@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>مسابقة تفاعلية</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    /* تخصيصات إضافية لنشاط المسابقة */
+    
+    /* حاوي الإعداد المحسن */
+    .setup-container {
+      background: var(--surface-glass);
+      border-radius: var(--border-radius-xl);
+      padding: var(--spacing-2xl);
+      max-width: 600px;
+      margin: 0 auto var(--spacing-2xl);
+      box-shadow: var(--shadow-large);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .setup-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-secondary);
+    }
+
+    .setup-container h2 {
+      color: var(--accent-gold);
+      margin-bottom: var(--spacing-xl);
+      font-size: var(--font-size-2xl);
+      font-weight: 600;
+      text-align: center;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    /* حاوي المسابقة المحسن */
+    .quiz-main-container {
+      background: var(--surface-glass);
+      border-radius: var(--border-radius-xl);
+      padding: var(--spacing-2xl);
+      max-width: 900px;
+      margin: 0 auto;
+      box-shadow: var(--shadow-large);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quiz-main-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-accent);
+    }
+
+    /* معلومات الدور المحسنة */
+    .turn-display {
+      background: var(--gradient-primary);
+      color: var(--oman-white);
+      padding: var(--spacing-xl);
+      border-radius: var(--border-radius-large);
+      margin-bottom: var(--spacing-2xl);
+      text-align: center;
+      box-shadow: var(--shadow-medium);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .turn-display::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      animation: shimmer 3s infinite;
+    }
+
+    .turn-display h2 {
+      margin: 0 0 var(--spacing-md) 0;
+      font-size: var(--font-size-2xl);
+      font-weight: 700;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .turn-display p {
+      margin: 0;
+      font-size: var(--font-size-lg);
+      opacity: 0.95;
+      font-weight: 500;
+    }
+
+    /* صندوق السؤال المحسن */
+    .question-display {
+      background: var(--surface-elevated);
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      border-radius: var(--border-radius-large);
+      padding: var(--spacing-xl);
+      margin-bottom: var(--spacing-2xl);
+      text-align: center;
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow-medium);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .question-display::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient-accent);
+    }
+
+    .question-display h3 {
+      margin: 0;
+      font-size: var(--font-size-xl);
+      line-height: 1.6;
+      color: var(--text-primary);
+      font-weight: 600;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    /* شبكة الخيارات المحسنة */
+    .choices-layout {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    .choice-option {
+      background: var(--surface-elevated);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      color: var(--text-primary);
+      padding: var(--spacing-lg) var(--spacing-xl);
+      border-radius: var(--border-radius-large);
+      font-size: var(--font-size-base);
+      cursor: pointer;
+      transition: var(--transition-normal);
+      font-family: 'Cairo', sans-serif;
+      font-weight: 600;
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow-small);
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .choice-option::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      transition: var(--transition-normal);
+    }
+
+    .choice-option:hover {
+      transform: translateY(-4px) scale(1.02);
+      border-color: var(--accent-gold);
+      box-shadow: var(--shadow-medium);
+      background: var(--surface-glass);
+    }
+
+    .choice-option:hover::before {
+      left: 100%;
+    }
+
+    .choice-option:active {
+      transform: translateY(-2px) scale(1.01);
+    }
+
+    .choice-option.correct {
+      background: var(--gradient-secondary);
+      border-color: var(--oman-green);
+      color: var(--oman-white);
+      animation: correctPulse 0.8s ease;
+      box-shadow: var(--shadow-success);
+    }
+
+    .choice-option.wrong {
+      background: var(--gradient-primary);
+      border-color: var(--oman-red);
+      color: var(--oman-white);
+      animation: wrongShake 0.6s ease;
+      box-shadow: var(--shadow-glow);
+    }
+
+    @keyframes correctPulse {
+      0%, 100% { 
+        transform: scale(1);
+        box-shadow: var(--shadow-success);
+      }
+      50% { 
+        transform: scale(1.08);
+        box-shadow: 0 0 32px rgba(34, 197, 94, 0.6);
+      }
+    }
+
+    @keyframes wrongShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-8px); }
+      40% { transform: translateX(8px); }
+      60% { transform: translateX(-6px); }
+      80% { transform: translateX(6px); }
+    }
+
+    /* حاوي النتائج المحسن */
+    .results-container {
+      background: var(--gradient-accent);
+      color: var(--text-dark);
+      padding: var(--spacing-2xl);
+      border-radius: var(--border-radius-xl);
+      text-align: center;
+      box-shadow: var(--shadow-large);
+      margin-top: var(--spacing-2xl);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .results-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-primary);
+    }
+
+    .results-container h2 {
+      margin: 0 0 var(--spacing-xl) 0;
+      font-size: var(--font-size-3xl);
+      font-weight: 700;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    /* تحسينات متجاوبة للمسابقة */
+    @media (max-width: 768px) {
+      .choices-layout {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+      }
+
+      .choice-option {
+        padding: var(--spacing-md);
+        font-size: var(--font-size-sm);
+        min-height: 50px;
+      }
+
+      .setup-container, 
+      .quiz-main-container {
+        margin: 0 auto var(--spacing-xl);
+        padding: var(--spacing-xl);
+      }
+
+      .turn-display {
+        padding: var(--spacing-lg);
+      }
+
+      .turn-display h2 {
+        font-size: var(--font-size-xl);
+      }
+
+      .question-display {
+        padding: var(--spacing-lg);
+      }
+
+      .question-display h3 {
+        font-size: var(--font-size-lg);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .choice-option {
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: var(--font-size-xs);
+        min-height: 45px;
+      }
+
+      .setup-container,
+      .quiz-main-container {
+        padding: var(--spacing-lg);
+        margin: 0 auto var(--spacing-lg);
+      }
+
+      .setup-container h2,
+      .results-container h2 {
+        font-size: var(--font-size-xl);
+      }
+
+      .turn-display h2 {
+        font-size: var(--font-size-lg);
+      }
+
+      .turn-display p {
+        font-size: var(--font-size-base);
+      }
+
+      .question-display h3 {
+        font-size: var(--font-size-base);
+        line-height: 1.4;
+      }
+
+      .results-container {
+        padding: var(--spacing-lg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- أزرار التحكم الموحدة -->
+  <div class="control-buttons-container">
+    <button class="control-btn" id="backBtn" title="العودة للصفحة الرئيسية">
+      <i class="fas fa-home"></i>
+    </button>
+    <button class="control-btn" id="muteBtn" title="كتم الصوت">
+      <i class="fas fa-volume-up"></i>
+    </button>
+    <button class="control-btn" id="fullscreenBtn" title="ملء الشاشة">
+      <i class="fas fa-expand"></i>
+    </button>
+  </div>
+
+  <!-- رأس الصفحة المحسن -->
+  <div class="page-header">
+    <h1><i class="fas fa-brain"></i> المسابقة التفاعلية</h1>
+    <p>اختبر معلوماتك في مسابقة شيقة ومفيدة</p>
+  </div>
+
+  <!-- صندوق الإعداد -->
+  <div class="setup-container" id="setupContainer">
+    <h2><i class="fas fa-cogs"></i> إعداد المسابقة</h2>
+    
+    <div class="form-section">
+      <div class="input-group">
+        <label for="classSelect"><i class="fas fa-users"></i> اختر الصف:</label>
+        <select id="classSelect" class="form-input">
+          <option value="">-- اختر الصف --</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label for="gameMode"><i class="fas fa-gamepad"></i> نوع المسابقة:</label>
+        <select id="gameMode" class="form-input">
+          <option value="individual">فردي - طالب واحد</option>
+          <option value="team">فرق - فريقان</option>
+          <option value="class">جماعي - الصف كاملاً</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label for="questionCount"><i class="fas fa-list-ol"></i> عدد الأسئلة:</label>
+        <select id="questionCount" class="form-input">
+          <option value="5">5 أسئلة</option>
+          <option value="10" selected>10 أسئلة</option>
+          <option value="15">15 سؤال</option>
+          <option value="20">20 سؤال</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button class="btn btn-primary" onclick="startQuiz()">
+        <i class="fas fa-rocket"></i> ابدأ المسابقة
+      </button>
+    </div>
+  </div>
+
+  <!-- حاوي المسابقة -->
+  <div class="quiz-main-container" id="quizMainContainer" style="display: none;">
+    <!-- معلومات الدور -->
+    <div class="turn-display" id="turnDisplay">
+      <h2 id="currentPlayer"><i class="fas fa-user"></i> السؤال الأول</h2>
+      <p id="questionCounter">السؤال 1 من 10</p>
+    </div>
+
+    <!-- صندوق السؤال -->
+    <div class="question-display">
+      <h3 id="questionText">جاري تحميل السؤال...</h3>
+    </div>
+
+    <!-- خيارات الإجابة -->
+    <div class="choices-layout" id="choicesLayout">
+      <!-- سيتم إنشاء الخيارات هنا بواسطة JavaScript -->
+    </div>
+
+    <!-- أزرار التحكم -->
+    <div class="button-group">
+      <button class="btn btn-secondary" onclick="skipQuestion()">
+        <i class="fas fa-forward"></i> تخطي
+      </button>
+      <button class="btn btn-warning" onclick="pauseQuiz()">
+        <i class="fas fa-pause"></i> إيقاف مؤقت
+      </button>
+      <button class="btn btn-primary" onclick="nextQuestion()">
+        <i class="fas fa-arrow-right"></i> السؤال التالي
+      </button>
+    </div>
+  </div>
+
+  <!-- صندوق النتائج -->
+  <div class="results-container" id="resultsContainer" style="display: none;">
+    <h2><i class="fas fa-trophy"></i> انتهت المسابقة!</h2>
+    <div id="finalResults"></div>
+    <div class="button-group">
+      <button class="btn btn-primary" onclick="restartQuiz()">
+        <i class="fas fa-redo"></i> مسابقة جديدة
+      </button>
+    </div>
+  </div>
+
+  <!-- تأثيرات الاحتفال -->
+  <div id="fireworks" class="fireworks-container" style="display: none;">
+    <div class="firework"></div>
+    <div class="firework"></div>
+    <div class="firework"></div>
+  </div>
+<script src="../config/unified-scripts-template.js"></script>
+<script>
+  // إعداد النشاط باستخدام ActivityUtils
+  const activity = new ActivityUtils('المسابقة التفاعلية', '../assets/media/sounds/');
+  
+  // متغيرات اللعبة
+  let gameState = {
+    isActive: false,
+    isPaused: false,
+    currentQuestionIndex: 0,
+    totalQuestions: 10,
+    gameMode: 'individual',
+    selectedClass: null,
+    students: [],
+    teamA: [],
+    teamB: [],
+    currentTeam: 'A',
+    currentPlayer: null,
+    questions: [],
+    answers: [],
+    correctCount: 0,
+    startTime: null
+  };
+
+  // بيانات الطلاب
+  let studentsData = {};
+
+  // بنك الأسئلة المحسن
+  const questionBank = [
+    {
+      question: "ما هي عاصمة سلطنة عُمان؟",
+      choices: ["مسقط", "صلالة", "نزوى", "صحار"],
+      correct: 0
+    },
+    {
+      question: "كم عدد أيام السنة العادية؟",
+      choices: ["360", "365", "366", "364"],
+      correct: 1
+    },
+    {
+      question: "ما هو أكبر المحيطات في العالم؟",
+      choices: ["الأطلسي", "الهندي", "الهادئ", "المتجمد الشمالي"],
+      correct: 2
+    },
+    {
+      question: "كم عدد ألوان قوس قزح؟",
+      choices: ["5", "6", "7", "8"],
+      correct: 2
+    },
+    {
+      question: "ما هو أقرب الكواكب إلى الشمس؟",
+      choices: ["الزهرة", "عطارد", "المريخ", "الأرض"],
+      correct: 1
+    },
+    {
+      question: "كم عدد قارات العالم؟",
+      choices: ["5", "6", "7", "8"],
+      correct: 2
+    },
+    {
+      question: "ما هي أطول آية في القرآن الكريم؟",
+      choices: ["آية الكرسي", "آية الدَّين", "آية المباهلة", "آية النور"],
+      correct: 1
+    },
+    {
+      question: "كم عدد أسنان الإنسان البالغ؟",
+      choices: ["28", "30", "32", "34"],
+      correct: 2
+    },
+    {
+      question: "ما هو أصغر دولة في العالم؟",
+      choices: ["موناكو", "الفاتيكان", "ليختنشتاين", "مالطا"],
+      correct: 1
+    },
+    {
+      question: "كم عدد عضلات جسم الإنسان؟",
+      choices: ["600", "650", "700", "750"],
+      correct: 1
+    },
+    {
+      question: "ما هي أكبر قارة في العالم؟",
+      choices: ["أفريقيا", "آسيا", "أوروبا", "أمريكا الشمالية"],
+      correct: 1
+    },
+    {
+      question: "كم عدد فصول السنة؟",
+      choices: ["3", "4", "5", "6"],
+      correct: 1
+    },
+    {
+      question: "ما هو رمز الذهب في الجدول الدوري؟",
+      choices: ["Go", "Au", "Ag", "Gd"],
+      correct: 1
+    },
+    {
+      question: "كم عدد أضلاع المثلث؟",
+      choices: ["2", "3", "4", "5"],
+      correct: 1
+    },
+    {
+      question: "ما هي عملة المملكة العربية السعودية؟",
+      choices: ["الدرهم", "الريال", "الدينار", "الليرة"],
+      correct: 1
+    },
+    {
+      question: "كم عدد أيام شهر فبراير في السنة الكبيسة؟",
+      choices: ["28", "29", "30", "31"],
+      correct: 1
+    },
+    {
+      question: "ما هو أطول نهر في العالم؟",
+      choices: ["النيل", "الأمازون", "المسيسيبي", "اليانغتسي"],
+      correct: 0
+    },
+    {
+      question: "كم عدد دقائق الساعة الواحدة؟",
+      choices: ["50", "60", "70", "80"],
+      correct: 1
+    },
+    {
+      question: "ما هي أصغر وحدة في الكمبيوتر؟",
+      choices: ["البايت", "البت", "الكيلوبايت", "الميجابايت"],
+      correct: 1
+    },
+    {
+      question: "كم عدد كواكب المجموعة الشمسية؟",
+      choices: ["7", "8", "9", "10"],
+      correct: 1
+    }
+  ];
+
+  // تحميل بيانات الطلاب
+  async function loadStudentsData() {
+    try {
+      const response = await fetch('../data/studentData.json');
+      if (response.ok) {
+        studentsData = await response.json();
+        populateClassSelect();
+        activity.showNotification('تم تحميل بيانات الطلاب بنجاح!', 'success');
+      } else {
+        throw new Error('فشل في تحميل البيانات');
+      }
+    } catch (error) {
+      console.log('خطأ في تحميل بيانات الطلاب:', error);
+      // استخدام بيانات عينة
+      studentsData = {
+        "الصف الخامس": ["أحمد محمد", "فاطمة علي", "عمر سالم", "نور الدين"],
+        "الصف السادس": ["مريم أحمد", "خالد سالم", "عائشة علي", "يوسف محمد"]
+      };
+      populateClassSelect();
+      activity.showNotification('تم استخدام بيانات تجريبية', 'info');
+    }
+  }
+
+  // ملء قائمة الصفوف
+  function populateClassSelect() {
+    const classSelect = document.getElementById('classSelect');
+    classSelect.innerHTML = '<option value="">-- اختر الصف --</option>';
+    
+    Object.keys(studentsData).forEach(className => {
+      const option = document.createElement('option');
+      option.value = className;
+      option.textContent = className;
+      classSelect.appendChild(option);
+    });
+  }
+
+  // بدء المسابقة
+  function startQuiz() {
+    const classSelect = document.getElementById('classSelect');
+    const gameMode = document.getElementById('gameMode');
+    const questionCount = document.getElementById('questionCount');
+
+    if (!classSelect.value) {
+      activity.showModal('تنبيه', 'يرجى اختيار الصف أولاً!', false);
+      return;
+    }
+
+    activity.playSound('start-timer.mp3');
+
+    // إعداد حالة اللعبة
+    gameState.selectedClass = classSelect.value;
+    gameState.gameMode = gameMode.value;
+    gameState.totalQuestions = parseInt(questionCount.value);
+    gameState.students = studentsData[gameState.selectedClass] || [];
+    gameState.currentQuestionIndex = 0;
+    gameState.correctCount = 0;
+    gameState.answers = [];
+    gameState.startTime = new Date();
+    gameState.isActive = true;
+
+    // إعداد الفرق حسب النوع
+    setupTeams();
+
+    // إعداد الأسئلة
+    gameState.questions = questionBank
+      .sort(() => Math.random() - 0.5)
+      .slice(0, gameState.totalQuestions);
+
+    // إخفاء صندوق الإعداد وعرض المسابقة
+    document.getElementById('setupContainer').style.display = 'none';
+    document.getElementById('quizMainContainer').style.display = 'block';
+
+    // عرض السؤال الأول
+    displayQuestion();
+    
+    activity.showNotification('بدأت المسابقة! حظاً موفقاً', 'success');
+  }
+
+  // إعداد الفرق
+  function setupTeams() {
+    if (gameState.gameMode === 'team') {
+      const shuffled = [...gameState.students].sort(() => Math.random() - 0.5);
+      const half = Math.ceil(shuffled.length / 2);
+      gameState.teamA = shuffled.slice(0, half);
+      gameState.teamB = shuffled.slice(half);
+      gameState.currentTeam = 'A';
+    } else if (gameState.gameMode === 'individual') {
+      gameState.currentPlayer = gameState.students[Math.floor(Math.random() * gameState.students.length)];
+    }
+  }
+
+  // عرض السؤال
+  function displayQuestion() {
+    const currentQ = gameState.questions[gameState.currentQuestionIndex];
+    
+    // تحديث معلومات الدور
+    updateTurnInfo();
+    
+    // تحديث نص السؤال
+    document.getElementById('questionText').textContent = currentQ.question;
+    document.getElementById('questionCounter').textContent = 
+      `السؤال ${gameState.currentQuestionIndex + 1} من ${gameState.totalQuestions}`;
+
+    // إنشاء خيارات الإجابة
+    const choicesContainer = document.getElementById('choicesLayout');
+    choicesContainer.innerHTML = '';
+
+    currentQ.choices.forEach((choice, index) => {
+      const button = document.createElement('button');
+      button.className = 'choice-option';
+      button.innerHTML = `<i class="fas fa-circle-dot"></i> ${choice}`;
+      button.onclick = () => selectAnswer(index);
+      choicesContainer.appendChild(button);
+    });
+
+    activity.playSound('name-start.mp3');
+  }
+
+  // تحديث معلومات الدور
+  function updateTurnInfo() {
+    const currentPlayerElement = document.getElementById('currentPlayer');
+    
+    switch (gameState.gameMode) {
+      case 'individual':
+        currentPlayerElement.innerHTML = `<i class="fas fa-user"></i> ${gameState.currentPlayer}`;
+        break;
+      case 'team':
+        const currentTeamName = gameState.currentTeam === 'A' ? 'الفريق الأول' : 'الفريق الثاني';
+        currentPlayerElement.innerHTML = `<i class="fas fa-users"></i> دور ${currentTeamName}`;
+        break;
+      case 'class':
+        currentPlayerElement.innerHTML = `<i class="fas fa-users"></i> ${gameState.selectedClass}`;
+        break;
+    }
+  }
+
+  // اختيار إجابة
+  function selectAnswer(selectedIndex) {
+    const currentQ = gameState.questions[gameState.currentQuestionIndex];
+    const isCorrect = selectedIndex === currentQ.correct;
+    
+    activity.playSound('Click.mp3');
+    
+    // تعطيل جميع الأزرار
+    document.querySelectorAll('.choice-option').forEach((btn, index) => {
+      btn.disabled = true;
+      btn.style.pointerEvents = 'none';
+      
+      if (index === currentQ.correct) {
+        btn.classList.add('correct');
+      } else if (index === selectedIndex && !isCorrect) {
+        btn.classList.add('wrong');
+      }
+    });
+
+    // حفظ الإجابة
+    gameState.answers.push({
+      questionIndex: gameState.currentQuestionIndex,
+      selectedAnswer: selectedIndex,
+      correctAnswer: currentQ.correct,
+      isCorrect: isCorrect,
+      player: getCurrentPlayer()
+    });
+
+    if (isCorrect) {
+      gameState.correctCount++;
+      activity.playSound('win.mp3');
+      activity.showNotification('إجابة صحيحة! أحسنت!', 'success');
+    } else {
+      activity.playSound('draw.mp3');
+      activity.showNotification('إجابة خاطئة. حاول مرة أخرى!', 'error');
+    }
+
+    // الانتقال للسؤال التالي بعد توقيت قصير
+    setTimeout(() => {
+      nextQuestion();
+    }, 2000);
+  }
+
+  // الحصول على اللاعب الحالي
+  function getCurrentPlayer() {
+    switch (gameState.gameMode) {
+      case 'individual':
+        return gameState.currentPlayer;
+      case 'team':
+        return gameState.currentTeam === 'A' ? 'الفريق الأول' : 'الفريق الثاني';
+      case 'class':
+        return gameState.selectedClass;
+      default:
+        return 'غير محدد';
+    }
+  }
+
+  // السؤال التالي
+  function nextQuestion() {
+    gameState.currentQuestionIndex++;
+
+    if (gameState.currentQuestionIndex >= gameState.totalQuestions) {
+      endQuiz();
+      return;
+    }
+
+    // تحديث اللاعب للسؤال التالي
+    updateCurrentPlayer();
+    
+    // عرض السؤال التالي
+    displayQuestion();
+  }
+
+  // تحديث اللاعب الحالي
+  function updateCurrentPlayer() {
+    switch (gameState.gameMode) {
+      case 'individual':
+        gameState.currentPlayer = gameState.students[Math.floor(Math.random() * gameState.students.length)];
+        break;
+      case 'team':
+        gameState.currentTeam = gameState.currentTeam === 'A' ? 'B' : 'A';
+        break;
+      case 'class':
+        // لا حاجة لتغيير في الوضع الجماعي
+        break;
+    }
+  }
+
+  // تخطي السؤال
+  function skipQuestion() {
+    activity.showModal('تأكيد', 'هل تريد تخطي هذا السؤال؟', true, () => {
+      gameState.answers.push({
+        questionIndex: gameState.currentQuestionIndex,
+        selectedAnswer: -1,
+        correctAnswer: gameState.questions[gameState.currentQuestionIndex].correct,
+        isCorrect: false,
+        player: getCurrentPlayer(),
+        skipped: true
+      });
+
+      activity.playSound('Click.mp3');
+      activity.showNotification('تم تخطي السؤال', 'info');
+      nextQuestion();
+    });
+  }
+
+  // إيقاف مؤقت
+  function pauseQuiz() {
+    gameState.isPaused = !gameState.isPaused;
+    
+    const pauseBtn = document.querySelector('[onclick="pauseQuiz()"]');
+    if (gameState.isPaused) {
+      pauseBtn.innerHTML = '<i class="fas fa-play"></i> استئناف';
+      activity.showNotification('تم إيقاف المسابقة مؤقتاً', 'info');
+    } else {
+      pauseBtn.innerHTML = '<i class="fas fa-pause"></i> إيقاف مؤقت';
+      activity.showNotification('تم استئناف المسابقة', 'success');
+    }
+    
+    activity.playSound('Click.mp3');
+  }
+
+  // إنهاء المسابقة
+  function endQuiz() {
+    gameState.isActive = false;
+    
+    // إخفاء حاوي المسابقة وعرض النتائج
+    document.getElementById('quizMainContainer').style.display = 'none';
+    document.getElementById('resultsContainer').style.display = 'block';
+
+    // حساب النتائج
+    const percentage = Math.round((gameState.correctCount / gameState.totalQuestions) * 100);
+    const duration = Math.round((new Date() - gameState.startTime) / 1000);
+
+    // عرض النتائج
+    document.getElementById('finalResults').innerHTML = `
+      <div class="results-stats">
+        <div class="stat-item">
+          <i class="fas fa-chart-bar"></i>
+          <span class="stat-label">النتيجة:</span>
+          <span class="stat-value">${gameState.correctCount} من ${gameState.totalQuestions} (${percentage}%)</span>
+        </div>
+        <div class="stat-item">
+          <i class="fas fa-clock"></i>
+          <span class="stat-label">الوقت المستغرق:</span>
+          <span class="stat-value">${Math.floor(duration / 60)}:${(duration % 60).toString().padStart(2, '0')}</span>
+        </div>
+        <div class="stat-item">
+          <i class="fas fa-medal"></i>
+          <span class="stat-label">التقييم:</span>
+          <span class="stat-value">${getGrade(percentage)}</span>
+        </div>
+      </div>
+    `;
+
+    // عرض الاحتفال
+    showCelebration(percentage);
+    
+    activity.playSound('clap.mp3');
+    activity.showNotification('انتهت المسابقة!', 'success');
+  }
+
+  // الحصول على التقييم
+  function getGrade(percentage) {
+    if (percentage >= 90) return '🌟 ممتاز';
+    if (percentage >= 80) return '👍 جيد جداً';
+    if (percentage >= 70) return '✅ جيد';
+    if (percentage >= 60) return '📝 مقبول';
+    return '📚 يحتاج مراجعة';
+  }
+
+  // عرض الاحتفال
+  function showCelebration(percentage) {
+    const fireworks = document.getElementById('fireworks');
+    fireworks.style.display = 'block';
+    
+    // إضافة كونفيتي حسب النتيجة
+    if (window.confetti) {
+      const particleCount = percentage >= 80 ? 200 : percentage >= 60 ? 100 : 50;
+      confetti({ 
+        particleCount: particleCount, 
+        spread: 120, 
+        origin: { y: 0.6 },
+        colors: ['#DC143C', '#228B22', '#FFD700']
+      });
+    }
+
+    setTimeout(() => {
+      fireworks.style.display = 'none';
+    }, 4000);
+  }
+
+  // إعادة تشغيل المسابقة
+  function restartQuiz() {
+    activity.playSound('Click.mp3');
+    
+    // إعادة تعيين الحالة
+    gameState = {
+      isActive: false,
+      isPaused: false,
+      currentQuestionIndex: 0,
+      totalQuestions: 10,
+      gameMode: 'individual',
+      selectedClass: null,
+      students: [],
+      teamA: [],
+      teamB: [],
+      currentTeam: 'A',
+      currentPlayer: null,
+      questions: [],
+      answers: [],
+      correctCount: 0,
+      startTime: null
+    };
+
+    // إعادة عرض صندوق الإعداد
+    document.getElementById('setupContainer').style.display = 'block';
+    document.getElementById('resultsContainer').style.display = 'none';
+    
+    activity.showNotification('جاهز لمسابقة جديدة!', 'info');
+  }
+
+  // تهيئة النشاط عند تحميل الصفحة
+  window.onload = async () => {
+    activity.init();
+    await loadStudentsData();
+  };
+</script>
+</body>
+</html>

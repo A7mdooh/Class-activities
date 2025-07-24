@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8"/>
+<title>التحديات 🔥</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../config/unified-styles-template.css">
+<style>
+    /* تخصيص نشاط التحديات */
+    .activity-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .challenge-header {
+      background: var(--gradient-primary);
+      color: white;
+      padding: 2rem;
+      border-radius: 15px;
+      margin-bottom: 2rem;
+      text-align: center;
+      box-shadow: var(--shadow-large);
+    }
+
+    .challenge-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .challenge-controls {
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: var(--shadow-medium);
+      margin-bottom: 2rem;
+    }
+
+    .control-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .control-group label {
+      font-weight: 600;
+      color: var(--text-color);
+      min-width: 100px;
+    }
+
+    .control-group select,
+    .control-group button {
+      padding: 0.8rem 1.2rem;
+      border-radius: 10px;
+      border: 2px solid var(--primary-color);
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .control-group select {
+      background: white;
+      color: var(--primary-color);
+      min-width: 150px;
+    }
+
+    .challenge-area {
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: var(--shadow-medium);
+      display: none;
+      text-align: center;
+    }
+
+    .turn-display {
+      background: var(--gradient-accent);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-medium);
+    }
+
+    .timer-container {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      margin: 2rem auto;
+    }
+
+    .timer-circle {
+      width: 150px;
+      height: 150px;
+    }
+
+    .timer-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent-color);
+    }
+
+    .timer-container.shake {
+      animation: shake 0.5s infinite;
+    }
+
+    .teams-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .team-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: var(--shadow-medium);
+      border: 3px solid var(--primary-color);
+      transition: all 0.3s ease;
+    }
+
+    .team-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-large);
+    }
+
+    .team-card h3 {
+      color: var(--primary-color);
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .team-score {
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--accent-color);
+      margin: 1rem 0;
+    }
+
+    .score-controls {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .score-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: none;
+      font-size: 1.5rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .score-btn.plus {
+      background: var(--gradient-success);
+      color: white;
+    }
+
+    .score-btn.minus {
+      background: var(--gradient-danger);
+      color: white;
+    }
+
+    .score-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .challenge-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .winner-display {
+      background: var(--gradient-accent);
+      color: white;
+      padding: 2rem;
+      border-radius: 15px;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-top: 2rem;
+      box-shadow: var(--shadow-large);
+      display: none;
+    }
+
+    .manual-selection {
+      background: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin: 1rem 0;
+      border: 2px dashed var(--primary-color);
+      display: none;
+    }
+
+    .multi-team-options {
+      background: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin: 1rem 0;
+      border: 2px dashed var(--primary-color);
+      display: none;
+    }
+
+    .instruction-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 10000;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+      background: white;
+      padding: 3rem;
+      border-radius: 20px;
+      max-width: 600px;
+      width: 90%;
+      text-align: center;
+      box-shadow: var(--shadow-extra-large);
+      position: relative;
+    }
+
+    .modal-content h2 {
+      color: var(--primary-color);
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-content p {
+      font-size: 1.3rem;
+      line-height: 1.8;
+      color: var(--text-color);
+      margin-bottom: 2rem;
+    }
+
+    .time-up-popup {
+      position: fixed;
+      top: 30%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      padding: 2rem 3rem;
+      border-radius: 20px;
+      box-shadow: var(--shadow-extra-large);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent-color);
+      z-index: 10000;
+      display: none;
+      border: 4px solid var(--accent-color);
+    }
+
+    .fireworks-effect {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: url('../assets/media/sounds/firework.gif') center center no-repeat;
+      background-size: cover;
+      z-index: 9999;
+      display: none;
+    }
+
+    /* تحسينات الاستجابة */
+    @media (max-width: 768px) {
+      .challenge-header h1 {
+        font-size: 2rem;
+      }
+
+      .control-group {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .teams-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .timer-container {
+        width: 120px;
+        height: 120px;
+      }
+
+      .timer-circle {
+        width: 120px;
+        height: 120px;
+      }
+
+      .challenge-actions {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .activity-container {
+        padding: 10px;
+      }
+
+      .challenge-header,
+      .challenge-controls,
+      .challenge-area {
+        padding: 1rem;
+      }
+
+      .team-score {
+        font-size: 2.5rem;
+      }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translate(0, 0); }
+      25% { transform: translate(5px, 0); }
+      50% { transform: translate(0, 5px); }
+      75% { transform: translate(-5px, 0); }
+    }
+</style>
+</head>
+<body>
+<!-- أزرار التحكم الموحدة -->
+<div class="control-buttons">
+  <button class="control-btn" id="backBtn" title="العودة للقائمة الرئيسية">
+    <i class="fas fa-home"></i>
+  </button>
+  <button class="control-btn" id="fullscreenBtn" title="ملء الشاشة">
+    <i class="fas fa-expand"></i>
+  </button>
+  <button class="control-btn" id="muteBtn" title="كتم/تشغيل الصوت">
+    <i class="fas fa-volume-up"></i>
+  </button>
+</div>
+
+<!-- منطقة الإشعارات -->
+<div id="notification-container"></div>
+
+<div class="activity-container">
+  <!-- رأس التحدي -->
+  <div class="challenge-header">
+    <h1><i class="fas fa-fire"></i> نشاط التحديات <i class="fas fa-fire"></i></h1>
+    <p>اختبر مهاراتك وتنافس مع زملائك في تحديات مثيرة!</p>
+  </div>
+
+  <!-- أدوات التحكم -->
+  <div class="challenge-controls">
+    <div class="control-group">
+      <label><i class="fas fa-users"></i> اختر الصف:</label>
+      <select id="classSelect">
+        <option value="">اختر الصف</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label><i class="fas fa-gamepad"></i> نوع التحدي:</label>
+      <select id="mode" onchange="handleModeChange()">
+        <option value="random">طالب ضد طالب (عشوائي)</option>
+        <option value="manual">طالب ضد طالب (اختياري)</option>
+        <option value="teams">فريق ضد فريق</option>
+        <option value="multiTeams">تحدي بين فرق متعددة</option>
+      </select>
+    </div>
+
+    <div id="manualSelection" class="manual-selection">
+      <h4><i class="fas fa-hand-pointer"></i> اختر المتنافسين</h4>
+      <div class="control-group">
+        <label>الطالب الأول:</label>
+        <select id="student1Select"></select>
+      </div>
+      <div class="control-group">
+        <label>الطالب الثاني:</label>
+        <select id="student2Select"></select>
+      </div>
+    </div>
+
+    <div id="multiTeamOptions" class="multi-team-options">
+      <h4><i class="fas fa-users-cog"></i> إعداد الفرق المتعددة</h4>
+      <div class="control-group">
+        <label>عدد الفرق:</label>
+        <select id="teamCountSelect">
+          <option value="3">3 فرق</option>
+          <option value="4">4 فرق</option>
+          <option value="5">5 فرق</option>
+          <option value="6">6 فرق</option>
+          <option value="7">7 فرق</option>
+          <option value="8">8 فرق</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label><i class="fas fa-clock"></i> المدة:</label>
+      <select id="duration">
+        <option value="30">30 ثانية</option>
+        <option value="60">1 دقيقة</option>
+        <option value="120">2 دقائق</option>
+        <option value="180">3 دقائق</option>
+        <option value="240">4 دقائق</option>
+        <option value="300">5 دقائق</option>
+        <option value="600">10 دقائق</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <button onclick="prepareChallenge()" class="btn btn-accent">
+        <i class="fas fa-rocket"></i> بدء التحدي
+      </button>
+    </div>
+  </div>
+
+  <!-- منطقة التحدي -->
+  <div id="challengeArea" class="challenge-area">
+    <div id="turnLabel" class="turn-display">
+      <i class="fas fa-user-clock"></i> جاري التحضير...
+    </div>
+
+    <div id="timerWrapper" class="timer-container">
+      <svg class="timer-circle" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="50" fill="none" stroke="#eee" stroke-width="8"></circle>
+        <circle cx="60" cy="60" r="50" fill="none" id="progress" stroke="var(--accent-color)" 
+                stroke-dasharray="314" stroke-dashoffset="0" stroke-width="8" 
+                transform="rotate(-90 60 60)"></circle>
+      </svg>
+      <div id="timerTextSec" class="timer-text">0s</div>
+    </div>
+
+    <div class="teams-grid" id="teamsContainer"></div>
+
+    <div class="challenge-actions">
+      <button onclick="nextTurn()" class="btn btn-primary">
+        <i class="fas fa-arrow-right"></i> التالي
+      </button>
+      <button onclick="endChallenge()" class="btn btn-success">
+        <i class="fas fa-trophy"></i> إنهاء التحدي
+      </button>
+      <button onclick="resetChallenge()" class="btn btn-secondary">
+        <i class="fas fa-redo"></i> إعادة تعيين
+      </button>
+    </div>
+
+    <div id="winnerDisplay" class="winner-display"></div>
+  </div>
+</div>
+<!-- نافذة التعليمات المنبثقة -->
+<div id="instructionModal" class="instruction-modal">
+  <div class="modal-content">
+    <h2><i class="fas fa-info-circle"></i> تعليمات التحدي</h2>
+    <p id="instructionText"></p>
+    <button onclick="closeInstructionModal()" class="btn btn-primary">
+      <i class="fas fa-check"></i> فهمت
+    </button>
+  </div>
+</div>
+
+<!-- المؤثرات البصرية -->
+<div id="fireworks" class="fireworks-effect"></div>
+<div id="timeUpPopup" class="time-up-popup">
+  <i class="fas fa-clock"></i> انتهى الوقت!
+</div>
+<script src="../config/unified-scripts-template.js"></script>
+<script>
+  // إعداد النشاط باستخدام ActivityUtils
+  const activity = new ActivityUtils('نشاط التحديات', '../assets/media/sounds/');
+  
+  // متغيرات النشاط
+  let studentData = {}, currentList = [], timer, timeLeft = 0;
+  let currentTurn = 1, usedStudents = [];
+  let teamScores = {};
+
+  // تحميل بيانات الطلاب
+  async function loadStudents() {
+    try {
+      const res = await fetch('https://raw.githubusercontent.com/A7mdooh/entertainment-app/main/data/studentData.json');
+      studentData = await res.json();
+      
+      const classSelect = document.getElementById('classSelect');
+      Object.keys(studentData).forEach(cls => {
+        const option = document.createElement('option');
+        option.value = cls;
+        option.textContent = `الصف ${cls}`;
+        classSelect.appendChild(option);
+      });
+
+      classSelect.addEventListener('change', () => {
+        populateStudentSelectors(classSelect.value);
+      });
+
+      if (classSelect.options.length > 1) {
+        classSelect.selectedIndex = 1;
+        populateStudentSelectors(classSelect.value);
+      }
+
+      // ربط أحداث الاختيار اليدوي
+      document.getElementById('student1Select').addEventListener('change', () => {
+        populateStudentSelectors(classSelect.value);
+      });
+
+      document.getElementById('student2Select').addEventListener('change', () => {
+        populateStudentSelectors(classSelect.value);
+      });
+
+      activity.showNotification('تم تحميل بيانات الطلاب بنجاح!', 'success');
+    } catch (error) {
+      activity.showNotification('خطأ في تحميل بيانات الطلاب', 'error');
+    }
+  }
+
+  // تعبئة قوائم الطلاب للاختيار اليدوي
+  function populateStudentSelectors(cls) {
+    const s1 = document.getElementById('student1Select');
+    const s2 = document.getElementById('student2Select');
+    const students = studentData[cls] || [];
+    const selected1 = s1.value;
+    const selected2 = s2.value;
+
+    s1.innerHTML = '<option value="">اختر الطالب الأول</option>';
+    s2.innerHTML = '<option value="">اختر الطالب الثاني</option>';
+
+    students.forEach(stu => {
+      if (stu !== selected2) {
+        const opt1 = document.createElement('option');
+        opt1.value = stu;
+        opt1.textContent = stu;
+        s1.appendChild(opt1);
+      }
+      if (stu !== selected1) {
+        const opt2 = document.createElement('option');
+        opt2.value = stu;
+        opt2.textContent = stu;
+        s2.appendChild(opt2);
+      }
+    });
+
+    if (selected1 && [...s1.options].some(o => o.value === selected1)) s1.value = selected1;
+    if (selected2 && [...s2.options].some(o => o.value === selected2)) s2.value = selected2;
+  }
+
+  // التعامل مع تغيير نمط التحدي
+  function handleModeChange() {
+    const mode = document.getElementById('mode').value;
+    
+    activity.playSound('Click.mp3');
+    
+    const manualSelection = document.getElementById('manualSelection');
+    const multiTeamOptions = document.getElementById('multiTeamOptions');
+    
+    manualSelection.style.display = (mode === 'manual') ? 'block' : 'none';
+    multiTeamOptions.style.display = (mode === 'multiTeams') ? 'block' : 'none';
+
+    if (mode === 'manual') {
+      const currentClass = document.getElementById('classSelect').value;
+      if (currentClass) {
+        populateStudentSelectors(currentClass);
+        activity.showNotification('اختر الطالبين للتحدي', 'info');
+      }
+    }
+  }
+
+  // عرض نافذة التعليمات
+  function showInstructionModal(mode) {
+    const modal = document.getElementById('instructionModal');
+    const text = document.getElementById('instructionText');
+    let instructions = '';
+
+    switch (mode) {
+      case 'random':
+        instructions = 'سيتم اختيار طالبين بشكل عشوائي للتحدي. كل طالب له دور وزمن محدد. المعلم يسجل النقاط يدوياً باستخدام أزرار + و -.';
+        break;
+      case 'manual':
+        instructions = 'يمكن اختيار الطالبين يدوياً من القائمة. كل طالب له وقت محدد للأداء. يتم تسجيل النقاط يدوياً.';
+        break;
+      case 'teams':
+        instructions = 'يتم التحدي بين فريقين. كل فريق يمكنه كسب أو خسارة نقاط. الهدف هو التفاعل الجماعي والتنافس الإيجابي.';
+        break;
+      case 'multiTeams':
+        instructions = 'سيتم إنشاء عدة فرق (من 3 إلى 8) حسب اختيارك. كل فريق له دوره ونقاطه الخاصة. مثالي للأنشطة الجماعية الكبيرة.';
+        break;
+    }
+
+    text.textContent = instructions;
+    modal.style.display = 'flex';
+    activity.playSound('name-start.mp3');
+  }
+
+  // إغلاق نافذة التعليمات
+  function closeInstructionModal() {
+    document.getElementById('instructionModal').style.display = 'none';
+    prepareChallengeContinue();
+  }
+
+  // بدء التحدي
+  function prepareChallenge() {
+    const cls = document.getElementById('classSelect').value;
+    const mode = document.getElementById('mode').value;
+
+    if (!cls) {
+      activity.showModal('تنبيه', 'يرجى اختيار الصف أولاً', false);
+      return;
+    }
+
+    if (!mode) {
+      activity.showModal('تنبيه', 'يرجى اختيار نوع التحدي', false);
+      return;
+    }
+
+    activity.playSound('start-timer.mp3');
+    showInstructionModal(mode);
+  }
+
+  // متابعة تحضير التحدي بعد التعليمات
+  function prepareChallengeContinue() {
+    const cls = document.getElementById('classSelect').value;
+    const mode = document.getElementById('mode').value;
+    timeLeft = parseInt(document.getElementById('duration').value);
+    currentList = [...(studentData[cls] || [])];
+
+    if (mode === 'multiTeams') {
+      setupMultiTeams();
+      return;
+    }
+
+    if (currentList.length < 2) {
+      activity.showModal('خطأ', 'يجب اختيار صف به طلاب كافيين', false);
+      return;
+    }
+
+    let name1 = 'فريق 1', name2 = 'فريق 2';
+
+    if (mode === 'random') {
+      const remaining = currentList.filter(s => !usedStudents.includes(s));
+      if (remaining.length < 2) {
+        activity.showModal('تنبيه', 'تم استخدام جميع الطلاب. سيتم إعادة تعيين القائمة.', false);
+        usedStudents = [];
+        const shuffled = [...currentList].sort(() => 0.5 - Math.random());
+        name1 = shuffled[0];
+        name2 = shuffled[1];
+      } else {
+        const shuffled = [...remaining].sort(() => 0.5 - Math.random());
+        name1 = shuffled[0];
+        name2 = shuffled[1];
+      }
+      usedStudents.push(name1, name2);
+    } else if (mode === 'manual') {
+      name1 = document.getElementById('student1Select').value;
+      name2 = document.getElementById('student2Select').value;
+      if (!name1 || !name2) {
+        activity.showModal('تنبيه', 'يرجى اختيار الطالبين', false);
+        return;
+      }
+      if (name1 === name2) {
+        activity.showModal('تنبيه', 'يرجى اختيار طالبين مختلفين', false);
+        return;
+      }
+    }
+
+    setupTwoPlayerChallenge(name1, name2);
+  }
+
+  // إعداد تحدي بين لاعبين
+  function setupTwoPlayerChallenge(name1, name2) {
+    const container = document.getElementById('teamsContainer');
+    container.innerHTML = `
+      <div class="team-card">
+        <h3 id="name1"><i class="fas fa-user"></i> ${name1}</h3>
+        <div class="team-score" id="score1">0</div>
+        <div class="score-controls">
+          <button class="score-btn plus" onclick="adjustScore(1, 1)">
+            <i class="fas fa-plus"></i>
+          </button>
+          <button class="score-btn minus" onclick="adjustScore(1, -1)">
+            <i class="fas fa-minus"></i>
+          </button>
+        </div>
+      </div>
+      <div class="team-card">
+        <h3 id="name2"><i class="fas fa-user"></i> ${name2}</h3>
+        <div class="team-score" id="score2">0</div>
+        <div class="score-controls">
+          <button class="score-btn plus" onclick="adjustScore(2, 1)">
+            <i class="fas fa-plus"></i>
+          </button>
+          <button class="score-btn minus" onclick="adjustScore(2, -1)">
+            <i class="fas fa-minus"></i>
+          </button>
+        </div>
+      </div>
+    `;
+
+    teamScores = { '1': 0, '2': 0 };
+    currentTurn = 1;
+
+    document.getElementById('challengeArea').style.display = 'block';
+    document.getElementById('winnerDisplay').style.display = 'none';
+    
+    activity.showNotification(`بدء التحدي بين ${name1} و ${name2}!`, 'success');
+    nextTurn();
+  }
+
+  // إعداد تحدي الفرق المتعددة
+  function setupMultiTeams() {
+    const teamCount = parseInt(document.getElementById('teamCountSelect').value);
+    const container = document.getElementById('teamsContainer');
+    container.innerHTML = '';
+
+    teamScores = {};
+
+    for (let i = 1; i <= teamCount; i++) {
+      const div = document.createElement('div');
+      div.className = 'team-card';
+      div.innerHTML = `
+        <h3 id="name${i}"><i class="fas fa-users"></i> فريق ${i}</h3>
+        <div class="team-score" id="score${i}">0</div>
+        <div class="score-controls">
+          <button class="score-btn plus" onclick="adjustScore(${i}, 1)">
+            <i class="fas fa-plus"></i>
+          </button>
+          <button class="score-btn minus" onclick="adjustScore(${i}, -1)">
+            <i class="fas fa-minus"></i>
+          </button>
+        </div>
+      `;
+      container.appendChild(div);
+      teamScores[i.toString()] = 0;
+    }
+
+    currentTurn = 1;
+    document.getElementById('challengeArea').style.display = 'block';
+    document.getElementById('winnerDisplay').style.display = 'none';
+    
+    activity.showNotification(`تم إنشاء ${teamCount} فرق للتحدي!`, 'success');
+    nextTurn();
+  }
+
+  // تحديث المؤقت
+  function updateTimer() {
+    const secText = document.getElementById('timerTextSec');
+    const circle = document.getElementById('progress');
+    const wrapper = document.getElementById('timerWrapper');
+
+    const total = parseInt(document.getElementById('duration').value);
+    const percent = timeLeft / total;
+    const offset = 314 * (1 - percent);
+
+    circle.style.strokeDashoffset = offset;
+    secText.innerHTML = `<i class="fas fa-clock"></i><br>${timeLeft}s`;
+
+    if (timeLeft <= 10 && timeLeft > 0) {
+      wrapper.classList.add('shake');
+      activity.playSound('countdown-beep.mp3');
+    } else {
+      wrapper.classList.remove('shake');
+    }
+  }
+
+  // بدء المؤقت
+  function startTimer() {
+    updateTimer();
+    timer = setInterval(() => {
+      timeLeft--;
+      updateTimer();
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        activity.playSound('long-beep.mp3');
+        showTimeUpPopup();
+      }
+    }, 1000);
+  }
+
+  // عرض نافذة انتهاء الوقت
+  function showTimeUpPopup() {
+    const popup = document.getElementById('timeUpPopup');
+    popup.style.display = 'block';
+    
+    setTimeout(() => {
+      popup.style.display = 'none';
+      nextTurn();
+    }, 2000);
+  }
+
+  // الدور التالي
+  function nextTurn() {
+    activity.playSound('vs.mp3');
+    clearInterval(timer);
+    
+    const mode = document.getElementById('mode').value;
+    const turnLabel = document.getElementById('turnLabel');
+
+    if (mode === 'multiTeams') {
+      const count = parseInt(document.getElementById('teamCountSelect').value);
+      turnLabel.innerHTML = `<i class="fas fa-users"></i> الدور على: فريق ${currentTurn}`;
+      timeLeft = parseInt(document.getElementById('duration').value);
+      startTimer();
+      currentTurn = currentTurn >= count ? 1 : currentTurn + 1;
+      return;
+    }
+
+    // للأنماط الأخرى
+    const currentPlayerName = currentTurn === 1 ? 
+      document.getElementById('name1').textContent : 
+      document.getElementById('name2').textContent;
+    
+    turnLabel.innerHTML = `<i class="fas fa-user-clock"></i> الدور على: ${currentPlayerName.replace('👤 ', '')}`;
+    timeLeft = parseInt(document.getElementById('duration').value);
+    startTimer();
+    currentTurn = currentTurn === 1 ? 2 : 1;
+  }
+
+  // تعديل النقاط
+  function adjustScore(team, val) {
+    activity.playSound('Click.mp3');
+    
+    const scoreElement = document.getElementById(`score${team}`);
+    let score = parseInt(scoreElement.textContent) + val;
+    score = Math.max(0, score);
+    scoreElement.textContent = score;
+    teamScores[team.toString()] = score;
+
+    // تأثير بصري عند تغيير النقاط
+    scoreElement.style.transform = 'scale(1.2)';
+    setTimeout(() => {
+      scoreElement.style.transform = 'scale(1)';
+    }, 200);
+  }
+
+  // إنهاء التحدي
+  function endChallenge() {
+    clearInterval(timer);
+    activity.playSound('end-timer.mp3');
+    
+    const mode = document.getElementById('mode').value;
+    const winnerDisplay = document.getElementById('winnerDisplay');
+
+    if (mode === 'multiTeams') {
+      const count = parseInt(document.getElementById('teamCountSelect').value);
+      let maxScore = -1;
+      let winners = [];
+
+      for (let i = 1; i <= count; i++) {
+        const score = parseInt(document.getElementById(`score${i}`).textContent);
+        if (score > maxScore) {
+          maxScore = score;
+          winners = [`فريق ${i}`];
+        } else if (score === maxScore) {
+          winners.push(`فريق ${i}`);
+        }
+      }
+
+      const result = winners.length > 1 ? 
+        `<i class="fas fa-handshake"></i> تعادل بين: ${winners.join(' و ')}` : 
+        `<i class="fas fa-trophy"></i> الفائز: ${winners[0]}`;
+      
+      winnerDisplay.innerHTML = result;
+      showCelebration(winners.length === 1);
+    } else {
+      // للأنماط الأخرى
+      const name1 = document.getElementById('name1').textContent.replace('👤 ', '');
+      const name2 = document.getElementById('name2').textContent.replace('👤 ', '');
+      const score1 = parseInt(document.getElementById('score1').textContent);
+      const score2 = parseInt(document.getElementById('score2').textContent);
+
+      let result;
+      if (score1 > score2) {
+        result = `<i class="fas fa-trophy"></i> الفائز: ${name1}`;
+        showCelebration(true);
+      } else if (score2 > score1) {
+        result = `<i class="fas fa-trophy"></i> الفائز: ${name2}`;
+        showCelebration(true);
+      } else {
+        result = '<i class="fas fa-handshake"></i> تعادل!';
+        showCelebration(false);
+      }
+
+      winnerDisplay.innerHTML = result;
+    }
+
+    winnerDisplay.style.display = 'block';
+    activity.showNotification('تم إنهاء التحدي!', 'success');
+  }
+
+  // عرض الاحتفال
+  function showCelebration(isWin) {
+    if (isWin) {
+      activity.playSound('win.mp3');
+      setTimeout(() => activity.playSound('clap.mp3'), 1000);
+    } else {
+      activity.playSound('draw.mp3');
+    }
+
+    const fireworks = document.getElementById('fireworks');
+    fireworks.style.display = 'block';
+    
+    // إضافة كونفيتي
+    if (window.confetti) {
+      confetti({ 
+        particleCount: 200, 
+        spread: 120, 
+        origin: { y: 0.6 },
+        colors: ['#DC143C', '#228B22', '#FFD700']
+      });
+    }
+
+    setTimeout(() => {
+      fireworks.style.display = 'none';
+    }, 4000);
+  }
+
+  // إعادة تعيين التحدي
+  function resetChallenge() {
+    activity.playSound('Click.mp3');
+    clearInterval(timer);
+    
+    document.getElementById('challengeArea').style.display = 'none';
+    document.getElementById('winnerDisplay').style.display = 'none';
+    document.getElementById('teamsContainer').innerHTML = '';
+    
+    // إعادة تعيين المتغيرات
+    currentTurn = 1;
+    teamScores = {};
+    timeLeft = 0;
+    
+    activity.showNotification('تم إعادة تعيين التحدي', 'info');
+  }
+
+  // تهيئة النشاط عند تحميل الصفحة
+  window.onload = async () => {
+    activity.init();
+    await loadStudents();
+  };
+</script>
+</body>
+</html>

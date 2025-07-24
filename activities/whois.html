@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>من هو؟ ❓</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <link rel="stylesheet" href="../config/unified-styles-template.css">
+  <style>
+    /* تخصيص النشاط */
+    .activity-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .game-header {
+      background: var(--gradient-primary);
+      color: white;
+      padding: 2rem;
+      border-radius: 15px;
+      margin-bottom: 2rem;
+      text-align: center;
+      box-shadow: var(--shadow-large);
+    }
+
+    .game-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .game-controls {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+
+    .game-controls select,
+    .game-controls button {
+      padding: 0.8rem 1.5rem;
+      border-radius: 10px;
+      border: none;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .game-controls select {
+      background: white;
+      color: var(--primary-color);
+      border: 2px solid var(--primary-color);
+    }
+
+    .hint-box {
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: var(--shadow-medium);
+      margin-bottom: 2rem;
+      font-size: 1.4rem;
+      color: var(--text-color);
+      display: none;
+      border-left: 5px solid var(--accent-color);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hint-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--gradient-accent);
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 2rem;
+    }
+
+    .option {
+      background: white;
+      padding: 1rem 1.5rem;
+      border: 2px solid var(--primary-color);
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      box-shadow: var(--shadow-small);
+    }
+
+    .option:hover {
+      background: var(--gradient-primary);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-medium);
+    }
+
+    .option:active {
+      transform: translateY(0);
+    }
+
+    .feedback {
+      margin: 2rem 0;
+      font-size: 1.8rem;
+      font-weight: 700;
+      text-align: center;
+      padding: 1rem;
+      border-radius: 12px;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .feedback.success {
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      color: white;
+    }
+
+    .feedback.error {
+      background: linear-gradient(135deg, #f44336, #da190b);
+      color: white;
+    }
+
+    .revealed-name {
+      background: var(--gradient-accent);
+      color: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      font-size: 1.6rem;
+      font-weight: 700;
+      text-align: center;
+      margin: 2rem 0;
+      box-shadow: var(--shadow-large);
+      display: none;
+    }
+
+    .manual-select {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: var(--shadow-medium);
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .manual-select select {
+      width: 100%;
+      max-width: 300px;
+      padding: 1rem;
+      border-radius: 10px;
+      border: 2px solid var(--primary-color);
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+    }
+
+    .manual-select select:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.1);
+    }
+
+    .secret-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: var(--shadow-extra-large);
+      z-index: 2000;
+      font-size: 1.5rem;
+      color: var(--primary-color);
+      text-align: center;
+      border: 3px solid var(--accent-color);
+      display: none;
+      max-width: 400px;
+      animation: popIn 0.5s ease;
+    }
+
+    .instruction-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 1000;
+      display: none;
+      backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 15px;
+      max-width: 500px;
+      margin: 10% auto;
+      text-align: center;
+      box-shadow: var(--shadow-extra-large);
+      position: relative;
+    }
+
+    .modal-content h2 {
+      color: var(--primary-color);
+      margin-bottom: 1.5rem;
+      font-size: 2rem;
+    }
+
+    .modal-content p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      color: var(--text-color);
+    }
+
+    @keyframes popIn {
+      0% { 
+        opacity: 0; 
+        transform: translate(-50%, -50%) scale(0.5); 
+      }
+      100% { 
+        opacity: 1; 
+        transform: translate(-50%, -50%) scale(1); 
+      }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      75% { transform: translateX(10px); }
+    }
+
+    .shake {
+      animation: shake 0.6s ease;
+    }
+
+    .start-challenge-btn {
+      display: none;
+      margin: 2rem auto;
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+      background: var(--gradient-accent);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow-medium);
+    }
+
+    .start-challenge-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-large);
+    }
+
+    /* تحسينات الاستجابة */
+    @media (max-width: 768px) {
+      .game-header h1 {
+        font-size: 2rem;
+      }
+      
+      .game-controls {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .options {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 10px;
+      }
+      
+      .hint-box {
+        padding: 1.5rem;
+        font-size: 1.2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .activity-container {
+        padding: 10px;
+      }
+      
+      .game-header {
+        padding: 1.5rem;
+      }
+      
+      .options {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- أزرار التحكم الموحدة -->
+  <div class="control-buttons">
+    <button class="control-btn" id="backBtn" title="العودة للقائمة الرئيسية">
+      <i class="fas fa-home"></i>
+    </button>
+    <button class="control-btn" id="fullscreenBtn" title="ملء الشاشة">
+      <i class="fas fa-expand"></i>
+    </button>
+    <button class="control-btn" id="muteBtn" title="كتم/تشغيل الصوت">
+      <i class="fas fa-volume-up"></i>
+    </button>
+  </div>
+
+  <!-- منطقة الإشعارات -->
+  <div id="notification-container"></div>
+
+  <div class="activity-container">
+    <!-- رأس اللعبة -->
+    <div class="game-header">
+      <h1><i class="fas fa-question-circle"></i> من هو؟</h1>
+      <p>اختر الصف ونوع النمط لبدء التحدي واكتشف هوية الطالب الغامض!</p>
+      
+      <div class="game-controls">
+        <select id="classSelect">
+          <option value="">اختر الصف</option>
+        </select>
+        <select id="modeSelect">
+          <option value="random">فردي عشوائي</option>
+          <option value="manual">فردي انتقائي</option>
+        </select>
+        <button id="startGameBtn" class="btn btn-accent">
+          <i class="fas fa-play"></i> ابدأ اللعبة
+        </button>
+      </div>
+    </div>
+
+    <!-- منطقة الاختيار اليدوي -->
+    <div id="manualSelectContainer" class="manual-select"></div>
+
+    <!-- النافذة السرية -->
+    <div id="secretNamePopup" class="secret-popup"></div>
+
+    <!-- زر بدء التحدي -->
+    <button id="startHintBtn" class="start-challenge-btn" onclick="showHint()">
+      <i class="fas fa-bullseye"></i> ابدأ التحدي
+    </button>
+
+    <!-- الاسم المكشوف -->
+    <div id="revealedName" class="revealed-name"></div>
+
+    <!-- صندوق التلميح -->
+    <div class="hint-box" id="hint">
+      <i class="fas fa-lightbulb"></i> انتظر التلميح...
+    </div>
+
+    <!-- خيارات الطلاب -->
+    <div class="options" id="options"></div>
+
+    <!-- منطقة التغذية الراجعة -->
+    <div id="feedback" class="feedback"></div>
+  </div>
+
+  <!-- نافذة التعليمات -->
+  <div id="instructionModal" class="instruction-modal">
+    <div class="modal-content">
+      <h2><i class="fas fa-info-circle"></i> طريقة اللعب</h2>
+      <p id="modalText"></p>
+      <button onclick="closeInstructionModal()" class="btn btn-primary">
+        <i class="fas fa-check"></i> فهمت
+      </button>
+    </div>
+  </div>
+
+    <script src="../config/unified-scripts-template.js"></script>
+  <script>
+    // إعداد النشاط باستخدام ActivityUtils
+    const activity = new ActivityUtils('نشاط من هو؟', '../assets/media/sounds/');
+    
+    // متغيرات اللعبة
+    let allStudents = [], usedNames = [], targetName = "";
+
+    // تحميل بيانات الطلاب
+    async function loadStudentData() {
+      try {
+        const res = await fetch('https://raw.githubusercontent.com/A7mdooh/entertainment-app/main/data/studentData.json');
+        const data = await res.json();
+        activity.showNotification('تم تحميل بيانات الطلاب بنجاح!', 'success');
+        return data;
+      } catch (error) {
+        activity.showNotification('خطأ في تحميل بيانات الطلاب', 'error');
+        return {};
+      }
+    }
+
+    // بدء اللعبة
+    async function startGame() {
+      const cls = document.getElementById("classSelect").value;
+      const mode = document.getElementById("modeSelect").value;
+      
+      if (!cls || !mode) {
+        activity.showModal('تنبيه', 'يرجى اختيار الصف والنمط', false);
+        return;
+      }
+
+      const data = await loadStudentData();
+      allStudents = data[cls] || [];
+      
+      if (allStudents.length === 0) {
+        activity.showModal('خطأ', 'لا توجد بيانات للصف المحدد', false);
+        return;
+      }
+
+      usedNames = [];
+      document.getElementById("revealedName").style.display = 'none';
+      
+      activity.playSound('start-timer.mp3');
+      showInstructions(mode);
+    }
+
+    // عرض التعليمات
+    function showInstructions(mode) {
+      const modalText = mode === 'manual'
+        ? "اختر طالبًا من القائمة وسيتم تمويه اسمه تلقائيًا. ثم ابدأ التحدي لتخمين هويته من خلال التلميحات!"
+        : "سيتم اختيار طالب عشوائي، وسيظهر الاسم في نافذة سرية للمعلم فقط لمدة 3 ثوانِ. انتبه جيداً!";
+      
+      document.getElementById("modalText").innerText = modalText;
+      document.getElementById("instructionModal").style.display = "block";
+      
+      activity.playSound('name-start.mp3');
+    }
+
+    // إغلاق نافذة التعليمات
+    function closeInstructionModal() {
+      document.getElementById("instructionModal").style.display = "none";
+      const mode = document.getElementById("modeSelect").value;
+
+      if (mode === 'random') {
+        startRandomMode();
+      } else {
+        startManualMode();
+      }
+    }
+
+    // النمط العشوائي
+    function startRandomMode() {
+      const remaining = allStudents.filter(n => !usedNames.includes(n));
+      
+      if (remaining.length === 0) {
+        activity.showModal('انتهت اللعبة', 'تم استخدام جميع أسماء الطلاب! ابدأ لعبة جديدة.', false);
+        return;
+      }
+
+      targetName = remaining[Math.floor(Math.random() * remaining.length)];
+      usedNames.push(targetName);
+      showSecretName(targetName);
+      
+      activity.showNotification(`تم اختيار طالب عشوائي (${remaining.length} متبقي)`, 'info');
+    }
+
+    // النمط اليدوي
+    function startManualMode() {
+      const container = document.getElementById("manualSelectContainer");
+      container.innerHTML = `
+        <h3><i class="fas fa-hand-pointer"></i> اختر الطالب المطلوب</h3>
+      `;
+      
+      const select = document.createElement("select");
+      select.id = "blurredName";
+      select.innerHTML = '<option value="">-- اختر الطالب --</option>' +
+        allStudents.map(n => `<option value="${n}">${n}</option>`).join('');
+      
+      select.onchange = () => {
+        targetName = select.value;
+        if (targetName) {
+          activity.playSound('select.mp3');
+          select.style.filter = 'blur(10px)';
+          select.style.pointerEvents = 'none';
+          document.getElementById("startHintBtn").style.display = 'block';
+          activity.showNotification(`تم اختيار ${targetName} - تم تمويه الاسم`, 'success');
+        }
+      };
+      
+      container.appendChild(select);
+    }
+
+    // عرض الاسم السري
+    function showSecretName(name) {
+      targetName = name;
+      activity.playSound('reveal.mp3');
+      
+      const popup = document.getElementById("secretNamePopup");
+      popup.innerHTML = `
+        <i class="fas fa-eye"></i><br>
+        <strong>اسم الطالب السري:</strong><br>
+        <span style="color: var(--accent-color); font-size: 1.8rem; font-weight: 700;">${name}</span>
+      `;
+      popup.style.display = 'block';
+      
+      // تشغيل الاحتفال
+      confetti({ 
+        particleCount: 120, 
+        spread: 100,
+        colors: ['#DC143C', '#228B22', '#FFD700']
+      });
+
+      setTimeout(() => {
+        popup.style.display = 'none';
+        document.getElementById("startHintBtn").style.display = 'block';
+        activity.showNotification('ابدأ التحدي الآن!', 'info');
+      }, 3000);
+    }
+
+    // عرض التلميح
+    function showHint() {
+      document.getElementById("hint").style.display = 'block';
+      document.getElementById("startHintBtn").style.display = 'none';
+      document.getElementById("revealedName").style.display = 'none';
+      document.getElementById("feedback").textContent = '';
+      document.getElementById("feedback").className = 'feedback';
+
+      // مجموعة التلميحات المحسنة
+      const hintList = [
+        "يشجّع ريال مدريد حتى أثناء الحصة! ⚽",
+        "يعشق برشلونة ويدافع عنها وكأنها عائلته! 🔴🔵", 
+        "دائمًا يجلس في الصف الأول وكأنه المعلم المساعد! 🎓",
+        "ضحكته تملأ الفصل وتصل للمدير أحيانًا! 😂",
+        "إذا سمع كلمة 'فسحة' يصبح أسرع من البرق! ⚡",
+        "يشرح الدرس وكأن لديه قناة تعليمية على يوتيوب! 🎥",
+        "ينسى كراسته كما ينسى كلمة المرور دائمًا! 📒❌",
+        "ينادي على أصدقائه من النافذة كأنه مؤذن الحي! 📣",
+        "يعرف النشيد الوطني كاملًا... والنسخة القديمة منه! ��🎶",
+        "يحب حصة الرياضة أكثر من الإجازة الأسبوعية! 🏃‍♂️🏀",
+        "يسأل سؤالًا كل دقيقتين وكأننا في برنامج مسابقات! ❓🎤",
+        "ينسى قلمه ولكن لا ينسى وجبته أبدًا! ✏️🍔",
+        "إذا رأى كرة ينسى المعلم والدرس والسبورة! 🏐😅",
+        "يملك أجمل ضحكة في الفصل... وممكن في المدرسة كلها! 😁",
+        "يعرف نتائج كل مباريات برشلونة حتى في كأس الملك! 📊",
+        "يفكر مليًّا قبل أن يتحدث، وكأن كل كلمة اختبار! 🤔",
+        "يفضل العمل بصمت... لكنه يُنجز أكثر من الجميع! 👤✨",
+        "دائمًا ما يطمح أن يكون قائد الفريق! 🧠💼",
+        "يحلل كل موقف وكأنه محقق شرطة! 🕵️‍♂️",
+        "لا يحب الفوضى… حتى في ترتيب الحقيبة! 🎒📏",
+        "ينجز واجباته دائمًا في اللحظات الأخيرة! ⌛🔥",
+        "لا يبدأ أي نشاط قبل أن يسأل: لماذا نفعل هذا؟ 🤷‍♂️",
+        "يساعد زملاءه حتى إن لم يُطلب منه ذلك! 🤝",
+        "يتحدث كثيرًا… وعندما يصمت، نعرف أنه مريض! 🗣️🤒",
+        "ينزعج من الضجيج، لكنه لا يمانع في الضحك عاليًا! 🙉😄",
+        "يحب التنظيم… يلوّن ملفاته وكأنها لوحة فنية! 🎨",
+        "يعبر عن مشاعره بكل وضوح… حتى عند الحصص الصعبة! 💬❤️",
+        "هادئ في البداية… لكنه نجم في الأنشطة! 🌟",
+        "يتحمّس لتجربة كل شيء جديد حتى قبل أن يفهمه! 🚀",
+        "يرى التفاصيل التي لا يلاحظها أحد… مثل القلم تحت الطاولة! 👀"
+      ];
+
+      const hint = hintList[Math.floor(Math.random() * hintList.length)];
+      document.getElementById("hint").innerHTML = `<i class="fas fa-lightbulb"></i> ${hint}`;
+
+      // إنشاء خيارات الطلاب
+      const others = allStudents.filter(n => n !== targetName);
+      let options = [...others.sort(() => 0.5 - Math.random()).slice(0, 19), targetName];
+      options = options.sort(() => 0.5 - Math.random());
+
+      const container = document.getElementById("options");
+      container.innerHTML = '';
+      
+      options.forEach(opt => {
+        const div = document.createElement("div");
+        div.className = "option";
+        div.innerHTML = `<i class="fas fa-user"></i> ${opt}`;
+        div.onclick = () => showAnswer(opt);
+        container.appendChild(div);
+      });
+
+      activity.playSound('name-start.mp3');
+    }
+
+    // عرض النتيجة
+    function showAnswer(choice) {
+      const feedback = document.getElementById("feedback");
+      
+      if (choice === targetName) {
+        // إجابة صحيحة
+        activity.playSound('win.mp3');
+        setTimeout(() => activity.playSound('clap.mp3'), 500);
+        
+        feedback.textContent = "🎉 إجابة صحيحة! أحسنت!";
+        feedback.className = 'feedback success';
+
+        // إبراز الاسم المكشوف
+        const revealed = document.getElementById("revealedName");
+        revealed.innerHTML = `<i class="fas fa-check-circle"></i> الطالب هو: ${targetName}`;
+        revealed.style.display = 'block';
+        revealed.classList.add("shake");
+        setTimeout(() => revealed.classList.remove("shake"), 700);
+
+        // إزالة التمويه في النمط اليدوي
+        const blurred = document.getElementById("blurredName");
+        if (blurred) {
+          blurred.style.filter = 'none';
+          blurred.style.pointerEvents = 'auto';
+          blurred.classList.add("shake");
+          setTimeout(() => blurred.classList.remove("shake"), 700);
+        }
+
+        // احتفال
+        confetti({ 
+          particleCount: 200, 
+          spread: 120, 
+          origin: { y: 0.6 },
+          colors: ['#DC143C', '#228B22', '#FFD700']
+        });
+
+        activity.showNotification('🏆 ممتاز! تم التعرف على الطالب بنجاح!', 'success');
+
+        setTimeout(() => {
+          resetGame();
+        }, 3000);
+
+      } else {
+        // إجابة خاطئة
+        activity.playSound('draw.mp3');
+        
+        feedback.textContent = "❌ خطأ! حاول مرة أخرى بتلميح جديد...";
+        feedback.className = 'feedback error';
+        
+        activity.showNotification('إجابة خاطئة، جرب تلميح آخر!', 'error');
+
+        setTimeout(() => {
+          feedback.textContent = "";
+          feedback.className = 'feedback';
+          showHint();
+        }, 2000);
+      }
+    }
+
+    // إعادة تعيين اللعبة
+    function resetGame() {
+      document.getElementById("feedback").textContent = "";
+      document.getElementById("feedback").className = 'feedback';
+      document.getElementById("hint").style.display = 'none';
+      document.getElementById("options").innerHTML = '';
+      document.getElementById("startHintBtn").style.display = 'block';
+      document.getElementById("revealedName").style.display = 'none';
+      
+      const manualContainer = document.getElementById("manualSelectContainer");
+      if (manualContainer.innerHTML.trim() !== '') {
+        manualContainer.innerHTML = '';
+      }
+    }
+
+    // تهيئة النشاط
+    window.onload = async () => {
+      activity.init();
+      
+      try {
+        const data = await loadStudentData();
+        const classSelect = document.getElementById("classSelect");
+        
+        for (const cls in data) {
+          const opt = document.createElement("option");
+          opt.value = cls;
+          opt.textContent = `الصف ${cls}`;
+          classSelect.appendChild(opt);
+        }
+        
+        // ربط الأحداث
+        document.getElementById('startGameBtn').onclick = startGame;
+        
+      } catch (error) {
+        activity.showNotification('خطأ في تهيئة النشاط', 'error');
+      }
+    };
+  </script>
+</body>
+</html>

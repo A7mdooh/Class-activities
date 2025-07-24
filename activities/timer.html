@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>المؤقت الصفي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Unified Styles -->
+  <link rel="stylesheet" href="../config/unified-styles-template.css">
+  
+  <!-- Activity-specific styles -->
+  <style>
+    /* Timer-specific customizations */
+    .timer-container {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      margin: var(--space-2xl) auto;
+    }
+    
+    .timer-circle {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .timer-circle svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+    
+    .timer-circle svg circle {
+      fill: none;
+      stroke-width: 12;
+      stroke-linecap: round;
+    }
+    
+    .timer-bg {
+      stroke: var(--medium-gray);
+    }
+    
+    .timer-progress {
+      stroke: var(--primary-color);
+      stroke-dasharray: 942; /* 2π * 150 */
+      stroke-dashoffset: 942;
+      transition: stroke-dashoffset 1s linear;
+    }
+    
+    .timer-progress.warning {
+      stroke: var(--warning-color);
+      animation: pulse-warning 1s infinite;
+    }
+    
+    .timer-progress.danger {
+      stroke: var(--danger-color);
+      animation: pulse-danger 0.5s infinite;
+    }
+    
+    @keyframes pulse-warning {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    
+    @keyframes pulse-danger {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    .timer-time {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: var(--font-size-4xl);
+      font-weight: 700;
+      color: var(--primary-color);
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      z-index: 1;
+    }
+    
+    .timer-time.warning {
+      color: var(--warning-color);
+      animation: bounce-warning 1s infinite;
+    }
+    
+    .timer-time.danger {
+      color: var(--danger-color);
+      animation: bounce-danger 0.5s infinite;
+    }
+    
+    @keyframes bounce-warning {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.1); }
+    }
+    
+    @keyframes bounce-danger {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.2); }
+    }
+    
+    .time-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+      justify-content: center;
+      margin: var(--space-xl) 0;
+    }
+    
+    .timer-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+      justify-content: center;
+      margin: var(--space-lg) 0;
+    }
+    
+    .preset-times {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: var(--space-md);
+      margin: var(--space-lg) 0;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .preset-btn {
+      background: linear-gradient(135deg, var(--secondary-color), var(--secondary-light));
+      color: var(--text-light);
+      border: none;
+      padding: var(--space-md);
+      border-radius: var(--radius-lg);
+      font-family: var(--font-family);
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      box-shadow: var(--shadow-light);
+    }
+    
+    .preset-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-medium);
+      background: linear-gradient(135deg, var(--secondary-dark), var(--secondary-color));
+    }
+    
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      margin: var(--space-lg) 0;
+      padding: var(--space-md);
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 2px solid var(--medium-gray);
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .status-indicator.running {
+      border-color: var(--success-color);
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), var(--white));
+    }
+    
+    .status-indicator.paused {
+      border-color: var(--warning-color);
+      background: linear-gradient(135deg, rgba(255, 152, 0, 0.1), var(--white));
+    }
+    
+    .status-indicator.finished {
+      border-color: var(--danger-color);
+      background: linear-gradient(135deg, rgba(244, 67, 54, 0.1), var(--white));
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .timer-container {
+        width: 250px;
+        height: 250px;
+      }
+      
+      .timer-time {
+        font-size: var(--font-size-3xl);
+      }
+      
+      .preset-times {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 300px;
+      }
+      
+      .time-controls,
+      .timer-controls {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .time-controls .btn,
+      .timer-controls .btn {
+        width: 100%;
+        max-width: 200px;
+      }
+    }
+  </style>
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    
+    .controls button:active {
+      transform: translateY(1px);
+    }
+    
+    .settings select {
+      font-size: 1.2rem;
+      padding: 12px 20px;
+      background-color: white;
+      color: var(--text-color);
+      border: 2px solid #ddd;
+    }
+    
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 1;
+      transition: opacity 1s ease;
+      display: none;
+      z-index: 1000;
+    }
+    
+    .modal.fade-out {
+      opacity: 0;
+    }
+    
+    .modal-content {
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      text-align: center;
+      font-size: 2.5rem;
+      color: var(--primary-color);
+      box-shadow: var(--shadow);
+    }
+    
+    label {
+      font-size: 1.3rem;
+      margin: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+        margin: 5rem 0 1.5rem;
+      }
+      
+      .control-btn {
+        width: 42px;
+        height: 42px;
+        top: 15px;
+        font-size: 1.2rem;
+      }
+      
+      #muteBtn {
+        right: 15px;
+      }
+      
+      #fullscreenBtn {
+        left: 15px;
+      }
+      
+      #progress-container {
+        width: 250px;
+        height: 250px;
+      }
+      
+      #timer {
+        font-size: 2.5rem;
+      }
+      
+      .controls button {
+        font-size: 1.3rem;
+        padding: 12px 20px;
+        min-width: 140px;
+      }
+      
+      .modal-content {
+        font-size: 2rem;
+        padding: 30px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.8rem;
+        margin: 4rem 0 1rem;
+      }
+      
+      #progress-container {
+        width: 220px;
+        height: 220px;
+      }
+      
+      #timer {
+        font-size: 2rem;
+      }
+      
+      .controls {
+        gap: 10px;
+      }
+      
+      .controls button {
+        width: 100%;
+        max-width: 200px;
+      }
+      
+      .settings {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Skip link for accessibility -->
+  <a href="#main-content" class="sr-only">تخطي إلى المحتوى الرئيسي</a>
+  
+  <!-- Audio elements -->
+  <audio id="startSound" src="../assets/media/sounds/start-timer.mp3"></audio>
+  <audio id="endSound" src="../assets/media/sounds/end-timer.mp3"></audio>
+  <audio id="clickSound" src="../assets/media/sounds/Click.mp3"></audio>
+  <audio id="tickSound" src="../assets/media/sounds/countdown-beep.mp3"></audio>
+
+  <!-- Main container -->
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <h1>⏱️ المؤقت الصفي</h1>
+      <p>اختر نوع المؤقت والمدة المطلوبة</p>
+    </header>
+
+    <!-- Main content -->
+    <main id="main-content">
+      <!-- Timer settings -->
+      <div class="card">
+        <h3>إعدادات المؤقت</h3>
+        <div class="grid grid-2">
+          <div class="form-group">
+            <label class="form-label">نوع المؤقت:</label>
+            <select id="mode" class="form-select">
+              <option value="countdown">تنازلي ⏱️</option>
+              <option value="countup">تصاعدي ⏲️</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">المدة:</label>
+            <select id="time" class="form-select">
+              <option value="60">1 دقيقة</option>
+              <option value="120">2 دقيقة</option>
+              <option value="180">3 دقائق</option>
+              <option value="300">5 دقائق</option>
+              <option value="600">10 دقائق</option>
+              <option value="900">15 دقيقة</option>
+              <option value="1200">20 دقيقة</option>
+              <option value="1800">30 دقيقة</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- Preset quick times -->
+        <div class="preset-times">
+          <button class="preset-btn" data-time="30">30 ثانية</button>
+          <button class="preset-btn" data-time="60">1 دقيقة</button>
+          <button class="preset-btn" data-time="180">3 دقائق</button>
+          <button class="preset-btn" data-time="300">5 دقائق</button>
+          <button class="preset-btn" data-time="600">10 دقائق</button>
+          <button class="preset-btn" data-time="900">15 دقيقة</button>
+        </div>
+      </div>
+
+      <!-- Timer display -->
+      <div class="timer-container">
+        <div class="timer-circle">
+          <svg viewBox="0 0 320 320">
+            <circle class="timer-bg" cx="160" cy="160" r="150" />
+            <circle class="timer-progress" id="progressCircle" cx="160" cy="160" r="150" />
+          </svg>
+          <div class="timer-time" id="timerDisplay">00:00</div>
+        </div>
+      </div>
+
+      <!-- Status indicator -->
+      <div class="status-indicator" id="statusIndicator">
+        <span id="statusText">جاهز للبدء</span>
+        <span id="statusIcon">⏸️</span>
+      </div>
+
+      <!-- Timer controls -->
+      <div class="timer-controls">
+        <button id="startBtn" class="btn btn-primary btn-large">▶️ ابدأ</button>
+        <button id="pauseResumeBtn" class="btn btn-secondary btn-large" disabled>⏸️ إيقاف</button>
+        <button id="resetBtn" class="btn btn-outline btn-large">🔄 إعادة</button>
+      </div>
+    </main>
+  </div>
+
+  <!-- Completion Modal -->
+  <div class="modal-overlay" id="completionModal" style="display: none;">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>⏰ انتهى الوقت!</h3>
+      </div>
+      <div class="text-center">
+        <p class="text-lg">تم انتهاء المؤقت بنجاح</p>
+        <button class="btn btn-primary" onclick="closeCompletionModal()">حسناً</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../config/unified-scripts-template.js"></script>
+  <script>
+    // Timer Activity - Enhanced with Unified System
+    
+    // Activity-specific variables
+    let timerInterval = null;
+    let duration = 300; // Default 5 minutes
+    let timeLeft = 0;
+    let elapsed = 0;
+    let mode = 'countdown';
+    let isRunning = false;
+    let isPaused = false;
+    let tickInterval = null;
+
+    // Initialize the activity
+    document.addEventListener('DOMContentLoaded', function() {
+      ActivityUtils.init('المؤقت الصفي');
+      setupEventListeners();
+      setupPresetButtons();
+      resetTimer();
+    });
+
+    // Setup event listeners
+    function setupEventListeners() {
+      const modeSelect = document.getElementById('mode');
+      const timeSelect = document.getElementById('time');
+      const startBtn = document.getElementById('startBtn');
+      const pauseBtn = document.getElementById('pauseResumeBtn');
+      const resetBtn = document.getElementById('resetBtn');
+      
+      modeSelect.addEventListener('change', handleModeChange);
+      timeSelect.addEventListener('change', handleTimeChange);
+      startBtn.addEventListener('click', startTimer);
+      pauseBtn.addEventListener('click', togglePause);
+      resetBtn.addEventListener('click', resetTimer);
+    }
+    
+    // Setup preset time buttons
+    function setupPresetButtons() {
+      const presetButtons = document.querySelectorAll('.preset-btn');
+      presetButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const time = parseInt(e.target.dataset.time);
+          setTime(time);
+          ActivityUtils.playSound('click');
+          ActivityUtils.showNotification(`تم تعيين المؤقت لـ ${formatTime(time)}`, 'info');
+        });
+      });
+    }
+
+    // Handle mode change
+    function handleModeChange() {
+      const modeSelect = document.getElementById('mode');
+      mode = modeSelect.value;
+      ActivityUtils.playSound('click');
+      resetTimer();
+      
+      const statusText = mode === 'countdown' ? 'مؤقت تنازلي' : 'مؤقت تصاعدي';
+      ActivityUtils.showNotification(`تم تغيير النمط إلى: ${statusText}`, 'info');
+    }
+
+    // Handle time selection change
+    function handleTimeChange() {
+      const timeSelect = document.getElementById('time');
+      duration = parseInt(timeSelect.value);
+      ActivityUtils.playSound('click');
+      resetTimer();
+      
+      ActivityUtils.showNotification(`تم تعيين المدة: ${formatTime(duration)}`, 'info');
+    }
+    
+    // Set custom time
+    function setTime(seconds) {
+      duration = seconds;
+      const timeSelect = document.getElementById('time');
+      
+      // Try to find matching option
+      const option = timeSelect.querySelector(`option[value="${seconds}"]`);
+      if (option) {
+        timeSelect.value = seconds;
+      }
+      
+      resetTimer();
+    }
+
+    // Start the timer
+    function startTimer() {
+      if (isRunning) return;
+      
+      isRunning = true;
+      isPaused = false;
+      
+      updateButtonStates();
+      updateStatusIndicator('running', 'المؤقت يعمل', '▶️');
+      
+      ActivityUtils.playSound('click');
+      ActivityUtils.showNotification('تم بدء المؤقت', 'success');
+      
+      timerInterval = setInterval(() => {
+        updateTimer();
+      }, 1000);
+      
+      // Start tick sound for countdown in last 10 seconds
+      if (mode === 'countdown') {
+        startTickSound();
+      }
+    }
+
+    // Toggle pause/resume
+    function togglePause() {
+      if (!isRunning) return;
+      
+      ActivityUtils.playSound('click');
+      
+      if (isPaused) {
+        // Resume
+        isPaused = false;
+        updateStatusIndicator('running', 'المؤقت يعمل', '▶️');
+        ActivityUtils.showNotification('تم استئناف المؤقت', 'info');
+        
+        timerInterval = setInterval(() => {
+          updateTimer();
+        }, 1000);
+        
+        if (mode === 'countdown') {
+          startTickSound();
+        }
+      } else {
+        // Pause
+        isPaused = true;
+        clearInterval(timerInterval);
+        clearInterval(tickInterval);
+        
+        updateStatusIndicator('paused', 'المؤقت متوقف مؤقتاً', '⏸️');
+        ActivityUtils.showNotification('تم إيقاف المؤقت مؤقتاً', 'warning');
+      }
+      
+      updateButtonStates();
+    }
+
+    // Reset the timer
+    function resetTimer() {
+      clearInterval(timerInterval);
+      clearInterval(tickInterval);
+      
+      isRunning = false;
+      isPaused = false;
+      timeLeft = duration;
+      elapsed = 0;
+      
+      updateDisplay();
+      updateButtonStates();
+      updateStatusIndicator('', 'جاهز للبدء', '⏸️');
+      
+      if (isRunning || isPaused) {
+        ActivityUtils.playSound('click');
+        ActivityUtils.showNotification('تم إعادة تعيين المؤقت', 'info');
+      }
+    }
+
+    // Update timer values
+    function updateTimer() {
+      if (mode === 'countdown') {
+        timeLeft--;
+        if (timeLeft <= 0) {
+          completeTimer();
+          return;
+        }
+      } else {
+        elapsed++;
+        if (elapsed >= duration) {
+          completeTimer();
+          return;
+        }
+      }
+      
+      updateDisplay();
+      
+      // Check for warning state (last 30 seconds for countdown)
+      if (mode === 'countdown' && timeLeft <= 30) {
+        updateTimerState('warning');
+      }
+      
+      // Check for danger state (last 10 seconds for countdown)
+      if (mode === 'countdown' && timeLeft <= 10) {
+        updateTimerState('danger');
+      }
+    }
+
+    // Complete the timer
+    function completeTimer() {
+      clearInterval(timerInterval);
+      clearInterval(tickInterval);
+      
+      isRunning = false;
+      isPaused = false;
+      
+      updateDisplay();
+      updateButtonStates();
+      updateStatusIndicator('finished', 'انتهى الوقت!', '⏰');
+      
+      // Play completion sound and celebrate
+      ActivityUtils.playSound('success');
+      ActivityUtils.celebrate();
+      
+      // Show completion modal
+      showCompletionModal();
+      
+      ActivityUtils.showNotification('انتهى الوقت! تم إكمال المؤقت بنجاح', 'success', 5000);
+    }
+
+    // Update the display
+    function updateDisplay() {
+      const timerDisplay = document.getElementById('timerDisplay');
+      const progressCircle = document.getElementById('progressCircle');
+      
+      const displayTime = mode === 'countdown' ? timeLeft : elapsed;
+      timerDisplay.textContent = formatTime(displayTime);
+      
+      // Update progress circle
+      const progress = mode === 'countdown' ? 
+        (duration - timeLeft) / duration : 
+        elapsed / duration;
+      
+      const circumference = 2 * Math.PI * 150; // radius = 150
+      const offset = circumference * (1 - progress);
+      
+      progressCircle.style.strokeDasharray = circumference;
+      progressCircle.style.strokeDashoffset = offset;
+    }
+
+    // Update timer visual state
+    function updateTimerState(state) {
+      const timerDisplay = document.getElementById('timerDisplay');
+      const progressCircle = document.getElementById('progressCircle');
+      
+      // Remove all state classes
+      timerDisplay.classList.remove('warning', 'danger');
+      progressCircle.classList.remove('warning', 'danger');
+      
+      if (state) {
+        timerDisplay.classList.add(state);
+        progressCircle.classList.add(state);
+      }
+    }
+
+    // Update button states
+    function updateButtonStates() {
+      const startBtn = document.getElementById('startBtn');
+      const pauseBtn = document.getElementById('pauseResumeBtn');
+      const resetBtn = document.getElementById('resetBtn');
+      
+      if (isRunning && !isPaused) {
+        startBtn.disabled = true;
+        pauseBtn.disabled = false;
+        pauseBtn.textContent = '⏸️ إيقاف';
+        pauseBtn.className = 'btn btn-warning btn-large';
+      } else if (isPaused) {
+        startBtn.disabled = true;
+        pauseBtn.disabled = false;
+        pauseBtn.textContent = '▶️ استئناف';
+        pauseBtn.className = 'btn btn-success btn-large';
+      } else {
+        startBtn.disabled = false;
+        pauseBtn.disabled = true;
+        pauseBtn.textContent = '⏸️ إيقاف';
+        pauseBtn.className = 'btn btn-secondary btn-large';
+      }
+    }
+
+    // Update status indicator
+    function updateStatusIndicator(state, text, icon) {
+      const statusIndicator = document.getElementById('statusIndicator');
+      const statusText = document.getElementById('statusText');
+      const statusIcon = document.getElementById('statusIcon');
+      
+      // Remove all state classes
+      statusIndicator.classList.remove('running', 'paused', 'finished');
+      
+      if (state) {
+        statusIndicator.classList.add(state);
+      }
+      
+      statusText.textContent = text;
+      statusIcon.textContent = icon;
+    }
+
+    // Start tick sound for countdown warnings
+    function startTickSound() {
+      clearInterval(tickInterval);
+      
+      if (mode === 'countdown') {
+        tickInterval = setInterval(() => {
+          if (timeLeft <= 10 && timeLeft > 0 && isRunning && !isPaused) {
+            ActivityUtils.playSound('timer');
+          }
+        }, 1000);
+      }
+    }
+
+    // Format time display
+    function formatTime(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    // Show completion modal
+    function showCompletionModal() {
+      const modal = document.getElementById('completionModal');
+      modal.style.display = 'flex';
+      
+      // Auto close after 5 seconds
+      setTimeout(() => {
+        closeCompletionModal();
+      }, 5000);
+    }
+
+    // Close completion modal
+    function closeCompletionModal() {
+      const modal = document.getElementById('completionModal');
+      modal.style.display = 'none';
+      ActivityUtils.playSound('click');
+    }
+
+    // Make function globally available for HTML onclick
+    window.closeCompletionModal = closeCompletionModal;
+
+    // Handle activity pause/resume
+    ActivityUtils.pauseActivity = function() {
+      if (isRunning && !isPaused) {
+        togglePause();
+        ActivityUtils.showNotification('تم إيقاف المؤقت بسبب تغيير الصفحة', 'warning');
+      }
+    };
+
+    ActivityUtils.resumeActivity = function() {
+      ActivityUtils.showNotification('تم العودة للمؤقت', 'info');
+    };
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+      clearInterval(timerInterval);
+      clearInterval(tickInterval);
+    });
+  </script>
+</body>
+</html>

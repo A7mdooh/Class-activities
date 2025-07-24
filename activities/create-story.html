@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>كوّن قصة - نشاط إنشاء القصص التفاعلية</title>
+  
+  <!-- الخطوط والأيقونات -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <!-- المكتبات الخارجية -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  
+  <!-- الأنماط والسكريبت الموحد -->
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script src="../assets/css/style.css" type="text/javascript"></script>
+</head>
+<body>
+  <!-- أزرار التحكم الموحدة -->
+  <div class="control-buttons-container">
+    <button class="control-btn" id="backBtn" title="العودة للصفحة الرئيسية">
+      <i class="fas fa-home"></i>
+    </button>
+    <button class="control-btn" id="muteBtn" title="كتم الصوت">
+      <i class="fas fa-volume-up"></i>
+    </button>
+    <button class="control-btn" id="instructionsBtn" title="تعليمات النشاط">
+      <i class="fas fa-question-circle"></i>
+    </button>
+    <button class="control-btn" id="fullscreenBtn" title="ملء الشاشة">
+      <i class="fas fa-expand"></i>
+    </button>
+  </div>
+
+  <!-- نافذة تعليمات النشاط -->
+  <div class="instructions-overlay" id="instructionsModal">
+    <div class="instructions-content">
+      <button class="close-btn" onclick="closeInstructions()" title="إغلاق">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="instructions-title">
+        <i class="fas fa-book-open"></i> تعليمات نشاط كوّن قصة
+      </div>
+      <ul class="instructions-list">
+        <li>اختر الصف الدراسي من القائمة المنسدلة.</li>
+        <li>حدد نوع القصة: فردية أو جماعية، عشوائية أو انتقائية.</li>
+        <li>في الوضع الانتقائي، اختر الطلاب المشاركين من البطاقات.</li>
+        <li>اضغط "ابدأ" أو "بدء السرد" لتشغيل المؤقت وبدء النشاط.</li>
+        <li>كل طالب يُكمل جزءاً من القصة خلال الوقت المحدد.</li>
+        <li>استخدم زر "التالي" للانتقال للطالب التالي في الوضع الجماعي.</li>
+        <li>اضغط "إنهاء" عند اكتمال القصة لإظهار النتائج.</li>
+        <li>ستظهر نافذة شكر تحتوي على أسماء جميع المشاركين.</li>
+      </ul>
+      <button class="btn btn-primary" onclick="closeInstructions()">
+        <i class="fas fa-check"></i> فهمت
+      </button>
+    </div>
+  </div>
+
+  <!-- نافذة النتائج النهائية -->
+  <div class="victory-modal" id="thankYouModal">
+    <div class="victory-content">
+      <button class="close-btn" id="closeModalBtn" title="إغلاق">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="victory-fireworks">
+        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
+      </div>
+      <div class="victory-trophy">
+        <i class="fas fa-trophy"></i>
+      </div>
+      <div class="victory-team">شكراً لمشاركتكم الرائعة!</div>
+      <div class="victory-names">المشاركون في القصة:</div>
+      <div class="honor-board-section">
+        <ul class="honor-list" id="participantList"></ul>
+      </div>
+      <button class="btn btn-primary" id="modalBackBtn">
+        <i class="fas fa-redo"></i> نشاط جديد
+      </button>
+    </div>
+  </div>
+
+  <!-- المحتوى الرئيسي -->
+  <div class="main-container">
+    <div class="page-header">
+      <div class="header-content">
+        <div class="header-icon">
+          <i class="fas fa-book-open"></i>
+        </div>
+        <div class="header-text">
+          <h1>نشاط كوّن قصة</h1>
+          <p>اختر الصف ونوع القصة لبدء التفاعل الإبداعي</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- نموذج الإعدادات -->
+    <div class="game-settings-card" id="settingsCard">
+      <div class="settings-header">
+        <i class="fas fa-cog"></i>
+        <h3>إعدادات النشاط</h3>
+      </div>
+      <form class="story-settings-form" id="storySettingsForm">
+        <div class="form-group">
+          <label for="classSelect">
+            <i class="fas fa-graduation-cap"></i> الصف الدراسي
+          </label>
+          <select id="classSelect" class="form-input" required>
+            <option value="">-- اختر الصف --</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="modeSelect">
+            <i class="fas fa-users"></i> نوع القصة
+          </label>
+          <select id="modeSelect" class="form-input" required>
+            <option value="">-- اختر نوع القصة --</option>
+            <option value="single">فردية عشوائية</option>
+            <option value="group">جماعية عشوائية</option>
+            <option value="select-single">فردية انتقائية</option>
+            <option value="select-group">جماعية انتقائية</option>
+          </select>
+        </div>
+        
+        <div class="button-group">
+          <button type="submit" class="btn btn-primary" id="startBtn">
+            <i class="fas fa-play"></i> ابدأ النشاط
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- منطقة اختيار الطلاب -->
+    <div class="students-selection-area" id="studentSelection"></div>
+
+    <!-- منطقة النشاط -->
+    <div class="story-activity-area" id="storyContainer">
+      <div class="current-student-card">
+        <div class="student-name-display" id="studentName"></div>
+        <div class="timer-container">
+          <canvas id="timerCanvas" width="150" height="150"></canvas>
+          <div class="timer-label">مؤقت السرد</div>
+        </div>
+        <div class="story-controls">
+          <button class="btn btn-success" id="nextBtn" style="display:none">
+            <i class="fas fa-arrow-left"></i> التالي
+          </button>
+          <button class="btn btn-danger" id="finishBtn">
+            <i class="fas fa-stop"></i> إنهاء القصة
+          </button>
+        </div>
+        <div class="celebration-message" id="celebration">
+          <i class="fas fa-star"></i> أحسنت! <i class="fas fa-star"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    // نظام الألوان العماني المتقدم
+    const OmaniColors = {
+      red: '#DC143C',
+      green: '#228B22', 
+      gold: '#FFD700',
+      white: '#F8F9FA',
+      black: '#1A1A1A'
+    };
+
+    let ActivityManager;
+    
+    // تهيئة النشاط
+    document.addEventListener('DOMContentLoaded', function() {
+      ActivityManager = new ActivityUtils({
+        activityName: 'create-story',
+        primaryColor: OmaniColors.red,
+        secondaryColor: OmaniColors.green,
+        sounds: {
+          click: '../assets/media/sounds/Click.mp3',
+          success: '../assets/media/sounds/name-start.mp3',
+          celebration: '../assets/media/sounds/clap.mp3',
+          win: '../assets/media/sounds/win.mp3'
+        }
+      });
+
+      initializeStoryActivity();
+    });
+
+    // المتغيرات العامة للنشاط
+    let students = [];
+    let currentStudentList = [];
+    let usedStudents = [];
+    let selectedManualStudents = [];
+    let timerInterval;
+    let secondsPassed = 0;
+    let currentMode = '';
+
+    // تحميل بيانات الطلاب
+    async function loadStudentData() {
+      try {
+        const response = await fetch('../data/studentData.json');
+        const data = await response.json();
+        students = data.students || [];
+        populateClassSelect();
+      } catch (error) {
+        console.error('خطأ في تحميل بيانات الطلاب:', error);
+        ActivityManager.showNotification('فشل في تحميل بيانات الطلاب', 'error');
+      }
+    }
+
+    // ملء قائمة الصفوف
+    function populateClassSelect() {
+      const classSelect = document.getElementById('classSelect');
+      const classes = [...new Set(students.map(s => s.class))];
+      
+      classSelect.innerHTML = '<option value="">-- اختر الصف --</option>';
+      classes.forEach(className => {
+        const option = document.createElement('option');
+        option.value = className;
+        option.textContent = className;
+        classSelect.appendChild(option);
+      });
+    }
+
+    // معالجة تغيير نوع القصة
+    function handleModeChange() {
+      ActivityManager.playSound('click');
+      const container = document.getElementById('studentSelection');
+      container.innerHTML = '';
+      container.style.display = 'none';
+    }
+
+    // عرض منطقة اختيار الطلاب
+    function showStudentSelection(className, mode) {
+      const container = document.getElementById('studentSelection');
+      const classStudents = students.filter(s => s.class === className);
+      
+      container.innerHTML = '';
+      container.style.display = 'block';
+      
+      // إنشاء عنوان المنطقة
+      const header = document.createElement('div');
+      header.className = 'students-selection-header';
+      header.innerHTML = `
+        <h3><i class="fas fa-users"></i> اختر الطلاب المشاركين</h3>
+        <p>انقر على الطلاب لاختيارهم ${mode === 'select-single' ? '(طالب واحد فقط)' : '(عدة طلاب)'}</p>
+      `;
+      container.appendChild(header);
+      
+      // إنشاء بطاقات الطلاب
+      const cardsContainer = document.createElement('div');
+      cardsContainer.className = 'student-cards-grid';
+      
+      classStudents.forEach(student => {
+        const card = document.createElement('div');
+        card.className = 'student-selection-card';
+        card.innerHTML = `
+          <div class="student-avatar">
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="student-name">${student.name}</div>
+        `;
+        
+        card.addEventListener('click', () => {
+          ActivityManager.playSound('click');
+          
+          if (mode === 'select-single') {
+            // إزالة التحديد من جميع الطلاب
+            document.querySelectorAll('.student-selection-card').forEach(c => 
+              c.classList.remove('selected'));
+            selectedManualStudents = [student.name];
+            card.classList.add('selected');
+          } else {
+            // وضع متعدد الطلاب
+            if (selectedManualStudents.includes(student.name)) {
+              selectedManualStudents = selectedManualStudents.filter(n => n !== student.name);
+              card.classList.remove('selected');
+            } else {
+              selectedManualStudents.push(student.name);
+              card.classList.add('selected');
+            }
+          }
+        });
+        
+        cardsContainer.appendChild(card);
+      });
+      
+      container.appendChild(cardsContainer);
+      
+      // زر بدء السرد
+      const startButton = document.createElement('button');
+      startButton.className = 'btn btn-primary start-story-btn';
+      startButton.innerHTML = '<i class="fas fa-play"></i> بدء السرد';
+      startButton.addEventListener('click', () => {
+        if (selectedManualStudents.length === 0) {
+          ActivityManager.showNotification('يرجى اختيار طالب واحد على الأقل', 'warning');
+          return;
+        }
+        
+        currentStudentList = [...selectedManualStudents];
+        usedStudents = [];
+        currentMode = mode;
+        startStoryActivity();
+      });
+      
+      container.appendChild(startButton);
+    }
+
+    // بدء النشاط
+    function startStoryActivity() {
+      // إخفاء الإعدادات وإظهار منطقة النشاط
+      document.getElementById('settingsCard').style.display = 'none';
+      document.getElementById('studentSelection').style.display = 'none';
+      document.getElementById('storyContainer').style.display = 'block';
+      
+      // إظهار زر التالي في الوضع الجماعي
+      const nextBtn = document.getElementById('nextBtn');
+      nextBtn.style.display = currentMode.includes('group') ? 'inline-block' : 'none';
+      
+      // بدء مع الطالب الأول
+      nextStudent();
+      startTimer();
+      
+      ActivityManager.playSound('success');
+      ActivityManager.showNotification('بدأ النشاط! حان وقت السرد', 'success');
+    }
+
+    // الانتقال للطالب التالي
+    function nextStudent() {
+      if (currentStudentList.length === 0) {
+        ActivityManager.showNotification('انتهى جميع الطلاب!', 'info');
+        return;
+      }
+      
+      const randomIndex = Math.floor(Math.random() * currentStudentList.length);
+      const selectedStudent = currentStudentList.splice(randomIndex, 1)[0];
+      usedStudents.push(selectedStudent);
+      
+      document.getElementById('studentName').innerHTML = `
+        <i class="fas fa-user-edit"></i> ابدأ السرد يا ${selectedStudent}
+      `;
+      
+      ActivityManager.playSound('click');
+    }
+
+    // بدء المؤقت
+    function startTimer() {
+      const canvas = document.getElementById('timerCanvas');
+      const ctx = canvas.getContext('2d');
+      secondsPassed = 0;
+
+      function drawTimer() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // رسم الدائرة الخارجية
+        ctx.beginPath();
+        ctx.arc(75, 75, 65, 0, 2 * Math.PI);
+        ctx.strokeStyle = '#E0E0E0';
+        ctx.lineWidth = 10;
+        ctx.stroke();
+
+        // رسم التقدم
+        const progress = (secondsPassed % 300) / 300; // كل 5 دقائق
+        ctx.beginPath();
+        ctx.arc(75, 75, 65, -Math.PI / 2, (2 * Math.PI * progress) - Math.PI / 2);
+        ctx.strokeStyle = OmaniColors.red;
+        ctx.lineWidth = 10;
+        ctx.stroke();
+
+        // عرض الوقت
+        ctx.fillStyle = OmaniColors.black;
+        ctx.font = 'bold 18px Cairo';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        const minutes = Math.floor(secondsPassed / 60);
+        const seconds = secondsPassed % 60;
+        const timeText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        ctx.fillText(timeText, 75, 75);
+      }
+
+      drawTimer();
+      timerInterval = setInterval(() => {
+        secondsPassed++;
+        drawTimer();
+      }, 1000);
+    }
+
+    // إيقاف المؤقت
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }
+
+    // إنهاء القصة
+    function finishStory() {
+      stopTimer();
+      
+      // إظهار رسالة الاحتفال
+      const celebration = document.getElementById('celebration');
+      celebration.style.display = 'block';
+      celebration.style.opacity = '1';
+      
+      // تأثيرات الاحتفال
+      ActivityManager.playSound('celebration');
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: [OmaniColors.red, OmaniColors.green, OmaniColors.gold]
+      });
+      
+      // إخفاء الاحتفال وإظهار النتائج
+      setTimeout(() => {
+        celebration.style.opacity = '0';
+        setTimeout(() => {
+          celebration.style.display = 'none';
+          showFinalResults();
+        }, 500);
+      }, 3000);
+    }
+
+    // إظهار النتائج النهائية
+    function showFinalResults() {
+      const modal = document.getElementById('thankYouModal');
+      const participantList = document.getElementById('participantList');
+      
+      // تنظيف القائمة
+      participantList.innerHTML = '';
+      
+      // إضافة المشاركين
+      usedStudents.forEach((name, index) => {
+        const li = document.createElement('li');
+        li.className = 'honor-item';
+        li.innerHTML = `
+          <span class="honor-rank">${index + 1}</span>
+          <span class="honor-team">${name}</span>
+          <span class="honor-names">مشارك في القصة</span>
+        `;
+        participantList.appendChild(li);
+      });
+      
+      modal.style.display = 'flex';
+    }
+
+    // إعادة تعيين النشاط
+    function resetStoryActivity() {
+      stopTimer();
+      
+      currentStudentList = [];
+      usedStudents = [];
+      selectedManualStudents = [];
+      secondsPassed = 0;
+      currentMode = '';
+      
+      // إعادة عرض الإعدادات
+      document.getElementById('settingsCard').style.display = 'block';
+      document.getElementById('studentSelection').style.display = 'none';
+      document.getElementById('storyContainer').style.display = 'none';
+      document.getElementById('thankYouModal').style.display = 'none';
+      
+      // إعادة تعيين النموذج
+      document.getElementById('storySettingsForm').reset();
+      document.getElementById('studentSelection').innerHTML = '';
+      
+      ActivityManager.showNotification('تم إعادة تعيين النشاط', 'success');
+    }
+
+    // تهيئة النشاط
+    function initializeStoryActivity() {
+      loadStudentData();
+      
+      // معالج أزرار التحكم
+      document.getElementById('backBtn').addEventListener('click', () => {
+        ActivityManager.goBack();
+      });
+      
+      document.getElementById('muteBtn').addEventListener('click', () => {
+        ActivityManager.toggleMute();
+        const icon = document.querySelector('#muteBtn i');
+        icon.className = ActivityManager.isMuted() ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+      });
+      
+      document.getElementById('instructionsBtn').addEventListener('click', () => {
+        document.getElementById('instructionsModal').style.display = 'flex';
+      });
+      
+      document.getElementById('fullscreenBtn').addEventListener('click', () => {
+        ActivityManager.toggleFullscreen();
+      });
+      
+      // معالج نموذج الإعدادات
+      document.getElementById('storySettingsForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const className = document.getElementById('classSelect').value;
+        const mode = document.getElementById('modeSelect').value;
+        
+        if (!className || !mode) {
+          ActivityManager.showNotification('يرجى اختيار الصف ونوع القصة', 'warning');
+          return;
+        }
+        
+        const classStudents = students.filter(s => s.class === className);
+        currentMode = mode;
+        
+        if (mode.includes('select')) {
+          // الوضع الانتقائي
+          selectedManualStudents = [];
+          showStudentSelection(className, mode);
+        } else {
+          // الوضع العشوائي
+          currentStudentList = classStudents.map(s => s.name);
+          usedStudents = [];
+          startStoryActivity();
+        }
+      });
+      
+      // معالج تغيير نوع القصة
+      document.getElementById('modeSelect').addEventListener('change', handleModeChange);
+      
+      // معالج أزرار النشاط
+      document.getElementById('nextBtn').addEventListener('click', nextStudent);
+      document.getElementById('finishBtn').addEventListener('click', finishStory);
+      
+      // معالج أزرار النتائج
+      document.getElementById('closeModalBtn').addEventListener('click', () => {
+        document.getElementById('thankYouModal').style.display = 'none';
+      });
+      
+      document.getElementById('modalBackBtn').addEventListener('click', resetStoryActivity);
+    }
+
+    // إغلاق نافذة التعليمات
+    function closeInstructions() {
+      document.getElementById('instructionsModal').style.display = 'none';
+    }
+
+    // إضافة مستمعي الأحداث للوحة المفاتيح
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeInstructions();
+        document.getElementById('thankYouModal').style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

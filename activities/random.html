@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>اختيار اسم عشوائي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Unified Styles -->
+  <link rel="stylesheet" href="../config/unified-styles-template.css">
+  
+  <!-- Activity-specific styles -->
+  <style>
+    /* Activity-specific customizations */
+    .random-display {
+      background: linear-gradient(135deg, var(--white), var(--light-gray));
+      border: 4px solid var(--accent-color);
+      border-radius: var(--radius-2xl);
+      padding: var(--space-2xl);
+      margin: var(--space-xl) 0;
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-heavy);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .random-display::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, 
+        transparent 30%, 
+        rgba(255, 215, 0, 0.1) 50%, 
+        transparent 70%);
+      animation: shimmer 3s infinite;
+      pointer-events: none;
+    }
+    
+    @keyframes shimmer {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .selected-name {
+      font-size: var(--font-size-4xl);
+      font-weight: 700;
+      color: var(--primary-color);
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      z-index: 1;
+      position: relative;
+    }
+    
+    .class-selector {
+      width: 100%;
+      max-width: 450px;
+      margin: var(--space-xl) auto;
+    }
+    
+    .control-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+      justify-content: center;
+      margin: var(--space-xl) 0;
+    }
+    
+    .animation-container {
+      position: relative;
+      min-height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .rolling-names {
+      position: absolute;
+      font-size: var(--font-size-3xl);
+      font-weight: 600;
+      color: var(--secondary-color);
+      opacity: 0.7;
+      animation: roll 0.1s infinite;
+    }
+    
+    @keyframes roll {
+      0% { transform: translateY(-20px); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(20px); opacity: 0; }
+    }
+    
+    .settings-panel {
+      background: var(--bg-card);
+      border-radius: var(--radius-xl);
+      padding: var(--space-xl);
+      margin: var(--space-lg) 0;
+      border: 2px solid var(--medium-gray);
+    }
+    
+    .speed-control {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      margin: var(--space-md) 0;
+    }
+    
+    .speed-slider {
+      flex: 1;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 8px;
+      background: var(--light-gray);
+      border-radius: var(--radius-full);
+      outline: none;
+    }
+    
+    .speed-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      background: var(--primary-color);
+      border-radius: var(--radius-full);
+      cursor: pointer;
+    }
+    
+    .speed-slider::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      background: var(--primary-color);
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      border: none;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .selected-name {
+        font-size: var(--font-size-3xl);
+      }
+      
+      .control-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .control-buttons .btn {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+  </style>
+    
+    /* للتلفزيونات الذكية */
+    @media (hover: none) {
+      #classSelect {
+        font-size: 1.6rem;
+        padding: 25px 30px;
+        padding-left: 65px;
+        border-width: 3px;
+      }
+      
+      #classSelect:focus,
+      #classSelect:active {
+        border-color: var(--accent-color);
+        transform: scale(1.02);
+      }
+    }
+    
+    #randomNameDisplay {
+      width: 90%;
+      min-width: 250px;
+      min-height: 100px;
+      max-width: 800px;
+      padding: 25px;
+      margin: 20px auto;
+      
+      white-space: normal;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      hyphens: auto;
+      overflow-y: auto;
+      text-overflow: clip;
+      
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: clamp(1.5rem, 5vw, 2.5rem);
+      line-height: 1.6;
+      
+      font-weight: bold;
+      color: var(--primary-dark);
+      background: white;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      border: 3px solid var(--light-gray);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      
+      box-sizing: border-box;
+      max-height: 50vh;
+    }
+    
+    #randomNameDisplay.highlight {
+      animation: highlight 0.5s ease;
+      background: linear-gradient(135deg, #e0f7fa, white);
+      border-color: var(--primary-color);
+    }
+    
+    @keyframes highlight {
+      0% { transform: scale(1); box-shadow: 0 0 0 rgba(0,121,107,0); }
+      50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(0,121,107,0.3); }
+      100% { transform: scale(1); box-shadow: var(--shadow); }
+    }
+    
+    #studentCount {
+      font-size: 1.3rem;
+      color: var(--primary-dark);
+      font-weight: 600;
+      margin: 20px 0;
+      padding: 10px;
+      background: rgba(255,255,255,0.7);
+      border-radius: 8px;
+      display: inline-block;
+    }
+    
+    .firework {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background-image: url('https://raw.githubusercontent.com/A7mdooh/entertainment-app/main/assets/media/sounds/firework.gif');
+      background-size: cover;
+      z-index: 1000;
+      display: none;
+      pointer-events: none;
+      border-radius: 50%;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    
+    .firework.show {
+      opacity: 1;
+    }
+    
+    /* زر التحكم الرئيسي الثابت */
+    .main-control-btn {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Cairo', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      padding: 18px 40px;
+      min-width: 220px;
+      border: none;
+      border-radius: 12px;
+      background-color: var(--accent-color);
+      color: white;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: var(--shadow);
+      z-index: 100;
+      animation: pulse 1.2s infinite;
+    }
+    
+    .main-control-btn:hover {
+      transform: translateX(-50%) translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    
+    .main-control-btn:active {
+      transform: translateX(-50%) translateY(1px);
+    }
+    
+    .main-control-btn:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+      transform: translateX(-50%) !important;
+    }
+    
+    .main-control-btn.stop {
+      background-color: var(--danger-color);
+      animation: none;
+    }
+    
+    .main-control-btn.continue {
+      background-color: var(--primary-color);
+      animation: none;
+    }
+    
+    @keyframes pulse {
+      0% { transform: translateX(-50%) scale(1); }
+      50% { transform: translateX(-50%) scale(1.05); }
+      100% { transform: translateX(-50%) scale(1); }
+    }
+    
+    /* نافذة التأكيد */
+    .confirm-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .confirm-box {
+      background-color: white;
+      padding: 25px;
+      border-radius: 12px;
+      max-width: 90%;
+      width: 400px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    
+    .confirm-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .confirm-buttons button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Cairo', sans-serif;
+      font-weight: bold;
+      transition: var(--transition);
+    }
+    
+    #confirmDeleteBtn {
+      background-color: var(--danger-color);
+      color: white;
+    }
+    
+    #continueBtn {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    /* تصميم متجاوب */
+    @media (max-width: 768px) {
+      .header {
+        padding: 1.2rem;
+        margin: 2rem 0;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      .control-btn {
+        width: 42px;
+        height: 42px;
+        top: 15px;
+        font-size: 1.2rem;
+      }
+      
+      #muteBtn {
+        right: 15px;
+      }
+      
+      #backBtn {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      
+      #fullscreenBtn {
+        left: 15px;
+      }
+      
+      #classSelect {
+        width: 90%;
+        font-size: 1.1rem;
+        padding: 12px;
+      }
+      
+      #randomNameDisplay {
+        font-size: clamp(1.2rem, 4vw, 2rem);
+        min-height: 80px;
+      }
+      
+      .main-control-btn {
+        font-size: 1.3rem;
+        padding: 15px 30px;
+        min-width: 180px;
+      }
+      
+      .confirm-box {
+        width: 90%;
+        padding: 20px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .main-control-btn {
+        width: 90%;
+        max-width: 300px;
+      }
+      
+      .confirm-buttons {
+        flex-direction: column;
+      }
+      
+      .confirm-buttons button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Skip link for accessibility -->
+  <a href="#main-content" class="sr-only">تخطي إلى المحتوى الرئيسي</a>
+  
+  <!-- Audio elements -->
+  <audio id="spinSound" src="../assets/media/sounds/reveal.mp3"></audio>
+  <audio id="selectSound" src="../assets/media/sounds/select.mp3"></audio>
+  <audio id="clickSound" src="../assets/media/sounds/Click.mp3"></audio>
+  <audio id="nameStartSound" src="../assets/media/sounds/name-start.mp3" loop></audio>
+  <audio id="nameStopSound" src="../assets/media/sounds/name-stop.mp3"></audio>
+
+  <!-- Main container -->
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <h1>🎲 اختيار اسم عشوائي</h1>
+      <p>اختر الصف وابدأ الدوران لاختيار الطالب</p>
+    </header>
+
+    <!-- Main content -->
+    <main id="main-content">
+      <!-- Class selector -->
+      <div class="class-selector">
+        <select id="classSelect" class="form-select">
+          <option value="">-- اختر الصف --</option>
+        </select>
+      </div>
+
+      <!-- Random name display -->
+      <div class="random-display">
+        <div class="animation-container">
+          <div id="randomNameDisplay" class="selected-name"></div>
+        </div>
+      </div>
+      
+      <!-- Student count -->
+      <div id="studentCount" class="text-center text-secondary"></div>
+
+      <!-- Control buttons -->
+      <div class="control-buttons">
+        <button id="mainControlBtn" class="btn btn-accent btn-large">🚀 ابدأ</button>
+      </div>
+    </main>
+  </div>
+
+  <!-- Firework effect -->
+  <div class="firework" id="firework"></div>
+
+  <!-- Scripts -->
+  <script src="../config/unified-scripts-template.js"></script>
+  <script>
+    // Random Name Selection Activity - Enhanced with Unified System
+    
+    // Activity-specific variables
+    let currentList = [];
+    let currentIndex = -1;
+    let rollingInterval = null;
+    let currentName = "";
+    let isRolling = false;
+    let canRemove = false;
+
+    // Initialize the activity
+    document.addEventListener('DOMContentLoaded', function() {
+      ActivityUtils.init('اختيار اسم عشوائي');
+      loadStudentClasses();
+      setupEventListeners();
+      
+      // Disable main button initially
+      const mainControlBtn = document.getElementById('mainControlBtn');
+      mainControlBtn.disabled = true;
+      mainControlBtn.textContent = "🚀 اختر الصف أولاً";
+    });
+
+    // Load student classes from data
+    async function loadStudentClasses() {
+      try {
+        // Use the unified system's student data
+        if (AppConfig.studentData && AppConfig.studentData.students) {
+          // Group students by class if needed
+          const classSelect = document.getElementById('classSelect');
+          
+          // For demo purposes, create classes from student data
+          const classes = ['الخامس أ', 'الخامس ب', 'السادس أ', 'السادس ب'];
+          
+          classes.forEach(className => {
+            const option = document.createElement('option');
+            option.value = className;
+            option.textContent = `الصف ${className}`;
+            classSelect.appendChild(option);
+          });
+          
+        } else {
+          // Fallback: create demo data
+          createDemoClasses();
+        }
+      } catch (error) {
+        console.error('Error loading student data:', error);
+        createDemoClasses();
+      }
+    }
+    
+    // Create demo classes for testing
+    function createDemoClasses() {
+      const classSelect = document.getElementById('classSelect');
+      const demoClasses = ['الخامس أ', 'الخامس ب', 'السادس أ', 'السادس ب'];
+      
+      demoClasses.forEach(className => {
+        const option = document.createElement('option');
+        option.value = className;
+        option.textContent = `الصف ${className}`;
+        classSelect.appendChild(option);
+      });
+    }
+
+    // Setup event listeners
+    function setupEventListeners() {
+      const classSelect = document.getElementById('classSelect');
+      const mainControlBtn = document.getElementById('mainControlBtn');
+      
+      classSelect.addEventListener('change', handleClassChange);
+      mainControlBtn.addEventListener('click', handleMainControl);
+      
+      // Add double-click to remove name
+      const nameDisplay = document.getElementById('randomNameDisplay');
+      nameDisplay.addEventListener('dblclick', () => {
+        if (canRemove && currentName) {
+          ActivityUtils.showConfirmDialog(
+            `هل تريد حذف "${currentName}" من القائمة؟`,
+            () => {
+              removeCurrentName();
+              ActivityUtils.showNotification('تم حذف الطالب من القائمة', 'success');
+            }
+          );
+        }
+      });
+    }
+
+    // Handle class selection change
+    function handleClassChange() {
+      const classSelect = document.getElementById('classSelect');
+      const selectedClass = classSelect.value;
+      
+      ActivityUtils.playSound('click');
+      
+      if (selectedClass) {
+        // Generate demo students for the selected class
+        currentList = generateStudentsForClass(selectedClass);
+        updateStudentCount();
+        resetSelection();
+        
+        // Enable main button
+        const mainControlBtn = document.getElementById('mainControlBtn');
+        mainControlBtn.disabled = false;
+        mainControlBtn.textContent = "🚀 ابدأ";
+        mainControlBtn.className = "btn btn-accent btn-large";
+        
+      } else {
+        // Reset state
+        currentList = [];
+        resetSelection();
+        
+        const mainControlBtn = document.getElementById('mainControlBtn');
+        mainControlBtn.disabled = true;
+        mainControlBtn.textContent = "🚀 اختر الصف أولاً";
+      }
+    }
+    
+    // Generate demo students for a class
+    function generateStudentsForClass(className) {
+      const firstNames = [
+        'أحمد', 'محمد', 'علي', 'حسن', 'عمر', 'يوسف', 'خالد', 'سعيد', 'عبدالله', 'إبراهيم',
+        'فاطمة', 'عائشة', 'زينب', 'مريم', 'خديجة', 'أسماء', 'حفصة', 'أم كلثوم', 'رقية', 'نورا'
+      ];
+      
+      const lastNames = [
+        'الحارثي', 'البلوشي', 'الشامسي', 'الكندي', 'العبري', 'الراشدي', 'الهاشمي', 'السليماني', 
+        'الشيدي', 'النبهاني', 'العامري', 'الفارسي', 'الصباحي', 'الغافري', 'المعمري'
+      ];
+      
+      const students = [];
+      const count = Math.floor(Math.random() * 10) + 15; // 15-25 students
+      
+      for (let i = 0; i < count; i++) {
+        const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+        const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+        students.push(`${firstName} ${lastName}`);
+      }
+      
+      return students;
+    }
+
+    // Main control handler
+    function handleMainControl() {
+      ActivityUtils.playSound('click');
+      
+      if (!isRolling && !canRemove) {
+        // Start rolling
+        startRolling();
+      } else if (isRolling) {
+        // Stop rolling
+        stopRolling();
+      } else if (canRemove) {
+        // Show options
+        showRemovalOptions();
+      }
+    }
+
+    // Start the name rolling animation
+    function startRolling() {
+      if (currentList.length === 0) {
+        ActivityUtils.showNotification('لا يوجد طلاب في هذا الصف', 'warning');
+        return;
+      }
+
+      isRolling = true;
+      canRemove = false;
+      
+      const mainControlBtn = document.getElementById('mainControlBtn');
+      const nameDisplay = document.getElementById('randomNameDisplay');
+      
+      mainControlBtn.textContent = "🖐️ إيقاف";
+      mainControlBtn.className = "btn btn-danger btn-large";
+      
+      // Start rolling sound
+      ActivityUtils.playSound('timer');
+      
+      // Rolling animation
+      rollingInterval = setInterval(() => {
+        currentIndex = Math.floor(Math.random() * currentList.length);
+        currentName = currentList[currentIndex];
+        nameDisplay.textContent = currentName;
+        
+        // Add rolling animation
+        nameDisplay.classList.add('rolling-names');
+        setTimeout(() => nameDisplay.classList.remove('rolling-names'), 50);
+        
+      }, 100);
+    }
+
+    // Stop the rolling animation
+    function stopRolling() {
+      if (!isRolling) return;
+      
+      clearInterval(rollingInterval);
+      rollingInterval = null;
+      isRolling = false;
+      canRemove = true;
+      
+      const mainControlBtn = document.getElementById('mainControlBtn');
+      const nameDisplay = document.getElementById('randomNameDisplay');
+      
+      mainControlBtn.textContent = "🔁 متابعة أو 🗑️ حذف";
+      mainControlBtn.className = "btn btn-secondary btn-large";
+      
+      // Final selection animation
+      nameDisplay.classList.add('animate-bounce');
+      setTimeout(() => nameDisplay.classList.remove('animate-bounce'), 1000);
+      
+      // Play success sound and celebrate
+      ActivityUtils.playSound('success');
+      ActivityUtils.celebrate();
+      
+      ActivityUtils.showNotification(`تم اختيار: ${currentName}`, 'success');
+    }
+
+    // Show removal options
+    function showRemovalOptions() {
+      const buttons = [
+        {
+          text: '🔁 متابعة الاختيار',
+          class: 'btn btn-primary',
+          action: () => {
+            canRemove = false;
+            resetMainButton();
+            startRolling();
+          }
+        },
+        {
+          text: '🗑️ حذف من القائمة',
+          class: 'btn btn-danger',
+          action: () => {
+            ActivityUtils.showConfirmDialog(
+              `هل تريد حذف "${currentName}" من القائمة؟`,
+              () => {
+                removeCurrentName();
+              }
+            );
+          }
+        }
+      ];
+      
+      // Create custom modal with buttons
+      const overlay = document.createElement('div');
+      overlay.className = 'modal-overlay';
+      
+      const modal = document.createElement('div');
+      modal.className = 'modal';
+      modal.innerHTML = `
+        <div class="modal-header">
+          <h3>ماذا تريد أن تفعل مع "${currentName}"؟</h3>
+        </div>
+        <div class="flex-center" style="gap: 1rem; margin-top: 2rem; flex-wrap: wrap;">
+          ${buttons.map(btn => `<button class="${btn.class}" data-action="${btn.text}">${btn.text}</button>`).join('')}
+        </div>
+      `;
+      
+      overlay.appendChild(modal);
+      document.body.appendChild(overlay);
+      
+      // Add event listeners
+      buttons.forEach((btn, index) => {
+        const button = modal.querySelector(`[data-action="${btn.text}"]`);
+        button.onclick = () => {
+          document.body.removeChild(overlay);
+          btn.action();
+          ActivityUtils.playSound('click');
+        };
+      });
+      
+      // Close on overlay click
+      overlay.onclick = (e) => {
+        if (e.target === overlay) {
+          document.body.removeChild(overlay);
+          ActivityUtils.playSound('click');
+        }
+      };
+    }
+
+    // Remove current name from list
+    function removeCurrentName() {
+      if (currentIndex !== -1 && currentList.length > 0) {
+        const removedName = currentList.splice(currentIndex, 1)[0];
+        
+        const nameDisplay = document.getElementById('randomNameDisplay');
+        nameDisplay.textContent = `تمت إزالة: ${removedName}`;
+        
+        updateStudentCount();
+        resetSelection();
+        
+        ActivityUtils.showNotification(`تم حذف ${removedName} من القائمة`, 'success');
+        ActivityUtils.playSound('notification');
+        
+        // Save the updated list
+        ActivityUtils.saveActivityData('currentList', currentList);
+      }
+    }
+
+    // Reset selection state
+    function resetSelection() {
+      clearInterval(rollingInterval);
+      rollingInterval = null;
+      isRolling = false;
+      canRemove = false;
+      currentName = "";
+      currentIndex = -1;
+      
+      resetMainButton();
+    }
+
+    // Reset main button to initial state
+    function resetMainButton() {
+      const mainControlBtn = document.getElementById('mainControlBtn');
+      mainControlBtn.textContent = "🚀 ابدأ";
+      mainControlBtn.className = "btn btn-accent btn-large";
+      mainControlBtn.disabled = currentList.length === 0;
+    }
+
+    // Update student count display
+    function updateStudentCount() {
+      const studentCount = document.getElementById('studentCount');
+      const count = currentList.length;
+      studentCount.textContent = `عدد الطلاب المتبقين: ${count}`;
+      
+      if (count === 0) {
+        studentCount.innerHTML += '<br><small style="color: var(--warning-color);">لا يوجد طلاب متبقين في هذا الصف</small>';
+      }
+    }
+
+    // Handle activity pause/resume
+    ActivityUtils.pauseActivity = function() {
+      if (isRolling) {
+        stopRolling();
+        ActivityUtils.showNotification('تم إيقاف النشاط مؤقتاً', 'info');
+      }
+    };
+
+    ActivityUtils.resumeActivity = function() {
+      ActivityUtils.showNotification('تم استئناف النشاط', 'info');
+    };
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+      if (rollingInterval) {
+        clearInterval(rollingInterval);
+      }
+    });
+  </script>
+</body>
+</html>

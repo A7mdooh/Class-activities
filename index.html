@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>برنامج الأنشطة الصفية</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --primary-color: #00796B;
+      --secondary-color: #004D40;
+      --text-color: #333;
+      --light-gray: #f5f5f5;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(135deg, #e0f7fa, #f3f4f6);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+    }
+
+    /* الأيقونات الثابتة */
+    .fullscreen-btn {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      font-size: 24px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      z-index: 100;
+      transition: transform 0.3s;
+    }
+    
+    .designer-btn {
+      position: fixed;
+      bottom: 15px;
+      right: 15px;
+      font-size: 24px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      z-index: 100;
+      transition: transform 0.3s;
+    }
+    
+    .exit-btn {
+      position: fixed;
+      bottom: 15px;
+      left: 15px;
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: #f44336;
+      cursor: pointer;
+      z-index: 100;
+      transition: transform 0.3s;
+    }
+    
+    .fullscreen-btn:hover,
+    .designer-btn:hover,
+    .exit-btn:hover {
+      transform: scale(1.2);
+    }
+
+    /* المحتوى الرئيسي */
+    .content {
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .school-logo {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      margin-bottom: 1rem;
+    }
+    
+    .title {
+      font-size: clamp(1.8rem, 5vw, 2.5rem);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--primary-color);
+    }
+    
+    .subtitle {
+      font-size: clamp(1rem, 3vw, 1.2rem);
+      margin-bottom: 1.5rem;
+      color: var(--secondary-color);
+    }
+    
+    .info-container {
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 1.5rem;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    #current-day-index {
+      font-size: 1.3rem;
+      margin-bottom: 0.3rem;
+    }
+    
+    #current-date {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+    
+    #digital-clock {
+      font-family: 'Courier New', monospace;
+      font-size: clamp(1.5rem, 6vw, 2rem);
+      color: #ff0000;
+      text-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
+      margin: 0.5rem 0;
+    }
+    
+    #current-class {
+      font-size: clamp(1rem, 3vw, 1.3rem);
+      color: var(--primary-color);
+      margin-top: 1rem;
+      padding: 8px 12px;
+      background: rgba(0, 121, 107, 0.1);
+      border-radius: 8px;
+      display: inline-block;
+    }
+    
+    .start-btn {
+      margin-top: 1.5rem;
+      padding: 12px 24px;
+      font-size: clamp(1rem, 3vw, 1.2rem);
+      border: none;
+      background-color: var(--primary-color);
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      text-decoration: none;
+      display: inline-block;
+    }
+    
+    .start-btn:hover {
+      background-color: var(--secondary-color);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    }
+    
+    .start-btn:active {
+      transform: translateY(1px);
+    }
+
+    /* النافذة المنبثقة */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 1000;
+      animation: fadeIn 0.3s ease-out;
+    }
+    
+    .modal-content {
+      background-color: #fff;
+      margin: 20% auto;
+      padding: 20px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      animation: zoomIn 0.3s ease-out;
+    }
+    
+    .modal-content h3 {
+      margin-bottom: 1rem;
+      color: var(--primary-color);
+    }
+    
+    .modal-content p {
+      margin-bottom: 0.5rem;
+    }
+    
+    .modal-content a {
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+    
+    .modal-content a:hover {
+      text-decoration: underline;
+    }
+    
+    .close-btn {
+      margin-top: 1rem;
+      padding: 8px 16px;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .close-btn:hover {
+      background-color: var(--secondary-color);
+    }
+
+    /* تأثيرات الحركة */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes zoomIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    
+    @keyframes flyOut {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh) scale(0.8);
+        opacity: 0;
+      }
+    }
+    
+    .fly-out {
+      animation: flyOut 0.7s ease forwards;
+    }
+
+    /* التكيف مع الشاشات الصغيرة */
+    @media (max-width: 480px) {
+      .school-logo {
+        width: 80px;
+        height: 80px;
+      }
+      
+      .info-container {
+        padding: 12px;
+      }
+      
+      .fullscreen-btn,
+      .designer-btn,
+      .exit-btn {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- زر ملء الشاشة في أعلى اليسار -->
+  <button class="fullscreen-btn" id="fullscreenBtn" title="ملء الشاشة">⛶</button>
+
+  <!-- المحتوى الرئيسي -->
+  <div class="content">
+    <img alt="شعار المدرسة" class="school-logo" src="assets/media/images/school-logo.png"/>
+    <h1 class="title" id="schoolName">مدرستي</h1>
+    <p class="subtitle">برنامج الأنشطة الصفية</p>
+    
+    <div class="info-container">
+      <div id="current-day-index"></div>
+      <div id="current-date"></div>
+      <div id="digital-clock"></div>
+    </div>
+    
+    <div id="current-class"></div>
+    <a class="start-btn" id="startBtn" href="main.html">ابدأ البرنامج</a>
+  </div>
+
+  <!-- زر المصمم في أسفل اليمين -->
+  <button class="designer-btn" id="openDesigner" title="معلومات المصمم">⚙️</button>
+
+  <!-- زر إنهاء في أسفل يسار الصفحة -->
+  <button class="exit-btn" id="exitBtn" title="إنهاء البرنامج">🚪</button>
+
+  <!-- نافذة المصمم المنبثقة -->
+  <div id="designerModal" class="modal">
+    <div class="modal-content">
+      <h3>مصمم البرنامج</h3>
+      <p>الأستاذ أحمد بن عبدالله الضامري</p>
+      <p><a href="mailto:Ahm7d@moe.om">Ahm7d@moe.om</a></p>
+      <button class="close-btn" id="closeDesigner">إغلاق</button>
+    </div>
+  </div>
+
+  <!-- إضافة عنصر صوت النقر -->
+  <audio id="clickSound" src="assets/media/sounds/Click.mp3" preload="auto"></audio>
+
+  <script>
+    // عرض اليوم والتاريخ
+    const arabicDays = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+    function updateDateTime() {
+      const now = new Date();
+      
+      // اليوم
+      document.getElementById('current-day-index').textContent = arabicDays[now.getDay()];
+      
+      // التاريخ
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const year = now.getFullYear();
+      document.getElementById('current-date').textContent = `${day}-${month}-${year}`;
+      
+      // الساعة
+      let hours = now.getHours();
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      const ampm = hours >= 12 ? 'م' : 'ص';
+      hours = hours % 12;
+      hours = hours ? hours : 12;
+      hours = String(hours).padStart(2, '0');
+      document.getElementById('digital-clock').textContent = `${hours}:${minutes}:${seconds} ${ampm}`;
+    }
+    
+    // تحديث الساعة كل ثانية
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
+
+    // تحميل اسم المدرسة
+    fetch('config/school.json')
+      .then(response => response.json())
+      .then(data => {
+        if(data.schoolName) {
+          document.getElementById('schoolName').textContent = data.schoolName;
+        }
+      })
+      .catch(error => {
+        console.error('خطأ في تحميل اسم المدرسة:', error);
+      });
+
+    // تحميل الجدول الزمني
+    fetch('data/schedule.json')
+      .then(response => {
+        if (!response.ok) throw new Error('تعذر تحميل الجدول');
+        return response.json();
+      })
+      .then(schedule => {
+        function updateCurrentClass() {
+          const now = new Date();
+          const currentTime = now.toTimeString().substr(0, 8);
+          const currentClass = schedule.find(period => {
+            return currentTime >= period.start && currentTime < period.end;
+          });
+          
+          const classDiv = document.getElementById('current-class');
+          if (currentClass) {
+            classDiv.textContent = `الآن: ${currentClass.label}`;
+          } else {
+            classDiv.textContent = 'لا توجد حصة حالياً';
+          }
+        }
+        
+        updateCurrentClass();
+        setInterval(updateCurrentClass, 60000);
+      })
+      .catch(error => {
+        console.error('فشل في تحميل الجدول:', error);
+      });
+
+    // التحكم في النافذة المنبثقة
+    const modal = document.getElementById('designerModal');
+    document.getElementById('openDesigner').addEventListener('click', () => {
+      modal.style.display = 'block';
+    });
+    
+    document.getElementById('closeDesigner').addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+    
+    // إغلاق النافذة عند النقر خارجها
+    window.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+
+    // وظيفة ملء الشاشة
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.log('خطأ في ملء الشاشة:', err);
+        });
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    // محاولة الدخول في وضع ملء الشاشة تلقائياً عند أول تفاعل للمستخدم
+    function requestFullscreenOnFirstInteraction() {
+      function handler() {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(()=>{});
+        }
+        window.removeEventListener('click', handler);
+        window.removeEventListener('keydown', handler);
+        window.removeEventListener('touchstart', handler);
+      }
+      window.addEventListener('click', handler);
+      window.addEventListener('keydown', handler);
+      window.addEventListener('touchstart', handler);
+    }
+    // استدعاء الدالة عند تحميل الصفحة
+    window.addEventListener('DOMContentLoaded', requestFullscreenOnFirstInteraction);
+
+    // زر ملء الشاشة
+    document.getElementById('fullscreenBtn').addEventListener('click', toggleFullScreen);
+
+    // زر إنهاء البرنامج
+    document.getElementById('exitBtn').addEventListener('click', function() {
+      window.close();
+      // إذا لم يغلق النافذة (بعض المتصفحات تمنع ذلك)، يمكن إعادة توجيه المستخدم:
+      window.location.href = "about:blank";
+    });
+
+    // دالة تشغيل صوت النقر
+    function playClick() {
+      const clickSound = document.getElementById('clickSound');
+      if (clickSound) {
+        clickSound.currentTime = 0;
+        clickSound.play().catch(()=>{});
+      }
+    }
+
+    // إضافة صوت النقر لجميع الأزرار
+    document.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', playClick);
+    });
+  </script>
+</body>
+</html>
