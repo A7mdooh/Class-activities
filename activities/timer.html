@@ -1468,7 +1468,7 @@
     let isRunning = false;
     let isPaused = false;
     let isFinished = false;
-    let finalSoundStarted = false; // متابعة بدء صوت النهاية
+    let finalSoundStarted = false; // متابعة بدء صوت التحذير النهائي (10 ثوان)
 
     // إعدادات الصوت
     let audioSettings = {
@@ -1703,11 +1703,11 @@
         case 'countdown':
           timeLeft--;
           
-          // تشغيل صوت النهاية في آخر 10 ثوان (مرة واحدة فقط) - فقط إذا كانت المدة أكبر من 10 ثوان
+          // تشغيل صوت التحذير (countdown-beep.mp3) في آخر 10 ثوان
           if (timeLeft === 10 && !finalSoundStarted && duration > 10) {
             finalSoundStarted = true;
-            playSound(elements.endSound, 'end');
-            console.log('🔔 بدء صوت النهاية - 10 ثوان متبقية');
+            playSound(elements.warningSound, 'warning');
+            console.log('⚠️ بدء صوت التحذير - 10 ثوان متبقية');
           }
           
           if (timeLeft <= 0) {
@@ -1718,11 +1718,11 @@
         case 'countup':
           elapsed++;
           
-          // تشغيل صوت النهاية في آخر 10 ثوان للعد التصاعدي - فقط إذا كانت المدة أكبر من 10 ثوان
+          // تشغيل صوت التحذير (countdown-beep.mp3) في آخر 10 ثوان للعد التصاعدي
           if (elapsed === duration - 10 && !finalSoundStarted && duration > 10) {
             finalSoundStarted = true;
-            playSound(elements.endSound, 'end');
-            console.log('🔔 بدء صوت النهاية - 10 ثوان متبقية');
+            playSound(elements.warningSound, 'warning');
+            console.log('⚠️ بدء صوت التحذير - 10 ثوان متبقية');
           }
           
           if (elapsed >= duration) {
@@ -1845,7 +1845,7 @@
       clearInterval(timerInterval);
       clearInterval(warningInterval);
       
-      // وقف أصوات التحذير قبل تشغيل صوت النهاية
+      // وقف أصوات التحذير
       if (elements.warningSound && !elements.warningSound.paused) {
         elements.warningSound.pause();
         elements.warningSound.currentTime = 0;
@@ -1859,11 +1859,9 @@
       updateStatus('finished', 'انتهى الوقت!', '⏰');
       updateControls();
 
-      // تشغيل صوت النهاية إذا لم يتم تشغيله مسبقاً (للمدد القصيرة <= 10 ثوان)
-      if (!finalSoundStarted || duration <= 10) {
-        playSound(elements.endSound, 'end');
-        console.log('🔔 تشغيل صوت النهاية عند الإكمال');
-      }
+      // تشغيل صوت النافذة المنبثقة (end-timer.mp3) عند الإكمال
+      playSound(elements.endSound, 'end');
+      console.log('🎉 تشغيل صوت النافذة المنبثقة عند انتهاء الوقت');
       
       // إضافة تأثير الاحتفال
       addCelebrationEffect();
@@ -1882,12 +1880,12 @@
       clearInterval(warningInterval);
       
       warningInterval = setInterval(() => {
-        // تشغيل الصوت فقط في الثواني 10، 5، 4، 3، 2، 1
+        // تشغيل الصوت فقط في الثواني 5، 4، 3، 2، 1 (ليس 10 لأنه مخصص للصوت الطويل)
         if (isRunning && !isPaused && 
-            (timeLeft === 10 || timeLeft === 5 || timeLeft === 4 || 
+            (timeLeft === 5 || timeLeft === 4 || 
              timeLeft === 3 || timeLeft === 2 || timeLeft === 1)) {
           playSound(elements.warningSound, 'warning');
-          console.log(`⚠️ تحذير: ${timeLeft} ثانية متبقية`);
+          console.log(`⚠️ تحذير قصير: ${timeLeft} ثانية متبقية`);
         }
       }, 1000);
     }
