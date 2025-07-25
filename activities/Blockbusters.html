@@ -1307,31 +1307,31 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0, 0, 0, 0.7);
-        backdrop-filter: blur(8px);
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(4px);
         display: flex;
         align-items: center;
         justify-content: center;
         z-index: 4000;
-        animation: fadeIn 0.3s ease;
+        animation: fadeIn 0.2s ease;
       `;
       
       loader.innerHTML = `
-        <div style="background: white; padding: 3rem; border-radius: 20px; text-align: center; 
-                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); max-width: 400px; width: 90%;">
-          <div style="width: 60px; height: 60px; margin: 0 auto 1.5rem; position: relative;">
-            <div style="width: 100%; height: 100%; border: 4px solid #E2E8F0; border-radius: 50%; 
-                        border-top-color: ${OMAN_COLORS.red}; animation: spin 1s linear infinite;"></div>
+        <div style="background: white; padding: 2rem; border-radius: 16px; text-align: center; 
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); max-width: 300px; width: 80%;">
+          <div style="width: 40px; height: 40px; margin: 0 auto 1rem; position: relative;">
+            <div style="width: 100%; height: 100%; border: 3px solid #E2E8F0; border-radius: 50%; 
+                        border-top-color: ${OMAN_COLORS.red}; animation: spin 0.8s linear infinite;"></div>
           </div>
-          <div style="font-size: 1.2rem; font-weight: 600; color: ${OMAN_COLORS.navy}; 
+          <div style="font-size: 1rem; font-weight: 600; color: ${OMAN_COLORS.navy}; 
                       margin-bottom: 0.5rem; font-family: 'Cairo', sans-serif;">${message}</div>
-          <div style="font-size: 0.9rem; color: #64748B;">يرجى الانتظار...</div>
+          <div style="font-size: 0.8rem; color: #64748B;">انتظر قليلاً...</div>
         </div>
       `;
       
       document.body.appendChild(loader);
       
-      // إضافة أنيمشن الدوران
+      // إضافة أنيمشن الدوران إذا لم يكن موجوداً
       if (!document.getElementById('loader-animations')) {
         const style = document.createElement('style');
         style.id = 'loader-animations';
@@ -1347,6 +1347,18 @@
         `;
         document.head.appendChild(style);
       }
+      
+      // إضافة timeout للإزالة التلقائية في حالة التعليق
+      setTimeout(() => {
+        if (document.getElementById('loadingIndicator')) {
+          hideLoadingIndicator();
+          showAdvancedNotification(
+            '⚠️ انتهت مهلة التحميل',
+            'تم التبديل للوضع الاحتياطي',
+            'warning'
+          );
+        }
+      }, 5000);
     }
 
     function hideLoadingIndicator() {
@@ -1380,74 +1392,123 @@
       }
     }
 
-    // ==== تحميل بيانات الطلاب الاحترافية ====
+    // ==== تحميل بيانات الطلاب السريع والذكي ====
     async function loadStudentData() {
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('انتهت مهلة التحميل')), 3000)
+      );
+      
       try {
-        showLoadingIndicator('🔄 جاري تحميل بيانات الطلاب...');
+        console.log('🚀 بدء تحميل بيانات الطلاب...');
         
-        const response = await fetch('../data/studentData.json');
+        // محاولة التحميل مع timeout
+        const response = await Promise.race([
+          fetch('../data/studentData.json', {
+            method: 'GET',
+            cache: 'no-cache',
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          }),
+          timeoutPromise
+        ]);
+        
         if (!response.ok) {
-          throw new Error(`HTTP Error: ${response.status}`);
+          throw new Error(`خطأ HTTP: ${response.status} - ${response.statusText}`);
         }
         
         const data = await response.json();
         
-        // تحويل البيانات إلى الصيغة المطلوبة
+        if (!data || typeof data !== 'object') {
+          throw new Error('تنسيق البيانات غير صحيح');
+        }
+        
+        // تحويل البيانات بسرعة
         gameData.classesData = data;
         gameData.students = [];
         
-        // تحويل البيانات من كائن إلى مصفوفة
+        let totalStudents = 0;
         Object.keys(data).forEach(className => {
-          data[className].forEach(studentName => {
-            gameData.students.push({
-              name: studentName,
-              class: className,
-              shortName: extractShortName(studentName)
+          if (Array.isArray(data[className])) {
+            data[className].forEach(studentName => {
+              gameData.students.push({
+                name: studentName,
+                class: className,
+                shortName: extractShortName(studentName)
+              });
+              totalStudents++;
             });
-          });
+          }
         });
         
-        hideLoadingIndicator();
         populateClassSelect();
         
-        console.log('✅ تم تحميل بيانات الطلاب بنجاح:', gameData.students.length, 'طالب');
+        console.log(`✅ تم تحميل ${totalStudents} طالب من ${Object.keys(data).length} صف`);
         showAdvancedNotification(
-          '🎓 تم تحميل بيانات الطلاب بنجاح!', 
-          `${gameData.students.length} طالباً من ${Object.keys(data).length} صف دراسي`,
-          'success'
+          '🎓 تحميل ناجح!', 
+          `${totalStudents} طالب • ${Object.keys(data).length} صف دراسي`,
+          'success',
+          3000
         );
+        
+        return true;
         
       } catch (error) {
-        console.error('❌ خطأ في تحميل بيانات الطلاب:', error);
-        hideLoadingIndicator();
+        console.warn('⚠️ خطأ في تحميل البيانات:', error.message);
+        
+        // تحميل البيانات الاحتياطية فوراً
+        loadBackupData();
         
         showAdvancedNotification(
-          '⚠️ تعذر تحميل بيانات الطلاب',
-          'سيتم استخدام البيانات الاحتياطية للمتابعة',
-          'warning'
+          '📚 بيانات احتياطية',
+          'تم تحميل بيانات تجريبية للمتابعة',
+          'warning',
+          4000
         );
         
-        // بيانات احتياطية محسنة
-        gameData.classesData = {
-          'خامس 1': ['أحمد بن محمد السيابي', 'سعد بن خالد الهطالي', 'عبدالله بن سالم الجابري'],
-          'خامس 2': ['محمد بن أحمد الفارسي', 'حمزة بن إبراهيم المحرمي', 'سالم بن علي البلوشي'],
-          'سادس 1': ['عمر بن سليمان الحارثي', 'خالد بن يوسف الوهيبي', 'طه محمود عبدالباقي'],
-          'سادس 2': ['راشد بن ناصر الرواحي', 'فهر بن طلال البريكي', 'يحيى بن علي الصبحي']
-        };
-        
-        gameData.students = [];
-        Object.keys(gameData.classesData).forEach(className => {
-          gameData.classesData[className].forEach(studentName => {
-            gameData.students.push({
-              name: studentName,
-              class: className,
-              shortName: extractShortName(studentName)
-            });
-          });
-        });
-        
-        populateClassSelect();
+        return false;
       }
+    }
+
+    // ==== تحميل البيانات الاحتياطية السريع ====
+    function loadBackupData() {
+      console.log('📦 تحميل البيانات الاحتياطية...');
+      
+      gameData.classesData = {
+        'خامس 1': [
+          'أحمد بن محمد السيابي', 'سعد بن خالد الهطالي', 'عبدالله بن سالم الجابري',
+          'محمد بن يونس الفارسي', 'حمزة بن نصر الحارثي', 'سيف بن سعيد السيابي'
+        ],
+        'خامس 2': [
+          'آدم بن محمد الفارسي', 'أنس بن أحمد الزدجالي', 'بدر بن موسى الفوري',
+          'تيمور بن فيصل اليوسفي', 'حمزة بن إبراهيم المحرمي', 'خالد بن طاهر العميري'
+        ],
+        'سادس 1': [
+          'عمر بن سليمان الحارثي', 'خالد بن يوسف الوهيبي', 'طه محمود عبدالباقي',
+          'صالح بن سلمان البلوشي', 'علي بن ماجد اليحيائي', 'فهر بن عمار البريكي'
+        ],
+        'سادس 2': [
+          'راشد بن ناصر الرواحي', 'فهر بن طلال البريكي', 'يحيى بن علي الصبحي',
+          'محمد بن سالم الوهيبي', 'عبدالله بن أحمد الضامري', 'مؤيد بن أحمد اليحيائي'
+        ]
+      };
+      
+      gameData.students = [];
+      let totalStudents = 0;
+      
+      Object.keys(gameData.classesData).forEach(className => {
+        gameData.classesData[className].forEach(studentName => {
+          gameData.students.push({
+            name: studentName,
+            class: className,
+            shortName: extractShortName(studentName)
+          });
+          totalStudents++;
+        });
+      });
+      
+      populateClassSelect();
+      console.log(`📚 تم تحميل ${totalStudents} طالب احتياطي`);
     }
 
     // استخراج الاسم المختصر للعرض
@@ -2849,94 +2910,88 @@
       }
     }
 
-    // ==== تهيئة التطبيق المتقدم ====
+    // ==== تهيئة التطبيق السريع ====
     function initializeApp() {
-      console.log('🎮 تهيئة لعبة بلوك باسترز الاحترافية المطورة...');
+      console.log('🚀 تهيئة سريعة للعبة بلوك باسترز...');
       
-      // إظهار شاشة التحميل الأولية
-      showLoadingIndicator('🚀 تهيئة اللعبة...');
+      // إظهار شاشة تحميل خفيفة
+      showLoadingIndicator('⚡ تهيئة سريعة...');
       
-      setTimeout(async () => {
-        try {
-          // تحميل بيانات الطلاب
-          await loadStudentData();
-          
-          // تهيئة لوحة الحروف
-          initializeHexBoard();
-          
-          // تهيئة متغيرات اللعبة
-          gameData.gameStartTime = null;
-          
-          // ربط الأحداث - أزرار التحكم
-          elements.backBtn.addEventListener('click', handleBackButton);
-          elements.soundBtn.addEventListener('click', toggleSound);
-          elements.instructionsBtn.addEventListener('click', () => showModal(elements.instructionsModal));
-          elements.fullscreenBtn.addEventListener('click', toggleFullscreen);
-          
-          // ربط الأحداث - الإعدادات
-          elements.gameSettingsForm.addEventListener('submit', handleGameStart);
-          elements.classSelect.addEventListener('change', handleClassChange);
-          elements.modeSelect.addEventListener('change', handleModeChange);
-          elements.resetGameBtn.addEventListener('click', handleGameReset);
-          elements.statisticsBtn.addEventListener('click', handleStatisticsView);
-          
-          // ربط الأحداث - اختيار الفريق
-          elements.selectGreenTeamBtn.addEventListener('click', () => selectTeamForCell('green'));
-          elements.selectRedTeamBtn.addEventListener('click', () => selectTeamForCell('red'));
-          elements.closeTeamSelectionBtn.addEventListener('click', () => hideModal(elements.teamSelectionModal));
-          
-          // ربط الأحداث - نافذة الفوز
-          elements.newGameBtn.addEventListener('click', handleNewGame);
-          elements.closeVictoryBtn.addEventListener('click', () => hideModal(elements.victoryModal));
-          elements.closeVictoryModalBtn.addEventListener('click', () => hideModal(elements.victoryModal));
-          
-          // ربط الأحداث - نافذة التعليمات
-          elements.closeInstructionsBtn.addEventListener('click', () => hideModal(elements.instructionsModal));
-          elements.understoodBtn.addEventListener('click', () => hideModal(elements.instructionsModal));
-          
-          // ربط الأحداث - نافذة الإحصائيات
-          elements.clearStatisticsBtn.addEventListener('click', handleClearStatistics);
-          elements.closeStatisticsBtn.addEventListener('click', () => hideModal(elements.statisticsModal));
-          elements.closeStatisticsModalBtn.addEventListener('click', () => hideModal(elements.statisticsModal));
-          
-          // ربط أحداث لوحة المفاتيح المتقدمة
-          setupAdvancedKeyboardEvents();
-          
-          // إعداد إغلاق النوافذ عند النقر خارجها
-          setupModalCloseEvents();
-          
-          // تحديث عرض الإحصائيات
-          updateStatisticsDisplay();
-          
-          // تحسينات الأداء والمظهر
-          optimizeGamePerformance();
-          addFloatingAnimation();
-          
+      // تهيئة فورية للعناصر الأساسية
+      initializeHexBoard();
+      gameData.gameStartTime = null;
+      setupEventListeners();
+      optimizeGamePerformance();
+      
+      // تحميل البيانات بشكل غير متزامن
+      loadStudentData()
+        .then((success) => {
           hideLoadingIndicator();
           
-          console.log('✅ تم تهيئة اللعبة بنجاح');
-          showAdvancedNotification(
-            '🎉 مرحباً بك!',
-            'لعبة بلوك باسترز الاحترافية جاهزة للعب',
-            'success',
-            4000
-          );
+          if (success) {
+            showAdvancedNotification(
+              '🎉 جاهز للعب!',
+              'جميع المكونات تم تحميلها بنجاح',
+              'success',
+              3000
+            );
+          }
           
-          // إضافة نصائح تفاعلية
-          setTimeout(() => {
-            showGameTips();
-          }, 2000);
+          // إضافة تحسينات بصرية
+          addFloatingAnimation();
           
-        } catch (error) {
-          console.error('❌ خطأ في تهيئة التطبيق:', error);
+          // نصائح تفاعلية بعد فترة قصيرة
+          setTimeout(() => showGameTips(), 1500);
+          
+        })
+        .catch((error) => {
+          console.error('❌ خطأ في التهيئة:', error);
           hideLoadingIndicator();
           showAdvancedNotification(
             '❌ خطأ في التهيئة',
-            'حدث خطأ أثناء تحميل اللعبة. يرجى إعادة تحميل الصفحة.',
-            'error'
+            'تم تحميل البيانات الاحتياطية للمتابعة',
+            'warning'
           );
-        }
-      }, 1000);
+        });
+    }
+
+    // ==== إعداد مستمعي الأحداث ====
+    function setupEventListeners() {
+      // أزرار التحكم
+      elements.backBtn.addEventListener('click', handleBackButton);
+      elements.soundBtn.addEventListener('click', toggleSound);
+      elements.instructionsBtn.addEventListener('click', () => showModal(elements.instructionsModal));
+      elements.fullscreenBtn.addEventListener('click', toggleFullscreen);
+      
+      // الإعدادات
+      elements.gameSettingsForm.addEventListener('submit', handleGameStart);
+      elements.classSelect.addEventListener('change', handleClassChange);
+      elements.modeSelect.addEventListener('change', handleModeChange);
+      elements.resetGameBtn.addEventListener('click', handleGameReset);
+      elements.statisticsBtn.addEventListener('click', handleStatisticsView);
+      
+      // اختيار الفريق
+      elements.selectGreenTeamBtn.addEventListener('click', () => selectTeamForCell('green'));
+      elements.selectRedTeamBtn.addEventListener('click', () => selectTeamForCell('red'));
+      elements.closeTeamSelectionBtn.addEventListener('click', () => hideModal(elements.teamSelectionModal));
+      
+      // نافذة الفوز
+      elements.newGameBtn.addEventListener('click', handleNewGame);
+      elements.closeVictoryBtn.addEventListener('click', () => hideModal(elements.victoryModal));
+      elements.closeVictoryModalBtn.addEventListener('click', () => hideModal(elements.victoryModal));
+      
+      // نافذة التعليمات
+      elements.closeInstructionsBtn.addEventListener('click', () => hideModal(elements.instructionsModal));
+      elements.understoodBtn.addEventListener('click', () => hideModal(elements.instructionsModal));
+      
+      // نافذة الإحصائيات
+      elements.clearStatisticsBtn.addEventListener('click', handleClearStatistics);
+      elements.closeStatisticsBtn.addEventListener('click', () => hideModal(elements.statisticsModal));
+      elements.closeStatisticsModalBtn.addEventListener('click', () => hideModal(elements.statisticsModal));
+      
+      // أحداث لوحة المفاتيح
+      setupAdvancedKeyboardEvents();
+      setupModalCloseEvents();
     }
 
     // ==== معالجات الأحداث المتقدمة ====
