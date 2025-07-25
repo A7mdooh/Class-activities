@@ -1468,6 +1468,7 @@
     let isRunning = false;
     let isPaused = false;
     let isFinished = false;
+    let finalSoundStarted = false; // متابعة بدء صوت النهاية
 
     // إعدادات الصوت
     let audioSettings = {
@@ -1701,6 +1702,14 @@
       switch (currentMode) {
         case 'countdown':
           timeLeft--;
+          
+          // تشغيل صوت النهاية في آخر 10 ثوان (مرة واحدة فقط)
+          if (timeLeft === 10 && !finalSoundStarted) {
+            finalSoundStarted = true;
+            playSound(elements.endSound, 'end');
+            console.log('🔔 بدء صوت النهاية - 10 ثوان متبقية');
+          }
+          
           if (timeLeft <= 0) {
             completeTimer();
             return;
@@ -1708,6 +1717,14 @@
           break;
         case 'countup':
           elapsed++;
+          
+          // تشغيل صوت النهاية في آخر 10 ثوان للعد التصاعدي
+          if (elapsed === duration - 10 && !finalSoundStarted) {
+            finalSoundStarted = true;
+            playSound(elements.endSound, 'end');
+            console.log('🔔 بدء صوت النهاية - 10 ثوان متبقية');
+          }
+          
           if (elapsed >= duration) {
             completeTimer();
             return;
@@ -1782,6 +1799,7 @@
       isRunning = false;
       isPaused = false;
       isFinished = false;
+      finalSoundStarted = false; // إعادة تعيين صوت النهاية
       timeLeft = duration;
       elapsed = 0;
 
@@ -1806,6 +1824,7 @@
       isRunning = false;
       isPaused = false;
       isFinished = true;
+      finalSoundStarted = false; // إعادة تعيين صوت النهاية
 
       // حفظ الجلسة (غير مكتملة)
       saveSession(false);
@@ -1836,18 +1855,9 @@
       updateStatus('finished', 'انتهى الوقت!', '⏰');
       updateControls();
 
-      // تشغيل صوت النهاية والاحتفال
-      playSound(elements.endSound, 'end');
+      // لا نحتاج لتشغيل صوت النهاية هنا لأنه بدأ بالفعل
+      // فقط إضافة تأثير الاحتفال
       addCelebrationEffect();
-
-      // إيقاف صوت النهاية بعد 3 ثوان
-      setTimeout(() => {
-        if (elements.endSound && !elements.endSound.paused) {
-          elements.endSound.pause();
-          elements.endSound.currentTime = 0;
-          console.log('🔇 تم إيقاف صوت النهاية تلقائياً');
-        }
-      }, 3000);
 
       // حفظ الجلسة (مكتملة)
       saveSession(true);
@@ -1975,6 +1985,7 @@
         stopAllSounds();
         
         currentMode = newMode;
+        finalSoundStarted = false; // إعادة تعيين صوت النهاية
         resetTimer();
         playSound(elements.clickSound, 'click');
         
@@ -1996,6 +2007,7 @@
         stopAllSounds();
         
         duration = newDuration;
+        finalSoundStarted = false; // إعادة تعيين صوت النهاية
         resetTimer();
         playSound(elements.clickSound, 'click');
         console.log(`⏰ تغيير المدة إلى: ${duration}s`);
@@ -2008,6 +2020,7 @@
       stopAllSounds();
       
       duration = seconds;
+      finalSoundStarted = false; // إعادة تعيين صوت النهاية
       elements.timerDuration.value = seconds;
       resetTimer();
       playSound(elements.clickSound, 'click');
