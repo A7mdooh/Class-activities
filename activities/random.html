@@ -630,6 +630,16 @@
       box-shadow: 0 8px 20px rgba(255, 152, 0, 0.4);
     }
 
+    .honor-btn {
+      background: linear-gradient(45deg, var(--accent-color), #FFE082);
+      color: #4A4A4A;
+    }
+
+    .honor-btn:hover:not(:disabled) {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4);
+    }
+
     .reset-btn {
       background: linear-gradient(45deg, var(--text-secondary), #9E9E9E);
       color: white;
@@ -863,6 +873,303 @@
       font-weight: 500;
     }
 
+    /* لوحة الشرف */
+    .honor-board {
+      background: linear-gradient(135deg, 
+        rgba(255, 248, 225, 0.98) 0%, 
+        rgba(255, 243, 176, 0.95) 50%,
+        rgba(255, 248, 225, 0.98) 100%);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-xl);
+      margin-bottom: var(--spacing-xl);
+      box-shadow: 
+        0 8px 32px rgba(255, 215, 0, 0.15),
+        0 2px 8px rgba(0, 0, 0, 0.08);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(255, 215, 0, 0.2);
+      animation: slideUp 0.8s ease-out 1.2s both;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .honor-board::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, 
+        var(--accent-color) 0%,
+        #FFE082 25%,
+        #FFCC02 50%,
+        #FFE082 75%,
+        var(--accent-color) 100%);
+      border-radius: var(--border-radius) var(--border-radius) 0 0;
+      animation: goldenGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes goldenGlow {
+      0%, 100% { 
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+      }
+      50% { 
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+      }
+    }
+
+    .honor-board h3 {
+      font-size: 1.4rem;
+      color: #B8860B;
+      margin-bottom: var(--spacing-lg);
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-sm);
+      text-shadow: 2px 2px 4px rgba(184, 134, 11, 0.2);
+      font-weight: 700;
+    }
+
+    .honor-board h3 span:first-child {
+      font-size: 1.8rem;
+      animation: trophyShine 3s ease-in-out infinite;
+    }
+
+    @keyframes trophyShine {
+      0%, 100% { 
+        transform: scale(1) rotate(0deg);
+        filter: brightness(1);
+      }
+      25% { 
+        transform: scale(1.1) rotate(-5deg);
+        filter: brightness(1.3);
+      }
+      75% { 
+        transform: scale(1.1) rotate(5deg);
+        filter: brightness(1.3);
+      }
+    }
+
+    .honor-list {
+      max-height: 400px;
+      overflow-y: auto;
+      padding: var(--spacing-sm);
+      border-radius: var(--border-radius-small);
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(255, 215, 0, 0.2);
+    }
+
+    .honor-list::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .honor-list::-webkit-scrollbar-track {
+      background: rgba(255, 215, 0, 0.1);
+      border-radius: 4px;
+    }
+
+    .honor-list::-webkit-scrollbar-thumb {
+      background: linear-gradient(to bottom, var(--accent-color), #FFE082);
+      border-radius: 4px;
+    }
+
+    .honor-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--spacing-md);
+      margin-bottom: var(--spacing-sm);
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.9) 0%,
+        rgba(255, 248, 225, 0.8) 100%);
+      border-radius: var(--border-radius-small);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      box-shadow: 0 2px 8px rgba(255, 215, 0, 0.1);
+      transition: all var(--transition-normal);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .honor-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(to bottom, var(--accent-color), #FFE082);
+    }
+
+    .honor-item:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 6px 16px rgba(255, 215, 0, 0.2);
+      border-color: var(--accent-color);
+    }
+
+    .honor-item:nth-child(1) {
+      background: linear-gradient(135deg, 
+        rgba(255, 215, 0, 0.3) 0%,
+        rgba(255, 248, 225, 0.9) 100%);
+      border: 2px solid var(--accent-color);
+      animation: firstPlace 2s ease-in-out infinite;
+    }
+
+    @keyframes firstPlace {
+      0%, 100% { 
+        box-shadow: 0 2px 8px rgba(255, 215, 0, 0.1);
+      }
+      50% { 
+        box-shadow: 0 6px 20px rgba(255, 215, 0, 0.3);
+      }
+    }
+
+    .honor-item:nth-child(2) {
+      background: linear-gradient(135deg, 
+        rgba(192, 192, 192, 0.3) 0%,
+        rgba(255, 248, 225, 0.9) 100%);
+      border: 2px solid #C0C0C0;
+    }
+
+    .honor-item:nth-child(3) {
+      background: linear-gradient(135deg, 
+        rgba(205, 127, 50, 0.3) 0%,
+        rgba(255, 248, 225, 0.9) 100%);
+      border: 2px solid #CD7F32;
+    }
+
+    .honor-student-info {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      flex: 1;
+    }
+
+    .honor-rank {
+      font-size: 1.5rem;
+      font-weight: 700;
+      min-width: 40px;
+      text-align: center;
+    }
+
+    .honor-item:nth-child(1) .honor-rank {
+      color: var(--accent-color);
+      text-shadow: 1px 1px 2px rgba(255, 215, 0, 0.3);
+    }
+
+    .honor-item:nth-child(2) .honor-rank {
+      color: #C0C0C0;
+      text-shadow: 1px 1px 2px rgba(192, 192, 192, 0.3);
+    }
+
+    .honor-item:nth-child(3) .honor-rank {
+      color: #CD7F32;
+      text-shadow: 1px 1px 2px rgba(205, 127, 50, 0.3);
+    }
+
+    .honor-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .honor-medal {
+      font-size: 1.2rem;
+      animation: medalSpin 4s linear infinite;
+    }
+
+    @keyframes medalSpin {
+      0% { transform: rotateY(0deg); }
+      50% { transform: rotateY(180deg); }
+      100% { transform: rotateY(360deg); }
+    }
+
+    .honor-time {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      opacity: 0.8;
+    }
+
+    .no-honors {
+      text-align: center;
+      padding: var(--spacing-xl);
+      color: var(--text-secondary);
+    }
+
+    .honor-icon {
+      font-size: 3rem;
+      margin-bottom: var(--spacing-md);
+      opacity: 0.6;
+      animation: starTwinkle 2s ease-in-out infinite;
+    }
+
+    @keyframes starTwinkle {
+      0%, 100% { opacity: 0.6; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.1); }
+    }
+
+    .no-honors p {
+      font-size: 1.1rem;
+      margin-bottom: var(--spacing-sm);
+      font-weight: 500;
+    }
+
+    .no-honors small {
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+
+    .honor-actions {
+      display: flex;
+      gap: var(--spacing-md);
+      justify-content: center;
+      margin-top: var(--spacing-lg);
+      padding-top: var(--spacing-lg);
+      border-top: 1px solid rgba(255, 215, 0, 0.2);
+    }
+
+    .honor-action-btn {
+      padding: var(--spacing-sm) var(--spacing-lg);
+      font-size: 0.9rem;
+      font-weight: 500;
+      border: none;
+      border-radius: var(--border-radius-small);
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+      font-family: 'Cairo', sans-serif;
+      box-shadow: 0 2px 6px var(--shadow-light);
+    }
+
+    .clear-honors-btn {
+      background: linear-gradient(45deg, var(--error-color), #EF5350);
+      color: white;
+    }
+
+    .clear-honors-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+    }
+
+    .export-honors-btn {
+      background: linear-gradient(45deg, var(--primary-color), var(--primary-light));
+      color: white;
+    }
+
+    .export-honors-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 121, 107, 0.3);
+    }
+
+    .honor-action-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
     /* تأثيرات الحركة */
     @keyframes slideDown {
       from {
@@ -971,6 +1278,46 @@
 
       .toggle-switch input:checked + .toggle-slider:before {
         transform: translateX(20px);
+      }
+
+      .honor-board {
+        padding: var(--spacing-md);
+      }
+
+      .honor-board h3 {
+        font-size: 1.2rem;
+        flex-direction: column;
+        gap: var(--spacing-xs);
+      }
+
+      .honor-item {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--spacing-xs);
+        padding: var(--spacing-sm);
+      }
+
+      .honor-student-info {
+        justify-content: center;
+        gap: var(--spacing-sm);
+      }
+
+      .honor-rank {
+        font-size: 1.3rem;
+      }
+
+      .honor-name {
+        font-size: 1rem;
+      }
+
+      .honor-actions {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+      }
+
+      .honor-action-btn {
+        width: 100%;
+        justify-content: center;
       }
     }
 
@@ -1155,6 +1502,10 @@
         <span>❌</span>
         <span>استبعاد الطالب</span>
       </button>
+      <button class="main-btn honor-btn" id="honorBtn" disabled>
+        <span>🏆</span>
+        <span>تكريم الطالب</span>
+      </button>
       <button class="main-btn reset-btn" id="resetBtn" disabled>
         <span>🔄</span>
         <span>إعادة تعيين</span>
@@ -1219,6 +1570,31 @@
       </div>
     </div>
 
+    <!-- لوحة الشرف -->
+    <div class="honor-board" id="honorBoard" style="display: none;">
+      <h3>
+        <span>🏆</span>
+        <span>لوحة الشرف - الطلاب المكرمون</span>
+      </h3>
+      <div class="honor-list" id="honorList">
+        <div class="no-honors">
+          <div class="honor-icon">⭐</div>
+          <p>لم يتم تكريم أي طالب بعد</p>
+          <small>اختر طالباً واضغط على زر التكريم لإضافته للوحة الشرف</small>
+        </div>
+      </div>
+      <div class="honor-actions">
+        <button class="honor-action-btn clear-honors-btn" id="clearHonorsBtn">
+          <span>🗑️</span>
+          <span>مسح لوحة الشرف</span>
+        </button>
+        <button class="honor-action-btn export-honors-btn" id="exportHonorsBtn">
+          <span>📋</span>
+          <span>نسخ قائمة المكرمين</span>
+        </button>
+      </div>
+    </div>
+
     <!-- معلومات الطلاب -->
     <div class="student-info" id="studentInfo" style="display: none;">
       <h3>
@@ -1260,6 +1636,7 @@
     let availableStudents = [];
     let removedStudents = [];
     let selectedStudents = [];
+    let honoredStudents = [];
     let isRolling = false;
     let rollingInterval = null;
     let currentSelectedName = '';
@@ -1287,6 +1664,7 @@
       startBtn: document.getElementById('startBtn'),
       stopBtn: document.getElementById('stopBtn'),
       removeBtn: document.getElementById('removeBtn'),
+      honorBtn: document.getElementById('honorBtn'),
       resetBtn: document.getElementById('resetBtn'),
       speedSlider: document.getElementById('speedSlider'),
       durationSlider: document.getElementById('durationSlider'),
@@ -1303,6 +1681,10 @@
       remainingStudents: document.getElementById('remainingStudents'),
       selectedCount: document.getElementById('selectedCount'),
       removedCount: document.getElementById('removedCount'),
+      honorBoard: document.getElementById('honorBoard'),
+      honorList: document.getElementById('honorList'),
+      clearHonorsBtn: document.getElementById('clearHonorsBtn'),
+      exportHonorsBtn: document.getElementById('exportHonorsBtn'),
       backBtn: document.getElementById('backBtn'),
       fullscreenBtn: document.getElementById('fullscreenBtn'),
       rollingSound: document.getElementById('rollingSound'),
@@ -1517,6 +1899,7 @@
       elements.startBtn.disabled = !hasStudents || isRolling;
       elements.stopBtn.disabled = !isRolling;
       elements.removeBtn.disabled = !currentSelectedName || isRolling;
+      elements.honorBtn.disabled = !currentSelectedName || isRolling;
       elements.resetBtn.disabled = currentStudents.length === 0;
       
       if (hasStudents && !currentSelectedName) {
@@ -1652,6 +2035,182 @@
       console.log(`❌ تم استبعاد: ${removedStudents[removedStudents.length - 1]}`);
     }
 
+    // تكريم الطالب المختار
+    function honorSelectedStudent() {
+      if (!currentSelectedName) return;
+      
+      // التحقق من عدم تكريم الطالب مسبقاً
+      const isAlreadyHonored = honoredStudents.some(student => student.name === currentSelectedName);
+      if (isAlreadyHonored) {
+        alert('🏆 هذا الطالب مُكرم بالفعل في لوحة الشرف!');
+        return;
+      }
+      
+      // إضافة إلى قائمة المكرمين
+      const honoredStudent = {
+        name: currentSelectedName,
+        timestamp: new Date(),
+        rank: honoredStudents.length + 1
+      };
+      
+      honoredStudents.push(honoredStudent);
+      
+      // عرض تأثير التكريم
+      showHonorEffect(currentSelectedName);
+      
+      // تحديث لوحة الشرف
+      updateHonorBoard();
+      showHonorBoard();
+      
+      // تشغيل صوت التكريم
+      playSound(elements.celebrationSound, 'celebration');
+      
+      currentSelectedName = '';
+      
+      if (availableStudents.length > 0) {
+        showWelcomeMessage();
+      }
+      
+      updateUI();
+      updateStats();
+      
+      console.log(`🏆 تم تكريم: ${honoredStudent.name}`);
+    }
+
+    // عرض تأثير التكريم
+    function showHonorEffect(name) {
+      elements.rollingAnimation.innerHTML = `
+        <div class="selected-name celebration" style="color: var(--accent-color); text-shadow: 3px 3px 6px rgba(255, 215, 0, 0.5);">
+          🏆 تم تكريم ${name} 🏆
+          <div style="font-size: 0.6em; margin-top: 10px; color: #B8860B;">
+            ✨ تمت إضافته إلى لوحة الشرف ✨
+          </div>
+        </div>
+      `;
+      
+      // إضافة تأثير الاحتفال الذهبي
+      elements.resultDisplay.classList.add('celebration');
+      setTimeout(() => {
+        elements.resultDisplay.classList.remove('celebration');
+      }, 3000);
+    }
+
+    // تحديث لوحة الشرف
+    function updateHonorBoard() {
+      if (honoredStudents.length === 0) {
+        elements.honorList.innerHTML = `
+          <div class="no-honors">
+            <div class="honor-icon">⭐</div>
+            <p>لم يتم تكريم أي طالب بعد</p>
+            <small>اختر طالباً واضغط على زر التكريم لإضافته للوحة الشرف</small>
+          </div>
+        `;
+        elements.clearHonorsBtn.disabled = true;
+        elements.exportHonorsBtn.disabled = true;
+        return;
+      }
+
+      let honorHTML = '';
+      honoredStudents.forEach((student, index) => {
+        const medals = ['🥇', '🥈', '🥉'];
+        const medal = medals[index] || '🏅';
+        const rankText = index === 0 ? '1st' : index === 1 ? '2nd' : index === 2 ? '3rd' : `${index + 1}th`;
+        
+        honorHTML += `
+          <div class="honor-item">
+            <div class="honor-student-info">
+              <div class="honor-rank">${index + 1}</div>
+              <div class="honor-name">${student.name}</div>
+            </div>
+            <div class="honor-medal">${medal}</div>
+            <div class="honor-time">${formatHonorTime(student.timestamp)}</div>
+          </div>
+        `;
+      });
+
+      elements.honorList.innerHTML = honorHTML;
+      elements.clearHonorsBtn.disabled = false;
+      elements.exportHonorsBtn.disabled = false;
+    }
+
+    // تنسيق وقت التكريم
+    function formatHonorTime(timestamp) {
+      const now = new Date();
+      const diff = now - timestamp;
+      const minutes = Math.floor(diff / 60000);
+      
+      if (minutes < 1) return 'الآن';
+      if (minutes === 1) return 'منذ دقيقة';
+      if (minutes < 60) return `منذ ${minutes} دقائق`;
+      
+      const hours = Math.floor(minutes / 60);
+      if (hours === 1) return 'منذ ساعة';
+      if (hours < 24) return `منذ ${hours} ساعات`;
+      
+      return timestamp.toLocaleDateString('ar-SA');
+    }
+
+    // إظهار لوحة الشرف
+    function showHonorBoard() {
+      elements.honorBoard.style.display = 'block';
+    }
+
+    // إخفاء لوحة الشرف
+    function hideHonorBoard() {
+      elements.honorBoard.style.display = 'none';
+    }
+
+    // مسح لوحة الشرف
+    function clearHonorBoard() {
+      if (honoredStudents.length === 0) return;
+      
+      if (confirm('هل تريد مسح جميع الطلاب من لوحة الشرف؟\nهذا الإجراء لا يمكن التراجع عنه.')) {
+        honoredStudents = [];
+        updateHonorBoard();
+        hideHonorBoard();
+        
+        playSound(elements.clickSound, 'click');
+        console.log('🗑️ تم مسح لوحة الشرف');
+      }
+    }
+
+    // تصدير قائمة المكرمين
+    function exportHonorsList() {
+      if (honoredStudents.length === 0) {
+        alert('⚠️ لا يوجد طلاب مكرمون لتصديرهم!');
+        return;
+      }
+
+      let exportText = '🏆 لوحة الشرف - الطلاب المكرمون 🏆\n\n';
+      exportText += `التاريخ: ${new Date().toLocaleDateString('ar-SA')}\n`;
+      exportText += `الوقت: ${new Date().toLocaleTimeString('ar-SA')}\n\n`;
+      exportText += '═══════════════════════════════\n\n';
+
+      honoredStudents.forEach((student, index) => {
+        const medals = ['🥇', '🥈', '🥉'];
+        const medal = medals[index] || '🏅';
+        exportText += `${medal} المركز ${index + 1}: ${student.name}\n`;
+        exportText += `   وقت التكريم: ${formatHonorTime(student.timestamp)}\n\n`;
+      });
+
+      exportText += '═══════════════════════════════\n';
+      exportText += `إجمالي الطلاب المكرمين: ${honoredStudents.length}\n`;
+      exportText += '\n🎓 مبارك لجميع الطلاب المتميزين! 🎓';
+
+      // نسخ النص للحافظة
+      navigator.clipboard.writeText(exportText).then(() => {
+        alert('✅ تم نسخ قائمة المكرمين إلى الحافظة بنجاح!\nيمكنك الآن لصقها في أي مكان تريد.');
+        playSound(elements.selectSound, 'selection');
+      }).catch(() => {
+        // إذا فشل النسخ، عرض النص في نافذة
+        const newWindow = window.open('', '_blank');
+        newWindow.document.write(`<pre style="font-family: Arial; direction: rtl; text-align: right; padding: 20px; line-height: 1.6;">${exportText}</pre>`);
+        newWindow.document.title = 'لوحة الشرف - الطلاب المكرمون';
+      });
+
+      console.log('📋 تم تصدير قائمة المكرمين');
+    }
+
     // إعادة تعيين النشاط
     function resetActivity() {
       clearInterval(rollingInterval);
@@ -1664,8 +2223,14 @@
         selectedStudents = [];
         showWelcomeMessage();
         showStudentInfo();
+        
+        // إظهار لوحة الشرف إذا كان هناك طلاب مكرمون
+        if (honoredStudents.length > 0) {
+          showHonorBoard();
+        }
       } else {
         hideStudentInfo();
+        hideHonorBoard();
         elements.rollingAnimation.innerHTML = `
           <div class="welcome-message">
             👋 مرحباً بك في نشاط الاختيار العشوائي<br>
@@ -1801,6 +2366,16 @@
         }
       });
 
+      elements.honorBtn.addEventListener('click', (e) => {
+        console.log('🏆 تم النقر على زر التكريم');
+        addClickEffect(e.target);
+        playSound(elements.clickSound, 'click');
+        
+        if (confirm(`هل تريد تكريم "${currentSelectedName}" وإضافته إلى لوحة الشرف؟`)) {
+          honorSelectedStudent();
+        }
+      });
+
       elements.resetBtn.addEventListener('click', (e) => {
         console.log('🔄 تم النقر على زر إعادة التعيين');
         addClickEffect(e.target);
@@ -1819,6 +2394,21 @@
       elements.selectionAudioToggle.addEventListener('change', updateAudioSettings);
       elements.celebrationAudioToggle.addEventListener('change', updateAudioSettings);
       elements.clickAudioToggle.addEventListener('change', updateAudioSettings);
+
+      // أزرار لوحة الشرف
+      elements.clearHonorsBtn.addEventListener('click', (e) => {
+        console.log('🗑️ تم النقر على زر مسح لوحة الشرف');
+        addClickEffect(e.target);
+        playSound(elements.clickSound, 'click');
+        clearHonorBoard();
+      });
+
+      elements.exportHonorsBtn.addEventListener('click', (e) => {
+        console.log('📋 تم النقر على زر تصدير قائمة المكرمين');
+        addClickEffect(e.target);
+        playSound(elements.clickSound, 'click');
+        exportHonorsList();
+      });
 
       // أزرار التحكم العلوية
       elements.fullscreenBtn.addEventListener('click', (e) => {
@@ -1878,6 +2468,13 @@
             if (!isRolling && currentSelectedName) {
               e.preventDefault();
               elements.removeBtn.click();
+            }
+            break;
+          case 'h':
+          case 'H':
+            if (!isRolling && currentSelectedName) {
+              e.preventDefault();
+              elements.honorBtn.click();
             }
             break;
         }
