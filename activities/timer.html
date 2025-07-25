@@ -1,774 +1,2232 @@
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <title>المؤقت الصفي</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Unified Styles -->
-  <link rel="stylesheet" href="../config/unified-styles-template.css">
-  
-  <!-- Activity-specific styles -->
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <meta name="theme-color" content="#00796B"/>
+  <meta name="description" content="المؤقت الصفي التفاعلي - أداة احترافية لإدارة الوقت في الصف"/>
+  <meta name="keywords" content="مؤقت, وقت, تعليم, صف, تفاعلي, عُمان"/>
+  <meta name="author" content="الأستاذ أحمد بن عبدالله الضامري"/>
+
+  <title>المؤقت الصفي - الأنشطة التفاعلية</title>
+
+  <!-- الخطوط والأيقونات -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- فافيكون -->
+  <link rel="icon" type="image/png" href="../assets/media/images/school-logo.png">
+
   <style>
-    /* Timer-specific customizations */
-    .timer-container {
+    :root {
+      /* نظام ألوان عُماني متطور */
+      --primary-color: #00796B;
+      --primary-light: #4DB6AC;
+      --primary-dark: #004D40;
+      --secondary-color: #FF5722;
+      --accent-color: #FFD700;
+      --success-color: #4CAF50;
+      --warning-color: #FF9800;
+      --error-color: #F44336;
+      --info-color: #2196F3;
+      --text-primary: #212121;
+      --text-secondary: #757575;
+      --text-light: #FAFAFA;
+      --background-light: #FAFAFA;
+      --surface-color: #FFFFFF;
+      --shadow-light: rgba(0, 0, 0, 0.1);
+      --shadow-medium: rgba(0, 0, 0, 0.2);
+      --shadow-dark: rgba(0, 0, 0, 0.3);
+
+      /* متغيرات التخطيط */
+      --border-radius: 16px;
+      --border-radius-small: 8px;
+      --spacing-xs: 4px;
+      --spacing-sm: 8px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+      --spacing-xl: 32px;
+      --spacing-2xl: 48px;
+
+      /* الانتقالات */
+      --transition-fast: 0.2s ease-out;
+      --transition-normal: 0.3s ease-out;
+      --transition-slow: 0.5s ease-out;
+
+      /* الخطوط */
+      --font-xs: 0.75rem;
+      --font-sm: 0.875rem;
+      --font-base: 1rem;
+      --font-lg: 1.125rem;
+      --font-xl: 1.25rem;
+      --font-2xl: 1.5rem;
+      --font-3xl: 1.875rem;
+      --font-4xl: 2.25rem;
+      --font-5xl: 3rem;
+      --font-6xl: 3.75rem;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(135deg,
+        #e0f7fa 0%,
+        #b2dfdb 25%,
+        #80cbc4 50%,
+        #4db6ac 75%,
+        #26a69a 100%);
+      background-attachment: fixed;
+      color: var(--text-primary);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* خلفية متحركة */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(0, 121, 107, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 60%, rgba(255, 87, 34, 0.1) 0%, transparent 50%);
+      animation: backgroundShift 20s ease-in-out infinite;
+      z-index: -1;
+    }
+
+    @keyframes backgroundShift {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(-20px, 20px) rotate(1deg); }
+      50% { transform: translate(20px, -20px) rotate(-1deg); }
+      75% { transform: translate(-10px, -10px) rotate(0.5deg); }
+    }
+
+    /* أزرار التحكم */
+    .control-buttons {
+      position: fixed;
+      top: var(--spacing-md);
+      display: flex;
+      gap: var(--spacing-sm);
+      z-index: 1000;
+    }
+
+    .control-buttons.left {
+      left: var(--spacing-md);
+    }
+
+    .control-buttons.right {
+      right: var(--spacing-md);
+    }
+
+    .control-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--primary-color);
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px var(--shadow-medium);
+      transition: all var(--transition-normal);
+      backdrop-filter: blur(10px);
+    }
+
+    .control-btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      background: var(--primary-color);
+      color: white;
+      box-shadow: 0 8px 20px var(--shadow-dark);
+    }
+
+    .control-btn:active {
+      transform: translateY(0) scale(0.95);
+    }
+
+    /* الحاوي الرئيسي */
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--spacing-xl) var(--spacing-lg);
+      position: relative;
+      z-index: 10;
+    }
+
+    /* رأس الصفحة */
+    .header {
+      text-align: center;
+      margin-bottom: var(--spacing-xl);
+      animation: slideDown 0.8s ease-out;
+    }
+
+    .header-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-xl);
+      box-shadow: 0 8px 32px var(--shadow-medium);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+    }
+
+    .header-title {
+      font-size: clamp(2rem, 5vw, 2.5rem);
+      font-weight: 700;
+      margin-bottom: var(--spacing-sm);
+      color: var(--primary-color);
+      text-shadow: 2px 2px 4px var(--shadow-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-sm);
+    }
+
+    .header-subtitle {
+      font-size: clamp(1rem, 3vw, 1.2rem);
+      color: var(--text-secondary);
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    /* إعدادات المؤقت */
+    .timer-settings {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(232, 245, 233, 0.95) 50%,
+        rgba(255, 255, 255, 0.98) 100%);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-xl);
+      margin-bottom: var(--spacing-xl);
+      box-shadow: 
+        0 8px 32px rgba(0, 121, 107, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.08);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(0, 121, 107, 0.1);
+      animation: slideUp 0.8s ease-out 0.2s both;
+    }
+
+    .timer-settings h3 {
+      font-size: 1.4rem;
+      color: var(--primary-color);
+      margin-bottom: var(--spacing-lg);
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-sm);
+      font-weight: 600;
+    }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .setting-group {
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: var(--border-radius-small);
+      padding: var(--spacing-lg);
+      border: 1px solid rgba(0, 121, 107, 0.1);
+      transition: all var(--transition-normal);
+    }
+
+    .setting-group:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(0, 121, 107, 0.15);
+      border-color: var(--primary-light);
+    }
+
+    .setting-label {
+      display: block;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-sm);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+    }
+
+    .timer-select {
+      width: 100%;
+      padding: var(--spacing-md);
+      border: 2px solid rgba(0, 121, 107, 0.2);
+      border-radius: var(--border-radius-small);
+      background: white;
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-family: 'Cairo', sans-serif;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+      background-position: left 0.5rem center;
+      background-repeat: no-repeat;
+      background-size: 1.5em 1.5em;
+      padding-left: 2.5rem;
+    }
+
+    .timer-select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(0, 121, 107, 0.1);
+    }
+
+    .timer-select:hover {
+      border-color: var(--primary-light);
+    }
+
+    /* أزرار الأوقات المحددة مسبقاً */
+    .preset-times {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-lg);
+    }
+
+    .preset-btn {
+      background: linear-gradient(135deg, var(--secondary-color), #FF7043);
+      color: white;
+      border: none;
+      padding: var(--spacing-md);
+      border-radius: var(--border-radius-small);
+      font-family: 'Cairo', sans-serif;
+      font-size: var(--font-sm);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      box-shadow: 0 2px 8px rgba(255, 87, 34, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .preset-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .preset-btn:hover::before {
+      left: 100%;
+    }
+
+    .preset-btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 6px 16px rgba(255, 87, 34, 0.4);
+      background: linear-gradient(135deg, #FF7043, var(--secondary-color));
+    }
+
+    .preset-btn:active {
+      transform: translateY(0) scale(0.95);
+    }
+
+    /* عرض المؤقت */
+    .timer-display {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-2xl);
+      margin-bottom: var(--spacing-xl);
+      box-shadow: 0 8px 32px var(--shadow-medium);
+      backdrop-filter: blur(15px);
+      animation: slideUp 0.8s ease-out 0.4s both;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .timer-display::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, 
+        transparent 30%, 
+        rgba(0, 121, 107, 0.1) 50%, 
+        transparent 70%);
+      animation: shimmer 4s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes shimmer {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* دائرة المؤقت */
+    .timer-circle-container {
       position: relative;
       width: 300px;
       height: 300px;
-      margin: var(--space-2xl) auto;
+      margin-bottom: var(--spacing-lg);
     }
-    
+
     .timer-circle {
-      position: relative;
-      width: 100%;
-      height: 100%;
-    }
-    
-    .timer-circle svg {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
       transform: rotate(-90deg);
     }
-    
-    .timer-circle svg circle {
+
+    .timer-circle circle {
       fill: none;
       stroke-width: 12;
       stroke-linecap: round;
     }
-    
-    .timer-bg {
-      stroke: var(--medium-gray);
+
+    .timer-bg-circle {
+      stroke: rgba(0, 121, 107, 0.2);
     }
-    
-    .timer-progress {
+
+    .timer-progress-circle {
       stroke: var(--primary-color);
-      stroke-dasharray: 942; /* 2π * 150 */
+      stroke-dasharray: 942; /* 2π × 150 */
       stroke-dashoffset: 942;
-      transition: stroke-dashoffset 1s linear;
+      transition: all var(--transition-normal);
+      filter: drop-shadow(0 0 10px rgba(0, 121, 107, 0.5));
     }
-    
-    .timer-progress.warning {
+
+    .timer-progress-circle.warning {
       stroke: var(--warning-color);
-      animation: pulse-warning 1s infinite;
+      animation: warningPulse 1s ease-in-out infinite;
     }
-    
-    .timer-progress.danger {
-      stroke: var(--danger-color);
-      animation: pulse-danger 0.5s infinite;
+
+    .timer-progress-circle.danger {
+      stroke: var(--error-color);
+      animation: dangerPulse 0.5s ease-in-out infinite;
     }
-    
-    @keyframes pulse-warning {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.7; }
+
+    @keyframes warningPulse {
+      0%, 100% { 
+        filter: drop-shadow(0 0 10px rgba(255, 152, 0, 0.5));
+        stroke-width: 12;
+      }
+      50% { 
+        filter: drop-shadow(0 0 20px rgba(255, 152, 0, 0.8));
+        stroke-width: 14;
+      }
     }
-    
-    @keyframes pulse-danger {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
+
+    @keyframes dangerPulse {
+      0%, 100% { 
+        filter: drop-shadow(0 0 15px rgba(244, 67, 54, 0.7));
+        stroke-width: 12;
+      }
+      50% { 
+        filter: drop-shadow(0 0 25px rgba(244, 67, 54, 1));
+        stroke-width: 16;
+      }
     }
-    
+
+    /* نص المؤقت */
     .timer-time {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: var(--font-size-4xl);
+      font-size: clamp(2.5rem, 8vw, 4rem);
       font-weight: 700;
       color: var(--primary-color);
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-      z-index: 1;
+      text-shadow: 2px 2px 8px rgba(0, 121, 107, 0.3);
+      font-variant-numeric: tabular-nums;
+      z-index: 10;
+      transition: all var(--transition-normal);
     }
-    
+
     .timer-time.warning {
       color: var(--warning-color);
-      animation: bounce-warning 1s infinite;
+      animation: timeWarning 1s ease-in-out infinite;
     }
-    
+
     .timer-time.danger {
-      color: var(--danger-color);
-      animation: bounce-danger 0.5s infinite;
+      color: var(--error-color);
+      animation: timeDanger 0.5s ease-in-out infinite;
+      text-shadow: 
+        2px 2px 8px rgba(244, 67, 54, 0.5),
+        0 0 20px rgba(244, 67, 54, 0.7);
     }
-    
-    @keyframes bounce-warning {
-      0%, 100% { transform: translate(-50%, -50%) scale(1); }
-      50% { transform: translate(-50%, -50%) scale(1.1); }
+
+    @keyframes timeWarning {
+      0%, 100% { 
+        transform: translate(-50%, -50%) scale(1);
+        text-shadow: 2px 2px 8px rgba(255, 152, 0, 0.3);
+      }
+      50% { 
+        transform: translate(-50%, -50%) scale(1.05);
+        text-shadow: 2px 2px 12px rgba(255, 152, 0, 0.6);
+      }
     }
-    
-    @keyframes bounce-danger {
-      0%, 100% { transform: translate(-50%, -50%) scale(1); }
-      50% { transform: translate(-50%, -50%) scale(1.2); }
+
+    @keyframes timeDanger {
+      0%, 100% { 
+        transform: translate(-50%, -50%) scale(1);
+        text-shadow: 
+          2px 2px 8px rgba(244, 67, 54, 0.5),
+          0 0 20px rgba(244, 67, 54, 0.7);
+      }
+      50% { 
+        transform: translate(-50%, -50%) scale(1.1);
+        text-shadow: 
+          2px 2px 12px rgba(244, 67, 54, 0.8),
+          0 0 30px rgba(244, 67, 54, 1);
+      }
     }
-    
-    .time-controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-md);
-      justify-content: center;
-      margin: var(--space-xl) 0;
-    }
-    
-    .timer-controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-md);
-      justify-content: center;
-      margin: var(--space-lg) 0;
-    }
-    
-    .preset-times {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: var(--space-md);
-      margin: var(--space-lg) 0;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    
-    .preset-btn {
-      background: linear-gradient(135deg, var(--secondary-color), var(--secondary-light));
-      color: var(--text-light);
-      border: none;
-      padding: var(--space-md);
-      border-radius: var(--radius-lg);
-      font-family: var(--font-family);
-      font-size: var(--font-size-sm);
-      font-weight: 600;
-      cursor: pointer;
-      transition: all var(--transition-normal);
-      box-shadow: var(--shadow-light);
-    }
-    
-    .preset-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-medium);
-      background: linear-gradient(135deg, var(--secondary-dark), var(--secondary-color));
-    }
-    
+
+    /* مؤشر الحالة */
     .status-indicator {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: var(--space-sm);
-      margin: var(--space-lg) 0;
-      padding: var(--space-md);
-      background: var(--bg-card);
-      border-radius: var(--radius-lg);
-      border: 2px solid var(--medium-gray);
-      max-width: 400px;
-      margin-left: auto;
-      margin-right: auto;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-md) var(--spacing-lg);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 249, 250, 0.9));
+      border: 2px solid rgba(0, 121, 107, 0.2);
+      border-radius: var(--border-radius-small);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      transition: all var(--transition-normal);
+      margin-bottom: var(--spacing-lg);
+      backdrop-filter: blur(10px);
     }
-    
+
+    .status-indicator.idle {
+      border-color: var(--text-secondary);
+      color: var(--text-secondary);
+    }
+
     .status-indicator.running {
       border-color: var(--success-color);
-      background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), var(--white));
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(76, 175, 80, 0.05));
+      color: var(--success-color);
+      animation: runningGlow 2s ease-in-out infinite;
     }
-    
+
     .status-indicator.paused {
       border-color: var(--warning-color);
-      background: linear-gradient(135deg, rgba(255, 152, 0, 0.1), var(--white));
+      background: linear-gradient(135deg, rgba(255, 152, 0, 0.1), rgba(255, 152, 0, 0.05));
+      color: var(--warning-color);
     }
-    
+
     .status-indicator.finished {
-      border-color: var(--danger-color);
-      background: linear-gradient(135deg, rgba(244, 67, 54, 0.1), var(--white));
+      border-color: var(--accent-color);
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+      color: #B8860B;
+      animation: finishedCelebration 1s ease-in-out infinite;
     }
-    
-    /* Responsive adjustments */
+
+    @keyframes runningGlow {
+      0%, 100% { box-shadow: 0 0 10px rgba(76, 175, 80, 0.3); }
+      50% { box-shadow: 0 0 20px rgba(76, 175, 80, 0.5); }
+    }
+
+    @keyframes finishedCelebration {
+      0%, 100% { 
+        transform: scale(1);
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+      }
+      50% { 
+        transform: scale(1.02);
+        box-shadow: 0 0 25px rgba(255, 215, 0, 0.8);
+      }
+    }
+
+    /* أزرار التحكم في المؤقت */
+    .timer-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-md);
+      justify-content: center;
+      margin-bottom: var(--spacing-xl);
+      animation: slideUp 0.8s ease-out 0.6s both;
+    }
+
+    .timer-btn {
+      padding: var(--spacing-md) var(--spacing-xl);
+      font-size: clamp(1rem, 3vw, 1.2rem);
+      font-weight: 600;
+      border: none;
+      border-radius: var(--border-radius-small);
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      min-width: 140px;
+      justify-content: center;
+      box-shadow: 0 4px 12px var(--shadow-light);
+      font-family: 'Cairo', sans-serif;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .timer-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .timer-btn:hover::before {
+      left: 100%;
+    }
+
+    .timer-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .timer-btn:disabled::before {
+      display: none;
+    }
+
+    .start-btn {
+      background: linear-gradient(45deg, var(--success-color), #66BB6A);
+      color: white;
+    }
+
+    .start-btn:hover:not(:disabled) {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
+    }
+
+    .pause-btn {
+      background: linear-gradient(45deg, var(--warning-color), #FFB74D);
+      color: white;
+    }
+
+    .pause-btn:hover:not(:disabled) {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(255, 152, 0, 0.4);
+    }
+
+    .resume-btn {
+      background: linear-gradient(45deg, var(--info-color), #42A5F5);
+      color: white;
+    }
+
+    .resume-btn:hover:not(:disabled) {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(33, 150, 243, 0.4);
+    }
+
+    .reset-btn {
+      background: linear-gradient(45deg, var(--text-secondary), #9E9E9E);
+      color: white;
+    }
+
+    .reset-btn:hover:not(:disabled) {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(158, 158, 158, 0.4);
+    }
+
+    .stop-btn {
+      background: linear-gradient(45deg, var(--error-color), #EF5350);
+      color: white;
+    }
+
+    .stop-btn:hover:not(:disabled) {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(244, 67, 54, 0.4);
+    }
+    .stop-btn:hover:not(:disabled) {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(244, 67, 54, 0.4);
+    }
+
+    /* إعدادات متقدمة */
+    .advanced-settings {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(240, 248, 255, 0.95) 50%,
+        rgba(255, 255, 255, 0.98) 100%);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-xl);
+      margin-bottom: var(--spacing-xl);
+      box-shadow: 
+        0 8px 32px rgba(33, 150, 243, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.08);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(33, 150, 243, 0.1);
+      animation: slideUp 0.8s ease-out 0.8s both;
+    }
+
+    .advanced-settings h3 {
+      font-size: 1.3rem;
+      color: var(--info-color);
+      margin-bottom: var(--spacing-lg);
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-sm);
+      font-weight: 600;
+    }
+
+    .sound-controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-md);
+    }
+
+    .sound-control {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--spacing-sm) var(--spacing-md);
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: var(--border-radius-small);
+      border: 1px solid rgba(33, 150, 243, 0.1);
+      transition: all var(--transition-normal);
+    }
+
+    .sound-control:hover {
+      background: rgba(33, 150, 243, 0.05);
+      border-color: rgba(33, 150, 243, 0.2);
+      transform: translateY(-1px);
+    }
+
+    .sound-label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+      cursor: pointer;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      border-radius: 24px;
+      transition: all var(--transition-normal);
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      border-radius: 50%;
+      transition: all var(--transition-normal);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .toggle-switch input:checked + .toggle-slider {
+      background: linear-gradient(45deg, var(--info-color), #42A5F5);
+    }
+
+    .toggle-switch input:checked + .toggle-slider:before {
+      transform: translateX(20px);
+      box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+    }
+
+    .toggle-switch:hover .toggle-slider {
+      box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+    }
+
+    /* شريط مستوى الصوت */
+    .volume-control {
+      margin-top: var(--spacing-md);
+      grid-column: 1 / -1;
+    }
+
+    .volume-slider {
+      width: 100%;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      background: linear-gradient(to right, #ccc, var(--info-color));
+      border-radius: var(--border-radius-small);
+      outline: none;
+      transition: all var(--transition-normal);
+    }
+
+    .volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      background: var(--info-color);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 2px 6px var(--shadow-medium);
+      transition: all var(--transition-fast);
+    }
+
+    .volume-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+      box-shadow: 0 4px 12px var(--shadow-dark);
+    }
+
+    .volume-value {
+      text-align: center;
+      margin-top: var(--spacing-sm);
+      font-weight: 600;
+      color: var(--info-color);
+      font-size: 0.9rem;
+    }
+
+    /* إحصائيات المؤقت */
+    .timer-stats {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(248, 250, 252, 0.95) 50%,
+        rgba(255, 255, 255, 0.98) 100%);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-xl);
+      margin-bottom: var(--spacing-xl);
+      box-shadow: 
+        0 8px 32px rgba(158, 158, 158, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.08);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(158, 158, 158, 0.1);
+      animation: slideUp 0.8s ease-out 1s both;
+    }
+
+    .timer-stats h3 {
+      font-size: 1.3rem;
+      color: var(--text-secondary);
+      margin-bottom: var(--spacing-lg);
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-sm);
+      font-weight: 600;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: var(--spacing-md);
+    }
+
+    .stat-item {
+      background: linear-gradient(135deg, rgba(158, 158, 158, 0.1), rgba(189, 189, 189, 0.1));
+      padding: var(--spacing-lg);
+      border-radius: var(--border-radius-small);
+      border: 2px solid rgba(158, 158, 158, 0.2);
+      text-align: center;
+      transition: all var(--transition-normal);
+    }
+
+    .stat-item:hover {
+      transform: translateY(-2px);
+      border-color: var(--text-secondary);
+      box-shadow: 0 4px 12px rgba(158, 158, 158, 0.2);
+    }
+
+    .stat-number {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: var(--spacing-xs);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+      opacity: 0.8;
+    }
+
+    /* نافذة الإكمال */
+    .completion-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all var(--transition-normal);
+      backdrop-filter: blur(5px);
+    }
+
+    .completion-modal.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background: linear-gradient(135deg, white, #f8f9fa);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-2xl);
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      transform: scale(0.8);
+      transition: all var(--transition-normal);
+      max-width: 400px;
+      margin: var(--spacing-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .completion-modal.show .modal-content {
+      transform: scale(1);
+    }
+
+    .modal-content::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--success-color), var(--accent-color), var(--primary-color));
+    }
+
+    .modal-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--success-color);
+      margin-bottom: var(--spacing-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-sm);
+    }
+
+    .modal-message {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      margin-bottom: var(--spacing-xl);
+      line-height: 1.5;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: var(--spacing-md);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .modal-btn {
+      padding: var(--spacing-md) var(--spacing-xl);
+      border: none;
+      border-radius: var(--border-radius-small);
+      font-family: 'Cairo', sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      min-width: 100px;
+    }
+
+    .modal-btn.primary {
+      background: linear-gradient(45deg, var(--success-color), #66BB6A);
+      color: white;
+    }
+
+    .modal-btn.secondary {
+      background: linear-gradient(45deg, var(--text-secondary), #9E9E9E);
+      color: white;
+    }
+
+    .modal-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px var(--shadow-medium);
+    }
+
+    /* تأثيرات الحركة */
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* التجاوب مع الشاشات المختلفة */
     @media (max-width: 768px) {
-      .timer-container {
+      .main-container {
+        padding: var(--spacing-lg) var(--spacing-md);
+      }
+      
+      .timer-circle-container {
         width: 250px;
         height: 250px;
       }
       
       .timer-time {
-        font-size: var(--font-size-3xl);
+        font-size: clamp(2rem, 6vw, 3rem);
       }
       
-      .preset-times {
-        grid-template-columns: repeat(2, 1fr);
-        max-width: 300px;
-      }
-      
-      .time-controls,
       .timer-controls {
         flex-direction: column;
         align-items: center;
       }
       
-      .time-controls .btn,
-      .timer-controls .btn {
+      .timer-btn {
         width: 100%;
-        max-width: 200px;
+        max-width: 280px;
       }
-    }
-  </style>
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-    }
-    
-    .controls button:active {
-      transform: translateY(1px);
-    }
-    
-    .settings select {
-      font-size: 1.2rem;
-      padding: 12px 20px;
-      background-color: white;
-      color: var(--text-color);
-      border: 2px solid #ddd;
-    }
-    
-    .modal {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      opacity: 1;
-      transition: opacity 1s ease;
-      display: none;
-      z-index: 1000;
-    }
-    
-    .modal.fade-out {
-      opacity: 0;
-    }
-    
-    .modal-content {
-      background: white;
-      padding: 40px;
-      border-radius: 16px;
-      text-align: center;
-      font-size: 2.5rem;
-      color: var(--primary-color);
-      box-shadow: var(--shadow);
-    }
-    
-    label {
-      font-size: 1.3rem;
-      margin: 10px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    
-    @media (max-width: 768px) {
-      h1 {
-        font-size: 2rem;
-        margin: 5rem 0 1.5rem;
+      
+      .settings-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .preset-times {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .sound-controls {
+        grid-template-columns: 1fr;
+      }
+      
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
       }
       
       .control-btn {
-        width: 42px;
-        height: 42px;
-        top: 15px;
-        font-size: 1.2rem;
-      }
-      
-      #muteBtn {
-        right: 15px;
-      }
-      
-      #fullscreenBtn {
-        left: 15px;
-      }
-      
-      #progress-container {
-        width: 250px;
-        height: 250px;
-      }
-      
-      #timer {
-        font-size: 2.5rem;
-      }
-      
-      .controls button {
-        font-size: 1.3rem;
-        padding: 12px 20px;
-        min-width: 140px;
-      }
-      
-      .modal-content {
-        font-size: 2rem;
-        padding: 30px;
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
       }
     }
-    
+
     @media (max-width: 480px) {
-      h1 {
-        font-size: 1.8rem;
-        margin: 4rem 0 1rem;
+      .header-card {
+        padding: var(--spacing-lg);
       }
       
-      #progress-container {
+      .timer-circle-container {
         width: 220px;
         height: 220px;
       }
       
-      #timer {
-        font-size: 2rem;
+      .timer-time {
+        font-size: clamp(1.8rem, 5vw, 2.5rem);
       }
       
-      .controls {
-        gap: 10px;
+      .preset-times {
+        grid-template-columns: 1fr;
       }
       
-      .controls button {
-        width: 100%;
-        max-width: 200px;
+      .stats-grid {
+        grid-template-columns: 1fr;
       }
       
-      .settings {
+      .modal-content {
+        padding: var(--spacing-lg);
+        margin: var(--spacing-md);
+      }
+      
+      .modal-title {
+        font-size: 1.6rem;
+      }
+      
+      .modal-message {
+        font-size: 1rem;
+      }
+      
+      .modal-buttons {
         flex-direction: column;
+      }
+      
+      .modal-btn {
+        width: 100%;
+      }
+    }
+
+    /* تحسينات إضافية للأداء */
+    .timer-btn,
+    .control-btn,
+    .preset-btn {
+      will-change: transform;
+    }
+
+    /* تأثيرات التركيز للوصولية */
+    .timer-btn:focus,
+    .control-btn:focus,
+    .timer-select:focus,
+    .preset-btn:focus,
+    .volume-slider:focus {
+      outline: 3px solid rgba(0, 121, 107, 0.5);
+      outline-offset: 2px;
+    }
+
+    /* تأثير النقر */
+    .click-effect {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .click-effect::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(0, 121, 107, 0.3);
+      transform: translate(-50%, -50%);
+      animation: ripple 0.6s ease-out;
+    }
+
+    @keyframes ripple {
+      to {
+        width: 300px;
+        height: 300px;
+        opacity: 0;
+      }
+    }
+
+    /* حالات خاصة */
+    .celebrating {
+      animation: celebrate 1s ease-out;
+    }
+
+    @keyframes celebrate {
+      0% { transform: scale(1) rotate(0deg); }
+      25% { transform: scale(1.05) rotate(-2deg); }
+      50% { transform: scale(1.1) rotate(2deg); }
+      75% { transform: scale(1.05) rotate(-1deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+
+    /* تأثيرات الصوت البصرية */
+    .sound-wave {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100px;
+      height: 100px;
+      border: 2px solid var(--primary-color);
+      border-radius: 50%;
+      opacity: 0;
+      animation: soundWave 1s ease-out;
+    }
+
+    @keyframes soundWave {
+      0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(3);
+        opacity: 0;
       }
     }
   </style>
 </head>
+
 <body>
-  <!-- Skip link for accessibility -->
-  <a href="#main-content" class="sr-only">تخطي إلى المحتوى الرئيسي</a>
-  
-  <!-- Audio elements -->
-  <audio id="startSound" src="../assets/media/sounds/start-timer.mp3"></audio>
-  <audio id="endSound" src="../assets/media/sounds/end-timer.mp3"></audio>
-  <audio id="clickSound" src="../assets/media/sounds/Click.mp3"></audio>
-  <audio id="tickSound" src="../assets/media/sounds/countdown-beep.mp3"></audio>
-
-  <!-- Main container -->
-  <div class="container">
-    <!-- Header -->
-    <header class="header">
-      <h1>⏱️ المؤقت الصفي</h1>
-      <p>اختر نوع المؤقت والمدة المطلوبة</p>
-    </header>
-
-    <!-- Main content -->
-    <main id="main-content">
-      <!-- Timer settings -->
-      <div class="card">
-        <h3>إعدادات المؤقت</h3>
-        <div class="grid grid-2">
-          <div class="form-group">
-            <label class="form-label">نوع المؤقت:</label>
-            <select id="mode" class="form-select">
-              <option value="countdown">تنازلي ⏱️</option>
-              <option value="countup">تصاعدي ⏲️</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">المدة:</label>
-            <select id="time" class="form-select">
-              <option value="60">1 دقيقة</option>
-              <option value="120">2 دقيقة</option>
-              <option value="180">3 دقائق</option>
-              <option value="300">5 دقائق</option>
-              <option value="600">10 دقائق</option>
-              <option value="900">15 دقيقة</option>
-              <option value="1200">20 دقيقة</option>
-              <option value="1800">30 دقيقة</option>
-            </select>
-          </div>
-        </div>
-        
-        <!-- Preset quick times -->
-        <div class="preset-times">
-          <button class="preset-btn" data-time="30">30 ثانية</button>
-          <button class="preset-btn" data-time="60">1 دقيقة</button>
-          <button class="preset-btn" data-time="180">3 دقائق</button>
-          <button class="preset-btn" data-time="300">5 دقائق</button>
-          <button class="preset-btn" data-time="600">10 دقائق</button>
-          <button class="preset-btn" data-time="900">15 دقيقة</button>
-        </div>
-      </div>
-
-      <!-- Timer display -->
-      <div class="timer-container">
-        <div class="timer-circle">
-          <svg viewBox="0 0 320 320">
-            <circle class="timer-bg" cx="160" cy="160" r="150" />
-            <circle class="timer-progress" id="progressCircle" cx="160" cy="160" r="150" />
-          </svg>
-          <div class="timer-time" id="timerDisplay">00:00</div>
-        </div>
-      </div>
-
-      <!-- Status indicator -->
-      <div class="status-indicator" id="statusIndicator">
-        <span id="statusText">جاهز للبدء</span>
-        <span id="statusIcon">⏸️</span>
-      </div>
-
-      <!-- Timer controls -->
-      <div class="timer-controls">
-        <button id="startBtn" class="btn btn-primary btn-large">▶️ ابدأ</button>
-        <button id="pauseResumeBtn" class="btn btn-secondary btn-large" disabled>⏸️ إيقاف</button>
-        <button id="resetBtn" class="btn btn-outline btn-large">🔄 إعادة</button>
-      </div>
-    </main>
+  <!-- أزرار التحكم -->
+  <div class="control-buttons right">
+    <button class="control-btn" id="backBtn" title="العودة للقائمة الرئيسية" aria-label="العودة للقائمة الرئيسية">
+      🏠
+    </button>
   </div>
 
-  <!-- Completion Modal -->
-  <div class="modal-overlay" id="completionModal" style="display: none;">
-    <div class="modal">
-      <div class="modal-header">
-        <h3>⏰ انتهى الوقت!</h3>
+  <div class="control-buttons left">
+    <button class="control-btn" id="fullscreenBtn" title="ملء الشاشة" aria-label="ملء الشاشة">
+      ⛶
+    </button>
+    <button class="control-btn" id="soundToggleBtn" title="تشغيل/إيقاف الصوت" aria-label="تشغيل/إيقاف الصوت">
+      🔊
+    </button>
+  </div>
+
+  <!-- المحتوى الرئيسي -->
+  <div class="main-container">
+    <!-- رأس الصفحة -->
+    <header class="header">
+      <div class="header-card">
+        <h1 class="header-title">
+          <span>⏱️</span>
+          <span>المؤقت الصفي التفاعلي</span>
+        </h1>
+        <p class="header-subtitle">
+          أداة احترافية لإدارة الوقت في الأنشطة الصفية مع تحكم كامل وتأثيرات بصرية
+        </p>
       </div>
-      <div class="text-center">
-        <p class="text-lg">تم انتهاء المؤقت بنجاح</p>
-        <button class="btn btn-primary" onclick="closeCompletionModal()">حسناً</button>
+    </header>
+
+    <!-- إعدادات المؤقت -->
+    <div class="timer-settings">
+      <h3>
+        <span>⚙️</span>
+        <span>إعدادات المؤقت</span>
+      </h3>
+      
+      <div class="settings-grid">
+        <div class="setting-group">
+          <label class="setting-label">
+            <span>🔄</span>
+            <span>نوع المؤقت</span>
+          </label>
+          <select class="timer-select" id="timerMode">
+            <option value="countdown">⏱️ تنازلي (العد التنازلي)</option>
+            <option value="countup">⏲️ تصاعدي (إيقاف عند حد معين)</option>
+            <option value="stopwatch">⏱️ ساعة إيقاف (مؤقت مفتوح)</option>
+          </select>
+        </div>
+        
+        <div class="setting-group">
+          <label class="setting-label">
+            <span>⏰</span>
+            <span>مدة المؤقت</span>
+          </label>
+          <select class="timer-select" id="timerDuration">
+            <option value="30">30 ثانية</option>
+            <option value="60">1 دقيقة</option>
+            <option value="120">2 دقيقة</option>
+            <option value="180">3 دقائق</option>
+            <option value="300" selected>5 دقائق</option>
+            <option value="600">10 دقائق</option>
+            <option value="900">15 دقيقة</option>
+            <option value="1200">20 دقيقة</option>
+            <option value="1800">30 دقيقة</option>
+            <option value="2700">45 دقيقة</option>
+            <option value="3600">60 دقيقة</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- أزرار الأوقات المحددة مسبقاً -->
+      <div class="preset-times">
+        <button class="preset-btn" data-time="10">10 ثوان</button>
+        <button class="preset-btn" data-time="30">30 ثانية</button>
+        <button class="preset-btn" data-time="60">1 دقيقة</button>
+        <button class="preset-btn" data-time="180">3 دقائق</button>
+        <button class="preset-btn" data-time="300">5 دقائق</button>
+        <button class="preset-btn" data-time="600">10 دقائق</button>
+        <button class="preset-btn" data-time="900">15 دقيقة</button>
+        <button class="preset-btn" data-time="1200">20 دقيقة</button>
+      </div>
+    </div>
+
+    <!-- عرض المؤقت -->
+    <div class="timer-display">
+      <div class="timer-circle-container">
+        <svg class="timer-circle" viewBox="0 0 320 320">
+          <circle class="timer-bg-circle" cx="160" cy="160" r="150"/>
+          <circle class="timer-progress-circle" id="progressCircle" cx="160" cy="160" r="150"/>
+        </svg>
+        <div class="timer-time" id="timerTime">00:00</div>
+      </div>
+      
+      <!-- مؤشر الحالة -->
+      <div class="status-indicator idle" id="statusIndicator">
+        <span id="statusIcon">⏸️</span>
+        <span id="statusText">جاهز للبدء</span>
+      </div>
+    </div>
+
+    <!-- أزرار التحكم في المؤقت -->
+    <div class="timer-controls">
+      <button class="timer-btn start-btn" id="startBtn">
+        <span>▶️</span>
+        <span>ابدأ المؤقت</span>
+      </button>
+      <button class="timer-btn pause-btn" id="pauseBtn" disabled>
+        <span>⏸️</span>
+        <span>إيقاف مؤقت</span>
+      </button>
+      <button class="timer-btn reset-btn" id="resetBtn">
+        <span>🔄</span>
+        <span>إعادة تعيين</span>
+      </button>
+    <!-- أزرار التحكم في المؤقت -->
+    <div class="timer-controls">
+      <button class="timer-btn start-btn" id="startBtn">
+        <span>▶️</span>
+        <span>ابدأ المؤقت</span>
+      </button>
+      <button class="timer-btn pause-btn" id="pauseBtn" disabled>
+        <span>⏸️</span>
+        <span>إيقاف مؤقت</span>
+      </button>
+      <button class="timer-btn reset-btn" id="resetBtn">
+        <span>🔄</span>
+        <span>إعادة تعيين</span>
+      </button>
+      <button class="timer-btn stop-btn" id="stopBtn" disabled>
+        <span>⏹️</span>
+        <span>إيقاف نهائي</span>
+      </button>
+    </div>
+
+    <!-- الإعدادات المتقدمة -->
+    <div class="advanced-settings">
+      <h3>
+        <span>🎵</span>
+        <span>إعدادات الصوت</span>
+      </h3>
+      
+      <div class="sound-controls">
+        <div class="sound-control">
+          <span class="sound-label">
+            <span>🔔</span>
+            <span>صوت البداية</span>
+          </span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="startSoundToggle" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        
+        <div class="sound-control">
+          <span class="sound-label">
+            <span>⏰</span>
+            <span>صوت النهاية</span>
+          </span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="endSoundToggle" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        
+        <div class="sound-control">
+          <span class="sound-label">
+            <span>⚠️</span>
+            <span>صوت التحذير</span>
+          </span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="warningSoundToggle" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        
+        <div class="sound-control">
+          <span class="sound-label">
+            <span>🖱️</span>
+            <span>صوت النقر</span>
+          </span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="clickSoundToggle" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        
+        <div class="volume-control">
+          <label class="sound-label">
+            <span>🔊</span>
+            <span>مستوى الصوت</span>
+          </label>
+          <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="70">
+          <div class="volume-value" id="volumeValue">70%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- إحصائيات المؤقت -->
+    <div class="timer-stats">
+      <h3>
+        <span>📊</span>
+        <span>إحصائيات الجلسة</span>
+      </h3>
+      
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-number" id="totalSessions">0</div>
+          <div class="stat-label">عدد الجلسات</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="totalTime">00:00</div>
+          <div class="stat-label">إجمالي الوقت</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="averageTime">00:00</div>
+          <div class="stat-label">متوسط الوقت</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="completedSessions">0</div>
+          <div class="stat-label">مكتملة</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Scripts -->
-  <script src="../config/unified-scripts-template.js"></script>
+  <!-- نافذة الإكمال -->
+  <div class="completion-modal" id="completionModal">
+    <div class="modal-content">
+      <h2 class="modal-title">
+        <span>🎉</span>
+        <span>انتهى الوقت!</span>
+      </h2>
+      <p class="modal-message" id="modalMessage">
+        تم إكمال المؤقت بنجاح! هل تريد بدء جلسة جديدة؟
+      </p>
+      <div class="modal-buttons">
+        <button class="modal-btn primary" id="newSessionBtn">
+          <span>🔄 جلسة جديدة</span>
+        </button>
+        <button class="modal-btn secondary" id="closeModalBtn">
+          <span>✅ إغلاق</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- عناصر الصوت -->
+  <audio id="startSound" src="../assets/media/sounds/start-timer.mp3" preload="auto" aria-hidden="true"></audio>
+  <audio id="endSound" src="../assets/media/sounds/end-timer.mp3" preload="auto" aria-hidden="true"></audio>
+  <audio id="warningSound" src="../assets/media/sounds/countdown-beep.mp3" preload="auto" aria-hidden="true"></audio>
+  <audio id="clickSound" src="../assets/media/sounds/Click.mp3" preload="auto" aria-hidden="true"></audio>
+
   <script>
-    // Timer Activity - Enhanced with Unified System
-    
-    // Activity-specific variables
+    console.log('⏱️ بدء تحميل المؤقت الصفي التفاعلي...');
+
+    // متغيرات المؤقت
     let timerInterval = null;
-    let duration = 300; // Default 5 minutes
-    let timeLeft = 0;
+    let warningInterval = null;
+    let currentMode = 'countdown';
+    let duration = 300; // 5 دقائق افتراضية
+    let timeLeft = 300;
     let elapsed = 0;
-    let mode = 'countdown';
     let isRunning = false;
     let isPaused = false;
-    let tickInterval = null;
+    let isFinished = false;
 
-    // Initialize the activity
-    document.addEventListener('DOMContentLoaded', function() {
-      ActivityUtils.init('المؤقت الصفي');
-      setupEventListeners();
-      setupPresetButtons();
-      resetTimer();
-    });
+    // إعدادات الصوت
+    let audioSettings = {
+      volume: 0.7,
+      startSound: true,
+      endSound: true,
+      warningSound: true,
+      clickSound: true,
+      masterMute: false
+    };
 
-    // Setup event listeners
-    function setupEventListeners() {
-      const modeSelect = document.getElementById('mode');
-      const timeSelect = document.getElementById('time');
-      const startBtn = document.getElementById('startBtn');
-      const pauseBtn = document.getElementById('pauseResumeBtn');
-      const resetBtn = document.getElementById('resetBtn');
-      
-      modeSelect.addEventListener('change', handleModeChange);
-      timeSelect.addEventListener('change', handleTimeChange);
-      startBtn.addEventListener('click', startTimer);
-      pauseBtn.addEventListener('click', togglePause);
-      resetBtn.addEventListener('click', resetTimer);
-    }
-    
-    // Setup preset time buttons
-    function setupPresetButtons() {
-      const presetButtons = document.querySelectorAll('.preset-btn');
-      presetButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const time = parseInt(e.target.dataset.time);
-          setTime(time);
-          ActivityUtils.playSound('click');
-          ActivityUtils.showNotification(`تم تعيين المؤقت لـ ${formatTime(time)}`, 'info');
-        });
-      });
-    }
+    // إحصائيات الجلسة
+    let sessionStats = {
+      totalSessions: 0,
+      completedSessions: 0,
+      totalTime: 0,
+      sessions: []
+    };
 
-    // Handle mode change
-    function handleModeChange() {
-      const modeSelect = document.getElementById('mode');
-      mode = modeSelect.value;
-      ActivityUtils.playSound('click');
-      resetTimer();
+    // عناصر DOM
+    const elements = {
+      // التحكم الرئيسي
+      timerMode: document.getElementById('timerMode'),
+      timerDuration: document.getElementById('timerDuration'),
+      timerTime: document.getElementById('timerTime'),
+      progressCircle: document.getElementById('progressCircle'),
+      statusIndicator: document.getElementById('statusIndicator'),
+      statusIcon: document.getElementById('statusIcon'),
+      statusText: document.getElementById('statusText'),
       
-      const statusText = mode === 'countdown' ? 'مؤقت تنازلي' : 'مؤقت تصاعدي';
-      ActivityUtils.showNotification(`تم تغيير النمط إلى: ${statusText}`, 'info');
-    }
+      // الأزرار
+      startBtn: document.getElementById('startBtn'),
+      pauseBtn: document.getElementById('pauseBtn'),
+      resetBtn: document.getElementById('resetBtn'),
+      stopBtn: document.getElementById('stopBtn'),
+      backBtn: document.getElementById('backBtn'),
+      fullscreenBtn: document.getElementById('fullscreenBtn'),
+      soundToggleBtn: document.getElementById('soundToggleBtn'),
+      
+      // الإعدادات
+      startSoundToggle: document.getElementById('startSoundToggle'),
+      endSoundToggle: document.getElementById('endSoundToggle'),
+      warningSoundToggle: document.getElementById('warningSoundToggle'),
+      clickSoundToggle: document.getElementById('clickSoundToggle'),
+      volumeSlider: document.getElementById('volumeSlider'),
+      volumeValue: document.getElementById('volumeValue'),
+      
+      // الإحصائيات
+      totalSessions: document.getElementById('totalSessions'),
+      totalTime: document.getElementById('totalTime'),
+      averageTime: document.getElementById('averageTime'),
+      completedSessions: document.getElementById('completedSessions'),
+      
+      // النافذة المنبثقة
+      completionModal: document.getElementById('completionModal'),
+      modalMessage: document.getElementById('modalMessage'),
+      newSessionBtn: document.getElementById('newSessionBtn'),
+      closeModalBtn: document.getElementById('closeModalBtn'),
+      
+      // الأصوات
+      startSound: document.getElementById('startSound'),
+      endSound: document.getElementById('endSound'),
+      warningSound: document.getElementById('warningSound'),
+      clickSound: document.getElementById('clickSound')
+    };
 
-    // Handle time selection change
-    function handleTimeChange() {
-      const timeSelect = document.getElementById('time');
-      duration = parseInt(timeSelect.value);
-      ActivityUtils.playSound('click');
-      resetTimer();
-      
-      ActivityUtils.showNotification(`تم تعيين المدة: ${formatTime(duration)}`, 'info');
-    }
-    
-    // Set custom time
-    function setTime(seconds) {
-      duration = seconds;
-      const timeSelect = document.getElementById('time');
-      
-      // Try to find matching option
-      const option = timeSelect.querySelector(`option[value="${seconds}"]`);
-      if (option) {
-        timeSelect.value = seconds;
+    // تشغيل الصوت مع معالجة الأخطاء والإعدادات
+    function playSound(soundElement, soundType = 'general') {
+      try {
+        if (audioSettings.masterMute) return;
+
+        const soundEnabled = {
+          'start': audioSettings.startSound,
+          'end': audioSettings.endSound,
+          'warning': audioSettings.warningSound,
+          'click': audioSettings.clickSound,
+          'general': true
+        };
+
+        if (!soundEnabled[soundType]) return;
+
+        if (soundElement && soundElement.readyState >= 2) {
+          soundElement.currentTime = 0;
+          soundElement.volume = audioSettings.volume;
+          const playPromise = soundElement.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(() => {
+              console.log('🔇 تعذر تشغيل الصوت (يتطلب تفاعل المستخدم)');
+            });
+          }
+        }
+      } catch (error) {
+        console.log('🔇 خطأ في تشغيل الصوت:', error);
       }
-      
-      resetTimer();
     }
 
-    // Start the timer
+    // تأثيرات بصرية للنقر
+    function addClickEffect(element) {
+      element.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        element.style.transform = '';
+      }, 150);
+    }
+
+    // تنسيق الوقت
+    function formatTime(seconds) {
+      const hours = Math.floor(seconds / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      const secs = seconds % 60;
+      
+      if (hours > 0) {
+        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      }
+      return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    // تحديث العرض
+    function updateDisplay() {
+      let displayTime;
+      let progress;
+
+      switch (currentMode) {
+        case 'countdown':
+          displayTime = timeLeft;
+          progress = (duration - timeLeft) / duration;
+          break;
+        case 'countup':
+          displayTime = elapsed;
+          progress = elapsed / duration;
+          break;
+        case 'stopwatch':
+          displayTime = elapsed;
+          progress = 0; // ساعة الإيقاف لا تحتاج تقدم
+          break;
+      }
+
+      elements.timerTime.textContent = formatTime(displayTime);
+      
+      // تحديث دائرة التقدم
+      if (currentMode !== 'stopwatch') {
+        const circumference = 2 * Math.PI * 150;
+        const offset = circumference * (1 - progress);
+        elements.progressCircle.style.strokeDasharray = circumference;
+        elements.progressCircle.style.strokeDashoffset = offset;
+      } else {
+        // ساعة الإيقاف - دائرة كاملة
+        elements.progressCircle.style.strokeDasharray = '0';
+        elements.progressCircle.style.strokeDashoffset = '0';
+      }
+
+      // تحديث حالات التحذير
+      updateWarningStates();
+    }
+
+    // تحديث حالات التحذير
+    function updateWarningStates() {
+      // إزالة جميع الفئات
+      elements.timerTime.classList.remove('warning', 'danger');
+      elements.progressCircle.classList.remove('warning', 'danger');
+
+      if (currentMode === 'countdown' && isRunning) {
+        if (timeLeft <= 10 && timeLeft > 0) {
+          elements.timerTime.classList.add('danger');
+          elements.progressCircle.classList.add('danger');
+        } else if (timeLeft <= 30) {
+          elements.timerTime.classList.add('warning');
+          elements.progressCircle.classList.add('warning');
+        }
+      }
+    }
+
+    // تحديث حالة المؤقت
+    function updateStatus(status, text, icon) {
+      elements.statusIndicator.classList.remove('idle', 'running', 'paused', 'finished');
+      elements.statusIndicator.classList.add(status);
+      elements.statusText.textContent = text;
+      elements.statusIcon.textContent = icon;
+    }
+
+    // تحديث أزرار التحكم
+    function updateControls() {
+      if (isRunning && !isPaused) {
+        elements.startBtn.disabled = true;
+        elements.pauseBtn.disabled = false;
+        elements.pauseBtn.innerHTML = '<span>⏸️</span><span>إيقاف مؤقت</span>';
+        elements.pauseBtn.className = 'timer-btn pause-btn';
+        elements.stopBtn.disabled = false;
+      } else if (isPaused) {
+        elements.startBtn.disabled = true;
+        elements.pauseBtn.disabled = false;
+        elements.pauseBtn.innerHTML = '<span>▶️</span><span>استكمال</span>';
+        elements.pauseBtn.className = 'timer-btn resume-btn';
+        elements.stopBtn.disabled = false;
+      } else {
+        elements.startBtn.disabled = isFinished;
+        elements.pauseBtn.disabled = true;
+        elements.pauseBtn.innerHTML = '<span>⏸️</span><span>إيقاف مؤقت</span>';
+        elements.pauseBtn.className = 'timer-btn pause-btn';
+        elements.stopBtn.disabled = true;
+      }
+    }
+
+    // بدء المؤقت
     function startTimer() {
       if (isRunning) return;
-      
+
       isRunning = true;
       isPaused = false;
+      isFinished = false;
+
+      updateStatus('running', 'المؤقت يعمل', '▶️');
+      updateControls();
       
-      updateButtonStates();
-      updateStatusIndicator('running', 'المؤقت يعمل', '▶️');
-      
-      ActivityUtils.playSound('click');
-      ActivityUtils.showNotification('تم بدء المؤقت', 'success');
-      
+      playSound(elements.startSound, 'start');
+      addSoundWave();
+
       timerInterval = setInterval(() => {
         updateTimer();
       }, 1000);
-      
-      // Start tick sound for countdown in last 10 seconds
-      if (mode === 'countdown') {
-        startTickSound();
+
+      // بدء أصوات التحذير للعد التنازلي
+      if (currentMode === 'countdown') {
+        startWarningSound();
       }
+
+      console.log(`🚀 بدء المؤقت - النمط: ${currentMode}, المدة: ${duration}s`);
     }
 
-    // Toggle pause/resume
+    // تحديث المؤقت
+    function updateTimer() {
+      switch (currentMode) {
+        case 'countdown':
+          timeLeft--;
+          if (timeLeft <= 0) {
+            completeTimer();
+            return;
+          }
+          break;
+        case 'countup':
+          elapsed++;
+          if (elapsed >= duration) {
+            completeTimer();
+            return;
+          }
+          break;
+        case 'stopwatch':
+          elapsed++;
+          break;
+      }
+
+      updateDisplay();
+    }
+
+    // إيقاف/استكمال المؤقت
     function togglePause() {
       if (!isRunning) return;
-      
-      ActivityUtils.playSound('click');
-      
+
+      playSound(elements.clickSound, 'click');
+
       if (isPaused) {
-        // Resume
+        // استكمال
         isPaused = false;
-        updateStatusIndicator('running', 'المؤقت يعمل', '▶️');
-        ActivityUtils.showNotification('تم استئناف المؤقت', 'info');
+        updateStatus('running', 'المؤقت يعمل', '▶️');
         
         timerInterval = setInterval(() => {
           updateTimer();
         }, 1000);
-        
-        if (mode === 'countdown') {
-          startTickSound();
+
+        if (currentMode === 'countdown') {
+          startWarningSound();
         }
+
+        console.log('▶️ استكمال المؤقت');
       } else {
-        // Pause
+        // إيقاف مؤقت
         isPaused = true;
         clearInterval(timerInterval);
-        clearInterval(tickInterval);
+        clearInterval(warningInterval);
         
-        updateStatusIndicator('paused', 'المؤقت متوقف مؤقتاً', '⏸️');
-        ActivityUtils.showNotification('تم إيقاف المؤقت مؤقتاً', 'warning');
+        updateStatus('paused', 'المؤقت متوقف مؤقتاً', '⏸️');
+        console.log('⏸️ إيقاف المؤقت مؤقتاً');
       }
-      
-      updateButtonStates();
+
+      updateControls();
     }
 
-    // Reset the timer
+    // إعادة تعيين المؤقت
     function resetTimer() {
       clearInterval(timerInterval);
-      clearInterval(tickInterval);
+      clearInterval(warningInterval);
       
       isRunning = false;
       isPaused = false;
+      isFinished = false;
       timeLeft = duration;
       elapsed = 0;
-      
+
       updateDisplay();
-      updateButtonStates();
-      updateStatusIndicator('', 'جاهز للبدء', '⏸️');
+      updateStatus('idle', 'جاهز للبدء', '⏸️');
+      updateControls();
       
-      if (isRunning || isPaused) {
-        ActivityUtils.playSound('click');
-        ActivityUtils.showNotification('تم إعادة تعيين المؤقت', 'info');
-      }
+      playSound(elements.clickSound, 'click');
+      console.log('🔄 إعادة تعيين المؤقت');
     }
 
-    // Update timer values
-    function updateTimer() {
-      if (mode === 'countdown') {
-        timeLeft--;
-        if (timeLeft <= 0) {
-          completeTimer();
-          return;
-        }
-      } else {
-        elapsed++;
-        if (elapsed >= duration) {
-          completeTimer();
-          return;
-        }
-      }
-      
-      updateDisplay();
-      
-      // Check for warning state (last 30 seconds for countdown)
-      if (mode === 'countdown' && timeLeft <= 30) {
-        updateTimerState('warning');
-      }
-      
-      // Check for danger state (last 10 seconds for countdown)
-      if (mode === 'countdown' && timeLeft <= 10) {
-        updateTimerState('danger');
-      }
-    }
+    // إيقاف نهائي
+    function stopTimer() {
+      if (!isRunning && !isPaused) return;
 
-    // Complete the timer
-    function completeTimer() {
       clearInterval(timerInterval);
-      clearInterval(tickInterval);
+      clearInterval(warningInterval);
       
       isRunning = false;
       isPaused = false;
+      isFinished = true;
+
+      // حفظ الجلسة (غير مكتملة)
+      saveSession(false);
+
+      updateStatus('finished', 'تم إيقاف المؤقت', '⏹️');
+      updateControls();
       
+      playSound(elements.clickSound, 'click');
+      console.log('⏹️ إيقاف المؤقت نهائياً');
+    }
+
+    // إكمال المؤقت
+    function completeTimer() {
+      clearInterval(timerInterval);
+      clearInterval(warningInterval);
+      
+      isRunning = false;
+      isPaused = false;
+      isFinished = true;
+
       updateDisplay();
-      updateButtonStates();
-      updateStatusIndicator('finished', 'انتهى الوقت!', '⏰');
-      
-      // Play completion sound and celebrate
-      ActivityUtils.playSound('success');
-      ActivityUtils.celebrate();
-      
-      // Show completion modal
+      updateStatus('finished', 'انتهى الوقت!', '⏰');
+      updateControls();
+
+      // تشغيل صوت النهاية والاحتفال
+      playSound(elements.endSound, 'end');
+      addCelebrationEffect();
+
+      // حفظ الجلسة (مكتملة)
+      saveSession(true);
+
+      // إظهار نافذة الإكمال
       showCompletionModal();
-      
-      ActivityUtils.showNotification('انتهى الوقت! تم إكمال المؤقت بنجاح', 'success', 5000);
+
+      console.log('🎉 تم إكمال المؤقت بنجاح!');
     }
 
-    // Update the display
-    function updateDisplay() {
-      const timerDisplay = document.getElementById('timerDisplay');
-      const progressCircle = document.getElementById('progressCircle');
+    // بدء صوت التحذير
+    function startWarningSound() {
+      clearInterval(warningInterval);
       
-      const displayTime = mode === 'countdown' ? timeLeft : elapsed;
-      timerDisplay.textContent = formatTime(displayTime);
-      
-      // Update progress circle
-      const progress = mode === 'countdown' ? 
-        (duration - timeLeft) / duration : 
-        elapsed / duration;
-      
-      const circumference = 2 * Math.PI * 150; // radius = 150
-      const offset = circumference * (1 - progress);
-      
-      progressCircle.style.strokeDasharray = circumference;
-      progressCircle.style.strokeDashoffset = offset;
+      warningInterval = setInterval(() => {
+        if (timeLeft <= 10 && timeLeft > 0 && isRunning && !isPaused) {
+          playSound(elements.warningSound, 'warning');
+        }
+      }, 1000);
     }
 
-    // Update timer visual state
-    function updateTimerState(state) {
-      const timerDisplay = document.getElementById('timerDisplay');
-      const progressCircle = document.getElementById('progressCircle');
+    // إضافة تأثير موجة الصوت
+    function addSoundWave() {
+      const wave = document.createElement('div');
+      wave.className = 'sound-wave';
+      elements.timerTime.parentElement.appendChild(wave);
       
-      // Remove all state classes
-      timerDisplay.classList.remove('warning', 'danger');
-      progressCircle.classList.remove('warning', 'danger');
-      
-      if (state) {
-        timerDisplay.classList.add(state);
-        progressCircle.classList.add(state);
-      }
-    }
-
-    // Update button states
-    function updateButtonStates() {
-      const startBtn = document.getElementById('startBtn');
-      const pauseBtn = document.getElementById('pauseResumeBtn');
-      const resetBtn = document.getElementById('resetBtn');
-      
-      if (isRunning && !isPaused) {
-        startBtn.disabled = true;
-        pauseBtn.disabled = false;
-        pauseBtn.textContent = '⏸️ إيقاف';
-        pauseBtn.className = 'btn btn-warning btn-large';
-      } else if (isPaused) {
-        startBtn.disabled = true;
-        pauseBtn.disabled = false;
-        pauseBtn.textContent = '▶️ استئناف';
-        pauseBtn.className = 'btn btn-success btn-large';
-      } else {
-        startBtn.disabled = false;
-        pauseBtn.disabled = true;
-        pauseBtn.textContent = '⏸️ إيقاف';
-        pauseBtn.className = 'btn btn-secondary btn-large';
-      }
-    }
-
-    // Update status indicator
-    function updateStatusIndicator(state, text, icon) {
-      const statusIndicator = document.getElementById('statusIndicator');
-      const statusText = document.getElementById('statusText');
-      const statusIcon = document.getElementById('statusIcon');
-      
-      // Remove all state classes
-      statusIndicator.classList.remove('running', 'paused', 'finished');
-      
-      if (state) {
-        statusIndicator.classList.add(state);
-      }
-      
-      statusText.textContent = text;
-      statusIcon.textContent = icon;
-    }
-
-    // Start tick sound for countdown warnings
-    function startTickSound() {
-      clearInterval(tickInterval);
-      
-      if (mode === 'countdown') {
-        tickInterval = setInterval(() => {
-          if (timeLeft <= 10 && timeLeft > 0 && isRunning && !isPaused) {
-            ActivityUtils.playSound('timer');
-          }
-        }, 1000);
-      }
-    }
-
-    // Format time display
-    function formatTime(seconds) {
-      const minutes = Math.floor(seconds / 60);
-      const secs = seconds % 60;
-      return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    }
-
-    // Show completion modal
-    function showCompletionModal() {
-      const modal = document.getElementById('completionModal');
-      modal.style.display = 'flex';
-      
-      // Auto close after 5 seconds
       setTimeout(() => {
-        closeCompletionModal();
-      }, 5000);
+        wave.remove();
+      }, 1000);
     }
 
-    // Close completion modal
-    function closeCompletionModal() {
-      const modal = document.getElementById('completionModal');
-      modal.style.display = 'none';
-      ActivityUtils.playSound('click');
+    // إضافة تأثير الاحتفال
+    function addCelebrationEffect() {
+      elements.timerTime.parentElement.classList.add('celebrating');
+      setTimeout(() => {
+        elements.timerTime.parentElement.classList.remove('celebrating');
+      }, 1000);
     }
 
-    // Make function globally available for HTML onclick
-    window.closeCompletionModal = closeCompletionModal;
+    // حفظ بيانات الجلسة
+    function saveSession(completed) {
+      const session = {
+        mode: currentMode,
+        duration: duration,
+        timeSpent: currentMode === 'countdown' ? duration - timeLeft : elapsed,
+        completed: completed,
+        timestamp: new Date()
+      };
 
-    // Handle activity pause/resume
-    ActivityUtils.pauseActivity = function() {
-      if (isRunning && !isPaused) {
-        togglePause();
-        ActivityUtils.showNotification('تم إيقاف المؤقت بسبب تغيير الصفحة', 'warning');
+      sessionStats.sessions.push(session);
+      sessionStats.totalSessions++;
+      if (completed) {
+        sessionStats.completedSessions++;
       }
-    };
+      sessionStats.totalTime += session.timeSpent;
 
-    ActivityUtils.resumeActivity = function() {
-      ActivityUtils.showNotification('تم العودة للمؤقت', 'info');
-    };
+      updateStatsDisplay();
+      
+      // حفظ في localStorage
+      localStorage.setItem('timerStats', JSON.stringify(sessionStats));
+    }
 
-    // Cleanup on page unload
+    // تحديث عرض الإحصائيات
+    function updateStatsDisplay() {
+      elements.totalSessions.textContent = sessionStats.totalSessions;
+      elements.completedSessions.textContent = sessionStats.completedSessions;
+      elements.totalTime.textContent = formatTime(sessionStats.totalTime);
+      
+      const averageTime = sessionStats.totalSessions > 0 ? 
+        Math.floor(sessionStats.totalTime / sessionStats.totalSessions) : 0;
+      elements.averageTime.textContent = formatTime(averageTime);
+    }
+
+    // إظهار نافذة الإكمال
+    function showCompletionModal() {
+      const modeText = {
+        'countdown': 'العد التنازلي',
+        'countup': 'العد التصاعدي', 
+        'stopwatch': 'ساعة الإيقاف'
+      };
+
+      elements.modalMessage.textContent = 
+        `تم إكمال ${modeText[currentMode]} بنجاح! الوقت المستغرق: ${formatTime(currentMode === 'countdown' ? duration : elapsed)}`;
+      
+      elements.completionModal.classList.add('show');
+      
+      // إغلاق تلقائي بعد 10 ثوان
+      setTimeout(() => {
+        if (elements.completionModal.classList.contains('show')) {
+          closeCompletionModal();
+        }
+      }, 10000);
+    }
+
+    // إغلاق نافذة الإكمال
+    function closeCompletionModal() {
+      elements.completionModal.classList.remove('show');
+      playSound(elements.clickSound, 'click');
+    }
+
+    // بدء جلسة جديدة
+    function startNewSession() {
+      closeCompletionModal();
+      resetTimer();
+      setTimeout(() => {
+        startTimer();
+      }, 500);
+    }
+    // تغيير نمط المؤقت
+    function changeMode() {
+      const newMode = elements.timerMode.value;
+      if (newMode !== currentMode) {
+        currentMode = newMode;
+        resetTimer();
+        playSound(elements.clickSound, 'click');
+        
+        const modeNames = {
+          'countdown': 'العد التنازلي',
+          'countup': 'العد التصاعدي',
+          'stopwatch': 'ساعة الإيقاف'
+        };
+        
+        console.log(`🔄 تغيير النمط إلى: ${modeNames[currentMode]}`);
+      }
+    }
+
+    // تغيير المدة
+    function changeDuration() {
+      const newDuration = parseInt(elements.timerDuration.value);
+      if (newDuration !== duration) {
+        duration = newDuration;
+        resetTimer();
+        playSound(elements.clickSound, 'click');
+        console.log(`⏰ تغيير المدة إلى: ${duration}s`);
+      }
+    }
+
+    // تعيين وقت محدد مسبقاً
+    function setPresetTime(seconds) {
+      duration = seconds;
+      elements.timerDuration.value = seconds;
+      resetTimer();
+      playSound(elements.clickSound, 'click');
+      console.log(`⚡ تعيين وقت محدد مسبقاً: ${seconds}s`);
+    }
+
+    // تحديث إعدادات الصوت
+    function updateAudioSettings() {
+      audioSettings.volume = parseInt(elements.volumeSlider.value) / 100;
+      elements.volumeValue.textContent = `${parseInt(elements.volumeSlider.value)}%`;
+      
+      audioSettings.startSound = elements.startSoundToggle.checked;
+      audioSettings.endSound = elements.endSoundToggle.checked;
+      audioSettings.warningSound = elements.warningSoundToggle.checked;
+      audioSettings.clickSound = elements.clickSoundToggle.checked;
+      
+      // تطبيق مستوى الصوت على جميع عناصر الصوت
+      [elements.startSound, elements.endSound, elements.warningSound, elements.clickSound]
+        .forEach(audio => {
+          if (audio) audio.volume = audioSettings.volume;
+        });
+      
+      console.log('🔊 تم تحديث إعدادات الصوت:', audioSettings);
+    }
+
+    // تبديل كتم الصوت الرئيسي
+    function toggleMasterMute() {
+      audioSettings.masterMute = !audioSettings.masterMute;
+      elements.soundToggleBtn.textContent = audioSettings.masterMute ? '🔇' : '🔊';
+      elements.soundToggleBtn.title = audioSettings.masterMute ? 'تشغيل الصوت' : 'كتم الصوت';
+      
+      playSound(elements.clickSound, 'click');
+      console.log(`🔊 الصوت الرئيسي: ${audioSettings.masterMute ? 'مكتوم' : 'مفعل'}`);
+    }
+
+    // وضع ملء الشاشة
+    async function toggleFullScreen() {
+      try {
+        if (!document.fullscreenElement) {
+          await document.documentElement.requestFullscreen();
+          console.log('🖥️ تم تفعيل ملء الشاشة');
+        } else {
+          await document.exitFullscreen();
+          console.log('🖥️ تم إلغاء ملء الشاشة');
+        }
+        playSound(elements.clickSound, 'click');
+      } catch (error) {
+        console.warn('⚠️ فشل في تغيير وضع ملء الشاشة:', error);
+      }
+    }
+
+    // تحميل الإحصائيات المحفوظة
+    function loadStats() {
+      try {
+        const savedStats = localStorage.getItem('timerStats');
+        if (savedStats) {
+          sessionStats = JSON.parse(savedStats);
+          updateStatsDisplay();
+        }
+      } catch (error) {
+        console.warn('⚠️ فشل في تحميل الإحصائيات:', error);
+      }
+    }
+
+    // مسح الإحصائيات
+    function clearStats() {
+      if (confirm('هل تريد مسح جميع الإحصائيات؟\nهذا الإجراء لا يمكن التراجع عنه.')) {
+        sessionStats = {
+          totalSessions: 0,
+          completedSessions: 0,
+          totalTime: 0,
+          sessions: []
+        };
+        updateStatsDisplay();
+        localStorage.removeItem('timerStats');
+        playSound(elements.clickSound, 'click');
+        console.log('🗑️ تم مسح الإحصائيات');
+      }
+    }
+
+    // تهيئة المؤقت
+    function initializeTimer() {
+      console.log('⚡ جاري تهيئة المؤقت الصفي التفاعلي...');
+      
+      // تحميل الإحصائيات
+      loadStats();
+      
+      // تحديث الإعدادات
+      updateAudioSettings();
+      
+      // إعداد المؤقت الأولي
+      resetTimer();
+      
+      console.log('🎉 تم تحميل المؤقت بنجاح!');
+    }
+
+    // معالجة الأحداث
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('📄 تم تحميل DOM - بدء تهيئة الأحداث...');
+      
+      // تهيئة المؤقت
+      initializeTimer();
+
+      // أزرار التحكم الرئيسية
+      elements.startBtn.addEventListener('click', (e) => {
+        addClickEffect(e.target);
+        playSound(elements.clickSound, 'click');
+        startTimer();
+      });
+
+      elements.pauseBtn.addEventListener('click', (e) => {
+        addClickEffect(e.target);
+        togglePause();
+      });
+
+      elements.resetBtn.addEventListener('click', (e) => {
+        addClickEffect(e.target);
+        resetTimer();
+      });
+
+      elements.stopBtn.addEventListener('click', (e) => {
+        addClickEffect(e.target);
+        stopTimer();
+      });
+
+      // الإعدادات
+      elements.timerMode.addEventListener('change', changeMode);
+      elements.timerDuration.addEventListener('change', changeDuration);
+
+      // أزرار الأوقات المحددة مسبقاً
+      document.querySelectorAll('.preset-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          addClickEffect(e.target);
+          const time = parseInt(e.target.dataset.time);
+          setPresetTime(time);
+        });
+      });
+
+      // إعدادات الصوت
+      elements.volumeSlider.addEventListener('input', updateAudioSettings);
+      elements.startSoundToggle.addEventListener('change', updateAudioSettings);
+      elements.endSoundToggle.addEventListener('change', updateAudioSettings);
+      elements.warningSoundToggle.addEventListener('change', updateAudioSettings);
+      elements.clickSoundToggle.addEventListener('change', updateAudioSettings);
+
+      // أزرار التحكم العلوية
+      elements.backBtn.addEventListener('click', (e) => {
+        addClickEffect(e.target);
+        playSound(elements.clickSound, 'click');
+        
+        // إيقاف المؤقت إذا كان يعمل
+        if (isRunning) {
+          stopTimer();
+        }
+        
+        // تأثير انتقال سلس
+        document.body.style.opacity = '0';
+        document.body.style.transform = 'scale(0.95)';
+        
+        setTimeout(() => {
+          window.location.href = '../main.html';
+        }, 300);
+      });
+
+      elements.fullscreenBtn.addEventListener('click', (e) => {
+        addClickEffect(e.target);
+        toggleFullScreen();
+      });
+
+      elements.soundToggleBtn.addEventListener('click', (e) => {
+        addClickEffect(e.target);
+        toggleMasterMute();
+      });
+
+      // أزرار النافذة المنبثقة
+      elements.newSessionBtn.addEventListener('click', (e) => {
+        addClickEffect(e.target);
+        startNewSession();
+      });
+
+      elements.closeModalBtn.addEventListener('click', (e) => {
+        addClickEffect(e.target);
+        closeCompletionModal();
+      });
+
+      // إغلاق النافذة بالنقر خارجها
+      elements.completionModal.addEventListener('click', (e) => {
+        if (e.target === elements.completionModal) {
+          closeCompletionModal();
+        }
+      });
+
+      // اختصارات لوحة المفاتيح
+      document.addEventListener('keydown', (e) => {
+        switch(e.key) {
+          case 'Enter':
+          case ' ':
+            e.preventDefault();
+            if (!isRunning && !isPaused) {
+              elements.startBtn.click();
+            } else if (isRunning || isPaused) {
+              elements.pauseBtn.click();
+            }
+            break;
+          case 'Escape':
+            if (elements.completionModal.classList.contains('show')) {
+              closeCompletionModal();
+            } else if (isRunning || isPaused) {
+              elements.stopBtn.click();
+            } else if (document.fullscreenElement) {
+              document.exitFullscreen();
+            }
+            break;
+          case 'r':
+          case 'R':
+            if (e.ctrlKey || e.metaKey) {
+              e.preventDefault();
+              elements.resetBtn.click();
+            }
+            break;
+          case 'F11':
+            e.preventDefault();
+            toggleFullScreen();
+            break;
+          case 'm':
+          case 'M':
+            if (e.ctrlKey || e.metaKey) {
+              e.preventDefault();
+              toggleMasterMute();
+            }
+            break;
+          case 's':
+          case 'S':
+            if (e.ctrlKey || e.metaKey) {
+              e.preventDefault();
+              if (isRunning || isPaused) {
+                elements.stopBtn.click();
+              }
+            }
+            break;
+        }
+      });
+
+      // مسح الإحصائيات بالنقر المزدوج على العنوان
+      elements.totalSessions.addEventListener('dblclick', clearStats);
+
+      console.log('✅ تم تهيئة جميع الأحداث بنجاح!');
+    });
+
+    // معالجة الأخطاء العامة
+    window.addEventListener('error', (e) => {
+      console.error('💥 خطأ عام في المؤقت:', e.error);
+    });
+
+    window.addEventListener('unhandledrejection', (e) => {
+      console.error('💥 خطأ غير معالج في Promise:', e.reason);
+    });
+
+    // تنظيف عند إغلاق الصفحة
     window.addEventListener('beforeunload', () => {
       clearInterval(timerInterval);
-      clearInterval(tickInterval);
+      clearInterval(warningInterval);
     });
+
+    // إيقاف المؤقت عند فقدان التركيز
+    window.addEventListener('blur', () => {
+      if (isRunning && !isPaused) {
+        togglePause();
+        console.log('⚠️ تم إيقاف المؤقت مؤقتاً بسبب فقدان التركيز');
+      }
+    });
+
+    console.log('📝 تم تحميل جميع النصوص البرمجية للمؤقت!');
+  </script>
+</body>
+</html>
   </script>
 </body>
 </html>
