@@ -1504,7 +1504,7 @@
       </button>
       <button class="main-btn honor-btn" id="honorBtn" disabled>
         <span>🏆</span>
-        <span>تكريم الطالب</span>
+        <span>إضافة للوحة الشرف</span>
       </button>
       <button class="main-btn reset-btn" id="resetBtn" disabled>
         <span>🔄</span>
@@ -1618,6 +1618,10 @@
           <div class="stat-number" id="removedCount">0</div>
           <div class="stat-label">تم استبعادهم</div>
         </div>
+        <div class="stat-item">
+          <div class="stat-number" id="honoredCount">0</div>
+          <div class="stat-label">مكرمون</div>
+        </div>
       </div>
     </div>
   </div>
@@ -1681,6 +1685,7 @@
       remainingStudents: document.getElementById('remainingStudents'),
       selectedCount: document.getElementById('selectedCount'),
       removedCount: document.getElementById('removedCount'),
+      honoredCount: document.getElementById('honoredCount'),
       honorBoard: document.getElementById('honorBoard'),
       honorList: document.getElementById('honorList'),
       clearHonorsBtn: document.getElementById('clearHonorsBtn'),
@@ -1909,10 +1914,16 @@
 
     // عرض رسالة الترحيب
     function showWelcomeMessage() {
+      const honoredCount = honoredStudents.length;
+      let message = `🎯 الصف محدد ونحن جاهزون!<br>${availableStudents.length} طالب متاح للاختيار`;
+      
+      if (honoredCount > 0) {
+        message += `<br>🏆 ${honoredCount} طالب مُكرم في لوحة الشرف`;
+      }
+      
       elements.rollingAnimation.innerHTML = `
         <div class="welcome-message">
-          🎯 الصف محدد ونحن جاهزون!<br>
-          ${availableStudents.length} طالب متاح للاختيار
+          ${message}
         </div>
       `;
     }
@@ -2042,11 +2053,13 @@
       // التحقق من عدم تكريم الطالب مسبقاً
       const isAlreadyHonored = honoredStudents.some(student => student.name === currentSelectedName);
       if (isAlreadyHonored) {
-        alert('🏆 هذا الطالب مُكرم بالفعل في لوحة الشرف!');
-        return;
+        // إذا كان مُكرماً بالفعل، نسأل المعلم إذا كان يريد تكريمه مرة أخرى
+        if (!confirm(`🏆 هذا الطالب مُكرم بالفعل في لوحة الشرف!\nهل تريد تكريمه مرة أخرى؟`)) {
+          return;
+        }
       }
       
-      // إضافة إلى قائمة المكرمين
+      // إضافة إلى قائمة المكرمين (حتى لو كان مُكرماً مسبقاً)
       const honoredStudent = {
         name: currentSelectedName,
         timestamp: new Date(),
@@ -2065,8 +2078,10 @@
       // تشغيل صوت التكريم
       playSound(elements.celebrationSound, 'celebration');
       
+      // مسح الاسم المختار الحالي فقط (لا نزيل الطالب من قائمة المتاحين)
       currentSelectedName = '';
       
+      // إظهار رسالة الاستعداد للاختيار التالي
       if (availableStudents.length > 0) {
         showWelcomeMessage();
       }
@@ -2074,7 +2089,7 @@
       updateUI();
       updateStats();
       
-      console.log(`🏆 تم تكريم: ${honoredStudent.name}`);
+      console.log(`🏆 تم تكريم: ${honoredStudent.name} - الطالب يبقى متاحاً للاختيار`);
     }
 
     // عرض تأثير التكريم
@@ -2085,6 +2100,9 @@
           <div style="font-size: 0.6em; margin-top: 10px; color: #B8860B;">
             ✨ تمت إضافته إلى لوحة الشرف ✨
           </div>
+          <div style="font-size: 0.5em; margin-top: 8px; color: var(--primary-color);">
+            📚 الطالب يبقى متاحاً للاختيار مرة أخرى
+          </div>
         </div>
       `;
       
@@ -2092,7 +2110,7 @@
       elements.resultDisplay.classList.add('celebration');
       setTimeout(() => {
         elements.resultDisplay.classList.remove('celebration');
-      }, 3000);
+      }, 4000);
     }
 
     // تحديث لوحة الشرف
@@ -2167,6 +2185,7 @@
       if (confirm('هل تريد مسح جميع الطلاب من لوحة الشرف؟\nهذا الإجراء لا يمكن التراجع عنه.')) {
         honoredStudents = [];
         updateHonorBoard();
+        updateStats();
         hideHonorBoard();
         
         playSound(elements.clickSound, 'click');
@@ -2251,6 +2270,7 @@
       elements.remainingStudents.textContent = availableStudents.length;
       elements.selectedCount.textContent = selectedStudents.length;
       elements.removedCount.textContent = removedStudents.length;
+      elements.honoredCount.textContent = honoredStudents.length;
     }
 
     // إظهار معلومات الطلاب
@@ -2371,7 +2391,7 @@
         addClickEffect(e.target);
         playSound(elements.clickSound, 'click');
         
-        if (confirm(`هل تريد تكريم "${currentSelectedName}" وإضافته إلى لوحة الشرف؟`)) {
+        if (confirm(`🏆 هل تريد إضافة "${currentSelectedName}" إلى لوحة الشرف؟\n\n(الطالب سيبقى متاحاً للاختيار مرة أخرى)`)) {
           honorSelectedStudent();
         }
       });
