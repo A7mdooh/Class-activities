@@ -463,8 +463,8 @@
 
     /* تصميم نافذة الإعدادات الاحترافية */
     .settings-modal {
-      max-width: 600px !important;
-      max-height: 80vh;
+      max-width: 700px !important;
+      max-height: 85vh;
       overflow-y: auto;
     }
 
@@ -504,6 +504,35 @@
       font-size: 1rem;
     }
 
+    /* إحصائيات سريعة */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+      padding: var(--spacing-md);
+      background: rgba(0, 0, 0, 0.02);
+      border-radius: var(--border-radius-small);
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: var(--spacing-sm);
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
     /* حالات مختلفة للترخيص */
     .license-status.full-version {
       border-color: var(--success-color);
@@ -520,7 +549,7 @@
       background: linear-gradient(135deg, rgba(244, 67, 54, 0.1), rgba(211, 47, 47, 0.1));
     }
 
-    /* قائمة الملفات */
+    /* قائمة الملفات المحسنة */
     .files-check {
       margin-bottom: var(--spacing-lg);
     }
@@ -535,75 +564,101 @@
     }
 
     .file-list {
-      background: rgba(0, 0, 0, 0.02);
+      background: rgba(255, 255, 255, 0.5);
       border-radius: var(--border-radius-small);
       padding: var(--spacing-md);
-      max-height: 200px;
-      overflow-y: auto;
+      border: 1px solid rgba(0, 121, 107, 0.1);
     }
 
     .file-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: var(--spacing-sm);
-      margin-bottom: var(--spacing-xs);
+      padding: var(--spacing-md);
+      margin-bottom: var(--spacing-sm);
       border-radius: var(--border-radius-small);
-      transition: background var(--transition-fast);
+      transition: all var(--transition-fast);
+      background: var(--surface-color);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
 
     .file-item:hover {
-      background: rgba(0, 121, 107, 0.05);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 121, 107, 0.1);
     }
 
     .file-info {
       display: flex;
       align-items: center;
-      gap: var(--spacing-sm);
+      gap: var(--spacing-md);
+      flex: 1;
+    }
+
+    .file-icon {
+      font-size: 1.5rem;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 121, 107, 0.1);
+      border-radius: 50%;
+    }
+
+    .file-details {
       flex: 1;
     }
 
     .file-name {
-      font-weight: 500;
+      font-weight: 600;
       color: var(--text-primary);
+      margin-bottom: 2px;
+      font-size: 1rem;
     }
 
-    .file-path {
-      font-size: 0.9rem;
+    .file-description {
+      font-size: 0.85rem;
       color: var(--text-secondary);
-      margin-right: var(--spacing-sm);
+      line-height: 1.3;
     }
 
     .file-status {
-      padding: var(--spacing-xs) var(--spacing-sm);
-      border-radius: 12px;
+      padding: var(--spacing-xs) var(--spacing-md);
+      border-radius: 20px;
       font-size: 0.8rem;
       font-weight: 600;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
+      min-width: 80px;
+      text-align: center;
     }
 
     .file-status.found {
-      background: var(--success-color);
+      background: linear-gradient(45deg, var(--success-color), #66BB6A);
       color: white;
+      box-shadow: 0 2px 4px rgba(76, 175, 80, 0.3);
     }
 
     .file-status.missing {
-      background: var(--error-color);
+      background: linear-gradient(45deg, var(--error-color), #EF5350);
       color: white;
+      box-shadow: 0 2px 4px rgba(244, 67, 54, 0.3);
     }
 
     .file-status.checking {
-      background: var(--warning-color);
+      background: linear-gradient(45deg, var(--warning-color), #FFB74D);
       color: white;
       animation: pulse 1.5s ease-in-out infinite;
+      box-shadow: 0 2px 4px rgba(255, 152, 0, 0.3);
     }
 
-    /* الإعدادات الإضافية */
-    .additional-settings {
+    /* منطقة رفع الملفات */
+    .upload-section {
       margin-bottom: var(--spacing-lg);
     }
 
-    .additional-settings h4 {
+    .upload-section h4 {
       margin-bottom: var(--spacing-md);
       color: var(--primary-color);
       font-size: 1.2rem;
@@ -612,31 +667,97 @@
       gap: var(--spacing-sm);
     }
 
-    .setting-item {
-      margin-bottom: var(--spacing-md);
+    .upload-area {
+      border: 2px dashed var(--primary-color);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-xl);
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      background: rgba(0, 121, 107, 0.02);
     }
 
-    .setting-item label {
+    .upload-area:hover {
+      border-color: var(--primary-light);
+      background: rgba(0, 121, 107, 0.05);
+      transform: translateY(-2px);
+    }
+
+    .upload-area.dragover {
+      border-color: var(--success-color);
+      background: rgba(76, 175, 80, 0.1);
+    }
+
+    .upload-icon {
+      font-size: 3rem;
+      margin-bottom: var(--spacing-sm);
+      color: var(--primary-color);
+    }
+
+    .upload-text {
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .upload-list {
+      margin-top: var(--spacing-md);
+    }
+
+    .upload-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--spacing-sm);
+      background: var(--surface-color);
+      border-radius: var(--border-radius-small);
+      margin-bottom: var(--spacing-xs);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .upload-item-info {
       display: flex;
       align-items: center;
       gap: var(--spacing-sm);
-      cursor: pointer;
-      padding: var(--spacing-sm);
-      border-radius: var(--border-radius-small);
-      transition: background var(--transition-fast);
     }
 
-    .setting-item label:hover {
-      background: rgba(0, 121, 107, 0.05);
+    .upload-item-name {
+      font-weight: 500;
+      color: var(--text-primary);
     }
 
-    .setting-item input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--primary-color);
+    .upload-item-size {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
     }
 
-    /* أزرار الإجراءات */
+    /* رسالة التأكيد النهائية */
+    .final-confirmation {
+      text-align: center;
+      padding: var(--spacing-lg);
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(139, 195, 74, 0.1));
+      border-radius: var(--border-radius);
+      border: 2px solid var(--success-color);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .confirmation-icon {
+      font-size: 4rem;
+      margin-bottom: var(--spacing-md);
+      animation: checkmark 0.5s ease-out;
+    }
+
+    .confirmation-text h4 {
+      color: var(--success-color);
+      margin-bottom: var(--spacing-sm);
+      font-size: 1.3rem;
+    }
+
+    .confirmation-text p {
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+
+    /* أزرار الإجراءات المحسنة */
     .settings-actions {
       display: flex;
       gap: var(--spacing-sm);
@@ -645,7 +766,7 @@
     }
 
     .action-button {
-      padding: var(--spacing-sm) var(--spacing-md);
+      padding: var(--spacing-md) var(--spacing-lg);
       border: none;
       border-radius: var(--border-radius-small);
       cursor: pointer;
@@ -653,29 +774,32 @@
       transition: all var(--transition-normal);
       display: flex;
       align-items: center;
-      gap: var(--spacing-xs);
-      min-width: 120px;
+      gap: var(--spacing-sm);
+      min-width: 140px;
       justify-content: center;
+      font-size: 0.95rem;
     }
 
     .refresh-btn {
       background: linear-gradient(45deg, var(--primary-color), var(--primary-light));
       color: white;
+      box-shadow: 0 2px 8px rgba(0, 121, 107, 0.3);
     }
 
     .refresh-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 121, 107, 0.3);
+      box-shadow: 0 4px 12px rgba(0, 121, 107, 0.4);
     }
 
-    .download-btn {
-      background: linear-gradient(45deg, var(--warning-color), #FFB74D);
+    .save-btn {
+      background: linear-gradient(45deg, var(--success-color), #66BB6A);
       color: white;
+      box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
     }
 
-    .download-btn:hover {
+    .save-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
     }
 
     /* تحسينات الحركة */
@@ -709,12 +833,17 @@
     @media (max-width: 768px) {
       .settings-modal {
         max-width: 95% !important;
-        margin: 5% auto !important;
+        margin: 2% auto !important;
       }
       
       .license-header {
         flex-direction: column;
         text-align: center;
+        gap: var(--spacing-sm);
+      }
+      
+      .stats-row {
+        grid-template-columns: 1fr;
         gap: var(--spacing-sm);
       }
       
@@ -724,6 +853,12 @@
       
       .action-button {
         width: 100%;
+      }
+      
+      .file-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
       }
     }
 
@@ -907,7 +1042,7 @@
   <!-- نافذة الإعدادات الاحترافية -->
   <div id="settingsModal" class="modal" role="dialog" aria-labelledby="settingsTitle" aria-hidden="true">
     <div class="modal-content settings-modal">
-      <h3 id="settingsTitle">⚙️ إعدادات البرنامج</h3>
+      <h3 id="settingsTitle">⚙️ إعدادات النظام</h3>
       
       <!-- حالة الترخيص -->
       <div class="license-status" id="licenseStatus">
@@ -920,34 +1055,47 @@
         </div>
       </div>
 
-      <!-- تفاصيل الملفات -->
+      <!-- إحصائيات سريعة -->
+      <div class="stats-row" id="statsRow" style="display: none;">
+        <div class="stat-item">
+          <div class="stat-number" id="totalFiles">0</div>
+          <div class="stat-label">إجمالي الملفات</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="foundFiles">0</div>
+          <div class="stat-label">ملفات موجودة</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="missingFiles">0</div>
+          <div class="stat-label">ملفات مفقودة</div>
+        </div>
+      </div>
+
+      <!-- تفاصيل الملفات الأساسية -->
       <div class="files-check">
-        <h4>📂 فحص ملفات النظام</h4>
+        <h4>� الملفات الأساسية المطلوبة</h4>
         <div class="file-list" id="filesList">
           <!-- سيتم ملؤها ديناميكياً -->
         </div>
       </div>
 
-      <!-- إعدادات إضافية -->
-      <div class="additional-settings">
-        <h4>🔧 إعدادات متقدمة</h4>
-        <div class="setting-item">
-          <label>
-            <input type="checkbox" id="autoCheck" checked>
-            فحص تلقائي عند بدء التشغيل
-          </label>
+      <!-- منطقة رفع الملفات -->
+      <div class="upload-section" id="uploadSection" style="display: none;">
+        <h4>📤 رفع الملفات المفقودة</h4>
+        <div class="upload-area" id="uploadArea">
+          <div class="upload-icon">📁</div>
+          <div class="upload-text">اسحب الملفات هنا أو انقر للاختيار</div>
+          <input type="file" id="fileInput" multiple accept=".json,.png,.jpg,.jpeg" style="display: none;">
         </div>
-        <div class="setting-item">
-          <label>
-            <input type="checkbox" id="soundEnabled" checked>
-            تفعيل الأصوات
-          </label>
-        </div>
-        <div class="setting-item">
-          <label>
-            <input type="checkbox" id="animationsEnabled" checked>
-            تفعيل الحركات البصرية
-          </label>
+        <div class="upload-list" id="uploadList"></div>
+      </div>
+
+      <!-- رسالة التأكيد النهائية -->
+      <div class="final-confirmation" id="finalConfirmation" style="display: none;">
+        <div class="confirmation-icon">✅</div>
+        <div class="confirmation-text">
+          <h4>تم إعداد النظام بنجاح!</h4>
+          <p>جميع الملفات الأساسية متوفرة والنظام جاهز للعمل</p>
         </div>
       </div>
 
@@ -956,8 +1104,8 @@
         <button class="action-button refresh-btn" id="refreshFiles">
           🔄 إعادة فحص
         </button>
-        <button class="action-button download-btn" id="downloadMissing" style="display: none;">
-          📥 تحميل الملفات المفقودة
+        <button class="action-button save-btn" id="saveSettings" style="display: none;">
+          � حفظ الإعدادات
         </button>
         <button class="close-button" id="closeSettings">
           إغلاق
@@ -1207,43 +1355,33 @@
         name: 'بيانات المدرسة',
         path: 'config/school.json',
         type: 'config',
-        critical: true
+        critical: true,
+        icon: '🏫',
+        description: 'معلومات المدرسة والإعدادات الأساسية'
       },
       {
         name: 'الجدول الدراسي',
         path: 'data/schedule.json',
         type: 'data',
-        critical: true
+        critical: true,
+        icon: '📅',
+        description: 'أوقات الحصص والجدول اليومي'
       },
       {
         name: 'بيانات الطلاب',
         path: 'data/studentData.json',
         type: 'data',
-        critical: true
+        critical: true,
+        icon: '👥',
+        description: 'قائمة أسماء الطلاب حسب الفصول'
       },
       {
         name: 'شعار المدرسة',
         path: 'assets/media/images/school-logo.png',
         type: 'asset',
-        critical: true
-      },
-      {
-        name: 'صوت النقر',
-        path: 'assets/media/sounds/Click.mp3',
-        type: 'asset',
-        critical: false
-      },
-      {
-        name: 'صوت البدء',
-        path: 'assets/media/sounds/start-timer.mp3',
-        type: 'asset',
-        critical: false
-      },
-      {
-        name: 'الصفحة الرئيسية',
-        path: 'main.html',
-        type: 'page',
-        critical: true
+        critical: true,
+        icon: '🖼️',
+        description: 'الشعار الرسمي للمدرسة'
       }
     ];
 
@@ -1254,7 +1392,10 @@
       const licenseTitle = document.getElementById('licenseTitle');
       const licenseSubtitle = document.getElementById('licenseSubtitle');
       const filesList = document.getElementById('filesList');
-      const downloadBtn = document.getElementById('downloadMissing');
+      const uploadSection = document.getElementById('uploadSection');
+      const finalConfirmation = document.getElementById('finalConfirmation');
+      const statsRow = document.getElementById('statsRow');
+      const saveBtn = document.getElementById('saveSettings');
 
       // إعادة تعيين الحالة
       licenseStatus.className = 'license-status';
@@ -1262,20 +1403,26 @@
       licenseTitle.textContent = 'جاري فحص النظام...';
       licenseSubtitle.textContent = 'يرجى الانتظار';
       filesList.innerHTML = '';
-      downloadBtn.style.display = 'none';
+      uploadSection.style.display = 'none';
+      finalConfirmation.style.display = 'none';
+      statsRow.style.display = 'none';
+      saveBtn.style.display = 'none';
 
       let foundFiles = 0;
       let criticalMissing = 0;
       const results = [];
 
-      // إنشاء عناصر الملفات
+      // إنشاء عناصر الملفات بتصميم محسن
       for (const file of requiredFiles) {
         const fileItem = document.createElement('div');
         fileItem.className = 'file-item';
         fileItem.innerHTML = `
           <div class="file-info">
-            <div class="file-name">${file.name}</div>
-            <div class="file-path">${file.path}</div>
+            <div class="file-icon">${file.icon}</div>
+            <div class="file-details">
+              <div class="file-name">${file.name}</div>
+              <div class="file-description">${file.description}</div>
+            </div>
           </div>
           <div class="file-status checking" id="status-${file.path.replace(/[/.]/g, '-')}">
             جاري الفحص...
@@ -1291,7 +1438,7 @@
         try {
           const response = await fetch(file.path, { method: 'HEAD' });
           if (response.ok) {
-            statusElement.textContent = 'موجود';
+            statusElement.textContent = 'موجود ✓';
             statusElement.className = 'file-status found';
             foundFiles++;
             results.push({ ...file, status: 'found' });
@@ -1299,7 +1446,7 @@
             throw new Error('File not found');
           }
         } catch (error) {
-          statusElement.textContent = 'مفقود';
+          statusElement.textContent = 'مفقود ✗';
           statusElement.className = 'file-status missing';
           results.push({ ...file, status: 'missing' });
           
@@ -1309,35 +1456,38 @@
         }
         
         // تأخير صغير للتأثير البصري
-        await new Promise(resolve => setTimeout(resolve, 200));
+        await new Promise(resolve => setTimeout(resolve, 300));
       }
+
+      // عرض الإحصائيات
+      statsRow.style.display = 'grid';
+      document.getElementById('totalFiles').textContent = requiredFiles.length;
+      document.getElementById('foundFiles').textContent = foundFiles;
+      document.getElementById('missingFiles').textContent = requiredFiles.length - foundFiles;
 
       // تحديد حالة النظام
       const completionPercentage = (foundFiles / requiredFiles.length) * 100;
       
       setTimeout(() => {
-        if (criticalMissing === 0 && foundFiles === requiredFiles.length) {
-          // نسخة كاملة
+        if (foundFiles === requiredFiles.length) {
+          // نسخة كاملة - جميع الملفات موجودة
           licenseStatus.className = 'license-status full-version';
           licenseIcon.textContent = '✅';
-          licenseTitle.textContent = 'تم تفعيل البرنامج';
-          licenseSubtitle.textContent = 'النسخة الكاملة - جميع الملفات متوفرة';
-        } else if (criticalMissing === 0) {
-          // نسخة كاملة مع ملفات اختيارية مفقودة
-          licenseStatus.className = 'license-status full-version';
-          licenseIcon.textContent = '✅';
-          licenseTitle.textContent = 'تم تفعيل البرنامج';
-          licenseSubtitle.textContent = `النسخة الكاملة - ${Math.round(completionPercentage)}% مكتمل`;
+          licenseTitle.textContent = 'تم تفعيل البرنامج بنجاح';
+          licenseSubtitle.textContent = 'النسخة الكاملة - جميع الملفات الأساسية متوفرة';
+          finalConfirmation.style.display = 'block';
+          saveBtn.style.display = 'inline-flex';
         } else {
-          // نسخة تجريبية
+          // ملفات مفقودة
           licenseStatus.className = 'license-status trial-version';
           licenseIcon.textContent = '⚠️';
-          licenseTitle.textContent = 'نسخة تجريبية';
-          licenseSubtitle.textContent = `ملفات أساسية مفقودة - ${Math.round(completionPercentage)}% مكتمل`;
-          downloadBtn.style.display = 'inline-flex';
+          licenseTitle.textContent = 'إعداد مطلوب';
+          licenseSubtitle.textContent = `${criticalMissing} ملف أساسي مفقود - يرجى رفع الملفات المطلوبة`;
+          uploadSection.style.display = 'block';
+          setupFileUpload();
         }
 
-        // إحصائيات مفصلة
+        // إحصائيات مفصلة في وحدة التحكم
         console.log('📊 نتائج فحص النظام:', {
           totalFiles: requiredFiles.length,
           foundFiles: foundFiles,
@@ -1348,9 +1498,116 @@
       }, 500);
     }
 
-    // تحميل الملفات المفقودة (محاكاة)
-    function downloadMissingFiles() {
-      alert('🚀 ميزة تحميل الملفات ستكون متوفرة في النسخة النهائية!\n\nيرجى التأكد من وجود جميع الملفات المطلوبة في المجلدات الصحيحة.');
+    // إعداد رفع الملفات
+    function setupFileUpload() {
+      const uploadArea = document.getElementById('uploadArea');
+      const fileInput = document.getElementById('fileInput');
+      const uploadList = document.getElementById('uploadList');
+
+      // النقر لاختيار الملفات
+      uploadArea.addEventListener('click', () => {
+        fileInput.click();
+      });
+
+      // السحب والإفلات
+      uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+      });
+
+      uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('dragover');
+      });
+
+      uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        handleFiles(e.dataTransfer.files);
+      });
+
+      // اختيار الملفات
+      fileInput.addEventListener('change', (e) => {
+        handleFiles(e.target.files);
+      });
+
+      function handleFiles(files) {
+        uploadList.innerHTML = '';
+        Array.from(files).forEach(file => {
+          const uploadItem = document.createElement('div');
+          uploadItem.className = 'upload-item';
+          uploadItem.innerHTML = `
+            <div class="upload-item-info">
+              <span class="upload-item-name">${file.name}</span>
+              <span class="upload-item-size">(${(file.size / 1024).toFixed(1)} KB)</span>
+            </div>
+            <button class="action-button" onclick="this.parentElement.remove()" style="min-width: auto; padding: 4px 8px;">✗</button>
+          `;
+          uploadList.appendChild(uploadItem);
+        });
+
+        // إظهار زر الحفظ إذا كانت هناك ملفات
+        if (files.length > 0) {
+          document.getElementById('saveSettings').style.display = 'inline-flex';
+        }
+      }
+    }
+
+    // حفظ الإعدادات (محاكاة)
+    function saveSystemSettings() {
+      const uploadList = document.getElementById('uploadList');
+      const uploadItems = uploadList.querySelectorAll('.upload-item');
+      
+      if (uploadItems.length === 0) {
+        // في حالة عدم وجود ملفات مرفوعة، فقط حفظ الحالة الحالية
+        localStorage.setItem('systemConfigured', 'true');
+        localStorage.setItem('configurationDate', new Date().toISOString());
+        
+        alert('✅ تم حفظ إعدادات النظام بنجاح!\n\nسيتم تطبيق الإعدادات عند إعادة تشغيل البرنامج.');
+        hideSettingsModal();
+        return;
+      }
+
+      // محاكاة عملية الرفع والحفظ
+      const saveBtn = document.getElementById('saveSettings');
+      const originalText = saveBtn.innerHTML;
+      
+      saveBtn.innerHTML = '⏳ جاري الحفظ...';
+      saveBtn.disabled = true;
+      
+      setTimeout(() => {
+        // محاكاة نجاح الحفظ
+        localStorage.setItem('systemConfigured', 'true');
+        localStorage.setItem('configurationDate', new Date().toISOString());
+        localStorage.setItem('uploadedFiles', JSON.stringify(Array.from(uploadItems).map(item => 
+          item.querySelector('.upload-item-name').textContent
+        )));
+        
+        saveBtn.innerHTML = originalText;
+        saveBtn.disabled = false;
+        
+        alert('🎉 تم حفظ الملفات والإعدادات بنجاح!\n\nملاحظة: في النسخة النهائية، سيتم رفع الملفات إلى الخادم وتكوين النظام تلقائياً.');
+        
+        // إعادة فحص النظام
+        setTimeout(() => {
+          checkSystemFiles();
+        }, 1000);
+        
+      }, 2000);
+    }
+
+    // التحقق من الإعداد السابق
+    function checkPreviousConfiguration() {
+      const isConfigured = localStorage.getItem('systemConfigured');
+      const configDate = localStorage.getItem('configurationDate');
+      
+      if (isConfigured && configDate) {
+        console.log('✅ تم العثور على إعدادات سابقة للنظام:', {
+          configured: isConfigured,
+          date: new Date(configDate).toLocaleString('ar-SA')
+        });
+      }
+      
+      return !!isConfigured;
     }
 
     // تهيئة التطبيق
@@ -1463,6 +1720,17 @@
           addClickEffect(e.target);
           playSound(elements.clickSound);
           downloadMissingFiles();
+        });
+      }
+
+      // زر حفظ الإعدادات
+      const saveSettings = document.getElementById('saveSettings');
+      if (saveSettings) {
+        saveSettings.addEventListener('click', (e) => {
+          console.log('💾 تم النقر على زر حفظ الإعدادات');
+          addClickEffect(e.target);
+          playSound(elements.clickSound);
+          saveSystemSettings();
         });
       }
 
