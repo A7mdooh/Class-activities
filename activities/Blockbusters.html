@@ -3,189 +3,1118 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مسابقة الحروف - Blockbusters</title>
+  <title>مسابقة الحروف - Blockbusters | أنشطة الفصل</title>
   
   <!-- الخطوط والأيقونات -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   
-  <!-- المكتبات الخارجية -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-  
-  <!-- الأنماط والسكريبت الموحد -->
-  <link rel="stylesheet" href="../assets/css/style.css">
-  <script src="../assets/css/style.css" type="text/javascript"></script>
+  <style>
+    /* ==== متغيرات الألوان العُمانية ==== */
+    :root {
+      /* الألوان الأساسية */
+      --oman-red: #DC143C;
+      --oman-green: #228B22;
+      --oman-gold: #FFD700;
+      --oman-white: #FFFFFF;
+      --oman-navy: #1B365D;
+      
+      /* التدرجات */
+      --red-gradient: linear-gradient(135deg, #DC143C 0%, #B91C3C 50%, #991B1B 100%);
+      --green-gradient: linear-gradient(135deg, #228B22 0%, #16A34A 50%, #15803D 100%);
+      --gold-gradient: linear-gradient(135deg, #FFD700 0%, #F59E0B 50%, #D97706 100%);
+      --navy-gradient: linear-gradient(135deg, #1B365D 0%, #1E40AF 50%, #1D4ED8 100%);
+      
+      /* ألوان النظام */
+      --bg-primary: #F8FAFC;
+      --bg-secondary: #F1F5F9;
+      --text-primary: #0F172A;
+      --text-secondary: #475569;
+      --border-color: #E2E8F0;
+      --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
+      --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --shadow-large: 0 10px 15px rgba(0, 0, 0, 0.1);
+      
+      /* متغيرات التحريك */
+      --transition-fast: 0.15s ease;
+      --transition-normal: 0.3s ease;
+      --transition-slow: 0.5s ease;
+      
+      /* الخط */
+      --font-family: 'Cairo', sans-serif;
+    }
+
+    /* ==== إعادة تعيين الأساسيات ==== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      direction: rtl;
+    }
+
+    /* ==== أزرار التحكم العلوية ==== */
+    .control-header {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem 2rem;
+      z-index: 1000;
+      box-shadow: var(--shadow-light);
+    }
+
+    .control-buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .app-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--oman-red);
+    }
+
+    .control-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .control-btn {
+      background: white;
+      border: 2px solid var(--border-color);
+      color: var(--text-secondary);
+      padding: 0.75rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: var(--transition-normal);
+      font-size: 1.1rem;
+      min-width: 3rem;
+      height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .control-btn:hover {
+      background: var(--bg-secondary);
+      border-color: var(--oman-red);
+      color: var(--oman-red);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-medium);
+    }
+
+    .control-btn:active {
+      transform: translateY(0);
+    }
+
+    .control-btn.active {
+      background: var(--red-gradient);
+      color: white;
+      border-color: var(--oman-red);
+    }
+
+    /* ==== المحتوى الرئيسي ==== */
+    .main-container {
+      margin-top: 5rem;
+      padding: 2rem;
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ==== عنوان اللعبة ==== */
+    .game-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding: 2rem;
+      background: white;
+      border-radius: 20px;
+      box-shadow: var(--shadow-medium);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .game-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--red-gradient);
+    }
+
+    .game-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: var(--red-gradient);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    .game-subtitle {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    /* ==== لوحة الإعدادات ==== */
+    .settings-panel {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-medium);
+      border: 1px solid var(--border-color);
+    }
+
+    .settings-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+    }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .setting-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .setting-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 1rem;
+    }
+
+    .setting-input, .setting-select {
+      padding: 1rem;
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      font-size: 1rem;
+      font-family: var(--font-family);
+      background: white;
+      color: var(--text-primary);
+      transition: var(--transition-normal);
+    }
+
+    .setting-input:focus, .setting-select:focus {
+      outline: none;
+      border-color: var(--oman-red);
+      box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.1);
+    }
+
+    .players-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .player-input {
+      position: relative;
+    }
+
+    .player-input input {
+      width: 100%;
+      padding: 1rem;
+      padding-right: 3rem;
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      font-size: 1rem;
+      font-family: var(--font-family);
+      transition: var(--transition-normal);
+    }
+
+    .player-input input:focus {
+      outline: none;
+      border-color: var(--oman-red);
+      box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.1);
+    }
+
+    .player-input .team-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+    }
+
+    .player-input.green .team-icon {
+      color: var(--oman-green);
+    }
+
+    .player-input.red .team-icon {
+      color: var(--oman-red);
+    }
+
+    /* ==== أزرار الأكشن ==== */
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      background: var(--red-gradient);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      font-family: var(--font-family);
+      cursor: pointer;
+      transition: var(--transition-normal);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-width: 150px;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-large);
+    }
+
+    .action-btn:active {
+      transform: translateY(0);
+    }
+
+    .action-btn.secondary {
+      background: var(--navy-gradient);
+    }
+
+    .action-btn.success {
+      background: var(--green-gradient);
+    }
+
+    .action-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ==== منطقة اللعبة ==== */
+    .game-area {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    /* ==== لوحات الفرق ==== */
+    .team-panel {
+      background: white;
+      border-radius: 20px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-medium);
+      border: 3px solid;
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition-normal);
+    }
+
+    .team-panel.green {
+      border-color: var(--oman-green);
+    }
+
+    .team-panel.red {
+      border-color: var(--oman-red);
+    }
+
+    .team-panel::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+    }
+
+    .team-panel.green::before {
+      background: var(--green-gradient);
+    }
+
+    .team-panel.red::before {
+      background: var(--red-gradient);
+    }
+
+    .team-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .team-icon {
+      font-size: 1.5rem;
+    }
+
+    .team-panel.green .team-icon {
+      color: var(--oman-green);
+    }
+
+    .team-panel.red .team-icon {
+      color: var(--oman-red);
+    }
+
+    .team-name {
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .team-panel.green .team-name {
+      color: var(--oman-green);
+    }
+
+    .team-panel.red .team-name {
+      color: var(--oman-red);
+    }
+
+    .team-score {
+      font-size: 3rem;
+      font-weight: 800;
+      text-align: center;
+      margin: 1rem 0;
+    }
+
+    .team-panel.green .team-score {
+      color: var(--oman-green);
+    }
+
+    .team-panel.red .team-score {
+      color: var(--oman-red);
+    }
+
+    .team-strategy {
+      font-size: 0.9rem;
+      text-align: center;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    .team-members {
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      padding: 1rem;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 500;
+    }
+
+    /* ==== لوحة الحروف ==== */
+    .board-container {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: var(--shadow-medium);
+      border: 1px solid var(--border-color);
+    }
+
+    .board-title {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .hexagon-board {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.5rem;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    .hex-cell {
+      aspect-ratio: 1;
+      background: var(--bg-secondary);
+      border: 3px solid var(--border-color);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition-normal);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hex-cell:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-medium);
+      border-color: var(--oman-gold);
+    }
+
+    .hex-cell.selected {
+      cursor: default;
+      transform: none;
+    }
+
+    .hex-cell.green {
+      background: var(--green-gradient);
+      border-color: var(--oman-green);
+      color: white;
+    }
+
+    .hex-cell.red {
+      background: var(--red-gradient);
+      border-color: var(--oman-red);
+      color: white;
+    }
+
+    .hex-cell::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      transition: var(--transition-fast);
+    }
+
+    .hex-cell:active::before {
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* ==== النوافذ المنبثقة ==== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 2rem;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      position: relative;
+      box-shadow: var(--shadow-large);
+      transform: scale(0.8);
+      opacity: 0;
+      transition: var(--transition-normal);
+    }
+
+    .modal-overlay.show .modal-content {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 8px;
+      transition: var(--transition-fast);
+    }
+
+    .close-btn:hover {
+      background: var(--bg-secondary);
+      color: var(--oman-red);
+    }
+
+    /* ==== نافذة اختيار الفريق ==== */
+    .team-selection-modal .modal-content {
+      text-align: center;
+    }
+
+    .team-selection-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 2rem;
+      color: var(--text-primary);
+    }
+
+    .team-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .team-btn {
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      font-family: var(--font-family);
+      cursor: pointer;
+      transition: var(--transition-normal);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-width: 150px;
+      justify-content: center;
+    }
+
+    .team-btn.green {
+      background: var(--green-gradient);
+      color: white;
+    }
+
+    .team-btn.red {
+      background: var(--red-gradient);
+      color: white;
+    }
+
+    .team-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-medium);
+    }
+
+    /* ==== نافذة الفوز ==== */
+    .victory-modal .modal-content {
+      text-align: center;
+      max-width: 600px;
+    }
+
+    .victory-animation {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-10px); }
+      60% { transform: translateY(-5px); }
+    }
+
+    .victory-title {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+    }
+
+    .victory-players {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      color: var(--text-secondary);
+    }
+
+    .honor-board {
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .honor-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .honor-list {
+      list-style: none;
+    }
+
+    .honor-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem;
+      background: white;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      box-shadow: var(--shadow-light);
+    }
+
+    .honor-rank {
+      font-weight: 700;
+      color: var(--oman-gold);
+      min-width: 2rem;
+    }
+
+    .honor-team {
+      font-weight: 600;
+      flex: 1;
+      text-align: right;
+    }
+
+    .honor-date {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    /* ==== نافذة التعليمات ==== */
+    .instructions-list {
+      list-style: none;
+    }
+
+    .instructions-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      margin-bottom: 1rem;
+    }
+
+    .instructions-list li::before {
+      content: '✓';
+      background: var(--green-gradient);
+      color: white;
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    /* ==== الحالات المخفية ==== */
+    .hidden {
+      display: none !important;
+    }
+
+    /* ==== التأثيرات البصرية ==== */
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .shake {
+      animation: shake 0.5s;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    /* ==== الاستجابة للشاشات الصغيرة ==== */
+    @media (max-width: 1200px) {
+      .game-area {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .team-panel {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1rem;
+        align-items: center;
+      }
+
+      .team-score {
+        font-size: 2rem;
+        margin: 0;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .main-container {
+        padding: 1rem;
+        margin-top: 4rem;
+      }
+
+      .control-header {
+        padding: 0.75rem 1rem;
+      }
+
+      .app-title {
+        font-size: 1.2rem;
+      }
+
+      .control-btn {
+        padding: 0.5rem;
+        min-width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1rem;
+      }
+
+      .game-title {
+        font-size: 2rem;
+      }
+
+      .settings-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+
+      .hexagon-board {
+        gap: 0.25rem;
+        padding: 0.5rem;
+      }
+
+      .hex-cell {
+        font-size: 1.2rem;
+      }
+
+      .team-panel {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .modal-overlay {
+        padding: 1rem;
+      }
+
+      .team-buttons {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hexagon-board {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .hex-cell {
+        font-size: 1rem;
+      }
+
+      .game-title {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- أزرار التحكم الموحدة -->
-  <div class="control-buttons-container">
-    <button class="control-btn" id="backBtn" title="العودة للصفحة الرئيسية">
-      <i class="fas fa-home"></i>
-    </button>
-    <button class="control-btn" id="muteBtn" title="كتم الصوت">
-      <i class="fas fa-volume-up"></i>
-    </button>
-    <button class="control-btn" id="instructionsBtn" title="تعليمات اللعبة">
-      <i class="fas fa-question-circle"></i>
-    </button>
-    <button class="control-btn" id="fullscreenBtn" title="ملء الشاشة">
-      <i class="fas fa-expand"></i>
-    </button>
+  <!-- أزرار التحكم العلوية -->
+  <div class="control-header">
+    <div class="control-buttons">
+      <div class="app-title">
+        🧩 مسابقة الحروف - Blockbusters
+      </div>
+      <div class="control-group">
+        <button class="control-btn" id="backBtn" title="العودة للصفحة الرئيسية">🏠</button>
+        <button class="control-btn" id="soundBtn" title="كتم/تشغيل الصوت">🔊</button>
+        <button class="control-btn" id="instructionsBtn" title="تعليمات اللعبة">❓</button>
+        <button class="control-btn" id="fullscreenBtn" title="ملء الشاشة">⛶</button>
+      </div>
+    </div>
   </div>
 
-  <!-- نافذة تعليمات اللعبة -->
-  <div class="instructions-overlay" id="instructionsModal">
-    <div class="instructions-content">
-      <button class="close-btn" onclick="closeInstructions()" title="إغلاق">
-        <i class="fas fa-times"></i>
-      </button>
-      <div class="instructions-title">
-        <i class="fas fa-book-open"></i> تعليمات اللعبة
+  <!-- المحتوى الرئيسي -->
+  <div class="main-container">
+    <!-- عنوان اللعبة -->
+    <div class="game-header">
+      <div class="game-title">🧩 مسابقة الحروف</div>
+      <div class="game-subtitle">لعبة Blockbusters الكلاسيكية - الفريق الأخضر يكمل الصفوف والأحمر يكمل الأعمدة</div>
+    </div>
+
+    <!-- لوحة الإعدادات -->
+    <div class="settings-panel" id="settingsPanel">
+      <div class="settings-title">
+        ⚙️ إعدادات اللعبة
       </div>
-      <ul class="instructions-list">
-        <li>اختر الصف الدراسي ونوع المسابقة من القائمة.</li>
-        <li>حدد أسماء الطلاب المشاركين أو اختر الوضع العشوائي.</li>
-        <li>اضغط على زر <strong>ابدأ</strong> لبدء اللعبة.</li>
-        <li>انقر على أي خلية في لوحة الحروف، ثم اختر الفريق المناسب (أخضر أو أحمر).</li>
-        <li>الفريق الأخضر يفوز عند إكمال صف أفقي بالكامل.</li>
-        <li>الفريق الأحمر يفوز عند إكمال عمود رأسي بالكامل.</li>
-        <li>إذا امتلأت جميع الخلايا ولم يفز أحد، يتم تحديد الفائز حسب النقاط.</li>
-        <li>عند فوز أحد الفرق ستظهر نافذة احتفالية مع لوحة الشرف.</li>
-        <li>يمكنك إعادة تعيين اللعبة في أي وقت بالضغط على زر "إعادة تعيين".</li>
-      </ul>
-      <button class="btn btn-primary" onclick="closeInstructions()">
-        <i class="fas fa-check"></i> فهمت
-      </button>
+      
+      <form id="gameSettingsForm">
+        <div class="settings-grid">
+          <div class="setting-group">
+            <label class="setting-label">
+              📚 اختر الصف الدراسي
+            </label>
+            <select id="classSelect" class="setting-select" required>
+              <option value="">-- اختر الصف --</option>
+            </select>
+          </div>
+          
+          <div class="setting-group">
+            <label class="setting-label">
+              🎮 نوع المسابقة
+            </label>
+            <select id="modeSelect" class="setting-select" required>
+              <option value="">-- نوع المسابقة --</option>
+              <option value="team2-manual">طالب واحد لكل فريق (اختيار يدوي)</option>
+              <option value="team4-manual">طالبان لكل فريق (اختيار يدوي)</option>
+              <option value="team2-random">طالبان لكل فريق (اختيار عشوائي)</option>
+              <option value="team-free">فريق ضد فريق (بدون أسماء)</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- مدخلات الطلاب -->
+        <div class="players-container" id="playersContainer"></div>
+        
+        <!-- أزرار الأكشن -->
+        <div class="action-buttons">
+          <button type="submit" class="action-btn" id="startGameBtn">
+            ▶️ ابدأ اللعبة
+          </button>
+          <button type="button" class="action-btn secondary" id="resetGameBtn">
+            🔄 إعادة تعيين
+          </button>
+          <button type="button" class="action-btn success" id="statisticsBtn">
+            📊 الإحصائيات
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- منطقة اللعبة -->
+    <div class="game-area hidden" id="gameArea">
+      <!-- لوحة الفريق الأخضر -->
+      <div class="team-panel green" id="greenTeamPanel">
+        <div class="team-header">
+          <div class="team-icon">🟢</div>
+          <div class="team-name">الفريق الأخضر</div>
+        </div>
+        <div class="team-score" id="greenTeamScore">0</div>
+        <div class="team-strategy">🎯 أكمل صفاً أفقياً للفوز</div>
+        <div class="team-members" id="greenTeamMembers">في انتظار بدء اللعبة</div>
+      </div>
+
+      <!-- لوحة الحروف -->
+      <div class="board-container">
+        <div class="board-title">
+          🎲 لوحة الحروف
+        </div>
+        <div class="hexagon-board" id="hexagonBoard"></div>
+      </div>
+
+      <!-- لوحة الفريق الأحمر -->
+      <div class="team-panel red" id="redTeamPanel">
+        <div class="team-header">
+          <div class="team-icon">🔴</div>
+          <div class="team-name">الفريق الأحمر</div>
+        </div>
+        <div class="team-score" id="redTeamScore">0</div>
+        <div class="team-strategy">🎯 أكمل عموداً رأسياً للفوز</div>
+        <div class="team-members" id="redTeamMembers">في انتظار بدء اللعبة</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة اختيار الفريق -->
+  <div class="modal-overlay" id="teamSelectionModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">اختيار الفريق</div>
+        <button class="close-btn" id="closeTeamSelectionBtn">✕</button>
+      </div>
+      <div class="team-selection-title" id="teamSelectionTitle">
+        أي فريق يريد الإجابة على هذا الحرف؟
+      </div>
+      <div class="team-buttons">
+        <button class="team-btn green" id="selectGreenTeamBtn">
+          🟢 الفريق الأخضر
+        </button>
+        <button class="team-btn red" id="selectRedTeamBtn">
+          🔴 الفريق الأحمر
+        </button>
+      </div>
     </div>
   </div>
 
   <!-- نافذة الفوز -->
-  <div class="victory-modal" id="victoryModal">
-    <div class="victory-content">
-      <button class="close-btn" id="closeVictoryModal" title="إغلاق">
-        <i class="fas fa-times"></i>
-      </button>
-      <div class="victory-fireworks" id="fireworksAnimation">
-        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
+  <div class="modal-overlay" id="victoryModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">🎉 انتهت اللعبة!</div>
+        <button class="close-btn" id="closeVictoryModalBtn">✕</button>
       </div>
-      <div class="victory-trophy">
-        <i class="fas fa-trophy"></i>
-      </div>
-      <div class="victory-team" id="victoryTeamName"></div>
-      <div class="victory-names" id="victoryPlayerNames"></div>
-      <div class="honor-board-section" id="honorBoardSection">
-        <h4><i class="fas fa-medal"></i> لوحة الشرف</h4>
-        <ul class="honor-list" id="honorList"></ul>
-      </div>
-      <button class="btn btn-primary" onclick="closeVictoryModal()">
-        <i class="fas fa-times"></i> إغلاق
-      </button>
-    </div>
-  </div>
-
-  <!-- اللوحة الرئيسية للعبة -->
-  <div class="game-main-panel" id="gameMainPanel">
-    <!-- لوحة الفريق الأخضر -->
-    <div class="team-score-panel green-team" id="greenTeamPanel">
-      <div class="team-title">
-        <i class="fas fa-users"></i> الفريق الأخضر
-      </div>
-      <div class="team-points" id="greenTeamPoints">0</div>
-      <div class="team-strategy">أكمل صفاً أفقياً للفوز</div>
-      <div class="team-members" id="greenTeamMembers"></div>
-    </div>
-
-    <!-- المنطقة الوسطى -->
-    <div class="game-center-area">
-      <div class="game-board-title">
-        <i class="fas fa-puzzle-piece"></i> مسابقة الحروف
-      </div>
+      <div class="victory-animation">🏆</div>
+      <div class="victory-title" id="victoryTitle">مبروك للفائز!</div>
+      <div class="victory-players" id="victoryPlayers"></div>
       
-      <!-- إعدادات اللعبة -->
-      <form class="game-settings" id="gameSettingsForm" autocomplete="off">
-        <select id="classSelect" class="form-input" required>
-          <option value="">-- اختر الصف --</option>
-        </select>
-        
-        <select id="modeSelect" class="form-input" required>
-          <option value="">-- نوع المسابقة --</option>
-          <option value="team2-manual">طالب للفريق الأحمر / طالب للفريق الأخضر</option>
-          <option value="team4-manual">طالبان للفريق الأحمر / طالبان للفريق الأخضر</option>
-          <option value="team2-random">جماعي عشوائي (طالبان لكل فريق)</option>
-          <option value="team-free">فريق ضد فريق (بدون تحديد أسماء)</option>
-        </select>
-        
-        <span id="playersInputsContainer"></span>
-        
-        <div class="button-group">
-          <button type="submit" class="btn btn-primary" id="startGameBtn">
-            <i class="fas fa-play"></i> ابدأ
-          </button>
-          <button type="button" class="btn btn-secondary" onclick="resetGame()">
-            <i class="fas fa-redo"></i> إعادة تعيين
-          </button>
+      <div class="honor-board">
+        <div class="honor-title">
+          🏅 لوحة الشرف
         </div>
-      </form>
-      
-      <!-- لوحة الحروف السداسية -->
-      <div class="hexagon-board" id="hexagonBoard"></div>
-    </div>
-
-    <!-- لوحة الفريق الأحمر -->
-    <div class="team-score-panel red-team" id="redTeamPanel">
-      <div class="team-title">
-        <i class="fas fa-users"></i> الفريق الأحمر
+        <div class="honor-list" id="honorList"></div>
       </div>
-      <div class="team-points" id="redTeamPoints">0</div>
-      <div class="team-strategy">أكمل عموداً رأسياً للفوز</div>
-      <div class="team-members" id="redTeamMembers"></div>
+      
+      <div class="action-buttons">
+        <button class="action-btn" id="newGameBtn">
+          🎮 لعبة جديدة
+        </button>
+        <button class="action-btn secondary" id="closeVictoryBtn">
+          ✅ إغلاق
+        </button>
+      </div>
     </div>
   </div>
+
+  <!-- نافذة التعليمات -->
+  <div class="modal-overlay" id="instructionsModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">📖 تعليمات اللعبة</div>
+        <button class="close-btn" id="closeInstructionsBtn">✕</button>
+      </div>
+      <ul class="instructions-list">
+        <li>اختر الصف الدراسي ونوع المسابقة من القائمة المنسدلة</li>
+        <li>حدد أسماء الطلاب المشاركين أو اختر الوضع العشوائي</li>
+        <li>اضغط على زر "ابدأ اللعبة" لبدء المسابقة</li>
+        <li>انقر على أي حرف في لوحة الحروف واختر الفريق المناسب</li>
+        <li>الفريق الأخضر يفوز عند إكمال صف أفقي كامل</li>
+        <li>الفريق الأحمر يفوز عند إكمال عمود رأسي كامل</li>
+        <li>إذا امتلأت جميع الخلايا بدون فائز، يفوز الفريق الأكثر نقاطاً</li>
+        <li>عند فوز أحد الفرق ستظهر نافذة احتفالية مع لوحة الشرف</li>
+      </ul>
+      <div class="action-buttons">
+        <button class="action-btn" id="understoodBtn">
+          ✅ فهمت
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة الإحصائيات -->
+  <div class="modal-overlay" id="statisticsModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">📊 إحصائيات اللعبة</div>
+        <button class="close-btn" id="closeStatisticsBtn">✕</button>
+      </div>
+      <div class="honor-board">
+        <div class="honor-title">
+          🏆 جميع النتائج
+        </div>
+        <div class="honor-list" id="allResultsList"></div>
+      </div>
+      <div class="action-buttons">
+        <button class="action-btn secondary" id="clearStatisticsBtn">
+          🗑️ مسح الإحصائيات
+        </button>
+        <button class="action-btn" id="closeStatisticsModalBtn">
+          ✅ إغلاق
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- عناصر الصوت -->
+  <audio id="clickSound" src="../assets/media/sounds/Click.mp3" preload="auto"></audio>
+  <audio id="successSound" src="../assets/media/sounds/name-start.mp3" preload="auto"></audio>
+  <audio id="winSound" src="../assets/media/sounds/win.mp3" preload="auto"></audio>
+  <audio id="greenPointSound" src="../assets/media/sounds/g.mp3" preload="auto"></audio>
+  <audio id="redPointSound" src="../assets/media/sounds/r.mp3" preload="auto"></audio>
 
   <script>
-    // نظام الألوان العماني المتقدم
-    const OmaniColors = {
+    // ==== متغيرات اللعبة والألوان العُمانية ====
+    const OMAN_COLORS = {
       red: '#DC143C',
-      green: '#228B22', 
+      green: '#228B22',
       gold: '#FFD700',
-      white: '#F8F9FA',
-      black: '#1A1A1A'
+      navy: '#1B365D',
+      white: '#FFFFFF'
     };
 
-    let ActivityManager;
-    
-    // تهيئة النشاط
-    document.addEventListener('DOMContentLoaded', function() {
-      ActivityManager = new ActivityUtils({
-        activityName: 'blockbusters-game',
-        primaryColor: OmaniColors.red,
-        secondaryColor: OmaniColors.green,
-        sounds: {
-          click: '../assets/media/sounds/Click.mp3',
-          success: '../assets/media/sounds/name-start.mp3',
-          win: '../assets/media/sounds/win.mp3',
-          greenPoint: '../assets/media/sounds/g.mp3',
-          redPoint: '../assets/media/sounds/r.mp3'
-        }
-      });
-
-      initializeGame();
-    });
-
     // المتغيرات العامة
-    let students = [];
-    let currentMode = '';
-    let gameStarted = false;
-    let greenTeam = [];
-    let redTeam = [];
-    let greenScore = 0;
-    let redScore = 0;
-    let honorBoard = JSON.parse(localStorage.getItem('blockbusters-honor') || '[]');
+    let gameData = {
+      students: [],
+      currentMode: '',
+      gameStarted: false,
+      greenTeam: [],
+      redTeam: [],
+      greenScore: 0,
+      redScore: 0,
+      selectedCell: null,
+      soundEnabled: true
+    };
 
-    // أحرف اللوحة السداسية
-    const hexagonLetters = [
+    // أحرف اللوحة السداسية (5x5)
+    const BOARD_LETTERS = [
       ['أ', 'ب', 'ت', 'ث', 'ج'],
       ['ح', 'خ', 'د', 'ذ', 'ر'],
       ['ز', 'س', 'ش', 'ص', 'ض'],
@@ -193,376 +1122,236 @@
       ['ق', 'ك', 'ل', 'م', 'ن']
     ];
 
-    // تحميل بيانات الطلاب
+    // عناصر DOM
+    const elements = {
+      // التحكم
+      backBtn: document.getElementById('backBtn'),
+      soundBtn: document.getElementById('soundBtn'),
+      instructionsBtn: document.getElementById('instructionsBtn'),
+      fullscreenBtn: document.getElementById('fullscreenBtn'),
+      
+      // الإعدادات
+      settingsPanel: document.getElementById('settingsPanel'),
+      gameSettingsForm: document.getElementById('gameSettingsForm'),
+      classSelect: document.getElementById('classSelect'),
+      modeSelect: document.getElementById('modeSelect'),
+      playersContainer: document.getElementById('playersContainer'),
+      startGameBtn: document.getElementById('startGameBtn'),
+      resetGameBtn: document.getElementById('resetGameBtn'),
+      statisticsBtn: document.getElementById('statisticsBtn'),
+      
+      // منطقة اللعبة
+      gameArea: document.getElementById('gameArea'),
+      hexagonBoard: document.getElementById('hexagonBoard'),
+      
+      // الفرق
+      greenTeamScore: document.getElementById('greenTeamScore'),
+      redTeamScore: document.getElementById('redTeamScore'),
+      greenTeamMembers: document.getElementById('greenTeamMembers'),
+      redTeamMembers: document.getElementById('redTeamMembers'),
+      
+      // النوافذ المنبثقة
+      teamSelectionModal: document.getElementById('teamSelectionModal'),
+      teamSelectionTitle: document.getElementById('teamSelectionTitle'),
+      selectGreenTeamBtn: document.getElementById('selectGreenTeamBtn'),
+      selectRedTeamBtn: document.getElementById('selectRedTeamBtn'),
+      closeTeamSelectionBtn: document.getElementById('closeTeamSelectionBtn'),
+      
+      victoryModal: document.getElementById('victoryModal'),
+      victoryTitle: document.getElementById('victoryTitle'),
+      victoryPlayers: document.getElementById('victoryPlayers'),
+      honorList: document.getElementById('honorList'),
+      newGameBtn: document.getElementById('newGameBtn'),
+      closeVictoryBtn: document.getElementById('closeVictoryBtn'),
+      closeVictoryModalBtn: document.getElementById('closeVictoryModalBtn'),
+      
+      instructionsModal: document.getElementById('instructionsModal'),
+      closeInstructionsBtn: document.getElementById('closeInstructionsBtn'),
+      understoodBtn: document.getElementById('understoodBtn'),
+      
+      statisticsModal: document.getElementById('statisticsModal'),
+      allResultsList: document.getElementById('allResultsList'),
+      clearStatisticsBtn: document.getElementById('clearStatisticsBtn'),
+      closeStatisticsBtn: document.getElementById('closeStatisticsBtn'),
+      closeStatisticsModalBtn: document.getElementById('closeStatisticsModalBtn'),
+      
+      // الأصوات
+      clickSound: document.getElementById('clickSound'),
+      successSound: document.getElementById('successSound'),
+      winSound: document.getElementById('winSound'),
+      greenPointSound: document.getElementById('greenPointSound'),
+      redPointSound: document.getElementById('redPointSound')
+    };
+
+    // ==== وظائف الصوت ====
+    function playSound(soundElement) {
+      if (!gameData.soundEnabled || !soundElement) return;
+      
+      try {
+        soundElement.currentTime = 0;
+        soundElement.volume = 0.7;
+        const playPromise = soundElement.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            console.log('🔇 تعذر تشغيل الصوت:', error);
+          });
+        }
+      } catch (error) {
+        console.log('🔇 خطأ في تشغيل الصوت:', error);
+      }
+    }
+
+    function toggleSound() {
+      gameData.soundEnabled = !gameData.soundEnabled;
+      elements.soundBtn.textContent = gameData.soundEnabled ? '🔊' : '🔇';
+      elements.soundBtn.title = gameData.soundEnabled ? 'كتم الصوت' : 'تشغيل الصوت';
+      
+      showNotification(
+        gameData.soundEnabled ? 'تم تشغيل الصوت' : 'تم كتم الصوت',
+        gameData.soundEnabled ? 'success' : 'info'
+      );
+    }
+
+    // ==== وظائف العرض والإشعارات ====
+    function showNotification(message, type = 'info') {
+      // إنشاء عنصر الإشعار
+      const notification = document.createElement('div');
+      notification.className = `notification ${type}`;
+      notification.style.cssText = `
+        position: fixed;
+        top: 6rem;
+        right: 2rem;
+        background: ${type === 'success' ? OMAN_COLORS.green : 
+                     type === 'error' ? OMAN_COLORS.red : 
+                     type === 'warning' ? OMAN_COLORS.gold : OMAN_COLORS.navy};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 3000;
+        animation: slideIn 0.3s ease;
+        font-weight: 600;
+        max-width: 300px;
+      `;
+      
+      notification.textContent = message;
+      document.body.appendChild(notification);
+      
+      // إضافة الأنيمشن
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes slideIn {
+          from { transform: translateX(100%); opacity: 0; }
+          to { transform: translateX(0); opacity: 1; }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      // إزالة الإشعار بعد 3 ثوان
+      setTimeout(() => {
+        notification.style.animation = 'slideIn 0.3s ease reverse';
+        setTimeout(() => {
+          if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+          }
+        }, 300);
+      }, 3000);
+    }
+
+    function showModal(modalElement) {
+      if (modalElement) {
+        modalElement.classList.add('show');
+        playSound(elements.clickSound);
+      }
+    }
+
+    function hideModal(modalElement) {
+      if (modalElement) {
+        modalElement.classList.remove('show');
+        playSound(elements.clickSound);
+      }
+    }
+
+    // ==== تحميل بيانات الطلاب ====
     async function loadStudentData() {
       try {
         const response = await fetch('../data/studentData.json');
         const data = await response.json();
-        students = data.students || [];
+        gameData.students = data.students || [];
         populateClassSelect();
+        console.log('✅ تم تحميل بيانات الطلاب بنجاح');
       } catch (error) {
-        console.error('خطأ في تحميل بيانات الطلاب:', error);
-        ActivityManager.showNotification('فشل في تحميل بيانات الطلاب', 'error');
+        console.error('❌ خطأ في تحميل بيانات الطلاب:', error);
+        showNotification('فشل في تحميل بيانات الطلاب', 'error');
+        
+        // بيانات احتياطية للاختبار
+        gameData.students = [
+          {name: 'أحمد محمد', class: 'الصف الخامس'},
+          {name: 'فاطمة علي', class: 'الصف الخامس'},
+          {name: 'محمد سالم', class: 'الصف السادس'},
+          {name: 'عائشة أحمد', class: 'الصف السادس'}
+        ];
+        populateClassSelect();
       }
     }
 
-    // ملء قائمة الصفوف
     function populateClassSelect() {
-      const classSelect = document.getElementById('classSelect');
-      const classes = [...new Set(students.map(s => s.class))];
+      const classes = [...new Set(gameData.students.map(s => s.class))];
+      elements.classSelect.innerHTML = '<option value="">-- اختر الصف --</option>';
       
-      classSelect.innerHTML = '<option value="">-- اختر الصف --</option>';
       classes.forEach(className => {
         const option = document.createElement('option');
         option.value = className;
         option.textContent = className;
-        classSelect.appendChild(option);
+        elements.classSelect.appendChild(option);
       });
     }
 
-    // تهيئة الشبكة السداسية
-    function initializeHexBoard() {
-      const board = document.getElementById('hexagonBoard');
-      board.innerHTML = '';
-      
-      hexagonLetters.forEach((row, rowIndex) => {
-        const rowDiv = document.createElement('div');
-        rowDiv.className = 'hex-row';
-        
-        row.forEach((letter, colIndex) => {
-          const hexCell = document.createElement('div');
-          hexCell.className = 'hex-cell';
-          hexCell.setAttribute('data-row', rowIndex);
-          hexCell.setAttribute('data-col', colIndex);
-          hexCell.innerHTML = `<span class="hex-letter">${letter}</span>`;
-          
-          hexCell.addEventListener('click', () => handleHexClick(rowIndex, colIndex, hexCell));
-          rowDiv.appendChild(hexCell);
-        });
-        
-        board.appendChild(rowDiv);
-      });
-    }
-
-    // معالجة النقر على الخلية السداسية
-    function handleHexClick(row, col, element) {
-      if (!gameStarted || element.classList.contains('selected')) return;
-      
-      ActivityManager.playSound('click');
-      
-      // إظهار نافذة اختيار الفريق
-      const modal = document.createElement('div');
-      modal.className = 'team-selection-modal';
-      modal.innerHTML = `
-        <div class="modal-content">
-          <h3>أي فريق يريد الإجابة على حرف "${hexagonLetters[row][col]}"؟</h3>
-          <div class="team-buttons">
-            <button class="btn btn-success" onclick="selectTeamForHex(${row}, ${col}, 'green'); closeTeamModal()">
-              <i class="fas fa-users"></i> الفريق الأخضر
-            </button>
-            <button class="btn btn-danger" onclick="selectTeamForHex(${row}, ${col}, 'red'); closeTeamModal()">
-              <i class="fas fa-users"></i> الفريق الأحمر
-            </button>
-          </div>
-        </div>
-      `;
-      
-      document.body.appendChild(modal);
-      modal.style.display = 'flex';
-      
-      window.currentHexElement = element;
-    }
-
-    // تعيين الخلية للفريق
-    function selectTeamForHex(row, col, team) {
-      const element = window.currentHexElement;
-      element.classList.add('selected', team);
-      
-      if (team === 'green') {
-        greenScore++;
-        document.getElementById('greenTeamPoints').textContent = greenScore;
-        ActivityManager.playSound('greenPoint');
-      } else {
-        redScore++;
-        document.getElementById('redTeamPoints').textContent = redScore;
-        ActivityManager.playSound('redPoint');
-      }
-      
-      // التحقق من الفوز
-      setTimeout(() => checkForWin(), 500);
-    }
-
-    // إغلاق نافذة اختيار الفريق
-    function closeTeamModal() {
-      const modal = document.querySelector('.team-selection-modal');
-      if (modal) modal.remove();
-    }
-
-    // التحقق من حالة الفوز
-    function checkForWin() {
-      const greenCells = document.querySelectorAll('.hex-cell.green');
-      const redCells = document.querySelectorAll('.hex-cell.red');
-      
-      // التحقق من فوز الفريق الأخضر (صف أفقي)
-      for (let row = 0; row < 5; row++) {
-        let greenRowCount = 0;
-        for (let col = 0; col < 5; col++) {
-          const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
-          if (cell && cell.classList.contains('green')) greenRowCount++;
-        }
-        if (greenRowCount === 5) {
-          declareWinner('green');
-          return;
-        }
-      }
-      
-      // التحقق من فوز الفريق الأحمر (عمود رأسي)
-      for (let col = 0; col < 5; col++) {
-        let redColCount = 0;
-        for (let row = 0; row < 5; row++) {
-          const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
-          if (cell && cell.classList.contains('red')) redColCount++;
-        }
-        if (redColCount === 5) {
-          declareWinner('red');
-          return;
-        }
-      }
-      
-      // التحقق من امتلاء الشبكة
-      if (greenCells.length + redCells.length === 25) {
-        if (greenScore > redScore) {
-          declareWinner('green');
-        } else if (redScore > greenScore) {
-          declareWinner('red');
-        } else {
-          declareTie();
-        }
-      }
-    }
-
-    // إعلان الفائز
-    function declareWinner(team) {
-      gameStarted = false;
-      const teamName = team === 'green' ? 'الفريق الأخضر' : 'الفريق الأحمر';
-      const teamMembers = team === 'green' ? greenTeam : redTeam;
-      
-      ActivityManager.playSound('win');
-      
-      // تأثيرات الاحتفال
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: [team === 'green' ? OmaniColors.green : OmaniColors.red, OmaniColors.gold]
-      });
-      
-      // حفظ في لوحة الشرف
-      saveToHonorBoard(teamName, teamMembers.join(' و '));
-      
-      // إظهار نافذة الفوز
-      showVictoryModal(teamName, teamMembers);
-    }
-
-    // إعلان التعادل
-    function declareTie() {
-      gameStarted = false;
-      ActivityManager.showNotification('تعادل! لا يوجد فائز', 'info');
-    }
-
-    // حفظ النتيجة في لوحة الشرف
-    function saveToHonorBoard(teamName, memberNames) {
-      honorBoard.unshift({
-        team: teamName,
-        names: memberNames,
-        date: new Date().toLocaleDateString('ar-SA'),
-        score: teamName.includes('أخضر') ? greenScore : redScore
-      });
-      
-      // الاحتفاظ بآخر 10 نتائج
-      honorBoard = honorBoard.slice(0, 10);
-      localStorage.setItem('blockbusters-honor', JSON.stringify(honorBoard));
-    }
-
-    // إظهار نافذة الفوز
-    function showVictoryModal(teamName, members) {
-      const modal = document.getElementById('victoryModal');
-      const teamNameElement = document.getElementById('victoryTeamName');
-      const playerNamesElement = document.getElementById('victoryPlayerNames');
-      const honorListElement = document.getElementById('honorList');
-      
-      teamNameElement.textContent = `🎉 ${teamName} فاز! 🎉`;
-      teamNameElement.style.color = teamName.includes('أخضر') ? OmaniColors.green : OmaniColors.red;
-      
-      if (members.length > 0) {
-        playerNamesElement.innerHTML = `<i class="fas fa-star"></i> ${members.join(' و ')}`;
-      } else {
-        playerNamesElement.textContent = '';
-      }
-      
-      // ملء لوحة الشرف
-      honorListElement.innerHTML = '';
-      honorBoard.slice(0, 5).forEach((entry, index) => {
-        const li = document.createElement('li');
-        li.className = 'honor-item';
-        li.innerHTML = `
-          <span class="honor-rank">${index + 1}</span>
-          <span class="honor-team" style="color: ${entry.team.includes('أخضر') ? OmaniColors.green : OmaniColors.red}">
-            ${entry.team}
-          </span>
-          <span class="honor-names">${entry.names}</span>
-          <span class="honor-date">${entry.date}</span>
-        `;
-        honorListElement.appendChild(li);
-      });
-      
-      modal.style.display = 'flex';
-    }
-
-    // إغلاق نافذة الفوز
-    function closeVictoryModal() {
-      document.getElementById('victoryModal').style.display = 'none';
-    }
-
-    // إعادة تعيين اللعبة
-    function resetGame() {
-      gameStarted = false;
-      greenScore = 0;
-      redScore = 0;
-      greenTeam = [];
-      redTeam = [];
-      
-      document.getElementById('greenTeamPoints').textContent = '0';
-      document.getElementById('redTeamPoints').textContent = '0';
-      document.getElementById('greenTeamMembers').textContent = '';
-      document.getElementById('redTeamMembers').textContent = '';
-      
-      // إعادة تعيين الشبكة
-      document.querySelectorAll('.hex-cell').forEach(cell => {
-        cell.classList.remove('selected', 'green', 'red');
-      });
-      
-      // إظهار نموذج الإعدادات
-      document.getElementById('gameSettingsForm').style.display = 'block';
-      
-      ActivityManager.showNotification('تم إعادة تعيين اللعبة', 'success');
-    }
-
-    // تهيئة اللعبة
-    function initializeGame() {
-      loadStudentData();
-      initializeHexBoard();
-      
-      // معالج أزرار التحكم
-      document.getElementById('backBtn').addEventListener('click', () => {
-        ActivityManager.goBack();
-      });
-      
-      document.getElementById('muteBtn').addEventListener('click', () => {
-        ActivityManager.toggleMute();
-        const icon = document.querySelector('#muteBtn i');
-        icon.className = ActivityManager.isMuted() ? 'fas fa-volume-mute' : 'fas fa-volume-up';
-      });
-      
-      document.getElementById('instructionsBtn').addEventListener('click', () => {
-        document.getElementById('instructionsModal').style.display = 'flex';
-      });
-      
-      document.getElementById('fullscreenBtn').addEventListener('click', () => {
-        ActivityManager.toggleFullscreen();
-      });
-      
-      // معالج نموذج الإعدادات
-      document.getElementById('gameSettingsForm').addEventListener('submit', startGame);
-      
-      // معالج إغلاق النوافذ
-      document.getElementById('closeVictoryModal').addEventListener('click', closeVictoryModal);
-      
-      // ملء خيارات الوضع حسب الصف المختار
-      document.getElementById('classSelect').addEventListener('change', updatePlayerInputs);
-      document.getElementById('modeSelect').addEventListener('change', updatePlayerInputs);
-    }
-
-    // بدء اللعبة
-    function startGame(e) {
-      e.preventDefault();
-      
-      const classValue = document.getElementById('classSelect').value;
-      const modeValue = document.getElementById('modeSelect').value;
-      
-      if (!classValue || !modeValue) {
-        ActivityManager.showNotification('يرجى اختيار الصف ونوع المسابقة', 'warning');
-        return;
-      }
-      
-      const classStudents = students.filter(s => s.class === classValue);
-      currentMode = modeValue;
-      
-      // تحديد أعضاء الفرق حسب الوضع
-      if (modeValue === 'team2-random') {
-        const shuffled = [...classStudents].sort(() => 0.5 - Math.random());
-        greenTeam = shuffled.slice(0, 2).map(s => s.name);
-        redTeam = shuffled.slice(2, 4).map(s => s.name);
-      } else if (modeValue === 'team-free') {
-        greenTeam = ['فريق أخضر'];
-        redTeam = ['فريق أحمر'];
-      } else {
-        // الحصول على الأسماء من المدخلات
-        const inputs = document.querySelectorAll('#playersInputsContainer input');
-        greenTeam = [];
-        redTeam = [];
-        
-        inputs.forEach(input => {
-          if (input.value.trim()) {
-            if (input.dataset.team === 'green') {
-              greenTeam.push(input.value.trim());
-            } else {
-              redTeam.push(input.value.trim());
-            }
-          }
-        });
-      }
-      
-      // تحديث عرض أعضاء الفرق
-      document.getElementById('greenTeamMembers').textContent = greenTeam.join(' و ');
-      document.getElementById('redTeamMembers').textContent = redTeam.join(' و ');
-      
-      // إخفاء نموذج الإعدادات وبدء اللعبة
-      document.getElementById('gameSettingsForm').style.display = 'none';
-      gameStarted = true;
-      
-      ActivityManager.playSound('success');
-      ActivityManager.showNotification('بدأت اللعبة! اختر الحروف', 'success');
-    }
-
-    // تحديث مدخلات الأسماء
+    // ==== إدارة مدخلات الطلاب ====
     function updatePlayerInputs() {
-      const classValue = document.getElementById('classSelect').value;
-      const modeValue = document.getElementById('modeSelect').value;
-      const container = document.getElementById('playersInputsContainer');
+      const classValue = elements.classSelect.value;
+      const modeValue = elements.modeSelect.value;
       
-      container.innerHTML = '';
+      elements.playersContainer.innerHTML = '';
       
       if (!classValue || !modeValue) return;
       
-      const classStudents = students.filter(s => s.class === classValue);
+      const classStudents = gameData.students.filter(s => s.class === classValue);
       
       if (modeValue === 'team2-manual') {
-        container.innerHTML = `
-          <input type="text" class="form-input" placeholder="اسم طالب الفريق الأخضر" data-team="green" list="students-${classValue}" required>
-          <input type="text" class="form-input" placeholder="اسم طالب الفريق الأحمر" data-team="red" list="students-${classValue}" required>
+        elements.playersContainer.innerHTML = `
+          <div class="player-input green">
+            <input type="text" placeholder="اسم طالب الفريق الأخضر" data-team="green" list="students-${classValue}" required>
+            <div class="team-icon">🟢</div>
+          </div>
+          <div class="player-input red">
+            <input type="text" placeholder="اسم طالب الفريق الأحمر" data-team="red" list="students-${classValue}" required>
+            <div class="team-icon">🔴</div>
+          </div>
         `;
       } else if (modeValue === 'team4-manual') {
-        container.innerHTML = `
-          <input type="text" class="form-input" placeholder="الطالب الأول - الفريق الأخضر" data-team="green" list="students-${classValue}" required>
-          <input type="text" class="form-input" placeholder="الطالب الثاني - الفريق الأخضر" data-team="green" list="students-${classValue}" required>
-          <input type="text" class="form-input" placeholder="الطالب الأول - الفريق الأحمر" data-team="red" list="students-${classValue}" required>
-          <input type="text" class="form-input" placeholder="الطالب الثاني - الفريق الأحمر" data-team="red" list="students-${classValue}" required>
+        elements.playersContainer.innerHTML = `
+          <div class="player-input green">
+            <input type="text" placeholder="الطالب الأول - الفريق الأخضر" data-team="green" list="students-${classValue}" required>
+            <div class="team-icon">🟢</div>
+          </div>
+          <div class="player-input green">
+            <input type="text" placeholder="الطالب الثاني - الفريق الأخضر" data-team="green" list="students-${classValue}" required>
+            <div class="team-icon">🟢</div>
+          </div>
+          <div class="player-input red">
+            <input type="text" placeholder="الطالب الأول - الفريق الأحمر" data-team="red" list="students-${classValue}" required>
+            <div class="team-icon">🔴</div>
+          </div>
+          <div class="player-input red">
+            <input type="text" placeholder="الطالب الثاني - الفريق الأحمر" data-team="red" list="students-${classValue}" required>
+            <div class="team-icon">🔴</div>
+          </div>
         `;
       }
       
       // إضافة قائمة الطلاب للاقتراح التلقائي
-      if (container.innerHTML) {
+      if (elements.playersContainer.innerHTML) {
         const datalist = document.createElement('datalist');
         datalist.id = `students-${classValue}`;
         classStudents.forEach(student => {
@@ -570,23 +1359,440 @@
           option.value = student.name;
           datalist.appendChild(option);
         });
-        container.appendChild(datalist);
+        elements.playersContainer.appendChild(datalist);
       }
     }
 
-    // إغلاق نافذة التعليمات
-    function closeInstructions() {
-      document.getElementById('instructionsModal').style.display = 'none';
+    // ==== تهيئة لوحة الحروف ====
+    function initializeHexBoard() {
+      elements.hexagonBoard.innerHTML = '';
+      
+      BOARD_LETTERS.forEach((row, rowIndex) => {
+        row.forEach((letter, colIndex) => {
+          const hexCell = document.createElement('div');
+          hexCell.className = 'hex-cell';
+          hexCell.setAttribute('data-row', rowIndex);
+          hexCell.setAttribute('data-col', colIndex);
+          hexCell.textContent = letter;
+          
+          hexCell.addEventListener('click', () => handleCellClick(rowIndex, colIndex, hexCell));
+          elements.hexagonBoard.appendChild(hexCell);
+        });
+      });
     }
 
-    // إضافة مستمعي الأحداث للوحة المفاتيح
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        closeInstructions();
-        closeVictoryModal();
-        closeTeamModal();
+    // ==== معالجة النقر على الخلايا ====
+    function handleCellClick(row, col, element) {
+      if (!gameData.gameStarted || element.classList.contains('selected')) {
+        return;
       }
-    });
+      
+      playSound(elements.clickSound);
+      
+      gameData.selectedCell = { row, col, element };
+      elements.teamSelectionTitle.textContent = 
+        `أي فريق يريد الإجابة على حرف "${BOARD_LETTERS[row][col]}"؟`;
+      
+      showModal(elements.teamSelectionModal);
+    }
+
+    function selectTeamForCell(team) {
+      if (!gameData.selectedCell) return;
+      
+      const { row, col, element } = gameData.selectedCell;
+      
+      element.classList.add('selected', team);
+      
+      if (team === 'green') {
+        gameData.greenScore++;
+        elements.greenTeamScore.textContent = gameData.greenScore;
+        playSound(elements.greenPointSound);
+      } else {
+        gameData.redScore++;
+        elements.redTeamScore.textContent = gameData.redScore;
+        playSound(elements.redPointSound);
+      }
+      
+      hideModal(elements.teamSelectionModal);
+      gameData.selectedCell = null;
+      
+      // التحقق من الفوز بعد قليل
+      setTimeout(() => checkForWin(), 500);
+    }
+
+    // ==== فحص حالات الفوز ====
+    function checkForWin() {
+      const greenCells = document.querySelectorAll('.hex-cell.green');
+      const redCells = document.querySelectorAll('.hex-cell.red');
+      
+      // فحص فوز الفريق الأخضر (صف أفقي كامل)
+      for (let row = 0; row < 5; row++) {
+        let greenRowCount = 0;
+        for (let col = 0; col < 5; col++) {
+          const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+          if (cell && cell.classList.contains('green')) {
+            greenRowCount++;
+          }
+        }
+        if (greenRowCount === 5) {
+          declareWinner('green', 'إكمال صف أفقي');
+          return;
+        }
+      }
+      
+      // فحص فوز الفريق الأحمر (عمود رأسي كامل)
+      for (let col = 0; col < 5; col++) {
+        let redColCount = 0;
+        for (let row = 0; row < 5; row++) {
+          const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+          if (cell && cell.classList.contains('red')) {
+            redColCount++;
+          }
+        }
+        if (redColCount === 5) {
+          declareWinner('red', 'إكمال عمود رأسي');
+          return;
+        }
+      }
+      
+      // فحص امتلاء اللوحة
+      if (greenCells.length + redCells.length === 25) {
+        if (gameData.greenScore > gameData.redScore) {
+          declareWinner('green', 'الأكثر نقاطاً');
+        } else if (gameData.redScore > gameData.greenScore) {
+          declareWinner('red', 'الأكثر نقاطاً');
+        } else {
+          declareTie();
+        }
+      }
+    }
+
+    function declareWinner(team, reason) {
+      gameData.gameStarted = false;
+      
+      const teamName = team === 'green' ? 'الفريق الأخضر' : 'الفريق الأحمر';
+      const teamMembers = team === 'green' ? gameData.greenTeam : gameData.redTeam;
+      const teamScore = team === 'green' ? gameData.greenScore : gameData.redScore;
+      
+      playSound(elements.winSound);
+      
+      // تأثير الاحتفال
+      if (typeof confetti !== 'undefined') {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: [team === 'green' ? OMAN_COLORS.green : OMAN_COLORS.red, OMAN_COLORS.gold]
+        });
+      }
+      
+      // حفظ النتيجة
+      saveGameResult(teamName, teamMembers, teamScore, reason);
+      
+      // إظهار نافذة الفوز
+      showVictoryModal(teamName, teamMembers, reason);
+    }
+
+    function declareTie() {
+      gameData.gameStarted = false;
+      showNotification('تعادل! لا يوجد فائز', 'info');
+    }
+
+    // ==== إدارة النتائج ====
+    function saveGameResult(teamName, members, score, reason) {
+      const results = JSON.parse(localStorage.getItem('blockbusters-results') || '[]');
+      
+      const result = {
+        team: teamName,
+        members: members.join(' و '),
+        score: score,
+        reason: reason,
+        date: new Date().toLocaleDateString('ar-SA'),
+        time: new Date().toLocaleTimeString('ar-SA')
+      };
+      
+      results.unshift(result);
+      
+      // الاحتفاظ بآخر 20 نتيجة
+      if (results.length > 20) {
+        results.splice(20);
+      }
+      
+      localStorage.setItem('blockbusters-results', JSON.stringify(results));
+    }
+
+    function loadGameResults() {
+      return JSON.parse(localStorage.getItem('blockbusters-results') || '[]');
+    }
+
+    function clearGameResults() {
+      localStorage.removeItem('blockbusters-results');
+      showNotification('تم مسح جميع الإحصائيات', 'success');
+      updateStatisticsDisplay();
+    }
+
+    // ==== إظهار النوافذ ====
+    function showVictoryModal(teamName, members, reason) {
+      elements.victoryTitle.textContent = `🎉 ${teamName} فاز!`;
+      elements.victoryTitle.style.color = teamName.includes('أخضر') ? OMAN_COLORS.green : OMAN_COLORS.red;
+      
+      if (members.length > 0) {
+        elements.victoryPlayers.innerHTML = `⭐ ${members.join(' و ')} - ${reason}`;
+      } else {
+        elements.victoryPlayers.textContent = `السبب: ${reason}`;
+      }
+      
+      updateHonorBoard();
+      showModal(elements.victoryModal);
+    }
+
+    function updateHonorBoard() {
+      const results = loadGameResults().slice(0, 5);
+      elements.honorList.innerHTML = '';
+      
+      results.forEach((result, index) => {
+        const item = document.createElement('div');
+        item.className = 'honor-item';
+        item.innerHTML = `
+          <span class="honor-rank">${index + 1}</span>
+          <span class="honor-team" style="color: ${result.team.includes('أخضر') ? OMAN_COLORS.green : OMAN_COLORS.red}">
+            ${result.team}
+          </span>
+          <span class="honor-date">${result.date}</span>
+        `;
+        elements.honorList.appendChild(item);
+      });
+    }
+
+    function updateStatisticsDisplay() {
+      const results = loadGameResults();
+      elements.allResultsList.innerHTML = '';
+      
+      if (results.length === 0) {
+        elements.allResultsList.innerHTML = '<div style="text-align: center; padding: 2rem; color: #64748B;">لا توجد نتائج محفوظة</div>';
+        return;
+      }
+      
+      results.forEach((result, index) => {
+        const item = document.createElement('div');
+        item.className = 'honor-item';
+        item.innerHTML = `
+          <span class="honor-rank">${index + 1}</span>
+          <div style="flex: 1;">
+            <div style="color: ${result.team.includes('أخضر') ? OMAN_COLORS.green : OMAN_COLORS.red}; font-weight: 600;">
+              ${result.team} - ${result.score} نقاط
+            </div>
+            <div style="font-size: 0.9rem; color: #64748B;">
+              ${result.members} - ${result.reason}
+            </div>
+          </div>
+          <div style="text-align: left; font-size: 0.8rem; color: #64748B;">
+            <div>${result.date}</div>
+            <div>${result.time}</div>
+          </div>
+        `;
+        elements.allResultsList.appendChild(item);
+      });
+    }
+
+    // ==== بدء اللعبة ====
+    function startGame(e) {
+      e.preventDefault();
+      
+      const classValue = elements.classSelect.value;
+      const modeValue = elements.modeSelect.value;
+      
+      if (!classValue || !modeValue) {
+        showNotification('يرجى اختيار الصف ونوع المسابقة', 'warning');
+        return;
+      }
+      
+      const classStudents = gameData.students.filter(s => s.class === classValue);
+      gameData.currentMode = modeValue;
+      
+      // تحديد أعضاء الفرق
+      gameData.greenTeam = [];
+      gameData.redTeam = [];
+      
+      if (modeValue === 'team2-random') {
+        const shuffled = [...classStudents].sort(() => 0.5 - Math.random());
+        gameData.greenTeam = shuffled.slice(0, 2).map(s => s.name);
+        gameData.redTeam = shuffled.slice(2, 4).map(s => s.name);
+      } else if (modeValue === 'team-free') {
+        gameData.greenTeam = ['فريق أخضر'];
+        gameData.redTeam = ['فريق أحمر'];
+      } else {
+        const inputs = elements.playersContainer.querySelectorAll('input');
+        inputs.forEach(input => {
+          if (input.value.trim()) {
+            if (input.dataset.team === 'green') {
+              gameData.greenTeam.push(input.value.trim());
+            } else {
+              gameData.redTeam.push(input.value.trim());
+            }
+          }
+        });
+        
+        if (gameData.greenTeam.length === 0 || gameData.redTeam.length === 0) {
+          showNotification('يرجى إدخال أسماء الطلاب لكلا الفريقين', 'warning');
+          return;
+        }
+      }
+      
+      // تحديث عرض الفرق
+      elements.greenTeamMembers.textContent = gameData.greenTeam.join(' و ');
+      elements.redTeamMembers.textContent = gameData.redTeam.join(' و ');
+      
+      // إخفاء الإعدادات وإظهار اللعبة
+      elements.settingsPanel.classList.add('hidden');
+      elements.gameArea.classList.remove('hidden');
+      
+      // بدء اللعبة
+      gameData.gameStarted = true;
+      gameData.greenScore = 0;
+      gameData.redScore = 0;
+      elements.greenTeamScore.textContent = '0';
+      elements.redTeamScore.textContent = '0';
+      
+      // إعادة تعيين اللوحة
+      document.querySelectorAll('.hex-cell').forEach(cell => {
+        cell.classList.remove('selected', 'green', 'red');
+      });
+      
+      playSound(elements.successSound);
+      showNotification('بدأت اللعبة! اختر الحروف', 'success');
+    }
+
+    // ==== إعادة تعيين اللعبة ====
+    function resetGame() {
+      gameData.gameStarted = false;
+      gameData.greenScore = 0;
+      gameData.redScore = 0;
+      gameData.greenTeam = [];
+      gameData.redTeam = [];
+      gameData.selectedCell = null;
+      
+      elements.greenTeamScore.textContent = '0';
+      elements.redTeamScore.textContent = '0';
+      elements.greenTeamMembers.textContent = 'في انتظار بدء اللعبة';
+      elements.redTeamMembers.textContent = 'في انتظار بدء اللعبة';
+      
+      // إعادة تعيين اللوحة
+      document.querySelectorAll('.hex-cell').forEach(cell => {
+        cell.classList.remove('selected', 'green', 'red');
+      });
+      
+      // إظهار الإعدادات وإخفاء اللعبة
+      elements.settingsPanel.classList.remove('hidden');
+      elements.gameArea.classList.add('hidden');
+      
+      // إعادة تعيين النموذج
+      elements.gameSettingsForm.reset();
+      elements.playersContainer.innerHTML = '';
+      
+      // إخفاء جميع النوافذ
+      hideModal(elements.teamSelectionModal);
+      hideModal(elements.victoryModal);
+      
+      showNotification('تم إعادة تعيين اللعبة', 'success');
+    }
+
+    // ==== وظائف التحكم ====
+    function goBack() {
+      if (confirm('هل تريد حقاً العودة للصفحة الرئيسية؟ سيتم فقدان التقدم الحالي.')) {
+        window.location.href = '../index.html';
+      }
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.log('خطأ في ملء الشاشة:', err);
+        });
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    // ==== تهيئة التطبيق ====
+    function initializeApp() {
+      console.log('🎮 تهيئة لعبة بلوك باسترز المطورة...');
+      
+      // تحميل بيانات الطلاب
+      loadStudentData();
+      
+      // تهيئة لوحة الحروف
+      initializeHexBoard();
+      
+      // ربط الأحداث - أزرار التحكم
+      elements.backBtn.addEventListener('click', goBack);
+      elements.soundBtn.addEventListener('click', toggleSound);
+      elements.instructionsBtn.addEventListener('click', () => showModal(elements.instructionsModal));
+      elements.fullscreenBtn.addEventListener('click', toggleFullscreen);
+      
+      // ربط الأحداث - الإعدادات
+      elements.gameSettingsForm.addEventListener('submit', startGame);
+      elements.classSelect.addEventListener('change', updatePlayerInputs);
+      elements.modeSelect.addEventListener('change', updatePlayerInputs);
+      elements.resetGameBtn.addEventListener('click', resetGame);
+      elements.statisticsBtn.addEventListener('click', () => {
+        updateStatisticsDisplay();
+        showModal(elements.statisticsModal);
+      });
+      
+      // ربط الأحداث - اختيار الفريق
+      elements.selectGreenTeamBtn.addEventListener('click', () => selectTeamForCell('green'));
+      elements.selectRedTeamBtn.addEventListener('click', () => selectTeamForCell('red'));
+      elements.closeTeamSelectionBtn.addEventListener('click', () => hideModal(elements.teamSelectionModal));
+      
+      // ربط الأحداث - نافذة الفوز
+      elements.newGameBtn.addEventListener('click', () => {
+        hideModal(elements.victoryModal);
+        resetGame();
+      });
+      elements.closeVictoryBtn.addEventListener('click', () => hideModal(elements.victoryModal));
+      elements.closeVictoryModalBtn.addEventListener('click', () => hideModal(elements.victoryModal));
+      
+      // ربط الأحداث - نافذة التعليمات
+      elements.closeInstructionsBtn.addEventListener('click', () => hideModal(elements.instructionsModal));
+      elements.understoodBtn.addEventListener('click', () => hideModal(elements.instructionsModal));
+      
+      // ربط الأحداث - نافذة الإحصائيات
+      elements.clearStatisticsBtn.addEventListener('click', () => {
+        if (confirm('هل تريد حقاً مسح جميع الإحصائيات؟ لا يمكن التراجع عن هذا الإجراء.')) {
+          clearGameResults();
+        }
+      });
+      elements.closeStatisticsBtn.addEventListener('click', () => hideModal(elements.statisticsModal));
+      elements.closeStatisticsModalBtn.addEventListener('click', () => hideModal(elements.statisticsModal));
+      
+      // ربط أحداث لوحة المفاتيح
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          hideModal(elements.teamSelectionModal);
+          hideModal(elements.victoryModal);
+          hideModal(elements.instructionsModal);
+          hideModal(elements.statisticsModal);
+        }
+      });
+      
+      // إغلاق النوافذ عند النقر خارجها
+      [elements.teamSelectionModal, elements.victoryModal, elements.instructionsModal, elements.statisticsModal].forEach(modal => {
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            hideModal(modal);
+          }
+        });
+      });
+      
+      console.log('✅ تم تهيئة اللعبة بنجاح');
+      showNotification('مرحباً بك في لعبة بلوك باسترز المطورة!', 'success');
+    }
+
+    // بدء التطبيق عند تحميل الصفحة
+    document.addEventListener('DOMContentLoaded', initializeApp);
+
+    console.log('🧩 تم تحميل لعبة بلوك باسترز الاحترافية بنجاح!');
   </script>
 </body>
 </html>
