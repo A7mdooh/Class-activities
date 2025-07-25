@@ -4,11 +4,11 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <meta name="theme-color" content="#00796B"/>
-  <meta name="description" content="قائمة الأنشطة الصفية التفاعلية - مدرسة أبو القاسم الزهراوي"/>
-  <meta name="keywords" content="أنشطة, تفاعلية, تعليم, مدرسة, عُمان"/>
+  <meta name="description" content="نشاط الاختيار العشوائي للطلاب - مدرسة أبو القاسم الزهراوي"/>
+  <meta name="keywords" content="اختيار عشوائي, طلاب, تفاعلي, تعليم, مدرسة, عُمان"/>
   <meta name="author" content="الأستاذ أحمد بن عبدالله الضامري"/>
 
-  <title>الأنشطة الصفية - مدرسة أبو القاسم الزهراوي</title>
+  <title>الاسم العشوائي - الأنشطة الصفية</title>
 
   <!-- الخطوط والأيقونات -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet"/>
@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
   <!-- فافيكون -->
-  <link rel="icon" type="image/png" href="assets/media/images/school-logo.png">
+  <link rel="icon" type="image/png" href="../assets/media/images/school-logo.png">
 
   <style>
     :root {
@@ -96,7 +96,7 @@
       75% { transform: translate(-10px, -10px) rotate(0.5deg); }
     }
 
-    /* أزرار التحكم المحسنة */
+    /* أزرار التحكم */
     .control-buttons {
       position: fixed;
       top: var(--spacing-md);
@@ -143,14 +143,14 @@
 
     /* الحاوي الرئيسي */
     .main-container {
-      max-width: 1200px;
+      max-width: 1000px;
       margin: 0 auto;
       padding: var(--spacing-xl) var(--spacing-lg);
       position: relative;
       z-index: 10;
     }
 
-    /* رأس الصفحة المحسن */
+    /* رأس الصفحة */
     .header {
       text-align: center;
       margin-bottom: var(--spacing-xl);
@@ -197,91 +197,352 @@
       line-height: 1.5;
     }
 
-    /* شبكة الأنشطة */
-    .activities-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: var(--spacing-lg);
-      animation: fadeInUp 1s ease-out 0.3s both;
-    }
-
-    /* بطاقات الأنشطة المحسنة */
-    .activity-card {
+    /* اختيار الصف */
+    .class-selector {
       background: rgba(255, 255, 255, 0.95);
       border-radius: var(--border-radius);
       padding: var(--spacing-lg);
-      cursor: pointer;
-      transition: all var(--transition-normal);
-      position: relative;
-      overflow: hidden;
+      margin-bottom: var(--spacing-xl);
       box-shadow: 0 4px 20px var(--shadow-light);
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      animation: slideIn 0.6s ease-out;
+      animation: slideUp 0.8s ease-out 0.2s both;
     }
 
-    .activity-card::before {
+    .class-selector h3 {
+      font-size: 1.3rem;
+      color: var(--primary-color);
+      margin-bottom: var(--spacing-md);
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-sm);
+    }
+
+    .class-select {
+      width: 100%;
+      padding: var(--spacing-md);
+      border: 2px solid rgba(0, 121, 107, 0.2);
+      border-radius: var(--border-radius-small);
+      font-size: 1.1rem;
+      background: var(--surface-color);
+      color: var(--text-primary);
+      transition: all var(--transition-normal);
+      font-family: 'Cairo', sans-serif;
+      text-align: center;
+    }
+
+    .class-select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(0, 121, 107, 0.1);
+      transform: scale(1.02);
+    }
+
+    /* منطقة عرض النتيجة */
+    .result-display {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-xl);
+      margin-bottom: var(--spacing-xl);
+      box-shadow: 0 8px 32px var(--shadow-medium);
+      backdrop-filter: blur(15px);
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      animation: slideUp 0.8s ease-out 0.4s both;
+    }
+
+    .result-display::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-      transition: left var(--transition-slow);
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, 
+        transparent 30%, 
+        rgba(255, 215, 0, 0.1) 50%, 
+        transparent 70%);
+      animation: shimmer 4s infinite;
+      pointer-events: none;
     }
 
-    .activity-card:hover::before {
-      left: 100%;
+    @keyframes shimmer {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
-    .activity-card:hover {
-      transform: translateY(-8px) scale(1.02);
-      box-shadow: 0 12px 40px var(--shadow-medium);
-      background: rgba(255, 255, 255, 0.98);
+    .rolling-animation {
+      position: relative;
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .activity-card:active {
-      transform: translateY(-4px) scale(0.98);
-    }
-
-    .activity-icon {
-      font-size: 3rem;
-      margin-bottom: var(--spacing-md);
-      display: block;
-      animation: float 3s ease-in-out infinite;
-    }
-
-    .activity-title {
-      font-size: clamp(1.2rem, 4vw, 1.4rem);
+    .rolling-names {
+      position: absolute;
+      font-size: clamp(1.5rem, 5vw, 2.5rem);
       font-weight: 600;
-      margin-bottom: var(--spacing-sm);
+      color: var(--secondary-color);
+      opacity: 0.7;
+      animation: roll 0.1s infinite;
+    }
+
+    @keyframes roll {
+      0% { transform: translateY(-30px); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(30px); opacity: 0; }
+    }
+
+    .selected-name {
+      font-size: clamp(2rem, 7vw, 3.5rem);
+      font-weight: 700;
       color: var(--primary-color);
-      line-height: 1.3;
+      text-shadow: 3px 3px 6px var(--shadow-medium);
+      z-index: 10;
+      position: relative;
+      text-align: center;
+      animation: nameAppear 0.8s ease-out;
     }
 
-    .activity-desc {
+    @keyframes nameAppear {
+      0% { 
+        opacity: 0; 
+        transform: scale(0.5) rotate(-10deg); 
+      }
+      50% { 
+        transform: scale(1.1) rotate(5deg); 
+      }
+      100% { 
+        opacity: 1; 
+        transform: scale(1) rotate(0deg); 
+      }
+    }
+
+    .welcome-message {
+      font-size: clamp(1.2rem, 4vw, 1.8rem);
       color: var(--text-secondary);
-      font-size: clamp(0.9rem, 3vw, 1rem);
-      line-height: 1.5;
-      text-align: justify;
+      text-align: center;
+      line-height: 1.6;
+      animation: fadeIn 1s ease-out;
     }
 
-    /* ألوان مختلفة للبطاقات */
-    .activity-card:nth-child(4n+1) {
-      border-left: 4px solid var(--primary-color);
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    .activity-card:nth-child(4n+2) {
-      border-left: 4px solid var(--secondary-color);
+    /* أزرار التحكم الرئيسية */
+    .main-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-md);
+      justify-content: center;
+      margin-bottom: var(--spacing-xl);
+      animation: slideUp 0.8s ease-out 0.6s both;
     }
 
-    .activity-card:nth-child(4n+3) {
-      border-left: 4px solid var(--accent-color);
+    .main-btn {
+      padding: var(--spacing-md) var(--spacing-xl);
+      font-size: clamp(1rem, 3vw, 1.2rem);
+      font-weight: 600;
+      border: none;
+      border-radius: var(--border-radius-small);
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      min-width: 140px;
+      justify-content: center;
+      box-shadow: 0 4px 12px var(--shadow-light);
+      font-family: 'Cairo', sans-serif;
     }
 
-    .activity-card:nth-child(4n+4) {
-      border-left: 4px solid var(--success-color);
+    .main-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .start-btn {
+      background: linear-gradient(45deg, var(--success-color), #66BB6A);
+      color: white;
+    }
+
+    .start-btn:hover:not(:disabled) {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
+    }
+
+    .stop-btn {
+      background: linear-gradient(45deg, var(--error-color), #EF5350);
+      color: white;
+    }
+
+    .stop-btn:hover:not(:disabled) {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(244, 67, 54, 0.4);
+    }
+
+    .remove-btn {
+      background: linear-gradient(45deg, var(--warning-color), #FFB74D);
+      color: white;
+    }
+
+    .remove-btn:hover:not(:disabled) {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(255, 152, 0, 0.4);
+    }
+
+    .reset-btn {
+      background: linear-gradient(45deg, var(--text-secondary), #9E9E9E);
+      color: white;
+    }
+
+    .reset-btn:hover:not(:disabled) {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(158, 158, 158, 0.4);
+    }
+
+    /* إعدادات الاختيار */
+    .settings-panel {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-lg);
+      margin-bottom: var(--spacing-xl);
+      box-shadow: 0 4px 20px var(--shadow-light);
+      backdrop-filter: blur(10px);
+      animation: slideUp 0.8s ease-out 0.8s both;
+    }
+
+    .settings-panel h3 {
+      font-size: 1.2rem;
+      color: var(--primary-color);
+      margin-bottom: var(--spacing-md);
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-sm);
+    }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-md);
+    }
+
+    .setting-item {
+      text-align: center;
+    }
+
+    .setting-label {
+      display: block;
+      margin-bottom: var(--spacing-sm);
+      color: var(--text-secondary);
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    .speed-slider {
+      width: 100%;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 8px;
+      background: linear-gradient(to right, var(--error-color), var(--warning-color), var(--success-color));
+      border-radius: var(--border-radius-small);
+      outline: none;
+      transition: all var(--transition-normal);
+    }
+
+    .speed-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      background: var(--primary-color);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 2px 6px var(--shadow-medium);
+      transition: all var(--transition-fast);
+    }
+
+    .speed-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+      box-shadow: 0 4px 12px var(--shadow-dark);
+    }
+
+    .speed-slider::-moz-range-thumb {
+      width: 24px;
+      height: 24px;
+      background: var(--primary-color);
+      border-radius: 50%;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 2px 6px var(--shadow-medium);
+      transition: all var(--transition-fast);
+    }
+
+    .speed-value {
+      margin-top: var(--spacing-sm);
+      font-weight: 600;
+      color: var(--primary-color);
+      font-size: 0.9rem;
+    }
+
+    /* معلومات الطلاب */
+    .student-info {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-lg);
+      box-shadow: 0 4px 20px var(--shadow-light);
+      backdrop-filter: blur(10px);
+      animation: slideUp 0.8s ease-out 1s both;
+    }
+
+    .student-info h3 {
+      font-size: 1.2rem;
+      color: var(--primary-color);
+      margin-bottom: var(--spacing-md);
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-sm);
+    }
+
+    .student-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: var(--spacing-md);
+      text-align: center;
+    }
+
+    .stat-item {
+      background: linear-gradient(135deg, rgba(0, 121, 107, 0.1), rgba(77, 182, 172, 0.1));
+      padding: var(--spacing-md);
+      border-radius: var(--border-radius-small);
+      border: 2px solid rgba(0, 121, 107, 0.2);
+    }
+
+    .stat-number {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 500;
     }
 
     /* تأثيرات الحركة */
@@ -294,88 +555,6 @@
         opacity: 1;
         transform: translateY(0);
       }
-    }
-
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(40px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes slideIn {
-      from {
-        opacity: 0;
-        transform: translateX(-30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-
-    /* مؤشر التحميل */
-    .loading-indicator {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 3000;
-    }
-
-    .spinner {
-      width: 50px;
-      height: 50px;
-      border: 4px solid rgba(0, 121, 107, 0.3);
-      border-top: 4px solid var(--primary-color);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    /* إحصائيات الأنشطة */
-    .stats-bar {
-      display: flex;
-      justify-content: center;
-      gap: var(--spacing-lg);
-      margin-bottom: var(--spacing-xl);
-      animation: slideUp 0.8s ease-out 0.5s both;
-    }
-
-    .stat-item {
-      background: rgba(255, 255, 255, 0.9);
-      padding: var(--spacing-md);
-      border-radius: var(--border-radius-small);
-      text-align: center;
-      min-width: 100px;
-      box-shadow: 0 4px 12px var(--shadow-light);
-      backdrop-filter: blur(10px);
-    }
-
-    .stat-number {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--primary-color);
-      margin-bottom: var(--spacing-xs);
-    }
-
-    .stat-label {
-      font-size: 0.8rem;
-      color: var(--text-secondary);
-      font-weight: 500;
     }
 
     @keyframes slideUp {
@@ -395,9 +574,14 @@
         padding: var(--spacing-lg) var(--spacing-md);
       }
       
-      .activities-grid {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-md);
+      .main-controls {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .main-btn {
+        width: 100%;
+        max-width: 300px;
       }
       
       .control-btn {
@@ -406,13 +590,12 @@
         font-size: 18px;
       }
       
-      .stats-bar {
-        flex-wrap: wrap;
-        gap: var(--spacing-sm);
+      .settings-grid {
+        grid-template-columns: 1fr;
       }
       
-      .activity-card {
-        padding: var(--spacing-md);
+      .student-stats {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
 
@@ -421,20 +604,27 @@
         padding: var(--spacing-lg);
       }
       
-      .activity-icon {
-        font-size: 2.5rem;
+      .result-display {
+        padding: var(--spacing-lg);
+        min-height: 250px;
+      }
+      
+      .student-stats {
+        grid-template-columns: 1fr;
       }
     }
 
     /* تحسينات إضافية للأداء */
-    .activity-card,
+    .main-btn,
     .control-btn {
       will-change: transform;
     }
 
     /* تأثيرات التركيز للوصولية */
-    .activity-card:focus,
-    .control-btn:focus {
+    .main-btn:focus,
+    .control-btn:focus,
+    .class-select:focus,
+    .speed-slider:focus {
       outline: 3px solid rgba(0, 121, 107, 0.5);
       outline-offset: 2px;
     }
@@ -465,22 +655,37 @@
         opacity: 0;
       }
     }
+
+    /* حالات خاصة */
+    .pulsing {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .celebration {
+      animation: celebrate 1s ease-out;
+    }
+
+    @keyframes celebrate {
+      0% { transform: scale(1) rotate(0deg); }
+      25% { transform: scale(1.1) rotate(-5deg); }
+      50% { transform: scale(1.2) rotate(5deg); }
+      75% { transform: scale(1.1) rotate(-2deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
   </style>
 </head>
 
 <body>
-  <!-- مؤشر التحميل -->
-  <div class="loading-indicator" id="loadingIndicator" style="display: none;">
-    <div class="spinner"></div>
-  </div>
-
   <!-- أزرار التحكم -->
   <div class="control-buttons right">
-    <button class="control-btn" id="homeBtn" title="العودة للصفحة الرئيسية" aria-label="العودة للصفحة الرئيسية">
+    <button class="control-btn" id="backBtn" title="العودة للقائمة الرئيسية" aria-label="العودة للقائمة الرئيسية">
       🏠
-    </button>
-    <button class="control-btn" id="studentsBtn" title="إدارة الطلاب" aria-label="إدارة الطلاب">
-      👥
     </button>
   </div>
 
@@ -496,157 +701,148 @@
     <header class="header">
       <div class="header-card">
         <h1 class="header-title">
-          <span>📚</span>
-          <span>الأنشطة الصفية التفاعلية</span>
+          <span>🎯</span>
+          <span>الاختيار العشوائي للطلاب</span>
         </h1>
         <p class="header-subtitle">
-          اختر نشاطًا تفاعليًا لبدء رحلة تعليمية ممتعة مع طلابك
+          اختر طالباً بشكل عشوائي وعادل لبدء المشاركة أو تنفيذ النشاط الصفي
         </p>
       </div>
     </header>
 
-    <!-- إحصائيات سريعة -->
-    <div class="stats-bar">
-      <div class="stat-item">
-        <div class="stat-number" id="totalActivities">12</div>
-        <div class="stat-label">نشاط تفاعلي</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-number" id="categoriesCount">4</div>
-        <div class="stat-label">فئة مختلفة</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-number" id="readyToUse">✓</div>
-        <div class="stat-label">جاهز للاستخدام</div>
+    <!-- اختيار الصف -->
+    <div class="class-selector">
+      <h3>
+        <span>🎓</span>
+        <span>اختر الصف الدراسي</span>
+      </h3>
+      <select class="class-select" id="classSelect">
+        <option value="">-- اختر الصف --</option>
+      </select>
+    </div>
+
+    <!-- منطقة عرض النتيجة -->
+    <div class="result-display" id="resultDisplay">
+      <div class="rolling-animation" id="rollingAnimation">
+        <div class="welcome-message" id="welcomeMessage">
+          👋 مرحباً بك في نشاط الاختيار العشوائي<br>
+          اختر الصف الدراسي أولاً لبدء المتعة!
+        </div>
       </div>
     </div>
 
-    <!-- شبكة الأنشطة -->
-    <main class="activities-grid">
-      <!-- النشاط الأول: الاسم العشوائي -->
-      <div class="activity-card click-effect" data-href="activities/random.html" role="button" tabindex="0" aria-label="نشاط الاسم العشوائي">
-        <div class="activity-icon">🎯</div>
-        <h2 class="activity-title">الاسم العشوائي</h2>
-        <p class="activity-desc">
-          اختيار طالب بشكل عشوائي لبدء المشاركة أو تنفيذ نشاط صفي بطريقة عادلة ومثيرة
-        </p>
-      </div>
+    <!-- أزرار التحكم الرئيسية -->
+    <div class="main-controls">
+      <button class="main-btn start-btn" id="startBtn" disabled>
+        <span>🚀</span>
+        <span>ابدأ الاختيار</span>
+      </button>
+      <button class="main-btn stop-btn" id="stopBtn" disabled>
+        <span>⏹️</span>
+        <span>توقف</span>
+      </button>
+      <button class="main-btn remove-btn" id="removeBtn" disabled>
+        <span>❌</span>
+        <span>استبعاد الطالب</span>
+      </button>
+      <button class="main-btn reset-btn" id="resetBtn" disabled>
+        <span>🔄</span>
+        <span>إعادة تعيين</span>
+      </button>
+    </div>
 
-      <!-- النشاط الثاني: المؤقت -->
-      <div class="activity-card click-effect" data-href="activities/timer.html" role="button" tabindex="0" aria-label="نشاط المؤقت">
-        <div class="activity-icon">⏱️</div>
-        <h2 class="activity-title">المؤقت التفاعلي</h2>
-        <p class="activity-desc">
-          مؤقت مرئي ومسموع يساعد في ضبط الأنشطة والمهام الصفية بدقة وفعالية
-        </p>
+    <!-- إعدادات الاختيار -->
+    <div class="settings-panel">
+      <h3>
+        <span>⚙️</span>
+        <span>إعدادات الاختيار</span>
+      </h3>
+      <div class="settings-grid">
+        <div class="setting-item">
+          <label class="setting-label" for="speedSlider">سرعة التدوير</label>
+          <input type="range" id="speedSlider" class="speed-slider" min="50" max="300" value="150">
+          <div class="speed-value" id="speedValue">متوسط</div>
+        </div>
+        <div class="setting-item">
+          <label class="setting-label" for="durationSlider">مدة التدوير</label>
+          <input type="range" id="durationSlider" class="speed-slider" min="1" max="10" value="3">
+          <div class="speed-value" id="durationValue">3 ثوان</div>
+        </div>
       </div>
+    </div>
 
-      <!-- النشاط الثالث: مسابقة الحروف -->
-      <div class="activity-card click-effect" data-href="activities/Blockbusters.html" role="button" tabindex="0" aria-label="مسابقة الحروف">
-        <div class="activity-icon">🧩</div>
-        <h2 class="activity-title">مسابقة الحروف</h2>
-        <p class="activity-desc">
-          لعبة تفاعلية مثيرة بين فريقين تعتمد على الحروف والسرعة في التفكير
-        </p>
+    <!-- معلومات الطلاب -->
+    <div class="student-info" id="studentInfo" style="display: none;">
+      <h3>
+        <span>📊</span>
+        <span>إحصائيات الطلاب</span>
+      </h3>
+      <div class="student-stats">
+        <div class="stat-item">
+          <div class="stat-number" id="totalStudents">0</div>
+          <div class="stat-label">إجمالي الطلاب</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="remainingStudents">0</div>
+          <div class="stat-label">طلاب متبقون</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="selectedCount">0</div>
+          <div class="stat-label">تم اختيارهم</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="removedCount">0</div>
+          <div class="stat-label">تم استبعادهم</div>
+        </div>
       </div>
-
-      <!-- النشاط الرابع: تحدي الفرق -->
-      <div class="activity-card click-effect" data-href="activities/challenges.html" role="button" tabindex="0" aria-label="تحدي الفرق">
-        <div class="activity-icon">🥇</div>
-        <h2 class="activity-title">تحدي الفرق</h2>
-        <p class="activity-desc">
-          مسابقة تفاعلية مثيرة بين فريقين مع نظام نقاط ومؤثرات صوتية حماسية
-        </p>
-      </div>
-
-      <!-- النشاط الخامس: كوّن قصة -->
-      <div class="activity-card click-effect" data-href="activities/create-story.html" role="button" tabindex="0" aria-label="كوّن قصة">
-        <div class="activity-icon">✍️</div>
-        <h2 class="activity-title">كوّن قصة</h2>
-        <p class="activity-desc">
-          نشاط قصصي تفاعلي فردي أو جماعي لتطوير مهارات الكتابة الإبداعية
-        </p>
-      </div>
-
-      <!-- النشاط السادس: صوّت وقرر -->
-      <div class="activity-card click-effect" data-href="activities/vote.html" role="button" tabindex="0" aria-label="صوّت وقرر">
-        <div class="activity-icon">🗳️</div>
-        <h2 class="activity-title">صوّت وقرر</h2>
-        <p class="activity-desc">
-          نظام تصويت فصلي تفاعلي مع عرض النتائج بالرسوم البيانية المباشرة
-        </p>
-      </div>
-
-      <!-- النشاط السابع: من هو؟ -->
-      <div class="activity-card click-effect" data-href="activities/whois.html" role="button" tabindex="0" aria-label="من هو؟">
-        <div class="activity-icon">🕵️</div>
-        <h2 class="activity-title">من هو؟</h2>
-        <p class="activity-desc">
-          تحدٍّ تفاعلي ممتع لاختبار الذكاء في كشف هوية الطالب من خلال تلميحات مثيرة
-        </p>
-      </div>
-
-      <!-- النشاط الثامن: مونوبولي عُمان -->
-      <div class="activity-card click-effect" data-href="activities/monopoly-oman.html" role="button" tabindex="0" aria-label="مونوبولي سلطنة عُمان">
-        <div class="activity-icon">🏰</div>
-        <h2 class="activity-title">مونوبولي سلطنة عُمان</h2>
-        <p class="activity-desc">
-          لعبة استراتيجية تفاعلية لاستكشاف معالم وثقافة سلطنة عُمان بطريقة تعليمية ممتعة
-        </p>
-      </div>
-
-      <!-- النشاط التاسع: سوق مطرح -->
-      <div class="activity-card click-effect" data-href="activities/matrah-market.html" role="button" tabindex="0" aria-label="سوق مطرح الحسابي">
-        <div class="activity-icon">🧮</div>
-        <h2 class="activity-title">سوق مطرح الحسابي</h2>
-        <p class="activity-desc">
-          لعبة تعليمية تفاعلية لتعلم الرياضيات في أجواء السوق التقليدي العُماني الأصيل
-        </p>
-      </div>
-
-      <!-- النشاط العاشر: مدرسة نزوى -->
-      <div class="activity-card click-effect" data-href="activities/nizwa-school.html" role="button" tabindex="0" aria-label="مدرسة نزوى التراثية">
-        <div class="activity-icon">🏛️</div>
-        <h2 class="activity-title">مدرسة نزوى التراثية</h2>
-        <p class="activity-desc">
-          رحلة تعليمية تفاعلية لتعلم اللغة العربية وفنونها في بيئة تراثية عُمانية أصيلة
-        </p>
-      </div>
-
-      <!-- النشاط الحادي عشر: القنبلة المؤقتة -->
-      <div class="activity-card click-effect" data-href="activities/bomb-timer.html" role="button" tabindex="0" aria-label="لعبة القنبلة المؤقتة">
-        <div class="activity-icon">💣</div>
-        <h2 class="activity-title">القنبلة المؤقتة</h2>
-        <p class="activity-desc">
-          لعبة تعليمية مثيرة لاختبار المعرفة تحت الضغط - أجب على السؤال قبل انتهاء الوقت!
-        </p>
-      </div>
-
-      <!-- النشاط الثاني عشر: سباق المعرفة -->
-      <div class="activity-card click-effect" data-href="activities/knowledge-race.html" role="button" tabindex="0" aria-label="سباق المعرفة">
-        <div class="activity-icon">🏁</div>
-        <h2 class="activity-title">سباق المعرفة</h2>
-        <p class="activity-desc">
-          سباق تعليمي مثير بين الفرق للوصول لخط النهاية عبر الإجابات الصحيحة والسريعة
-        </p>
-      </div>
-    </main>
+    </div>
   </div>
 
   <!-- الأصوات -->
-  <audio id="clickSound" src="assets/media/sounds/Click.mp3" preload="auto" aria-hidden="true"></audio>
-  <audio id="navigationSound" src="assets/media/sounds/select.mp3" preload="auto" aria-hidden="true"></audio>
+  <audio id="rollingSound" src="../assets/media/sounds/name-start.mp3" preload="auto" aria-hidden="true"></audio>
+  <audio id="selectSound" src="../assets/media/sounds/name-stop.mp3" preload="auto" aria-hidden="true"></audio>
+  <audio id="clickSound" src="../assets/media/sounds/Click.mp3" preload="auto" aria-hidden="true"></audio>
+  <audio id="celebrationSound" src="../assets/media/sounds/clap.mp3" preload="auto" aria-hidden="true"></audio>
 
   <script>
-    console.log('🚀 بدء تحميل صفحة الأنشطة...');
+    console.log('🎯 بدء تحميل نشاط الاختيار العشوائي...');
 
-    // تحسين الأداء والذاكرة
+    // متغيرات النشاط
+    let currentStudents = [];
+    let availableStudents = [];
+    let removedStudents = [];
+    let selectedStudents = [];
+    let isRolling = false;
+    let rollingInterval = null;
+    let currentSelectedName = '';
+    let rollingSpeed = 150;
+    let rollingDuration = 3000;
+
+    // عناصر DOM
     const elements = {
-      loadingIndicator: document.getElementById('loadingIndicator'),
+      classSelect: document.getElementById('classSelect'),
+      resultDisplay: document.getElementById('resultDisplay'),
+      rollingAnimation: document.getElementById('rollingAnimation'),
+      welcomeMessage: document.getElementById('welcomeMessage'),
+      startBtn: document.getElementById('startBtn'),
+      stopBtn: document.getElementById('stopBtn'),
+      removeBtn: document.getElementById('removeBtn'),
+      resetBtn: document.getElementById('resetBtn'),
+      speedSlider: document.getElementById('speedSlider'),
+      durationSlider: document.getElementById('durationSlider'),
+      speedValue: document.getElementById('speedValue'),
+      durationValue: document.getElementById('durationValue'),
+      studentInfo: document.getElementById('studentInfo'),
+      totalStudents: document.getElementById('totalStudents'),
+      remainingStudents: document.getElementById('remainingStudents'),
+      selectedCount: document.getElementById('selectedCount'),
+      removedCount: document.getElementById('removedCount'),
+      backBtn: document.getElementById('backBtn'),
+      fullscreenBtn: document.getElementById('fullscreenBtn'),
+      rollingSound: document.getElementById('rollingSound'),
+      selectSound: document.getElementById('selectSound'),
       clickSound: document.getElementById('clickSound'),
-      navigationSound: document.getElementById('navigationSound'),
-      homeBtn: document.getElementById('homeBtn'),
-      fullscreenBtn: document.getElementById('fullscreenBtn')
+      celebrationSound: document.getElementById('celebrationSound')
     };
 
     // تشغيل الصوت مع معالجة الأخطاء
@@ -674,7 +870,7 @@
       }, 150);
     }
 
-    // وظيفة ملء الشاشة المحسنة
+    // وظيفة ملء الشاشة
     async function toggleFullScreen() {
       try {
         if (!document.fullscreenElement) {
@@ -689,144 +885,433 @@
       }
     }
 
-    // تحديث عدد الأنشطة ديناميكياً
-    function updateStats() {
-      const activityCards = document.querySelectorAll('.activity-card');
-      const totalActivities = activityCards.length;
-      
-      document.getElementById('totalActivities').textContent = totalActivities;
-      
-      // تأثير عد متحرك
-      animateNumber('totalActivities', 0, totalActivities, 1000);
-      animateNumber('categoriesCount', 0, 4, 1200);
-    }
-
-    // تأثير العد المتحرك
-    function animateNumber(elementId, start, end, duration) {
-      const element = document.getElementById(elementId);
-      const startTime = performance.now();
-      
-      function update(currentTime) {
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
+    // تحميل بيانات الطلاب
+    async function loadStudentData() {
+      try {
+        console.log('📚 جاري تحميل بيانات الطلاب...');
+        const response = await fetch('../data/studentData.json');
         
-        const current = Math.floor(start + (end - start) * progress);
-        element.textContent = elementId === 'readyToUse' ? '✓' : current;
-        
-        if (progress < 1) {
-          requestAnimationFrame(update);
+        if (!response.ok) {
+          throw new Error('فشل في تحميل بيانات الطلاب');
         }
+        
+        const data = await response.json();
+        console.log('✅ تم تحميل بيانات الطلاب:', data);
+        
+        // تعبئة قائمة الصفوف
+        if (data.classes && Array.isArray(data.classes)) {
+          data.classes.forEach(classInfo => {
+            if (classInfo.students && classInfo.students.length > 0) {
+              const option = document.createElement('option');
+              option.value = classInfo.className;
+              option.textContent = `الصف ${classInfo.className}`;
+              elements.classSelect.appendChild(option);
+            }
+          });
+        }
+        
+        return data;
+        
+      } catch (error) {
+        console.error('❌ خطأ في تحميل بيانات الطلاب:', error);
+        // إنشاء بيانات تجريبية
+        createDemoData();
+        return null;
       }
-      
-      requestAnimationFrame(update);
     }
 
-    // معالجة النقر على بطاقات الأنشطة
-    function handleActivityClick(event) {
-      const card = event.currentTarget;
-      const href = card.getAttribute('data-href');
+    // إنشاء بيانات تجريبية
+    function createDemoData() {
+      console.log('🎭 إنشاء بيانات تجريبية...');
       
-      if (href) {
-        addClickEffect(card);
-        playSound(elements.navigationSound);
+      const demoClasses = [
+        {
+          className: 'الخامس أ',
+          students: ['أحمد محمد', 'فاطمة علي', 'يوسف سالم', 'مريم خالد', 'عبدالله سعيد', 'نور الدين', 'هند عبدالله', 'محمد يوسف']
+        },
+        {
+          className: 'الخامس ب', 
+          students: ['سارة أحمد', 'علي محمد', 'لينا سالم', 'حمزة علي', 'زينب محمد', 'عمر خالد', 'ريم سعيد', 'خالد أحمد']
+        },
+        {
+          className: 'السادس أ',
+          students: ['منى علي', 'محمود سالم', 'دينا محمد', 'طارق أحمد', 'ريما خالد', 'سلطان علي', 'نوال محمد', 'فيصل سعيد']
+        }
+      ];
+
+      demoClasses.forEach(classInfo => {
+        const option = document.createElement('option');
+        option.value = classInfo.className;
+        option.textContent = `الصف ${classInfo.className}`;
+        elements.classSelect.appendChild(option);
+      });
+
+      // حفظ البيانات التجريبية
+      window.demoStudentData = { classes: demoClasses };
+    }
+
+    // تحديث قائمة الطلاب عند تغيير الصف
+    async function updateStudentList(className) {
+      if (!className) {
+        currentStudents = [];
+        availableStudents = [];
+        resetActivity();
+        return;
+      }
+
+      try {
+        let studentData = null;
         
-        // إضافة تأثير الموجة
-        card.classList.add('click-effect');
-        setTimeout(() => {
-          card.classList.remove('click-effect');
-        }, 600);
+        // محاولة تحميل البيانات الحقيقية
+        try {
+          const response = await fetch('../data/studentData.json');
+          if (response.ok) {
+            studentData = await response.json();
+          }
+        } catch (error) {
+          console.log('استخدام البيانات التجريبية');
+        }
         
-        // تأثير انتقال سلس
-        setTimeout(() => {
-          window.location.href = href;
-        }, 300);
+        // استخدام البيانات التجريبية إذا لم تتوفر البيانات الحقيقية
+        if (!studentData && window.demoStudentData) {
+          studentData = window.demoStudentData;
+        }
+        
+        if (studentData && studentData.classes) {
+          const selectedClass = studentData.classes.find(cls => cls.className === className);
+          
+          if (selectedClass && selectedClass.students) {
+            currentStudents = [...selectedClass.students];
+            availableStudents = [...selectedClass.students];
+            removedStudents = [];
+            selectedStudents = [];
+            
+            updateUI();
+            updateStats();
+            showStudentInfo();
+            
+            console.log(`✅ تم تحميل ${currentStudents.length} طالب من الصف ${className}`);
+          }
+        }
+        
+      } catch (error) {
+        console.error('❌ خطأ في تحديث قائمة الطلاب:', error);
       }
     }
 
-    // تهيئة التطبيق
-    function initializeApp() {
-      console.log('⚡ جاري تهيئة صفحة الأنشطة...');
+    // تحديث واجهة المستخدم
+    function updateUI() {
+      const hasStudents = availableStudents.length > 0;
       
-      // تحديث الإحصائيات
+      elements.startBtn.disabled = !hasStudents || isRolling;
+      elements.stopBtn.disabled = !isRolling;
+      elements.removeBtn.disabled = !currentSelectedName || isRolling;
+      elements.resetBtn.disabled = currentStudents.length === 0;
+      
+      if (hasStudents && !currentSelectedName) {
+        showWelcomeMessage();
+      }
+    }
+
+    // عرض رسالة الترحيب
+    function showWelcomeMessage() {
+      elements.rollingAnimation.innerHTML = `
+        <div class="welcome-message">
+          🎯 الصف محدد ونحن جاهزون!<br>
+          ${availableStudents.length} طالب متاح للاختيار
+        </div>
+      `;
+    }
+
+    // بدء عملية الاختيار العشوائي
+    function startSelection() {
+      if (availableStudents.length === 0) {
+        alert('⚠️ لا يوجد طلاب متاحون للاختيار!');
+        return;
+      }
+
+      isRolling = true;
+      currentSelectedName = '';
+      updateUI();
+      
+      playSound(elements.rollingSound);
+      
+      // إزالة أي محتوى سابق
+      elements.rollingAnimation.innerHTML = '';
+      
+      // إنشاء عنصر التدوير
+      const rollingElement = document.createElement('div');
+      rollingElement.className = 'rolling-names';
+      elements.rollingAnimation.appendChild(rollingElement);
+      
+      // بدء التدوير
+      rollingInterval = setInterval(() => {
+        const randomIndex = Math.floor(Math.random() * availableStudents.length);
+        rollingElement.textContent = availableStudents[randomIndex];
+      }, rollingSpeed);
+      
+      // إيقاف التدوير بعد المدة المحددة
+      setTimeout(() => {
+        if (isRolling) {
+          stopSelection();
+        }
+      }, rollingDuration);
+      
+      console.log('🎲 بدء عملية الاختيار العشوائي');
+    }
+
+    // إيقاف عملية الاختيار
+    function stopSelection() {
+      if (!isRolling || availableStudents.length === 0) return;
+      
+      clearInterval(rollingInterval);
+      isRolling = false;
+      
+      // اختيار طالب عشوائي نهائي
+      const randomIndex = Math.floor(Math.random() * availableStudents.length);
+      currentSelectedName = availableStudents[randomIndex];
+      
+      // إضافة إلى قائمة المختارين
+      selectedStudents.push(currentSelectedName);
+      
+      // عرض النتيجة
+      showSelectedName(currentSelectedName);
+      
+      playSound(elements.selectSound);
+      setTimeout(() => {
+        playSound(elements.celebrationSound);
+      }, 500);
+      
+      updateUI();
       updateStats();
       
-      // إخفاء مؤشر التحميل
-      elements.loadingIndicator.style.display = 'none';
+      console.log(`✅ تم اختيار: ${currentSelectedName}`);
+    }
+
+    // عرض الاسم المختار
+    function showSelectedName(name) {
+      elements.rollingAnimation.innerHTML = `
+        <div class="selected-name celebration">
+          🎉 ${name} 🎉
+        </div>
+      `;
       
-      console.log('🎉 تم تحميل صفحة الأنشطة بنجاح!');
+      // إضافة تأثير الاحتفال
+      elements.resultDisplay.classList.add('pulsing');
+      setTimeout(() => {
+        elements.resultDisplay.classList.remove('pulsing');
+      }, 2000);
+    }
+
+    // استبعاد الطالب المختار
+    function removeSelectedStudent() {
+      if (!currentSelectedName) return;
+      
+      // إضافة إلى قائمة المستبعدين
+      removedStudents.push(currentSelectedName);
+      
+      // إزالة من قائمة المتاحين
+      const index = availableStudents.indexOf(currentSelectedName);
+      if (index > -1) {
+        availableStudents.splice(index, 1);
+      }
+      
+      // إزالة من قائمة المختارين
+      const selectedIndex = selectedStudents.indexOf(currentSelectedName);
+      if (selectedIndex > -1) {
+        selectedStudents.splice(selectedIndex, 1);
+      }
+      
+      currentSelectedName = '';
+      
+      if (availableStudents.length > 0) {
+        showWelcomeMessage();
+      } else {
+        elements.rollingAnimation.innerHTML = `
+          <div class="welcome-message">
+            🏁 تم استبعاد جميع الطلاب!<br>
+            استخدم زر "إعادة تعيين" لبدء من جديد
+          </div>
+        `;
+      }
+      
+      updateUI();
+      updateStats();
+      
+      console.log(`❌ تم استبعاد: ${removedStudents[removedStudents.length - 1]}`);
+    }
+
+    // إعادة تعيين النشاط
+    function resetActivity() {
+      clearInterval(rollingInterval);
+      isRolling = false;
+      currentSelectedName = '';
+      
+      if (currentStudents.length > 0) {
+        availableStudents = [...currentStudents];
+        removedStudents = [];
+        selectedStudents = [];
+        showWelcomeMessage();
+        showStudentInfo();
+      } else {
+        hideStudentInfo();
+        elements.rollingAnimation.innerHTML = `
+          <div class="welcome-message">
+            👋 مرحباً بك في نشاط الاختيار العشوائي<br>
+            اختر الصف الدراسي أولاً لبدء المتعة!
+          </div>
+        `;
+      }
+      
+      updateUI();
+      updateStats();
+      
+      console.log('🔄 تم إعادة تعيين النشاط');
+    }
+
+    // تحديث الإحصائيات
+    function updateStats() {
+      elements.totalStudents.textContent = currentStudents.length;
+      elements.remainingStudents.textContent = availableStudents.length;
+      elements.selectedCount.textContent = selectedStudents.length;
+      elements.removedCount.textContent = removedStudents.length;
+    }
+
+    // إظهار معلومات الطلاب
+    function showStudentInfo() {
+      elements.studentInfo.style.display = 'block';
+    }
+
+    // إخفاء معلومات الطلاب
+    function hideStudentInfo() {
+      elements.studentInfo.style.display = 'none';
+    }
+
+    // تحديث إعدادات السرعة
+    function updateSpeedSettings() {
+      rollingSpeed = parseInt(elements.speedSlider.value);
+      rollingDuration = parseInt(elements.durationSlider.value) * 1000;
+      
+      // تحديث النصوص
+      const speedLabels = {
+        50: 'سريع جداً',
+        100: 'سريع',
+        150: 'متوسط',
+        200: 'بطيء',
+        250: 'بطيء جداً',
+        300: 'بطيء للغاية'
+      };
+      
+      const closestSpeed = Object.keys(speedLabels).reduce((prev, curr) => 
+        Math.abs(curr - rollingSpeed) < Math.abs(prev - rollingSpeed) ? curr : prev
+      );
+      
+      elements.speedValue.textContent = speedLabels[closestSpeed];
+      elements.durationValue.textContent = `${rollingDuration / 1000} ثوان`;
+    }
+
+    // تهيئة النشاط
+    async function initializeActivity() {
+      console.log('⚡ جاري تهيئة نشاط الاختيار العشوائي...');
+      
+      await loadStudentData();
+      updateSpeedSettings();
+      updateUI();
+      
+      console.log('🎉 تم تحميل النشاط بنجاح!');
     }
 
     // معالجة الأحداث
     document.addEventListener('DOMContentLoaded', () => {
       console.log('📄 تم تحميل DOM - بدء تهيئة الأحداث...');
       
-      // تهيئة التطبيق
-      initializeApp();
+      // تهيئة النشاط
+      initializeActivity();
 
-      // زر ملء الشاشة
-      if (elements.fullscreenBtn) {
-        elements.fullscreenBtn.addEventListener('click', (e) => {
-          console.log('🖥️ تم النقر على زر ملء الشاشة');
-          addClickEffect(e.target);
-          playSound(elements.clickSound);
-          toggleFullScreen();
-        });
-      }
+      // اختيار الصف
+      elements.classSelect.addEventListener('change', (e) => {
+        console.log(`🎓 تم اختيار الصف: ${e.target.value}`);
+        updateStudentList(e.target.value);
+      });
 
-      // زر العودة للصفحة الرئيسية
-      if (elements.homeBtn) {
-        elements.homeBtn.addEventListener('click', (e) => {
-          console.log('🏠 تم النقر على زر العودة للصفحة الرئيسية');
-          addClickEffect(e.target);
-          playSound(elements.clickSound);
-          
-          // تأثير انتقال سلس
-          document.body.style.opacity = '0';
-          document.body.style.transform = 'scale(0.95)';
-          
-          setTimeout(() => {
-            window.location.href = 'index.html';
-          }, 300);
-        });
-      }
+      // أزرار التحكم الرئيسية
+      elements.startBtn.addEventListener('click', (e) => {
+        console.log('🚀 تم النقر على زر البدء');
+        addClickEffect(e.target);
+        playSound(elements.clickSound);
+        startSelection();
+      });
 
-      // زر إدارة الطلاب
-      const studentsBtn = document.getElementById('studentsBtn');
-      if (studentsBtn) {
-        studentsBtn.addEventListener('click', (e) => {
-          console.log('👥 تم النقر على زر إدارة الطلاب');
-          addClickEffect(e.target);
-          playSound(elements.clickSound);
-          
-          // تأثير انتقال سلس
-          document.body.style.opacity = '0';
-          document.body.style.transform = 'scale(0.95)';
-          
-          setTimeout(() => {
-            window.location.href = 'student-management.html';
-          }, 300);
-        });
-      }
+      elements.stopBtn.addEventListener('click', (e) => {
+        console.log('⏹️ تم النقر على زر التوقف');
+        addClickEffect(e.target);
+        playSound(elements.clickSound);
+        stopSelection();
+      });
 
-      // معالجة بطاقات الأنشطة
-      const activityCards = document.querySelectorAll('.activity-card');
-      activityCards.forEach(card => {
-        card.addEventListener('click', handleActivityClick);
+      elements.removeBtn.addEventListener('click', (e) => {
+        console.log('❌ تم النقر على زر الاستبعاد');
+        addClickEffect(e.target);
+        playSound(elements.clickSound);
         
-        // دعم لوحة المفاتيح
-        card.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            handleActivityClick(e);
-          }
-        });
+        if (confirm(`هل تريد استبعاد "${currentSelectedName}" من القائمة؟`)) {
+          removeSelectedStudent();
+        }
+      });
+
+      elements.resetBtn.addEventListener('click', (e) => {
+        console.log('🔄 تم النقر على زر إعادة التعيين');
+        addClickEffect(e.target);
+        playSound(elements.clickSound);
+        
+        if (confirm('هل تريد إعادة تعيين النشاط وإرجاع جميع الطلاب؟')) {
+          resetActivity();
+        }
+      });
+
+      // إعدادات السرعة والمدة
+      elements.speedSlider.addEventListener('input', updateSpeedSettings);
+      elements.durationSlider.addEventListener('input', updateSpeedSettings);
+
+      // أزرار التحكم العلوية
+      elements.fullscreenBtn.addEventListener('click', (e) => {
+        console.log('🖥️ تم النقر على زر ملء الشاشة');
+        addClickEffect(e.target);
+        playSound(elements.clickSound);
+        toggleFullScreen();
+      });
+
+      elements.backBtn.addEventListener('click', (e) => {
+        console.log('🏠 تم النقر على زر العودة');
+        addClickEffect(e.target);
+        playSound(elements.clickSound);
+        
+        // تأثير انتقال سلس
+        document.body.style.opacity = '0';
+        document.body.style.transform = 'scale(0.95)';
+        
+        setTimeout(() => {
+          window.location.href = '../main.html';
+        }, 300);
       });
 
       // اختصارات لوحة المفاتيح
       document.addEventListener('keydown', (e) => {
         switch(e.key) {
+          case 'Enter':
+          case ' ':
+            if (!isRolling && !elements.startBtn.disabled) {
+              e.preventDefault();
+              elements.startBtn.click();
+            } else if (isRolling) {
+              e.preventDefault();
+              elements.stopBtn.click();
+            }
+            break;
           case 'Escape':
-            if (document.fullscreenElement) {
+            if (isRolling) {
+              elements.stopBtn.click();
+            } else if (document.fullscreenElement) {
               document.exitFullscreen();
             }
             break;
@@ -834,8 +1319,19 @@
             e.preventDefault();
             toggleFullScreen();
             break;
-          case 'Home':
-            elements.homeBtn.click();
+          case 'r':
+          case 'R':
+            if (e.ctrlKey || e.metaKey) {
+              e.preventDefault();
+              elements.resetBtn.click();
+            }
+            break;
+          case 'Delete':
+          case 'Backspace':
+            if (!isRolling && currentSelectedName) {
+              e.preventDefault();
+              elements.removeBtn.click();
+            }
             break;
         }
       });
@@ -845,14 +1341,14 @@
 
     // معالجة الأخطاء العامة
     window.addEventListener('error', (e) => {
-      console.error('💥 خطأ عام في التطبيق:', e.error);
+      console.error('💥 خطأ عام في النشاط:', e.error);
     });
 
     window.addEventListener('unhandledrejection', (e) => {
       console.error('💥 خطأ غير معالج في Promise:', e.reason);
     });
 
-    console.log('📝 تم تحميل جميع النصوص البرمجية!');
+    console.log('📝 تم تحميل جميع النصوص البرمجية للنشاط!');
   </script>
 </body>
 </html>
