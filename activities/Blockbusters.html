@@ -1087,6 +1087,7 @@
   <audio id="clickSound" src="../assets/media/sounds/Click.mp3" preload="auto"></audio>
   <audio id="successSound" src="../assets/media/sounds/name-start.mp3" preload="auto"></audio>
   <audio id="winSound" src="../assets/media/sounds/win.mp3" preload="auto"></audio>
+  <audio id="winBlockbustersSound" src="../assets/media/sounds/win-Blockbusters.mp3" preload="auto"></audio>
   <audio id="greenPointSound" src="../assets/media/sounds/g.mp3" preload="auto"></audio>
   <audio id="redPointSound" src="../assets/media/sounds/r.mp3" preload="auto"></audio>
 
@@ -1180,6 +1181,7 @@
       clickSound: document.getElementById('clickSound'),
       successSound: document.getElementById('successSound'),
       winSound: document.getElementById('winSound'),
+      winBlockbustersSound: document.getElementById('winBlockbustersSound'),
       greenPointSound: document.getElementById('greenPointSound'),
       redPointSound: document.getElementById('redPointSound')
     };
@@ -1212,6 +1214,61 @@
         }
       } catch (error) {
         console.log('🔇 خطأ في تشغيل الصوت:', error);
+      }
+    }
+
+    // ==== تشغيل تسلسل أصوات الفوز ====
+    function playWinSoundSequence() {
+      if (!gameData.soundEnabled) return;
+      
+      console.log('🎵 بدء تسلسل أصوات الفوز...');
+      
+      // تشغيل الصوت الأول (win.mp3)
+      if (elements.winSound) {
+        elements.winSound.currentTime = 0;
+        elements.winSound.volume = 0.7;
+        
+        const playFirstSound = elements.winSound.play();
+        if (playFirstSound !== undefined) {
+          playFirstSound.then(() => {
+            console.log('🔊 تم تشغيل win.mp3');
+            
+            // عند انتهاء الصوت الأول، تشغيل الصوت الثاني
+            const playSecondSound = () => {
+              if (elements.winBlockbustersSound && gameData.soundEnabled) {
+                elements.winBlockbustersSound.currentTime = 0;
+                elements.winBlockbustersSound.volume = 0.7;
+                
+                const playSecond = elements.winBlockbustersSound.play();
+                if (playSecond !== undefined) {
+                  playSecond.then(() => {
+                    console.log('🔊 تم تشغيل win-Blockbusters.mp3');
+                  }).catch(error => {
+                    console.log('🔇 تعذر تشغيل win-Blockbusters.mp3:', error);
+                  });
+                }
+              }
+            };
+            
+            // انتظار انتهاء الصوت الأول أو تشغيل الثاني بعد 3 ثوان (أيهما أقل)
+            elements.winSound.addEventListener('ended', playSecondSound, { once: true });
+            
+            // احتياطي: تشغيل الصوت الثاني بعد 3 ثوان في حالة عدم تفعيل حدث ended
+            setTimeout(() => {
+              if (elements.winSound.paused || elements.winSound.ended) {
+                playSecondSound();
+              }
+            }, 3000);
+            
+          }).catch(error => {
+            console.log('🔇 تعذر تشغيل win.mp3:', error);
+            // في حالة فشل الصوت الأول، جرب الثاني مباشرة
+            playSound(elements.winBlockbustersSound);
+          });
+        }
+      } else {
+        // إذا لم يكن الصوت الأول متاحاً، شغل الثاني مباشرة
+        playSound(elements.winBlockbustersSound);
       }
     }
 
@@ -2146,7 +2203,8 @@
       // تأثير الفوز المرئي
       addWinningAnimation(team, winData);
       
-      playSound(elements.winSound);
+      // تشغيل تسلسل أصوات الفوز المطور
+      playWinSoundSequence();
       
       // تأثير الاحتفال المتقدم
       triggerAdvancedCelebration(teamColor);
