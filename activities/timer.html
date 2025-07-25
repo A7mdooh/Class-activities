@@ -1725,6 +1725,8 @@
     function togglePause() {
       if (!isRunning) return;
 
+      // وقف جميع الأصوات
+      stopAllSounds();
       playSound(elements.clickSound, 'click');
 
       if (isPaused) {
@@ -1754,10 +1756,24 @@
       updateControls();
     }
 
+    // وقف جميع الأصوات
+    function stopAllSounds() {
+      [elements.startSound, elements.endSound, elements.warningSound, elements.clickSound]
+        .forEach(audio => {
+          if (audio && !audio.paused) {
+            audio.pause();
+            audio.currentTime = 0;
+          }
+        });
+    }
+
     // إعادة تعيين المؤقت
     function resetTimer() {
       clearInterval(timerInterval);
       clearInterval(warningInterval);
+      
+      // وقف جميع الأصوات
+      stopAllSounds();
       
       isRunning = false;
       isPaused = false;
@@ -1779,6 +1795,9 @@
 
       clearInterval(timerInterval);
       clearInterval(warningInterval);
+      
+      // وقف جميع الأصوات
+      stopAllSounds();
       
       isRunning = false;
       isPaused = false;
@@ -1810,6 +1829,15 @@
       // تشغيل صوت النهاية والاحتفال
       playSound(elements.endSound, 'end');
       addCelebrationEffect();
+
+      // إيقاف صوت النهاية بعد 3 ثوان
+      setTimeout(() => {
+        if (elements.endSound && !elements.endSound.paused) {
+          elements.endSound.pause();
+          elements.endSound.currentTime = 0;
+          console.log('🔇 تم إيقاف صوت النهاية تلقائياً');
+        }
+      }, 3000);
 
       // حفظ الجلسة (مكتملة)
       saveSession(true);
@@ -1907,12 +1935,18 @@
 
     // إغلاق نافذة الإكمال
     function closeCompletionModal() {
+      // وقف جميع الأصوات
+      stopAllSounds();
+      
       elements.completionModal.classList.remove('show');
       playSound(elements.clickSound, 'click');
     }
 
     // بدء جلسة جديدة
     function startNewSession() {
+      // وقف جميع الأصوات
+      stopAllSounds();
+      
       closeCompletionModal();
       resetTimer();
       setTimeout(() => {
@@ -1923,6 +1957,9 @@
     function changeMode() {
       const newMode = elements.timerMode.value;
       if (newMode !== currentMode) {
+        // وقف جميع الأصوات
+        stopAllSounds();
+        
         currentMode = newMode;
         resetTimer();
         playSound(elements.clickSound, 'click');
@@ -1941,6 +1978,9 @@
     function changeDuration() {
       const newDuration = parseInt(elements.timerDuration.value);
       if (newDuration !== duration) {
+        // وقف جميع الأصوات
+        stopAllSounds();
+        
         duration = newDuration;
         resetTimer();
         playSound(elements.clickSound, 'click');
@@ -1950,6 +1990,9 @@
 
     // تعيين وقت محدد مسبقاً
     function setPresetTime(seconds) {
+      // وقف جميع الأصوات
+      stopAllSounds();
+      
       duration = seconds;
       elements.timerDuration.value = seconds;
       resetTimer();
