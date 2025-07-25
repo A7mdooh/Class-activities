@@ -1765,6 +1765,10 @@
             audio.currentTime = 0;
           }
         });
+      
+      // وقف الفواصل الزمنية للأصوات
+      clearInterval(warningInterval);
+      console.log('🔇 تم إيقاف جميع الأصوات والفواصل الزمنية');
     }
 
     // إعادة تعيين المؤقت
@@ -1818,6 +1822,12 @@
       clearInterval(timerInterval);
       clearInterval(warningInterval);
       
+      // وقف أصوات التحذير قبل تشغيل صوت النهاية
+      if (elements.warningSound && !elements.warningSound.paused) {
+        elements.warningSound.pause();
+        elements.warningSound.currentTime = 0;
+      }
+      
       isRunning = false;
       isPaused = false;
       isFinished = true;
@@ -1853,8 +1863,12 @@
       clearInterval(warningInterval);
       
       warningInterval = setInterval(() => {
-        if (timeLeft <= 10 && timeLeft > 0 && isRunning && !isPaused) {
+        // تشغيل الصوت فقط في الثواني 10، 5، 4، 3، 2، 1
+        if (isRunning && !isPaused && 
+            (timeLeft === 10 || timeLeft === 5 || timeLeft === 4 || 
+             timeLeft === 3 || timeLeft === 2 || timeLeft === 1)) {
           playSound(elements.warningSound, 'warning');
+          console.log(`⚠️ تحذير: ${timeLeft} ثانية متبقية`);
         }
       }, 1000);
     }
