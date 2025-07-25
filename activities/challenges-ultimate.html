@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🏆 مملكة التحديات الذكية | نظام التعلم التفاعلي المتقدم</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+      --danger-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+      --dark-gradient: linear-gradient(135deg, #232526 0%, #414345 100%);
+      
+      --text-primary: #2d3748;
+      --text-secondary: #4a5568;
+      --text-light: #a0aec0;
+      --bg-primary: #f7fafc;
+      --bg-secondary: #edf2f7;
+      --border-radius: 20px;
+      --shadow-light: 0 10px 25px rgba(0,0,0,0.1);
+      --shadow-heavy: 0 20px 40px rgba(0,0,0,0.15);
+      
+      --arabic-font: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--arabic-font);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      min-height: 100vh;
+      color: var(--text-primary);
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ===== PARTICLES BACKGROUND ===== */
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    /* ===== GLASSMORPHISM CONTAINER ===== */
+    .glass-container {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-heavy);
+      padding: 2rem;
+      margin: 1rem;
+    }
+
+    /* ===== MAIN HEADER ===== */
+    .main-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .kingdom-title {
+      font-size: 3rem;
+      font-weight: 900;
+      background: linear-gradient(45deg, #FFD700, #FFA500, #FF6347, #FF1493);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      animation: titleGlow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes titleGlow {
+      0% { filter: drop-shadow(0 0 10px rgba(255,215,0,0.5)); }
+      100% { filter: drop-shadow(0 0 20px rgba(255,215,0,0.8)); }
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: rgba(255,255,255,0.9);
+      font-weight: 600;
+      margin-bottom: 2rem;
+    }
+
+    /* ===== INTERACTIVE DASHBOARD ===== */
+    .kingdom-dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .realm-card {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(15px);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 2px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .realm-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: all 0.6s;
+    }
+
+    .realm-card:hover::before {
+      left: 100%;
+    }
+
+    .realm-card:hover {
+      transform: translateY(-10px) scale(1.05);
+      border-color: rgba(255,255,255,0.5);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+    }
+
+    .realm-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: iconPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes iconPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .realm-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 0.5rem;
+    }
+
+    .realm-description {
+      color: rgba(255,255,255,0.8);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    /* ===== BATTLE ARENA ===== */
+    .battle-arena {
+      display: none;
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(20px);
+      border-radius: var(--border-radius);
+      padding: 3rem;
+      margin: 2rem 0;
+      border: 2px solid rgba(255,215,0,0.5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .battle-arena::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%);
+      animation: battleAura 4s linear infinite;
+    }
+
+    @keyframes battleAura {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .arena-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    .challenge-timer {
+      font-size: 6rem;
+      font-weight: 900;
+      background: linear-gradient(45deg, #ff0000, #ff4500, #ffd700);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 30px rgba(255,0,0,0.5);
+      animation: timerPulse 1s ease-in-out infinite;
+    }
+
+    @keyframes timerPulse {
+      0%, 100% { transform: scale(1); filter: brightness(1); }
+      50% { transform: scale(1.1); filter: brightness(1.3); }
+    }
+
+    /* ===== HOLOGRAPHIC TEAMS ===== */
+    .teams-hologram {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .team-hologram {
+      background: linear-gradient(135deg, rgba(0,255,255,0.1), rgba(255,0,255,0.1));
+      border: 2px solid rgba(0,255,255,0.3);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      transition: all 0.5s ease;
+    }
+
+    .team-hologram::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      animation: holoScan 3s linear infinite;
+    }
+
+    @keyframes holoScan {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    .team-avatar-3d {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 1rem;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, #ff006e, #ffbe0b, #8338ec, #3a86ff, #06ffa5, #ff006e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: white;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      animation: avatarFloat 3s ease-in-out infinite;
+      position: relative;
+    }
+
+    @keyframes avatarFloat {
+      0%, 100% { transform: translateY(0px) rotateY(0deg); }
+      50% { transform: translateY(-10px) rotateY(180deg); }
+    }
+
+    .team-name-glow {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #00ffff;
+      text-shadow: 0 0 20px #00ffff;
+      margin-bottom: 1rem;
+    }
+
+    .score-crystal {
+      font-size: 3rem;
+      font-weight: 900;
+      background: linear-gradient(45deg, #ffd700, #ffed4e, #ffd700);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 10px rgba(255,215,0,0.8));
+      animation: crystalGlow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes crystalGlow {
+      0% { filter: drop-shadow(0 0 10px rgba(255,215,0,0.8)); }
+      100% { filter: drop-shadow(0 0 20px rgba(255,215,0,1)); }
+    }
+
+    /* ===== NEURAL NETWORK BUTTONS ===== */
+    .neural-button {
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      border: none;
+      border-radius: 50px;
+      padding: 1rem 2rem;
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      margin: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .neural-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: all 0.5s;
+    }
+
+    .neural-button:hover::before {
+      left: 100%;
+    }
+
+    .neural-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    }
+
+    .neural-button:active {
+      transform: translateY(0);
+    }
+
+    /* ===== QUANTUM NOTIFICATIONS ===== */
+    .quantum-notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(20px);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      color: white;
+      border: 2px solid rgba(0,255,255,0.5);
+      box-shadow: 0 10px 30px rgba(0,255,255,0.3);
+      z-index: 10000;
+      transform: translateX(400px);
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      max-width: 350px;
+    }
+
+    .quantum-notification.show {
+      transform: translateX(0);
+    }
+
+    .notification-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .notification-icon {
+      font-size: 1.5rem;
+      animation: quantumSpin 2s linear infinite;
+    }
+
+    @keyframes quantumSpin {
+      0% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(180deg) scale(1.2); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+
+    /* ===== COSMIC EFFECTS ===== */
+    .cosmic-star {
+      position: fixed;
+      color: #ffd700;
+      font-size: 20px;
+      z-index: 1000;
+      pointer-events: none;
+      animation: cosmicFall 4s linear forwards;
+    }
+
+    @keyframes cosmicFall {
+      0% {
+        transform: translateY(-50px) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    .cosmic-explosion {
+      position: fixed;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, transparent 70%);
+      animation: cosmicBlast 1s ease-out forwards;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    @keyframes cosmicBlast {
+      0% {
+        transform: scale(0);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(10);
+        opacity: 0;
+      }
+    }
+
+    /* ===== RESPONSIVE DESIGN ===== */
+    @media (max-width: 768px) {
+      .kingdom-title {
+        font-size: 2rem;
+      }
+      
+      .glass-container {
+        margin: 0.5rem;
+        padding: 1rem;
+      }
+      
+      .challenge-timer {
+        font-size: 4rem;
+      }
+      
+      .team-avatar-3d {
+        width: 80px;
+        height: 80px;
+        font-size: 2rem;
+      }
+    }
+
+    /* ===== LOADING SCREEN ===== */
+    .cosmic-loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #000000, #1a1a2e, #16213e);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 100000;
+      transition: opacity 1s ease;
+    }
+
+    .loader-animation {
+      width: 150px;
+      height: 150px;
+      border: 4px solid transparent;
+      border-top: 4px solid #00ffff;
+      border-right: 4px solid #ff00ff;
+      border-radius: 50%;
+      animation: cosmicSpin 2s linear infinite;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .loader-animation::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100px;
+      height: 100px;
+      border: 2px solid transparent;
+      border-bottom: 2px solid #ffd700;
+      border-left: 2px solid #ff4500;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: cosmicSpin 1s linear infinite reverse;
+    }
+
+    @keyframes cosmicSpin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loader-text {
+      color: #00ffff;
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-align: center;
+      animation: textPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes textPulse {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.1); }
+    }
+
+    .loader-progress {
+      width: 300px;
+      height: 6px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 3px;
+      margin-top: 2rem;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #00ffff, #ff00ff, #ffd700);
+      border-radius: 3px;
+      width: 0%;
+      transition: width 0.5s ease;
+      animation: progressGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes progressGlow {
+      0%, 100% { box-shadow: 0 0 10px rgba(0,255,255,0.5); }
+      50% { box-shadow: 0 0 20px rgba(0,255,255,1); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Particles Background -->
+  <div id="particles-js"></div>
+
+  <!-- Cosmic Loading Screen -->
+  <div class="cosmic-loader" id="cosmicLoader">
+    <div class="loader-animation"></div>
+    <div class="loader-text" id="loaderText">🌌 تهيئة مملكة التحديات الذكية...</div>
+    <div class="loader-progress">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+  </div>
+
+  <!-- Main Application -->
+  <div class="glass-container" id="mainApp" style="display: none;">
+    <!-- Kingdom Header -->
+    <header class="main-header">
+      <h1 class="kingdom-title">🏆 مملكة التحديات الذكية</h1>
+      <p class="subtitle">⚡ نظام التعلم التفاعلي المتقدم بتقنية الذكاء الاصطناعي</p>
+      
+      <!-- Real-time Stats -->
+      <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 2rem;">
+        <div style="text-align: center; color: white;">
+          <div style="font-size: 2rem; font-weight: 900;">⏱️</div>
+          <div>وقت الجلسة</div>
+          <div id="sessionTime" style="font-weight: 700;">00:00</div>
+        </div>
+        <div style="text-align: center; color: white;">
+          <div style="font-size: 2rem; font-weight: 900;">🎯</div>
+          <div>التحديات المكتملة</div>
+          <div id="completedChallenges" style="font-weight: 700;">0</div>
+        </div>
+        <div style="text-align: center; color: white;">
+          <div style="font-size: 2rem; font-weight: 900;">⚡</div>
+          <div>مستوى الطاقة</div>
+          <div id="energyLevel" style="font-weight: 700;">100%</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Kingdom Dashboard -->
+    <div class="kingdom-dashboard" id="kingdomDashboard">
+      <!-- Lightning Challenge Realm -->
+      <div class="realm-card" onclick="activateRealm('lightning')">
+        <div class="realm-icon">⚡</div>
+        <h3 class="realm-title">مملكة البرق</h3>
+        <p class="realm-description">تحديات سريعة لاختبار سرعة التفكير والذكاء</p>
+      </div>
+
+      <!-- Wisdom Challenge Realm -->
+      <div class="realm-card" onclick="activateRealm('wisdom')">
+        <div class="realm-icon">🧠</div>
+        <h3 class="realm-title">مملكة الحكمة</h3>
+        <p class="realm-description">تحديات فكرية عميقة لتطوير الذكاء والإبداع</p>
+      </div>
+
+      <!-- Team Battle Realm -->
+      <div class="realm-card" onclick="activateRealm('battle')">
+        <div class="realm-icon">⚔️</div>
+        <h3 class="realm-title">ساحة المعركة</h3>
+        <p class="realm-description">معارك جماعية ملحمية بين الفرق</p>
+      </div>
+
+      <!-- Mystery Realm -->
+      <div class="realm-card" onclick="activateRealm('mystery')">
+        <div class="realm-icon">🔮</div>
+        <h3 class="realm-title">مملكة الألغاز</h3>
+        <p class="realm-description">ألغاز غامضة وتحديات استثنائية</p>
+      </div>
+    </div>
+
+    <!-- Battle Arena -->
+    <div class="battle-arena" id="battleArena">
+      <div class="arena-header">
+        <h2 style="color: #ffd700; font-size: 2rem; margin-bottom: 1rem;">⚔️ ساحة المعركة النشطة</h2>
+        <div class="challenge-timer" id="challengeTimer">00:00</div>
+        <p style="color: rgba(255,255,255,0.8); font-size: 1.1rem;">استعد للمعركة الأسطورية!</p>
+      </div>
+
+      <!-- Teams Hologram Display -->
+      <div class="teams-hologram" id="teamsHologram">
+        <!-- Teams will be generated dynamically -->
+      </div>
+
+      <!-- Battle Controls -->
+      <div style="text-align: center; margin-top: 2rem;">
+        <button class="neural-button" onclick="startBattle()">🚀 بدء المعركة</button>
+        <button class="neural-button" onclick="pauseBattle()">⏸️ إيقاف مؤقت</button>
+        <button class="neural-button" onclick="endBattle()">🏁 إنهاء المعركة</button>
+        <button class="neural-button" onclick="resetArena()">🔄 إعادة تعيين</button>
+      </div>
+    </div>
+
+    <!-- AI Coach Panel -->
+    <div class="glass-container" style="margin-top: 2rem; border: 2px solid rgba(0,255,255,0.3);">
+      <h3 style="color: #00ffff; text-align: center; margin-bottom: 1rem;">🤖 المدرب الذكي</h3>
+      <div id="aiCoachMessages" style="min-height: 100px; padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 10px; color: white;">
+        <div style="opacity: 0.7;">المدرب الذكي جاهز لمساعدتك...</div>
+      </div>
+      <div style="text-align: center; margin-top: 1rem;">
+        <button class="neural-button" onclick="getAITip()">💡 نصيحة ذكية</button>
+        <button class="neural-button" onclick="analyzePerformance()">📊 تحليل الأداء</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sound Control -->
+  <div style="position: fixed; bottom: 20px; left: 20px; z-index: 1000;">
+    <button class="neural-button" onclick="toggleSound()" id="soundToggle">🔊 الصوت</button>
+  </div>
+
+  <!-- Settings Panel -->
+  <div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+    <button class="neural-button" onclick="openSettings()">⚙️ الإعدادات</button>
+  </div>
+
+<script>
+// ===== GLOBAL VARIABLES =====
+let gameState = {
+  currentRealm: null,
+  isActive: false,
+  sessionStartTime: Date.now(),
+  completedChallenges: 0,
+  energyLevel: 100,
+  soundEnabled: true,
+  teams: [],
+  battleTimer: null,
+  battleDuration: 0
+};
+
+let studentData = {};
+let aiCoachMessages = [
+  "🌟 ممتاز! استمر في هذا الأداء المتميز",
+  "💪 قوة التركيز هي سلاحك السري",
+  "🧠 فكر خارج الصندوق لتجد الحل",
+  "⚡ السرعة مهمة، لكن الدقة أهم",
+  "🎯 ركز على الهدف ولا تدع شيئاً يشتت انتباهك",
+  "🚀 أنت تتقدم بسرعة نحو النصر",
+  "💎 كل تحدٍ تتغلب عليه يجعلك أقوى",
+  "🔥 الحماس هو وقود النجاح"
+];
+
+// ===== INITIALIZATION =====
+window.addEventListener('load', async () => {
+  await initializeKingdom();
+});
+
+async function initializeKingdom() {
+  const progressBar = document.getElementById('progressBar');
+  const loaderText = document.getElementById('loaderText');
+  
+  // Initialize particles
+  initParticles();
+  
+  // Loading sequence
+  const loadingSteps = [
+    { progress: 20, text: "🌌 تحميل الأنظمة الكونية..." },
+    { progress: 40, text: "⚡ شحن محركات الذكاء الاصطناعي..." },
+    { progress: 60, text: "🏰 بناء المماليك السحرية..." },
+    { progress: 80, text: "👥 تحميل بيانات المحاربين..." },
+    { progress: 100, text: "🎉 مملكة التحديات جاهزة!" }
+  ];
+  
+  for (let step of loadingSteps) {
+    await new Promise(resolve => setTimeout(resolve, 800));
+    progressBar.style.width = step.progress + '%';
+    loaderText.textContent = step.text;
+  }
+  
+  // Load student data
+  await loadStudentData();
+  
+  // Hide loader and show main app
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  document.getElementById('cosmicLoader').style.opacity = '0';
+  setTimeout(() => {
+    document.getElementById('cosmicLoader').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'block';
+    startSessionTimer();
+    showWelcomeMessage();
+  }, 1000);
+}
+
+function initParticles() {
+  particlesJS('particles-js', {
+    particles: {
+      number: { value: 100 },
+      color: { value: ['#00ffff', '#ff00ff', '#ffd700'] },
+      shape: { type: 'circle' },
+      opacity: { value: 0.6, random: true },
+      size: { value: 3, random: true },
+      line_linked: { enable: true, distance: 150, color: '#ffffff', opacity: 0.4, width: 1 },
+      move: { enable: true, speed: 2, direction: 'none', random: false, straight: false, out_mode: 'out', bounce: false }
+    },
+    interactivity: {
+      detect_on: 'canvas',
+      events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' }, resize: true },
+      modes: { grab: { distance: 400, line_linked: { opacity: 1 } }, bubble: { distance: 400, size: 40, duration: 2, opacity: 8, speed: 3 }, repulse: { distance: 200, duration: 0.4 }, push: { particles_nb: 4 }, remove: { particles_nb: 2 } }
+    },
+    retina_detect: true
+  });
+}
+
+async function loadStudentData() {
+  try {
+    const response = await fetch('../data/studentData.json');
+    if (response.ok) {
+      studentData = await response.json();
+      console.log('✅ تم تحميل بيانات الطلاب بنجاح');
+    } else {
+      throw new Error('فشل تحميل البيانات');
+    }
+  } catch (error) {
+    console.warn('⚠️ استخدام البيانات الاحتياطية');
+    studentData = {
+      "خامس 1": ["أحمد محمد", "فاطمة علي", "عبدالله سالم", "مريم أحمد"],
+      "خامس 2": ["سارة حسن", "محمد عمر", "نور الدين", "عائشة خالد"]
+    };
+  }
+}
+
+// ===== REALM ACTIVATION =====
+function activateRealm(realmType) {
+  gameState.currentRealm = realmType;
+  
+  createCosmicExplosion(event.target);
+  playCosmicSound('realm-activate');
+  
+  setTimeout(() => {
+    switch(realmType) {
+      case 'lightning':
+        startLightningChallenge();
+        break;
+      case 'wisdom':
+        startWisdomChallenge();
+        break;
+      case 'battle':
+        enterBattleArena();
+        break;
+      case 'mystery':
+        startMysteryChallenge();
+        break;
+    }
+  }, 500);
+}
+
+function enterBattleArena() {
+  document.getElementById('kingdomDashboard').style.display = 'none';
+  document.getElementById('battleArena').style.display = 'block';
+  
+  showQuantumNotification('⚔️ دخول ساحة المعركة', 'استعد للمعركة الأسطورية!', 'battle');
+  generateTeams();
+}
+
+function generateTeams() {
+  const teamsContainer = document.getElementById('teamsHologram');
+  teamsContainer.innerHTML = '';
+  
+  const teamCount = Math.floor(Math.random() * 3) + 2; // 2-4 teams
+  gameState.teams = [];
+  
+  const teamIcons = ['🦁', '🐉', '🦅', '🐺', '🦄', '🔥'];
+  const teamNames = ['محاربو النور', 'فرسان الظلام', 'حماة السماء', 'أسياد الأرض', 'سحرة الزمن', 'عمالقة القوة'];
+  
+  for (let i = 0; i < teamCount; i++) {
+    const team = {
+      id: i + 1,
+      name: teamNames[i] || `الفريق ${i + 1}`,
+      icon: teamIcons[i] || '⭐',
+      score: 0,
+      energy: 100
+    };
+    
+    gameState.teams.push(team);
+    
+    const teamElement = document.createElement('div');
+    teamElement.className = 'team-hologram';
+    teamElement.innerHTML = `
+      <div class="team-avatar-3d">${team.icon}</div>
+      <div class="team-name-glow">${team.name}</div>
+      <div class="score-crystal" id="score-${team.id}">${team.score}</div>
+      <div style="margin-top: 1rem;">
+        <button class="neural-button" onclick="addPointToTeam(${team.id})">⬆️ نقطة</button>
+        <button class="neural-button" onclick="removePointFromTeam(${team.id})">⬇️ خصم</button>
+      </div>
+      <div style="margin-top: 0.5rem; font-size: 0.9rem; color: rgba(255,255,255,0.7);">
+        الطاقة: <span id="energy-${team.id}">${team.energy}%</span>
+      </div>
+    `;
+    
+    teamsContainer.appendChild(teamElement);
+  }
+}
+
+// ===== BATTLE SYSTEM =====
+function startBattle() {
+  if (gameState.isActive) return;
+  
+  gameState.isActive = true;
+  gameState.battleDuration = 0;
+  
+  playCosmicSound('battle-start');
+  showQuantumNotification('🚀 بدء المعركة!', 'المعركة الأسطورية بدأت الآن!', 'success');
+  
+  gameState.battleTimer = setInterval(() => {
+    gameState.battleDuration++;
+    updateBattleTimer();
+    
+    // Random events during battle
+    if (gameState.battleDuration % 30 === 0) {
+      triggerRandomEvent();
+    }
+  }, 1000);
+  
+  // Start cosmic rain
+  startCosmicRain();
+}
+
+function pauseBattle() {
+  if (!gameState.isActive) return;
+  
+  gameState.isActive = false;
+  clearInterval(gameState.battleTimer);
+  
+  playCosmicSound('battle-pause');
+  showQuantumNotification('⏸️ معركة متوقفة', 'تم إيقاف المعركة مؤقتاً', 'warning');
+}
+
+function endBattle() {
+  gameState.isActive = false;
+  clearInterval(gameState.battleTimer);
+  
+  const winner = findWinner();
+  celebrateVictory(winner);
+  
+  gameState.completedChallenges++;
+  updateStats();
+}
+
+function resetArena() {
+  gameState.isActive = false;
+  clearInterval(gameState.battleTimer);
+  gameState.battleDuration = 0;
+  
+  // Reset all teams
+  gameState.teams.forEach(team => {
+    team.score = 0;
+    team.energy = 100;
+    document.getElementById(`score-${team.id}`).textContent = '0';
+    document.getElementById(`energy-${team.id}`).textContent = '100%';
+  });
+  
+  updateBattleTimer();
+  playCosmicSound('reset');
+  showQuantumNotification('🔄 إعادة تعيين', 'تم إعادة تعيين ساحة المعركة', 'info');
+}
+
+// ===== TEAM MANAGEMENT =====
+function addPointToTeam(teamId) {
+  const team = gameState.teams.find(t => t.id === teamId);
+  if (team) {
+    team.score++;
+    document.getElementById(`score-${team.id}`).textContent = team.score;
+    
+    // Energy boost
+    team.energy = Math.min(100, team.energy + 5);
+    document.getElementById(`energy-${team.id}`).textContent = team.energy + '%';
+    
+    createCosmicStars();
+    playCosmicSound('point-gained');
+    
+    // Check for achievement
+    if (team.score % 5 === 0) {
+      showQuantumNotification('🏆 إنجاز!', `${team.name} حقق ${team.score} نقاط!`, 'achievement');
+    }
+  }
+}
+
+function removePointFromTeam(teamId) {
+  const team = gameState.teams.find(t => t.id === teamId);
+  if (team && team.score > 0) {
+    team.score--;
+    document.getElementById(`score-${team.id}`).textContent = team.score;
+    
+    // Energy drain
+    team.energy = Math.max(0, team.energy - 3);
+    document.getElementById(`energy-${team.id}`).textContent = team.energy + '%';
+    
+    playCosmicSound('point-lost');
+  }
+}
+
+// ===== SPECIAL EFFECTS =====
+function createCosmicExplosion(element) {
+  const rect = element.getBoundingClientRect();
+  const explosion = document.createElement('div');
+  explosion.className = 'cosmic-explosion';
+  explosion.style.left = (rect.left + rect.width / 2 - 100) + 'px';
+  explosion.style.top = (rect.top + rect.height / 2 - 100) + 'px';
+  document.body.appendChild(explosion);
+  
+  setTimeout(() => explosion.remove(), 1000);
+}
+
+function createCosmicStars() {
+  for (let i = 0; i < 10; i++) {
+    setTimeout(() => {
+      const star = document.createElement('div');
+      star.className = 'cosmic-star';
+      star.textContent = ['⭐', '✨', '💫', '🌟'][Math.floor(Math.random() * 4)];
+      star.style.left = Math.random() * window.innerWidth + 'px';
+      star.style.top = '-50px';
+      document.body.appendChild(star);
+      
+      setTimeout(() => star.remove(), 4000);
+    }, i * 100);
+  }
+}
+
+function startCosmicRain() {
+  const rainInterval = setInterval(() => {
+    if (!gameState.isActive) {
+      clearInterval(rainInterval);
+      return;
+    }
+    
+    createCosmicStars();
+  }, 2000);
+}
+
+// ===== AI COACH SYSTEM =====
+function getAITip() {
+  const tip = aiCoachMessages[Math.floor(Math.random() * aiCoachMessages.length)];
+  const messagesContainer = document.getElementById('aiCoachMessages');
+  
+  const tipElement = document.createElement('div');
+  tipElement.style.cssText = `
+    background: linear-gradient(45deg, rgba(0,255,255,0.2), rgba(255,0,255,0.2));
+    padding: 1rem;
+    border-radius: 10px;
+    margin: 0.5rem 0;
+    border: 1px solid rgba(0,255,255,0.5);
+    animation: fadeInUp 0.5s ease;
+  `;
+  tipElement.textContent = tip;
+  
+  messagesContainer.appendChild(tipElement);
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  
+  playCosmicSound('ai-tip');
+}
+
+function analyzePerformance() {
+  const analysis = generatePerformanceAnalysis();
+  const messagesContainer = document.getElementById('aiCoachMessages');
+  
+  const analysisElement = document.createElement('div');
+  analysisElement.style.cssText = `
+    background: linear-gradient(45deg, rgba(255,215,0,0.2), rgba(255,105,180,0.2));
+    padding: 1rem;
+    border-radius: 10px;
+    margin: 0.5rem 0;
+    border: 1px solid rgba(255,215,0,0.5);
+    animation: fadeInUp 0.5s ease;
+  `;
+  analysisElement.innerHTML = analysis;
+  
+  messagesContainer.appendChild(analysisElement);
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  
+  playCosmicSound('analysis');
+}
+
+function generatePerformanceAnalysis() {
+  const sessionMinutes = Math.floor((Date.now() - gameState.sessionStartTime) / 60000);
+  const avgPointsPerMinute = sessionMinutes > 0 ? (getTotalPoints() / sessionMinutes).toFixed(1) : 0;
+  
+  return `
+    📊 <strong>تحليل الأداء:</strong><br>
+    ⏱️ وقت الجلسة: ${sessionMinutes} دقيقة<br>
+    🎯 التحديات المكتملة: ${gameState.completedChallenges}<br>
+    ⚡ متوسط النقاط/دقيقة: ${avgPointsPerMinute}<br>
+    💪 تقييم الأداء: ${getPerformanceRating(avgPointsPerMinute)}
+  `;
+}
+
+function getPerformanceRating(avgPoints) {
+  if (avgPoints >= 2) return "🔥 ممتاز";
+  if (avgPoints >= 1) return "💪 جيد جداً";
+  if (avgPoints >= 0.5) return "👍 جيد";
+  return "📈 يمكن التحسن";
+}
+
+// ===== UTILITY FUNCTIONS =====
+function updateBattleTimer() {
+  const minutes = Math.floor(gameState.battleDuration / 60);
+  const seconds = gameState.battleDuration % 60;
+  document.getElementById('challengeTimer').textContent = 
+    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
+
+function startSessionTimer() {
+  setInterval(() => {
+    const elapsed = Math.floor((Date.now() - gameState.sessionStartTime) / 1000);
+    const minutes = Math.floor(elapsed / 60);
+    const seconds = elapsed % 60;
+    document.getElementById('sessionTime').textContent = 
+      `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  }, 1000);
+}
+
+function updateStats() {
+  document.getElementById('completedChallenges').textContent = gameState.completedChallenges;
+  
+  // Update energy based on activity
+  gameState.energyLevel = Math.max(50, gameState.energyLevel - 5);
+  document.getElementById('energyLevel').textContent = gameState.energyLevel + '%';
+}
+
+function getTotalPoints() {
+  return gameState.teams.reduce((total, team) => total + team.score, 0);
+}
+
+function findWinner() {
+  return gameState.teams.reduce((winner, team) => 
+    team.score > winner.score ? team : winner
+  );
+}
+
+function celebrateVictory(winner) {
+  // Massive confetti celebration
+  confetti({
+    particleCount: 200,
+    spread: 100,
+    origin: { y: 0.6 },
+    colors: ['#FFD700', '#FF6347', '#00FFFF', '#FF00FF']
+  });
+  
+  setTimeout(() => {
+    confetti({
+      particleCount: 150,
+      spread: 120,
+      origin: { x: 0.1, y: 0.7 }
+    });
+  }, 300);
+  
+  setTimeout(() => {
+    confetti({
+      particleCount: 150,
+      spread: 120,
+      origin: { x: 0.9, y: 0.7 }
+    });
+  }, 600);
+  
+  showQuantumNotification('👑 النصر!', `${winner.name} فاز بالمعركة الأسطورية!`, 'victory');
+  playCosmicSound('victory');
+  createCosmicStars();
+}
+
+function triggerRandomEvent() {
+  const events = [
+    { text: '⚡ عاصفة كونية! جميع الفرق تحصل على طاقة إضافية', effect: 'energy_boost' },
+    { text: '🌟 نجم ساقط! نقطة مضاعفة للفريق التالي', effect: 'double_points' },
+    { text: '🌀 دوامة زمنية! الوقت يتباطأ', effect: 'time_slow' },
+    { text: '💎 كريستال سحري ظهر! مكافأة خاصة', effect: 'bonus_crystal' }
+  ];
+  
+  const event = events[Math.floor(Math.random() * events.length)];
+  showQuantumNotification('🎆 حدث خاص!', event.text, 'special');
+  
+  // Apply event effect
+  switch(event.effect) {
+    case 'energy_boost':
+      gameState.teams.forEach(team => {
+        team.energy = Math.min(100, team.energy + 20);
+        document.getElementById(`energy-${team.id}`).textContent = team.energy + '%';
+      });
+      break;
+  }
+}
+
+// ===== SOUND SYSTEM =====
+function playCosmicSound(soundType) {
+  if (!gameState.soundEnabled) return;
+  
+  const sounds = {
+    'realm-activate': '../assets/media/sounds/select.mp3',
+    'battle-start': '../assets/media/sounds/start-timer.mp3',
+    'battle-pause': '../assets/media/sounds/Click.mp3',
+    'point-gained': '../assets/media/sounds/win.mp3',
+    'point-lost': '../assets/media/sounds/wrong_answer.mp3',
+    'victory': '../assets/media/sounds/clap.mp3',
+    'ai-tip': '../assets/media/sounds/reveal.mp3',
+    'analysis': '../assets/media/sounds/name-start.mp3',
+    'reset': '../assets/media/sounds/Click.mp3'
+  };
+  
+  const soundPath = sounds[soundType];
+  if (soundPath) {
+    const audio = new Audio(soundPath);
+    audio.volume = 0.7;
+    audio.play().catch(e => console.log('Sound play failed:', e));
+  }
+}
+
+function toggleSound() {
+  gameState.soundEnabled = !gameState.soundEnabled;
+  const button = document.getElementById('soundToggle');
+  button.innerHTML = gameState.soundEnabled ? '🔊 الصوت' : '🔇 صامت';
+  
+  if (gameState.soundEnabled) {
+    playCosmicSound('ai-tip');
+  }
+}
+
+// ===== NOTIFICATIONS SYSTEM =====
+function showQuantumNotification(title, message, type = 'info') {
+  const notification = document.createElement('div');
+  notification.className = 'quantum-notification';
+  
+  const icons = {
+    info: '💫',
+    success: '✅',
+    warning: '⚠️',
+    error: '❌',
+    battle: '⚔️',
+    victory: '👑',
+    achievement: '🏆',
+    special: '🎆'
+  };
+  
+  notification.innerHTML = `
+    <div class="notification-header">
+      <span class="notification-icon">${icons[type] || '💫'}</span>
+      <strong>${title}</strong>
+      <button onclick="this.parentElement.parentElement.remove()" style="background:none;border:none;color:white;font-size:1.2rem;cursor:pointer;">×</button>
+    </div>
+    <div>${message}</div>
+  `;
+  
+  document.body.appendChild(notification);
+  
+  // Show animation
+  setTimeout(() => notification.classList.add('show'), 100);
+  
+  // Auto remove
+  setTimeout(() => {
+    notification.classList.remove('show');
+    setTimeout(() => notification.remove(), 500);
+  }, 5000);
+}
+
+function showWelcomeMessage() {
+  showQuantumNotification(
+    '🌟 مرحباً بك في مملكة التحديات!',
+    'استعد لخوض أعظم المغامرات التعليمية في الكون!',
+    'success'
+  );
+}
+
+// ===== CHALLENGE TYPES =====
+function startLightningChallenge() {
+  showQuantumNotification('⚡ تحدي البرق', 'تحدي سريع لمدة دقيقة واحدة!', 'battle');
+  // Implementation for lightning challenge
+}
+
+function startWisdomChallenge() {
+  showQuantumNotification('🧠 تحدي الحكمة', 'تحدي فكري عميق ومعقد!', 'info');
+  // Implementation for wisdom challenge
+}
+
+function startMysteryChallenge() {
+  showQuantumNotification('🔮 تحدي الألغاز', 'لغز غامض ينتظر حله!', 'special');
+  // Implementation for mystery challenge
+}
+
+function openSettings() {
+  showQuantumNotification('⚙️ الإعدادات', 'لوحة الإعدادات المتقدمة قريباً!', 'info');
+}
+
+// ===== INITIALIZATION =====
+console.log('🏆 مملكة التحديات الذكية - تحميل مكتمل!');
+</script>
+</body>
+</html>
