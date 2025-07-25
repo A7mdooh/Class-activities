@@ -479,6 +479,9 @@
     <button class="control-btn" id="homeBtn" title="العودة للصفحة الرئيسية" aria-label="العودة للصفحة الرئيسية">
       🏠
     </button>
+    <button class="control-btn" id="studentsBtn" title="إدارة الطلاب" aria-label="إدارة الطلاب">
+      👥
+    </button>
   </div>
 
   <div class="control-buttons left">
@@ -783,6 +786,24 @@
           
           setTimeout(() => {
             window.location.href = 'index.html';
+          }, 300);
+        });
+      }
+
+      // زر إدارة الطلاب
+      const studentsBtn = document.getElementById('studentsBtn');
+      if (studentsBtn) {
+        studentsBtn.addEventListener('click', (e) => {
+          console.log('👥 تم النقر على زر إدارة الطلاب');
+          addClickEffect(e.target);
+          playSound(elements.clickSound);
+          
+          // تأثير انتقال سلس
+          document.body.style.opacity = '0';
+          document.body.style.transform = 'scale(0.95)';
+          
+          setTimeout(() => {
+            window.location.href = 'student-management.html';
           }, 300);
         });
       }
