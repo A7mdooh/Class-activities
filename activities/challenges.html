@@ -1100,8 +1100,33 @@
 </div>
 <script src="../config/unified-scripts-template.js"></script>
 <script>
-  // إعداد النشاط باستخدام ActivityUtils
-  const activity = new ActivityUtils('نشاط التحديات', '../assets/media/sounds/');
+  // إعداد النشاط
+  const activityName = 'نشاط التحديات';
+  const soundsPath = '../assets/media/sounds/';
+  
+  // كائن النشاط المحلي
+  const activity = {
+    name: activityName,
+    soundEnabled: true,
+    soundsPath: soundsPath,
+    
+    init() {
+      console.log(`🎯 تهيئة ${this.name}...`);
+      ActivityUtils.init(this.name);
+    },
+    
+    playSound(filename) {
+      if (!this.soundEnabled) return;
+      
+      try {
+        const audio = new Audio(this.soundsPath + filename);
+        audio.volume = 0.7;
+        audio.play().catch(e => console.log('تعذر تشغيل الصوت:', e));
+      } catch (error) {
+        console.log('خطأ في تشغيل الصوت:', error);
+      }
+    }
+  };
   
   // ==== نظام الأصوات المتقدم والذكي ====
   const challengeSounds = {
@@ -1360,8 +1385,10 @@ function hideLoadingIndicator() {
 function updateLoadingProgress(message) {
   const text = document.getElementById('loadingText');
   if (text) text.textContent = message;
-}  // ==== تحميل بيانات الطلاب المحسن والذكي ====
-  async function loadStudents() {
+}
+
+// ==== تحميل بيانات الطلاب المحسن والذكي ====
+async function loadStudents() {
     // عرض مؤشر التحميل
     showLoadingIndicator('� جاري تحميل بيانات الطلاب...');
     updateLoadingProgress('محاولة الاتصال بقاعدة البيانات...');
@@ -2467,13 +2494,25 @@ function updateLoadingProgress(message) {
     try {
       // تهيئة النشاط الأساسي
       updateLoadingProgress('تهيئة النظام...');
-      activity.init();
+      try {
+        activity.init();
+        console.log('✅ تم تهيئة النشاط الأساسي بنجاح');
+      } catch (initError) {
+        console.warn('⚠️ خطأ في تهيئة النشاط الأساسي:', initError);
+        // يمكن المتابعة بدون ActivityUtils
+      }
       
       // تحميل الإحصائيات المحفوظة
       updateLoadingProgress('تحميل الإحصائيات...');
-      loadSavedStats();
+      try {
+        loadSavedStats();
+        console.log('✅ تم تحميل الإحصائيات بنجاح');
+      } catch (statsError) {
+        console.warn('⚠️ خطأ في تحميل الإحصائيات:', statsError);
+      }
       
       // تحميل بيانات الطلاب
+      updateLoadingProgress('تحميل بيانات الطلاب...');
       await loadStudents();
       
       // رسالة الجاهزية النهائية
@@ -2490,7 +2529,21 @@ function updateLoadingProgress(message) {
       
     } catch (error) {
       console.error('❌ خطأ في تهيئة النشاط:', error);
-      updateLoadingProgress('❌ حدث خطأ في التحميل');
+      
+      // إخفاء مؤشر التحميل
+      hideLoadingIndicator();
+      
+      // عرض رسالة خطأ مفصلة
+      let errorMessage = 'حدث خطأ غير متوقع';
+      if (error.message.includes('ActivityUtils')) {
+        errorMessage = 'فشل في تحميل مكتبة النشاط الأساسية';
+      } else if (error.message.includes('fetch')) {
+        errorMessage = 'فشل في الاتصال بالخادم';
+      } else if (error.message.includes('studentData')) {
+        errorMessage = 'فشل في تحميل بيانات الطلاب';
+      }
+      
+      updateLoadingProgress(`❌ ${errorMessage}`);
       
       setTimeout(() => {
         hideLoadingIndicator();
@@ -2542,6 +2595,10 @@ function updateLoadingProgress(message) {
       });
     });
   }
+
+  // رسالة تأكيد تحميل النشاط
+  console.log('🎯 تم تحميل نشاط التحديات - جاهز للتشغيل!');
+  console.log('📊 المميزات المتاحة: نظام إشعارات متقدم، إحصائيات شاملة، تأثيرات بصرية وصوتية');
 </script>
 </body>
 </html>
