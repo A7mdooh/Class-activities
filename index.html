@@ -2273,15 +2273,56 @@
         startBtn.addEventListener('click', (e) => {
           console.log('▶️ تم النقر على زر البدء');
           addClickEffect(startBtn);
-          playSound(elements.startSound);
           
-          // تأثير انتقال سلس
-          document.body.style.opacity = '0';
-          document.body.style.transform = 'scale(0.95)';
-          
-          setTimeout(() => {
-            window.location.href = startBtn.href;
-          }, 300);
+          // تشغيل الصوت والانتظار لانتهائه
+          const startSound = elements.startSound;
+          if (startSound) {
+            try {
+              startSound.currentTime = 0;
+              const playPromise = startSound.play();
+              
+              if (playPromise !== undefined) {
+                playPromise.then(() => {
+                  console.log('🔊 بدء تشغيل صوت البداية');
+                  
+                  // تأثير انتقال سلس
+                  document.body.style.opacity = '0';
+                  document.body.style.transform = 'scale(0.95)';
+                  
+                  // الانتظار لانتهاء الصوت
+                  startSound.addEventListener('ended', () => {
+                    console.log('✅ انتهى صوت البداية - بدء الانتقال');
+                    window.location.href = startBtn.href;
+                  }, { once: true });
+                  
+                  // حد أقصى للانتظار (4 ثوانٍ) في حالة مشاكل الصوت
+                  setTimeout(() => {
+                    console.log('⚠️ انتهت مهلة انتظار الصوت - بدء الانتقال');
+                    window.location.href = startBtn.href;
+                  }, 4000);
+                  
+                }).catch(() => {
+                  console.log('🔇 فشل تشغيل الصوت - الانتقال المباشر');
+                  // في حالة فشل تشغيل الصوت، انتقل مباشرة
+                  setTimeout(() => {
+                    window.location.href = startBtn.href;
+                  }, 300);
+                });
+              }
+            } catch (error) {
+              console.log('❌ خطأ في تشغيل الصوت:', error);
+              // في حالة الخطأ، انتقل بعد تأخير قصير
+              setTimeout(() => {
+                window.location.href = startBtn.href;
+              }, 300);
+            }
+          } else {
+            console.log('⚠️ عنصر الصوت غير موجود - الانتقال المباشر');
+            // في حالة عدم وجود عنصر الصوت
+            setTimeout(() => {
+              window.location.href = startBtn.href;
+            }, 300);
+          }
           
           e.preventDefault();
         });
