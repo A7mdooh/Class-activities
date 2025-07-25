@@ -898,13 +898,13 @@
         const data = await response.json();
         console.log('✅ تم تحميل بيانات الطلاب:', data);
         
-        // تعبئة قائمة الصفوف
-        if (data.classes && Array.isArray(data.classes)) {
-          data.classes.forEach(classInfo => {
-            if (classInfo.students && classInfo.students.length > 0) {
+        // تعبئة قائمة الصفوف من البنية الجديدة
+        if (data && typeof data === 'object') {
+          Object.keys(data).forEach(className => {
+            if (Array.isArray(data[className]) && data[className].length > 0) {
               const option = document.createElement('option');
-              option.value = classInfo.className;
-              option.textContent = `الصف ${classInfo.className}`;
+              option.value = className;
+              option.textContent = `الصف ${className}`;
               elements.classSelect.appendChild(option);
             }
           });
@@ -924,30 +924,21 @@
     function createDemoData() {
       console.log('🎭 إنشاء بيانات تجريبية...');
       
-      const demoClasses = [
-        {
-          className: 'الخامس أ',
-          students: ['أحمد محمد', 'فاطمة علي', 'يوسف سالم', 'مريم خالد', 'عبدالله سعيد', 'نور الدين', 'هند عبدالله', 'محمد يوسف']
-        },
-        {
-          className: 'الخامس ب', 
-          students: ['سارة أحمد', 'علي محمد', 'لينا سالم', 'حمزة علي', 'زينب محمد', 'عمر خالد', 'ريم سعيد', 'خالد أحمد']
-        },
-        {
-          className: 'السادس أ',
-          students: ['منى علي', 'محمود سالم', 'دينا محمد', 'طارق أحمد', 'ريما خالد', 'سلطان علي', 'نوال محمد', 'فيصل سعيد']
-        }
-      ];
+      const demoData = {
+        'الخامس أ': ['أحمد محمد', 'فاطمة علي', 'يوسف سالم', 'مريم خالد', 'عبدالله سعيد', 'نور الدين', 'هند عبدالله', 'محمد يوسف'],
+        'الخامس ب': ['سارة أحمد', 'علي محمد', 'لينا سالم', 'حمزة علي', 'زينب محمد', 'عمر خالد', 'ريم سعيد', 'خالد أحمد'],
+        'السادس أ': ['منى علي', 'محمود سالم', 'دينا محمد', 'طارق أحمد', 'ريما خالد', 'سلطان علي', 'نوال محمد', 'فيصل سعيد']
+      };
 
-      demoClasses.forEach(classInfo => {
+      Object.keys(demoData).forEach(className => {
         const option = document.createElement('option');
-        option.value = classInfo.className;
-        option.textContent = `الصف ${classInfo.className}`;
+        option.value = className;
+        option.textContent = `الصف ${className}`;
         elements.classSelect.appendChild(option);
       });
 
       // حفظ البيانات التجريبية
-      window.demoStudentData = { classes: demoClasses };
+      window.demoStudentData = demoData;
     }
 
     // تحديث قائمة الطلاب عند تغيير الصف
@@ -977,12 +968,24 @@
           studentData = window.demoStudentData;
         }
         
-        if (studentData && studentData.classes) {
-          const selectedClass = studentData.classes.find(cls => cls.className === className);
+        if (studentData) {
+          // التعامل مع البنية الجديدة للبيانات
+          let studentsArray = null;
           
-          if (selectedClass && selectedClass.students) {
-            currentStudents = [...selectedClass.students];
-            availableStudents = [...selectedClass.students];
+          if (studentData[className] && Array.isArray(studentData[className])) {
+            // البنية الجديدة: مفتاح مباشر للصف
+            studentsArray = studentData[className];
+          } else if (studentData.classes) {
+            // البنية القديمة: classes array (للبيانات التجريبية القديمة)
+            const selectedClass = studentData.classes.find(cls => cls.className === className);
+            if (selectedClass && selectedClass.students) {
+              studentsArray = selectedClass.students;
+            }
+          }
+          
+          if (studentsArray && studentsArray.length > 0) {
+            currentStudents = [...studentsArray];
+            availableStudents = [...studentsArray];
             removedStudents = [];
             selectedStudents = [];
             
@@ -991,6 +994,9 @@
             showStudentInfo();
             
             console.log(`✅ تم تحميل ${currentStudents.length} طالب من الصف ${className}`);
+          } else {
+            console.warn(`⚠️ لم يتم العثور على طلاب في الصف ${className}`);
+            alert(`⚠️ لم يتم العثور على طلاب في الصف ${className}!`);
           }
         }
         
