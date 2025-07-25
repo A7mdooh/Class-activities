@@ -1110,7 +1110,8 @@
       greenScore: 0,
       redScore: 0,
       selectedCell: null,
-      soundEnabled: true
+      soundEnabled: true,
+      gameStartTime: null
     };
 
     // أحرف اللوحة السداسية (5x5)
@@ -1183,8 +1184,8 @@
       redPointSound: document.getElementById('redPointSound')
     };
 
-    // ==== وظائف الصوت ====
-    function playSound(soundElement) {
+    // ==== وظائف الصوت المحسنة ====
+    function playSound(soundElement, autoMuteAfter = null) {
       if (!gameData.soundEnabled || !soundElement) return;
       
       try {
@@ -1192,7 +1193,20 @@
         soundElement.volume = 0.7;
         const playPromise = soundElement.play();
         if (playPromise !== undefined) {
-          playPromise.catch(error => {
+          playPromise.then(() => {
+            console.log(`🔊 تم تشغيل الصوت: ${soundElement.src?.split('/').pop() || 'مجهول'}`);
+            
+            // إضافة كتم تلقائي إذا تم تحديده
+            if (autoMuteAfter && typeof autoMuteAfter === 'number') {
+              setTimeout(() => {
+                if (!soundElement.paused) {
+                  soundElement.pause();
+                  soundElement.currentTime = 0;
+                  console.log(`🔇 تم كتم الصوت تلقائياً بعد ${autoMuteAfter}ms`);
+                }
+              }, autoMuteAfter);
+            }
+          }).catch(error => {
             console.log('🔇 تعذر تشغيل الصوت:', error);
           });
         }
@@ -2591,7 +2605,9 @@
           resetBoardWithAnimation();
           
           hideLoadingIndicator();
-          playSound(elements.successSound);
+          
+          // تشغيل صوت بدء اللعبة مع كتم تلقائي بعد 4 ثوان
+          playSound(elements.successSound, 4000);
           
           // رسالة ترحيب مخصصة
           const welcomeMessage = generateWelcomeMessage();
