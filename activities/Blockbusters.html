@@ -760,6 +760,129 @@
       margin-top: 0.1rem;
     }
 
+    /* ==== التبويبات المطورة ==== */
+    .tab-btn {
+      background: var(--bg-secondary);
+      border: 2px solid var(--border-color);
+      color: var(--text-secondary);
+      padding: 0.75rem 1rem;
+      border-radius: 8px 8px 0 0;
+      cursor: pointer;
+      transition: var(--transition-normal);
+      font-size: 0.9rem;
+      font-weight: 600;
+      font-family: var(--font-family);
+      flex: 1;
+      text-align: center;
+    }
+
+    .tab-btn:hover {
+      background: var(--bg-primary);
+      border-color: var(--oman-red);
+      color: var(--oman-red);
+    }
+
+    .tab-btn.active {
+      background: var(--red-gradient);
+      color: white;
+      border-color: var(--oman-red);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* ==== بطاقات النصائح ==== */
+    .tip-card {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: var(--shadow-light);
+    }
+
+    .tip-header {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--oman-navy);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* ==== فئات الأسئلة ==== */
+    .question-category {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-light);
+    }
+
+    .category-header {
+      background: var(--navy-gradient);
+      color: white;
+      padding: 1rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .category-content {
+      padding: 1rem;
+    }
+
+    .question-examples {
+      background: linear-gradient(135deg, var(--oman-green)15 0%, var(--oman-gold)15 100%);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-right: 4px solid var(--oman-green);
+    }
+
+    .question-examples div {
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .question-tips {
+      font-size: 0.9rem;
+    }
+
+    .question-tips ul {
+      margin: 0.5rem 0 0 0;
+      padding-right: 1rem;
+    }
+
+    .question-tips li {
+      margin-bottom: 0.25rem;
+    }
+
+    /* ==== النصائح السريعة ==== */
+    .quick-tip {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: var(--bg-secondary);
+      padding: 1rem;
+      border-radius: 12px;
+      border-right: 4px solid var(--oman-gold);
+    }
+
+    .tip-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .tip-text {
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
     /* ==== الحالات المخفية ==== */
     .hidden {
       display: none !important;
@@ -1038,19 +1161,178 @@
   <div class="modal-overlay" id="instructionsModal">
     <div class="modal-content">
       <div class="modal-header">
-        <div class="modal-title">📖 تعليمات اللعبة</div>
+        <div class="modal-title">📖 دليل المعلم الشامل</div>
         <button class="close-btn" id="closeInstructionsBtn">✕</button>
       </div>
-      <ul class="instructions-list">
-        <li>اختر الصف الدراسي ونوع المسابقة من القائمة المنسدلة</li>
-        <li>حدد أسماء الطلاب المشاركين أو اختر الوضع العشوائي</li>
-        <li>اضغط على زر "ابدأ اللعبة" لبدء المسابقة</li>
-        <li>انقر على أي حرف في لوحة الحروف واختر الفريق المناسب</li>
-        <li>الفريق الأخضر يفوز عند إكمال صف أفقي كامل</li>
-        <li>الفريق الأحمر يفوز عند إكمال عمود رأسي كامل</li>
-        <li>إذا امتلأت جميع الخلايا بدون فائز، يفوز الفريق الأكثر نقاطاً</li>
-        <li>عند فوز أحد الفرق ستظهر نافذة احتفالية مع لوحة الشرف</li>
-      </ul>
+      
+      <!-- تبويبات التعليمات -->
+      <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 2px solid #E2E8F0;">
+        <button class="tab-btn active" data-tab="rules">📋 قواعد اللعبة</button>
+        <button class="tab-btn" data-tab="teacher-tips">👨‍🏫 نصائح للمعلم</button>
+        <button class="tab-btn" data-tab="questions">❓ دليل الأسئلة</button>
+      </div>
+      
+      <!-- محتوى قواعد اللعبة -->
+      <div class="tab-content active" id="rules-content">
+        <ul class="instructions-list">
+          <li>اختر الصف الدراسي ونوع المسابقة من القائمة المنسدلة</li>
+          <li>حدد أسماء الطلاب المشاركين أو اختر الوضع العشوائي</li>
+          <li>اضغط على زر "ابدأ اللعبة" لبدء المسابقة</li>
+          <li>انقر على أي حرف في لوحة الحروف واختر الفريق المناسب</li>
+          <li>الفريق الأخضر يفوز عند إكمال صف أفقي كامل</li>
+          <li>الفريق الأحمر يفوز عند إكمال عمود رأسي كامل</li>
+          <li>إذا امتلأت جميع الخلايا بدون فائز، يفوز الفريق الأكثر نقاطاً</li>
+          <li>عند فوز أحد الفرق ستظهر نافذة احتفالية مع لوحة الشرف</li>
+        </ul>
+      </div>
+      
+      <!-- محتوى نصائح للمعلم -->
+      <div class="tab-content" id="teacher-tips-content">
+        <div style="background: linear-gradient(135deg, #1B365D 0%, #228B22 100%); color: white; 
+                    padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; text-align: center;">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">👨‍🏫</div>
+          <div style="font-size: 1.2rem; font-weight: 700;">دليل المعلم الاحترافي</div>
+          <div style="font-size: 0.9rem; opacity: 0.9;">إرشادات شاملة لإدارة النشاط بفعالية</div>
+        </div>
+        
+        <div style="display: grid; gap: 1rem;">
+          <div class="tip-card">
+            <div class="tip-header">🎯 إدارة اللعبة</div>
+            <ul style="margin: 0; padding-right: 1rem;">
+              <li>استخدم زر ⛶ ملء الشاشة للعرض الأمثل</li>
+              <li>راقب التحذيرات الاستراتيجية عندما يقترب فريق من الفوز</li>
+              <li>استخدم الاختصارات: 1 للأخضر، 2 للأحمر</li>
+              <li>يمكن إعادة تعيين اللعبة في أي وقت</li>
+            </ul>
+          </div>
+          
+          <div class="tip-card">
+            <div class="tip-header">⚖️ توزيع الفرق</div>
+            <ul style="margin: 0; padding-right: 1rem;">
+              <li><strong>الوضع اليدوي:</strong> اختر الطلاب بناءً على المستوى</li>
+              <li><strong>الوضع العشوائي:</strong> للتوزيع العادل والمفاجآت</li>
+              <li><strong>فريق ضد فريق:</strong> للمجموعات الكبيرة والمنافسة المفتوحة</li>
+              <li>تأكد من التوازن في مستويات الطلاب</li>
+            </ul>
+          </div>
+          
+          <div class="tip-card">
+            <div class="tip-header">🎪 إثارة الحماس</div>
+            <ul style="margin: 0; padding-right: 1rem;">
+              <li>شجع الهتافات الرياضية للفرق</li>
+              <li>استخدم الأصوات والتأثيرات البصرية</li>
+              <li>احتفل بالنقاط والإنجازات الصغيرة</li>
+              <li>اجعل الطلاب يشاركون في التشجيع</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <!-- محتوى دليل الأسئلة -->
+      <div class="tab-content" id="questions-content">
+        <div style="background: linear-gradient(135deg, #DC143C 0%, #FFD700 100%); color: white; 
+                    padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; text-align: center;">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">❓</div>
+          <div style="font-size: 1.2rem; font-weight: 700;">دليل الأسئلة الذكي</div>
+          <div style="font-size: 0.9rem; opacity: 0.9;">استراتيجيات متنوعة لطرح أسئلة فعالة</div>
+        </div>
+        
+        <div style="display: grid; gap: 1rem;">
+          <div class="question-category">
+            <div class="category-header">📚 أسئلة المنهج</div>
+            <div class="category-content">
+              <div class="question-examples">
+                <div><strong>مثال:</strong> حرف "ع" → "علم يدرس الكائنات الحية"</div>
+                <div><strong>الإجابة:</strong> علم الأحياء</div>
+              </div>
+              <div class="question-tips">
+                <div>💡 <strong>نصائح:</strong></div>
+                <ul>
+                  <li>اربط الأسئلة بالمناهج الدراسية</li>
+                  <li>استخدم المصطلحات العلمية والأدبية</li>
+                  <li>نوع بين السهل والصعب</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          <div class="question-category">
+            <div class="category-header">🌍 الثقافة العامة</div>
+            <div class="category-content">
+              <div class="question-examples">
+                <div><strong>مثال:</strong> حرف "م" → "عاصمة سلطنة عُمان"</div>
+                <div><strong>الإجابة:</strong> مسقط</div>
+              </div>
+              <div class="question-tips">
+                <div>💡 <strong>نصائح:</strong></div>
+                <ul>
+                  <li>ركز على الثقافة العُمانية والعربية</li>
+                  <li>اسأل عن المعالم والشخصيات</li>
+                  <li>استخدم المعلومات المحلية</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          <div class="question-category">
+            <div class="category-header">🎯 استراتيجية الأسئلة</div>
+            <div class="category-content">
+              <div style="background: #F8FAFC; padding: 1rem; border-radius: 8px; border-right: 4px solid #FFD700;">
+                <div style="font-weight: 600; margin-bottom: 0.5rem;">📊 العدد المثالي:</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                  <div>⏰ <strong>10-15 دقيقة:</strong> 8-12 سؤال</div>
+                  <div>⏰ <strong>20-25 دقيقة:</strong> 15-20 سؤال</div>
+                  <div>⏰ <strong>30-40 دقيقة:</strong> 20-25 سؤال</div>
+                </div>
+                
+                <div style="font-weight: 600; margin-bottom: 0.5rem;">🎭 مستويات الصعوبة:</div>
+                <div style="display: grid; gap: 0.5rem;">
+                  <div>🟢 <strong>سهل (40%):</strong> معلومات أساسية ومألوفة</div>
+                  <div>🟡 <strong>متوسط (40%):</strong> تطبيق وتحليل</div>
+                  <div>🔴 <strong>صعب (20%):</strong> تحدي وإبداع</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="question-category">
+            <div class="category-header">⚡ نصائح سريعة</div>
+            <div class="category-content">
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                <div class="quick-tip">
+                  <div class="tip-icon">⏱️</div>
+                  <div class="tip-text">
+                    <strong>إدارة الوقت:</strong><br>
+                    30-45 ثانية لكل سؤال
+                  </div>
+                </div>
+                <div class="quick-tip">
+                  <div class="tip-icon">🎯</div>
+                  <div class="tip-text">
+                    <strong>التنويع:</strong><br>
+                    امزج بين المواد المختلفة
+                  </div>
+                </div>
+                <div class="quick-tip">
+                  <div class="tip-icon">🤝</div>
+                  <div class="tip-text">
+                    <strong>المشاركة:</strong><br>
+                    اسمح للفريق بالتشاور
+                  </div>
+                </div>
+                <div class="quick-tip">
+                  <div class="tip-icon">🏆</div>
+                  <div class="tip-text">
+                    <strong>التشجيع:</strong><br>
+                    احتفل بكل إجابة صحيحة
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
       <div class="action-buttons">
         <button class="action-btn" id="understoodBtn">
           ✅ فهمت
@@ -3058,6 +3340,9 @@
       elements.closeInstructionsBtn.addEventListener('click', () => hideModal(elements.instructionsModal));
       elements.understoodBtn.addEventListener('click', () => hideModal(elements.instructionsModal));
       
+      // تفعيل التبويبات في نافذة التعليمات
+      setupInstructionsTabs();
+      
       // نافذة الإحصائيات
       elements.clearStatisticsBtn.addEventListener('click', handleClearStatistics);
       elements.closeStatisticsBtn.addEventListener('click', () => hideModal(elements.statisticsModal));
@@ -3266,6 +3551,34 @@
         'info',
         6000
       );
+    }
+
+    // ==== إعداد تبويبات التعليمات ====
+    function setupInstructionsTabs() {
+      const tabButtons = document.querySelectorAll('.tab-btn');
+      const tabContents = document.querySelectorAll('.tab-content');
+      
+      tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const targetTab = button.getAttribute('data-tab');
+          
+          // إزالة الحالة النشطة من جميع التبويبات
+          tabButtons.forEach(btn => btn.classList.remove('active'));
+          tabContents.forEach(content => content.classList.remove('active'));
+          
+          // تفعيل التبويب المختار
+          button.classList.add('active');
+          const targetContent = document.getElementById(`${targetTab}-content`);
+          if (targetContent) {
+            targetContent.classList.add('active');
+          }
+          
+          // تأثير صوتي
+          playSound(elements.clickSound);
+          
+          console.log(`📖 تم التبديل لتبويب: ${targetTab}`);
+        });
+      });
     }
 
     // بدء التطبيق عند تحميل الصفحة
