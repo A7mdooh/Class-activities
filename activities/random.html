@@ -199,44 +199,273 @@
 
     /* اختيار الصف */
     .class-selector {
-      background: rgba(255, 255, 255, 0.95);
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(232, 245, 233, 0.95) 50%,
+        rgba(255, 255, 255, 0.98) 100%);
       border-radius: var(--border-radius);
-      padding: var(--spacing-lg);
+      padding: var(--spacing-xl);
       margin-bottom: var(--spacing-xl);
-      box-shadow: 0 4px 20px var(--shadow-light);
-      backdrop-filter: blur(10px);
+      box-shadow: 
+        0 8px 32px rgba(0, 121, 107, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.08);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(0, 121, 107, 0.1);
       animation: slideUp 0.8s ease-out 0.2s both;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .class-selector::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, 
+        var(--primary-color) 0%,
+        var(--primary-light) 50%,
+        var(--accent-color) 100%);
+      border-radius: var(--border-radius) var(--border-radius) 0 0;
+    }
+
+    .class-selector::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, 
+        transparent 0%,
+        rgba(0, 121, 107, 0.05) 25%,
+        transparent 50%,
+        rgba(255, 215, 0, 0.05) 75%,
+        transparent 100%);
+      border-radius: var(--border-radius);
+      z-index: -1;
+      animation: borderGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes borderGlow {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; }
     }
 
     .class-selector h3 {
-      font-size: 1.3rem;
+      font-size: 1.4rem;
       color: var(--primary-color);
-      margin-bottom: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
       text-align: center;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: var(--spacing-sm);
+      text-shadow: 1px 1px 2px rgba(0, 121, 107, 0.1);
+      font-weight: 600;
+    }
+
+    .class-selector h3 span:first-child {
+      font-size: 1.6rem;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-5px); }
+      60% { transform: translateY(-3px); }
+    }
+
+    /* حاوي قائمة الاختيار */
+    .select-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      background: linear-gradient(135deg, #ffffff 0%, #f8fffe 100%);
+      border: 2px solid rgba(0, 121, 107, 0.15);
+      border-radius: var(--border-radius-small);
+      overflow: hidden;
+      transition: all var(--transition-normal);
+      box-shadow: 
+        0 4px 16px rgba(0, 121, 107, 0.1),
+        inset 0 1px 2px rgba(255, 255, 255, 0.8);
+    }
+
+    .select-wrapper:hover {
+      border-color: var(--primary-light);
+      box-shadow: 
+        0 8px 24px rgba(0, 121, 107, 0.15),
+        inset 0 1px 2px rgba(255, 255, 255, 0.9);
+      transform: translateY(-2px);
+    }
+
+    .select-wrapper:focus-within {
+      border-color: var(--primary-color);
+      box-shadow: 
+        0 0 0 3px rgba(0, 121, 107, 0.2),
+        0 8px 32px rgba(0, 121, 107, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.9);
+      transform: scale(1.02);
+    }
+
+    .select-icon {
+      padding: 0 var(--spacing-md);
+      font-size: 1.2rem;
+      color: var(--primary-color);
+      background: linear-gradient(135deg, var(--primary-light), var(--primary-color));
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: iconPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes iconPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .select-arrow {
+      position: absolute;
+      right: var(--spacing-md);
+      color: var(--primary-color);
+      pointer-events: none;
+      transition: all var(--transition-normal);
+    }
+
+    .select-wrapper:hover .select-arrow {
+      color: var(--primary-dark);
+      transform: scale(1.1);
+    }
+
+    .select-wrapper:focus-within .select-arrow {
+      transform: rotate(180deg) scale(1.1);
     }
 
     .class-select {
-      width: 100%;
-      padding: var(--spacing-md);
-      border: 2px solid rgba(0, 121, 107, 0.2);
-      border-radius: var(--border-radius-small);
-      font-size: 1.1rem;
-      background: var(--surface-color);
+      flex: 1;
+      padding: var(--spacing-md) var(--spacing-lg);
+      border: none;
+      background: transparent;
       color: var(--text-primary);
-      transition: all var(--transition-normal);
+      font-size: 1.1rem;
       font-family: 'Cairo', sans-serif;
       text-align: center;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      outline: none;
+      transition: all var(--transition-normal);
+      font-weight: 500;
     }
 
     .class-select:focus {
-      outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(0, 121, 107, 0.1);
-      transform: scale(1.02);
+      color: var(--primary-dark);
+    }
+
+    .class-select option {
+      padding: var(--spacing-md) var(--spacing-lg);
+      background: white;
+      color: var(--text-primary);
+      font-size: 1rem;
+      border: none;
+      font-family: 'Cairo', sans-serif;
+      font-weight: 500;
+      text-align: right;
+      direction: rtl;
+    }
+
+    .class-select option:hover {
+      background: linear-gradient(135deg, var(--primary-light), var(--primary-color));
+      color: white;
+    }
+
+    .class-select option:checked {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      color: white;
+      font-weight: 600;
+    }
+
+    .class-select option[value=""] {
+      color: var(--text-secondary);
+      font-style: italic;
+      background: #f8f9fa;
+    }
+
+    .class-select option[value=""]:hover {
+      background: linear-gradient(135deg, #e9ecef, #dee2e6);
+      color: var(--text-primary);
+    }
+
+    /* تأثير عند اختيار صف */
+    .class-selector.selected {
+      background: linear-gradient(135deg, 
+        rgba(232, 245, 233, 0.98) 0%, 
+        rgba(200, 230, 201, 0.95) 50%,
+        rgba(232, 245, 233, 0.98) 100%);
+      border-color: var(--success-color);
+      box-shadow: 
+        0 12px 40px rgba(76, 175, 80, 0.2),
+        0 4px 12px rgba(0, 0, 0, 0.1);
+      animation: successPulse 1s ease-out;
+    }
+
+    @keyframes successPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+
+    .class-selector.selected::before {
+      background: linear-gradient(90deg, 
+        var(--success-color) 0%,
+        #66BB6A 50%,
+        var(--accent-color) 100%);
+    }
+
+    .class-selector.selected .select-wrapper {
+      border-color: var(--success-color);
+      background: linear-gradient(135deg, #ffffff 0%, #e8f5e8 100%);
+    }
+
+    .class-selector.selected .select-icon {
+      background: linear-gradient(135deg, var(--success-color), #66BB6A);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .class-selector.selected .select-arrow {
+      color: var(--success-color);
+    }
+
+    /* رسالة التأكيد */
+    .selection-confirmation {
+      margin-top: var(--spacing-md);
+      padding: var(--spacing-sm) var(--spacing-md);
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(102, 187, 106, 0.1));
+      border: 1px solid rgba(76, 175, 80, 0.3);
+      border-radius: var(--border-radius-small);
+      color: var(--success-color);
+      font-size: 0.9rem;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: all var(--transition-normal);
+      display: none;
+    }
+
+    .selection-confirmation.show {
+      opacity: 1;
+      transform: translateY(0);
+      display: block;
+      animation: slideDown 0.3s ease-out;
+    }
+
+    .selection-confirmation .icon {
+      margin-left: var(--spacing-xs);
+      font-size: 1rem;
     }
 
     /* منطقة عرض النتيجة */
@@ -597,6 +826,36 @@
       .student-stats {
         grid-template-columns: repeat(2, 1fr);
       }
+
+      .class-selector {
+        padding: var(--spacing-lg);
+      }
+
+      .class-selector h3 {
+        font-size: 1.2rem;
+        margin-bottom: var(--spacing-md);
+      }
+
+      .select-wrapper {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .select-icon {
+        padding: var(--spacing-sm) 0;
+        order: -1;
+      }
+
+      .select-arrow {
+        position: relative;
+        right: auto;
+        margin-top: var(--spacing-sm);
+      }
+
+      .class-select {
+        text-align: center;
+        padding: var(--spacing-md);
+      }
     }
 
     @media (max-width: 480px) {
@@ -611,6 +870,21 @@
       
       .student-stats {
         grid-template-columns: 1fr;
+      }
+
+      .class-selector {
+        padding: var(--spacing-md);
+      }
+
+      .class-selector h3 {
+        font-size: 1.1rem;
+        flex-direction: column;
+        gap: var(--spacing-xs);
+      }
+
+      .selection-confirmation {
+        font-size: 0.8rem;
+        padding: var(--spacing-xs) var(--spacing-sm);
       }
     }
 
@@ -711,14 +985,26 @@
     </header>
 
     <!-- اختيار الصف -->
-    <div class="class-selector">
+    <div class="class-selector" id="classSelector">
       <h3>
         <span>🎓</span>
         <span>اختر الصف الدراسي</span>
       </h3>
-      <select class="class-select" id="classSelect">
-        <option value="">-- اختر الصف --</option>
-      </select>
+      <div class="select-wrapper">
+        <div class="select-icon">📚</div>
+        <select class="class-select" id="classSelect">
+          <option value="">-- اختر الصف الدراسي --</option>
+        </select>
+        <div class="select-arrow">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M8 11L3 6H13L8 11Z" fill="currentColor"/>
+          </svg>
+        </div>
+      </div>
+      <div class="selection-confirmation" id="selectionConfirmation">
+        <span class="icon">✅</span>
+        <span id="confirmationText">تم اختيار الصف بنجاح!</span>
+      </div>
     </div>
 
     <!-- منطقة عرض النتيجة -->
@@ -821,6 +1107,9 @@
     // عناصر DOM
     const elements = {
       classSelect: document.getElementById('classSelect'),
+      classSelector: document.getElementById('classSelector'),
+      selectionConfirmation: document.getElementById('selectionConfirmation'),
+      confirmationText: document.getElementById('confirmationText'),
       resultDisplay: document.getElementById('resultDisplay'),
       rollingAnimation: document.getElementById('rollingAnimation'),
       welcomeMessage: document.getElementById('welcomeMessage'),
@@ -941,11 +1230,30 @@
       window.demoStudentData = demoData;
     }
 
+    // عرض رسالة التأكيد
+    function showSelectionConfirmation(className) {
+      elements.confirmationText.textContent = `تم اختيار الصف "${className}" بنجاح! 🎉`;
+      elements.selectionConfirmation.classList.add('show');
+      elements.classSelector.classList.add('selected');
+      
+      // إخفاء الرسالة بعد 3 ثوان
+      setTimeout(() => {
+        elements.selectionConfirmation.classList.remove('show');
+      }, 3000);
+    }
+
+    // إخفاء رسالة التأكيد
+    function hideSelectionConfirmation() {
+      elements.selectionConfirmation.classList.remove('show');
+      elements.classSelector.classList.remove('selected');
+    }
+
     // تحديث قائمة الطلاب عند تغيير الصف
     async function updateStudentList(className) {
       if (!className) {
         currentStudents = [];
         availableStudents = [];
+        hideSelectionConfirmation();
         resetActivity();
         return;
       }
@@ -989,6 +1297,9 @@
             removedStudents = [];
             selectedStudents = [];
             
+            // إظهار رسالة التأكيد
+            showSelectionConfirmation(className);
+            
             updateUI();
             updateStats();
             showStudentInfo();
@@ -997,11 +1308,13 @@
           } else {
             console.warn(`⚠️ لم يتم العثور على طلاب في الصف ${className}`);
             alert(`⚠️ لم يتم العثور على طلاب في الصف ${className}!`);
+            hideSelectionConfirmation();
           }
         }
         
       } catch (error) {
         console.error('❌ خطأ في تحديث قائمة الطلاب:', error);
+        hideSelectionConfirmation();
       }
     }
 
@@ -1237,6 +1550,15 @@
       // اختيار الصف
       elements.classSelect.addEventListener('change', (e) => {
         console.log(`🎓 تم اختيار الصف: ${e.target.value}`);
+        
+        if (e.target.value) {
+          // تشغيل صوت عند اختيار صف
+          playSound(elements.selectSound);
+          
+          // تأثير بصري على القائمة
+          addClickEffect(e.target);
+        }
+        
         updateStudentList(e.target.value);
       });
 
