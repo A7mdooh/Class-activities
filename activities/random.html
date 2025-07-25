@@ -680,6 +680,95 @@
       font-size: 0.9rem;
     }
 
+    /* مفاتيح الصوت */
+    .sound-toggles {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-sm);
+    }
+
+    .toggle-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--spacing-xs) var(--spacing-sm);
+      background: rgba(0, 121, 107, 0.05);
+      border-radius: var(--border-radius-small);
+      border: 1px solid rgba(0, 121, 107, 0.1);
+      transition: all var(--transition-normal);
+    }
+
+    .toggle-item:hover {
+      background: rgba(0, 121, 107, 0.1);
+      border-color: rgba(0, 121, 107, 0.2);
+      transform: translateX(-2px);
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+      cursor: pointer;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      border-radius: 24px;
+      transition: all var(--transition-normal);
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      border-radius: 50%;
+      transition: all var(--transition-normal);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .toggle-switch input:checked + .toggle-slider {
+      background: linear-gradient(45deg, var(--primary-color), var(--primary-light));
+    }
+
+    .toggle-switch input:checked + .toggle-slider:before {
+      transform: translateX(26px);
+      box-shadow: 0 2px 8px rgba(0, 121, 107, 0.3);
+    }
+
+    .toggle-switch:hover .toggle-slider {
+      box-shadow: 0 0 0 3px rgba(0, 121, 107, 0.1);
+    }
+
+    .toggle-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+    }
+
+    .toggle-item:hover .toggle-label {
+      color: var(--primary-color);
+    }
+
     .speed-slider {
       width: 100%;
       -webkit-appearance: none;
@@ -856,6 +945,33 @@
         text-align: center;
         padding: var(--spacing-md);
       }
+
+      .sound-toggles {
+        gap: var(--spacing-xs);
+      }
+
+      .toggle-item {
+        padding: var(--spacing-xs);
+        flex-direction: column;
+        text-align: center;
+        gap: var(--spacing-xs);
+      }
+
+      .toggle-switch {
+        width: 40px;
+        height: 20px;
+      }
+
+      .toggle-slider:before {
+        height: 14px;
+        width: 14px;
+        left: 3px;
+        bottom: 3px;
+      }
+
+      .toggle-switch input:checked + .toggle-slider:before {
+        transform: translateX(20px);
+      }
     }
 
     @media (max-width: 480px) {
@@ -885,6 +1001,14 @@
       .selection-confirmation {
         font-size: 0.8rem;
         padding: var(--spacing-xs) var(--spacing-sm);
+      }
+
+      .toggle-label {
+        font-size: 0.75rem;
+      }
+
+      .settings-panel {
+        padding: var(--spacing-md);
       }
     }
 
@@ -1054,6 +1178,44 @@
           <input type="range" id="durationSlider" class="speed-slider" min="1" max="10" value="3">
           <div class="speed-value" id="durationValue">3 ثوان</div>
         </div>
+        <div class="setting-item">
+          <label class="setting-label" for="volumeSlider">مستوى الصوت</label>
+          <input type="range" id="volumeSlider" class="speed-slider" min="0" max="100" value="70">
+          <div class="speed-value" id="volumeValue">70%</div>
+        </div>
+        <div class="setting-item">
+          <label class="setting-label">تشغيل الأصوات</label>
+          <div class="sound-toggles">
+            <div class="toggle-item">
+              <label class="toggle-switch">
+                <input type="checkbox" id="rollingAudioToggle" checked>
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="toggle-label">🎵 صوت التدوير</span>
+            </div>
+            <div class="toggle-item">
+              <label class="toggle-switch">
+                <input type="checkbox" id="selectionAudioToggle" checked>
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="toggle-label">🎯 صوت الاختيار</span>
+            </div>
+            <div class="toggle-item">
+              <label class="toggle-switch">
+                <input type="checkbox" id="celebrationAudioToggle" checked>
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="toggle-label">🎉 صوت الاحتفال</span>
+            </div>
+            <div class="toggle-item">
+              <label class="toggle-switch">
+                <input type="checkbox" id="clickAudioToggle" checked>
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="toggle-label">🖱️ صوت النقر</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1104,6 +1266,15 @@
     let rollingSpeed = 150;
     let rollingDuration = 3000;
 
+    // إعدادات الصوت
+    let audioSettings = {
+      volume: 0.7,
+      rollingEnabled: true,
+      selectionEnabled: true,
+      celebrationEnabled: true,
+      clickEnabled: true
+    };
+
     // عناصر DOM
     const elements = {
       classSelect: document.getElementById('classSelect'),
@@ -1121,6 +1292,12 @@
       durationSlider: document.getElementById('durationSlider'),
       speedValue: document.getElementById('speedValue'),
       durationValue: document.getElementById('durationValue'),
+      volumeSlider: document.getElementById('volumeSlider'),
+      volumeValue: document.getElementById('volumeValue'),
+      rollingAudioToggle: document.getElementById('rollingAudioToggle'),
+      selectionAudioToggle: document.getElementById('selectionAudioToggle'),
+      celebrationAudioToggle: document.getElementById('celebrationAudioToggle'),
+      clickAudioToggle: document.getElementById('clickAudioToggle'),
       studentInfo: document.getElementById('studentInfo'),
       totalStudents: document.getElementById('totalStudents'),
       remainingStudents: document.getElementById('remainingStudents'),
@@ -1134,11 +1311,26 @@
       celebrationSound: document.getElementById('celebrationSound')
     };
 
-    // تشغيل الصوت مع معالجة الأخطاء
-    function playSound(soundElement) {
+    // تشغيل الصوت مع معالجة الأخطاء والإعدادات
+    function playSound(soundElement, soundType = 'general') {
       try {
+        // التحقق من إعدادات الصوت
+        const soundEnabled = {
+          'rolling': audioSettings.rollingEnabled,
+          'selection': audioSettings.selectionEnabled,
+          'celebration': audioSettings.celebrationEnabled,
+          'click': audioSettings.clickEnabled,
+          'general': true
+        };
+
+        if (!soundEnabled[soundType]) {
+          console.log(`🔇 تم إلغاء تشغيل صوت ${soundType} (مُعطل في الإعدادات)`);
+          return;
+        }
+
         if (soundElement && soundElement.readyState >= 2) {
           soundElement.currentTime = 0;
+          soundElement.volume = audioSettings.volume;
           const playPromise = soundElement.play();
           if (playPromise !== undefined) {
             playPromise.catch(() => {
@@ -1353,7 +1545,7 @@
       currentSelectedName = '';
       updateUI();
       
-      playSound(elements.rollingSound);
+      playSound(elements.rollingSound, 'rolling');
       
       // إزالة أي محتوى سابق
       elements.rollingAnimation.innerHTML = '';
@@ -1396,9 +1588,9 @@
       // عرض النتيجة
       showSelectedName(currentSelectedName);
       
-      playSound(elements.selectSound);
+      playSound(elements.selectSound, 'selection');
       setTimeout(() => {
-        playSound(elements.celebrationSound);
+        playSound(elements.celebrationSound, 'celebration');
       }, 500);
       
       updateUI();
@@ -1506,7 +1698,7 @@
       elements.studentInfo.style.display = 'none';
     }
 
-    // تحديث إعدادات السرعة
+    // تحديث إعدادات السرعة والصوت
     function updateSpeedSettings() {
       rollingSpeed = parseInt(elements.speedSlider.value);
       rollingDuration = parseInt(elements.durationSlider.value) * 1000;
@@ -1529,12 +1721,34 @@
       elements.durationValue.textContent = `${rollingDuration / 1000} ثوان`;
     }
 
+    // تحديث إعدادات الصوت
+    function updateAudioSettings() {
+      // تحديث مستوى الصوت
+      audioSettings.volume = parseInt(elements.volumeSlider.value) / 100;
+      elements.volumeValue.textContent = `${parseInt(elements.volumeSlider.value)}%`;
+      
+      // تحديث إعدادات تشغيل الأصوات
+      audioSettings.rollingEnabled = elements.rollingAudioToggle.checked;
+      audioSettings.selectionEnabled = elements.selectionAudioToggle.checked;
+      audioSettings.celebrationEnabled = elements.celebrationAudioToggle.checked;
+      audioSettings.clickEnabled = elements.clickAudioToggle.checked;
+      
+      // تطبيق مستوى الصوت على جميع عناصر الصوت
+      [elements.rollingSound, elements.selectSound, elements.clickSound, elements.celebrationSound]
+        .forEach(audio => {
+          if (audio) audio.volume = audioSettings.volume;
+        });
+      
+      console.log('🔊 تم تحديث إعدادات الصوت:', audioSettings);
+    }
+
     // تهيئة النشاط
     async function initializeActivity() {
       console.log('⚡ جاري تهيئة نشاط الاختيار العشوائي...');
       
       await loadStudentData();
       updateSpeedSettings();
+      updateAudioSettings();
       updateUI();
       
       console.log('🎉 تم تحميل النشاط بنجاح!');
@@ -1553,7 +1767,7 @@
         
         if (e.target.value) {
           // تشغيل صوت عند اختيار صف
-          playSound(elements.selectSound);
+          playSound(elements.selectSound, 'selection');
           
           // تأثير بصري على القائمة
           addClickEffect(e.target);
@@ -1566,21 +1780,21 @@
       elements.startBtn.addEventListener('click', (e) => {
         console.log('🚀 تم النقر على زر البدء');
         addClickEffect(e.target);
-        playSound(elements.clickSound);
+        playSound(elements.clickSound, 'click');
         startSelection();
       });
 
       elements.stopBtn.addEventListener('click', (e) => {
         console.log('⏹️ تم النقر على زر التوقف');
         addClickEffect(e.target);
-        playSound(elements.clickSound);
+        playSound(elements.clickSound, 'click');
         stopSelection();
       });
 
       elements.removeBtn.addEventListener('click', (e) => {
         console.log('❌ تم النقر على زر الاستبعاد');
         addClickEffect(e.target);
-        playSound(elements.clickSound);
+        playSound(elements.clickSound, 'click');
         
         if (confirm(`هل تريد استبعاد "${currentSelectedName}" من القائمة؟`)) {
           removeSelectedStudent();
@@ -1590,29 +1804,34 @@
       elements.resetBtn.addEventListener('click', (e) => {
         console.log('🔄 تم النقر على زر إعادة التعيين');
         addClickEffect(e.target);
-        playSound(elements.clickSound);
+        playSound(elements.clickSound, 'click');
         
         if (confirm('هل تريد إعادة تعيين النشاط وإرجاع جميع الطلاب؟')) {
           resetActivity();
         }
       });
 
-      // إعدادات السرعة والمدة
+      // إعدادات السرعة والمدة والصوت
       elements.speedSlider.addEventListener('input', updateSpeedSettings);
       elements.durationSlider.addEventListener('input', updateSpeedSettings);
+      elements.volumeSlider.addEventListener('input', updateAudioSettings);
+      elements.rollingAudioToggle.addEventListener('change', updateAudioSettings);
+      elements.selectionAudioToggle.addEventListener('change', updateAudioSettings);
+      elements.celebrationAudioToggle.addEventListener('change', updateAudioSettings);
+      elements.clickAudioToggle.addEventListener('change', updateAudioSettings);
 
       // أزرار التحكم العلوية
       elements.fullscreenBtn.addEventListener('click', (e) => {
         console.log('🖥️ تم النقر على زر ملء الشاشة');
         addClickEffect(e.target);
-        playSound(elements.clickSound);
+        playSound(elements.clickSound, 'click');
         toggleFullScreen();
       });
 
       elements.backBtn.addEventListener('click', (e) => {
         console.log('🏠 تم النقر على زر العودة');
         addClickEffect(e.target);
-        playSound(elements.clickSound);
+        playSound(elements.clickSound, 'click');
         
         // تأثير انتقال سلس
         document.body.style.opacity = '0';
