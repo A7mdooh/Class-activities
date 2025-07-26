@@ -2352,8 +2352,7 @@ const NavigationManager = {
       console.log('✅ تم إظهار لوحة الاختيار');
     }
     
-    // تحميل الصفوف
-    loadClassSelection();
+    // لا نستدعي loadClassSelection هنا لتجنب الدورة اللانهائية
   },
   
   // إظهار الممالك
@@ -2444,8 +2443,23 @@ let selectedStudentsList = [];
 function loadClassSelection() {
   console.log('🎓 بدء تحميل اختيار الصفوف');
   
-  // استخدام NavigationManager لإظهار صفحة الاختيار
-  NavigationManager.showClassSelection();
+  // إظهار عناصر الاختيار مباشرة بدون NavigationManager
+  const mainApp = document.getElementById('mainApp');
+  if (mainApp) {
+    mainApp.style.display = 'block';
+  }
+  
+  // إخفاء الممالك وإظهار لوحة الاختيار
+  const kingdomContent = document.getElementById('kingdomContent');
+  const selectionPanel = document.getElementById('selectionPanel');
+  
+  if (kingdomContent) {
+    kingdomContent.style.display = 'none';
+  }
+  
+  if (selectionPanel) {
+    selectionPanel.style.display = 'block';
+  }
   
   const classGrid = document.getElementById('classGrid');
   if (!classGrid) {
@@ -4927,6 +4941,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // استخدام البيانات المدمجة مباشرة
   if (!studentData || Object.keys(studentData).length === 0) {
+    console.log('📚 تحميل البيانات المدمجة...');
     studentData = {
       "الصف الخامس أ": [
         "أحمد محمد السيابي", "فاطمة علي الحارثي", "عبدالله سالم الجابري", 
@@ -4946,10 +4961,11 @@ document.addEventListener('DOMContentLoaded', () => {
         "فاطمة سيف السعيدي", "عثمان ناصر الهطالي", "خولة عبدالله المسلمي"
       ]
     };
+    console.log('✅ تم تحميل البيانات المدمجة:', Object.keys(studentData));
   }
   
   // عرض صفحة الاختيار فوراً
-  NavigationManager.showClassSelection();
+  loadClassSelection();
   console.log('✅ تم عرض التطبيق بنجاح');
   
   // محاولة تحميل البيانات الخارجية في الخلفية (اختياري)
@@ -5105,7 +5121,7 @@ function initializeControlButtons() {
         const studentsCount = gameState.selectedStudents.length;
         showQuantumNotification('🏰 العودة للممالك', `محتفظ بـ ${studentsCount} طلاب`, 'success');
       } else {
-        NavigationManager.showClassSelection();
+        loadClassSelection();
         showQuantumNotification('📚 اختر صفك أولاً', 'يجب اختيار الطلاب قبل دخول الممالك', 'info');
       }
     });
