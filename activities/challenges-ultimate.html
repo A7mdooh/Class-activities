@@ -4741,19 +4741,41 @@ function initializeControlButtons() {
   document.getElementById('homeBtn').addEventListener('click', function() {
     playCosmicSound('ui-back');
     
+    console.log('🔍 حالة الطلاب:', {
+      gameStateStudents: gameState.selectedStudents?.length || 0,
+      selectedStudentsList: selectedStudentsList?.length || 0,
+      gameStarted: gameState.gameStarted
+    });
+    
     // التحقق من وجود طلاب مختارين
-    if (gameState.selectedStudents && gameState.selectedStudents.length > 0) {
+    if ((gameState.selectedStudents && gameState.selectedStudents.length > 0) || 
+        (selectedStudentsList && selectedStudentsList.length > 0)) {
       // إذا كان هناك طلاب مختارين، العودة للممالك
       console.log('🏠 النقر على زر الرئيسية - العودة للممالك مع الاحتفاظ بالطلاب');
       
       // إخفاء جميع الساحات والعرض
       hideAllArenas();
       
-      // إظهار الممالك
-      document.getElementById('kingdomContent').style.display = 'block';
-      document.getElementById('kingdomDashboard').style.display = 'grid';
+      // التأكد من إظهار الممالك
+      const kingdomContent = document.getElementById('kingdomContent');
+      const kingdomDashboard = document.getElementById('kingdomDashboard');
       
-      showQuantumNotification('🏰 العودة للممالك', `محتفظ بـ ${gameState.selectedStudents.length} طلاب - اختر مملكة جديدة!`, 'success');
+      console.log('🔍 عناصر الممالك:', {
+        kingdomContent: kingdomContent ? 'موجود' : 'غير موجود',
+        kingdomDashboard: kingdomDashboard ? 'موجود' : 'غير موجود'
+      });
+      
+      if (kingdomContent) {
+        kingdomContent.style.display = 'block';
+        console.log('✅ تم إظهار kingdomContent');
+      }
+      if (kingdomDashboard) {
+        kingdomDashboard.style.display = 'grid';
+        console.log('✅ تم إظهار kingdomDashboard');
+      }
+      
+      const studentsCount = gameState.selectedStudents?.length || selectedStudentsList?.length || 0;
+      showQuantumNotification('🏰 العودة للممالك', `محتفظ بـ ${studentsCount} طلاب - اختر مملكة جديدة!`, 'success');
     } else {
       // إذا لم يكن هناك طلاب مختارين، العودة لاختيار الصف
       console.log('🏠 النقر على زر الرئيسية - الانتقال لاختيار الصف');
