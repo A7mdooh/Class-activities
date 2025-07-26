@@ -1569,8 +1569,8 @@
   <!-- Particles Background -->
   <div id="particles-js"></div>
 
-  <!-- Cosmic Loading Screen -->
-  <div class="cosmic-loader" id="cosmicLoader">
+  <!-- Cosmic Loading Screen - مخفي افتراضياً للحصول على أداء أفضل -->
+  <div class="cosmic-loader" id="cosmicLoader" style="display: none;">
     <div class="loader-animation"></div>
     <div class="loader-text" id="loaderText">🌌 تهيئة مملكة التحديات الذكية...</div>
     <div class="loader-progress">
@@ -1578,8 +1578,8 @@
     </div>
   </div>
 
-  <!-- Main Application -->
-  <div class="glass-container" id="mainApp" style="display: none;">
+  <!-- Main Application - ظاهر افتراضياً -->
+  <div class="glass-container" id="mainApp" style="display: block;">
     <!-- Class & Student Selection Panel -->
     <div class="selection-panel" id="selectionPanel">
       <div class="glass-container" style="background: rgba(0,0,0,0.8); border: 2px solid rgba(255,215,0,0.5);">
@@ -4909,9 +4909,9 @@ function updateSettingsData() {
 }
 
 // ===== ENHANCED UI INTERACTIONS =====
-// Add hover sound effects to buttons
+// تهيئة بسيطة وسريعة
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('🚀 بدء تهيئة نظام التعلم التفاعلي');
+  console.log('🚀 بدء تهيئة سريعة للتطبيق');
   
   // تحميل الحالة المحفوظة
   gameState.loadFromLocalStorage();
@@ -4922,21 +4922,42 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize control buttons
   initializeControlButtons();
   
-  // عرض رسالة تحميل سريعة
-  console.log('⏳ تهيئة سريعة...');
+  // عرض التطبيق فوراً مع البيانات المدمجة
+  console.log('⚡ استخدام البيانات المدمجة للحصول على أداء فوري');
   
-  // Load student data with faster fallback
-  try {
-    await loadStudentData();
-    NavigationManager.showClassSelection();
-    console.log('✅ تم تحميل البيانات وعرض صفحة الاختيار');
-  } catch (error) {
-    console.error('❌ فشل في تحميل بيانات الطلاب:', error);
-    // استخدام البيانات المدمجة فوراً
-    NavigationManager.showClassSelection();
+  // استخدام البيانات المدمجة مباشرة
+  if (!studentData || Object.keys(studentData).length === 0) {
+    studentData = {
+      "الصف الخامس أ": [
+        "أحمد محمد السيابي", "فاطمة علي الحارثي", "عبدالله سالم الجابري", 
+        "مريم أحمد البلوشي", "سعيد يوسف المحرمي", "نور حسن الرواحي",
+        "خالد طارق البوسعيدي", "عائشة سليمان الفارسي"
+      ],
+      "الصف الخامس ب": [
+        "سارة حسن اليحيائي", "محمد عمر الحديدي", "نور الدين المسافر", 
+        "عائشة خالد الضامري", "راشد سالم الوهيبي", "زينب أحمد الحبسي"
+      ],
+      "الصف السادس أ": [
+        "علي محمد الزدجالي", "حليمة أحمد العمري", "يوسف سعيد الخربوشي",
+        "خديجة علي الحوسني", "طارق خليل البلوشي", "آمنة حمود الحضرمي"
+      ],
+      "الصف السادس ب": [
+        "إبراهيم سالم الليثي", "رقية محمد الرمضاني", "حمزة أحمد اليوسفي",
+        "فاطمة سيف السعيدي", "عثمان ناصر الهطالي", "خولة عبدالله المسلمي"
+      ]
+    };
   }
   
-  // Add hover effects to neural buttons after page load
+  // عرض صفحة الاختيار فوراً
+  NavigationManager.showClassSelection();
+  console.log('✅ تم عرض التطبيق بنجاح');
+  
+  // محاولة تحميل البيانات الخارجية في الخلفية (اختياري)
+  loadStudentData().catch(() => {
+    console.log('📚 استمرار باستخدام البيانات المدمجة');
+  });
+  
+  // Add hover effects to buttons
   setTimeout(() => {
     const buttons = document.querySelectorAll('.neural-button, .realm-card');
     buttons.forEach(button => {
@@ -4948,7 +4969,7 @@ document.addEventListener('DOMContentLoaded', () => {
         playCosmicSound('cosmic-click', { volume: 0.5 });
       });
     });
-  }, 500);
+  }, 100);
 });
 
 // تم تحسين التحميل لأداء أفضل
