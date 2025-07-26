@@ -2181,42 +2181,271 @@
 
 <script>
 // ===== GLOBAL VARIABLES =====
-let gameState = {
+// 🎮 نظام إدارة الحالة المحسن - Kingdom Challenges Ultimate
+const GameStateManager = {
+  // حالة التطبيق الرئيسية
+  currentView: 'classSelection', // classSelection, kingdoms, arena
   currentRealm: null,
   isActive: false,
-  sessionStartTime: Date.now(),
-  completedChallenges: 0,
-  energyLevel: 100,
-  soundEnabled: true,
-  teams: [],
-  battleTimer: null,
-  battleDuration: 0,
   selectedClass: null,
   selectedStudents: [],
   gameStarted: false,
-  waitingForAnswer: false  // لتحدي البرق
+  sessionStartTime: Date.now(),
+  waitingForAnswer: false,
+  
+  // إحصائيات اللعبة
+  completedChallenges: 0,
+  energyLevel: 100,
+  totalPoints: 0,
+  sessionsPlayed: 0,
+  
+  // إعدادات اللعبة
+  soundEnabled: true,
+  timerEnabled: true,
+  effectsEnabled: true,
+  
+  // فرق اللعب
+  teams: [],
+  battleTimer: null,
+  battleDuration: 0,
+  
+  // مؤقت الجلسة
+  sessionTimer: null,
+  
+  // بدء مؤقت الجلسة
+  startSessionTimer() {
+    if (this.sessionTimer) {
+      clearInterval(this.sessionTimer);
+    }
+    
+    this.sessionTimer = setInterval(() => {
+      this.refreshStatsDisplay();
+    }, 1000);
+    
+    console.log('⏰ تم بدء مؤقت الجلسة');
+  },
+  
+  // تحديث عرض الإحصائيات
+  refreshStatsDisplay() {
+    // تحديث وقت الجلسة
+    if (this.sessionStartTime) {
+      const elapsed = Math.floor((Date.now() - this.sessionStartTime) / 1000);
+      const minutes = Math.floor(elapsed / 60);
+      const seconds = elapsed % 60;
+      const timeString = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      
+      const sessionTimeElement = document.getElementById('sessionTime');
+      if (sessionTimeElement) {
+        sessionTimeElement.textContent = timeString;
+      }
+    }
+    
+    // تحديث التحديات المكتملة
+    const challengesElement = document.getElementById('completedChallenges');
+    if (challengesElement) {
+      challengesElement.textContent = this.completedChallenges;
+    }
+    
+    // تحديث مستوى الطاقة
+    const energyElement = document.getElementById('energyLevel');
+    if (energyElement) {
+      energyElement.textContent = this.energyLevel + '%';
+    }
+  },
+  
+  // إكمال تحدي
+  completeChallenge() {
+    this.completedChallenges += 1;
+    this.energyLevel = Math.max(50, this.energyLevel - 5);
+    this.refreshStatsDisplay();
+    this.saveToLocalStorage();
+    console.log('✅ تم إكمال تحدي جديد. المجموع:', this.completedChallenges);
+  },
+  
+  // حفظ الحالة
+  saveToLocalStorage() {
+    try {
+      localStorage.setItem('kingdomChallenges_gameState', JSON.stringify({
+        completedChallenges: this.completedChallenges,
+        energyLevel: this.energyLevel,
+        soundEnabled: this.soundEnabled,
+        lastSession: Date.now()
+      }));
+    } catch (error) {
+      console.warn('⚠️ فشل في حفظ الحالة:', error);
+    }
+  },
+  
+  // تحميل الحالة
+  loadFromLocalStorage() {
+    try {
+      const saved = localStorage.getItem('kingdomChallenges_gameState');
+      if (saved) {
+        const data = JSON.parse(saved);
+        this.completedChallenges = data.completedChallenges || 0;
+        this.energyLevel = data.energyLevel || 100;
+        this.soundEnabled = data.soundEnabled !== false;
+        console.log('✅ تم تحميل الحالة المحفوظة');
+      }
+    } catch (error) {
+      console.warn('⚠️ فشل في تحميل الحالة:', error);
+    }
+  },
+  
+  // بدء جلسة جديدة
+  startNewSession() {
+    this.sessionStartTime = Date.now();
+    this.currentView = 'kingdoms';
+    this.gameStarted = true;
+    this.startSessionTimer();
+    this.saveToLocalStorage();
+    console.log('🚀 بدء جلسة جديدة');
+  }
 };
 
+// للتوافق مع الكود الحالي
+const gameState = GameStateManager;
+
 let studentData = {};
+
+// 🧭 نظام التنقل المحسن
+const NavigationManager = {
+  // إخفاء جميع المحتويات
+  hideAllViews() {
+    const elementsToHide = [
+      'selectionPanel', 'kingdomContent', 'lightningArena', 
+      'battleArena', 'gameInterface', 'wizardArena', 'mysteryArena'
+    ];
+    
+    elementsToHide.forEach(elementId => {
+      const element = document.getElementById(elementId);
+      if (element) {
+        element.style.display = 'none';
+      }
+    });
+    
+    console.log('🔄 تم إخفاء جميع العروض');
+  },
+  
+  // إظهار التطبيق الرئيسي
+  showMainApp() {
+    const mainApp = document.getElementById('mainApp');
+    if (mainApp) {
+      mainApp.style.display = 'block';
+      mainApp.style.visibility = 'visible';
+      mainApp.style.opacity = '1';
+      console.log('✅ تم إظهار التطبيق الرئيسي');
+    }
+  },
+  
+  // إظهار صفحة اختيار الصفوف
+  showClassSelection() {
+    console.log('🎓 عرض صفحة اختيار الصفوف');
+    gameState.currentView = 'classSelection';
+    
+    this.hideAllViews();
+    this.showMainApp();
+    
+    const selectionPanel = document.getElementById('selectionPanel');
+    if (selectionPanel) {
+      selectionPanel.style.display = 'block';
+      console.log('✅ تم إظهار لوحة الاختيار');
+    }
+    
+    // تحميل الصفوف
+    loadClassSelection();
+  },
+  
+  // إظهار الممالك
+  showKingdoms() {
+    console.log('🏰 عرض صفحة الممالك');
+    gameState.currentView = 'kingdoms';
+    
+    this.hideAllViews();
+    this.showMainApp();
+    
+    // إظهار واجهة اللعبة
+    const gameInterface = document.getElementById('gameInterface');
+    if (gameInterface) {
+      gameInterface.style.display = 'block';
+      console.log('✅ تم إظهار واجهة اللعبة');
+    }
+    
+    // إظهار محتوى الممالك
+    const kingdomContent = document.getElementById('kingdomContent');
+    if (kingdomContent) {
+      kingdomContent.style.display = 'block';
+      kingdomContent.style.visibility = 'visible';
+      kingdomContent.style.opacity = '1';
+      console.log('✅ تم إظهار محتوى الممالك');
+    }
+    
+    // إظهار لوحة معلومات الممالك
+    const kingdomDashboard = document.getElementById('kingdomDashboard');
+    if (kingdomDashboard) {
+      kingdomDashboard.style.display = 'grid';
+      kingdomDashboard.style.visibility = 'visible';
+      kingdomDashboard.style.opacity = '1';
+      console.log('✅ تم إظهار لوحة معلومات الممالك');
+    }
+    
+    // تحديث الإحصائيات
+    gameState.refreshStatsDisplay();
+    
+    // بدء مؤقت الجلسة إذا لم يكن يعمل
+    if (!gameState.sessionTimer && gameState.gameStarted) {
+      gameState.startSessionTimer();
+    }
+  },
+  
+  // إظهار ساحة محددة
+  showArena(arenaId) {
+    console.log(`⚔️ عرض الساحة: ${arenaId}`);
+    gameState.currentView = 'arena';
+    gameState.currentRealm = arenaId;
+    
+    this.hideAllViews();
+    this.showMainApp();
+    
+    // إظهار واجهة اللعبة
+    const gameInterface = document.getElementById('gameInterface');
+    if (gameInterface) {
+      gameInterface.style.display = 'block';
+    }
+    
+    // إظهار الساحة المحددة
+    const arena = document.getElementById(arenaId);
+    if (arena) {
+      arena.style.display = 'block';
+      arena.style.visibility = 'visible';
+      arena.style.opacity = '1';
+      console.log(`✅ تم إظهار ساحة ${arenaId}`);
+    }
+  },
+  
+  // العودة للصفحة الرئيسية (خارج التطبيق)
+  goHome() {
+    console.log('🏠 العودة للصفحة الرئيسية');
+    
+    // محاولة العودة للصفحة السابقة
+    if (document.referrer && document.referrer !== window.location.href) {
+      console.log('↩️ العودة للصفحة السابقة:', document.referrer);
+      window.history.back();
+    } else {
+      // الانتقال لصفحة الأنشطة
+      console.log('🏠 الانتقال لصفحة الأنشطة');
+      window.location.href = '../index.html';
+    }
+  }
+};
 let selectedStudentsList = [];
 
 // ===== ENHANCED STUDENT MANAGEMENT SYSTEM =====
 function loadClassSelection() {
   console.log('🎓 بدء تحميل اختيار الصفوف');
-  console.log('📊 بيانات الطلاب المتاحة:', Object.keys(studentData));
   
-  // Show main app container
-  const mainApp = document.getElementById('mainApp');
-  if (mainApp) {
-    mainApp.style.display = 'block';
-    console.log('✅ تم إظهار التطبيق الرئيسي');
-  }
-  
-  // Hide main dashboard
-  document.getElementById('kingdomContent').style.display = 'none';
-  
-  // Show selection panel
-  document.getElementById('selectionPanel').style.display = 'block';
+  // استخدام NavigationManager لإظهار صفحة الاختيار
+  NavigationManager.showClassSelection();
   
   const classGrid = document.getElementById('classGrid');
   if (!classGrid) {
@@ -2611,13 +2840,13 @@ function startKingdomGame() {
     return;
   }
   
+  // تحديث حالة اللعبة
   gameState.selectedStudents = [...selectedStudentsList];
   gameState.gameStarted = true;
+  gameState.startNewSession();
   
-  // Hide selection panel and show game interface
-  document.getElementById('selectionPanel').style.display = 'none';
-  document.getElementById('kingdomContent').style.display = 'block';
-  document.getElementById('gameInterface').style.display = 'block';
+  // استخدام NavigationManager للانتقال للممالك
+  NavigationManager.showKingdoms();
   
   // Generate teams from selected students
   generateTeamsFromStudents();
@@ -3339,28 +3568,14 @@ function showKingdoms() {
 }
 
 function updateStats() {
-  console.log('📊 تحديث الإحصائيات...');
-  
-  // تحديث التحديات المكتملة
-  const challengesElement = document.getElementById('completedChallenges');
-  if (challengesElement) {
-    challengesElement.textContent = gameState.completedChallenges;
-    console.log('✅ التحديات المكتملة:', gameState.completedChallenges);
-  } else {
-    console.error('❌ لم يتم العثور على عنصر completedChallenges');
-  }
-  
-  // تحديث مستوى الطاقة
-  gameState.energyLevel = Math.max(50, gameState.energyLevel - 5);
-  const energyElement = document.getElementById('energyLevel');
-  if (energyElement) {
-    energyElement.textContent = gameState.energyLevel + '%';
-    console.log('✅ مستوى الطاقة:', gameState.energyLevel + '%');
-  } else {
-    console.error('❌ لم يتم العثور على عنصر energyLevel');
-  }
-  
-  console.log('📊 انتهاء تحديث الإحصائيات');
+  // استخدام دالة refreshStatsDisplay من GameStateManager
+  gameState.refreshStatsDisplay();
+}
+
+// دالة لإكمال تحدي جديد
+function completeChallenge() {
+  gameState.completeChallenge();
+  showQuantumNotification('🎉 تحدي مكتمل!', `المجموع: ${gameState.completedChallenges} تحدي`, 'success');
 }
 
 function getTotalPoints() {
@@ -3811,16 +4026,16 @@ function startLightningChallenge() {
 }
 
 function createLightningArena() {
-  const mainApp = document.getElementById('mainApp');
+  console.log('⚡ إنشاء ساحة البرق');
   
   // التحقق من وجود ساحة البرق مسبقاً
   let lightningArena = document.getElementById('lightningArena');
   
   if (lightningArena) {
-    // إذا كانت موجودة، فقط أظهرها وأعد تعيين المحتوى
-    lightningArena.style.display = 'block';
-    // إعادة تعيين النقاط والمؤقت
+    // إذا كانت موجودة، استخدم NavigationManager لإظهارها
+    NavigationManager.showArena('lightningArena');
     resetLightningArena();
+    console.log('✅ تم إظهار ساحة البرق الموجودة');
   } else {
     // إنشاء ساحة البرق جديدة
     lightningArena = document.createElement('div');
@@ -4679,6 +4894,11 @@ function updateSettingsData() {
 // ===== ENHANCED UI INTERACTIONS =====
 // Add hover sound effects to buttons
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('🚀 بدء تهيئة نظام التعلم التفاعلي');
+  
+  // تحميل الحالة المحفوظة
+  gameState.loadFromLocalStorage();
+  
   // Initialize audio system
   initAudioSystem();
   
@@ -4687,7 +4907,8 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Load student data first, then start with class selection
   loadStudentData().then(() => {
-    loadClassSelection();
+    NavigationManager.showClassSelection();
+    console.log('✅ تم تحميل البيانات وعرض صفحة الاختيار');
   }).catch(error => {
     console.error('❌ فشل في تحميل بيانات الطلاب:', error);
     loadClassSelection(); // Try to load anyway
@@ -4830,73 +5051,47 @@ function hideAllArenas() {
 
 // تفعيل أزرار التحكم
 function initializeControlButtons() {
-  console.log('🔧 بدء تفعيل أزرار التحكم...');
+  console.log('🔧 بدء تفعيل أزرار التحكم المحسن...');
   
-  // التحقق من وجود زر الرئيسية قبل ربط الحدث
+  // زر الرئيسية (العودة للصفحة السابقة)
   const homeBtn = document.getElementById('homeBtn');
-  if (!homeBtn) {
-    console.error('❌ لم يتم العثور على زر الرئيسية homeBtn');
-    return;
+  if (homeBtn) {
+    homeBtn.addEventListener('click', function() {
+      console.log('🏠 النقر على زر الرئيسية');
+      playCosmicSound('ui-back');
+      NavigationManager.goHome();
+    });
+    console.log('✅ تم ربط زر الرئيسية');
   } else {
-    console.log('✅ تم العثور على زر الرئيسية');
+    console.error('❌ لم يتم العثور على زر الرئيسية');
   }
 
-  // زر الصفحة الرئيسية
-  homeBtn.addEventListener('click', function() {
-    console.log('🏠 تم النقر على زر الرئيسية!');
-    playCosmicSound('ui-back');
-    
-    console.log('🔍 العودة للصفحة السابقة...');
-    
-    // العودة للصفحة السابقة (صفحة اختيار الأنشطة)
-    if (document.referrer && document.referrer !== window.location.href) {
-      // إذا كان هناك صفحة سابقة، العودة إليها
-      console.log('↩️ العودة للصفحة السابقة:', document.referrer);
-      window.history.back();
-    } else {
-      // إذا لم تكن هناك صفحة سابقة، الانتقال لصفحة الأنشطة
-      console.log('🏠 الانتقال لصفحة الأنشطة الرئيسية');
-      window.location.href = '../index.html';
-    }
-  });
-
-  // زر العودة للممالك
+  // زر الممالك (العودة للممالك داخل التطبيق)
   const kingdomsBtn = document.getElementById('kingdomsBtn');
   if (kingdomsBtn) {
     kingdomsBtn.addEventListener('click', function() {
-      console.log('🏰 تم النقر على زر الممالك!');
-      playCosmicSound('ui-back');
+      console.log('🏰 النقر على زر الممالك');
+      playCosmicSound('ui-select');
       
-      // التحقق من وجود طلاب مختارين
-      if ((gameState.selectedStudents && gameState.selectedStudents.length > 0) || 
-          (selectedStudentsList && selectedStudentsList.length > 0)) {
-        // إذا كان هناك طلاب مختارين، العودة للممالك
-        console.log('🏰 العودة للممالك مع الاحتفاظ بالطلاب');
-        
-        // إخفاء جميع الساحات
-        hideAllArenas();
-        
-        // إظهار الممالك
-        showKingdoms();
-        
-        // التأكد من تشغيل مؤقت الجلسة
-        if (!gameState.sessionStartTime) {
-          gameState.sessionStartTime = Date.now();
-          startSessionTimer();
-        }
-        
-        const studentsCount = gameState.selectedStudents?.length || selectedStudentsList?.length || 0;
-        showQuantumNotification('🏰 العودة للممالك', `محتفظ بـ ${studentsCount} طلاب - اختر مملكة جديدة!`, 'success');
+      // التحقق من حالة اللعبة
+      if (gameState.selectedStudents && gameState.selectedStudents.length > 0) {
+        NavigationManager.showKingdoms();
+        const studentsCount = gameState.selectedStudents.length;
+        showQuantumNotification('🏰 العودة للممالك', `محتفظ بـ ${studentsCount} طلاب`, 'success');
       } else {
-        // إذا لم يكن هناك طلاب، اذهب لاختيار الصفوف
-        console.log('🏰 لا توجد طلاب محددون، الانتقال لاختيار الصف');
-        loadClassSelection();
+        NavigationManager.showClassSelection();
+        showQuantumNotification('📚 اختر صفك أولاً', 'يجب اختيار الطلاب قبل دخول الممالك', 'info');
       }
     });
     console.log('✅ تم ربط زر الممالك');
   } else {
     console.error('❌ لم يتم العثور على زر الممالك');
   }
+        
+        // التأكد من تشغيل مؤقت الجلسة
+  
+  console.log('� تم تفعيل جميع أزرار التحكم بنجاح');
+}
 
   // زر التحكم في الصوت
   const soundToggleBtn = document.getElementById('soundToggleBtn');
