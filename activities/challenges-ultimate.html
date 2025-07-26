@@ -42,6 +42,7 @@
       color: var(--text-primary);
       overflow-x: hidden;
       position: relative;
+      padding-top: 80px; /* مساحة لأزرار التحكم */
     }
 
     /* ===== PARTICLES BACKGROUND ===== */
@@ -60,27 +61,33 @@
       top: 0;
       left: 0;
       right: 0;
-      background: rgba(0, 0, 0, 0.9);
+      background: rgba(0, 0, 0, 0.95);
       backdrop-filter: blur(20px);
-      border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+      border-bottom: 2px solid rgba(255, 215, 0, 0.5);
       padding: 1rem 2rem;
-      z-index: 10000;
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+      z-index: 99999;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.7);
+      display: flex !important;
+      visibility: visible !important;
+      opacity: 1 !important;
     }
 
     .control-buttons-container {
-      display: flex;
+      display: flex !important;
       justify-content: space-between;
       align-items: center;
       max-width: 1600px;
       margin: 0 auto;
+      width: 100%;
+      height: 60px;
     }
 
     .app-title-cosmic {
-      display: flex;
+      display: flex !important;
       align-items: center;
       gap: 1rem;
       color: white;
+      visibility: visible !important;
     }
 
     .title-icon {
@@ -110,14 +117,16 @@
     }
 
     .control-group-cosmic {
-      display: flex;
+      display: flex !important;
       gap: 0.8rem;
+      align-items: center;
+      visibility: visible !important;
     }
 
     .cosmic-control-btn {
       position: relative;
-      background: rgba(255, 255, 255, 0.1);
-      border: 2px solid rgba(255, 215, 0, 0.3);
+      background: rgba(255, 255, 255, 0.15);
+      border: 2px solid rgba(255, 215, 0, 0.5);
       color: white;
       padding: 0.8rem;
       border-radius: 15px;
@@ -126,10 +135,13 @@
       font-size: 1.2rem;
       min-width: 4rem;
       height: 4rem;
-      display: flex;
+      display: flex !important;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      visibility: visible !important;
+      opacity: 1 !important;
+      z-index: 99999;
       gap: 0.2rem;
       overflow: hidden;
     }
@@ -2345,6 +2357,43 @@ function testSelectionSystem() {
 // إضافة الدالة للوحة التحكم العامة (للمطورين)
 window.testSelectionSystem = testSelectionSystem;
 
+// التأكد من ظهور أزرار التحكم
+function ensureControlHeaderVisible() {
+  console.log('🔧 التأكد من ظهور أزرار التحكم...');
+  
+  const controlHeader = document.querySelector('.cosmic-control-header');
+  if (!controlHeader) {
+    console.error('❌ لم يتم العثور على header التحكم');
+    return;
+  }
+  
+  // فرض ظهور العنصر
+  controlHeader.style.display = 'flex';
+  controlHeader.style.visibility = 'visible';
+  controlHeader.style.opacity = '1';
+  controlHeader.style.zIndex = '99999';
+  controlHeader.style.position = 'fixed';
+  controlHeader.style.top = '0';
+  controlHeader.style.left = '0';
+  controlHeader.style.right = '0';
+  
+  // فحص الأزرار الفردية
+  const buttons = controlHeader.querySelectorAll('.cosmic-control-btn');
+  console.log(`🎮 تم العثور على ${buttons.length} أزرار تحكم`);
+  
+  buttons.forEach((btn, index) => {
+    btn.style.display = 'flex';
+    btn.style.visibility = 'visible';
+    btn.style.opacity = '1';
+    console.log(`✅ زر ${index + 1} مرئي:`, btn.id || btn.textContent);
+  });
+  
+  // إضافة مساحة للمحتوى تحت الشريط
+  document.body.style.paddingTop = '80px';
+  
+  console.log('✅ تم التأكد من ظهور أزرار التحكم');
+}
+
 // ===== REALM ACTIVATION =====
 function activateRealm(realmType) {
   gameState.currentRealm = realmType;
@@ -3220,11 +3269,18 @@ window.addEventListener('load', async () => {
 });
 
 async function initializeKingdom() {
+  console.log('🏰 بدء تهيئة المملكة...');
+  
   const progressBar = document.getElementById('progressBar');
   const loaderText = document.getElementById('loaderText');
   
   // Initialize particles
   initParticles();
+  
+  // التأكد من ظهور أزرار التحكم فوراً
+  setTimeout(() => {
+    ensureControlHeaderVisible();
+  }, 100);
   
   // Loading sequence with sound effects
   const loadingSteps = [
@@ -3262,6 +3318,14 @@ async function initializeKingdom() {
   setTimeout(() => {
     document.getElementById('cosmicLoader').style.display = 'none';
     document.getElementById('mainApp').style.display = 'block';
+    
+    // التأكد من ظهور أزرار التحكم بعد تحميل التطبيق
+    ensureControlHeaderVisible();
+    
+    // Additional visual confirmation
+    setTimeout(() => {
+      ensureControlHeaderVisible();
+    }, 500);
     
     // Show class selection panel initially instead of welcome message
     loadClassSelection();
