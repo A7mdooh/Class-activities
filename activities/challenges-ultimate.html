@@ -1525,16 +1525,6 @@
     </div>
   </div>
 
-  <!-- Sound Control -->
-  <div style="position: fixed; bottom: 20px; left: 20px; z-index: 1000;">
-    <button class="neural-button" onclick="toggleSound()" id="soundToggle">🔊 الصوت</button>
-  </div>
-
-  <!-- Settings Panel -->
-  <div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
-    <button class="neural-button" onclick="openSettings()">⚙️ الإعدادات</button>
-  </div>
-
   <!-- Teacher Guide Modal -->
   <!-- نافذة الإعدادات المتقدمة الشاملة -->
   <div class="modal-overlay settings-modal" id="settingsModal">
@@ -3351,8 +3341,9 @@ function playSoundSequence(sounds, interval = 500) {
 
 function toggleSound() {
   gameState.soundEnabled = !gameState.soundEnabled;
-  const button = document.getElementById('soundToggle');
-  button.innerHTML = gameState.soundEnabled ? '🔊 الصوت' : '🔇 صامت';
+  
+  // تحديث زر شريط التحكم
+  updateSoundButton();
   
   // Play sound toggle feedback
   if (gameState.soundEnabled) {
@@ -3501,8 +3492,47 @@ function startMysteryChallenge() {
 }
 
 function openSettings() {
+  console.log('⚙️ فتح نافذة الإعدادات');
   playCosmicSound('menu-open');
-  showQuantumNotification('⚙️ الإعدادات', 'لوحة الإعدادات المتقدمة قريباً!', 'info');
+  
+  const settingsModal = document.getElementById('settingsModal');
+  if (settingsModal) {
+    settingsModal.classList.add('active');
+    settingsModal.style.display = 'flex';
+    
+    // تحديث بيانات الإعدادات
+    updateSettingsData();
+    
+    showQuantumNotification('⚙️ مركز التحكم', 'تم فتح الإعدادات المتقدمة', 'success');
+  } else {
+    console.error('❌ لم يتم العثور على نافذة الإعدادات');
+    showQuantumNotification('❌ خطأ', 'لم يتم العثور على نافذة الإعدادات', 'error');
+  }
+}
+
+// تحديث بيانات الإعدادات
+function updateSettingsData() {
+  console.log('📊 تحديث بيانات الإعدادات...');
+  
+  // تحديث عدد الصفوف والطلاب
+  const classesCount = Object.keys(studentData).length;
+  const totalStudents = Object.values(studentData).reduce((sum, students) => sum + students.length, 0);
+  
+  const classesCountElement = document.getElementById('classesCount');
+  const totalStudentsElement = document.getElementById('totalStudentsCount');
+  const lastUpdateElement = document.getElementById('lastUpdateTime');
+  
+  if (classesCountElement) classesCountElement.textContent = classesCount;
+  if (totalStudentsElement) totalStudentsElement.textContent = totalStudents;
+  if (lastUpdateElement) lastUpdateElement.textContent = new Date().toLocaleString('ar-SA');
+  
+  // تحديث الصف المختار
+  const selectedClassElement = document.getElementById('selectedClassDisplay');
+  if (selectedClassElement && gameState.selectedClass) {
+    selectedClassElement.innerHTML = `<option value="${gameState.selectedClass}" selected>${gameState.selectedClass}</option>`;
+  }
+  
+  console.log(`✅ تم تحديث البيانات: ${classesCount} صفوف، ${totalStudents} طالب`);
 }
 
 // ===== ENHANCED UI INTERACTIONS =====
@@ -3589,6 +3619,7 @@ async function initializeKingdom() {
     setTimeout(() => {
       ensureControlHeaderVisible();
       initializeControlButtons(); // تفعيل أزرار التحكم
+      setupSettingsTabs(); // تفعيل تبويبات الإعدادات
     }, 500);
     
     // Show class selection panel initially instead of welcome message
@@ -3921,6 +3952,7 @@ function exportClassData() {
 function closeSettingsModal() {
   const modal = document.getElementById('settingsModal');
   modal.classList.remove('active');
+  modal.style.display = 'none';
   playCosmicSound('ui-back');
 }
 
