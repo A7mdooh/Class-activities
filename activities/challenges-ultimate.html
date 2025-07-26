@@ -4737,8 +4737,20 @@ function hideAllArenas() {
 
 // تفعيل أزرار التحكم
 function initializeControlButtons() {
+  console.log('🔧 بدء تفعيل أزرار التحكم...');
+  
+  // التحقق من وجود زر الرئيسية قبل ربط الحدث
+  const homeBtn = document.getElementById('homeBtn');
+  if (!homeBtn) {
+    console.error('❌ لم يتم العثور على زر الرئيسية homeBtn');
+    return;
+  } else {
+    console.log('✅ تم العثور على زر الرئيسية');
+  }
+
   // زر الصفحة الرئيسية
-  document.getElementById('homeBtn').addEventListener('click', function() {
+  homeBtn.addEventListener('click', function() {
+    console.log('🏠 تم النقر على زر الرئيسية!');
     playCosmicSound('ui-back');
     
     console.log('🔍 حالة الطلاب:', {
@@ -4784,40 +4796,70 @@ function initializeControlButtons() {
   });
 
   // زر التحكم في الصوت
-  document.getElementById('soundToggleBtn').addEventListener('click', function() {
-    gameState.soundEnabled = !gameState.soundEnabled;
-    updateSoundButton();
-    playCosmicSound('ui-click');
-    showQuantumNotification(
-      gameState.soundEnabled ? '🔊 تم تفعيل الصوت' : '🔇 تم كتم الصوت',
-      '',
-      'info'
-    );
-  });
+  const soundToggleBtn = document.getElementById('soundToggleBtn');
+  if (soundToggleBtn) {
+    soundToggleBtn.addEventListener('click', function() {
+      gameState.soundEnabled = !gameState.soundEnabled;
+      updateSoundButton();
+      playCosmicSound('ui-click');
+      showQuantumNotification(
+        gameState.soundEnabled ? '🔊 تم تفعيل الصوت' : '🔇 تم كتم الصوت',
+        '', 
+        'info'
+      );
+    });
+    console.log('✅ تم ربط زر الصوت');
+  } else {
+    console.error('❌ لم يتم العثور على زر الصوت');
+  }
 
   // زر دليل المعلم
-  document.getElementById('teacherGuideBtn').addEventListener('click', function() {
-    playCosmicSound('ui-click');
-    showTeacherGuide();
-  });
-
-  // زر الإعدادات
-  document.getElementById('settingsBtn').addEventListener('click', function() {
-    playCosmicSound('ui-click');
-    showSettingsModal();
-  });
+  const teacherGuideBtn = document.getElementById('teacherGuideBtn');
+  if (teacherGuideBtn) {
+    teacherGuideBtn.addEventListener('click', function() {
+      playCosmicSound('ui-click');
+      showTeacherGuide();
+    });
+    console.log('✅ تم ربط زر دليل المعلم');
+  } else {
+    console.error('❌ لم يتم العثور على زر دليل المعلم');
+  }  // زر الإعدادات
+  const settingsBtn = document.getElementById('settingsBtn');
+  if (settingsBtn) {
+    settingsBtn.addEventListener('click', function() {
+      playCosmicSound('ui-click');
+      showSettingsModal();
+    });
+    console.log('✅ تم ربط زر الإعدادات');
+  } else {
+    console.error('❌ لم يتم العثور على زر الإعدادات');
+  }
 
   // زر الإحصائيات
-  document.getElementById('statsBtn').addEventListener('click', function() {
-    playCosmicSound('ui-click');
-    showStatsModal();
-  });
+  const statsBtn = document.getElementById('statsBtn');
+  if (statsBtn) {
+    statsBtn.addEventListener('click', function() {
+      playCosmicSound('ui-click');
+      showStatsModal();
+    });
+    console.log('✅ تم ربط زر الإحصائيات');
+  } else {
+    console.error('❌ لم يتم العثور على زر الإحصائيات');
+  }
 
   // زر ملء الشاشة
-  document.getElementById('fullscreenBtn').addEventListener('click', function() {
-    playCosmicSound('ui-click');
-    toggleFullscreen();
-  });
+  const fullscreenBtn = document.getElementById('fullscreenBtn');
+  if (fullscreenBtn) {
+    fullscreenBtn.addEventListener('click', function() {
+      playCosmicSound('ui-click');
+      toggleFullscreen();
+    });
+    console.log('✅ تم ربط زر ملء الشاشة');
+  } else {
+    console.error('❌ لم يتم العثور على زر ملء الشاشة');
+  }
+  
+  console.log('🔧 انتهاء تفعيل أزرار التحكم');
 }
 
 // تحديث زر الصوت
