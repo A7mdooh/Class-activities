@@ -291,6 +291,57 @@
       font-weight: 600;
     }
 
+    /* تبويبات الإعدادات */
+    .settings-tab-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      color: rgba(255, 255, 255, 0.7);
+      padding: 0.8rem 1.5rem;
+      border-radius: 10px 10px 0 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .settings-tab-btn:hover {
+      background: rgba(255, 215, 0, 0.2);
+      color: #ffd700;
+      border-color: #ffd700;
+    }
+
+    .settings-tab-btn.active {
+      background: rgba(255, 215, 0, 0.3);
+      color: #ffd700;
+      border-color: #ffd700;
+      border-bottom-color: transparent;
+    }
+
+    .settings-tab-content {
+      display: none;
+    }
+
+    .settings-tab-content.active {
+      display: block;
+    }
+
+    .setting-select {
+      width: 100%;
+      padding: 0.8rem;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .setting-select:focus {
+      outline: none;
+      border-color: #ffd700;
+      box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+    }
+
     /* تحسينات إضافية */
     .secondary {
       background: rgba(108, 117, 125, 0.2) !important;
@@ -1058,13 +1109,6 @@
             </button>
           </div>
         </div>
-
-        <!-- Teacher Guide Button -->
-        <div style="position: absolute; top: 20px; right: 20px;">
-          <button class="neural-button" onclick="openTeacherGuide()" style="background: linear-gradient(45deg, #4CAF50, #45a049);">
-            📖 دليل المعلم
-          </button>
-        </div>
       </div>
     </div>
 
@@ -1213,57 +1257,208 @@
   </div>
 
   <!-- Teacher Guide Modal -->
-  <!-- نافذة الإعدادات المتقدمة -->
+  <!-- نافذة الإعدادات المتقدمة الشاملة -->
   <div class="modal-overlay settings-modal" id="settingsModal">
       <div class="modal-content settings-content">
           <div class="modal-header settings-header">
               <h2 class="settings-title">
                   <span>⚙️</span>
-                  إعدادات مملكة التحديات
+                  إعدادات مملكة التحديات المتقدمة
               </h2>
               <button class="close-settings" onclick="closeSettingsModal()">✕</button>
           </div>
           
-          <div class="settings-sections">
-              <!-- إعدادات الصوت -->
+          <!-- تبويبات الإعدادات -->
+          <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 2px solid rgba(255,215,0,0.3);">
+              <button class="settings-tab-btn active" data-tab="game-settings">🎮 إعدادات اللعبة</button>
+              <button class="settings-tab-btn" data-tab="audio-settings">🎵 الصوت</button>
+              <button class="settings-tab-btn" data-tab="display-settings">🎨 العرض</button>
+              <button class="settings-tab-btn" data-tab="class-settings">👥 الصفوف</button>
+          </div>
+          
+          <!-- تبويب إعدادات اللعبة -->
+          <div class="settings-tab-content active" id="game-settings-content">
               <div class="setting-section">
-                  <h3 style="color: #00ffff; margin-bottom: 1rem;">🎵 إعدادات الصوت</h3>
+                  <h3 style="color: #ffd700; margin-bottom: 1rem;">🎯 إعدادات اللعبة الأساسية</h3>
+                  
                   <div class="setting-item">
-                      <label>مستوى الصوت العام:</label>
+                      <label>📚 الصف الدراسي المختار:</label>
+                      <select id="selectedClassDisplay" class="setting-select" disabled>
+                          <option value="">-- لم يتم اختيار صف --</option>
+                      </select>
+                  </div>
+                  
+                  <div class="setting-item">
+                      <label>⏱️ مدة التحدي (بالثواني):</label>
+                      <select id="challengeDurationSelect" class="setting-select">
+                          <option value="30">30 ثانية</option>
+                          <option value="60" selected>60 ثانية</option>
+                          <option value="90">90 ثانية</option>
+                          <option value="120">120 ثانية</option>
+                          <option value="180">180 ثانية</option>
+                      </select>
+                  </div>
+                  
+                  <div class="setting-item">
+                      <label>🎯 مستوى الصعوبة:</label>
+                      <select id="difficultySelect" class="setting-select">
+                          <option value="easy">سهل 🟢 - للمبتدئين</option>
+                          <option value="medium" selected>متوسط 🟡 - التوازن المثالي</option>
+                          <option value="hard">صعب 🔴 - للخبراء</option>
+                          <option value="mixed">مختلط 🌈 - تنوع الصعوبة</option>
+                      </select>
+                  </div>
+                  
+                  <div class="setting-item">
+                      <label>🏆 نظام النقاط:</label>
+                      <select id="scoringSystemSelect" class="setting-select">
+                          <option value="standard" selected>نظام النقاط العادي</option>
+                          <option value="bonus">نظام المكافآت المضاعفة</option>
+                          <option value="penalty">نظام الخصم على الأخطاء</option>
+                          <option value="time-based">نظام الوقت المتدرج</option>
+                      </select>
+                  </div>
+              </div>
+          </div>
+          
+          <!-- تبويب إعدادات الصوت -->
+          <div class="settings-tab-content" id="audio-settings-content">
+              <div class="setting-section">
+                  <h3 style="color: #00ffff; margin-bottom: 1rem;">🎵 إعدادات الصوت المتقدمة</h3>
+                  
+                  <div class="setting-item">
+                      <label>🔊 مستوى الصوت العام:</label>
                       <input type="range" id="masterVolumeSlider" min="0" max="100" value="50" 
                              style="width: 100%; margin-top: 0.5rem;">
                       <div style="text-align: center; color: #ffd700; margin-top: 0.5rem;">
                           <span id="volumeDisplay">50%</span>
                       </div>
                   </div>
+                  
+                  <div class="setting-item">
+                      <label>🎼 أصوات التأثيرات:</label>
+                      <input type="range" id="effectsVolumeSlider" min="0" max="100" value="70" 
+                             style="width: 100%; margin-top: 0.5rem;">
+                      <div style="text-align: center; color: #00ffff; margin-top: 0.5rem;">
+                          <span id="effectsVolumeDisplay">70%</span>
+                      </div>
+                  </div>
+                  
+                  <div class="setting-item">
+                      <label>🎵 الموسيقى الخلفية:</label>
+                      <input type="range" id="musicVolumeSlider" min="0" max="100" value="30" 
+                             style="width: 100%; margin-top: 0.5rem;">
+                      <div style="text-align: center; color: #ff69b4; margin-top: 0.5rem;">
+                          <span id="musicVolumeDisplay">30%</span>
+                      </div>
+                  </div>
+                  
+                  <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                      <button class="neural-button" onclick="testAllSounds()" style="flex: 1;">
+                          🎼 اختبار جميع الأصوات
+                      </button>
+                      <button class="neural-button secondary" onclick="muteAllSounds()" style="flex: 1;">
+                          🔇 كتم جميع الأصوات
+                      </button>
+                  </div>
               </div>
-
-              <!-- إعدادات العرض -->
+          </div>
+          
+          <!-- تبويب إعدادات العرض -->
+          <div class="settings-tab-content" id="display-settings-content">
               <div class="setting-section">
-                  <h3 style="color: #ff69b4; margin-bottom: 1rem;">🎨 إعدادات العرض</h3>
+                  <h3 style="color: #ff69b4; margin-bottom: 1rem;">🎨 إعدادات العرض والواجهة</h3>
+                  
                   <div class="setting-item">
                       <label>
                           <input type="checkbox" id="particlesToggle" checked> 
-                          تفعيل خلفية الجسيمات
+                          🌌 تفعيل خلفية الجسيمات المتحركة
                       </label>
                   </div>
+                  
                   <div class="setting-item">
                       <label>
                           <input type="checkbox" id="animationsToggle" checked> 
-                          تفعيل التأثيرات المتحركة
+                          ✨ تفعيل التأثيرات المتحركة
                       </label>
                   </div>
+                  
+                  <div class="setting-item">
+                      <label>
+                          <input type="checkbox" id="notificationsToggle" checked> 
+                          🔔 إظهار الإشعارات البصرية
+                      </label>
+                  </div>
+                  
+                  <div class="setting-item">
+                      <label>
+                          <input type="checkbox" id="fullscreenModeToggle"> 
+                          ⛶ تفعيل وضع ملء الشاشة تلقائياً
+                      </label>
+                  </div>
+                  
+                  <div class="setting-item">
+                      <label>🎨 نمط الألوان:</label>
+                      <select id="colorThemeSelect" class="setting-select">
+                          <option value="cosmic" selected>الكوني (افتراضي)</option>
+                          <option value="ocean">المحيط الأزرق</option>
+                          <option value="sunset">غروب الشمس</option>
+                          <option value="forest">الغابة الخضراء</option>
+                          <option value="royal">الملكي الذهبي</option>
+                      </select>
+                  </div>
               </div>
-
-              <!-- أزرار الحفظ -->
-              <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                  <button class="neural-button" onclick="saveSettings()" style="flex: 1;">
-                      💾 حفظ الإعدادات
-                  </button>
-                  <button class="neural-button secondary" onclick="resetSettings()" style="flex: 1;">
-                      🔄 إعادة التعيين
-                  </button>
+          </div>
+          
+          <!-- تبويب إعدادات الصفوف -->
+          <div class="settings-tab-content" id="class-settings-content">
+              <div class="setting-section">
+                  <h3 style="color: #ffd700; margin-bottom: 1rem;">👥 إدارة الصفوف والطلاب</h3>
+                  
+                  <div class="setting-item">
+                      <label>📊 إحصائيات البيانات المحملة:</label>
+                      <div id="dataStatsDisplay" style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 10px; margin-top: 0.5rem;">
+                          <div>عدد الصفوف: <span id="classesCount">--</span></div>
+                          <div>إجمالي الطلاب: <span id="totalStudentsCount">--</span></div>
+                          <div>آخر تحديث: <span id="lastUpdateTime">--</span></div>
+                      </div>
+                  </div>
+                  
+                  <div class="setting-item">
+                      <label>🔄 إدارة البيانات:</label>
+                      <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                          <button class="neural-button" onclick="reloadStudentData()" style="flex: 1;">
+                              🔄 إعادة تحميل البيانات
+                          </button>
+                          <button class="neural-button secondary" onclick="exportClassData()" style="flex: 1;">
+                              � تصدير البيانات
+                          </button>
+                      </div>
+                  </div>
+                  
+                  <div class="setting-item">
+                      <label>⚡ إعدادات الاختيار السريع:</label>
+                      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem;">
+                          <label><input type="checkbox" id="autoSelectAllStudents"> اختيار جميع الطلاب تلقائياً</label>
+                          <label><input type="checkbox" id="randomizeStudentOrder"> ترتيب عشوائي للطلاب</label>
+                          <label><input type="checkbox" id="enableQuickStart"> بدء سريع بدون إعداد</label>
+                          <label><input type="checkbox" id="rememberLastSelection"> تذكر آخر اختيار</label>
+                      </div>
+                  </div>
               </div>
+          </div>
+          
+          <!-- أزرار الحفظ والإجراءات -->
+          <div style="display: flex; gap: 1rem; margin-top: 2rem; padding-top: 1rem; border-top: 2px solid rgba(255,215,0,0.3);">
+              <button class="neural-button" onclick="saveAllSettings()" style="flex: 2; background: linear-gradient(45deg, #4facfe, #00f2fe);">
+                  💾 حفظ جميع الإعدادات
+              </button>
+              <button class="neural-button secondary" onclick="resetAllSettings()" style="flex: 1;">
+                  🔄 إعادة تعيين الكل
+              </button>
+              <button class="neural-button" onclick="exportSettings()" style="flex: 1; background: linear-gradient(45deg, #43e97b, #38f9d7);">
+                  📤 تصدير الإعدادات
+              </button>
           </div>
       </div>
   </div>
@@ -1797,6 +1992,10 @@ function backToSetup() {
 function openTeacherGuide() {
   document.getElementById('teacherGuideModal').style.display = 'block';
   playCosmicSound('menu-open');
+}
+
+function showTeacherGuide() {
+  openTeacherGuide();
 }
 
 function closeTeacherGuide() {
@@ -2867,10 +3066,257 @@ function showSettingsModal() {
   modal.classList.add('active');
   
   // تحديث القيم الحالية
+  updateSettingsDisplay();
+  
+  // تفعيل أول تبويب
+  showSettingsTab('game-settings');
+  
+  // إعداد التبويبات
+  setupSettingsTabs();
+}
+
+// إعداد التبويبات
+function setupSettingsTabs() {
+  const tabButtons = document.querySelectorAll('.settings-tab-btn');
+  tabButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const tabId = this.getAttribute('data-tab');
+      showSettingsTab(tabId);
+      
+      // تحديث الأزرار النشطة
+      tabButtons.forEach(btn => btn.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+}
+
+// إظهار تبويب معين
+function showSettingsTab(tabId) {
+  // إخفاء جميع التبويبات
+  const allTabs = document.querySelectorAll('.settings-tab-content');
+  allTabs.forEach(tab => tab.classList.remove('active'));
+  
+  // إظهار التبويب المحدد
+  const targetTab = document.getElementById(tabId + '-content');
+  if (targetTab) {
+    targetTab.classList.add('active');
+  }
+}
+
+// تحديث عرض الإعدادات
+function updateSettingsDisplay() {
+  // تحديث مستويات الصوت
   document.getElementById('masterVolumeSlider').value = (gameState.masterVolume || 0.5) * 100;
   document.getElementById('volumeDisplay').textContent = Math.round((gameState.masterVolume || 0.5) * 100) + '%';
+  
+  // تحديث الإعدادات الأخرى
   document.getElementById('particlesToggle').checked = gameState.particlesEnabled !== false;
   document.getElementById('animationsToggle').checked = gameState.animationsEnabled !== false;
+  document.getElementById('notificationsToggle').checked = gameState.notificationsEnabled !== false;
+  
+  // تحديث معلومات الصف
+  updateClassDataDisplay();
+  
+  // مراقبة تغيير مستوى الصوت
+  setupVolumeSliders();
+}
+
+// إعداد أشرطة الصوت
+function setupVolumeSliders() {
+  const masterSlider = document.getElementById('masterVolumeSlider');
+  const effectsSlider = document.getElementById('effectsVolumeSlider');
+  const musicSlider = document.getElementById('musicVolumeSlider');
+  
+  masterSlider.addEventListener('input', function() {
+    const volume = this.value / 100;
+    gameState.masterVolume = volume;
+    document.getElementById('volumeDisplay').textContent = this.value + '%';
+    playCosmicSound('ui-click', { volume: volume });
+  });
+  
+  effectsSlider.addEventListener('input', function() {
+    const volume = this.value / 100;
+    gameState.effectsVolume = volume;
+    document.getElementById('effectsVolumeDisplay').textContent = this.value + '%';
+    playCosmicSound('cosmic-click', { volume: volume });
+  });
+  
+  musicSlider.addEventListener('input', function() {
+    const volume = this.value / 100;
+    gameState.musicVolume = volume;
+    document.getElementById('musicVolumeDisplay').textContent = this.value + '%';
+  });
+}
+
+// تحديث عرض بيانات الصفوف
+function updateClassDataDisplay() {
+  const classesCount = Object.keys(studentData).length;
+  const totalStudents = Object.values(studentData).reduce((sum, students) => sum + students.length, 0);
+  
+  document.getElementById('classesCount').textContent = classesCount;
+  document.getElementById('totalStudentsCount').textContent = totalStudents;
+  document.getElementById('lastUpdateTime').textContent = new Date().toLocaleString('ar-SA');
+  
+  // تحديث الصف المختار
+  const selectedClassSelect = document.getElementById('selectedClassDisplay');
+  selectedClassSelect.innerHTML = '<option value="">-- لم يتم اختيار صف --</option>';
+  Object.keys(studentData).forEach(className => {
+    const option = document.createElement('option');
+    option.value = className;
+    option.textContent = className;
+    if (gameState.selectedClass === className) {
+      option.selected = true;
+    }
+    selectedClassSelect.appendChild(option);
+  });
+}
+
+// اختبار جميع الأصوات
+function testAllSounds() {
+  const soundTests = [
+    'cosmic-click', 'button-hover', 'achievement', 'magic-sparkle', 
+    'epic-charge', 'victory-fanfare', 'ui-back'
+  ];
+  
+  let index = 0;
+  const interval = setInterval(() => {
+    if (index < soundTests.length) {
+      playCosmicSound(soundTests[index], { volume: 0.3 });
+      showQuantumNotification(`🎵 اختبار الصوت: ${soundTests[index]}`, '', 'info');
+      index++;
+    } else {
+      clearInterval(interval);
+      showQuantumNotification('🎼 انتهى اختبار الأصوات!', '', 'success');
+    }
+  }, 1000);
+}
+
+// كتم جميع الأصوات
+function muteAllSounds() {
+  gameState.soundEnabled = false;
+  gameState.masterVolume = 0;
+  gameState.effectsVolume = 0;
+  gameState.musicVolume = 0;
+  
+  document.getElementById('masterVolumeSlider').value = 0;
+  document.getElementById('effectsVolumeSlider').value = 0;
+  document.getElementById('musicVolumeSlider').value = 0;
+  
+  updateSoundButton();
+  showQuantumNotification('🔇 تم كتم جميع الأصوات', '', 'info');
+}
+
+// حفظ جميع الإعدادات
+function saveAllSettings() {
+  const settings = {
+    masterVolume: document.getElementById('masterVolumeSlider').value / 100,
+    effectsVolume: document.getElementById('effectsVolumeSlider').value / 100,
+    musicVolume: document.getElementById('musicVolumeSlider').value / 100,
+    particlesEnabled: document.getElementById('particlesToggle').checked,
+    animationsEnabled: document.getElementById('animationsToggle').checked,
+    notificationsEnabled: document.getElementById('notificationsToggle').checked,
+    fullscreenMode: document.getElementById('fullscreenModeToggle').checked,
+    challengeDuration: document.getElementById('challengeDurationSelect').value,
+    difficulty: document.getElementById('difficultySelect').value,
+    scoringSystem: document.getElementById('scoringSystemSelect').value,
+    colorTheme: document.getElementById('colorThemeSelect').value,
+    autoSelectStudents: document.getElementById('autoSelectAllStudents').checked,
+    randomizeOrder: document.getElementById('randomizeStudentOrder').checked,
+    quickStart: document.getElementById('enableQuickStart').checked,
+    rememberSelection: document.getElementById('rememberLastSelection').checked,
+    timestamp: new Date().toISOString()
+  };
+  
+  // تطبيق الإعدادات على الحالة العامة
+  Object.assign(gameState, settings);
+  
+  // حفظ في التخزين المحلي
+  localStorage.setItem('kingdomSettingsAdvanced', JSON.stringify(settings));
+  
+  playCosmicSound('achievement');
+  showQuantumNotification('💾 تم حفظ جميع الإعدادات بنجاح!', 'الإعدادات نشطة الآن', 'success');
+  closeSettingsModal();
+}
+
+// إعادة تعيين جميع الإعدادات
+function resetAllSettings() {
+  if (confirm('🔄 هل تريد إعادة تعيين جميع الإعدادات للقيم الافتراضية؟\n\nسيتم فقدان جميع الإعدادات المخصصة.')) {
+    // القيم الافتراضية
+    const defaultSettings = {
+      masterVolume: 0.5,
+      effectsVolume: 0.7,
+      musicVolume: 0.3,
+      particlesEnabled: true,
+      animationsEnabled: true,
+      notificationsEnabled: true,
+      fullscreenMode: false,
+      challengeDuration: 60,
+      difficulty: 'medium',
+      scoringSystem: 'standard',
+      colorTheme: 'cosmic',
+      autoSelectStudents: false,
+      randomizeOrder: false,
+      quickStart: false,
+      rememberSelection: true
+    };
+    
+    Object.assign(gameState, defaultSettings);
+    localStorage.removeItem('kingdomSettingsAdvanced');
+    
+    updateSettingsDisplay();
+    playCosmicSound('ui-reset');
+    showQuantumNotification('🔄 تم إعادة تعيين جميع الإعدادات', 'القيم الافتراضية نشطة الآن', 'info');
+  }
+}
+
+// تصدير الإعدادات
+function exportSettings() {
+  const settings = JSON.parse(localStorage.getItem('kingdomSettingsAdvanced') || '{}');
+  const exportData = {
+    appName: 'مملكة التحديات الذكية',
+    version: '2.0',
+    settings: settings,
+    exportDate: new Date().toISOString(),
+    exportedBy: 'نظام الإعدادات المتقدم'
+  };
+  
+  const dataStr = JSON.stringify(exportData, null, 2);
+  const dataBlob = new Blob([dataStr], {type: 'application/json'});
+  const url = URL.createObjectURL(dataBlob);
+  
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `kingdom-settings-${new Date().toISOString().split('T')[0]}.json`;
+  link.click();
+  
+  playCosmicSound('achievement');
+  showQuantumNotification('📤 تم تصدير الإعدادات بنجاح', '', 'success');
+}
+
+// تصدير بيانات الصفوف
+function exportClassData() {
+  const exportData = {
+    appName: 'مملكة التحديات الذكية',
+    dataType: 'بيانات الصفوف والطلاب',
+    classes: studentData,
+    statistics: {
+      totalClasses: Object.keys(studentData).length,
+      totalStudents: Object.values(studentData).reduce((sum, students) => sum + students.length, 0)
+    },
+    exportDate: new Date().toISOString()
+  };
+  
+  const dataStr = JSON.stringify(exportData, null, 2);
+  const dataBlob = new Blob([dataStr], {type: 'application/json'});
+  const url = URL.createObjectURL(dataBlob);
+  
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `kingdom-class-data-${new Date().toISOString().split('T')[0]}.json`;
+  link.click();
+  
+  playCosmicSound('achievement');
+  showQuantumNotification('📥 تم تصدير بيانات الصفوف بنجاح', '', 'success');
 }
 
 // إغلاق نافذة الإعدادات
@@ -2880,38 +3326,14 @@ function closeSettingsModal() {
   playCosmicSound('ui-back');
 }
 
-// حفظ الإعدادات
+// حفظ الإعدادات (للتوافق مع النظام القديم)
 function saveSettings() {
-  gameState.masterVolume = document.getElementById('masterVolumeSlider').value / 100;
-  gameState.particlesEnabled = document.getElementById('particlesToggle').checked;
-  gameState.animationsEnabled = document.getElementById('animationsToggle').checked;
-  
-  localStorage.setItem('kingdomSettings', JSON.stringify({
-    masterVolume: gameState.masterVolume,
-    particlesEnabled: gameState.particlesEnabled,
-    animationsEnabled: gameState.animationsEnabled,
-    soundEnabled: gameState.soundEnabled
-  }));
-  
-  playCosmicSound('achievement');
-  showQuantumNotification('💾 تم حفظ الإعدادات بنجاح', '', 'success');
-  closeSettingsModal();
+  saveAllSettings();
 }
 
-// إعادة تعيين الإعدادات
+// إعادة تعيين الإعدادات (للتوافق مع النظام القديم)
 function resetSettings() {
-  if (confirm('🔄 هل تريد إعادة تعيين جميع الإعدادات للقيم الافتراضية؟')) {
-    gameState.masterVolume = 0.5;
-    gameState.particlesEnabled = true;
-    gameState.animationsEnabled = true;
-    gameState.soundEnabled = true;
-    
-    localStorage.removeItem('kingdomSettings');
-    
-    playCosmicSound('ui-reset');
-    showQuantumNotification('🔄 تم إعادة تعيين الإعدادات', '', 'info');
-    closeSettingsModal();
-  }
+  resetAllSettings();
 }
 
 // إظهار نافذة الإحصائيات
@@ -2981,13 +3403,33 @@ function backToMainDashboard() {
 
 // تحميل الإعدادات المحفوظة
 function loadSavedSettings() {
-  const saved = localStorage.getItem('kingdomSettings');
-  if (saved) {
-    const settings = JSON.parse(saved);
+  // تحميل الإعدادات المتقدمة الجديدة
+  const advancedSettings = localStorage.getItem('kingdomSettingsAdvanced');
+  if (advancedSettings) {
+    const settings = JSON.parse(advancedSettings);
+    Object.assign(gameState, settings);
+    console.log('✅ تم تحميل الإعدادات المتقدمة');
+    return;
+  }
+  
+  // تحميل الإعدادات القديمة للتوافق
+  const oldSettings = localStorage.getItem('kingdomSettings');
+  if (oldSettings) {
+    const settings = JSON.parse(oldSettings);
     gameState.masterVolume = settings.masterVolume || 0.5;
     gameState.particlesEnabled = settings.particlesEnabled !== false;
     gameState.animationsEnabled = settings.animationsEnabled !== false;
     gameState.soundEnabled = settings.soundEnabled !== false;
+    console.log('✅ تم تحميل الإعدادات القديمة وترقيتها');
+  } else {
+    // الإعدادات الافتراضية
+    gameState.masterVolume = 0.5;
+    gameState.effectsVolume = 0.7;
+    gameState.musicVolume = 0.3;
+    gameState.particlesEnabled = true;
+    gameState.animationsEnabled = true;
+    gameState.notificationsEnabled = true;
+    console.log('📋 تم تطبيق الإعدادات الافتراضية');
   }
 }
 
