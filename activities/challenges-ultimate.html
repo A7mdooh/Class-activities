@@ -1652,9 +1652,13 @@
                 <span class="version-badge">v2.0</span>
             </div>
             <div class="control-group-cosmic">
-                <button class="cosmic-control-btn" id="homeBtn" title="العودة للممالك الرئيسية">
+                <button class="cosmic-control-btn" id="homeBtn" title="العودة لصفحة الأنشطة">
                     <span class="btn-icon">🏠</span>
                     <span class="btn-tooltip">الرئيسية</span>
+                </button>
+                <button class="cosmic-control-btn" id="kingdomsBtn" title="العودة للممالك">
+                    <span class="btn-icon">�</span>
+                    <span class="btn-tooltip">الممالك</span>
                 </button>
                 <button class="cosmic-control-btn" id="soundToggleBtn" title="التحكم في الصوت">
                     <span class="btn-icon">🔊</span>
@@ -4842,39 +4846,57 @@ function initializeControlButtons() {
     console.log('🏠 تم النقر على زر الرئيسية!');
     playCosmicSound('ui-back');
     
-    console.log('🔍 حالة الطلاب:', {
-      gameStateStudents: gameState.selectedStudents?.length || 0,
-      selectedStudentsList: selectedStudentsList?.length || 0,
-      gameStarted: gameState.gameStarted
-    });
+    console.log('🔍 العودة للصفحة السابقة...');
     
-    // التحقق من وجود طلاب مختارين
-    if ((gameState.selectedStudents && gameState.selectedStudents.length > 0) || 
-        (selectedStudentsList && selectedStudentsList.length > 0)) {
-      // إذا كان هناك طلاب مختارين، العودة للممالك
-      console.log('🏠 النقر على زر الرئيسية - العودة للممالك مع الاحتفاظ بالطلاب');
-      
-      // إخفاء جميع الساحات والعرض
-      hideAllArenas();
-      
-      // إظهار الممالك
-      showKingdoms();
-      
-      // التأكد من تشغيل مؤقت الجلسة إذا لم يكن يعمل
-      if (!gameState.sessionStartTime) {
-        gameState.sessionStartTime = Date.now();
-        startSessionTimer();
-        console.log('⏰ تم بدء مؤقت الجلسة');
-      }
-      
-      const studentsCount = gameState.selectedStudents?.length || selectedStudentsList?.length || 0;
-      showQuantumNotification('🏰 العودة للممالك', `محتفظ بـ ${studentsCount} طلاب - اختر مملكة جديدة!`, 'success');
+    // العودة للصفحة السابقة (صفحة اختيار الأنشطة)
+    if (document.referrer && document.referrer !== window.location.href) {
+      // إذا كان هناك صفحة سابقة، العودة إليها
+      console.log('↩️ العودة للصفحة السابقة:', document.referrer);
+      window.history.back();
     } else {
-      // إذا لم يكن هناك طلاب مختارين، العودة لاختيار الصف
-      console.log('🏠 النقر على زر الرئيسية - الانتقال لاختيار الصف');
-      loadClassSelection();
+      // إذا لم تكن هناك صفحة سابقة، الانتقال لصفحة الأنشطة
+      console.log('🏠 الانتقال لصفحة الأنشطة الرئيسية');
+      window.location.href = '../index.html';
     }
   });
+
+  // زر العودة للممالك
+  const kingdomsBtn = document.getElementById('kingdomsBtn');
+  if (kingdomsBtn) {
+    kingdomsBtn.addEventListener('click', function() {
+      console.log('🏰 تم النقر على زر الممالك!');
+      playCosmicSound('ui-back');
+      
+      // التحقق من وجود طلاب مختارين
+      if ((gameState.selectedStudents && gameState.selectedStudents.length > 0) || 
+          (selectedStudentsList && selectedStudentsList.length > 0)) {
+        // إذا كان هناك طلاب مختارين، العودة للممالك
+        console.log('🏰 العودة للممالك مع الاحتفاظ بالطلاب');
+        
+        // إخفاء جميع الساحات
+        hideAllArenas();
+        
+        // إظهار الممالك
+        showKingdoms();
+        
+        // التأكد من تشغيل مؤقت الجلسة
+        if (!gameState.sessionStartTime) {
+          gameState.sessionStartTime = Date.now();
+          startSessionTimer();
+        }
+        
+        const studentsCount = gameState.selectedStudents?.length || selectedStudentsList?.length || 0;
+        showQuantumNotification('🏰 العودة للممالك', `محتفظ بـ ${studentsCount} طلاب - اختر مملكة جديدة!`, 'success');
+      } else {
+        // إذا لم يكن هناك طلاب، اذهب لاختيار الصفوف
+        console.log('🏰 لا توجد طلاب محددون، الانتقال لاختيار الصف');
+        loadClassSelection();
+      }
+    });
+    console.log('✅ تم ربط زر الممالك');
+  } else {
+    console.error('❌ لم يتم العثور على زر الممالك');
+  }
 
   // زر التحكم في الصوت
   const soundToggleBtn = document.getElementById('soundToggleBtn');
