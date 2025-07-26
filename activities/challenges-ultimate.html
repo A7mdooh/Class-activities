@@ -54,6 +54,278 @@
       z-index: -1;
     }
 
+    /* ==== أزرار التحكم العلوية الاحترافية ==== */
+    .cosmic-control-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(20px);
+      border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+      padding: 1rem 2rem;
+      z-index: 10000;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .control-buttons-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    .app-title-cosmic {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      color: white;
+    }
+
+    .title-icon {
+      font-size: 2rem;
+      animation: cosmic-glow 2s ease-in-out infinite alternate;
+    }
+
+    .title-text {
+      font-size: 1.5rem;
+      font-weight: 900;
+      background: linear-gradient(45deg, #ffd700, #00ffff, #ff69b4);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 200% 200%;
+      animation: cosmic-text 3s ease-in-out infinite;
+    }
+
+    .version-badge {
+      background: linear-gradient(45deg, #ff6b35, #f7931e);
+      color: white;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      box-shadow: 0 2px 10px rgba(255, 107, 53, 0.4);
+    }
+
+    .control-group-cosmic {
+      display: flex;
+      gap: 0.8rem;
+    }
+
+    .cosmic-control-btn {
+      position: relative;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      color: white;
+      padding: 0.8rem;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1.2rem;
+      min-width: 4rem;
+      height: 4rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.2rem;
+      overflow: hidden;
+    }
+
+    .cosmic-control-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .cosmic-control-btn:hover::before {
+      left: 100%;
+    }
+
+    .cosmic-control-btn:hover {
+      background: rgba(255, 215, 0, 0.2);
+      border-color: #ffd700;
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+    }
+
+    .cosmic-control-btn:active {
+      transform: translateY(-1px) scale(1.02);
+    }
+
+    .btn-icon {
+      font-size: 1.4rem;
+      transition: transform 0.3s ease;
+    }
+
+    .cosmic-control-btn:hover .btn-icon {
+      transform: scale(1.2);
+    }
+
+    .btn-tooltip {
+      font-size: 0.7rem;
+      font-weight: 600;
+      opacity: 0.8;
+    }
+
+    @keyframes cosmic-glow {
+      0% { text-shadow: 0 0 5px #ffd700, 0 0 10px #ffd700; }
+      100% { text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700, 0 0 30px #ffd700; }
+    }
+
+    @keyframes cosmic-text {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* تحديث padding للمحتوى الرئيسي */
+    .main-header {
+      margin-top: 6rem !important;
+    }
+
+    /* ==== نوافذ الإعدادات والإحصائيات ==== */
+    .settings-modal, .stats-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      z-index: 20000;
+      backdrop-filter: blur(10px);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .settings-modal.active, .stats-modal.active {
+      display: flex;
+    }
+
+    .settings-content {
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      border: 2px solid #ffd700;
+      border-radius: 20px;
+      padding: 2rem;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      position: relative;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .stats-content {
+      background: linear-gradient(135deg, #0f3460, #16537e);
+      border: 2px solid #00ffff;
+      border-radius: 20px;
+      padding: 2rem;
+      max-width: 800px;
+      width: 95%;
+      max-height: 85vh;
+      overflow-y: auto;
+      position: relative;
+      box-shadow: 0 20px 60px rgba(0, 255, 255, 0.3);
+    }
+
+    .settings-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+    }
+
+    .settings-title {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #ffd700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0;
+    }
+
+    .close-settings {
+      background: rgba(255, 69, 69, 0.2);
+      border: 2px solid #ff4545;
+      color: #ff4545;
+      padding: 0.5rem;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+    }
+
+    .close-settings:hover {
+      background: #ff4545;
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .setting-section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .setting-item {
+      margin-bottom: 1rem;
+      color: white;
+    }
+
+    .setting-item label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    /* تحسينات إضافية */
+    .secondary {
+      background: rgba(108, 117, 125, 0.2) !important;
+      border-color: #6c757d !important;
+    }
+
+    .secondary:hover {
+      background: rgba(108, 117, 125, 0.4) !important;
+    }
+
+    /* تأثيرات responsive */
+    @media (max-width: 768px) {
+      .control-group-cosmic {
+        gap: 0.4rem;
+      }
+      
+      .cosmic-control-btn {
+        min-width: 3rem;
+        height: 3rem;
+        padding: 0.5rem;
+      }
+      
+      .btn-tooltip {
+        display: none;
+      }
+      
+      .title-text {
+        font-size: 1.2rem;
+      }
+      
+      .cosmic-control-header {
+        padding: 0.8rem 1rem;
+      }
+    }
+
     /* ===== GLASSMORPHISM CONTAINER ===== */
     .glass-container {
       background: rgba(255, 255, 255, 0.15);
@@ -724,9 +996,22 @@
     <!-- Class & Student Selection Panel -->
     <div class="selection-panel" id="selectionPanel">
       <div class="glass-container" style="background: rgba(0,0,0,0.8); border: 2px solid rgba(255,215,0,0.5);">
-        <h2 style="text-align: center; color: #ffd700; font-size: 2.5rem; margin-bottom: 2rem;">
-          👥 إعداد مملكة التحديات
-        </h2>
+        <!-- عنوان محسن للوحة -->
+        <div style="position: relative; margin-bottom: 2rem;">
+          <h2 style="text-align: center; color: #ffd700; font-size: 2.5rem; margin-bottom: 0.5rem;">
+            👥 إعداد مملكة التحديات
+          </h2>
+          <p style="text-align: center; color: rgba(255,255,255,0.8); font-size: 1.1rem;">
+            ⚡ اختر صفك وطلابك لبدء الرحلة الملحمية
+          </p>
+          
+          <!-- زر العودة للوحة الرئيسية -->
+          <button class="cosmic-control-btn" onclick="backToMainDashboard()" 
+                  style="position: absolute; top: 0; right: 0; background: rgba(255,69,69,0.2); border-color: #ff4545;">
+            <span class="btn-icon">↩️</span>
+            <span class="btn-tooltip">الوحة الرئيسية</span>
+          </button>
+        </div>
         
         <!-- Class Selection -->
         <div class="class-selection-section" style="margin-bottom: 3rem;">
@@ -789,6 +1074,43 @@
       <div style="position: fixed; top: 20px; left: 20px; z-index: 1000;">
         <button class="neural-button" onclick="backToSetup()">🔙 العودة للإعداد</button>
       </div>
+    <!-- أزرار التحكم العلوية الاحترافية -->
+    <div class="cosmic-control-header">
+        <div class="control-buttons-container">
+            <div class="app-title-cosmic">
+                <span class="title-icon">🏰</span>
+                <span class="title-text">مملكة التحديات الذكية</span>
+                <span class="version-badge">v2.0</span>
+            </div>
+            <div class="control-group-cosmic">
+                <button class="cosmic-control-btn" id="homeBtn" title="العودة للصفحة الرئيسية">
+                    <span class="btn-icon">🏠</span>
+                    <span class="btn-tooltip">الرئيسية</span>
+                </button>
+                <button class="cosmic-control-btn" id="soundToggleBtn" title="التحكم في الصوت">
+                    <span class="btn-icon">🔊</span>
+                    <span class="btn-tooltip">الصوت</span>
+                </button>
+                <button class="cosmic-control-btn" id="teacherGuideBtn" title="دليل المعلم">
+                    <span class="btn-icon">📖</span>
+                    <span class="btn-tooltip">دليل المعلم</span>
+                </button>
+                <button class="cosmic-control-btn" id="settingsBtn" title="إعدادات اللعبة">
+                    <span class="btn-icon">⚙️</span>
+                    <span class="btn-tooltip">الإعدادات</span>
+                </button>
+                <button class="cosmic-control-btn" id="statsBtn" title="إحصائيات اللعبة">
+                    <span class="btn-icon">📊</span>
+                    <span class="btn-tooltip">الإحصائيات</span>
+                </button>
+                <button class="cosmic-control-btn" id="fullscreenBtn" title="وضع ملء الشاشة">
+                    <span class="btn-icon">⛶</span>
+                    <span class="btn-tooltip">ملء الشاشة</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Kingdom Header -->
     <header class="main-header">
       <h1 class="kingdom-title">🏆 مملكة التحديات الذكية</h1>
@@ -891,6 +1213,78 @@
   </div>
 
   <!-- Teacher Guide Modal -->
+  <!-- نافذة الإعدادات المتقدمة -->
+  <div class="modal-overlay settings-modal" id="settingsModal">
+      <div class="modal-content settings-content">
+          <div class="modal-header settings-header">
+              <h2 class="settings-title">
+                  <span>⚙️</span>
+                  إعدادات مملكة التحديات
+              </h2>
+              <button class="close-settings" onclick="closeSettingsModal()">✕</button>
+          </div>
+          
+          <div class="settings-sections">
+              <!-- إعدادات الصوت -->
+              <div class="setting-section">
+                  <h3 style="color: #00ffff; margin-bottom: 1rem;">🎵 إعدادات الصوت</h3>
+                  <div class="setting-item">
+                      <label>مستوى الصوت العام:</label>
+                      <input type="range" id="masterVolumeSlider" min="0" max="100" value="50" 
+                             style="width: 100%; margin-top: 0.5rem;">
+                      <div style="text-align: center; color: #ffd700; margin-top: 0.5rem;">
+                          <span id="volumeDisplay">50%</span>
+                      </div>
+                  </div>
+              </div>
+
+              <!-- إعدادات العرض -->
+              <div class="setting-section">
+                  <h3 style="color: #ff69b4; margin-bottom: 1rem;">🎨 إعدادات العرض</h3>
+                  <div class="setting-item">
+                      <label>
+                          <input type="checkbox" id="particlesToggle" checked> 
+                          تفعيل خلفية الجسيمات
+                      </label>
+                  </div>
+                  <div class="setting-item">
+                      <label>
+                          <input type="checkbox" id="animationsToggle" checked> 
+                          تفعيل التأثيرات المتحركة
+                      </label>
+                  </div>
+              </div>
+
+              <!-- أزرار الحفظ -->
+              <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                  <button class="neural-button" onclick="saveSettings()" style="flex: 1;">
+                      💾 حفظ الإعدادات
+                  </button>
+                  <button class="neural-button secondary" onclick="resetSettings()" style="flex: 1;">
+                      🔄 إعادة التعيين
+                  </button>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <!-- نافذة الإحصائيات -->
+  <div class="modal-overlay stats-modal" id="statsModal">
+      <div class="modal-content stats-content">
+          <div class="modal-header">
+              <h2 style="color: #00ffff; font-size: 1.8rem;">
+                  <span>📊</span>
+                  إحصائيات مملكة التحديات
+              </h2>
+              <button class="close-settings" onclick="closeStatsModal()">✕</button>
+          </div>
+          
+          <div id="statsContent">
+              <!-- سيتم ملء المحتوى ديناميكياً -->
+          </div>
+      </div>
+  </div>
+
   <div class="teacher-guide-modal" id="teacherGuideModal">
     <div class="guide-content">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
@@ -2336,6 +2730,192 @@ async function initializeKingdom() {
   }, 1000);
 }
 
+// ===== وظائف أزرار التحكم العلوية =====
+
+// تفعيل أزرار التحكم
+function initializeControlButtons() {
+  // زر الصفحة الرئيسية
+  document.getElementById('homeBtn').addEventListener('click', function() {
+    if (confirm('🏠 هل تريد العودة للصفحة الرئيسية؟\n\n⚠️ سيتم فقدان التقدم الحالي في اللعبة')) {
+      playCosmicSound('ui-back');
+      window.location.href = '../main.html';
+    }
+  });
+
+  // زر التحكم في الصوت
+  document.getElementById('soundToggleBtn').addEventListener('click', function() {
+    gameState.soundEnabled = !gameState.soundEnabled;
+    updateSoundButton();
+    playCosmicSound('ui-click');
+    showQuantumNotification(
+      gameState.soundEnabled ? '🔊 تم تفعيل الصوت' : '🔇 تم كتم الصوت',
+      '',
+      'info'
+    );
+  });
+
+  // زر دليل المعلم
+  document.getElementById('teacherGuideBtn').addEventListener('click', function() {
+    playCosmicSound('ui-click');
+    showTeacherGuide();
+  });
+
+  // زر الإعدادات
+  document.getElementById('settingsBtn').addEventListener('click', function() {
+    playCosmicSound('ui-click');
+    showSettingsModal();
+  });
+
+  // زر الإحصائيات
+  document.getElementById('statsBtn').addEventListener('click', function() {
+    playCosmicSound('ui-click');
+    showStatsModal();
+  });
+
+  // زر ملء الشاشة
+  document.getElementById('fullscreenBtn').addEventListener('click', function() {
+    playCosmicSound('ui-click');
+    toggleFullscreen();
+  });
+}
+
+// تحديث زر الصوت
+function updateSoundButton() {
+  const soundBtn = document.getElementById('soundToggleBtn');
+  const icon = soundBtn.querySelector('.btn-icon');
+  icon.textContent = gameState.soundEnabled ? '🔊' : '🔇';
+}
+
+// إظهار نافذة الإعدادات
+function showSettingsModal() {
+  const modal = document.getElementById('settingsModal');
+  modal.classList.add('active');
+  
+  // تحديث القيم الحالية
+  document.getElementById('masterVolumeSlider').value = (gameState.masterVolume || 0.5) * 100;
+  document.getElementById('volumeDisplay').textContent = Math.round((gameState.masterVolume || 0.5) * 100) + '%';
+  document.getElementById('particlesToggle').checked = gameState.particlesEnabled !== false;
+  document.getElementById('animationsToggle').checked = gameState.animationsEnabled !== false;
+}
+
+// إغلاق نافذة الإعدادات
+function closeSettingsModal() {
+  const modal = document.getElementById('settingsModal');
+  modal.classList.remove('active');
+  playCosmicSound('ui-back');
+}
+
+// حفظ الإعدادات
+function saveSettings() {
+  gameState.masterVolume = document.getElementById('masterVolumeSlider').value / 100;
+  gameState.particlesEnabled = document.getElementById('particlesToggle').checked;
+  gameState.animationsEnabled = document.getElementById('animationsToggle').checked;
+  
+  localStorage.setItem('kingdomSettings', JSON.stringify({
+    masterVolume: gameState.masterVolume,
+    particlesEnabled: gameState.particlesEnabled,
+    animationsEnabled: gameState.animationsEnabled,
+    soundEnabled: gameState.soundEnabled
+  }));
+  
+  playCosmicSound('achievement');
+  showQuantumNotification('💾 تم حفظ الإعدادات بنجاح', '', 'success');
+  closeSettingsModal();
+}
+
+// إعادة تعيين الإعدادات
+function resetSettings() {
+  if (confirm('🔄 هل تريد إعادة تعيين جميع الإعدادات للقيم الافتراضية؟')) {
+    gameState.masterVolume = 0.5;
+    gameState.particlesEnabled = true;
+    gameState.animationsEnabled = true;
+    gameState.soundEnabled = true;
+    
+    localStorage.removeItem('kingdomSettings');
+    
+    playCosmicSound('ui-reset');
+    showQuantumNotification('🔄 تم إعادة تعيين الإعدادات', '', 'info');
+    closeSettingsModal();
+  }
+}
+
+// إظهار نافذة الإحصائيات
+function showStatsModal() {
+  const modal = document.getElementById('statsModal');
+  const content = document.getElementById('statsContent');
+  
+  content.innerHTML = `
+    <div style="display: grid; gap: 1.5rem;">
+      <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 15px;">
+        <h3 style="color: #ffd700; margin-bottom: 1rem;">🎮 إحصائيات اللعب</h3>
+        <div>عدد الألعاب: ${gameState.totalGames || 0}</div>
+        <div>النقاط المكتسبة: ${gameState.totalPoints || 0}</div>
+      </div>
+      
+      <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 15px;">
+        <h3 style="color: #00ffff; margin-bottom: 1rem;">👥 إحصائيات الطلاب</h3>
+        <div>عدد الطلاب المشاركين: ${gameState.selectedStudents?.length || 0}</div>
+        <div>الصف المختار: ${gameState.selectedClass || 'غير محدد'}</div>
+      </div>
+    </div>
+  `;
+  
+  modal.classList.add('active');
+}
+
+// إغلاق نافذة الإحصائيات
+function closeStatsModal() {
+  const modal = document.getElementById('statsModal');
+  modal.classList.remove('active');
+  playCosmicSound('ui-back');
+}
+
+// وضع ملء الشاشة
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().then(() => {
+      showQuantumNotification('⛶ وضع ملء الشاشة مفعل', '', 'info');
+    });
+  } else {
+    document.exitFullscreen().then(() => {
+      showQuantumNotification('⛶ تم إلغاء ملء الشاشة', '', 'info');
+    });
+  }
+}
+
+// العودة للوحة الرئيسية
+function backToMainDashboard() {
+  // إخفاء لوحة الاختيار
+  document.getElementById('selectionPanel').style.display = 'none';
+  
+  // إظهار المحتوى الرئيسي
+  document.getElementById('kingdomContent').style.display = 'block';
+  
+  // تشغيل صوت العودة
+  playCosmicSound('ui-back');
+  
+  // إظهار رسالة ترحيب
+  showWelcomeMessage();
+  
+  showQuantumNotification(
+    '🏰 مرحباً بك في مملكة التحديات',
+    'اختر التحدي المناسب لبدء الرحلة',
+    'info'
+  );
+}
+
+// تحميل الإعدادات المحفوظة
+function loadSavedSettings() {
+  const saved = localStorage.getItem('kingdomSettings');
+  if (saved) {
+    const settings = JSON.parse(saved);
+    gameState.masterVolume = settings.masterVolume || 0.5;
+    gameState.particlesEnabled = settings.particlesEnabled !== false;
+    gameState.animationsEnabled = settings.animationsEnabled !== false;
+    gameState.soundEnabled = settings.soundEnabled !== false;
+  }
+}
+
 // ===== FINAL INITIALIZATION =====
 console.log('🏆 مملكة التحديات الذكية - تحميل مكتمل!');
 console.log('🎵 نظام الصوت المتقدم مع 61 تأثير صوتي جاهز!');
@@ -2343,6 +2923,15 @@ console.log('⚡ جميع المماليك والتحديات جاهزة للع�
 
 // Initialize the enhanced audio system
 initAudioSystem();
+
+// تفعيل أزرار التحكم العلوية
+initializeControlButtons();
+
+// تحميل الإعدادات المحفوظة
+loadSavedSettings();
+
+// تحديث زر الصوت
+updateSoundButton();
 </script>
 </body>
 </html>
