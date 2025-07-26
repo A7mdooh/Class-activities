@@ -2201,6 +2201,13 @@ function loadClassSelection() {
   console.log('🎓 بدء تحميل اختيار الصفوف');
   console.log('📊 بيانات الطلاب المتاحة:', Object.keys(studentData));
   
+  // Show main app container
+  const mainApp = document.getElementById('mainApp');
+  if (mainApp) {
+    mainApp.style.display = 'block';
+    console.log('✅ تم إظهار التطبيق الرئيسي');
+  }
+  
   // Hide main dashboard
   document.getElementById('kingdomContent').style.display = 'none';
   
@@ -3276,30 +3283,55 @@ function startSessionTimer() {
 function showKingdoms() {
   console.log('👑 إظهار صفحة الممالك...');
   
-  // إخفاء لوحة الاختيار
-  const selectionPanel = document.getElementById('selectionPanel');
-  if (selectionPanel) {
-    selectionPanel.style.display = 'none';
-    console.log('✅ تم إخفاء لوحة الاختيار');
+  // Show main app container first
+  const mainApp = document.getElementById('mainApp');
+  if (mainApp) {
+    mainApp.style.display = 'block';
+    console.log('✅ تم إظهار التطبيق الرئيسي');
   }
   
-  // إظهار محتوى الممالك
+  // إخفاء جميع العناصر الأخرى أولاً
+  const elementsToHide = [
+    'selectionPanel', 'lightningArena', 'battleArena', 
+    'gameInterface', 'wizardArena', 'mysteryArena'
+  ];
+  
+  elementsToHide.forEach(elementId => {
+    const element = document.getElementById(elementId);
+    if (element) {
+      element.style.display = 'none';
+      console.log(`✅ تم إخفاء ${elementId}`);
+    }
+  });
+  
+  // إظهار محتوى الممالك بقوة
   const kingdomContent = document.getElementById('kingdomContent');
   if (kingdomContent) {
     kingdomContent.style.display = 'block';
+    kingdomContent.style.visibility = 'visible';
+    kingdomContent.style.opacity = '1';
     console.log('✅ تم إظهار محتوى الممالك');
+  } else {
+    console.error('❌ لم يتم العثور على kingdomContent');
   }
   
   // إظهار لوحة معلومات الممالك
   const kingdomDashboard = document.getElementById('kingdomDashboard');
   if (kingdomDashboard) {
     kingdomDashboard.style.display = 'grid';
+    kingdomDashboard.style.visibility = 'visible';
+    kingdomDashboard.style.opacity = '1';
     console.log('✅ تم إظهار لوحة معلومات الممالك');
+  } else {
+    console.error('❌ لم يتم العثور على kingdomDashboard');
   }
   
   // تحديث الإحصائيات
   updateStats();
   console.log('📊 تم تحديث إحصائيات الممالك');
+  
+  // التأكد من إعادة تعيين أي تحولات CSS
+  document.body.style.overflow = 'auto';
 }
 
 function updateStats() {
@@ -4645,6 +4677,17 @@ function updateSettingsData() {
 document.addEventListener('DOMContentLoaded', () => {
   // Initialize audio system
   initAudioSystem();
+  
+  // Initialize control buttons
+  initializeControlButtons();
+  
+  // Load student data first, then start with class selection
+  loadStudentData().then(() => {
+    loadClassSelection();
+  }).catch(error => {
+    console.error('❌ فشل في تحميل بيانات الطلاب:', error);
+    loadClassSelection(); // Try to load anyway
+  });
   
   // Add hover effects to neural buttons after page load
   setTimeout(() => {
