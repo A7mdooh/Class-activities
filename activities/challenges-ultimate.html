@@ -446,6 +446,181 @@
       }
     }
 
+    /* ===== SELECTION PANEL STYLES ===== */
+    .selection-panel {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .class-card {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .class-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(255, 215, 0, 0.5);
+      box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+    }
+
+    .class-card.selected {
+      border-color: #ffd700;
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 99, 71, 0.3));
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    }
+
+    .class-card h4 {
+      color: white;
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .class-card .student-count {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+    }
+
+    .student-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 15px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .student-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(0, 255, 255, 0.5);
+      box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
+    }
+
+    .student-card.selected {
+      border-color: #00ffff;
+      background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(255, 0, 255, 0.2));
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+    }
+
+    .student-card .student-name {
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    .student-card .selection-indicator {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .student-card.selected .selection-indicator {
+      background: #00ffff;
+      color: #000;
+      font-weight: bold;
+    }
+
+    /* ===== TEACHER GUIDE MODAL ===== */
+    .teacher-guide-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(10px);
+      z-index: 100000;
+      display: none;
+      overflow-y: auto;
+      padding: 2rem;
+    }
+
+    .guide-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      border: 2px solid rgba(255, 215, 0, 0.3);
+    }
+
+    .guide-section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .guide-section h3 {
+      color: #ffd700;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .guide-section p, .guide-section li {
+      color: rgba(255, 255, 255, 0.9);
+      line-height: 1.6;
+      margin-bottom: 0.5rem;
+    }
+
+    .guide-section ul {
+      padding-right: 1.5rem;
+    }
+
+    /* ===== ENHANCED BUTTON STYLES ===== */
+    .neural-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .neural-button:disabled:hover {
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    /* ===== RESPONSIVE DESIGN ENHANCEMENTS ===== */
+    @media (max-width: 768px) {
+      .selection-panel {
+        padding: 1rem;
+      }
+      
+      .class-grid, .students-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .guide-content {
+        padding: 1rem;
+      }
+    }
+
     /* ===== LOADING SCREEN ===== */
     .cosmic-loader {
       position: fixed;
@@ -546,6 +721,74 @@
 
   <!-- Main Application -->
   <div class="glass-container" id="mainApp" style="display: none;">
+    <!-- Class & Student Selection Panel -->
+    <div class="selection-panel" id="selectionPanel">
+      <div class="glass-container" style="background: rgba(0,0,0,0.8); border: 2px solid rgba(255,215,0,0.5);">
+        <h2 style="text-align: center; color: #ffd700; font-size: 2.5rem; margin-bottom: 2rem;">
+          👥 إعداد مملكة التحديات
+        </h2>
+        
+        <!-- Class Selection -->
+        <div class="class-selection-section" style="margin-bottom: 3rem;">
+          <h3 style="color: #00ffff; font-size: 1.8rem; margin-bottom: 1rem; text-align: center;">
+            🏫 اختيار الصف
+          </h3>
+          <div class="class-grid" id="classGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <!-- Classes will be loaded dynamically -->
+          </div>
+        </div>
+
+        <!-- Student Selection -->
+        <div class="student-selection-section" id="studentSelectionSection" style="display: none;">
+          <h3 style="color: #ff6347; font-size: 1.8rem; margin-bottom: 1rem; text-align: center;">
+            🎯 اختيار المشاركين
+          </h3>
+          
+          <!-- Selection Controls -->
+          <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+            <button class="neural-button" onclick="selectAllStudents()">✅ اختيار الكل</button>
+            <button class="neural-button" onclick="clearAllStudents()">❌ إلغاء الكل</button>
+            <button class="neural-button" onclick="selectRandomStudents()">🎲 اختيار عشوائي</button>
+            <button class="neural-button" onclick="quickSelectCount()">🔢 اختيار عدد محدد</button>
+          </div>
+
+          <!-- Student Grid -->
+          <div class="students-grid" id="studentsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+            <!-- Students will be loaded dynamically -->
+          </div>
+
+          <!-- Selected Count Display -->
+          <div style="text-align: center; margin-bottom: 2rem;">
+            <div style="background: rgba(0,255,255,0.2); padding: 1rem; border-radius: 15px; display: inline-block;">
+              <span style="color: #00ffff; font-size: 1.2rem; font-weight: 700;">
+                المشاركين المختارين: <span id="selectedCount">0</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Start Game Button -->
+          <div style="text-align: center;">
+            <button class="neural-button" id="startGameBtn" onclick="startKingdomGame()" style="font-size: 1.3rem; padding: 1.5rem 3rem; background: linear-gradient(45deg, #ffd700, #ff6347);" disabled>
+              🚀 بدء مملكة التحديات
+            </button>
+          </div>
+        </div>
+
+        <!-- Teacher Guide Button -->
+        <div style="position: absolute; top: 20px; right: 20px;">
+          <button class="neural-button" onclick="openTeacherGuide()" style="background: linear-gradient(45deg, #4CAF50, #45a049);">
+            📖 دليل المعلم
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Game Interface (initially hidden) -->
+    <div class="game-interface" id="gameInterface" style="display: none;">
+      <!-- Back to Setup Button -->
+      <div style="position: fixed; top: 20px; left: 20px; z-index: 1000;">
+        <button class="neural-button" onclick="backToSetup()">🔙 العودة للإعداد</button>
+      </div>
     <!-- Kingdom Header -->
     <header class="main-header">
       <h1 class="kingdom-title">🏆 مملكة التحديات الذكية</h1>
@@ -647,6 +890,173 @@
     <button class="neural-button" onclick="openSettings()">⚙️ الإعدادات</button>
   </div>
 
+  <!-- Teacher Guide Modal -->
+  <div class="teacher-guide-modal" id="teacherGuideModal">
+    <div class="guide-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h2 style="color: #ffd700; font-size: 2.5rem;">📖 دليل المعلم - مملكة التحديات الذكية</h2>
+        <button class="neural-button" onclick="closeTeacherGuide()" style="background: #ff4444;">✖️ إغلاق</button>
+      </div>
+
+      <div class="guide-section">
+        <h3>🎯 نظرة عامة على النشاط</h3>
+        <p>مملكة التحديات الذكية هي منصة تعليمية تفاعلية متطورة تهدف إلى تحفيز الطلاب وزيادة مشاركتهم في التعلم من خلال:</p>
+        <ul>
+          <li>نظام مماليك متنوعة (البرق، الحكمة، المعركة، الألغاز)</li>
+          <li>تحديات تفاعلية مناسبة لمختلف أنماط التعلم</li>
+          <li>نظام نقاط وإنجازات محفز</li>
+          <li>مدرب ذكي يقدم النصائح والتحليلات</li>
+          <li>تأثيرات بصرية وصوتية غامرة</li>
+        </ul>
+      </div>
+
+      <div class="guide-section">
+        <h3>🚀 خطوات البدء</h3>
+        <p><strong>الخطوة 1: اختيار الصف</strong></p>
+        <ul>
+          <li>انقر على بطاقة الصف المطلوب من الشاشة الرئيسية</li>
+          <li>ستظهر قائمة بجميع طلاب الصف المختار</li>
+        </ul>
+        
+        <p><strong>الخطوة 2: اختيار الطلاب المشاركين</strong></p>
+        <ul>
+          <li><strong>اختيار الكل:</strong> لإشراك جميع طلاب الصف</li>
+          <li><strong>اختيار عشوائي:</strong> للاختيار العشوائي السريع</li>
+          <li><strong>اختيار عدد محدد:</strong> لتحديد عدد معين من الطلاب</li>
+          <li><strong>اختيار يدوي:</strong> انقر على أسماء الطلاب المرغوبين</li>
+        </ul>
+
+        <p><strong>الخطوة 3: بدء النشاط</strong></p>
+        <ul>
+          <li>انقر على "بدء مملكة التحديات" بعد اختيار الطلاب</li>
+          <li>ستظهر لوحة التحكم الرئيسية للنشاط</li>
+        </ul>
+      </div>
+
+      <div class="guide-section">
+        <h3>⚔️ أنواع التحديات</h3>
+        
+        <p><strong>⚡ مملكة البرق:</strong></p>
+        <ul>
+          <li>تحديات سريعة تركز على سرعة التفكير</li>
+          <li>مدة قصيرة (30-60 ثانية)</li>
+          <li>مناسبة للإحماء وكسر الجليد</li>
+        </ul>
+
+        <p><strong>🧠 مملكة الحكمة:</strong></p>
+        <ul>
+          <li>تحديات فكرية عميقة تتطلب التأمل</li>
+          <li>تطوير مهارات التفكير النقدي</li>
+          <li>وقت أطول للتفكير والمناقشة</li>
+        </ul>
+
+        <p><strong>⚔️ ساحة المعركة:</strong></p>
+        <ul>
+          <li>تحديات جماعية بين الفرق</li>
+          <li>تعزيز روح التعاون والمنافسة الإيجابية</li>
+          <li>نظام نقاط وطاقة تفاعلي</li>
+        </ul>
+
+        <p><strong>🔮 مملكة الألغاز:</strong></p>
+        <ul>
+          <li>ألغاز ومشاكل تتطلب حلول إبداعية</li>
+          <li>تنمية مهارات حل المشكلات</li>
+          <li>تحديات متدرجة الصعوبة</li>
+        </ul>
+      </div>
+
+      <div class="guide-section">
+        <h3>🎮 إدارة ساحة المعركة</h3>
+        <p><strong>إنشاء الفرق:</strong></p>
+        <ul>
+          <li>يتم تكوين الفرق تلقائياً من الطلاب المختارين</li>
+          <li>كل فريق له اسم وأيقونة مميزة</li>
+          <li>نظام طاقة وصحة للفرق</li>
+        </ul>
+
+        <p><strong>إدارة النقاط:</strong></p>
+        <ul>
+          <li><strong>إضافة نقطة (⬆️):</strong> عند الإجابة الصحيحة أو المشاركة الإيجابية</li>
+          <li><strong>خصم نقطة (⬇️):</strong> عند الإجابة الخاطئة أو السلوك غير المرغوب</li>
+          <li><strong>النقاط المضاعفة:</strong> تحدث تلقائياً في الأحداث الخاصة</li>
+        </ul>
+
+        <p><strong>الأحداث العشوائية:</strong></p>
+        <ul>
+          <li>تحدث كل 30 ثانية أثناء المعركة النشطة</li>
+          <li>تضيف عنصر المفاجأة والإثارة</li>
+          <li>تشمل: طاقة إضافية، نقاط مضاعفة، مكافآت خاصة</li>
+        </ul>
+      </div>
+
+      <div class="guide-section">
+        <h3>🤖 المدرب الذكي</h3>
+        <p>يقدم المدرب الذكي:</p>
+        <ul>
+          <li><strong>نصائح ذكية:</strong> توجيهات مفيدة أثناء النشاط</li>
+          <li><strong>تحليل الأداء:</strong> إحصائيات مفصلة عن أداء الطلاب</li>
+          <li><strong>تحفيز إيجابي:</strong> رسائل محفزة ومشجعة</li>
+          <li><strong>اقتراحات تحسين:</strong> نصائح لتطوير الأداء</li>
+        </ul>
+      </div>
+
+      <div class="guide-section">
+        <h3>📊 التقييم والمتابعة</h3>
+        <p><strong>مؤشرات الأداء:</strong></p>
+        <ul>
+          <li>وقت الجلسة الإجمالي</li>
+          <li>عدد التحديات المكتملة</li>
+          <li>مستوى طاقة الطلاب</li>
+          <li>متوسط النقاط لكل دقيقة</li>
+        </ul>
+
+        <p><strong>نصائح للتقييم:</strong></p>
+        <ul>
+          <li>راقب مشاركة الطلاب وتفاعلهم</li>
+          <li>لاحظ مستوى الحماس والانخراط</li>
+          <li>استخدم النقاط كأداة تحفيزية وليس تقييمية فقط</li>
+          <li>شجع التعاون والمساعدة المتبادلة</li>
+        </ul>
+      </div>
+
+      <div class="guide-section">
+        <h3>💡 نصائح للاستخدام الأمثل</h3>
+        <ul>
+          <li><strong>التحضير:</strong> تأكد من عمل الصوت وجودة الاتصال</li>
+          <li><strong>إدارة الوقت:</strong> خصص 5-10 دقائق لكل تحدي</li>
+          <li><strong>التنويع:</strong> استخدم مماليك مختلفة لتنويع التجربة</li>
+          <li><strong>التفاعل:</strong> شارك مع الطلاب وكن متحمساً</li>
+          <li><strong>المرونة:</strong> يمكن تعديل القواعد حسب احتياجات الصف</li>
+          <li><strong>الختام:</strong> اختتم بتهنئة جميع المشاركين</li>
+        </ul>
+      </div>
+
+      <div class="guide-section">
+        <h3>🔧 استكشاف الأخطاء</h3>
+        <p><strong>مشاكل شائعة وحلولها:</strong></p>
+        <ul>
+          <li><strong>عدم عمل الصوت:</strong> تحقق من إعدادات المتصفح والصوت</li>
+          <li><strong>بطء في التحميل:</strong> تأكد من سرعة الإنترنت</li>
+          <li><strong>عدم ظهور الطلاب:</strong> تحقق من ملف studentData.json</li>
+          <li><strong>مشاكل في العرض:</strong> استخدم متصفح حديث (Chrome, Firefox, Edge)</li>
+        </ul>
+      </div>
+
+      <div class="guide-section">
+        <h3>🎯 أهداف تعليمية</h3>
+        <p>يساعد هذا النشاط على تحقيق:</p>
+        <ul>
+          <li>زيادة الدافعية للتعلم</li>
+          <li>تطوير مهارات التفكير النقدي</li>
+          <li>تعزيز روح الفريق والتعاون</li>
+          <li>تحسين الثقة بالنفس</li>
+          <li>ربط التعلم بالمتعة والإثارة</li>
+          <li>تطوير مهارات حل المشكلات</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
 <script>
 // ===== GLOBAL VARIABLES =====
 let gameState = {
@@ -658,10 +1068,301 @@ let gameState = {
   soundEnabled: true,
   teams: [],
   battleTimer: null,
-  battleDuration: 0
+  battleDuration: 0,
+  selectedClass: null,
+  selectedStudents: [],
+  gameStarted: false
 };
 
 let studentData = {};
+let selectedStudentsList = [];
+
+// ===== ENHANCED STUDENT MANAGEMENT SYSTEM =====
+function loadClassSelection() {
+  // Hide main dashboard
+  document.getElementById('kingdomContent').style.display = 'none';
+  
+  // Show selection panel
+  document.getElementById('selectionPanel').style.display = 'block';
+  
+  const classGrid = document.getElementById('classGrid');
+  classGrid.innerHTML = '';
+  
+  Object.keys(studentData).forEach(className => {
+    const classCard = document.createElement('div');
+    classCard.className = 'class-card';
+    classCard.onclick = () => selectClass(className);
+    
+    const studentCount = studentData[className].length;
+    
+    classCard.innerHTML = `
+      <div style="font-size: 3rem; margin-bottom: 1rem;">🏫</div>
+      <h4>${className}</h4>
+      <div class="student-count">${studentCount} طالب</div>
+    `;
+    
+    classGrid.appendChild(classCard);
+  });
+  
+  playCosmicSound('panel-slide');
+}
+
+function selectClass(className) {
+  gameState.selectedClass = className;
+  
+  // Update visual selection
+  document.querySelectorAll('.class-card').forEach(card => {
+    card.classList.remove('selected');
+  });
+  event.target.closest('.class-card').classList.add('selected');
+  
+  // Load students for selected class
+  loadStudentSelection(className);
+  
+  // Show student selection section
+  document.getElementById('studentSelectionSection').style.display = 'block';
+  
+  // Play selection sound
+  playCosmicSound('cosmic-click');
+  
+  // Scroll to student selection
+  document.getElementById('studentSelectionSection').scrollIntoView({ 
+    behavior: 'smooth' 
+  });
+}
+
+function loadStudentSelection(className) {
+  const studentsGrid = document.getElementById('studentsGrid');
+  studentsGrid.innerHTML = '';
+  
+  selectedStudentsList = []; // Reset selection
+  updateSelectedCount();
+  
+  const students = studentData[className] || [];
+  
+  students.forEach((studentName, index) => {
+    const studentCard = document.createElement('div');
+    studentCard.className = 'student-card';
+    studentCard.dataset.studentName = studentName;
+    studentCard.dataset.studentIndex = index;
+    studentCard.onclick = () => toggleStudentSelection(studentCard, studentName);
+    
+    studentCard.innerHTML = `
+      <div class="selection-indicator">○</div>
+      <div class="student-name">${studentName}</div>
+    `;
+    
+    studentsGrid.appendChild(studentCard);
+  });
+  
+  playCosmicSound('magic-sparkle');
+}
+
+function toggleStudentSelection(cardElement, studentName) {
+  const isSelected = cardElement.classList.contains('selected');
+  
+  if (isSelected) {
+    // Deselect
+    cardElement.classList.remove('selected');
+    cardElement.querySelector('.selection-indicator').textContent = '○';
+    selectedStudentsList = selectedStudentsList.filter(name => name !== studentName);
+    playCosmicSound('button-hover');
+  } else {
+    // Select
+    cardElement.classList.add('selected');
+    cardElement.querySelector('.selection-indicator').textContent = '✓';
+    selectedStudentsList.push(studentName);
+    playCosmicSound('point-earn');
+  }
+  
+  updateSelectedCount();
+}
+
+function selectAllStudents() {
+  const studentCards = document.querySelectorAll('.student-card');
+  selectedStudentsList = [];
+  
+  studentCards.forEach(card => {
+    card.classList.add('selected');
+    card.querySelector('.selection-indicator').textContent = '✓';
+    selectedStudentsList.push(card.dataset.studentName);
+  });
+  
+  updateSelectedCount();
+  playCosmicSound('achievement-unlock');
+}
+
+function clearAllStudents() {
+  const studentCards = document.querySelectorAll('.student-card');
+  selectedStudentsList = [];
+  
+  studentCards.forEach(card => {
+    card.classList.remove('selected');
+    card.querySelector('.selection-indicator').textContent = '○';
+  });
+  
+  updateSelectedCount();
+  playCosmicSound('cosmic-click');
+}
+
+function selectRandomStudents() {
+  clearAllStudents();
+  
+  const studentCards = Array.from(document.querySelectorAll('.student-card'));
+  const randomCount = Math.min(8, Math.max(4, Math.floor(studentCards.length * 0.4)));
+  
+  // Shuffle and select random students
+  const shuffled = studentCards.sort(() => 0.5 - Math.random());
+  const selected = shuffled.slice(0, randomCount);
+  
+  selected.forEach(card => {
+    card.classList.add('selected');
+    card.querySelector('.selection-indicator').textContent = '✓';
+    selectedStudentsList.push(card.dataset.studentName);
+  });
+  
+  updateSelectedCount();
+  playSoundSequence(['cosmic-explosion', 'point-earn'], 300);
+}
+
+function quickSelectCount() {
+  const studentCards = document.querySelectorAll('.student-card');
+  const maxCount = studentCards.length;
+  
+  const count = parseInt(prompt(`كم عدد الطلاب المطلوب اختيارهم؟ (الحد الأقصى: ${maxCount})`, '6'));
+  
+  if (count && count > 0 && count <= maxCount) {
+    clearAllStudents();
+    
+    const shuffled = Array.from(studentCards).sort(() => 0.5 - Math.random());
+    const selected = shuffled.slice(0, count);
+    
+    selected.forEach(card => {
+      card.classList.add('selected');
+      card.querySelector('.selection-indicator').textContent = '✓';
+      selectedStudentsList.push(card.dataset.studentName);
+    });
+    
+    updateSelectedCount();
+    playCosmicSound('level-up');
+  }
+}
+
+function updateSelectedCount() {
+  const countElement = document.getElementById('selectedCount');
+  const startBtn = document.getElementById('startGameBtn');
+  
+  countElement.textContent = selectedStudentsList.length;
+  
+  // Enable/disable start button
+  if (selectedStudentsList.length >= 2) {
+    startBtn.disabled = false;
+    startBtn.style.opacity = '1';
+  } else {
+    startBtn.disabled = true;
+    startBtn.style.opacity = '0.5';
+  }
+}
+
+function startKingdomGame() {
+  if (selectedStudentsList.length < 2) {
+    showQuantumNotification('⚠️ تحذير', 'يجب اختيار طالبين على الأقل لبدء اللعبة', 'warning');
+    return;
+  }
+  
+  gameState.selectedStudents = [...selectedStudentsList];
+  gameState.gameStarted = true;
+  
+  // Hide selection panel and show game interface
+  document.getElementById('selectionPanel').style.display = 'none';
+  document.getElementById('kingdomContent').style.display = 'block';
+  document.getElementById('gameInterface').style.display = 'block';
+  
+  // Generate teams from selected students
+  generateTeamsFromStudents();
+  
+  // Play epic start sequence
+  playSoundSequence([
+    'royal-fanfare',
+    'kingdom-enter',
+    'epic-charge'
+  ], 1000);
+  
+  showQuantumNotification(
+    '🏆 مملكة التحديات بدأت!', 
+    `تم اختيار ${selectedStudentsList.length} مشارك من ${gameState.selectedClass}`, 
+    'success'
+  );
+  
+  // Show welcome message after selection
+  setTimeout(() => {
+    showWelcomeMessage();
+  }, 2000);
+}
+
+function generateTeamsFromStudents() {
+  const studentsCount = selectedStudentsList.length;
+  const teamCount = Math.min(4, Math.max(2, Math.ceil(studentsCount / 3)));
+  
+  gameState.teams = [];
+  const teamIcons = ['🦁', '🐉', '🦅', '🐺', '🦄', '🔥'];
+  const teamNames = ['محاربو النور', 'فرسان الظلام', 'حماة السماء', 'أسياد الأرض', 'سحرة الزمن', 'عمالقة القوة'];
+  
+  // Shuffle students for random team assignment
+  const shuffledStudents = [...selectedStudentsList].sort(() => 0.5 - Math.random());
+  
+  for (let i = 0; i < teamCount; i++) {
+    const team = {
+      id: i + 1,
+      name: teamNames[i] || `الفريق ${i + 1}`,
+      icon: teamIcons[i] || '⭐',
+      score: 0,
+      energy: 100,
+      members: []
+    };
+    
+    // Assign students to teams (round robin)
+    for (let j = i; j < shuffledStudents.length; j += teamCount) {
+      team.members.push(shuffledStudents[j]);
+    }
+    
+    gameState.teams.push(team);
+  }
+  
+  console.log('Generated teams:', gameState.teams);
+}
+
+function backToSetup() {
+  if (confirm('هل أنت متأكد من العودة لإعداد النشاط؟ سيتم فقدان التقدم الحالي.')) {
+    gameState.gameStarted = false;
+    gameState.isActive = false;
+    
+    // Reset game state
+    if (gameState.battleTimer) {
+      clearInterval(gameState.battleTimer);
+      gameState.battleTimer = null;
+    }
+    
+    // Show selection panel and hide game interface
+    document.getElementById('selectionPanel').style.display = 'block';
+    document.getElementById('gameInterface').style.display = 'none';
+    document.getElementById('kingdomDashboard').style.display = 'grid';
+    document.getElementById('battleArena').style.display = 'none';
+    
+    playCosmicSound('panel-slide');
+  }
+}
+
+// ===== TEACHER GUIDE FUNCTIONS =====
+function openTeacherGuide() {
+  document.getElementById('teacherGuideModal').style.display = 'block';
+  playCosmicSound('menu-open');
+}
+
+function closeTeacherGuide() {
+  document.getElementById('teacherGuideModal').style.display = 'none';
+  playCosmicSound('cosmic-click');
+}
 let aiCoachMessages = [
   "🌟 ممتاز! استمر في هذا الأداء المتميز",
   "💪 قوة التركيز هي سلاحك السري",
@@ -677,42 +1378,6 @@ let aiCoachMessages = [
 window.addEventListener('load', async () => {
   await initializeKingdom();
 });
-
-async function initializeKingdom() {
-  const progressBar = document.getElementById('progressBar');
-  const loaderText = document.getElementById('loaderText');
-  
-  // Initialize particles
-  initParticles();
-  
-  // Loading sequence
-  const loadingSteps = [
-    { progress: 20, text: "🌌 تحميل الأنظمة الكونية..." },
-    { progress: 40, text: "⚡ شحن محركات الذكاء الاصطناعي..." },
-    { progress: 60, text: "🏰 بناء المماليك السحرية..." },
-    { progress: 80, text: "👥 تحميل بيانات المحاربين..." },
-    { progress: 100, text: "🎉 مملكة التحديات جاهزة!" }
-  ];
-  
-  for (let step of loadingSteps) {
-    await new Promise(resolve => setTimeout(resolve, 800));
-    progressBar.style.width = step.progress + '%';
-    loaderText.textContent = step.text;
-  }
-  
-  // Load student data
-  await loadStudentData();
-  
-  // Hide loader and show main app
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  document.getElementById('cosmicLoader').style.opacity = '0';
-  setTimeout(() => {
-    document.getElementById('cosmicLoader').style.display = 'none';
-    document.getElementById('mainApp').style.display = 'block';
-    startSessionTimer();
-    showWelcomeMessage();
-  }, 1000);
-}
 
 function initParticles() {
   particlesJS('particles-js', {
@@ -808,29 +1473,27 @@ function generateTeams() {
   const teamsContainer = document.getElementById('teamsHologram');
   teamsContainer.innerHTML = '';
   
-  const teamCount = Math.floor(Math.random() * 3) + 2; // 2-4 teams
-  gameState.teams = [];
+  // If no teams generated yet, generate from selected students
+  if (gameState.teams.length === 0) {
+    generateTeamsFromStudents();
+  }
   
-  const teamIcons = ['🦁', '🐉', '🦅', '🐺', '🦄', '🔥'];
-  const teamNames = ['محاربو النور', 'فرسان الظلام', 'حماة السماء', 'أسياد الأرض', 'سحرة الزمن', 'عمالقة القوة'];
-  
-  for (let i = 0; i < teamCount; i++) {
-    const team = {
-      id: i + 1,
-      name: teamNames[i] || `الفريق ${i + 1}`,
-      icon: teamIcons[i] || '⭐',
-      score: 0,
-      energy: 100
-    };
-    
-    gameState.teams.push(team);
-    
+  gameState.teams.forEach(team => {
     const teamElement = document.createElement('div');
     teamElement.className = 'team-hologram';
+    
+    // Create members list display
+    const membersDisplay = team.members.length > 0 
+      ? `<div style="font-size: 0.8rem; color: rgba(255,255,255,0.7); margin-top: 0.5rem;">
+           الأعضاء: ${team.members.slice(0, 2).join(', ')}${team.members.length > 2 ? '...' : ''}
+         </div>`
+      : '';
+    
     teamElement.innerHTML = `
       <div class="team-avatar-3d">${team.icon}</div>
       <div class="team-name-glow">${team.name}</div>
       <div class="score-crystal" id="score-${team.id}">${team.score}</div>
+      ${membersDisplay}
       <div style="margin-top: 1rem;">
         <button class="neural-button" onclick="addPointToTeam(${team.id})">⬆️ نقطة</button>
         <button class="neural-button" onclick="removePointFromTeam(${team.id})">⬇️ خصم</button>
@@ -841,7 +1504,7 @@ function generateTeams() {
     `;
     
     teamsContainer.appendChild(teamElement);
-  }
+  });
 }
 
 // ===== BATTLE SYSTEM =====
@@ -1664,8 +2327,12 @@ async function initializeKingdom() {
   setTimeout(() => {
     document.getElementById('cosmicLoader').style.display = 'none';
     document.getElementById('mainApp').style.display = 'block';
+    
+    // Show class selection panel initially instead of welcome message
+    loadClassSelection();
+    
     startSessionTimer();
-    showWelcomeMessage();
+    // showWelcomeMessage(); // Will be shown after student selection
   }, 1000);
 }
 
