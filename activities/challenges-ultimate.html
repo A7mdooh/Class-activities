@@ -834,8 +834,25 @@
 
     .student-card.selected {
       border-color: #00ffff;
-      background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(255, 0, 255, 0.2));
-      box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+      background: linear-gradient(135deg, rgba(0, 255, 255, 0.3), rgba(255, 0, 255, 0.3));
+      box-shadow: 
+        0 0 15px rgba(0, 255, 255, 0.5),
+        inset 0 0 10px rgba(0, 255, 255, 0.2);
+      transform: scale(1.02);
+      animation: selectedGlow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes selectedGlow {
+      0% { 
+        box-shadow: 
+          0 0 15px rgba(0, 255, 255, 0.5),
+          inset 0 0 10px rgba(0, 255, 255, 0.2);
+      }
+      100% { 
+        box-shadow: 
+          0 0 25px rgba(0, 255, 255, 0.8),
+          inset 0 0 15px rgba(0, 255, 255, 0.4);
+      }
     }
 
     .student-card .student-name {
@@ -861,9 +878,17 @@
     }
 
     .student-card.selected .selection-indicator {
-      background: #00ffff;
+      background: linear-gradient(135deg, #00ffff, #ff00ff);
       color: #000;
       font-weight: bold;
+      transform: scale(1.2);
+      animation: checkmarkPulse 0.5s ease-out;
+    }
+
+    @keyframes checkmarkPulse {
+      0% { transform: scale(0.8); opacity: 0.5; }
+      50% { transform: scale(1.4); opacity: 1; }
+      100% { transform: scale(1.2); opacity: 1; }
     }
 
     /* ===== TEACHER GUIDE MODAL ===== */
@@ -1837,17 +1862,34 @@ function loadStudentSelection(className) {
   console.log(`👥 تحميل ${students.length} طالب`);
   
   students.forEach((studentName, index) => {
+    console.log(`👤 إنشاء بطاقة للطالب: ${studentName} (الفهرس: ${index})`);
+    
     const studentCard = document.createElement('div');
     studentCard.className = 'student-card';
     studentCard.dataset.studentName = studentName;
     studentCard.dataset.studentIndex = index;
-    studentCard.onclick = () => toggleStudentSelection(studentCard, studentName);
+    
+    // ربط الحدث بطريقة آمنة ومفصلة
+    studentCard.addEventListener('click', function(event) {
+      console.log('🖱️ تم النقر على بطاقة الطالب:', studentName);
+      console.log('🎯 العنصر المنقور:', this);
+      event.preventDefault();
+      event.stopPropagation();
+      toggleStudentSelection(this, studentName);
+    });
+    
+    // إضافة تأثير hover
+    studentCard.addEventListener('mouseenter', function() {
+      console.log('🎭 مرور الماوس على بطاقة:', studentName);
+      playCosmicSound('button-hover', { volume: 0.1 });
+    });
     
     studentCard.innerHTML = `
       <div class="selection-indicator">○</div>
       <div class="student-name">${studentName}</div>
     `;
     
+    console.log('✅ تم إنشاء بطاقة الطالب بنجاح');
     studentsGrid.appendChild(studentCard);
   });
   
@@ -1856,23 +1898,52 @@ function loadStudentSelection(className) {
 }
 
 function toggleStudentSelection(cardElement, studentName) {
+  console.log('🎯 بدء تبديل اختيار الطالب:', studentName);
+  console.log('📋 عنصر البطاقة:', cardElement);
+  
+  if (!cardElement) {
+    console.error('❌ عنصر البطاقة غير موجود');
+    return;
+  }
+  
+  if (!studentName) {
+    console.error('❌ اسم الطالب غير موجود');
+    return;
+  }
+  
   const isSelected = cardElement.classList.contains('selected');
+  console.log('🔍 هل الطالب محدد حالياً؟', isSelected);
+  
+  const selectionIndicator = cardElement.querySelector('.selection-indicator');
+  if (!selectionIndicator) {
+    console.error('❌ لم يتم العثور على مؤشر الاختيار');
+    return;
+  }
   
   if (isSelected) {
     // Deselect
+    console.log('➖ إلغاء تحديد الطالب');
     cardElement.classList.remove('selected');
-    cardElement.querySelector('.selection-indicator').textContent = '○';
+    selectionIndicator.textContent = '○';
     selectedStudentsList = selectedStudentsList.filter(name => name !== studentName);
     playCosmicSound('button-hover');
   } else {
     // Select
+    console.log('➕ تحديد الطالب');
     cardElement.classList.add('selected');
-    cardElement.querySelector('.selection-indicator').textContent = '✓';
+    selectionIndicator.textContent = '✓';
     selectedStudentsList.push(studentName);
     playCosmicSound('point-earn');
   }
   
+  console.log('📊 القائمة الحالية للطلاب المحددين:', selectedStudentsList);
   updateSelectedCount();
+  
+  // إضافة تأثير بصري للتأكيد
+  cardElement.style.transform = 'scale(1.05)';
+  setTimeout(() => {
+    cardElement.style.transform = '';
+  }, 200);
 }
 
 function selectAllStudents() {
@@ -1946,28 +2017,65 @@ function quickSelectCount() {
 }
 
 function updateSelectedCount() {
+  console.log('🔢 تحديث عدد الطلاب المحددين...');
+  
   const countElement = document.getElementById('selectedCount');
   const startBtn = document.getElementById('startGameBtn');
   
-  if (!countElement || !startBtn) {
-    console.error('❌ لم يتم العثور على عناصر العد أو زر البدء');
+  if (!countElement) {
+    console.error('❌ لم يتم العثور على عنصر العد selectedCount');
     return;
   }
   
-  countElement.textContent = selectedStudentsList.length;
+  if (!startBtn) {
+    console.error('❌ لم يتم العثور على زر البدء startGameBtn');
+    return;
+  }
+  
+  const selectedCount = selectedStudentsList.length;
+  console.log(`👥 عدد الطلاب المختارين: ${selectedCount}`);
+  console.log('📋 قائمة الطلاب المختارين:', selectedStudentsList);
+  
+  // تحديث النص مع تأثير بصري
+  countElement.textContent = selectedCount;
+  countElement.style.transform = 'scale(1.2)';
+  countElement.style.color = selectedCount > 0 ? '#00ffff' : '#ffffff';
+  
+  setTimeout(() => {
+    countElement.style.transform = 'scale(1)';
+  }, 200);
   
   // Enable/disable start button
-  if (selectedStudentsList.length >= 2) {
+  if (selectedCount >= 2) {
+    console.log('✅ تفعيل زر البدء - تم اختيار عدد كافي من الطلاب');
     startBtn.disabled = false;
     startBtn.style.opacity = '1';
     startBtn.style.cursor = 'pointer';
+    startBtn.style.transform = 'scale(1.05)';
+    
+    // إشعار بصري للاستعداد
+    showQuantumNotification(
+      '🎯 جاهز للبدء!',
+      `تم اختيار ${selectedCount} طالب`,
+      'success'
+    );
   } else {
+    console.log('⚠️ تعطيل زر البدء - عدد الطلاب غير كافي');
     startBtn.disabled = true;
     startBtn.style.opacity = '0.5';
     startBtn.style.cursor = 'not-allowed';
+    startBtn.style.transform = 'scale(1)';
+    
+    if (selectedCount === 1) {
+      showQuantumNotification(
+        '⏳ اختر طالب آخر',
+        'يحتاج اللعبة إلى طالبين على الأقل',
+        'info'
+      );
+    }
   }
   
-  console.log(`👥 عدد الطلاب المختارين: ${selectedStudentsList.length}`);
+  console.log(`🎮 حالة زر البدء: ${startBtn.disabled ? 'معطل' : 'مفعل'}`);
 }
 
 function startKingdomGame() {
@@ -2182,6 +2290,60 @@ async function reloadStudentData() {
     );
   }
 }
+
+// دالة اختبار لنظام الاختيار (للتطوير والتشخيص)
+function testSelectionSystem() {
+  console.log('🧪 اختبار نظام الاختيار...');
+  
+  const studentCards = document.querySelectorAll('.student-card');
+  console.log(`🔍 تم العثور على ${studentCards.length} بطاقة طالب`);
+  
+  if (studentCards.length === 0) {
+    console.error('❌ لا توجد بطاقات طلاب للاختبار');
+    showQuantumNotification(
+      '❌ خطأ في الاختبار',
+      'لا توجد بطاقات طلاب',
+      'error'
+    );
+    return;
+  }
+  
+  // اختبار اختيار الطالب الأول
+  const firstCard = studentCards[0];
+  const studentName = firstCard.dataset.studentName;
+  
+  console.log(`🎯 اختبار اختيار الطالب: ${studentName}`);
+  
+  // محاكاة النقر
+  firstCard.click();
+  
+  setTimeout(() => {
+    console.log('📊 نتائج الاختبار:');
+    console.log('- عدد الطلاب المحددين:', selectedStudentsList.length);
+    console.log('- قائمة الطلاب:', selectedStudentsList);
+    console.log('- حالة البطاقة:', firstCard.classList.contains('selected') ? 'محددة' : 'غير محددة');
+    
+    const indicator = firstCard.querySelector('.selection-indicator');
+    console.log('- نص المؤشر:', indicator ? indicator.textContent : 'غير موجود');
+    
+    if (selectedStudentsList.length > 0 && firstCard.classList.contains('selected')) {
+      showQuantumNotification(
+        '✅ نظام الاختيار يعمل',
+        'تم اختبار النظام بنجاح',
+        'success'
+      );
+    } else {
+      showQuantumNotification(
+        '❌ مشكلة في النظام',
+        'فشل اختبار نظام الاختيار',
+        'error'
+      );
+    }
+  }, 500);
+}
+
+// إضافة الدالة للوحة التحكم العامة (للمطورين)
+window.testSelectionSystem = testSelectionSystem;
 
 // ===== REALM ACTIVATION =====
 function activateRealm(realmType) {
