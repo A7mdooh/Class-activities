@@ -400,7 +400,78 @@
       margin: 1rem;
     }
 
+    /* ===== MAIN HEADER ===== */
+    .main-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      position: relative;
+    }
 
+    .kingdom-title {
+      font-size: 3rem;
+      font-weight: 900;
+      background: linear-gradient(45deg, #FFD700, #FFA500, #FF6347, #FF1493);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      animation: titleGlow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes titleGlow {
+      0% { filter: drop-shadow(0 0 10px rgba(255,215,0,0.5)); }
+      100% { filter: drop-shadow(0 0 20px rgba(255,215,0,0.8)); }
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: rgba(255,255,255,0.9);
+      font-weight: 600;
+      margin-bottom: 2rem;
+    }
+
+    /* ===== INTERACTIVE DASHBOARD ===== */
+    .kingdom-dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .realm-card {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(15px);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 2px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .realm-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: all 0.6s;
+    }
+
+    .realm-card:hover::before {
+      left: 100%;
+    }
+
+    .realm-card:hover {
+      transform: translateY(-10px) scale(1.05);
+      border-color: rgba(255,255,255,0.5);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+    }
 
     .realm-icon {
       font-size: 4rem;
@@ -1596,10 +1667,6 @@
                     <span class="btn-icon">🏠</span>
                     <span class="btn-tooltip">الرئيسية</span>
                 </button>
-                <button class="cosmic-control-btn" id="lightningBtn" title="تحدي مملكة البرق" onclick="startLightningChallenge()">
-                    <span class="btn-icon">⚡</span>
-                    <span class="btn-tooltip">مملكة البرق</span>
-                </button>
                 <button class="cosmic-control-btn" id="soundToggleBtn" title="التحكم في الصوت">
                     <span class="btn-icon">🔊</span>
                     <span class="btn-tooltip">الصوت</span>
@@ -1623,6 +1690,64 @@
             </div>
         </div>
     </div>
+
+    <!-- Kingdom Header -->
+    <div id="kingdomContent">
+    <header class="main-header">
+      <h1 class="kingdom-title">🏆 مملكة التحديات الذكية</h1>
+      <p class="subtitle">⚡ نظام التعلم التفاعلي المتقدم بتقنية الذكاء الاصطناعي</p>
+      
+      <!-- Real-time Stats -->
+      <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 2rem;">
+        <div style="text-align: center; color: white;">
+          <div style="font-size: 2rem; font-weight: 900;">⏱️</div>
+          <div>وقت الجلسة</div>
+          <div id="sessionTime" style="font-weight: 700;">00:00</div>
+        </div>
+        <div style="text-align: center; color: white;">
+          <div style="font-size: 2rem; font-weight: 900;">🎯</div>
+          <div>التحديات المكتملة</div>
+          <div id="completedChallenges" style="font-weight: 700;">0</div>
+        </div>
+        <div style="text-align: center; color: white;">
+          <div style="font-size: 2rem; font-weight: 900;">⚡</div>
+          <div>مستوى الطاقة</div>
+          <div id="energyLevel" style="font-weight: 700;">100%</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Kingdom Dashboard -->
+    <div class="kingdom-dashboard" id="kingdomDashboard">
+      <!-- Lightning Challenge Realm -->
+      <div class="realm-card" onclick="activateRealm('lightning')">
+        <div class="realm-icon">⚡</div>
+        <h3 class="realm-title">مملكة البرق</h3>
+        <p class="realm-description">تحديات سريعة لاختبار سرعة التفكير والذكاء</p>
+      </div>
+
+      <!-- Wisdom Challenge Realm -->
+      <div class="realm-card" onclick="activateRealm('wisdom')">
+        <div class="realm-icon">🧠</div>
+        <h3 class="realm-title">مملكة الحكمة</h3>
+        <p class="realm-description">تحديات فكرية عميقة لتطوير الذكاء والإبداع</p>
+      </div>
+
+      <!-- Team Battle Realm -->
+      <div class="realm-card" onclick="activateRealm('battle')">
+        <div class="realm-icon">⚔️</div>
+        <h3 class="realm-title">ساحة المعركة</h3>
+        <p class="realm-description">معارك جماعية ملحمية بين الفرق</p>
+      </div>
+
+      <!-- Mystery Realm -->
+      <div class="realm-card" onclick="activateRealm('mystery')">
+        <div class="realm-icon">🔮</div>
+        <h3 class="realm-title">مملكة الألغاز</h3>
+        <p class="realm-description">ألغاز غامضة وتحديات استثنائية</p>
+      </div>
+    </div>
+    </div> <!-- End of kingdomContent -->
 
 
 
@@ -2087,6 +2212,9 @@ function loadClassSelection() {
   console.log('🎓 بدء تحميل اختيار الصفوف');
   console.log('📊 بيانات الطلاب المتاحة:', Object.keys(studentData));
   
+  // Hide main dashboard
+  document.getElementById('kingdomContent').style.display = 'none';
+  
   // Show selection panel
   document.getElementById('selectionPanel').style.display = 'block';
   
@@ -2488,6 +2616,7 @@ function startKingdomGame() {
   
   // Hide selection panel and show game interface
   document.getElementById('selectionPanel').style.display = 'none';
+  document.getElementById('kingdomContent').style.display = 'block';
   document.getElementById('gameInterface').style.display = 'block';
   
   // Generate teams from selected students
@@ -2820,6 +2949,7 @@ function activateRealm(realmType) {
 }
 
 function enterBattleArena() {
+  document.getElementById('kingdomDashboard').style.display = 'none';
   document.getElementById('battleArena').style.display = 'block';
   
   // Epic battle arena entrance
@@ -3139,28 +3269,17 @@ function startSessionTimer() {
     const elapsed = Math.floor((Date.now() - gameState.sessionStartTime) / 1000);
     const minutes = Math.floor(elapsed / 60);
     const seconds = elapsed % 60;
-    const timeString = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    
-    const sessionTimeElement = document.getElementById('sessionTime');
-    if (sessionTimeElement) {
-      sessionTimeElement.textContent = timeString;
-    }
+    document.getElementById('sessionTime').textContent = 
+      `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   }, 1000);
 }
 
 function updateStats() {
-  // Update completed challenges counter if element exists
-  const challengesElement = document.getElementById('completedChallenges');
-  if (challengesElement) {
-    challengesElement.textContent = gameState.completedChallenges;
-  }
+  document.getElementById('completedChallenges').textContent = gameState.completedChallenges;
   
   // Update energy based on activity
   gameState.energyLevel = Math.max(50, gameState.energyLevel - 5);
-  const energyElement = document.getElementById('energyLevel');
-  if (energyElement) {
-    energyElement.textContent = gameState.energyLevel + '%';
-  }
+  document.getElementById('energyLevel').textContent = gameState.energyLevel + '%';
 }
 
 function getTotalPoints() {
@@ -3576,6 +3695,9 @@ function startLightningChallenge() {
     'thunder-rumble'
   ], 600);
   
+  // إخفاء لوحة القيادة وإظهار ساحة البرق
+  document.getElementById('kingdomDashboard').style.display = 'none';
+  
   // إنشاء ساحة تحدي البرق
   createLightningArena();
   
@@ -3986,9 +4108,9 @@ function backToKingdomDashboard() {
     lightningArena.remove();
   }
   
-  // Since Kingdom Dashboard was removed, we can just clean up and show notification
+  document.getElementById('kingdomDashboard').style.display = 'grid';
   playCosmicSound('ui-back');
-  showQuantumNotification('🏠 العودة للمملكة', 'يمكنك الآن الوصول للتحديات من الشريط العلوي!', 'success');
+  showQuantumNotification('🏠 العودة للمملكة', 'أهلاً بكم مرة أخرى!', 'success');
 }
 
 // تأثيرات البرق البصرية المذهلة
