@@ -3273,12 +3273,58 @@ function startSessionTimer() {
   }, 1000);
 }
 
-function updateStats() {
-  document.getElementById('completedChallenges').textContent = gameState.completedChallenges;
+function showKingdoms() {
+  console.log('👑 إظهار صفحة الممالك...');
   
-  // Update energy based on activity
+  // إخفاء لوحة الاختيار
+  const selectionPanel = document.getElementById('selectionPanel');
+  if (selectionPanel) {
+    selectionPanel.style.display = 'none';
+    console.log('✅ تم إخفاء لوحة الاختيار');
+  }
+  
+  // إظهار محتوى الممالك
+  const kingdomContent = document.getElementById('kingdomContent');
+  if (kingdomContent) {
+    kingdomContent.style.display = 'block';
+    console.log('✅ تم إظهار محتوى الممالك');
+  }
+  
+  // إظهار لوحة معلومات الممالك
+  const kingdomDashboard = document.getElementById('kingdomDashboard');
+  if (kingdomDashboard) {
+    kingdomDashboard.style.display = 'grid';
+    console.log('✅ تم إظهار لوحة معلومات الممالك');
+  }
+  
+  // تحديث الإحصائيات
+  updateStats();
+  console.log('📊 تم تحديث إحصائيات الممالك');
+}
+
+function updateStats() {
+  console.log('📊 تحديث الإحصائيات...');
+  
+  // تحديث التحديات المكتملة
+  const challengesElement = document.getElementById('completedChallenges');
+  if (challengesElement) {
+    challengesElement.textContent = gameState.completedChallenges;
+    console.log('✅ التحديات المكتملة:', gameState.completedChallenges);
+  } else {
+    console.error('❌ لم يتم العثور على عنصر completedChallenges');
+  }
+  
+  // تحديث مستوى الطاقة
   gameState.energyLevel = Math.max(50, gameState.energyLevel - 5);
-  document.getElementById('energyLevel').textContent = gameState.energyLevel + '%';
+  const energyElement = document.getElementById('energyLevel');
+  if (energyElement) {
+    energyElement.textContent = gameState.energyLevel + '%';
+    console.log('✅ مستوى الطاقة:', gameState.energyLevel + '%');
+  } else {
+    console.error('❌ لم يتم العثور على عنصر energyLevel');
+  }
+  
+  console.log('📊 انتهاء تحديث الإحصائيات');
 }
 
 function getTotalPoints() {
@@ -4768,22 +4814,14 @@ function initializeControlButtons() {
       // إخفاء جميع الساحات والعرض
       hideAllArenas();
       
-      // التأكد من إظهار الممالك
-      const kingdomContent = document.getElementById('kingdomContent');
-      const kingdomDashboard = document.getElementById('kingdomDashboard');
+      // إظهار الممالك
+      showKingdoms();
       
-      console.log('🔍 عناصر الممالك:', {
-        kingdomContent: kingdomContent ? 'موجود' : 'غير موجود',
-        kingdomDashboard: kingdomDashboard ? 'موجود' : 'غير موجود'
-      });
-      
-      if (kingdomContent) {
-        kingdomContent.style.display = 'block';
-        console.log('✅ تم إظهار kingdomContent');
-      }
-      if (kingdomDashboard) {
-        kingdomDashboard.style.display = 'grid';
-        console.log('✅ تم إظهار kingdomDashboard');
+      // التأكد من تشغيل مؤقت الجلسة إذا لم يكن يعمل
+      if (!gameState.sessionStartTime) {
+        gameState.sessionStartTime = Date.now();
+        startSessionTimer();
+        console.log('⏰ تم بدء مؤقت الجلسة');
       }
       
       const studentsCount = gameState.selectedStudents?.length || selectedStudentsList?.length || 0;
