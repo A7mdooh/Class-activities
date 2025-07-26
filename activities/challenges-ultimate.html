@@ -757,7 +757,22 @@ function activateRealm(realmType) {
   gameState.currentRealm = realmType;
   
   createCosmicExplosion(event.target);
-  playCosmicSound('realm-activate');
+  
+  // Enhanced realm-specific sound effects
+  switch(realmType) {
+    case 'lightning':
+      playSoundSequence(['cosmic-portal', 'lightning-strike'], 300);
+      break;
+    case 'wisdom':
+      playSoundSequence(['cosmic-portal', 'wisdom-chime'], 300);
+      break;
+    case 'battle':
+      playSoundSequence(['cosmic-portal', 'war-drum'], 300);
+      break;
+    case 'mystery':
+      playSoundSequence(['cosmic-portal', 'mystery-whisper'], 300);
+      break;
+  }
   
   setTimeout(() => {
     switch(realmType) {
@@ -780,6 +795,10 @@ function activateRealm(realmType) {
 function enterBattleArena() {
   document.getElementById('kingdomDashboard').style.display = 'none';
   document.getElementById('battleArena').style.display = 'block';
+  
+  // Epic battle arena entrance
+  playCosmicSound('battle-horn', { volume: 0.8 });
+  setTimeout(() => playCosmicSound('epic-charge'), 1000);
   
   showQuantumNotification('⚔️ دخول ساحة المعركة', 'استعد للمعركة الأسطورية!', 'battle');
   generateTeams();
@@ -832,7 +851,13 @@ function startBattle() {
   gameState.isActive = true;
   gameState.battleDuration = 0;
   
-  playCosmicSound('battle-start');
+  // Epic battle start sequence
+  playSoundSequence([
+    'battle-horn',
+    { type: 'timer-start', options: { volume: 0.6 } },
+    { type: 'epic-charge', options: { volume: 0.8 } }
+  ], 800);
+  
   showQuantumNotification('🚀 بدء المعركة!', 'المعركة الأسطورية بدأت الآن!', 'success');
   
   gameState.battleTimer = setInterval(() => {
@@ -842,6 +867,11 @@ function startBattle() {
     // Random events during battle
     if (gameState.battleDuration % 30 === 0) {
       triggerRandomEvent();
+    }
+    
+    // Countdown warning sounds
+    if (gameState.battleDuration > 0 && gameState.battleDuration % 60 === 50) {
+      playCosmicSound('time-warning');
     }
   }, 1000);
   
@@ -855,7 +885,7 @@ function pauseBattle() {
   gameState.isActive = false;
   clearInterval(gameState.battleTimer);
   
-  playCosmicSound('battle-pause');
+  playCosmicSound('timer-pause');
   showQuantumNotification('⏸️ معركة متوقفة', 'تم إيقاف المعركة مؤقتاً', 'warning');
 }
 
@@ -864,6 +894,14 @@ function endBattle() {
   clearInterval(gameState.battleTimer);
   
   const winner = findWinner();
+  
+  // Victory sound sequence
+  playSoundSequence([
+    'battle-victory',
+    'crown-ceremony',
+    'crowd-cheer'
+  ], 1000);
+  
   celebrateVictory(winner);
   
   gameState.completedChallenges++;
@@ -884,7 +922,7 @@ function resetArena() {
   });
   
   updateBattleTimer();
-  playCosmicSound('reset');
+  playCosmicSound('cosmic-click');
   showQuantumNotification('🔄 إعادة تعيين', 'تم إعادة تعيين ساحة المعركة', 'info');
 }
 
@@ -900,11 +938,27 @@ function addPointToTeam(teamId) {
     document.getElementById(`energy-${team.id}`).textContent = team.energy + '%';
     
     createCosmicStars();
-    playCosmicSound('point-gained');
+    
+    // Enhanced point sound effects
+    if (team.score % 10 === 0) {
+      playCosmicSound('perfect-score');
+    } else if (team.score % 5 === 0) {
+      playCosmicSound('achievement-unlock');
+    } else {
+      playCosmicSound('point-earn');
+    }
+    
+    // Combo system
+    const comboCount = getTeamCombo(teamId);
+    if (comboCount >= 3) {
+      playCosmicSound('combo-hit');
+      setTimeout(() => playCosmicSound('energy-boost'), 200);
+    }
     
     // Check for achievement
     if (team.score % 5 === 0) {
       showQuantumNotification('🏆 إنجاز!', `${team.name} حقق ${team.score} نقاط!`, 'achievement');
+      playCosmicSound('level-up');
     }
   }
 }
@@ -919,8 +973,23 @@ function removePointFromTeam(teamId) {
     team.energy = Math.max(0, team.energy - 3);
     document.getElementById(`energy-${team.id}`).textContent = team.energy + '%';
     
-    playCosmicSound('point-lost');
+    playCosmicSound('point-lose');
   }
+}
+
+// Helper function for combo system
+function getTeamCombo(teamId) {
+  // Simple combo tracking (can be enhanced)
+  if (!gameState.teamCombos) gameState.teamCombos = {};
+  if (!gameState.teamCombos[teamId]) gameState.teamCombos[teamId] = 0;
+  gameState.teamCombos[teamId]++;
+  
+  // Reset combo after 5 seconds
+  setTimeout(() => {
+    if (gameState.teamCombos[teamId]) gameState.teamCombos[teamId] = 0;
+  }, 5000);
+  
+  return gameState.teamCombos[teamId];
 }
 
 // ===== SPECIAL EFFECTS =====
@@ -980,7 +1049,11 @@ function getAITip() {
   messagesContainer.appendChild(tipElement);
   messagesContainer.scrollTop = messagesContainer.scrollHeight;
   
-  playCosmicSound('ai-tip');
+  // Enhanced AI coach sounds
+  playSoundSequence([
+    'ai-beep',
+    'ai-notification'
+  ], 300);
 }
 
 function analyzePerformance() {
@@ -1001,7 +1074,12 @@ function analyzePerformance() {
   messagesContainer.appendChild(analysisElement);
   messagesContainer.scrollTop = messagesContainer.scrollHeight;
   
-  playCosmicSound('analysis');
+  // Data processing sound sequence
+  playSoundSequence([
+    'scanner-beep',
+    'data-process',
+    'ai-notification'
+  ], 500);
 }
 
 function generatePerformanceAnalysis() {
@@ -1086,20 +1164,58 @@ function celebrateVictory(winner) {
   }, 600);
   
   showQuantumNotification('👑 النصر!', `${winner.name} فاز بالمعركة الأسطورية!`, 'victory');
-  playCosmicSound('victory');
+  
+  // Ultimate victory sound sequence
+  playSoundSequence([
+    'ultimate-triumph',
+    'fireworks-burst',
+    'golden-confetti'
+  ], 1500);
+  
   createCosmicStars();
 }
 
 function triggerRandomEvent() {
   const events = [
-    { text: '⚡ عاصفة كونية! جميع الفرق تحصل على طاقة إضافية', effect: 'energy_boost' },
-    { text: '🌟 نجم ساقط! نقطة مضاعفة للفريق التالي', effect: 'double_points' },
-    { text: '🌀 دوامة زمنية! الوقت يتباطأ', effect: 'time_slow' },
-    { text: '💎 كريستال سحري ظهر! مكافأة خاصة', effect: 'bonus_crystal' }
+    { 
+      text: '⚡ عاصفة كونية! جميع الفرق تحصل على طاقة إضافية', 
+      effect: 'energy_boost',
+      sound: ['cosmic-explosion', 'energy-boost']
+    },
+    { 
+      text: '🌟 نجم ساقط! نقطة مضاعفة للفريق التالي', 
+      effect: 'double_points',
+      sound: ['star-fall', 'bonus-collect']
+    },
+    { 
+      text: '🌀 دوامة زمنية! الوقت يتباطأ', 
+      effect: 'time_slow',
+      sound: ['time-warp', 'mystic-wind']
+    },
+    { 
+      text: '💎 كريستال سحري ظهر! مكافأة خاصة', 
+      effect: 'bonus_crystal',
+      sound: ['crystal-ping', 'crystal-bonus']
+    },
+    {
+      text: '🔮 بوابة بُعدية فُتحت! طاقة سحرية تملأ الساحة',
+      effect: 'portal_magic',
+      sound: ['portal-open', 'spell-cast']
+    },
+    {
+      text: '🏆 إنجاز ملكي! جميع الفرق تحصل على نقاط إضافية',
+      effect: 'royal_bonus',
+      sound: ['royal-fanfare', 'achievement-unlock']
+    }
   ];
   
   const event = events[Math.floor(Math.random() * events.length)];
   showQuantumNotification('🎆 حدث خاص!', event.text, 'special');
+  
+  // Play event sound sequence
+  if (event.sound) {
+    playSoundSequence(event.sound, 800);
+  }
   
   // Apply event effect
   switch(event.effect) {
@@ -1109,31 +1225,225 @@ function triggerRandomEvent() {
         document.getElementById(`energy-${team.id}`).textContent = team.energy + '%';
       });
       break;
+      
+    case 'double_points':
+      gameState.doublePointsNext = true;
+      setTimeout(() => gameState.doublePointsNext = false, 10000);
+      break;
+      
+    case 'bonus_crystal':
+      gameState.teams.forEach(team => {
+        team.score += 2;
+        document.getElementById(`score-${team.id}`).textContent = team.score;
+      });
+      break;
+      
+    case 'portal_magic':
+      gameState.teams.forEach(team => {
+        team.energy = 100;
+        document.getElementById(`energy-${team.id}`).textContent = '100%';
+      });
+      break;
+      
+    case 'royal_bonus':
+      gameState.teams.forEach(team => {
+        team.score += 1;
+        document.getElementById(`score-${team.id}`).textContent = team.score;
+      });
+      break;
   }
 }
 
-// ===== SOUND SYSTEM =====
-function playCosmicSound(soundType) {
+// ===== ADVANCED SOUND SYSTEM =====
+let audioContext = null;
+let masterVolume = 0.7;
+let soundQueue = [];
+let activeSounds = new Map();
+
+// Initialize Web Audio Context for better sound control
+function initAudioSystem() {
+  try {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    console.log('🎵 نظام الصوت المتقدم جاهز!');
+  } catch (error) {
+    console.warn('⚠️ فشل في تهيئة نظام الصوت المتقدم، استخدام النظام التقليدي');
+  }
+}
+
+function playCosmicSound(soundType, options = {}) {
   if (!gameState.soundEnabled) return;
   
+  // Enhanced sound library with all kingdom sounds
   const sounds = {
-    'realm-activate': '../assets/media/sounds/select.mp3',
-    'battle-start': '../assets/media/sounds/start-timer.mp3',
-    'battle-pause': '../assets/media/sounds/Click.mp3',
-    'point-gained': '../assets/media/sounds/win.mp3',
-    'point-lost': '../assets/media/sounds/wrong_answer.mp3',
-    'victory': '../assets/media/sounds/clap.mp3',
-    'ai-tip': '../assets/media/sounds/reveal.mp3',
-    'analysis': '../assets/media/sounds/name-start.mp3',
-    'reset': '../assets/media/sounds/Click.mp3'
+    // Kingdom Core Sounds
+    'kingdom-enter': '../assets/media/sounds/kingdom-sounds/kingdom-enter.mp3',
+    'cosmic-portal': '../assets/media/sounds/kingdom-sounds/cosmic-portal.mp3',
+    'magic-sparkle': '../assets/media/sounds/kingdom-sounds/magic-sparkle.mp3',
+    'royal-fanfare': '../assets/media/sounds/kingdom-sounds/royal-fanfare.mp3',
+    
+    // Lightning Realm Sounds
+    'lightning-strike': '../assets/media/sounds/kingdom-sounds/lightning-strike.mp3',
+    'electric-charge': '../assets/media/sounds/kingdom-sounds/electric-charge.mp3',
+    'thunder-rumble': '../assets/media/sounds/kingdom-sounds/thunder-rumble.mp3',
+    'lightning-whoosh': '../assets/media/sounds/kingdom-sounds/lightning-whoosh.mp3',
+    
+    // Wisdom Realm Sounds
+    'wisdom-chime': '../assets/media/sounds/kingdom-sounds/wisdom-chime.mp3',
+    'brain-activate': '../assets/media/sounds/kingdom-sounds/brain-activate.mp3',
+    'ancient-bell': '../assets/media/sounds/kingdom-sounds/ancient-bell.mp3',
+    'knowledge-unlock': '../assets/media/sounds/kingdom-sounds/knowledge-unlock.mp3',
+    
+    // Battle Arena Sounds
+    'battle-horn': '../assets/media/sounds/kingdom-sounds/battle-horn.mp3',
+    'sword-clash': '../assets/media/sounds/kingdom-sounds/sword-clash.mp3',
+    'armor-clank': '../assets/media/sounds/kingdom-sounds/armor-clank.mp3',
+    'war-drum': '../assets/media/sounds/kingdom-sounds/war-drum.mp3',
+    'epic-charge': '../assets/media/sounds/kingdom-sounds/epic-charge.mp3',
+    'shield-block': '../assets/media/sounds/kingdom-sounds/shield-block.mp3',
+    'battle-victory': '../assets/media/sounds/kingdom-sounds/battle-victory.mp3',
+    
+    // Mystery Realm Sounds
+    'mystery-whisper': '../assets/media/sounds/kingdom-sounds/mystery-whisper.mp3',
+    'crystal-ping': '../assets/media/sounds/kingdom-sounds/crystal-ping.mp3',
+    'mystic-wind': '../assets/media/sounds/kingdom-sounds/mystic-wind.mp3',
+    'spell-cast': '../assets/media/sounds/kingdom-sounds/spell-cast.mp3',
+    'riddle-solved': '../assets/media/sounds/kingdom-sounds/riddle-solved.mp3',
+    
+    // AI Coach Sounds
+    'ai-beep': '../assets/media/sounds/kingdom-sounds/ai-beep.mp3',
+    'robot-voice': '../assets/media/sounds/kingdom-sounds/robot-voice.mp3',
+    'data-process': '../assets/media/sounds/kingdom-sounds/data-process.mp3',
+    'ai-notification': '../assets/media/sounds/kingdom-sounds/ai-notification.mp3',
+    'scanner-beep': '../assets/media/sounds/kingdom-sounds/scanner-beep.mp3',
+    
+    // Points & Achievements
+    'point-earn': '../assets/media/sounds/kingdom-sounds/point-earn.mp3',
+    'point-lose': '../assets/media/sounds/kingdom-sounds/point-lose.mp3',
+    'combo-hit': '../assets/media/sounds/kingdom-sounds/combo-hit.mp3',
+    'achievement-unlock': '../assets/media/sounds/kingdom-sounds/achievement-unlock.mp3',
+    'level-up': '../assets/media/sounds/kingdom-sounds/level-up.mp3',
+    'bonus-collect': '../assets/media/sounds/kingdom-sounds/bonus-collect.mp3',
+    'perfect-score': '../assets/media/sounds/kingdom-sounds/perfect-score.mp3',
+    
+    // Special Effects & Random Events
+    'cosmic-explosion': '../assets/media/sounds/kingdom-sounds/cosmic-explosion.mp3',
+    'star-fall': '../assets/media/sounds/kingdom-sounds/star-fall.mp3',
+    'time-warp': '../assets/media/sounds/kingdom-sounds/time-warp.mp3',
+    'energy-boost': '../assets/media/sounds/kingdom-sounds/energy-boost.mp3',
+    'crystal-bonus': '../assets/media/sounds/kingdom-sounds/crystal-bonus.mp3',
+    'portal-open': '../assets/media/sounds/kingdom-sounds/portal-open.mp3',
+    'dimensional-shift': '../assets/media/sounds/kingdom-sounds/dimensional-shift.mp3',
+    
+    // Celebration & Victory
+    'epic-victory': '../assets/media/sounds/kingdom-sounds/epic-victory.mp3',
+    'crown-ceremony': '../assets/media/sounds/kingdom-sounds/crown-ceremony.mp3',
+    'fireworks-burst': '../assets/media/sounds/kingdom-sounds/fireworks-burst.mp3',
+    'crowd-cheer': '../assets/media/sounds/kingdom-sounds/crowd-cheer.mp3',
+    'golden-confetti': '../assets/media/sounds/kingdom-sounds/golden-confetti.mp3',
+    'ultimate-triumph': '../assets/media/sounds/kingdom-sounds/ultimate-triumph.mp3',
+    
+    // UI & Control Sounds
+    'button-hover': '../assets/media/sounds/kingdom-sounds/button-hover.mp3',
+    'panel-slide': '../assets/media/sounds/kingdom-sounds/panel-slide.mp3',
+    'menu-open': '../assets/media/sounds/kingdom-sounds/menu-open.mp3',
+    'setting-change': '../assets/media/sounds/kingdom-sounds/setting-change.mp3',
+    'notification-pop': '../assets/media/sounds/kingdom-sounds/notification-pop.mp3',
+    'cosmic-click': '../assets/media/sounds/kingdom-sounds/cosmic-click.mp3',
+    
+    // Timer & Countdown
+    'countdown-tick': '../assets/media/sounds/kingdom-sounds/countdown-tick.mp3',
+    'final-countdown': '../assets/media/sounds/kingdom-sounds/final-countdown.mp3',
+    'time-warning': '../assets/media/sounds/kingdom-sounds/time-warning.mp3',
+    'time-up': '../assets/media/sounds/kingdom-sounds/time-up.mp3',
+    'timer-start': '../assets/media/sounds/kingdom-sounds/timer-start.mp3',
+    'timer-pause': '../assets/media/sounds/kingdom-sounds/timer-pause.mp3',
+    
+    // Legacy sounds fallback
+    'realm-activate': '../assets/media/sounds/kingdom-sounds/cosmic-portal.mp3',
+    'battle-start': '../assets/media/sounds/kingdom-sounds/battle-horn.mp3',
+    'battle-pause': '../assets/media/sounds/kingdom-sounds/timer-pause.mp3',
+    'point-gained': '../assets/media/sounds/kingdom-sounds/point-earn.mp3',
+    'point-lost': '../assets/media/sounds/kingdom-sounds/point-lose.mp3',
+    'victory': '../assets/media/sounds/kingdom-sounds/epic-victory.mp3',
+    'ai-tip': '../assets/media/sounds/kingdom-sounds/ai-notification.mp3',
+    'analysis': '../assets/media/sounds/kingdom-sounds/data-process.mp3',
+    'reset': '../assets/media/sounds/kingdom-sounds/cosmic-click.mp3'
   };
   
   const soundPath = sounds[soundType];
   if (soundPath) {
     const audio = new Audio(soundPath);
-    audio.volume = 0.7;
-    audio.play().catch(e => console.log('Sound play failed:', e));
+    
+    // Apply options
+    audio.volume = (options.volume || masterVolume) * (gameState.soundEnabled ? 1 : 0);
+    
+    // Advanced sound controls
+    if (options.loop) audio.loop = true;
+    if (options.delay) {
+      setTimeout(() => audio.play().catch(e => console.log('Sound play failed:', e)), options.delay);
+    } else {
+      audio.play().catch(e => console.log('Sound play failed:', e));
+    }
+    
+    // Track active sounds
+    if (options.id) {
+      activeSounds.set(options.id, audio);
+    }
+    
+    // Auto cleanup
+    audio.addEventListener('ended', () => {
+      if (options.id) activeSounds.delete(options.id);
+    });
+    
+    return audio;
   }
+}
+
+// Enhanced sound control functions
+function stopSound(soundId) {
+  const audio = activeSounds.get(soundId);
+  if (audio) {
+    audio.pause();
+    audio.currentTime = 0;
+    activeSounds.delete(soundId);
+  }
+}
+
+function fadeOutSound(soundId, duration = 1000) {
+  const audio = activeSounds.get(soundId);
+  if (audio) {
+    const startVolume = audio.volume;
+    const fadeStep = startVolume / (duration / 50);
+    
+    const fadeInterval = setInterval(() => {
+      audio.volume = Math.max(0, audio.volume - fadeStep);
+      if (audio.volume <= 0) {
+        clearInterval(fadeInterval);
+        audio.pause();
+        activeSounds.delete(soundId);
+      }
+    }, 50);
+  }
+}
+
+function setMasterVolume(volume) {
+  masterVolume = Math.max(0, Math.min(1, volume));
+  activeSounds.forEach(audio => {
+    audio.volume = masterVolume * (gameState.soundEnabled ? 1 : 0);
+  });
+}
+
+// Play sound sequences
+function playSoundSequence(sounds, interval = 500) {
+  sounds.forEach((sound, index) => {
+    setTimeout(() => {
+      if (typeof sound === 'string') {
+        playCosmicSound(sound);
+      } else {
+        playCosmicSound(sound.type, sound.options);
+      }
+    }, index * interval);
+  });
 }
 
 function toggleSound() {
@@ -1141,8 +1451,9 @@ function toggleSound() {
   const button = document.getElementById('soundToggle');
   button.innerHTML = gameState.soundEnabled ? '🔊 الصوت' : '🔇 صامت';
   
+  // Play sound toggle feedback
   if (gameState.soundEnabled) {
-    playCosmicSound('ai-tip');
+    setTimeout(() => playCosmicSound('setting-change'), 100);
   }
 }
 
@@ -1162,6 +1473,18 @@ function showQuantumNotification(title, message, type = 'info') {
     special: '🎆'
   };
   
+  // Enhanced notification sounds
+  const notificationSounds = {
+    info: 'notification-pop',
+    success: ['notification-pop', 'magic-sparkle'],
+    warning: 'time-warning',
+    error: 'cosmic-click',
+    battle: ['notification-pop', 'war-drum'],
+    victory: ['notification-pop', 'crown-ceremony'],
+    achievement: ['notification-pop', 'achievement-unlock'],
+    special: ['notification-pop', 'cosmic-explosion']
+  };
+  
   notification.innerHTML = `
     <div class="notification-header">
       <span class="notification-icon">${icons[type] || '💫'}</span>
@@ -1172,6 +1495,14 @@ function showQuantumNotification(title, message, type = 'info') {
   `;
   
   document.body.appendChild(notification);
+  
+  // Play notification sound
+  const sound = notificationSounds[type];
+  if (Array.isArray(sound)) {
+    playSoundSequence(sound, 300);
+  } else {
+    playCosmicSound(sound || 'notification-pop');
+  }
   
   // Show animation
   setTimeout(() => notification.classList.add('show'), 100);
@@ -1184,6 +1515,13 @@ function showQuantumNotification(title, message, type = 'info') {
 }
 
 function showWelcomeMessage() {
+  // Welcome sequence with royal fanfare
+  playSoundSequence([
+    'kingdom-enter',
+    'royal-fanfare',
+    'magic-sparkle'
+  ], 1000);
+  
   showQuantumNotification(
     '🌟 مرحباً بك في مملكة التحديات!',
     'استعد لخوض أعظم المغامرات التعليمية في الكون!',
@@ -1193,26 +1531,151 @@ function showWelcomeMessage() {
 
 // ===== CHALLENGE TYPES =====
 function startLightningChallenge() {
+  // Lightning realm entrance
+  playSoundSequence([
+    'lightning-strike',
+    'electric-charge',
+    'thunder-rumble'
+  ], 600);
+  
   showQuantumNotification('⚡ تحدي البرق', 'تحدي سريع لمدة دقيقة واحدة!', 'battle');
-  // Implementation for lightning challenge
+  
+  // Quick challenge implementation
+  let lightningTimer = 60;
+  const timerInterval = setInterval(() => {
+    lightningTimer--;
+    if (lightningTimer <= 10) {
+      playCosmicSound('countdown-tick');
+    }
+    if (lightningTimer <= 0) {
+      clearInterval(timerInterval);
+      playCosmicSound('lightning-whoosh');
+      showQuantumNotification('⚡ انتهى الوقت!', 'تحدي البرق اكتمل!', 'success');
+    }
+  }, 1000);
 }
 
 function startWisdomChallenge() {
+  // Wisdom realm entrance
+  playSoundSequence([
+    'wisdom-chime',
+    'ancient-bell',
+    'brain-activate'
+  ], 800);
+  
   showQuantumNotification('🧠 تحدي الحكمة', 'تحدي فكري عميق ومعقد!', 'info');
-  // Implementation for wisdom challenge
+  
+  // Wisdom challenge with thinking time
+  setTimeout(() => {
+    playCosmicSound('knowledge-unlock');
+    showQuantumNotification('💡 فكر بعمق', 'الحكمة تحتاج للتأمل والصبر', 'info');
+  }, 3000);
 }
 
 function startMysteryChallenge() {
+  // Mystery realm entrance
+  playSoundSequence([
+    'mystery-whisper',
+    'mystic-wind',
+    'spell-cast'
+  ], 700);
+  
   showQuantumNotification('🔮 تحدي الألغاز', 'لغز غامض ينتظر حله!', 'special');
-  // Implementation for mystery challenge
+  
+  // Mystery challenge with suspense
+  setTimeout(() => {
+    playCosmicSound('crystal-ping');
+    showQuantumNotification('🔍 ابحث عن الأدلة', 'الألغاز تحتاج لعين ثاقبة!', 'special');
+  }, 2000);
+  
+  setTimeout(() => {
+    const solved = Math.random() > 0.5;
+    if (solved) {
+      playCosmicSound('riddle-solved');
+      showQuantumNotification('✅ حُل اللغز!', 'أحسنت! لقد كشفت الحقيقة', 'success');
+    }
+  }, 8000);
 }
 
 function openSettings() {
+  playCosmicSound('menu-open');
   showQuantumNotification('⚙️ الإعدادات', 'لوحة الإعدادات المتقدمة قريباً!', 'info');
 }
 
+// ===== ENHANCED UI INTERACTIONS =====
+// Add hover sound effects to buttons
+document.addEventListener('DOMContentLoaded', () => {
+  // Initialize audio system
+  initAudioSystem();
+  
+  // Add hover effects to neural buttons after page load
+  setTimeout(() => {
+    const buttons = document.querySelectorAll('.neural-button, .realm-card');
+    buttons.forEach(button => {
+      button.addEventListener('mouseenter', () => {
+        playCosmicSound('button-hover', { volume: 0.3 });
+      });
+      
+      button.addEventListener('click', () => {
+        playCosmicSound('cosmic-click', { volume: 0.5 });
+      });
+    });
+  }, 1000);
+});
+
 // ===== INITIALIZATION =====
+window.addEventListener('load', async () => {
+  await initializeKingdom();
+});
+
+async function initializeKingdom() {
+  const progressBar = document.getElementById('progressBar');
+  const loaderText = document.getElementById('loaderText');
+  
+  // Initialize particles
+  initParticles();
+  
+  // Loading sequence with sound effects
+  const loadingSteps = [
+    { progress: 20, text: "� تحميل الأنظمة الكونية...", sound: 'cosmic-portal' },
+    { progress: 40, text: "⚡ شحن محركات الذكاء الاصطناعي...", sound: 'ai-beep' },
+    { progress: 60, text: "🏰 بناء المماليك السحرية...", sound: 'magic-sparkle' },
+    { progress: 80, text: "👥 تحميل بيانات المحاربين...", sound: 'data-process' },
+    { progress: 100, text: "🎉 مملكة التحديات جاهزة!", sound: 'kingdom-enter' }
+  ];
+  
+  for (let step of loadingSteps) {
+    await new Promise(resolve => setTimeout(resolve, 800));
+    progressBar.style.width = step.progress + '%';
+    loaderText.textContent = step.text;
+    
+    // Play loading sound
+    if (step.sound) {
+      playCosmicSound(step.sound, { volume: 0.4 });
+    }
+  }
+  
+  // Load student data
+  await loadStudentData();
+  
+  // Hide loader and show main app
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  document.getElementById('cosmicLoader').style.opacity = '0';
+  setTimeout(() => {
+    document.getElementById('cosmicLoader').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'block';
+    startSessionTimer();
+    showWelcomeMessage();
+  }, 1000);
+}
+
+// ===== FINAL INITIALIZATION =====
 console.log('🏆 مملكة التحديات الذكية - تحميل مكتمل!');
+console.log('🎵 نظام الصوت المتقدم مع 61 تأثير صوتي جاهز!');
+console.log('⚡ جميع المماليك والتحديات جاهزة للعمل!');
+
+// Initialize the enhanced audio system
+initAudioSystem();
 </script>
 </body>
 </html>
