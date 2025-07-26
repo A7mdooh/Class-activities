@@ -1668,6 +1668,9 @@ let selectedStudentsList = [];
 
 // ===== ENHANCED STUDENT MANAGEMENT SYSTEM =====
 function loadClassSelection() {
+  console.log('🎓 بدء تحميل اختيار الصفوف');
+  console.log('📊 بيانات الطلاب المتاحة:', Object.keys(studentData));
+  
   // Hide main dashboard
   document.getElementById('kingdomContent').style.display = 'none';
   
@@ -1675,10 +1678,16 @@ function loadClassSelection() {
   document.getElementById('selectionPanel').style.display = 'block';
   
   const classGrid = document.getElementById('classGrid');
+  if (!classGrid) {
+    console.error('❌ لم يتم العثور على classGrid');
+    return;
+  }
+  
   classGrid.innerHTML = '';
   
   // التحقق من وجود البيانات
   if (!studentData || Object.keys(studentData).length === 0) {
+    console.warn('⚠️ لا توجد بيانات طلاب');
     classGrid.innerHTML = `
       <div style="text-align: center; color: #ff6b6b; padding: 2rem; grid-column: 1 / -1;">
         <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
@@ -1693,15 +1702,25 @@ function loadClassSelection() {
     // إعادة تحميل البيانات
     loadStudentData().then(() => {
       loadClassSelection(); // إعادة استدعاء الدالة بعد التحميل
+    }).catch(error => {
+      console.error('❌ فشل في إعادة تحميل البيانات:', error);
     });
     return;
   }
   
-  Object.keys(studentData).forEach(className => {
+  const classNames = Object.keys(studentData);
+  console.log(`📚 تحميل ${classNames.length} صفوف:`, classNames);
+  
+  classNames.forEach(className => {
     const classCard = document.createElement('div');
     classCard.className = 'class-card';
     classCard.style.cursor = 'pointer';
-    classCard.onclick = () => selectClass(className);
+    
+    // ربط الحدث بطريقة آمنة
+    classCard.addEventListener('click', function() {
+      console.log('🖱️ تم النقر على صف:', className);
+      selectClass(className);
+    });
     
     const studentCount = studentData[className].length;
     
@@ -1727,6 +1746,8 @@ function loadClassSelection() {
     'اختر صفك لبدء المغامرة',
     'success'
   );
+  
+  console.log('✅ تم تحميل بطاقات الصفوف بنجاح');
 }
 
 // إعادة تحميل بيانات الطلاب
@@ -1745,35 +1766,75 @@ async function reloadStudentData() {
 function selectClass(className) {
   gameState.selectedClass = className;
   
+  console.log('🎓 تم اختيار الصف:', className);
+  
   // Update visual selection
   document.querySelectorAll('.class-card').forEach(card => {
     card.classList.remove('selected');
   });
-  event.target.closest('.class-card').classList.add('selected');
+  
+  // Find and select the clicked card
+  const clickedCard = Array.from(document.querySelectorAll('.class-card')).find(card => 
+    card.textContent.includes(className)
+  );
+  if (clickedCard) {
+    clickedCard.classList.add('selected');
+  }
   
   // Load students for selected class
   loadStudentSelection(className);
   
   // Show student selection section
-  document.getElementById('studentSelectionSection').style.display = 'block';
+  const studentSection = document.getElementById('studentSelectionSection');
+  if (studentSection) {
+    studentSection.style.display = 'block';
+    
+    // Scroll to student selection
+    studentSection.scrollIntoView({ 
+      behavior: 'smooth' 
+    });
+  }
   
   // Play selection sound
   playCosmicSound('cosmic-click');
   
-  // Scroll to student selection
-  document.getElementById('studentSelectionSection').scrollIntoView({ 
-    behavior: 'smooth' 
-  });
+  // Show success notification
+  showQuantumNotification(
+    `✅ تم اختيار صف ${className}`,
+    `${studentData[className]?.length || 0} طالب متاح`,
+    'success'
+  );
 }
 
 function loadStudentSelection(className) {
+  console.log('📚 تحميل طلاب الصف:', className);
+  console.log('📊 بيانات الطلاب:', studentData[className]);
+  
   const studentsGrid = document.getElementById('studentsGrid');
+  if (!studentsGrid) {
+    console.error('❌ لم يتم العثور على studentsGrid');
+    return;
+  }
+  
   studentsGrid.innerHTML = '';
   
   selectedStudentsList = []; // Reset selection
   updateSelectedCount();
   
   const students = studentData[className] || [];
+  
+  if (students.length === 0) {
+    studentsGrid.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; color: #ff6b6b; padding: 2rem;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+        <h3>لا توجد بيانات طلاب لهذا الصف</h3>
+        <p>تحقق من ملف البيانات</p>
+      </div>
+    `;
+    return;
+  }
+  
+  console.log(`👥 تحميل ${students.length} طالب`);
   
   students.forEach((studentName, index) => {
     const studentCard = document.createElement('div');
@@ -1791,6 +1852,7 @@ function loadStudentSelection(className) {
   });
   
   playCosmicSound('magic-sparkle');
+  console.log('✅ تم تحميل بطاقات الطلاب بنجاح');
 }
 
 function toggleStudentSelection(cardElement, studentName) {
@@ -1887,16 +1949,25 @@ function updateSelectedCount() {
   const countElement = document.getElementById('selectedCount');
   const startBtn = document.getElementById('startGameBtn');
   
+  if (!countElement || !startBtn) {
+    console.error('❌ لم يتم العثور على عناصر العد أو زر البدء');
+    return;
+  }
+  
   countElement.textContent = selectedStudentsList.length;
   
   // Enable/disable start button
   if (selectedStudentsList.length >= 2) {
     startBtn.disabled = false;
     startBtn.style.opacity = '1';
+    startBtn.style.cursor = 'pointer';
   } else {
     startBtn.disabled = true;
     startBtn.style.opacity = '0.5';
+    startBtn.style.cursor = 'not-allowed';
   }
+  
+  console.log(`👥 عدد الطلاب المختارين: ${selectedStudentsList.length}`);
 }
 
 function startKingdomGame() {
@@ -2071,6 +2142,44 @@ async function loadStudentData() {
       ]
     };
     console.log('📚 تم تحميل البيانات الاحتياطية:', Object.keys(studentData));
+  }
+}
+
+// إعادة تحميل بيانات الطلاب عند الحاجة
+async function reloadStudentData() {
+  console.log('🔄 إعادة تحميل بيانات الطلاب...');
+  
+  try {
+    showQuantumNotification('⏳ جاري إعادة التحميل...', 'يرجى الانتظار', 'info');
+    
+    const response = await fetch('../data/studentData.json?' + new Date().getTime());
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    console.log('📊 تم تحميل البيانات الجديدة:', Object.keys(data));
+    
+    studentData = data;
+    
+    showQuantumNotification(
+      '✅ تم التحديث بنجاح',
+      `تم تحميل ${Object.keys(data).length} صفوف`,
+      'success'
+    );
+    
+    // إعادة تحميل اختيار الصفوف
+    setTimeout(() => {
+      loadClassSelection();
+    }, 1000);
+    
+  } catch (error) {
+    console.error('❌ فشل في إعادة التحميل:', error);
+    showQuantumNotification(
+      '❌ فشل في التحميل',
+      'يرجى التأكد من ملف البيانات',
+      'error'
+    );
   }
 }
 
