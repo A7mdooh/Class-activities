@@ -1652,7 +1652,7 @@
                 <span class="version-badge">v2.0</span>
             </div>
             <div class="control-group-cosmic">
-                <button class="cosmic-control-btn" id="homeBtn" title="العودة للصفحة الرئيسية">
+                <button class="cosmic-control-btn" id="homeBtn" title="العودة للممالك الرئيسية">
                     <span class="btn-icon">🏠</span>
                     <span class="btn-tooltip">الرئيسية</span>
                 </button>
@@ -3714,8 +3714,9 @@ function startLightningChallenge() {
   // تأثيرات بصرية للدخول
   createLightningStorm();
   
-  // رسالة دخول عشوائية
-  showQuantumNotification('⚡ مرحباً بكم في مملكة البرق!', randomEnterMessage, 'battle');
+  // رسالة دخول عشوائية مع إظهار عدد الطلاب
+  const studentsCount = gameState.selectedStudents ? gameState.selectedStudents.length : 0;
+  showQuantumNotification('⚡ مرحباً بكم في مملكة البرق!', `${randomEnterMessage} (${studentsCount} طلاب جاهزون!)`, 'battle');
   
   // رسائل تحفيزية متتالية
   setTimeout(() => {
@@ -3730,24 +3731,33 @@ function startLightningChallenge() {
 function createLightningArena() {
   const mainApp = document.getElementById('mainApp');
   
-  // إنشاء ساحة البرق
-  const lightningArena = document.createElement('div');
-  lightningArena.id = 'lightningArena';
-  lightningArena.className = 'lightning-arena';
+  // التحقق من وجود ساحة البرق مسبقاً
+  let lightningArena = document.getElementById('lightningArena');
   
-  lightningArena.innerHTML = `
-    <div class="lightning-arena-container">
-      <!-- رأس ساحة البرق -->
-      <div class="lightning-header">
-        <div class="lightning-title-container">
-          <div class="lightning-icon">⚡</div>
-          <div>
-            <h1 class="lightning-title">مملكة البرق</h1>
-            <p class="lightning-subtitle">تحدي السرعة والذكاء البرقي</p>
+  if (lightningArena) {
+    // إذا كانت موجودة، فقط أظهرها وأعد تعيين المحتوى
+    lightningArena.style.display = 'block';
+    // إعادة تعيين النقاط والمؤقت
+    resetLightningArena();
+  } else {
+    // إنشاء ساحة البرق جديدة
+    lightningArena = document.createElement('div');
+    lightningArena.id = 'lightningArena';
+    lightningArena.className = 'lightning-arena';
+    
+    lightningArena.innerHTML = `
+      <div class="lightning-arena-container">
+        <!-- رأس ساحة البرق -->
+        <div class="lightning-header">
+          <div class="lightning-title-container">
+            <div class="lightning-icon">⚡</div>
+            <div>
+              <h1 class="lightning-title">مملكة البرق</h1>
+              <p class="lightning-subtitle">تحدي السرعة والذكاء البرقي</p>
+            </div>
           </div>
-        </div>
-        
-        <!-- مؤقت التحدي الرئيسي -->
+          
+          <!-- مؤقت التحدي الرئيسي -->
         <div class="lightning-timer-container">
           <div class="timer-circle">
             <div class="timer-text" id="lightningTimer">60</div>
@@ -3800,14 +3810,44 @@ function createLightningArena() {
       <div class="lightning-effects" id="lightningEffects"></div>
     </div>
   `;
-  
-  mainApp.appendChild(lightningArena);
+    
+    mainApp.appendChild(lightningArena);
+  }
   
   // تهيئة الطلاب المتنافسين
   initializeCompetitors();
   
   // بدء المؤقت
   startLightningTimer();
+}
+
+// إعادة تعيين ساحة البرق للاستخدام مع نفس الطلاب
+function resetLightningArena() {
+  // إعادة تعيين المؤقت
+  lightningTimeLeft = 300; // 5 دقائق
+  
+  // إيقاف المؤقت السابق إن وجد
+  if (lightningTimerInterval) {
+    clearInterval(lightningTimerInterval);
+    lightningTimerInterval = null;
+  }
+  
+  // إعادة تعيين حالة الانتظار
+  gameState.waitingForAnswer = false;
+  
+  // إعادة تعيين النقاط لجميع الطلاب
+  selectedStudentsList.forEach((studentName, index) => {
+    const scoreElement = document.getElementById(`score-${index}`);
+    if (scoreElement) {
+      scoreElement.textContent = '0';
+    }
+  });
+  
+  // إعادة تعيين منطقة السؤال
+  resetQuestionZone();
+  
+  // تحديث لوحة النتائج
+  updateLightningScoreboard();
 }
 
 // تهيئة الطلاب المتنافسين
@@ -4252,11 +4292,20 @@ function showFinalResults() {
 
 // العودة للوحة القيادة
 function backToKingdomDashboard() {
+  // إخفاء ساحة البرق بدلاً من حذفها للحفاظ على الحالة
   const lightningArena = document.getElementById('lightningArena');
   if (lightningArena) {
-    lightningArena.remove();
+    lightningArena.style.display = 'none';
   }
   
+  // إيقاف المؤقت إذا كان يعمل
+  if (lightningTimerInterval) {
+    clearInterval(lightningTimerInterval);
+    lightningTimerInterval = null;
+  }
+  
+  // إظهار الممالك والاحتفاظ بالطلاب المختارين
+  document.getElementById('kingdomContent').style.display = 'block';
   document.getElementById('kingdomDashboard').style.display = 'grid';
   playCosmicSound('ui-back');
   
@@ -4271,7 +4320,10 @@ function backToKingdomDashboard() {
   ];
   
   const randomReturnMessage = returnMessages[Math.floor(Math.random() * returnMessages.length)];
-  showQuantumNotification('🏠 العودة للمملكة', randomReturnMessage, 'success');
+  
+  // إظهار رسالة مع عدد الطلاب المحتفظ بهم
+  const studentsCount = gameState.selectedStudents ? gameState.selectedStudents.length : 0;
+  showQuantumNotification('🏠 العودة للمملكة', `${randomReturnMessage} (محتفظ بـ ${studentsCount} طلاب)`, 'success');
   
   // رسالة تحفيزية إضافية
   setTimeout(() => {
@@ -4642,13 +4694,71 @@ async function initializeKingdom() {
 
 // ===== وظائف أزرار التحكم العلوية =====
 
+// إخفاء جميع الساحات والعودة للممالك
+function hideAllArenas() {
+  // إخفاء ساحة البرق
+  const lightningArena = document.getElementById('lightningArena');
+  if (lightningArena) {
+    lightningArena.style.display = 'none';
+  }
+  
+  // إخفاء ساحة المعركة
+  const battleArena = document.getElementById('battleArena');
+  if (battleArena) {
+    battleArena.style.display = 'none';
+  }
+  
+  // إخفاء لوحة اختيار الصفوف إذا كانت مفتوحة
+  const selectionPanel = document.getElementById('selectionPanel');
+  if (selectionPanel) {
+    selectionPanel.style.display = 'none';
+  }
+  
+  // إخفاء واجهة اللعبة إذا كانت مفتوحة
+  const gameInterface = document.getElementById('gameInterface');
+  if (gameInterface) {
+    gameInterface.style.display = 'none';
+  }
+  
+  // إيقاف أي مؤقتات نشطة
+  if (lightningTimerInterval) {
+    clearInterval(lightningTimerInterval);
+    lightningTimerInterval = null;
+  }
+  
+  if (gameState.battleTimer) {
+    clearInterval(gameState.battleTimer);
+    gameState.battleTimer = null;
+  }
+  
+  // إعادة تعيين حالة الانتظار
+  gameState.waitingForAnswer = false;
+}
+
 // تفعيل أزرار التحكم
 function initializeControlButtons() {
   // زر الصفحة الرئيسية
   document.getElementById('homeBtn').addEventListener('click', function() {
-    console.log('🏠 النقر على زر الرئيسية - الانتقال لاختيار الصف');
     playCosmicSound('ui-back');
-    loadClassSelection();
+    
+    // التحقق من وجود طلاب مختارين
+    if (gameState.selectedStudents && gameState.selectedStudents.length > 0) {
+      // إذا كان هناك طلاب مختارين، العودة للممالك
+      console.log('🏠 النقر على زر الرئيسية - العودة للممالك مع الاحتفاظ بالطلاب');
+      
+      // إخفاء جميع الساحات والعرض
+      hideAllArenas();
+      
+      // إظهار الممالك
+      document.getElementById('kingdomContent').style.display = 'block';
+      document.getElementById('kingdomDashboard').style.display = 'grid';
+      
+      showQuantumNotification('🏰 العودة للممالك', `محتفظ بـ ${gameState.selectedStudents.length} طلاب - اختر مملكة جديدة!`, 'success');
+    } else {
+      // إذا لم يكن هناك طلاب مختارين، العودة لاختيار الصف
+      console.log('🏠 النقر على زر الرئيسية - الانتقال لاختيار الصف');
+      loadClassSelection();
+    }
   });
 
   // زر التحكم في الصوت
