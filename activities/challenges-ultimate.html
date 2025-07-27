@@ -2171,6 +2171,41 @@
       }
     }
 
+    @keyframes urgentPulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 20px rgba(255, 71, 87, 0.6);
+      }
+      50% {
+        transform: scale(1.1);
+        box-shadow: 0 0 40px rgba(255, 71, 87, 0.9);
+      }
+    }
+
+    @keyframes criticalPulse {
+      0%, 100% {
+        transform: scale(1);
+        color: #ff4757;
+        text-shadow: 0 0 15px rgba(255, 71, 87, 0.8);
+      }
+      50% {
+        transform: scale(1.2);
+        color: #ff3742;
+        text-shadow: 0 0 25px rgba(255, 71, 87, 1);
+      }
+    }
+
+    @keyframes leaderboardExit {
+      0% {
+        opacity: 1;
+        transform: scale(1) rotateY(0deg);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(0.8) rotateY(-180deg);
+      }
+    }
+
     .timer-text {
       font-size: 2.5rem;
       font-weight: 900;
@@ -2308,8 +2343,70 @@
       border-radius: 25px;
       padding: 2rem;
       margin-bottom: 2rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .gameplay-instructions {
+      background: rgba(0, 0, 0, 0.3);
+      border: 2px solid rgba(0, 255, 255, 0.3);
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      text-align: right;
+    }
+
+    .gameplay-instructions h4 {
+      color: #00ffff;
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    }
+
+    .instructions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .instruction-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.8rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      border-right: 4px solid #ffff00;
+      transition: all 0.3s ease;
+    }
+
+    .instruction-item:hover {
+      background: rgba(255, 255, 0, 0.1);
+      transform: translateX(-5px);
+    }
+
+    .step-number {
+      background: linear-gradient(45deg, #ffff00, #ffa500);
+      color: #000;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.1rem;
+      box-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
+    }
+
+    .instruction-item span:last-child {
+      color: white;
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+
+    .question-display {
       text-align: center;
-      min-height: 200px;
+      min-height: 150px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -5585,59 +5682,85 @@ function createLightningArena() {
             </div>
           </div>
           
-          <!-- مؤقت التحدي الرئيسي -->
-        <div class="lightning-timer-container">
-          <div class="timer-circle">
-            <div class="timer-text" id="lightningTimer">60</div>
-            <div class="timer-label">ثانية</div>
+          <!-- مؤقت التحدي الرئيسي - 5 دقائق -->
+          <div class="lightning-timer-container">
+            <div class="timer-circle">
+              <div class="timer-text" id="lightningTimer">5:00</div>
+              <div class="timer-label">دقائق</div>
+            </div>
+          </div>
+          
+          <!-- أزرار التحكم -->
+          <div class="lightning-controls">
+            <button class="lightning-btn" id="startQuestionBtn" onclick="startNewQuestion()">
+              ⚡ سؤال جديد
+            </button>
+            <button class="lightning-btn secondary" onclick="pauseLightningChallenge()">
+              ⏸️ إيقاف مؤقت
+            </button>
+            <button class="lightning-btn danger" onclick="endLightningChallenge()">
+              🏁 إنهاء التحدي
+            </button>
           </div>
         </div>
         
-        <!-- أزرار التحكم -->
-        <div class="lightning-controls">
-          <button class="lightning-btn" id="startQuestionBtn" onclick="startNewQuestion()">
-            ⚡ سؤال جديد
-          </button>
-          <button class="lightning-btn secondary" onclick="pauseLightningChallenge()">
-            ⏸️ إيقاف مؤقت
-          </button>
-          <button class="lightning-btn danger" onclick="endLightningChallenge()">
-            🏁 إنهاء التحدي
-          </button>
-        </div>
-      </div>
-      
-      <!-- منطقة الطلاب المتنافسين -->
-      <div class="competitors-zone">
-        <div class="zone-title">🏆 المتنافسون</div>
-        <div class="competitors-grid" id="competitorsGrid">
-          <!-- سيتم ملؤها بالطلاب المختارين -->
-        </div>
-      </div>
-      
-      <!-- منطقة السؤال التفاعلية -->
-      <div class="question-zone">
-        <div class="question-display" id="questionDisplay">
-          <div class="waiting-state">
-            <div class="waiting-icon">⚡</div>
-            <h3>استعداد للسؤال التالي</h3>
-            <p>اضغط "سؤال جديد" عندما تكون جاهزاً لطرح السؤال شفوياً</p>
+        <!-- منطقة السؤال الشفوي (تم نقلها للأعلى) -->
+        <div class="question-zone">
+          <div class="zone-title">� منطقة السؤال الشفوي</div>
+          <div class="gameplay-instructions">
+            <h4>📋 طريقة اللعب:</h4>
+            <div class="instructions-list">
+              <div class="instruction-item">
+                <span class="step-number">1</span>
+                <span>اضغط "⚡ سؤال جديد" عندما تكون جاهزاً لطرح السؤال شفوياً</span>
+              </div>
+              <div class="instruction-item">
+                <span class="step-number">2</span>
+                <span>اطرح السؤال على الطلاب بصوت واضح ومسموع</span>
+              </div>
+              <div class="instruction-item">
+                <span class="step-number">3</span>
+                <span>انتظر رفع الأيدي أو الإجابات من الطلاب</span>
+              </div>
+              <div class="instruction-item">
+                <span class="step-number">4</span>
+                <span>اضغط على اسم الطالب الذي أجاب إجابة صحيحة</span>
+              </div>
+              <div class="instruction-item">
+                <span class="step-number">5</span>
+                <span>الطالب يحصل على نقاط حسب سرعة الإجابة</span>
+              </div>
+            </div>
+          </div>
+          <div class="question-display" id="questionDisplay">
+            <div class="waiting-state">
+              <div class="waiting-icon">⚡</div>
+              <h3>استعداد للسؤال التالي</h3>
+              <p>اضغط "سؤال جديد" عندما تكون جاهزاً لطرح السؤال شفوياً</p>
+            </div>
           </div>
         </div>
-      </div>
-      
-      <!-- لوحة النتائج -->
-      <div class="lightning-scoreboard">
-        <div class="scoreboard-title">⚡ لوحة الصواعق</div>
-        <div class="scores-container" id="lightningScores">
-          <!-- النتائج ستظهر هنا -->
+        
+        <!-- منطقة الطلاب المتنافسين -->
+        <div class="competitors-zone">
+          <div class="zone-title">🏆 المتنافسون</div>
+          <div class="competitors-grid" id="competitorsGrid">
+            <!-- سيتم ملؤها بالطلاب المختارين -->
+          </div>
         </div>
+        
+        <!-- لوحة النتائج -->
+        <div class="lightning-scoreboard">
+          <div class="scoreboard-title">⚡ لوحة الصواعق</div>
+          <div class="scores-container" id="lightningScores">
+            <!-- النتائج ستظهر هنا -->
+          </div>
+        </div>
+        
+        <!-- تأثيرات البرق -->
+        <div class="lightning-effects" id="lightningEffects"></div>
       </div>
-      
-      <!-- تأثيرات البرق -->
-      <div class="lightning-effects" id="lightningEffects"></div>
-    </div>
-  `;
+    `;
     
     mainApp.appendChild(lightningArena);
   }
@@ -5701,56 +5824,254 @@ function initializeCompetitors() {
   updateLightningScoreboard();
 }
 
-// بدء المؤقت الرئيسي
+// بدء المؤقت الرئيسي - 5 دقائق احترافي
 let lightningTimerInterval;
-let lightningTimeLeft = 300; // 5 دقائق
+let lightningTimeLeft = 300; // 5 دقائق (300 ثانية)
 
 function startLightningTimer() {
   const timerElement = document.getElementById('lightningTimer');
   
+  // إيقاف أي مؤقت سابق
+  if (lightningTimerInterval) {
+    clearInterval(lightningTimerInterval);
+  }
+  
+  // بدء المؤقت التنازلي
   lightningTimerInterval = setInterval(() => {
     lightningTimeLeft--;
     
+    // تحديث العرض بتنسيق دقائق:ثواني
     const minutes = Math.floor(lightningTimeLeft / 60);
     const seconds = lightningTimeLeft % 60;
     timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
     
-    // رسائل تحفيزية دورية
-    if (lightningTimeLeft === 240) { // 4 دقائق متبقية
-      showQuantumNotification('⏰ 4 دقائق متبقية!', '🔥 النار ما زالت مشتعلة! استمروا!', 'info');
-    } else if (lightningTimeLeft === 180) { // 3 دقائق
-      showQuantumNotification('⚡ نصف الوقت مر!', '💫 الطاقة ترتفع! من سيفوز؟', 'warning');
-    } else if (lightningTimeLeft === 120) { // دقيقتان
-      showQuantumNotification('🌩️ دقيقتان متبقيتان!', '🔥⚡ المعركة تحتدم! اللحظات الحاسمة!', 'battle');
-    } else if (lightningTimeLeft === 60) { // دقيقة واحدة
-      showQuantumNotification('🚨 دقيقة أخيرة!', '💥 الوقت ينفد! اللحظات الذهبية الأخيرة!', 'error');
-    }
+    // تأثيرات بصرية وصوتية احترافية حسب الوقت المتبقي
+    updateTimerEffects(lightningTimeLeft, timerElement);
     
-    // تأثيرات صوتية ومرئية
-    if (lightningTimeLeft <= 30 && lightningTimeLeft > 0) {
-      if (lightningTimeLeft % 5 === 0) {
+    // رسائل تحفيزية دورية احترافية
+    showTimerNotifications(lightningTimeLeft);
+    
+    // انتهاء الوقت - عرض لوحة المتصدرين
+    if (lightningTimeLeft <= 0) {
+      endLightningChallengeWithLeaderboard();
+    }
+  }, 1000);
+}
+
+// تحديث التأثيرات البصرية والصوتية للمؤقت
+function updateTimerEffects(timeLeft, timerElement) {
+  const timerContainer = timerElement.parentElement;
+  
+  if (timeLeft <= 60) { // الدقيقة الأخيرة - تأثيرات عاجلة
+    timerElement.style.color = '#ff4757';
+    timerContainer.style.borderColor = '#ff4757';
+    timerContainer.style.animation = 'urgentPulse 1s infinite';
+    
+    if (timeLeft <= 30) { // نصف دقيقة أخيرة
+      if (timeLeft % 5 === 0) {
         playCosmicSound('countdown-tick');
         createLightningBolt();
       }
-      timerElement.style.color = '#ff4757';
-      timerElement.parentElement.style.borderColor = '#ff4757';
-    } else if (lightningTimeLeft <= 10 && lightningTimeLeft > 0) {
-      playCosmicSound('countdown-beep');
-      createLightningBolt();
-      timerElement.style.animation = 'urgentPulse 0.5s infinite';
-      
-      // رسائل العد التنازلي الأخير
-      if (lightningTimeLeft === 10) {
-        showQuantumNotification('🔟 عشر ثوان!', '💥 الانفجار النهائي قادم!', 'error');
-      } else if (lightningTimeLeft === 5) {
-        showQuantumNotification('5️⃣ خمس ثوان!', '⚡🔥 اللحظة الأخيرة!', 'error');
-      }
     }
     
-    if (lightningTimeLeft <= 0) {
-      endLightningChallenge();
+    if (timeLeft <= 10 && timeLeft > 0) { // العشر ثوان الأخيرة
+      playCosmicSound('countdown-beep');
+      createLightningBolt();
+      timerElement.style.animation = 'criticalPulse 0.5s infinite';
     }
-  }, 1000);
+  } else if (timeLeft <= 120) { // الدقيقتان الأخيرتان
+    timerElement.style.color = '#ffa502';
+    timerContainer.style.borderColor = '#ffa502';
+  } else if (timeLeft <= 180) { // الثلاث دقائق الأخيرة
+    timerElement.style.color = '#ffff00';
+    timerContainer.style.borderColor = '#ffff00';
+  }
+}
+
+// رسائل تحفيزية احترافية حسب الوقت
+function showTimerNotifications(timeLeft) {
+  if (timeLeft === 240) { // 4 دقائق متبقية
+    showQuantumNotification('⏰ 4 دقائق متبقية!', '🔥 النار ما زالت مشتعلة! استمروا!', 'info');
+    playCosmicSound('ai-notification');
+  } else if (timeLeft === 180) { // 3 دقائق
+    showQuantumNotification('⚡ 3 دقائق متبقية!', '💫 الطاقة ترتفع! من سيتصدر؟', 'warning');
+    playCosmicSound('level-up');
+  } else if (timeLeft === 120) { // دقيقتان
+    showQuantumNotification('🌩️ دقيقتان متبقيتان!', '🔥⚡ المعركة تحتدم! اللحظات الحاسمة!', 'battle');
+    playCosmicSound('battle-horn');
+  } else if (timeLeft === 60) { // دقيقة واحدة
+    showQuantumNotification('🚨 دقيقة أخيرة!', '💥 الوقت ينفد! اللحظات الذهبية الأخيرة!', 'error');
+    playCosmicSound('final-countdown');
+  } else if (timeLeft === 30) { // نصف دقيقة
+    showQuantumNotification('⏰ 30 ثانية!', '🔥 اللحظات الأخيرة! أعطوا كل ما لديكم!', 'error');
+  } else if (timeLeft === 10) {
+    showQuantumNotification('🔟 عشر ثوان!', '💥 الانفجار النهائي قادم!', 'error');
+  } else if (timeLeft === 5) {
+    showQuantumNotification('5️⃣ خمس ثوان!', '⚡🔥 اللحظة الأخيرة!', 'error');
+  }
+}
+
+// إنهاء التحدي مع عرض لوحة متصدرين احترافية
+function endLightningChallengeWithLeaderboard() {
+  // إيقاف المؤقت
+  if (lightningTimerInterval) {
+    clearInterval(lightningTimerInterval);
+    lightningTimerInterval = null;
+  }
+  
+  // تأثيرات نهاية احترافية
+  playCosmicSound('fireworks-burst');
+  createCosmicExplosion(document.getElementById('lightningTimer'));
+  
+  // رسالة انتهاء التحدي
+  showQuantumNotification('🏁 انتهى التحدي!', '⚡ تم انتهاء الوقت! لنرى النتائج النهائية...', 'success');
+  
+  // عرض لوحة المتصدرين بعد تأخير قصير للتأثير
+  setTimeout(() => {
+    showProfessionalLeaderboard();
+  }, 2000);
+}
+
+// عرض لوحة متصدرين احترافية بسيطة
+function showProfessionalLeaderboard() {
+  // ترتيب المتنافسين حسب النقاط
+  const sortedCompetitors = [...lightningState.competitors].sort((a, b) => b.score - a.score);
+  
+  // إنشاء لوحة المتصدرين
+  const leaderboardModal = document.createElement('div');
+  leaderboardModal.className = 'professional-leaderboard-modal';
+  leaderboardModal.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(0,0,0,0.95), rgba(26,26,46,0.98));
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(20px);
+    animation: leaderboardEnter 0.8s ease-out;
+  `;
+  
+  leaderboardModal.innerHTML = `
+    <div class="leaderboard-content" style="
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(0,255,255,0.05));
+      border: 3px solid rgba(255,215,0,0.6);
+      border-radius: 25px;
+      padding: 3rem;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(255,215,0,0.3);
+      backdrop-filter: blur(15px);
+    ">
+      <div style="margin-bottom: 2rem;">
+        <div style="font-size: 4rem; margin-bottom: 1rem;">🏆</div>
+        <h2 style="color: #ffd700; font-size: 2.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 20px rgba(255,215,0,0.8);">
+          🌟 لوحة المتصدرين 🌟
+        </h2>
+        <p style="color: #00ffff; font-size: 1.2rem; text-shadow: 0 0 10px rgba(0,255,255,0.5);">
+          نتائج تحدي مملكة البرق
+        </p>
+      </div>
+      
+      <div class="competitors-list" style="margin-bottom: 2rem;">
+        ${sortedCompetitors.map((competitor, index) => {
+          const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '🏅';
+          const bgColor = index === 0 ? 'rgba(255,215,0,0.2)' : 
+                         index === 1 ? 'rgba(192,192,192,0.2)' : 
+                         index === 2 ? 'rgba(205,127,50,0.2)' : 'rgba(255,255,255,0.1)';
+          
+          return `
+            <div style="
+              background: ${bgColor};
+              border: 2px solid ${index < 3 ? '#ffd700' : 'rgba(255,255,255,0.3)'};
+              border-radius: 15px;
+              padding: 1.5rem;
+              margin-bottom: 1rem;
+              display: flex;
+              align-items: center;
+              gap: 1rem;
+              transition: transform 0.3s ease;
+            " onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+              <div style="font-size: 2.5rem;">${medal}</div>
+              <div style="flex: 1; text-align: right;">
+                <div style="color: white; font-size: 1.3rem; font-weight: 700; margin-bottom: 0.3rem;">
+                  ${competitor.name}
+                </div>
+                <div style="color: #ffff00; font-size: 1.1rem; font-weight: 600;">
+                  ${competitor.score} نقطة ⚡
+                </div>
+              </div>
+              <div style="font-size: 1.5rem; color: #ffd700; font-weight: 900;">
+                #${index + 1}
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+      
+      <button onclick="closeProfessionalLeaderboard()" style="
+        background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+        border: 2px solid rgba(255,107,107,0.6);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 15px;
+        font-size: 1.2rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(255,107,107,0.4);
+      " onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 25px rgba(255,107,107,0.6)'" 
+         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px 15px rgba(255,107,107,0.4)'">
+        � إغلاق
+      </button>
+    </div>
+  `;
+  
+  // إضافة التأثيرات المتحركة
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes leaderboardEnter {
+      0% {
+        opacity: 0;
+        transform: scale(0.8) rotateY(180deg);
+      }
+      50% {
+        opacity: 0.8;
+        transform: scale(1.05) rotateY(90deg);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) rotateY(0deg);
+      }
+    }
+  `;
+  document.head.appendChild(style);
+  
+  document.body.appendChild(leaderboardModal);
+  
+  // تشغيل صوت النصر
+  playCosmicSound('epic-victory');
+}
+
+// إغلاق لوحة المتصدرين الاحترافية
+function closeProfessionalLeaderboard() {
+  const modal = document.querySelector('.professional-leaderboard-modal');
+  if (modal) {
+    modal.style.animation = 'leaderboardExit 0.5s ease-in forwards';
+    setTimeout(() => {
+      modal.remove();
+      // العودة للوحة الرئيسية
+      returnToKingdom();
+    }, 500);
+  }
+  
+  playCosmicSound('ui-back');
 }
 
 // بدء سؤال جديد
@@ -5982,35 +6303,10 @@ function resumeLightningChallenge() {
   pauseBtn.onclick = pauseLightningChallenge;
 }
 
-// إنهاء التحدي
+// إنهاء التحدي - يستدعي لوحة المتصدرين الاحترافية
 function endLightningChallenge() {
-  if (lightningTimerInterval) {
-    clearInterval(lightningTimerInterval);
-  }
-  
-  playCosmicSound('challenge-complete');
-  
-  // رسائل نهاية إبداعية
-  const endMessages = [
-    '🌩️ عاصفة البرق تهدأ... النتائج النهائية!',
-    '⚡💥 انطفأت الشرارات... من هو البطل؟',
-    '🔥 نار الذكاء انطفأت... حان وقت التقييم!',
-    '💫 النجوم توقفت عن اللمعان... النتائج النهائية!',
-    '🎆 الألعاب النارية الذهنية انتهت!'
-  ];
-  
-  const randomEndMessage = endMessages[Math.floor(Math.random() * endMessages.length)];
-  showQuantumNotification('🏁 انتهاء التحدي!', randomEndMessage, 'battle');
-  
-  // رسالة تحضيرية للنتائج
-  setTimeout(() => {
-    showQuantumNotification('📊 جاري حساب النتائج...', 'استعدوا لمعرفة ملك البرق الجديد! 👑', 'info');
-  }, 1000);
-  
-  // إظهار النتائج النهائية
-  setTimeout(() => {
-    showFinalResults();
-  }, 2000);
+  // استدعاء الوظيفة الاحترافية الجديدة
+  endLightningChallengeWithLeaderboard();
 }
 
 // إظهار النتائج النهائية
@@ -8546,7 +8842,7 @@ function returnToKingdom() {
 // ===== ACHIEVEMENTS SYSTEM =====
 const achievements = {
   firstSteps: { id: 'firstSteps', name: 'الخطوات الأولى', description: 'أكمل أول تحدي', icon: '👶', points: 10, unlocked: false },
-  speedDemon: { id: 'speedDemon', name: 'شيطان السرعة', description: 'أكمل 10 تحديات في 5 دقائق', icon: '⚡', points: 50, unlocked: false },
+  speedDemon: { id: 'speedDemon', name: 'برق السرعة', description: 'أكمل 10 تحديات في 5 دقائق', icon: '⚡', points: 50, unlocked: false },
   brainiac: { id: 'brainiac', name: 'العبقري', description: 'اجمع 100 نقطة', icon: '🧠', points: 100, unlocked: false },
   perfectionist: { id: 'perfectionist', name: 'الكمالي', description: 'أجب على 10 أسئلة متتالية بشكل صحيح', icon: '💎', points: 75, unlocked: false },
   explorer: { id: 'explorer', name: 'المستكشف', description: 'زر جميع الممالك', icon: '🗺️', points: 30, unlocked: false },
