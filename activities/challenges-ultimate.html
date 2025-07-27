@@ -203,19 +203,25 @@
       margin-top: 6rem !important;
     }
 
-    /* ==== نوافذ الإعدادات والإحصائيات ==== */
+    /* ==== نوافذ الإعدادات والإحصائيات المحسنة ==== */
     .settings-modal, .stats-modal {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0, 0, 0, 0.9);
       display: none;
       z-index: 20000;
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(15px);
       align-items: center;
       justify-content: center;
+      animation: modalFadeIn 0.3s ease;
+    }
+
+    @keyframes modalFadeIn {
+      0% { opacity: 0; backdrop-filter: blur(0px); }
+      100% { opacity: 1; backdrop-filter: blur(15px); }
     }
 
     .settings-modal.active, .stats-modal.active {
@@ -223,135 +229,798 @@
     }
 
     .settings-content {
-      background: linear-gradient(135deg, #1a1a2e, #16213e);
-      border: 2px solid #ffd700;
-      border-radius: 20px;
-      padding: 2rem;
-      max-width: 600px;
-      width: 90%;
-      max-height: 80vh;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      border: 3px solid #ffd700;
+      border-radius: 25px;
+      padding: 2.5rem;
+      max-width: 900px;
+      width: 95%;
+      max-height: 90vh;
       overflow-y: auto;
       position: relative;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      box-shadow: 
+        0 25px 60px rgba(0, 0, 0, 0.8),
+        0 0 40px rgba(255, 215, 0, 0.3),
+        inset 0 0 30px rgba(255, 215, 0, 0.1);
+      animation: modalSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     .stats-content {
-      background: linear-gradient(135deg, #0f3460, #16537e);
-      border: 2px solid #00ffff;
-      border-radius: 20px;
-      padding: 2rem;
-      max-width: 800px;
+      background: linear-gradient(135deg, #0f3460 0%, #16537e 50%, #1a1a2e 100%);
+      border: 3px solid #00ffff;
+      border-radius: 25px;
+      padding: 2.5rem;
+      max-width: 1000px;
       width: 95%;
-      max-height: 85vh;
+      max-height: 90vh;
       overflow-y: auto;
       position: relative;
-      box-shadow: 0 20px 60px rgba(0, 255, 255, 0.3);
+      box-shadow: 
+        0 25px 60px rgba(0, 255, 255, 0.4),
+        0 0 40px rgba(0, 255, 255, 0.3),
+        inset 0 0 30px rgba(0, 255, 255, 0.1);
+      animation: modalSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes modalSlideIn {
+      0% { 
+        transform: scale(0.8) translateY(-50px);
+        opacity: 0;
+      }
+      100% { 
+        transform: scale(1) translateY(0);
+        opacity: 1;
+      }
     }
 
     .settings-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 2rem;
-      padding-bottom: 1rem;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
       border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+      position: relative;
+    }
+
+    .settings-header::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #ffd700, transparent);
+      animation: headerGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes headerGlow {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    .settings-title-container {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .settings-icon-main {
+      font-size: 3.5rem;
+      background: linear-gradient(135deg, #ffd700, #ff6b35, #ffd700);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: iconRotate 4s ease-in-out infinite;
+      filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+    }
+
+    @keyframes iconRotate {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      25% { transform: rotate(10deg) scale(1.1); }
+      50% { transform: rotate(0deg) scale(1); }
+      75% { transform: rotate(-10deg) scale(1.1); }
     }
 
     .settings-title {
-      font-size: 1.8rem;
-      font-weight: 900;
-      color: #ffd700;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
       margin: 0;
+      font-size: 2.2rem;
+      font-weight: 900;
+      background: linear-gradient(45deg, #ffd700, #ffed4e, #ffd700);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+      animation: titleShimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes titleShimmer {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.3); }
+    }
+
+    .settings-subtitle {
+      margin: 0.5rem 0 0 0;
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.8);
+      font-weight: 400;
     }
 
     .close-settings {
-      background: rgba(255, 69, 69, 0.2);
-      border: 2px solid #ff4545;
-      color: #ff4545;
-      padding: 0.5rem;
-      border-radius: 10px;
+      background: linear-gradient(135deg, #ff4757, #ff3838, #ff4757);
+      border: none;
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
       cursor: pointer;
-      font-size: 1.2rem;
+      font-size: 1.4rem;
+      font-weight: bold;
       transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 
+        0 6px 20px rgba(255, 71, 87, 0.4),
+        inset 0 0 10px rgba(255, 255, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .close-settings::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .close-settings:hover::before {
+      left: 100%;
     }
 
     .close-settings:hover {
-      background: #ff4545;
-      color: white;
-      transform: scale(1.1);
+      transform: scale(1.1) rotate(90deg);
+      box-shadow: 
+        0 8px 25px rgba(255, 71, 87, 0.6),
+        inset 0 0 15px rgba(255, 255, 255, 0.3);
+    }
+
+    .close-settings:active {
+      transform: scale(0.95) rotate(90deg);
     }
 
     .setting-section {
-      margin-bottom: 2rem;
-      padding: 1.5rem;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 15px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 2.5rem;
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 
+        0 8px 25px rgba(0, 0, 0, 0.3),
+        inset 0 0 20px rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .setting-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transition: left 0.8s ease;
+    }
+
+    .setting-section:hover::before {
+      left: 100%;
+    }
+
+    .setting-section:hover {
+      transform: translateY(-2px);
+      box-shadow: 
+        0 12px 35px rgba(0, 0, 0, 0.4),
+        inset 0 0 25px rgba(255, 255, 255, 0.08);
     }
 
     .setting-item {
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
       color: white;
     }
 
     .setting-item label {
       display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 600;
+      margin-bottom: 0.8rem;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.9);
     }
 
-    /* تبويبات الإعدادات */
+    /* تبويبات الإعدادات المحسنة */
+    .settings-tabs-container {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      border-bottom: 3px solid rgba(255, 215, 0, 0.2);
+      position: relative;
+      overflow-x: auto;
+      padding-bottom: 0;
+    }
+
     .settings-tab-btn {
-      background: rgba(255, 255, 255, 0.1);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
       border: 2px solid rgba(255, 215, 0, 0.3);
-      color: rgba(255, 255, 255, 0.7);
-      padding: 0.8rem 1.5rem;
-      border-radius: 10px 10px 0 0;
+      color: rgba(255, 255, 255, 0.8);
+      padding: 1rem 1.8rem;
+      border-radius: 15px 15px 0 0;
       cursor: pointer;
       transition: all 0.3s ease;
-      font-size: 0.9rem;
-      font-weight: 600;
+      font-size: 1rem;
+      font-weight: 700;
+      position: relative;
+      overflow: hidden;
+      white-space: nowrap;
+      min-width: 150px;
+      text-align: center;
+    }
+
+    .settings-tab-btn::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, #ffd700, #ffed4e, #ffd700);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
     }
 
     .settings-tab-btn:hover {
-      background: rgba(255, 215, 0, 0.2);
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
       color: #ffd700;
-      border-color: #ffd700;
+      border-color: rgba(255, 215, 0, 0.6);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+    }
+
+    .settings-tab-btn:hover::before {
+      transform: scaleX(1);
     }
 
     .settings-tab-btn.active {
-      background: rgba(255, 215, 0, 0.3);
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 215, 0, 0.2));
       color: #ffd700;
       border-color: #ffd700;
       border-bottom-color: transparent;
+      transform: translateY(-3px);
+      box-shadow: 
+        0 8px 20px rgba(255, 215, 0, 0.4),
+        inset 0 0 15px rgba(255, 215, 0, 0.1);
+    }
+
+    .settings-tab-btn.active::before {
+      transform: scaleX(1);
     }
 
     .settings-tab-content {
       display: none;
+      animation: contentFadeIn 0.4s ease;
     }
 
     .settings-tab-content.active {
       display: block;
     }
 
+    @keyframes contentFadeIn {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
     .setting-select {
       width: 100%;
-      padding: 0.8rem;
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.1);
+      padding: 1rem;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
       color: white;
       font-size: 1rem;
-      margin-top: 0.5rem;
+      margin-top: 0.8rem;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
     }
 
     .setting-select:focus {
       outline: none;
       border-color: #ffd700;
-      box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+      box-shadow: 
+        0 0 0 3px rgba(255, 215, 0, 0.3),
+        0 5px 15px rgba(255, 215, 0, 0.2);
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+    }
+
+    .setting-select option {
+      background: #1a1a2e;
+      color: white;
+      padding: 0.5rem;
+    }
+
+    /* أزرار الإعدادات المحسنة */
+    .settings-action-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 2px solid rgba(255, 215, 0, 0.3);
+      flex-wrap: wrap;
+    }
+
+    .settings-action-btn {
+      flex: 1;
+      min-width: 150px;
+      padding: 1.2rem 2rem;
+      border: none;
+      border-radius: 15px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .settings-action-btn.primary {
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      color: white;
+      box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
+    }
+
+    .settings-action-btn.secondary {
+      background: linear-gradient(135deg, #6c757d, #495057);
+      color: white;
+      box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+    }
+
+    .settings-action-btn.success {
+      background: linear-gradient(135deg, #43e97b, #38f9d7);
+      color: white;
+      box-shadow: 0 6px 20px rgba(67, 233, 123, 0.4);
+    }
+
+    .settings-action-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .settings-action-btn:hover::before {
+      left: 100%;
+    }
+
+    .settings-action-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .settings-action-btn:active {
+      transform: translateY(-1px);
+    }
+
+    /* نافذة الإنجازات المحسنة */
+    .achievements-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, 
+        rgba(0, 0, 0, 0.8), 
+        rgba(26, 26, 46, 0.9),
+        rgba(52, 58, 64, 0.8)
+      );
+      backdrop-filter: blur(15px);
+      z-index: 10000;
+      animation: modalFadeIn 0.5s ease;
+    }
+
+    .achievements-modal.show {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .achievements-modal-content {
+      background: linear-gradient(135deg, 
+        rgba(26, 26, 46, 0.95), 
+        rgba(16, 21, 35, 0.95),
+        rgba(52, 58, 64, 0.95)
+      );
+      border-radius: 25px;
+      padding: 3rem 2.5rem;
+      width: 95%;
+      max-width: 900px;
+      max-height: 90vh;
+      overflow-y: auto;
+      border: 2px solid rgba(255, 215, 0, 0.4);
+      box-shadow: 
+        0 25px 60px rgba(0, 0, 0, 0.5),
+        inset 0 0 30px rgba(255, 215, 0, 0.1),
+        0 0 100px rgba(255, 215, 0, 0.2);
+      animation: modalSlideIn 0.6s ease-out;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .achievements-modal-content::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center, 
+        rgba(255, 215, 0, 0.05) 0%, 
+        transparent 70%);
+      animation: backgroundPulse 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .achievements-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+
+    .achievements-header h2 {
+      font-size: 2.8rem;
+      background: linear-gradient(45deg, #ffd700, #ffed4e, #ffd700);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 0;
+      text-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+      animation: titleShimmer 2s ease-in-out infinite;
+      position: relative;
+    }
+
+    .achievements-header h2::after {
+      content: '🏆';
+      position: absolute;
+      top: -10px;
+      right: -50px;
+      font-size: 2rem;
+      animation: iconRotate 3s ease-in-out infinite;
+    }
+
+    .achievements-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .achievement-card {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.1), 
+        rgba(255, 255, 255, 0.05)
+      );
+      border-radius: 20px;
+      padding: 2rem;
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .achievement-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 215, 0, 0.1), 
+        transparent
+      );
+      transition: left 0.8s ease;
+    }
+
+    .achievement-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: #ffd700;
+      box-shadow: 
+        0 15px 40px rgba(255, 215, 0, 0.3),
+        inset 0 0 20px rgba(255, 215, 0, 0.1);
+    }
+
+    .achievement-card:hover::before {
+      left: 100%;
+    }
+
+    .achievement-card.unlocked {
+      background: linear-gradient(135deg, 
+        rgba(67, 233, 123, 0.2), 
+        rgba(56, 249, 215, 0.15)
+      );
+      border-color: #43e97b;
+      box-shadow: 0 10px 30px rgba(67, 233, 123, 0.2);
+    }
+
+    .achievement-icon {
+      font-size: 3.5rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.3));
+    }
+
+    .achievement-card.unlocked .achievement-icon {
+      animation: achievementGlow 2s ease-in-out infinite;
+    }
+
+    .achievement-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #ffd700;
+      text-align: center;
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .achievement-description {
+      color: rgba(255, 255, 255, 0.8);
+      text-align: center;
+      line-height: 1.5;
+      font-size: 1rem;
+    }
+
+    .achievement-status {
+      text-align: center;
+      margin-top: 1rem;
+      padding: 0.8rem;
+      border-radius: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .achievement-status.unlocked {
+      background: linear-gradient(135deg, #43e97b, #38f9d7);
+      color: white;
+      box-shadow: 0 4px 15px rgba(67, 233, 123, 0.3);
+    }
+
+    .achievement-status.locked {
+      background: linear-gradient(135deg, #6c757d, #495057);
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .achievements-close {
+      position: absolute;
+      top: 20px;
+      right: 25px;
+      background: linear-gradient(135deg, #ff4757, #ff3742);
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4);
+    }
+
+    .achievements-close:hover {
+      transform: rotate(90deg) scale(1.1);
+      box-shadow: 0 8px 25px rgba(255, 71, 87, 0.6);
+      background: linear-gradient(135deg, #ff3742, #ff1744);
+    }
+
+    @keyframes achievementGlow {
+      0%, 100% { filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.3)); }
+      50% { filter: drop-shadow(0 5px 15px rgba(67, 233, 123, 0.6)); }
+    }
+
+    /* تحسين نافذة الإحصائيات */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.1), 
+        rgba(255, 255, 255, 0.05)
+      );
+      border-radius: 20px;
+      padding: 2rem;
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      text-align: center;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 215, 0, 0.1), 
+        transparent
+      );
+      transition: left 0.8s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      border-color: #ffd700;
+      box-shadow: 0 12px 30px rgba(255, 215, 0, 0.3);
+    }
+
+    .stat-card:hover::before {
+      left: 100%;
+    }
+
+    .stat-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.3));
+    }
+
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: #ffd700;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 3px 6px rgba(255, 215, 0, 0.3);
+    }
+
+    .stat-label {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    /* تحسين عام لجميع النوافذ */
+    .modal-overlay, .quantum-overlay {
+      backdrop-filter: blur(20px) saturate(1.2);
+      background: linear-gradient(135deg, 
+        rgba(0, 0, 0, 0.8), 
+        rgba(26, 26, 46, 0.9),
+        rgba(52, 58, 64, 0.8)
+      );
+    }
+
+    .quantum-notification, .coaching-panel {
+      border: 2px solid rgba(255, 215, 0, 0.4);
+      box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.5),
+        inset 0 0 20px rgba(255, 215, 0, 0.1),
+        0 0 80px rgba(255, 215, 0, 0.2);
+      backdrop-filter: blur(15px);
+    }
+
+    .quantum-notification::before, .coaching-panel::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center, 
+        rgba(255, 215, 0, 0.03) 0%, 
+        transparent 70%);
+      animation: backgroundPulse 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    /* تحسين أزرار الإغلاق */
+    .close-btn, .modal-close {
+      background: linear-gradient(135deg, #ff4757, #ff3742) !important;
+      border: none !important;
+      border-radius: 50% !important;
+      width: 45px !important;
+      height: 45px !important;
+      color: white !important;
+      font-size: 1.3rem !important;
+      cursor: pointer !important;
+      transition: all 0.3s ease !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4) !important;
+      position: absolute !important;
+      top: 15px !important;
+      right: 20px !important;
+      z-index: 1000 !important;
+    }
+
+    .close-btn:hover, .modal-close:hover {
+      transform: rotate(90deg) scale(1.1) !important;
+      box-shadow: 0 8px 25px rgba(255, 71, 87, 0.6) !important;
+      background: linear-gradient(135deg, #ff3742, #ff1744) !important;
+    }
+
+    /* تحسين القوائم المنسدلة */
+    select, .custom-select {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05)) !important;
+      border: 2px solid rgba(255, 215, 0, 0.3) !important;
+      border-radius: 12px !important;
+      color: white !important;
+      padding: 1rem !important;
+      transition: all 0.3s ease !important;
+      backdrop-filter: blur(10px) !important;
+    }
+
+    select:focus, .custom-select:focus {
+      outline: none !important;
+      border-color: #ffd700 !important;
+      box-shadow: 
+        0 0 0 3px rgba(255, 215, 0, 0.3) !important,
+        0 5px 15px rgba(255, 215, 0, 0.2) !important;
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05)) !important;
+    }
+
+    /* تحسين المدخلات النصية */
+    input[type="text"], input[type="number"], textarea {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05)) !important;
+      border: 2px solid rgba(255, 215, 0, 0.3) !important;
+      border-radius: 12px !important;
+      color: white !important;
+      padding: 1rem !important;
+      transition: all 0.3s ease !important;
+      backdrop-filter: blur(10px) !important;
+    }
+
+    input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
+      outline: none !important;
+      border-color: #ffd700 !important;
+      box-shadow: 
+        0 0 0 3px rgba(255, 215, 0, 0.3) !important,
+        0 5px 15px rgba(255, 215, 0, 0.2) !important;
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05)) !important;
+    }
+
+    /* تحسين الإشعارات */
+    .notification, .alert {
+      border-radius: 20px !important;
+      backdrop-filter: blur(15px) !important;
+      border: 2px solid rgba(255, 215, 0, 0.4) !important;
+      box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.4) !important,
+        inset 0 0 20px rgba(255, 215, 0, 0.1) !important;
+      animation: notificationSlide 0.5s ease-out !important;
+    }
+
+    @keyframes notificationSlide {
+      0% { transform: translateY(-100px) scale(0.8); opacity: 0; }
+      100% { transform: translateY(0) scale(1); opacity: 1; }
     }
 
     /* تحسينات إضافية */
@@ -2214,6 +2883,19 @@
       <div style="text-align: center; margin-top: 1rem;">
         <button class="neural-button" onclick="checkForNewAchievements()">🔍 فحص الإنجازات الجديدة</button>
         <button class="neural-button" onclick="showAllAchievements()">📜 عرض جميع الإنجازات</button>
+      </div>
+    </div>
+
+    <!-- نافذة الإنجازات المحسنة -->
+    <div id="achievementsModal" class="achievements-modal">
+      <div class="achievements-modal-content">
+        <button class="achievements-close" onclick="closeAchievementsModal()">×</button>
+        <div class="achievements-header">
+          <h2>🏆 الإنجازات</h2>
+        </div>
+        <div id="achievementsGrid" class="achievements-grid">
+          <!-- Achievements will be loaded here -->
+        </div>
       </div>
     </div>
 
@@ -7361,43 +8043,59 @@ function checkForNewAchievements() {
 }
 
 function showAllAchievements() {
-  const modal = document.createElement('div');
-  modal.className = 'modal-overlay';
-  modal.style.cssText = `
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.8); z-index: 10000; display: flex;
-    align-items: center; justify-content: center; backdrop-filter: blur(10px);
-  `;
+  const modal = document.getElementById('achievementsModal');
+  const grid = document.getElementById('achievementsGrid');
   
-  const content = document.createElement('div');
-  content.style.cssText = `
-    background: linear-gradient(135deg, #1a1a2e, #16213e); border: 2px solid #ffd700;
-    border-radius: 20px; padding: 2rem; max-width: 800px; width: 90%;
-    max-height: 80vh; overflow-y: auto; color: white;
-  `;
+  // Clear and populate achievements
+  grid.innerHTML = '';
   
-  content.innerHTML = `
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-      <h2 style="color: #ffd700; margin: 0;">🏆 جميع الإنجازات</h2>
-      <button onclick="this.closest('.modal-overlay').remove()" style="background: #ff4757; border: none; color: white; padding: 0.5rem; border-radius: 50%; width: 40px; height: 40px; cursor: pointer;">✕</button>
-    </div>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
-      ${Object.values(achievements).map(achievement => `
-        <div style="background: ${achievement.unlocked ? 'linear-gradient(45deg, rgba(255,215,0,0.3), rgba(255,165,0,0.3))' : 'rgba(255,255,255,0.1)'}; padding: 1rem; border-radius: 10px; text-align: center; opacity: ${achievement.unlocked ? '1' : '0.5'};">
-          <div style="font-size: 2rem; margin-bottom: 0.5rem;">${achievement.icon}</div>
-          <h4 style="color: ${achievement.unlocked ? '#ffd700' : '#ccc'}; margin-bottom: 0.3rem;">${achievement.name}</h4>
-          <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">${achievement.description}</p>
-          <div style="color: #ffd700; font-weight: bold;">+${achievement.points} نقطة</div>
-          ${achievement.unlocked ? '<div style="color: #00ff00; margin-top: 0.5rem;">✅ مكتمل</div>' : '<div style="color: #999; margin-top: 0.5rem;">🔒 مقفل</div>'}
-        </div>
-      `).join('')}
-    </div>
-  `;
+  Object.keys(achievements).forEach(achievementId => {
+    const achievement = achievements[achievementId];
+    const isUnlocked = unlockedAchievements.includes(achievementId);
+    
+    const card = document.createElement('div');
+    card.className = `achievement-card ${isUnlocked ? 'unlocked' : ''}`;
+    
+    card.innerHTML = `
+      <div class="achievement-icon">${achievement.icon}</div>
+      <div class="achievement-title">${achievement.title}</div>
+      <div class="achievement-description">${achievement.description}</div>
+      <div class="achievement-status ${isUnlocked ? 'unlocked' : 'locked'}">
+        ${isUnlocked ? '✅ تم الإنجاز' : '🔒 مؤمن'}
+      </div>
+    `;
+    
+    grid.appendChild(card);
+  });
   
-  modal.appendChild(content);
-  document.body.appendChild(modal);
+  modal.classList.add('show');
   playCosmicSound('cosmic-portal');
 }
+
+function closeAchievementsModal() {
+  const modal = document.getElementById('achievementsModal');
+  modal.classList.remove('show');
+  playCosmicSound('cosmic-click');
+}
+
+// إغلاق النوافذ بالنقر خارجها
+document.addEventListener('click', function(e) {
+  const achievementsModal = document.getElementById('achievementsModal');
+  const settingsModal = document.getElementById('settingsModal');
+  const statsModal = document.getElementById('statsModal');
+  
+  if (e.target === achievementsModal) {
+    closeAchievementsModal();
+  }
+  
+  if (e.target === settingsModal && settingsModal.style.display === 'flex') {
+    closeSettings();
+  }
+  
+  if (e.target === statsModal && statsModal.style.display === 'flex') {
+    closeStats();
+  }
+});
 
 // ===== QUICK CHALLENGES =====
 function startOneMinuteChallenge() {
