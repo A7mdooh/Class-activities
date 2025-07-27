@@ -450,6 +450,10 @@
       border: 2px solid transparent;
       position: relative;
       overflow: hidden;
+      min-height: 240px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
     .realm-card::before {
@@ -472,6 +476,16 @@
       border-color: rgba(255,255,255,0.5);
       box-shadow: 0 25px 50px rgba(0,0,0,0.2);
     }
+
+    .realm-card:nth-child(1):hover { border-color: #ffd700; box-shadow: 0 25px 50px rgba(255,215,0,0.3); }
+    .realm-card:nth-child(2):hover { border-color: #00ffff; box-shadow: 0 25px 50px rgba(0,255,255,0.3); }
+    .realm-card:nth-child(3):hover { border-color: #ff6347; box-shadow: 0 25px 50px rgba(255,99,71,0.3); }
+    .realm-card:nth-child(4):hover { border-color: #ff69b4; box-shadow: 0 25px 50px rgba(255,105,180,0.3); }
+    .realm-card:nth-child(5):hover { border-color: #32cd32; box-shadow: 0 25px 50px rgba(50,205,50,0.3); }
+    .realm-card:nth-child(6):hover { border-color: #9370db; box-shadow: 0 25px 50px rgba(147,112,219,0.3); }
+    .realm-card:nth-child(7):hover { border-color: #ffa500; box-shadow: 0 25px 50px rgba(255,165,0,0.3); }
+    .realm-card:nth-child(8):hover { border-color: #20b2aa; box-shadow: 0 25px 50px rgba(32,178,170,0.3); }
+    .realm-card:nth-child(9):hover { border-color: #daa520; box-shadow: 0 25px 50px rgba(218,165,32,0.3); }
 
     .realm-icon {
       font-size: 4rem;
@@ -499,6 +513,18 @@
       color: rgba(255,255,255,0.8);
       font-size: 0.9rem;
       line-height: 1.6;
+      flex-grow: 1;
+    }
+
+    .realm-stats {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      background: rgba(255,255,255,0.1);
+      border-radius: 15px;
+      color: #ffd700;
+      font-weight: 600;
+      font-size: 0.85rem;
+      border: 1px solid rgba(255,215,0,0.3);
     }
 
     /* ===== BATTLE ARENA ===== */
@@ -1721,6 +1747,7 @@
         <div class="realm-icon">⚡</div>
         <h3 class="realm-title">مملكة البرق</h3>
         <p class="realm-description">تحديات سريعة لاختبار سرعة التفكير والذكاء</p>
+        <div class="realm-stats">🏆 125 تحدي متاح</div>
       </div>
 
       <!-- Wisdom Challenge Realm -->
@@ -1728,6 +1755,7 @@
         <div class="realm-icon">🧠</div>
         <h3 class="realm-title">مملكة الحكمة</h3>
         <p class="realm-description">تحديات فكرية عميقة لتطوير الذكاء والإبداع</p>
+        <div class="realm-stats">🎯 88 تحدي متاح</div>
       </div>
 
       <!-- Team Battle Realm -->
@@ -1735,6 +1763,7 @@
         <div class="realm-icon">⚔️</div>
         <h3 class="realm-title">ساحة المعركة</h3>
         <p class="realm-description">معارك جماعية ملحمية بين الفرق</p>
+        <div class="realm-stats">⚔️ 45 معركة متاحة</div>
       </div>
 
       <!-- Mystery Realm -->
@@ -1742,6 +1771,48 @@
         <div class="realm-icon">🔮</div>
         <h3 class="realm-title">مملكة الألغاز</h3>
         <p class="realm-description">ألغاز غامضة وتحديات استثنائية</p>
+        <div class="realm-stats">🔍 67 لغز متاح</div>
+      </div>
+
+      <!-- New Realms -->
+      <!-- Creative Challenge Realm -->
+      <div class="realm-card" onclick="activateRealm('creative')">
+        <div class="realm-icon">🎨</div>
+        <h3 class="realm-title">مملكة الإبداع</h3>
+        <p class="realm-description">تحديات إبداعية وفنية لتنمية الخيال والابتكار</p>
+        <div class="realm-stats">🎭 52 نشاط إبداعي</div>
+      </div>
+
+      <!-- Science Laboratory Realm -->
+      <div class="realm-card" onclick="activateRealm('science')">
+        <div class="realm-icon">🔬</div>
+        <h3 class="realm-title">مختبر العلوم</h3>
+        <p class="realm-description">تجارب علمية تفاعلية واكتشافات مذهلة</p>
+        <div class="realm-stats">⚗️ 73 تجربة علمية</div>
+      </div>
+
+      <!-- Language Masters Realm -->
+      <div class="realm-card" onclick="activateRealm('language')">
+        <div class="realm-icon">📚</div>
+        <h3 class="realm-title">مملكة اللغة</h3>
+        <p class="realm-description">تحديات لغوية وأدبية لتطوير مهارات التعبير</p>
+        <div class="realm-stats">📝 96 تحدي لغوي</div>
+      </div>
+
+      <!-- Mathematical Kingdom -->
+      <div class="realm-card" onclick="activateRealm('math')">
+        <div class="realm-icon">🔢</div>
+        <h3 class="realm-title">مملكة الأرقام</h3>
+        <p class="realm-description">مغامرات رياضية وألعاب حسابية ممتعة</p>
+        <div class="realm-stats">➕ 134 مسألة رياضية</div>
+      </div>
+
+      <!-- Time Travel Challenge -->
+      <div class="realm-card" onclick="activateRealm('history')">
+        <div class="realm-icon">🕰️</div>
+        <h3 class="realm-title">آلة الزمن</h3>
+        <p class="realm-description">رحلات عبر التاريخ واستكشاف الحضارات</p>
+        <div class="realm-stats">🏛️ 41 حقبة تاريخية</div>
       </div>
     </div>
     </div> <!-- End of kingdomContent -->
@@ -1770,15 +1841,183 @@
       </div>
     </div>
 
+    <!-- Lightning Arena -->
+    <div class="battle-arena" id="lightningArena" style="display: none;">
+      <div class="arena-header">
+        <h2 style="color: #ffd700; font-size: 2rem; margin-bottom: 1rem;">⚡ مملكة البرق</h2>
+        <div class="challenge-timer" id="lightningTimer">30</div>
+        <p style="color: rgba(255,255,255,0.8); font-size: 1.1rem;">التفكير السريع هو المفتاح!</p>
+      </div>
+
+      <!-- Lightning Challenge Display -->
+      <div class="lightning-challenge-container" style="text-align: center; margin: 2rem 0;">
+        <div id="lightningQuestion" style="font-size: 1.8rem; color: white; margin-bottom: 2rem; padding: 2rem; background: rgba(255,255,255,0.1); border-radius: 15px; min-height: 150px; display: flex; align-items: center; justify-content: center;">
+          استعد للتحدي...
+        </div>
+        
+        <div class="lightning-options" id="lightningOptions" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+          <!-- Options will be generated dynamically -->
+        </div>
+
+        <div style="display: flex; justify-content: center; gap: 1rem;">
+          <button class="neural-button" onclick="nextLightningChallenge()">⚡ التحدي التالي</button>
+          <button class="neural-button" onclick="endLightningRound()">🏁 إنهاء الجولة</button>
+          <button class="neural-button secondary" onclick="returnToKingdom()">🏰 العودة للممالك</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Creative Arena -->
+    <div class="battle-arena" id="creativeArena" style="display: none;">
+      <div class="arena-header">
+        <h2 style="color: #32cd32; font-size: 2rem; margin-bottom: 1rem;">🎨 مملكة الإبداع</h2>
+        <div class="challenge-timer" id="creativeTimer">05:00</div>
+        <p style="color: rgba(255,255,255,0.8); font-size: 1.1rem;">اطلق العنان لإبداعك!</p>
+      </div>
+
+      <div class="creative-workspace" style="background: rgba(255,255,255,0.1); border-radius: 15px; padding: 2rem; margin: 2rem 0;">
+        <div id="creativePrompt" style="font-size: 1.5rem; color: #32cd32; margin-bottom: 2rem; text-align: center;">
+          مهمة إبداعية جديدة قادمة...
+        </div>
+        
+        <div class="creative-tools" style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+          <button class="neural-button" onclick="showDrawingCanvas()">🖌️ الرسم</button>
+          <button class="neural-button" onclick="showStoryWriter()">📝 الكتابة</button>
+          <button class="neural-button" onclick="showMusicComposer()">🎵 الموسيقى</button>
+          <button class="neural-button" onclick="showIdeaGenerator()">💡 العصف الذهني</button>
+          <button class="neural-button secondary" onclick="returnToKingdom()">🏰 العودة للممالك</button>
+        </div>
+
+        <div id="creativeCanvas" style="min-height: 300px; background: rgba(0,0,0,0.3); border-radius: 10px; padding: 1rem;">
+          <div style="text-align: center; color: rgba(255,255,255,0.6); padding: 3rem;">
+            اختر أداة الإبداع للبدء...
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Science Lab Arena -->
+    <div class="battle-arena" id="scienceArena" style="display: none;">
+      <div class="arena-header">
+        <h2 style="color: #9370db; font-size: 2rem; margin-bottom: 1rem;">🔬 مختبر العلوم</h2>
+        <div class="challenge-timer" id="scienceTimer">10:00</div>
+        <p style="color: rgba(255,255,255,0.8); font-size: 1.1rem;">مرحباً بك في المختبر الافتراضي!</p>
+      </div>
+
+      <div class="science-lab" style="background: rgba(147,112,219,0.1); border-radius: 15px; padding: 2rem; margin: 2rem 0;">
+        <div class="lab-equipment" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+          <div class="equipment-item" onclick="selectEquipment('microscope')" style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 10px; text-align: center; cursor: pointer; transition: all 0.3s;">
+            <div style="font-size: 2rem;">🔬</div>
+            <div>المجهر</div>
+          </div>
+          <div class="equipment-item" onclick="selectEquipment('beaker')" style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 10px; text-align: center; cursor: pointer; transition: all 0.3s;">
+            <div style="font-size: 2rem;">🧪</div>
+            <div>الأنابيب</div>
+          </div>
+          <div class="equipment-item" onclick="selectEquipment('calculator')" style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 10px; text-align: center; cursor: pointer; transition: all 0.3s;">
+            <div style="font-size: 2rem;">🧮</div>
+            <div>الحاسبة</div>
+          </div>
+          <div class="equipment-item" onclick="selectEquipment('scales')" style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 10px; text-align: center; cursor: pointer; transition: all 0.3s;">
+            <div style="font-size: 2rem;">⚖️</div>
+            <div>الميزان</div>
+          </div>
+        </div>
+        
+        <div id="experimentArea" style="min-height: 200px; background: rgba(0,0,0,0.3); border-radius: 10px; padding: 2rem; text-align: center; color: white;">
+          اختر أداة من المختبر لبدء التجربة...
+        </div>
+        
+        <div style="text-align: center; margin-top: 1rem;">
+          <button class="neural-button secondary" onclick="returnToKingdom()">🏰 العودة للممالك</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Math Kingdom Arena -->
+    <div class="battle-arena" id="mathArena" style="display: none;">
+      <div class="arena-header">
+        <h2 style="color: #20b2aa; font-size: 2rem; margin-bottom: 1rem;">🔢 مملكة الأرقام</h2>
+        <div class="challenge-timer" id="mathTimer">03:00</div>
+        <p style="color: rgba(255,255,255,0.8); font-size: 1.1rem;">العقل الرياضي في العمل!</p>
+      </div>
+
+      <div class="math-workspace" style="background: rgba(32,178,170,0.1); border-radius: 15px; padding: 2rem; margin: 2rem 0;">
+        <div id="mathProblem" style="font-size: 2.5rem; color: #20b2aa; text-align: center; margin-bottom: 2rem; padding: 2rem; background: rgba(255,255,255,0.1); border-radius: 15px; min-height: 150px; display: flex; align-items: center; justify-content: center;">
+          مسألة رياضية قادمة...
+        </div>
+        
+        <div class="math-input" style="text-align: center; margin-bottom: 2rem;">
+          <input type="text" id="mathAnswer" placeholder="اكتب الإجابة هنا..." style="font-size: 1.5rem; padding: 1rem; border-radius: 10px; border: 2px solid #20b2aa; background: rgba(255,255,255,0.1); color: white; text-align: center; width: 300px;" />
+        </div>
+
+        <div style="text-align: center;">
+          <button class="neural-button" onclick="checkMathAnswer()">✅ تحقق من الإجابة</button>
+          <button class="neural-button" onclick="nextMathProblem()">➡️ المسألة التالية</button>
+          <button class="neural-button" onclick="getMathHint()">💡 تلميح</button>
+          <button class="neural-button secondary" onclick="returnToKingdom()">🏰 العودة للممالك</button>
+        </div>
+      </div>
+    </div>
+
     <!-- AI Coach Panel -->
     <div class="glass-container" style="margin-top: 2rem; border: 2px solid rgba(0,255,255,0.3);">
-      <h3 style="color: #00ffff; text-align: center; margin-bottom: 1rem;">🤖 المدرب الذكي</h3>
-      <div id="aiCoachMessages" style="min-height: 100px; padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 10px; color: white;">
-        <div style="opacity: 0.7;">المدرب الذكي جاهز لمساعدتك...</div>
+      <h3 style="color: #00ffff; text-align: center; margin-bottom: 1rem;">🤖 المدرب الذكي المتطور</h3>
+      <div id="aiCoachMessages" style="min-height: 150px; padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 10px; color: white; overflow-y: auto; max-height: 300px;">
+        <div style="opacity: 0.7; text-align: center;">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">🤖</div>
+          <div>المدرب الذكي جاهز لمساعدتك في رحلة التعلم...</div>
+          <div style="font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-top: 0.5rem;">
+            اضغط على أي زر للحصول على المساعدة الذكية
+          </div>
+        </div>
       </div>
-      <div style="text-align: center; margin-top: 1rem;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-top: 1rem;">
         <button class="neural-button" onclick="getAITip()">💡 نصيحة ذكية</button>
         <button class="neural-button" onclick="analyzePerformance()">📊 تحليل الأداء</button>
+        <button class="neural-button" onclick="getMotivationalMessage()">🌟 رسالة تحفيزية</button>
+        <button class="neural-button" onclick="suggestStrategy()">🎯 استراتيجية</button>
+        <button class="neural-button" onclick="showProgress()">📈 التقدم</button>
+        <button class="neural-button" onclick="clearAIMessages()">🗑️ مسح الرسائل</button>
+      </div>
+    </div>
+
+    <!-- Achievements Panel -->
+    <div class="glass-container" style="margin-top: 2rem; border: 2px solid rgba(255,215,0,0.3);">
+      <h3 style="color: #ffd700; text-align: center; margin-bottom: 1rem;">🏆 نظام الإنجازات</h3>
+      <div id="achievementsContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+        <!-- Achievements will be generated dynamically -->
+      </div>
+      <div style="text-align: center; margin-top: 1rem;">
+        <button class="neural-button" onclick="checkForNewAchievements()">🔍 فحص الإنجازات الجديدة</button>
+        <button class="neural-button" onclick="showAllAchievements()">📜 عرض جميع الإنجازات</button>
+      </div>
+    </div>
+
+    <!-- Quick Challenge Panel -->
+    <div class="glass-container" style="margin-top: 2rem; border: 2px solid rgba(255,105,180,0.3);">
+      <h3 style="color: #ff69b4; text-align: center; margin-bottom: 1rem;">⚡ التحديات السريعة</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+        <div style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 10px; text-align: center;">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔥</div>
+          <h4 style="color: #ff6347; margin-bottom: 0.5rem;">تحدي الدقيقة الواحدة</h4>
+          <p style="font-size: 0.9rem; margin-bottom: 1rem;">أجب على أكبر عدد من الأسئلة في دقيقة واحدة</p>
+          <button class="neural-button" onclick="startOneMinuteChallenge()">🚀 ابدأ الآن</button>
+        </div>
+        
+        <div style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 10px; text-align: center;">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎯</div>
+          <h4 style="color: #00ff00; margin-bottom: 0.5rem;">تحدي الدقة</h4>
+          <p style="font-size: 0.9rem; margin-bottom: 1rem;">10 أسئلة بدون أخطاء</p>
+          <button class="neural-button" onclick="startAccuracyChallenge()">🎯 ابدأ التحدي</button>
+        </div>
+        
+        <div style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 10px; text-align: center;">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">🌟</div>
+          <h4 style="color: #ffd700; margin-bottom: 0.5rem;">تحدي النجوم</h4>
+          <p style="font-size: 0.9rem; margin-bottom: 1rem;">اجمع 50 نقطة في أسرع وقت</p>
+          <button class="neural-button" onclick="startStarChallenge()">⭐ ابدأ الجمع</button>
+        </div>
       </div>
     </div>
   </div>
@@ -3261,6 +3500,16 @@ function ensureControlHeaderVisible() {
 function activateRealm(realmType) {
   gameState.currentRealm = realmType;
   
+  // تتبع الممالك المزارة للإنجازات
+  if (!gameState.visitedRealms.includes(realmType)) {
+    gameState.visitedRealms.push(realmType);
+    
+    // فحص إنجاز المستكشف
+    if (gameState.visitedRealms.length >= 4) {
+      setTimeout(() => checkAchievement('explorer'), 1000);
+    }
+  }
+  
   createCosmicExplosion(event.target);
   
   // Enhanced realm-specific sound effects
@@ -3276,6 +3525,21 @@ function activateRealm(realmType) {
       break;
     case 'mystery':
       playSoundSequence(['cosmic-portal', 'mystery-whisper'], 300);
+      break;
+    case 'creative':
+      playSoundSequence(['cosmic-portal', 'ai-notification'], 300);
+      break;
+    case 'science':
+      playSoundSequence(['cosmic-portal', 'brain-activate'], 300);
+      break;
+    case 'language':
+      playSoundSequence(['cosmic-portal', 'achievement-unlock'], 300);
+      break;
+    case 'math':
+      playSoundSequence(['cosmic-portal', 'crystal-ping'], 300);
+      break;
+    case 'history':
+      playSoundSequence(['cosmic-portal', 'ancient-bell'], 300);
       break;
   }
   
@@ -3295,13 +3559,36 @@ function activateRealm(realmType) {
         setTimeout(() => startLightningChallenge(), 1000);
         break;
       case 'wisdom':
-        startWisdomChallenge();
+        showQuantumNotification('🧠 مملكة الحكمة', 'مرحباً بكم في عالم الحكمة والمعرفة!', 'info');
+        setTimeout(() => startWisdomChallenge(), 1000);
         break;
       case 'battle':
-        enterBattleArena();
+        showQuantumNotification('⚔️ ساحة المعركة', 'استعدوا للمعركة الأسطورية!', 'warning');
+        setTimeout(() => enterBattleArena(), 1000);
         break;
       case 'mystery':
-        startMysteryChallenge();
+        showQuantumNotification('🔮 مملكة الألغاز', 'ادخلوا عالم الألغاز الغامضة!', 'mystery');
+        setTimeout(() => startMysteryChallenge(), 1000);
+        break;
+      case 'creative':
+        showQuantumNotification('🎨 مملكة الإبداع', 'اطلقوا العنان لخيالكم وإبداعكم!', 'success');
+        setTimeout(() => startCreativeChallenge(), 1000);
+        break;
+      case 'science':
+        showQuantumNotification('🔬 مختبر العلوم', 'مرحباً بكم في المختبر الافتراضي!', 'info');
+        setTimeout(() => startScienceChallenge(), 1000);
+        break;
+      case 'language':
+        showQuantumNotification('📚 مملكة اللغة', 'رحلة ممتعة في عالم الكلمات والتعبير!', 'info');
+        setTimeout(() => startLanguageChallenge(), 1000);
+        break;
+      case 'math':
+        showQuantumNotification('🔢 مملكة الأرقام', 'استعدوا لمغامرة رياضية مثيرة!', 'success');
+        setTimeout(() => startMathChallenge(), 1000);
+        break;
+      case 'history':
+        showQuantumNotification('🕰️ آلة الزمن', 'رحلة عبر التاريخ والحضارات!', 'mystery');
+        setTimeout(() => startHistoryChallenge(), 1000);
         break;
     }
   }, 500);
@@ -3610,9 +3897,143 @@ function generatePerformanceAnalysis() {
 
 function getPerformanceRating(avgPoints) {
   if (avgPoints >= 2) return "🔥 ممتاز";
-  if (avgPoints >= 1) return "💪 جيد جداً";
-  if (avgPoints >= 0.5) return "👍 جيد";
-  return "📈 يمكن التحسن";
+  if (avgPoints >= 1.5) return "⭐ جيد جداً";
+  if (avgPoints >= 1) return "👍 جيد";
+  return "💪 يمكنك التحسن";
+}
+
+// ===== ENHANCED AI COACH FUNCTIONS =====
+function getMotivationalMessage() {
+  const motivationalMessages = [
+    "🌟 كل تحدٍ تواجهه يجعلك أقوى وأذكى!",
+    "💫 النجاح يبدأ بخطوة واحدة، وأنت تتقدم بثبات!",
+    "🚀 عقلك مثل العضلة، كلما درّبته أصبح أقوى!",
+    "⭐ لا تخف من الأخطاء، فهي خطوات نحو النجاح!",
+    "🎯 التركيز والمثابرة مفتاح كل إنجاز عظيم!",
+    "🔥 أنت أقوى مما تتخيل وأذكى مما تعتقد!",
+    "💎 كل لحظة تعلم هي استثمار في مستقبلك الباهر!",
+    "🌈 تذكر: الرحلة أهم من الوجهة، استمتع بالتعلم!"
+  ];
+  
+  const randomMessage = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
+  displayAIMessage(randomMessage, 'motivational');
+  playCosmicSound('achievement-unlock');
+}
+
+function suggestStrategy() {
+  const strategies = [
+    "🎯 ركز على التحديات السهلة أولاً لبناء الثقة",
+    "⏰ استخدم تقنية البومودورو: 25 دقيقة عمل، 5 دقائق راحة",
+    "🧠 اقرأ السؤال مرتين قبل الإجابة",
+    "📝 اكتب الأفكار الرئيسية قبل الإجابة النهائية",
+    "🤝 تعاون مع زملائك في التحديات الجماعية",
+    "💡 لا تتردد في طلب التلميحات عند الحاجة",
+    "🔄 راجع إجاباتك قبل التأكيد النهائي",
+    "🎨 استخدم الرسم والمخططات لتوضيح أفكارك"
+  ];
+  
+  const randomStrategy = strategies[Math.floor(Math.random() * strategies.length)];
+  displayAIMessage("📈 استراتيجية مقترحة: " + randomStrategy, 'strategy');
+  playCosmicSound('brain-activate');
+}
+
+function showProgress() {
+  const progressData = calculateProgress();
+  displayAIMessage(progressData, 'progress');
+  playCosmicSound('level-up');
+}
+
+function clearAIMessages() {
+  const messagesContainer = document.getElementById('aiCoachMessages');
+  messagesContainer.innerHTML = `
+    <div style="opacity: 0.7; text-align: center;">
+      <div style="font-size: 2rem; margin-bottom: 0.5rem;">🤖</div>
+      <div>تم مسح الرسائل. المدرب الذكي جاهز لمساعدتك...</div>
+    </div>
+  `;
+  playCosmicSound('ui-back');
+}
+
+function displayAIMessage(message, type) {
+  const messagesContainer = document.getElementById('aiCoachMessages');
+  
+  // إزالة رسالة الترحيب إذا كانت موجودة
+  if (messagesContainer.children.length === 1 && messagesContainer.textContent.includes('جاهز لمساعدتك')) {
+    messagesContainer.innerHTML = '';
+  }
+  
+  const messageElement = document.createElement('div');
+  
+  // تحديد الألوان حسب نوع الرسالة
+  let bgGradient, borderColor;
+  switch(type) {
+    case 'motivational':
+      bgGradient = 'linear-gradient(45deg, rgba(255,215,0,0.2), rgba(255,165,0,0.2))';
+      borderColor = 'rgba(255,215,0,0.5)';
+      break;
+    case 'strategy':
+      bgGradient = 'linear-gradient(45deg, rgba(0,255,0,0.2), rgba(0,255,255,0.2))';
+      borderColor = 'rgba(0,255,255,0.5)';
+      break;
+    case 'progress':
+      bgGradient = 'linear-gradient(45deg, rgba(255,105,180,0.2), rgba(147,112,219,0.2))';
+      borderColor = 'rgba(255,105,180,0.5)';
+      break;
+    default:
+      bgGradient = 'linear-gradient(45deg, rgba(0,255,255,0.2), rgba(255,0,255,0.2))';
+      borderColor = 'rgba(0,255,255,0.5)';
+  }
+  
+  messageElement.style.cssText = `
+    background: ${bgGradient};
+    padding: 1rem;
+    border-radius: 10px;
+    margin: 0.5rem 0;
+    border: 1px solid ${borderColor};
+    animation: fadeInUp 0.5s ease;
+    font-size: 0.95rem;
+    line-height: 1.4;
+  `;
+  messageElement.innerHTML = message;
+  
+  messagesContainer.appendChild(messageElement);
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  
+  // تأثير بصري عند إضافة الرسالة
+  messageElement.style.transform = 'scale(0.95)';
+  setTimeout(() => {
+    messageElement.style.transform = 'scale(1)';
+    messageElement.style.transition = 'transform 0.3s ease';
+  }, 100);
+}
+
+function calculateProgress() {
+  const sessionMinutes = Math.floor((Date.now() - gameState.sessionStartTime) / 60000);
+  const totalPoints = getTotalPoints();
+  const challengesCompleted = gameState.completedChallenges || 0;
+  
+  let progressLevel = "مبتدئ";
+  let progressEmoji = "🌱";
+  
+  if (totalPoints >= 100) {
+    progressLevel = "خبير";
+    progressEmoji = "🏆";
+  } else if (totalPoints >= 50) {
+    progressLevel = "متقدم";
+    progressEmoji = "⭐";
+  } else if (totalPoints >= 20) {
+    progressLevel = "متوسط";
+    progressEmoji = "🚀";
+  }
+  
+  return `
+    📊 <strong>تقرير التقدم الحالي:</strong><br>
+    ${progressEmoji} <strong>مستواك:</strong> ${progressLevel}<br>
+    🎯 <strong>النقاط الإجمالية:</strong> ${totalPoints}<br>
+    ✅ <strong>التحديات المكتملة:</strong> ${challengesCompleted}<br>
+    ⏱️ <strong>وقت اللعب:</strong> ${sessionMinutes} دقيقة<br>
+    📈 <strong>معدل الإنجاز:</strong> ${sessionMinutes > 0 ? (challengesCompleted / sessionMinutes * 10).toFixed(1) : 0} تحدي/10دقائق
+  `;
 }
 
 // ===== UTILITY FUNCTIONS =====
@@ -5879,10 +6300,552 @@ function loadSavedSettings() {
   }
 }
 
+// ===== NEW REALM FUNCTIONS =====
+
+// مملكة الإبداع
+function startCreativeChallenge() {
+  hideAllArenas();
+  document.getElementById('creativeArena').style.display = 'block';
+  
+  const creativePrompts = [
+    '🎨 ارسم مستقبل مدرستك في عام 2030',
+    '📝 اكتب قصة قصيرة عن رحلة إلى المريخ',
+    '🎵 اخترع أغنية تحفيزية لزملائك',
+    '💡 صمم اختراعاً لحل مشكلة بيئية',
+    '🌟 اقترح فكرة لنشاط ممتع في المدرسة'
+  ];
+  
+  const randomPrompt = creativePrompts[Math.floor(Math.random() * creativePrompts.length)];
+  document.getElementById('creativePrompt').textContent = randomPrompt;
+  
+  startCreativeTimer();
+  playCosmicSound('achievement-unlock');
+}
+
+// مختبر العلوم
+function startScienceChallenge() {
+  hideAllArenas();
+  document.getElementById('scienceArena').style.display = 'block';
+  
+  startScienceTimer();
+  playCosmicSound('brain-activate');
+  
+  // تفعيل التأثيرات التفاعلية للمعدات
+  setupScienceEquipment();
+}
+
+// مملكة الأرقام
+function startMathChallenge() {
+  hideAllArenas();
+  document.getElementById('mathArena').style.display = 'block';
+  
+  generateMathProblem();
+  startMathTimer();
+  playCosmicSound('crystal-ping');
+}
+
+// مملكة اللغة
+function startLanguageChallenge() {
+  hideAllArenas();
+  // يمكن إضافة arena خاص باللغة لاحقاً
+  showQuantumNotification('📚 مملكة اللغة', 'سيتم إطلاق التحديات اللغوية قريباً!', 'info');
+  setTimeout(() => {
+    document.getElementById('kingdomDashboard').style.display = 'grid';
+  }, 2000);
+}
+
+// آلة الزمن
+function startHistoryChallenge() {
+  hideAllArenas();
+  // يمكن إضافة arena خاص بالتاريخ لاحقاً
+  showQuantumNotification('🕰️ آلة الزمن', 'استعدوا لرحلة عبر التاريخ قريباً!', 'mystery');
+  setTimeout(() => {
+    document.getElementById('kingdomDashboard').style.display = 'grid';
+  }, 2000);
+}
+
+// إخفاء جميع الساحات
+function hideAllArenas() {
+  document.getElementById('kingdomDashboard').style.display = 'none';
+  document.getElementById('battleArena').style.display = 'none';
+  document.getElementById('lightningArena').style.display = 'none';
+  document.getElementById('creativeArena').style.display = 'none';
+  document.getElementById('scienceArena').style.display = 'none';
+  document.getElementById('mathArena').style.display = 'none';
+}
+
+// ===== CREATIVE ARENA FUNCTIONS =====
+function showDrawingCanvas() {
+  const canvas = document.getElementById('creativeCanvas');
+  canvas.innerHTML = `
+    <h4 style="color: #32cd32; margin-bottom: 1rem;">🖌️ لوحة الرسم الرقمية</h4>
+    <div style="background: white; height: 300px; border-radius: 10px; margin: 1rem 0; display: flex; align-items: center; justify-content: center;">
+      <canvas id="drawingCanvas" width="500" height="250" style="border: 2px solid #32cd32; border-radius: 5px;"></canvas>
+    </div>
+    <div style="text-align: center;">
+      <button class="neural-button" onclick="clearDrawing()">🗑️ مسح</button>
+      <button class="neural-button" onclick="saveDrawing()">💾 حفظ</button>
+    </div>
+  `;
+  setupDrawingCanvas();
+}
+
+function showStoryWriter() {
+  const canvas = document.getElementById('creativeCanvas');
+  canvas.innerHTML = `
+    <h4 style="color: #32cd32; margin-bottom: 1rem;">📝 كاتب القصص</h4>
+    <textarea id="storyText" placeholder="اكتب قصتك هنا..." style="width: 100%; height: 250px; padding: 1rem; border-radius: 10px; border: 2px solid #32cd32; font-family: 'Cairo', sans-serif; font-size: 1rem; background: rgba(255,255,255,0.9); color: #333;"></textarea>
+    <div style="text-align: center; margin-top: 1rem;">
+      <button class="neural-button" onclick="generateStoryIdea()">💡 فكرة جديدة</button>
+      <button class="neural-button" onclick="saveStory()">💾 حفظ القصة</button>
+    </div>
+  `;
+}
+
+function showMusicComposer() {
+  const canvas = document.getElementById('creativeCanvas');
+  canvas.innerHTML = `
+    <h4 style="color: #32cd32; margin-bottom: 1rem;">🎵 مؤلف الموسيقى</h4>
+    <div style="display: grid; grid-template-columns: repeat(8, 1fr); gap: 0.5rem; margin: 1rem 0;">
+      ${Array.from({length: 8}, (_, i) => 
+        `<button class="neural-button" onclick="playNote(${i})" style="padding: 1rem; font-size: 1.2rem;">🎵</button>`
+      ).join('')}
+    </div>
+    <div style="text-align: center;">
+      <button class="neural-button" onclick="playMelody()">🎶 تشغيل اللحن</button>
+      <button class="neural-button" onclick="recordMelody()">🎤 تسجيل</button>
+    </div>
+  `;
+}
+
+function showIdeaGenerator() {
+  const canvas = document.getElementById('creativeCanvas');
+  canvas.innerHTML = `
+    <h4 style="color: #32cd32; margin-bottom: 1rem;">💡 مولد الأفكار</h4>
+    <div id="ideaDisplay" style="background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 10px; margin: 1rem 0; min-height: 150px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: white;">
+      اضغط لتوليد فكرة إبداعية جديدة
+    </div>
+    <div style="text-align: center;">
+      <button class="neural-button" onclick="generateCreativeIdea()">⚡ فكرة جديدة</button>
+      <button class="neural-button" onclick="favoriteIdea()">⭐ إضافة للمفضلة</button>
+    </div>
+  `;
+}
+
+// ===== SCIENCE LAB FUNCTIONS =====
+function selectEquipment(equipment) {
+  const experimentArea = document.getElementById('experimentArea');
+  
+  switch(equipment) {
+    case 'microscope':
+      experimentArea.innerHTML = `
+        <h4 style="color: #9370db; margin-bottom: 1rem;">🔬 فحص بالمجهر</h4>
+        <p>اختر العينة التي تريد فحصها:</p>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1rem 0;">
+          <button class="neural-button" onclick="examineSpecimen('leaf')">🌿 ورقة نبات</button>
+          <button class="neural-button" onclick="examineSpecimen('water')">💧 قطرة ماء</button>
+          <button class="neural-button" onclick="examineSpecimen('salt')">🧂 بلورات ملح</button>
+        </div>
+      `;
+      break;
+    case 'beaker':
+      experimentArea.innerHTML = `
+        <h4 style="color: #9370db; margin-bottom: 1rem;">🧪 تجربة كيميائية</h4>
+        <p>اختر المواد للتجربة:</p>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 1rem 0;">
+          <button class="neural-button" onclick="mixChemicals('acid')">🟡 حمض</button>
+          <button class="neural-button" onclick="mixChemicals('base')">🟢 قاعدة</button>
+        </div>
+      `;
+      break;
+    default:
+      experimentArea.innerHTML = `<p>جهاز ${equipment} جاهز للاستخدام!</p>`;
+  }
+  
+  playCosmicSound('ai-beep');
+}
+
+// ===== MATH KINGDOM FUNCTIONS =====
+function generateMathProblem() {
+  const problems = [
+    { question: '25 + 17 = ?', answer: '42' },
+    { question: '8 × 7 = ?', answer: '56' },
+    { question: '100 ÷ 4 = ?', answer: '25' },
+    { question: '15² = ?', answer: '225' },
+    { question: '√64 = ?', answer: '8' },
+    { question: '12 × 12 = ?', answer: '144' },
+    { question: '50 - 23 = ?', answer: '27' },
+    { question: '9 × 9 = ?', answer: '81' }
+  ];
+  
+  const randomProblem = problems[Math.floor(Math.random() * problems.length)];
+  gameState.currentMathAnswer = randomProblem.answer;
+  
+  document.getElementById('mathProblem').textContent = randomProblem.question;
+  document.getElementById('mathAnswer').value = '';
+  document.getElementById('mathAnswer').focus();
+}
+
+function checkMathAnswer() {
+  const userAnswer = document.getElementById('mathAnswer').value.trim();
+  
+  if (userAnswer === gameState.currentMathAnswer) {
+    playCosmicSound('win');
+    showQuantumNotification('✅ إجابة صحيحة!', 'أحسنت! النقاط +10', 'success');
+    setTimeout(() => nextMathProblem(), 1500);
+  } else {
+    playCosmicSound('wrong_answer');
+    showQuantumNotification('❌ إجابة خاطئة', 'حاول مرة أخرى!', 'error');
+  }
+}
+
+function nextMathProblem() {
+  generateMathProblem();
+  playCosmicSound('cosmic-click');
+}
+
+function getMathHint() {
+  showQuantumNotification('💡 تلميح', 'فكر في العملية الحسابية خطوة بخطوة', 'info');
+  playCosmicSound('ai-notification');
+}
+
+// ===== TIMER FUNCTIONS =====
+function startCreativeTimer() {
+  let timeLeft = 300; // 5 minutes
+  const timer = document.getElementById('creativeTimer');
+  
+  const countdown = setInterval(() => {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    
+    if (timeLeft <= 0) {
+      clearInterval(countdown);
+      playCosmicSound('end-timer');
+      showQuantumNotification('⏰ انتهى الوقت!', 'أظهر إبداعك الآن!', 'warning');
+    }
+    timeLeft--;
+  }, 1000);
+}
+
+function startScienceTimer() {
+  let timeLeft = 600; // 10 minutes
+  const timer = document.getElementById('scienceTimer');
+  
+  const countdown = setInterval(() => {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    
+    if (timeLeft <= 0) {
+      clearInterval(countdown);
+      playCosmicSound('end-timer');
+      showQuantumNotification('⏰ انتهت التجربة!', 'ما النتائج التي توصلت إليها؟', 'info');
+    }
+    timeLeft--;
+  }, 1000);
+}
+
+function startMathTimer() {
+  let timeLeft = 180; // 3 minutes
+  const timer = document.getElementById('mathTimer');
+  
+  const countdown = setInterval(() => {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    
+    if (timeLeft <= 0) {
+      clearInterval(countdown);
+      playCosmicSound('end-timer');
+      showQuantumNotification('⏰ انتهى الوقت!', 'كم مسألة حللت؟', 'warning');
+    }
+    timeLeft--;
+  }, 1000);
+}
+
+// ===== CREATIVE FUNCTIONS =====
+function generateCreativeIdea() {
+  const ideas = [
+    '🌟 ابتكر لعبة تعليمية جديدة',
+    '🎨 صمم ملصقاً للمحافظة على البيئة',
+    '🤖 تخيل روبوت مساعد للطلاب',
+    '🚀 اخترع وسيلة نقل مستقبلية',
+    '📱 طور تطبيقاً مفيداً للطلاب',
+    '🏠 صمم بيت المستقبل',
+    '🌍 اقترح حلولاً للمشاكل العالمية',
+    '🎭 ألف مسرحية قصيرة'
+  ];
+  
+  const randomIdea = ideas[Math.floor(Math.random() * ideas.length)];
+  document.getElementById('ideaDisplay').textContent = randomIdea;
+  playCosmicSound('cosmic-click');
+}
+
+function setupScienceEquipment() {
+  const equipmentItems = document.querySelectorAll('.equipment-item');
+  equipmentItems.forEach(item => {
+    item.addEventListener('mouseenter', () => {
+      item.style.transform = 'scale(1.05)';
+      item.style.background = 'rgba(147,112,219,0.3)';
+    });
+    item.addEventListener('mouseleave', () => {
+      item.style.transform = 'scale(1)';
+      item.style.background = 'rgba(255,255,255,0.1)';
+    });
+  });
+}
+
+// العودة للوحة الرئيسية من أي ساحة
+function returnToKingdom() {
+  hideAllArenas();
+  document.getElementById('kingdomDashboard').style.display = 'grid';
+  playCosmicSound('ui-back');
+  showQuantumNotification('🏰 مرحباً بعودتك', 'اختر مملكة أخرى للاستكشاف!', 'info');
+}
+
+// ===== ACHIEVEMENTS SYSTEM =====
+const achievements = {
+  firstSteps: { id: 'firstSteps', name: 'الخطوات الأولى', description: 'أكمل أول تحدي', icon: '👶', points: 10, unlocked: false },
+  speedDemon: { id: 'speedDemon', name: 'شيطان السرعة', description: 'أكمل 10 تحديات في 5 دقائق', icon: '⚡', points: 50, unlocked: false },
+  brainiac: { id: 'brainiac', name: 'العبقري', description: 'اجمع 100 نقطة', icon: '🧠', points: 100, unlocked: false },
+  perfectionist: { id: 'perfectionist', name: 'الكمالي', description: 'أجب على 10 أسئلة متتالية بشكل صحيح', icon: '💎', points: 75, unlocked: false },
+  explorer: { id: 'explorer', name: 'المستكشف', description: 'زر جميع الممالك', icon: '🗺️', points: 30, unlocked: false },
+  creative: { id: 'creative', name: 'المبدع', description: 'أكمل 5 تحديات إبداعية', icon: '🎨', points: 40, unlocked: false },
+  scientist: { id: 'scientist', name: 'العالم', description: 'أجر 10 تجارب في مختبر العلوم', icon: '🔬', points: 60, unlocked: false },
+  mathematician: { id: 'mathematician', name: 'عالم الرياضيات', description: 'حل 25 مسألة رياضية', icon: '📐', points: 80, unlocked: false }
+};
+
+function initializeAchievements() {
+  // تحميل الإنجازات المحفوظة
+  const savedAchievements = localStorage.getItem('kingdomAchievements');
+  if (savedAchievements) {
+    const saved = JSON.parse(savedAchievements);
+    Object.keys(achievements).forEach(key => {
+      if (saved[key]) {
+        achievements[key].unlocked = saved[key].unlocked;
+      }
+    });
+  }
+  
+  displayAchievements();
+}
+
+function displayAchievements() {
+  const container = document.getElementById('achievementsContainer');
+  if (!container) return;
+  
+  const unlockedAchievements = Object.values(achievements).filter(a => a.unlocked);
+  const recentAchievements = unlockedAchievements.slice(-3); // آخر 3 إنجازات
+  
+  container.innerHTML = recentAchievements.map(achievement => `
+    <div style="background: linear-gradient(45deg, rgba(255,215,0,0.2), rgba(255,165,0,0.2)); padding: 1rem; border-radius: 10px; text-align: center; border: 2px solid rgba(255,215,0,0.5);">
+      <div style="font-size: 2rem; margin-bottom: 0.5rem;">${achievement.icon}</div>
+      <h4 style="color: #ffd700; margin-bottom: 0.3rem; font-size: 1rem;">${achievement.name}</h4>
+      <p style="font-size: 0.8rem; color: rgba(255,255,255,0.8); margin-bottom: 0.5rem;">${achievement.description}</p>
+      <div style="color: #ffd700; font-weight: bold;">+${achievement.points} نقطة</div>
+    </div>
+  `).join('');
+  
+  if (recentAchievements.length === 0) {
+    container.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: rgba(255,255,255,0.6);">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">🏆</div>
+        <div>ابدأ التحديات لفتح الإنجازات!</div>
+      </div>
+    `;
+  }
+}
+
+function checkAchievement(achievementId) {
+  if (achievements[achievementId] && !achievements[achievementId].unlocked) {
+    achievements[achievementId].unlocked = true;
+    
+    // حفظ الإنجازات
+    localStorage.setItem('kingdomAchievements', JSON.stringify(achievements));
+    
+    // إظهار إشعار الإنجاز
+    showAchievementNotification(achievements[achievementId]);
+    
+    // تحديث العرض
+    displayAchievements();
+    
+    // تشغيل تأثيرات صوتية ومرئية
+    playCosmicSound('achievement-unlock');
+    createCosmicExplosion(document.getElementById('achievementsContainer'));
+  }
+}
+
+function showAchievementNotification(achievement) {
+  showQuantumNotification(
+    `🏆 إنجاز جديد: ${achievement.name}`,
+    `${achievement.description} - +${achievement.points} نقطة`,
+    'success'
+  );
+}
+
+function checkForNewAchievements() {
+  const totalPoints = getTotalPoints();
+  const completedChallenges = gameState.completedChallenges || 0;
+  
+  // فحص مختلف الإنجازات
+  if (completedChallenges >= 1) checkAchievement('firstSteps');
+  if (totalPoints >= 100) checkAchievement('brainiac');
+  if (gameState.visitedRealms && gameState.visitedRealms.length >= 4) checkAchievement('explorer');
+  
+  playCosmicSound('data-process');
+  showQuantumNotification('🔍 فحص الإنجازات', 'تم فحص جميع الإنجازات المتاحة', 'info');
+}
+
+function showAllAchievements() {
+  const modal = document.createElement('div');
+  modal.className = 'modal-overlay';
+  modal.style.cssText = `
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8); z-index: 10000; display: flex;
+    align-items: center; justify-content: center; backdrop-filter: blur(10px);
+  `;
+  
+  const content = document.createElement('div');
+  content.style.cssText = `
+    background: linear-gradient(135deg, #1a1a2e, #16213e); border: 2px solid #ffd700;
+    border-radius: 20px; padding: 2rem; max-width: 800px; width: 90%;
+    max-height: 80vh; overflow-y: auto; color: white;
+  `;
+  
+  content.innerHTML = `
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+      <h2 style="color: #ffd700; margin: 0;">🏆 جميع الإنجازات</h2>
+      <button onclick="this.closest('.modal-overlay').remove()" style="background: #ff4757; border: none; color: white; padding: 0.5rem; border-radius: 50%; width: 40px; height: 40px; cursor: pointer;">✕</button>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+      ${Object.values(achievements).map(achievement => `
+        <div style="background: ${achievement.unlocked ? 'linear-gradient(45deg, rgba(255,215,0,0.3), rgba(255,165,0,0.3))' : 'rgba(255,255,255,0.1)'}; padding: 1rem; border-radius: 10px; text-align: center; opacity: ${achievement.unlocked ? '1' : '0.5'};">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">${achievement.icon}</div>
+          <h4 style="color: ${achievement.unlocked ? '#ffd700' : '#ccc'}; margin-bottom: 0.3rem;">${achievement.name}</h4>
+          <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">${achievement.description}</p>
+          <div style="color: #ffd700; font-weight: bold;">+${achievement.points} نقطة</div>
+          ${achievement.unlocked ? '<div style="color: #00ff00; margin-top: 0.5rem;">✅ مكتمل</div>' : '<div style="color: #999; margin-top: 0.5rem;">🔒 مقفل</div>'}
+        </div>
+      `).join('')}
+    </div>
+  `;
+  
+  modal.appendChild(content);
+  document.body.appendChild(modal);
+  playCosmicSound('cosmic-portal');
+}
+
+// ===== QUICK CHALLENGES =====
+function startOneMinuteChallenge() {
+  gameState.quickChallenge = 'oneMinute';
+  gameState.quickChallengeStartTime = Date.now();
+  gameState.quickChallengeScore = 0;
+  
+  showQuantumNotification('⏰ تحدي الدقيقة الواحدة', 'ابدأ الآن! لديك 60 ثانية فقط', 'warning');
+  playCosmicSound('countdown-tick');
+  
+  // يمكن دمجه مع نظام البرق الحالي
+  setTimeout(() => activateRealm('lightning'), 1000);
+}
+
+function startAccuracyChallenge() {
+  gameState.quickChallenge = 'accuracy';
+  gameState.quickChallengeScore = 0;
+  gameState.consecutiveCorrect = 0;
+  
+  showQuantumNotification('🎯 تحدي الدقة', '10 أسئلة بدون أخطاء - هل تستطيع؟', 'info');
+  playCosmicSound('brain-activate');
+  
+  setTimeout(() => activateRealm('wisdom'), 1000);
+}
+
+function startStarChallenge() {
+  gameState.quickChallenge = 'stars';
+  gameState.quickChallengeStartTime = Date.now();
+  gameState.quickChallengeTarget = 50;
+  
+  showQuantumNotification('⭐ تحدي النجوم', 'اجمع 50 نقطة في أسرع وقت ممكن!', 'success');
+  playCosmicSound('level-up');
+  
+  // يمكن البدء بأي مملكة
+  setTimeout(() => {
+    document.getElementById('kingdomDashboard').style.display = 'grid';
+    showQuantumNotification('🎯 اختر المملكة', 'ابدأ من أي مملكة تريد!', 'info');
+  }, 1500);
+}
+
+// تتبع التقدم في التحديات السريعة
+function updateQuickChallengeProgress(points) {
+  if (!gameState.quickChallenge) return;
+  
+  gameState.quickChallengeScore += points;
+  
+  switch (gameState.quickChallenge) {
+    case 'oneMinute':
+      const timeLeft = 60 - Math.floor((Date.now() - gameState.quickChallengeStartTime) / 1000);
+      if (timeLeft <= 0) {
+        completeQuickChallenge();
+      }
+      break;
+      
+    case 'accuracy':
+      gameState.consecutiveCorrect++;
+      if (gameState.consecutiveCorrect >= 10) {
+        completeQuickChallenge();
+      }
+      break;
+      
+    case 'stars':
+      if (gameState.quickChallengeScore >= gameState.quickChallengeTarget) {
+        completeQuickChallenge();
+      }
+      break;
+  }
+}
+
+function completeQuickChallenge() {
+  const challenge = gameState.quickChallenge;
+  const score = gameState.quickChallengeScore;
+  
+  let message = '';
+  let bonus = 0;
+  
+  switch (challenge) {
+    case 'oneMinute':
+      message = `🔥 أجبت على ${score} سؤال في دقيقة واحدة!`;
+      bonus = score * 2;
+      break;
+    case 'accuracy':
+      message = `🎯 مذهل! 10 إجابات صحيحة متتالية!`;
+      bonus = 50;
+      checkAchievement('perfectionist');
+      break;
+    case 'stars':
+      const timeSpent = Math.floor((Date.now() - gameState.quickChallengeStartTime) / 1000);
+      message = `⭐ رائع! جمعت 50 نقطة في ${timeSpent} ثانية!`;
+      bonus = Math.max(10, 100 - timeSpent);
+      break;
+  }
+  
+  gameState.totalPoints = (gameState.totalPoints || 0) + bonus;
+  
+  showQuantumNotification('🏆 تحدي مكتمل!', `${message} مكافأة: +${bonus} نقطة`, 'success');
+  playCosmicSound('epic-victory');
+  
+  // إعادة تعيين التحدي السريع
+  gameState.quickChallenge = null;
+  
+  // فحص إنجازات جديدة
+  setTimeout(() => checkForNewAchievements(), 2000);
+}
+
 // ===== FINAL INITIALIZATION =====
 console.log('🏆 مملكة التحديات الذكية - تحميل مكتمل!');
 console.log('🎵 نظام الصوت المتقدم مع 61 تأثير صوتي جاهز!');
 console.log('⚡ جميع المماليك والتحديات جاهزة للعمل!');
+console.log('🏆 نظام الإنجازات مفعل!');
+console.log('🎯 التحديات السريعة متاحة!');
 
 // Initialize the enhanced audio system
 initAudioSystem();
@@ -5898,6 +6861,58 @@ updateSoundButton();
 
 // تحديث زر إدارة الجلسة
 updateSessionButtonStatus();
+
+// تفعيل نظام الإنجازات
+initializeAchievements();
+
+// إضافة تتبع المماليك المزارة
+if (!gameState.visitedRealms) {
+  gameState.visitedRealms = [];
+}
+
+// تحسين تتبع النقاط
+if (!gameState.totalPoints) {
+  gameState.totalPoints = 0;
+}
+
+// إضافة مستمع للوحة المفاتيح للتحكم السريع
+document.addEventListener('keydown', function(event) {
+  if (event.ctrlKey || event.metaKey) {
+    switch(event.key) {
+      case '1':
+        event.preventDefault();
+        activateRealm('lightning');
+        break;
+      case '2':
+        event.preventDefault();
+        activateRealm('wisdom');
+        break;
+      case '3':
+        event.preventDefault();
+        activateRealm('battle');
+        break;
+      case '4':
+        event.preventDefault();
+        activateRealm('creative');
+        break;
+      case 'h':
+        event.preventDefault();
+        returnToKingdom();
+        break;
+    }
+  }
+});
+
+// رسالة ترحيب محسنة
+setTimeout(() => {
+  if (document.getElementById('kingdomContent').style.display !== 'none') {
+    showQuantumNotification(
+      '👑 أهلاً بك في مملكة التحديات المتطورة!',
+      'اكتشف 9 ممالك مختلفة، اجمع الإنجازات، وتحدى نفسك! 🚀',
+      'info'
+    );
+  }
+}, 2000);
 </script>
 </body>
 </html>
