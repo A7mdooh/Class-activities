@@ -27,84 +27,7 @@
       --shadow-heavy: 0 20px 40px rgba(0,0,0,0.15);
       
       --arabic-font: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      
-      /* متغيرات برق السرعة */
-      --lightning-primary: #ffd700;
-      --lightning-secondary: #ffed4e;
-      --lightning-accent: #ff6347;
-      --lightning-dark: #1a1a2e;
     }
-
-    /* ===== تأثيرات برق السرعة ===== */
-    @keyframes lightningGlow {
-      0%, 100% { text-shadow: 0 0 30px var(--lightning-primary), 0 0 60px var(--lightning-primary); }
-      50% { text-shadow: 0 0 50px var(--lightning-primary), 0 0 100px var(--lightning-primary); }
-    }
-
-    @keyframes lightningButtonPulse {
-      0%, 100% { transform: scale(1); box-shadow: 0 10px 30px rgba(255,215,0,0.4); }
-      50% { transform: scale(1.05); box-shadow: 0 15px 40px rgba(255,215,0,0.6); }
-    }
-
-    @keyframes lightningWarning {
-      0%, 100% { color: var(--lightning-primary); }
-      50% { color: #ffff66; }
-    }
-
-    @keyframes scoreFloat {
-      0% { 
-        opacity: 1; 
-        transform: translate(-50%, -50%) scale(1); 
-      }
-      100% { 
-        opacity: 0; 
-        transform: translate(-50%, -150%) scale(1.5); 
-      }
-    }
-
-    @keyframes slideInFromRight {
-      0% { 
-        transform: translateX(100%); 
-        opacity: 0; 
-      }
-      100% { 
-        transform: translateX(0); 
-        opacity: 1; 
-      }
-    }
-
-    @keyframes slideOutToRight {
-      0% { 
-        transform: translateX(0); 
-        opacity: 1; 
-      }
-      100% { 
-        transform: translateX(100%); 
-        opacity: 0; 
-      }
-    }
-
-    .speed-lightning-phase {
-      padding: 2rem;
-      min-height: 100vh;
-    }
-
-    .speed-student-card:hover {
-      transform: scale(1.05) !important;
-      box-shadow: 0 10px 30px rgba(255,215,0,0.6) !important;
-    }
-
-    .lightning-start-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 15px 40px rgba(255,215,0,0.6);
-    }
-
-    .action-btn:hover {
-      transform: scale(1.05);
-      opacity: 0.9;
-    }
-
-    /* ===== نهاية تأثيرات برق السرعة =====
 
     * {
       margin: 0;
@@ -1238,114 +1161,6 @@
       .competitor-item div:nth-child(3) > div:nth-child(2) {
         font-size: 1.4rem !important;
       }
-    }
-
-    /* Lightning Challenge Timer Animations */
-    @keyframes timerPulse {
-      0%, 100% { 
-        transform: scale(1); 
-        box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
-      }
-      50% { 
-        transform: scale(1.05); 
-        box-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
-      }
-    }
-
-    @keyframes timerUrgent {
-      0%, 100% { 
-        transform: scale(1); 
-        box-shadow: 0 0 30px rgba(255, 0, 0, 0.7);
-        border-color: #ff0000;
-      }
-      50% { 
-        transform: scale(1.1); 
-        box-shadow: 0 0 50px rgba(255, 0, 0, 1);
-        border-color: #ff4757;
-      }
-    }
-
-    @keyframes timerCritical {
-      0%, 100% { 
-        transform: scale(1.05); 
-        box-shadow: 0 0 40px rgba(255, 0, 0, 1);
-        background: linear-gradient(135deg, rgba(255,0,0,0.8), rgba(255,71,87,0.3));
-      }
-      25% { 
-        transform: scale(1.15); 
-        box-shadow: 0 0 60px rgba(255, 0, 0, 1);
-      }
-      75% { 
-        transform: scale(0.95); 
-        box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
-      }
-    }
-
-    .lightning-control-btn:hover {
-      transform: translateY(-3px) scale(1.05) !important;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
-    }
-
-    .lightning-control-btn:active {
-      transform: translateY(-1px) scale(1.02) !important;
-    }
-
-    /* Timer Warning States */
-    .timer-warning {
-      animation: timerUrgent 0.5s ease-in-out infinite !important;
-      color: #ff4757 !important;
-      text-shadow: 0 0 30px #ff4757, 0 0 60px #ff4757 !important;
-    }
-
-    .timer-critical {
-      animation: timerCritical 0.3s ease-in-out infinite !important;
-      color: #ff0000 !important;
-      text-shadow: 0 0 30px #ff0000, 0 0 60px #ff0000 !important;
-    }
-
-    /* Student Button Enhanced Styles */
-    .student-btn-active {
-      animation: studentGlow 0.6s ease-in-out;
-      transform: scale(1.1);
-      box-shadow: 0 0 25px rgba(67, 233, 123, 0.8) !important;
-    }
-
-    @keyframes studentGlow {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.15); box-shadow: 0 0 35px rgba(67, 233, 123, 1); }
-      100% { transform: scale(1.1); }
-    }
-
-    /* Challenge Completion Effects */
-    .challenge-complete-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(26,26,46,0.95));
-      z-index: 20000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      animation: overlayFadeIn 0.5s ease;
-    }
-
-    @keyframes overlayFadeIn {
-      0% { opacity: 0; }
-      100% { opacity: 1; }
-    }
-
-    .completion-message {
-      text-align: center;
-      color: white;
-      animation: completionBounce 0.8s ease-out;
-    }
-
-    @keyframes completionBounce {
-      0% { opacity: 0; transform: scale(0.3) translateY(-100px); }
-      60% { opacity: 1; transform: scale(1.1) translateY(0); }
-      100% { opacity: 1; transform: scale(1) translateY(0); }
     }
 
     /* تحسينات إضافية */
@@ -2815,11 +2630,6 @@
             <button class="neural-button" id="startGameBtn" onclick="startKingdomGame()" style="font-size: 1.3rem; padding: 1.5rem 3rem; background: linear-gradient(45deg, #ffd700, #ff6347);" disabled>
               🚀 بدء مملكة التحديات
             </button>
-            
-            <!-- Quick Test Button (for debugging) -->
-            <button class="neural-button" onclick="quickTestStart()" style="font-size: 1rem; padding: 0.8rem 1.5rem; background: linear-gradient(45deg, #ff6347, #ffd700); margin-top: 1rem;">
-              🧪 اختبار سريع (طلاب تجريبيين)
-            </button>
           </div>
         </div>
       </div>
@@ -2827,52 +2637,6 @@
 
     <!-- Main Game Interface (initially hidden) -->
     <div class="game-interface" id="gameInterface" style="display: none;">
-    
-    <!-- Kingdom Selection Menu -->
-    <div id="kingdomSelectionMenu" style="display: none;">
-      <header class="main-header">
-        <h1 class="kingdom-title">🏆 مملكة التحديات الذكية</h1>
-        <p class="subtitle">⚡ اختر التحدي المناسب لطلابك</p>
-      </header>
-
-      <!-- Kingdoms Grid -->
-      <div class="kingdoms-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; padding: 2rem; max-width: 1200px; margin: 0 auto;">
-        
-        <!-- Lightning Kingdom -->
-        <div class="realm-card" onclick="enterLightningKingdom()" style="background: linear-gradient(135deg, #ffd700, #ff6347); cursor: pointer; padding: 2rem; border-radius: 20px; text-align: center; transition: transform 0.3s;">
-          <div style="font-size: 4rem; margin-bottom: 1rem;">⚡</div>
-          <h3 style="color: #1a1a2e; font-size: 1.8rem; margin-bottom: 1rem;">برق السرعة</h3>
-          <p style="color: #1a1a2e; font-size: 1.1rem;">منافسة برق سريعة - 5 دقائق من الإثارة الخالصة!</p>
-        </div>
-
-        <!-- Creative Kingdom -->
-        <div class="realm-card" onclick="enterCreativeKingdom()" style="background: linear-gradient(135deg, #32cd32, #00ff7f); cursor: pointer; padding: 2rem; border-radius: 20px; text-align: center; transition: transform 0.3s;">
-          <div style="font-size: 4rem; margin-bottom: 1rem;">🎨</div>
-          <h3 style="color: #1a1a2e; font-size: 1.8rem; margin-bottom: 1rem;">مملكة الإبداع</h3>
-          <p style="color: #1a1a2e; font-size: 1.1rem;">تحديات إبداعية في الفن والكتابة والتفكير</p>
-        </div>
-
-        <!-- Strategy Kingdom -->
-        <div class="realm-card" onclick="enterStrategyKingdom()" style="background: linear-gradient(135deg, #4169e1, #1e90ff); cursor: pointer; padding: 2rem; border-radius: 20px; text-align: center; transition: transform 0.3s;">
-          <div style="font-size: 4rem; margin-bottom: 1rem;">🧠</div>
-          <h3 style="color: white; font-size: 1.8rem; margin-bottom: 1rem;">مملكة الاستراتيجية</h3>
-          <p style="color: white; font-size: 1.1rem;">تحديات تفكير استراتيجي وحل المشاكل</p>
-        </div>
-
-        <!-- Knowledge Kingdom -->
-        <div class="realm-card" onclick="enterKnowledgeKingdom()" style="background: linear-gradient(135deg, #9370db, #8a2be2); cursor: pointer; padding: 2rem; border-radius: 20px; text-align: center; transition: transform 0.3s;">
-          <div style="font-size: 4rem; margin-bottom: 1rem;">📚</div>
-          <h3 style="color: white; font-size: 1.8rem; margin-bottom: 1rem;">مملكة المعرفة</h3>
-          <p style="color: white; font-size: 1.1rem;">أسئلة معرفية متنوعة وتحديات علمية</p>
-        </div>
-      </div>
-
-      <!-- Back Button -->
-      <div style="text-align: center; margin-top: 2rem;">
-        <button class="neural-button secondary" onclick="returnToStudentSelection()">🔙 العودة لاختيار الطلاب</button>
-      </div>
-    </div>
-    
     <!-- أزرار التحكم العلوية الاحترافية -->
     <div class="cosmic-control-header">
         <div class="control-buttons-container">
@@ -2919,7 +2683,7 @@
     </div>
 
     <!-- Kingdom Header -->
-    <div id="kingdomContent" style="display: none;">
+    <div id="kingdomContent">
     <header class="main-header">
       <h1 class="kingdom-title">🏆 مملكة التحديات الذكية</h1>
       <p class="subtitle">⚡ نظام التعلم التفاعلي المتقدم بتقنية الذكاء الاصطناعي</p>
@@ -3045,199 +2809,15 @@
       </div>
     </div>
 
-    <!-- Lightning Arena - شيطان السرعة -->
+    <!-- Lightning Arena - Enhanced Competitive Version -->
     <div class="battle-arena" id="lightningArena" style="display: none;">
-      <!-- شاشة البداية -->
-      <div id="speedDemonStart" class="speed-lightning-phase">
-        <div class="lightning-header">
-          <button onclick="returnToKingdom()" class="return-btn" style="position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 10px; cursor: pointer;">← العودة</button>
-          
-          <h1 style="color: #ffd700; font-size: 4rem; text-align: center; margin: 2rem 0; text-shadow: 0 0 30px #ffd700; animation: lightningGlow 2s ease-in-out infinite;">
-            ⚡ برق السرعة ⚡
-          </h1>
-          
-          <!-- إعدادات التحدي -->
-          <div class="challenge-settings" style="background: rgba(0,0,0,0.3); padding: 2rem; border-radius: 20px; margin: 2rem auto; max-width: 800px; border: 2px solid rgba(255,215,0,0.3);">
-            <h3 style="color: #ffd700; text-align: center; margin-bottom: 2rem; font-size: 1.8rem;">⚙️ إعدادات التحدي ⚙️</h3>
-            
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
-              <!-- مدة التحدي -->
-              <div class="setting-group">
-                <label style="color: rgba(255,255,255,0.9); font-size: 1.1rem; display: block; margin-bottom: 0.5rem;">⏱️ مدة التحدي:</label>
-                <select id="challengeDuration" style="width: 100%; padding: 0.8rem; border-radius: 10px; border: 2px solid #ffd700; background: rgba(255,255,255,0.1); color: white; font-size: 1rem;">
-                  <option value="60">1 دقيقة</option>
-                  <option value="120">2 دقيقة</option>
-                  <option value="180">3 دقائق</option>
-                  <option value="240">4 دقائق</option>
-                  <option value="300" selected>5 دقائق</option>
-                </select>
-              </div>
-              
-              <!-- نوع العرض -->
-              <div class="setting-group">
-                <label style="color: rgba(255,255,255,0.9); font-size: 1.1rem; display: block; margin-bottom: 0.5rem;">👥 نوع العرض:</label>
-                <select id="displayType" style="width: 100%; padding: 0.8rem; border-radius: 10px; border: 2px solid #ffd700; background: rgba(255,255,255,0.1); color: white; font-size: 1rem;">
-                  <option value="individual" selected>فردي (كل طالب لوحده)</option>
-                  <option value="teams">فرق (تقسيم إلى فرق)</option>
-                </select>
-              </div>
-              
-              <!-- عرض النقاط مباشرة -->
-              <div class="setting-group">
-                <label style="color: rgba(255,255,255,0.9); font-size: 1.1rem; display: block; margin-bottom: 0.5rem;">📊 عرض النقاط مباشرة؟</label>
-                <div style="display: flex; gap: 1rem; align-items: center;">
-                  <label style="display: flex; align-items: center; gap: 0.5rem; color: rgba(255,255,255,0.8);">
-                    <input type="radio" name="liveScores" value="yes" checked style="transform: scale(1.2);"> نعم
-                  </label>
-                  <label style="display: flex; align-items: center; gap: 0.5rem; color: rgba(255,255,255,0.8);">
-                    <input type="radio" name="liveScores" value="no" style="transform: scale(1.2);"> لا
-                  </label>
-                </div>
-              </div>
-              
-              <!-- أصوات التفاعل -->
-              <div class="setting-group">
-                <label style="color: rgba(255,255,255,0.9); font-size: 1.1rem; display: block; margin-bottom: 0.5rem;">🔊 إظهار أصوات التفاعل؟</label>
-                <div style="display: flex; gap: 1rem; align-items: center;">
-                  <label style="display: flex; align-items: center; gap: 0.5rem; color: rgba(255,255,255,0.8);">
-                    <input type="radio" name="soundEffects" value="yes" checked style="transform: scale(1.2);"> نعم (تشجيعية)
-                  </label>
-                  <label style="display: flex; align-items: center; gap: 0.5rem; color: rgba(255,255,255,0.8);">
-                    <input type="radio" name="soundEffects" value="no" style="transform: scale(1.2);"> لا
-                  </label>
-                </div>
-              </div>
-            </div>
-            
-            <!-- الأهداف التربوية -->
-            <div style="background: rgba(255,215,0,0.1); padding: 1.5rem; border-radius: 15px; margin-top: 2rem; border: 1px solid rgba(255,215,0,0.3);">
-              <h4 style="color: #ffd700; margin-bottom: 1rem; text-align: center;">🧠 الأهداف التربوية المستفاد منها:</h4>
-              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; color: rgba(255,255,255,0.9); font-size: 0.95rem;">
-                <div>• تعزيز الإصغاء السريع</div>
-                <div>• تنمية رد الفعل العقلي</div>
-                <div>• التشجيع على التنافس الإيجابي</div>
-                <div>• تركيز فوري مرتفع داخل الصف</div>
-                <div>• تقوية الثقة في الإجابة الشفوية أمام الآخرين</div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="countdown-display" style="text-align: center; margin: 2rem 0;">
-            <div class="countdown-circle" style="width: 200px; height: 200px; border: 5px solid #ffd700; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(255,215,0,0.3)); box-shadow: 0 0 40px rgba(255,215,0,0.5);">
-              <div style="text-align: center;">
-                <div id="durationDisplay" style="font-size: 2.5rem; color: #ffd700; font-weight: bold;">5:00</div>
-                <div style="color: rgba(255,255,255,0.8); font-size: 1rem;">دقائق من الإثارة</div>
-              </div>
-            </div>
-          </div>
-          
-          <div style="text-align: center; margin: 2rem 0;">
-            <p style="color: rgba(255,255,255,0.9); font-size: 1.4rem; margin: 1rem 0;">المعلم يطرح الأسئلة... الطلاب يتسابقون للإجابة!</p>
-            <p style="color: #ffd700; font-size: 1.2rem;">انقر على اسم الطالب الذي يجيب ← نقاط فورية + مؤثرات!</p>
-          </div>
-          
-          <div style="text-align: center;">
-            <button onclick="startSpeedDemon()" class="lightning-start-btn" style="
-              background: linear-gradient(135deg, #ffd700, #ffed4e);
-              border: none;
-              color: #1a1a2e;
-              padding: 1.5rem 3rem;
-              font-size: 1.5rem;
-              font-weight: bold;
-              border-radius: 20px;
-              cursor: pointer;
-              text-transform: uppercase;
-              letter-spacing: 2px;
-              box-shadow: 0 10px 30px rgba(255,215,0,0.4);
-              animation: lightningButtonPulse 2s ease-in-out infinite;
-              transition: all 0.3s ease;
-            ">
-              ⚡ ابدأ برق السرعة ⚡
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- شاشة اللعب النشط -->
-      <div id="speedDemonActive" class="speed-lightning-phase" style="display: none;">
-        <div class="active-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 15px;">
-          <div class="lightning-timer" style="text-align: center;">
-            <div id="activeDemonTimer" style="font-size: 3rem; color: #ffd700; font-weight: bold; text-shadow: 0 0 20px #ffd700;">5:00</div>
-            <div style="color: rgba(255,255,255,0.7);">الوقت المتبقي</div>
-          </div>
-          
-          <div class="game-stats" style="text-align: center;">
-            <div id="totalClicks" style="font-size: 2rem; color: #ffd700; font-weight: bold;">0</div>
-            <div style="color: rgba(255,255,255,0.7);">إجمالي النقرات</div>
-          </div>
-          
-          <button onclick="endSpeedDemon()" class="emergency-stop" style="background: #ff4757; border: none; color: white; padding: 1rem; border-radius: 10px; cursor: pointer; font-weight: bold;">🛑 إيقاف</button>
-        </div>
-
-        <!-- شبكة الطلاب للنقر السريع -->
-        <div class="speed-students-grid" id="speedStudentsGrid" style="
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-          gap: 1rem;
-          margin: 2rem 0;
-        ">
-          <!-- سيتم ملء الطلاب هنا -->
-        </div>
-
-        <!-- النقاط الحية -->
-        <div class="live-scores" id="liveScoresContainer" style="background: rgba(0,0,0,0.3); padding: 1.5rem; border-radius: 15px; margin-top: 2rem;">
-          <h3 style="color: #ffd700; text-align: center; margin-bottom: 1rem;">🏆 النقاط الحية 🏆</h3>
-          <div id="liveScoresList" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.5rem;">
-            <!-- النقاط الحية هنا -->
-          </div>
-        </div>
-      </div>
-
-      <!-- شاشة النتائج النهائية -->
-      <div id="speedDemonResults" class="speed-lightning-phase" style="display: none;">
-        <div class="results-header" style="text-align: center; margin: 2rem 0;">
-          <h2 style="color: #ff4757; font-size: 3rem; margin-bottom: 1rem;">🎉 انتهى برق السرعة! 🎉</h2>
-          <div style="color: rgba(255,255,255,0.8); font-size: 1.2rem;">المدة: 5 دقائق كاملة من الإثارة</div>
-        </div>
+      <!-- Lightning Header with Storm Effects -->
+      <div class="arena-header" style="position: relative; overflow: hidden;">
+        <div class="lightning-storm-bg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, rgba(255,255,0,0.1) 0%, transparent 70%); animation: lightningPulse 2s ease-in-out infinite;"></div>
         
-        <div class="final-leaderboard" style="background: rgba(0,0,0,0.3); padding: 2rem; border-radius: 20px; margin: 2rem 0;">
-          <h3 style="color: #ffd700; text-align: center; margin-bottom: 2rem; font-size: 2rem;">👑 المتصدرون النهائيون 👑</h3>
-          <div id="finalLeaderboard">
-            <!-- المتصدرون هنا -->
-          </div>
-        </div>
-
-        <div class="action-buttons" style="text-align: center; margin: 2rem 0;">
-          <button onclick="restartSpeedDemon()" class="action-btn" style="
-            background: linear-gradient(135deg, #43e97b, #38f9d7);
-            border: none;
-            color: white;
-            padding: 1rem 2rem;
-            margin: 0 1rem;
-            border-radius: 15px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-          ">
-            � جولة أخرى
-          </button>
-          
-          <button onclick="returnToKingdom()" class="action-btn" style="
-            background: linear-gradient(135deg, #ffd700, #ffed4e);
-            border: none;
-            color: #1a1a2e;
-            padding: 1rem 2rem;
-            margin: 0 1rem;
-            border-radius: 15px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-          ">
-            👑 العودة للمملكة
-          </button>
-        </div>
-      </div>
-    </div>
+        <h2 style="color: #ffd700; font-size: 2.5rem; margin-bottom: 1rem; text-shadow: 0 0 20px #ffd700; position: relative; z-index: 10;">
+          ⚡ مملكة البرق الكهربائية ⚡
+        </h2>
         
         <!-- Dynamic Timer with Electric Effect -->
         <div class="lightning-timer-container" style="position: relative; margin: 1rem 0;">
@@ -3291,14 +2871,11 @@
           </div>
         </div>
 
-        <!-- Student Scoring Panel -->
-        <div class="student-scoring-panel" style="background: rgba(67,233,123,0.1); padding: 1.5rem; border-radius: 15px; margin-top: 1rem; border: 2px solid rgba(67,233,123,0.3);">
-          <h4 style="color: #43e97b; text-align: center; margin-bottom: 1rem;">🎯 تسجيل النقاط للطلاب 🎯</h4>
-          <div style="text-align: center; margin-bottom: 1rem; color: rgba(255,255,255,0.8);">
-            اضغط على اسم الطالب لإعطائه نقاط عند الإجابة الصحيحة
-          </div>
-          <div id="studentScoringButtons" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.8rem;">
-            <!-- Student scoring buttons will be generated dynamically -->
+        <!-- Quick Answer Selection -->
+        <div class="quick-answer-selection" style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 15px; margin-top: 1rem;">
+          <h4 style="color: #00ffff; text-align: center; margin-bottom: 1rem;">⚡ اختيار سريع للفائز ⚡</h4>
+          <div id="quickAnswerButtons" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.8rem;">
+            <!-- Quick selection buttons will be generated -->
           </div>
         </div>
       </div>
@@ -3891,771 +3468,6 @@
   </div>
 
 <script>
-// ===== برق السرعة - نظام بسيط وفعال =====
-
-// متغيرات برق السرعة
-let speedLightningState = {
-  isActive: false,
-  timeRemaining: 300, // 5 دقائق بالثواني
-  timer: null,
-  studentScores: {},
-  teamScores: {},
-  totalClicks: 0,
-  phase: 'start', // start, active, results
-  settings: {
-    duration: 300, // بالثواني
-    displayType: 'individual', // individual, teams
-    liveScores: true,
-    soundEffects: true
-  }
-};
-
-// تحديث العرض عند تغيير الإعدادات
-function updateSettingsDisplay() {
-  // تحديث عرض المدة
-  const durationSelect = document.getElementById('challengeDuration');
-  if (durationSelect) {
-    const selectedDuration = parseInt(durationSelect.value);
-    const minutes = Math.floor(selectedDuration / 60);
-    const seconds = selectedDuration % 60;
-    const displayText = seconds > 0 ? `${minutes}:${seconds.toString().padStart(2, '0')}` : `${minutes}:00`;
-    
-    const durationDisplay = document.getElementById('durationDisplay');
-    if (durationDisplay) {
-      durationDisplay.textContent = displayText;
-    }
-  }
-}
-
-// إعداد مستمعي الأحداث للإعدادات
-function setupSettingsListeners() {
-  // مستمع تغيير المدة
-  const durationSelect = document.getElementById('challengeDuration');
-  if (durationSelect) {
-    durationSelect.addEventListener('change', function() {
-      speedLightningState.settings.duration = parseInt(this.value);
-      updateSettingsDisplay();
-    });
-  }
-  
-  // مستمع تغيير نوع العرض
-  const displayTypeSelect = document.getElementById('displayType');
-  if (displayTypeSelect) {
-    displayTypeSelect.addEventListener('change', function() {
-      speedLightningState.settings.displayType = this.value;
-    });
-  }
-  
-  // مستمعات النقاط المباشرة
-  const liveScoresRadios = document.querySelectorAll('input[name="liveScores"]');
-  liveScoresRadios.forEach(radio => {
-    radio.addEventListener('change', function() {
-      speedLightningState.settings.liveScores = this.value === 'yes';
-    });
-  });
-  
-  // مستمعات الأصوات
-  const soundRadios = document.querySelectorAll('input[name="soundEffects"]');
-  soundRadios.forEach(radio => {
-    radio.addEventListener('change', function() {
-      speedLightningState.settings.soundEffects = this.value === 'yes';
-    });
-  });
-}
-
-// بدء برق السرعة
-function startSpeedDemon() {
-  console.log('⚡ بدء برق السرعة!');
-  
-  // قراءة الإعدادات الحالية
-  readCurrentSettings();
-  
-  // تغيير المرحلة
-  speedLightningState.phase = 'active';
-  speedLightningState.isActive = true;
-  speedLightningState.timeRemaining = speedLightningState.settings.duration;
-  speedLightningState.totalClicks = 0;
-  speedLightningState.studentScores = {};
-  speedLightningState.teamScores = {};
-  
-  // إخفاء شاشة البداية وإظهار شاشة اللعب
-  document.getElementById('speedDemonStart').style.display = 'none';
-  document.getElementById('speedDemonActive').style.display = 'block';
-  
-  // إنشاء الطلاب أو الفرق حسب الإعداد
-  if (speedLightningState.settings.displayType === 'teams') {
-    createTeamsGrid();
-  } else {
-    createSpeedStudentsGrid();
-  }
-  
-  // بدء المؤقت
-  startLightningTimer();
-  
-  // صوت البداية
-  if (speedLightningState.settings.soundEffects) {
-    playLightningSound('start');
-  }
-  
-  // رسالة ترحيب
-  showLightningNotification('⚡ بدأ برق السرعة!', 'انقر على الطلاب للنقاط!', 'lightning');
-}
-
-// قراءة الإعدادات الحالية
-function readCurrentSettings() {
-  const durationSelect = document.getElementById('challengeDuration');
-  const displayTypeSelect = document.getElementById('displayType');
-  const liveScoresRadio = document.querySelector('input[name="liveScores"]:checked');
-  const soundRadio = document.querySelector('input[name="soundEffects"]:checked');
-  
-  if (durationSelect) speedLightningState.settings.duration = parseInt(durationSelect.value);
-  if (displayTypeSelect) speedLightningState.settings.displayType = displayTypeSelect.value;
-  if (liveScoresRadio) speedLightningState.settings.liveScores = liveScoresRadio.value === 'yes';
-  if (soundRadio) speedLightningState.settings.soundEffects = soundRadio.value === 'yes';
-}
-
-// إنشاء شبكة الطلاب
-function createSpeedStudentsGrid() {
-  const grid = document.getElementById('speedStudentsGrid');
-  grid.innerHTML = '';
-  
-  // التأكد من وجود الطلاب
-  if (!selectedStudentsList || selectedStudentsList.length === 0) {
-    grid.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.7); grid-column: 1/-1;">لا توجد طلاب محددون</div>';
-    return;
-  }
-  
-  selectedStudentsList.forEach(student => {
-    // تهيئة النقاط
-    speedLightningState.studentScores[student.id] = 0;
-    
-    const studentCard = document.createElement('div');
-    studentCard.className = 'speed-student-card';
-    studentCard.innerHTML = `
-      <div class="student-avatar" style="font-size: 2rem; margin-bottom: 0.5rem;">${student.avatar || '👤'}</div>
-      <div class="student-name" style="font-weight: bold; margin-bottom: 0.5rem;">${student.name}</div>
-      <div class="student-score" id="score-${student.id}" style="font-size: 1.5rem; color: #ffd700;">0</div>
-      <div style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">نقطة</div>
-    `;
-    
-    studentCard.style.cssText = `
-      background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,215,0,0.4));
-      border: 2px solid #ffd700;
-      border-radius: 15px;
-      padding: 1rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      color: white;
-    `;
-    
-    // إضافة تأثير النقر
-    studentCard.onclick = () => clickSpeedStudent(student.id, student.name);
-    
-    // تأثيرات التفاعل
-    studentCard.onmouseenter = () => {
-      studentCard.style.transform = 'scale(1.05)';
-      studentCard.style.boxShadow = '0 10px 30px rgba(255,215,0,0.6)';
-    };
-    
-    studentCard.onmouseleave = () => {
-      studentCard.style.transform = 'scale(1)';
-      studentCard.style.boxShadow = 'none';
-    };
-    
-    grid.appendChild(studentCard);
-  });
-}
-
-// إنشاء شبكة الفرق
-function createTeamsGrid() {
-  const grid = document.getElementById('speedStudentsGrid');
-  grid.innerHTML = '';
-  
-  if (!selectedStudentsList || selectedStudentsList.length === 0) {
-    grid.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.7); grid-column: 1/-1;">لا توجد طلاب محددون</div>';
-    return;
-  }
-  
-  // تقسيم الطلاب إلى فرق
-  const teams = createTeamsFromStudents();
-  
-  teams.forEach((team, index) => {
-    speedLightningState.teamScores[team.id] = 0;
-    
-    const teamCard = document.createElement('div');
-    teamCard.className = 'speed-team-card';
-    teamCard.innerHTML = `
-      <div class="team-icon" style="font-size: 2.5rem; margin-bottom: 0.5rem;">${team.icon}</div>
-      <div class="team-name" style="font-weight: bold; margin-bottom: 0.5rem; color: #ffd700;">${team.name}</div>
-      <div class="team-members" style="font-size: 0.8rem; margin-bottom: 0.5rem; color: rgba(255,255,255,0.7);">
-        ${team.members.map(m => m.name).join(', ')}
-      </div>
-      <div class="team-score" id="team-score-${team.id}" style="font-size: 1.8rem; color: #ffd700; font-weight: bold;">0</div>
-      <div style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">نقطة فريق</div>
-    `;
-    
-    teamCard.style.cssText = `
-      background: linear-gradient(135deg, ${team.color}20, ${team.color}40);
-      border: 2px solid ${team.color};
-      border-radius: 15px;
-      padding: 1.5rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      color: white;
-    `;
-    
-    teamCard.onclick = () => clickTeam(team.id, team.name);
-    
-    teamCard.onmouseenter = () => {
-      teamCard.style.transform = 'scale(1.05)';
-      teamCard.style.boxShadow = `0 10px 30px ${team.color}60`;
-    };
-    
-    teamCard.onmouseleave = () => {
-      teamCard.style.transform = 'scale(1)';
-      teamCard.style.boxShadow = 'none';
-    };
-    
-    grid.appendChild(teamCard);
-  });
-}
-
-// إنشاء الفرق من الطلاب
-function createTeamsFromStudents() {
-  const teamColors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#6c5ce7', '#a55eea'];
-  const teamIcons = ['🦁', '🐯', '🦅', '🐺', '🐉', '🦄'];
-  const teamNames = ['الأسود', 'النمور', 'النسور', 'الذئاب', 'التنانين', 'وحيدات القرن'];
-  
-  const teams = [];
-  const studentsPerTeam = Math.ceil(selectedStudentsList.length / Math.min(6, Math.max(2, Math.ceil(selectedStudentsList.length / 4))));
-  
-  for (let i = 0; i < selectedStudentsList.length; i += studentsPerTeam) {
-    const teamIndex = Math.floor(i / studentsPerTeam);
-    const teamMembers = selectedStudentsList.slice(i, i + studentsPerTeam);
-    
-    teams.push({
-      id: teamIndex + 1,
-      name: teamNames[teamIndex % teamNames.length],
-      icon: teamIcons[teamIndex % teamIcons.length],
-      color: teamColors[teamIndex % teamColors.length],
-      members: teamMembers
-    });
-  }
-  
-  return teams;
-}
-
-// النقر على الفريق
-function clickTeam(teamId, teamName) {
-  if (!speedLightningState.isActive) return;
-  
-  speedLightningState.teamScores[teamId]++;
-  speedLightningState.totalClicks++;
-  
-  document.getElementById(`team-score-${teamId}`).textContent = speedLightningState.teamScores[teamId];
-  document.getElementById('totalClicks').textContent = speedLightningState.totalClicks;
-  
-  showScoreAnimation(`فريق ${teamName}`, 'team');
-  
-  if (speedLightningState.settings.soundEffects) {
-    playLightningSound('point');
-  }
-  
-  if (speedLightningState.settings.liveScores) {
-    updateLiveScores();
-  }
-}
-
-// النقر على الطالب
-function clickSpeedStudent(studentId, studentName) {
-  if (!speedLightningState.isActive) return;
-  
-  // زيادة النقاط
-  speedLightningState.studentScores[studentId]++;
-  speedLightningState.totalClicks++;
-  
-  // تحديث العرض
-  document.getElementById(`score-${studentId}`).textContent = speedLightningState.studentScores[studentId];
-  document.getElementById('totalClicks').textContent = speedLightningState.totalClicks;
-  
-  // مؤثرات بصرية
-  showScoreAnimation(studentName, 'student');
-  
-  // مؤثرات صوتية
-  if (speedLightningState.settings.soundEffects) {
-    playLightningSound('point');
-  }
-  
-  // تحديث النقاط الحية
-  if (speedLightningState.settings.liveScores) {
-    updateLiveScores();
-    document.getElementById('liveScoresContainer').style.display = 'block';
-  } else {
-    document.getElementById('liveScoresContainer').style.display = 'none';
-  }
-}
-
-// تحديث النقاط الحية
-function updateLiveScores() {
-  const liveScoresList = document.getElementById('liveScoresList');
-  
-  if (speedLightningState.settings.displayType === 'teams') {
-    // عرض نقاط الفرق
-    const sortedTeams = Object.entries(speedLightningState.teamScores)
-      .sort(([,a], [,b]) => b - a)
-      .slice(0, 5);
-    
-    liveScoresList.innerHTML = sortedTeams.map(([teamId, score], index) => {
-      const medals = ['🥇', '🥈', '🥉', '🏅', '⭐'];
-      
-      return `
-        <div style="
-          background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,215,0,0.4));
-          padding: 0.5rem;
-          border-radius: 10px;
-          text-align: center;
-          border: 1px solid #ffd700;
-        ">
-          <div style="font-size: 1.2rem;">${medals[index] || '🌟'}</div>
-          <div style="font-size: 0.9rem; font-weight: bold;">فريق ${teamId}</div>
-          <div style="color: #ffd700; font-weight: bold;">${score}</div>
-        </div>
-      `;
-    }).join('');
-  } else {
-    // عرض نقاط الطلاب الفرديين
-    const sortedStudents = Object.entries(speedLightningState.studentScores)
-      .sort(([,a], [,b]) => b - a)
-      .slice(0, 5);
-    
-    liveScoresList.innerHTML = sortedStudents.map(([studentId, score], index) => {
-      const student = selectedStudentsList.find(s => s.id == studentId);
-      const medals = ['🥇', '🥈', '🥉', '🏅', '⭐'];
-      
-      return `
-        <div style="
-          background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,215,0,0.4));
-          padding: 0.5rem;
-          border-radius: 10px;
-          text-align: center;
-          border: 1px solid #ffd700;
-        ">
-          <div style="font-size: 1.2rem;">${medals[index] || '🌟'}</div>
-          <div style="font-size: 0.9rem; font-weight: bold;">${student ? student.name : 'طالب'}</div>
-          <div style="color: #ffd700; font-weight: bold;">${score}</div>
-        </div>
-      `;
-    }).join('');
-  }
-}
-
-// بدء المؤقت
-function startLightningTimer() {
-  speedLightningState.timer = setInterval(() => {
-    speedLightningState.timeRemaining--;
-    
-    // تحديث العرض
-    const minutes = Math.floor(speedLightningState.timeRemaining / 60);
-    const seconds = speedLightningState.timeRemaining % 60;
-    const timeDisplay = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-    
-    document.getElementById('activeDemonTimer').textContent = timeDisplay;
-    
-    // تحقق من انتهاء الوقت
-    if (speedLightningState.timeRemaining <= 0) {
-      endSpeedDemon();
-    }
-    
-    // تأثيرات تحذيرية في آخر 10 ثوانٍ
-    if (speedLightningState.timeRemaining <= 10) {
-      document.getElementById('activeDemonTimer').style.color = '#ff4757';
-      document.getElementById('activeDemonTimer').style.animation = 'lightningWarning 1s ease-in-out infinite';
-      
-      if (speedLightningState.timeRemaining <= 3 && speedLightningState.settings.soundEffects) {
-        playLightningSound('countdown');
-      }
-    }
-  }, 1000);
-}
-
-// إنهاء برق السرعة
-function endSpeedDemon() {
-  console.log('🏁 انتهى برق السرعة!');
-  
-  // إيقاف المؤقت
-  if (speedLightningState.timer) {
-    clearInterval(speedLightningState.timer);
-    speedLightningState.timer = null;
-  }
-  
-  speedLightningState.isActive = false;
-  speedLightningState.phase = 'results';
-  
-  // إخفاء اللعب النشط وإظهار النتائج
-  document.getElementById('speedDemonActive').style.display = 'none';
-  document.getElementById('speedDemonResults').style.display = 'block';
-  
-  // إنشاء المتصدرين النهائيين
-  createFinalLeaderboard();
-  
-  // أصوات النهاية
-  if (speedLightningState.settings.soundEffects) {
-    playLightningSound('end');
-  }
-  
-  // رسالة النهاية
-  showLightningNotification('🎉 انتهى برق السرعة!', 'تحقق من المتصدرين!', 'success');
-}
-
-// إنشاء المتصدرين النهائيين
-function createFinalLeaderboard() {
-  const leaderboard = document.getElementById('finalLeaderboard');
-  const medals = ['🥇', '🥈', '🥉'];
-  const colors = ['#ffd700', '#c0c0c0', '#cd7f32'];
-  
-  let sortedResults = [];
-  
-  if (speedLightningState.settings.displayType === 'teams') {
-    // ترتيب الفرق
-    sortedResults = Object.entries(speedLightningState.teamScores)
-      .sort(([,a], [,b]) => b - a)
-      .map(([teamId, score]) => ({
-        name: `فريق ${teamId}`,
-        score: score,
-        type: 'team'
-      }));
-  } else {
-    // ترتيب الطلاب
-    sortedResults = Object.entries(speedLightningState.studentScores)
-      .sort(([,a], [,b]) => b - a)
-      .map(([studentId, score]) => {
-        const student = selectedStudentsList.find(s => s.id == studentId);
-        return {
-          name: student ? student.name : 'طالب',
-          score: score,
-          type: 'student'
-        };
-      });
-  }
-  
-  leaderboard.innerHTML = sortedResults.map((item, index) => {
-    const isTop3 = index < 3;
-    return `
-      <div style="
-        background: linear-gradient(135deg, ${isTop3 ? colors[index] + '20' : 'rgba(255,255,255,0.1)'}, ${isTop3 ? colors[index] + '40' : 'rgba(255,255,255,0.2)'});
-        border: 2px solid ${isTop3 ? colors[index] : 'rgba(255,255,255,0.3)'};
-        border-radius: 15px;
-        padding: 1.5rem;
-        margin: 1rem 0;
-        text-align: center;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      ">
-        <div style="display: flex; align-items: center; gap: 1rem;">
-          <div style="font-size: 2rem;">${isTop3 ? medals[index] : `#${index + 1}`}</div>
-          <div>
-            <div style="font-size: 1.2rem; font-weight: bold; color: white;">${item.name}</div>
-            <div style="color: rgba(255,255,255,0.7);">المرتبة ${index + 1}</div>
-          </div>
-        </div>
-        <div style="text-align: center;">
-          <div style="font-size: 2rem; font-weight: bold; color: ${isTop3 ? colors[index] : '#ffd700'};">${item.score}</div>
-          <div style="color: rgba(255,255,255,0.7);">نقطة</div>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
-// إعادة تشغيل برق السرعة
-function restartSpeedDemon() {
-  console.log('🔄 إعادة تشغيل برق السرعة');
-  
-  // إعادة تعيين الحالة
-  speedLightningState = {
-    isActive: false,
-    timeRemaining: 300,
-    timer: null,
-    studentScores: {},
-    teamScores: {},
-    totalClicks: 0,
-    phase: 'start',
-    settings: {
-      duration: 300,
-      displayType: 'individual',
-      liveScores: true,
-      soundEffects: true
-    }
-  };
-  
-  // إخفاء النتائج وإظهار البداية
-  document.getElementById('speedDemonResults').style.display = 'none';
-  document.getElementById('speedDemonStart').style.display = 'block';
-  document.getElementById('speedDemonActive').style.display = 'none';
-  
-  // إعادة تعيين الإعدادات
-  setupSettingsListeners();
-  updateSettingsDisplay();
-  
-  showLightningNotification('🔄 تمت إعادة التعيين', 'مستعد لجولة جديدة!', 'info');
-}
-
-// عرض تأثيرات النقاط
-function showScoreAnimation(name, type) {
-  const animation = document.createElement('div');
-  animation.innerHTML = type === 'team' ? `+1 فريق ⚡` : `+1 ⚡`;
-  animation.style.cssText = `
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 2rem;
-    color: #ffd700;
-    font-weight: bold;
-    z-index: 10000;
-    pointer-events: none;
-    animation: scoreFloat 1s ease-out forwards;
-  `;
-  
-  document.body.appendChild(animation);
-  
-  setTimeout(() => {
-    if (animation.parentNode) {
-      animation.parentNode.removeChild(animation);
-    }
-  }, 1000);
-}
-
-// تشغيل الأصوات
-function playLightningSound(type) {
-  if (!speedLightningState.settings.soundEffects) return;
-  
-  try {
-    let soundFile = '';
-    switch(type) {
-      case 'start':
-        soundFile = '../assets/media/sounds/startapp.mp3';
-        break;
-      case 'point':
-        soundFile = '../assets/media/sounds/Click.mp3';
-        break;
-      case 'countdown':
-        soundFile = '../assets/media/sounds/countdown-beep.mp3';
-        break;
-      case 'end':
-        soundFile = '../assets/media/sounds/win.mp3';
-        break;
-      default:
-        soundFile = '../assets/media/sounds/Click.mp3';
-    }
-    
-    const audio = new Audio(soundFile);
-    audio.volume = 0.5;
-    audio.play().catch(e => console.log('لا يمكن تشغيل الصوت:', e));
-  } catch (error) {
-    console.log('خطأ في تشغيل الصوت:', error);
-  }
-}
-  
-  const medals = ['🥇', '🥈', '🥉'];
-  const colors = ['#ffd700', '#c0c0c0', '#cd7f32'];
-  
-  leaderboard.innerHTML = sortedStudents.map((item, index) => {
-    const isTop3 = index < 3;
-    return `
-      <div style="
-        background: linear-gradient(135deg, ${isTop3 ? colors[index] + '20' : 'rgba(255,255,255,0.1)'}, ${isTop3 ? colors[index] + '40' : 'rgba(255,255,255,0.2)'});
-        border: 2px solid ${isTop3 ? colors[index] : 'rgba(255,255,255,0.3)'};
-        border-radius: 15px;
-        padding: 1.5rem;
-        margin: 1rem 0;
-        text-align: center;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      ">
-        <div style="display: flex; align-items: center; gap: 1rem;">
-          <div style="font-size: 2rem;">${isTop3 ? medals[index] : `#${index + 1}`}</div>
-          <div>
-            <div style="font-size: 1.2rem; font-weight: bold; color: white;">${item.student ? item.student.name : 'طالب'}</div>
-            <div style="color: rgba(255,255,255,0.7);">المرتبة ${index + 1}</div>
-          </div>
-        </div>
-        <div style="text-align: center;">
-          <div style="font-size: 2rem; font-weight: bold; color: ${isTop3 ? colors[index] : '#ffd700'};">${item.score}</div>
-          <div style="color: rgba(255,255,255,0.7);">نقطة</div>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
-// إعادة تشغيل برق السرعة
-function restartSpeedDemon() {
-  console.log('🔄 إعادة تشغيل برق السرعة');
-  
-  // إعادة تعيين الحالة
-  speedLightningState = {
-    isActive: false,
-    timeRemaining: 300,
-    timer: null,
-    studentScores: {},
-    totalClicks: 0,
-    phase: 'start'
-  };
-  
-  // إخفاء النتائج وإظهار البداية
-  document.getElementById('speedDemonResults').style.display = 'none';
-  document.getElementById('speedDemonStart').style.display = 'block';
-  document.getElementById('speedDemonActive').style.display = 'none';
-  
-  showLightningNotification('🔄 تمت إعادة التعيين', 'مستعد لجولة جديدة!', 'info');
-}
-
-// عرض تأثيرات النقاط
-function showScoreAnimation(studentId, studentName) {
-  // إنشاء تأثير بصري للنقطة
-  const animation = document.createElement('div');
-  animation.innerHTML = `+1 ⚡`;
-  animation.style.cssText = `
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 2rem;
-    color: #ffd700;
-    font-weight: bold;
-    z-index: 10000;
-    pointer-events: none;
-    animation: scoreFloat 1s ease-out forwards;
-  `;
-  
-  document.body.appendChild(animation);
-  
-  // إزالة التأثير بعد انتهاء الأنيميشن
-  setTimeout(() => {
-    if (animation.parentNode) {
-      animation.parentNode.removeChild(animation);
-    }
-  }, 1000);
-}
-
-// تشغيل الأصوات
-function playLightningSound(type) {
-  try {
-    let soundFile = '';
-    switch(type) {
-      case 'start':
-        soundFile = '../assets/media/sounds/startapp.mp3';
-        break;
-      case 'point':
-        soundFile = '../assets/media/sounds/Click.mp3';
-        break;
-      case 'countdown':
-        soundFile = '../assets/media/sounds/countdown-beep.mp3';
-        break;
-      case 'end':
-        soundFile = '../assets/media/sounds/win.mp3';
-        break;
-      default:
-        soundFile = '../assets/media/sounds/Click.mp3';
-    }
-    
-    const audio = new Audio(soundFile);
-    audio.volume = 0.5;
-    audio.play().catch(e => console.log('لا يمكن تشغيل الصوت:', e));
-  } catch (error) {
-    console.log('خطأ في تشغيل الصوت:', error);
-  }
-}
-
-// عرض الإشعارات
-function showLightningNotification(title, message, type) {
-  console.log(`${title}: ${message}`);
-  
-  // يمكن استخدام نظام الإشعارات الموجود أو إنشاء إشعار بسيط
-  const notification = document.createElement('div');
-  notification.style.cssText = `
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: linear-gradient(135deg, #ffd700, #ffed4e);
-    color: #1a1a2e;
-    padding: 1rem 2rem;
-    border-radius: 10px;
-    z-index: 10000;
-    font-weight: bold;
-    box-shadow: 0 10px 30px rgba(255,215,0,0.4);
-    animation: slideInFromRight 0.5s ease-out;
-  `;
-  
-  notification.innerHTML = `
-    <div style="font-size: 1.1rem; margin-bottom: 0.5rem;">${title}</div>
-    <div style="font-size: 0.9rem; opacity: 0.9;">${message}</div>
-  `;
-  
-  document.body.appendChild(notification);
-  
-  // إزالة الإشعار بعد 3 ثوانٍ
-  setTimeout(() => {
-    if (notification.parentNode) {
-      notification.style.animation = 'slideOutToRight 0.5s ease-out';
-      setTimeout(() => {
-        if (notification.parentNode) {
-          notification.parentNode.removeChild(notification);
-        }
-      }, 500);
-    }
-  }, 3000);
-}
-
-// تحديث دالة enterLightningKingdom لاستخدام برق السرعة الجديد
-function enterLightningKingdom() {
-  console.log('⚡ الدخول إلى برق السرعة');
-  
-  // إخفاء قائمة الممالك
-  document.getElementById('kingdomSelectionMenu').style.display = 'none';
-  
-  // إظهار منطقة برق السرعة
-  document.getElementById('lightningArena').style.display = 'block';
-  
-  // إعادة تعيين برق السرعة
-  speedLightningState = {
-    isActive: false,
-    timeRemaining: 300,
-    timer: null,
-    studentScores: {},
-    teamScores: {},
-    totalClicks: 0,
-    phase: 'start',
-    settings: {
-      duration: 300,
-      displayType: 'individual',
-      liveScores: true,
-      soundEffects: true
-    }
-  };
-  
-  // إظهار شاشة البداية
-  document.getElementById('speedDemonStart').style.display = 'block';
-  document.getElementById('speedDemonActive').style.display = 'none';
-  document.getElementById('speedDemonResults').style.display = 'none';
-  
-  // إعداد مستمعي الأحداث للإعدادات
-  setupSettingsListeners();
-  updateSettingsDisplay();
-  
-  // رسالة ترحيب
-  showLightningNotification('⚡ أهلاً بك في برق السرعة!', 'استعد لـ 5 دقائق من الإثارة!', 'lightning');
-  
-  // صوت دخول
-  playLightningSound('start');
-}
-
-// ===== نهاية كود برق السرعة =====
 // ===== GLOBAL VARIABLES =====
 let gameState = {
   currentRealm: null,
@@ -4678,17 +3490,75 @@ let gameState = {
 // نظام راحة المعلم - حفظ واستعادة الاختيارات
 function saveTeacherSession() {
   if (gameState.selectedClass && selectedStudentsList.length > 0) {
-    // تحديث حالة اللعبة بدون حفظ
-    gameState.selectedClass = selectedClass;
-    gameState.selectedStudents = [...selectedStudentsList];
+    const teacherSession = {
+      selectedClass: gameState.selectedClass,
+      selectedStudents: [...selectedStudentsList],
+      timestamp: Date.now(),
+      sessionId: `session_${Date.now()}`
+    };
     
-    console.log('✅ تم تحديث اختيار الطلاب:', selectedStudentsList);
+    localStorage.setItem('teacherActiveSession', JSON.stringify(teacherSession));
+    gameState.hasActiveSession = true;
+    console.log('💾 تم حفظ جلسة المعلم:', teacherSession);
     
     // إشعار المعلم
-    showQuantumNotification('✅ تم التحديث', 
-      `تم اختيار: ${gameState.selectedClass} (${selectedStudentsList.length} طلاب)`, 
+    showQuantumNotification('💾 تم الحفظ التلقائي', 
+      `حُفظت اختياراتك: ${gameState.selectedClass} (${selectedStudentsList.length} طلاب)`, 
       'success');
+    
+    // تحديث أيقونة زر الجلسة
+    setTimeout(() => updateSessionButtonStatus(), 500);
   }
+}
+
+function loadTeacherSession() {
+  const savedSession = localStorage.getItem('teacherActiveSession');
+  if (savedSession) {
+    try {
+      const session = JSON.parse(savedSession);
+      
+      // التحقق من أن الجلسة ليست قديمة جداً (أقل من 24 ساعة)
+      const hoursPassed = (Date.now() - session.timestamp) / (1000 * 60 * 60);
+      if (hoursPassed < 24) {
+        return session;
+      } else {
+        // إزالة الجلسة القديمة
+        localStorage.removeItem('teacherActiveSession');
+      }
+    } catch (e) {
+      console.error('خطأ في قراءة جلسة المعلم:', e);
+    }
+  }
+  return null;
+}
+
+function restoreTeacherSession(session) {
+  gameState.selectedClass = session.selectedClass;
+  selectedStudentsList = [...session.selectedStudents];
+  gameState.selectedStudents = [...session.selectedStudents];
+  gameState.hasActiveSession = true;
+  
+  console.log('🔄 تم استعادة جلسة المعلم:', session);
+  
+  // إشعار المعلم بالاستعادة
+  showQuantumNotification('🔄 تم استعادة الجلسة', 
+    `استُعيدت اختياراتك: ${session.selectedClass} (${session.selectedStudents.length} طلاب)`, 
+    'info');
+}
+
+function clearTeacherSession() {
+  localStorage.removeItem('teacherActiveSession');
+  gameState.hasActiveSession = false;
+  gameState.selectedClass = null;
+  selectedStudentsList = [];
+  gameState.selectedStudents = [];
+  
+  showQuantumNotification('🗑️ تم مسح الجلسة', 
+    'تم مسح الاختيارات السابقة، يمكنك البدء من جديد', 
+    'info');
+  
+  // تحديث أيقونة زر الجلسة
+  setTimeout(() => updateSessionButtonStatus(), 500);
 }
 
 // عرض خيارات الجلسة المحفوظة للمعلم
@@ -4952,12 +3822,24 @@ let selectedStudentsList = [];
 
 // ===== ENHANCED STUDENT MANAGEMENT SYSTEM =====
 function loadClassSelection() {
-  console.log('🎓 تحميل اختيار الصفوف');
+  console.log('🎓 بدء تحميل اختيار الصفوف');
+  console.log('📊 بيانات الطلاب المتاحة:', Object.keys(studentData));
+  
+  // التحقق من وجود جلسة محفوظة للمعلم
+  const savedSession = loadTeacherSession();
+  if (savedSession) {
+    console.log('💾 تم العثور على جلسة محفوظة للمعلم');
+    
+    // عرض خيارات للمعلم
+    showTeacherSessionOptions(savedSession);
+    return; // إيقاف التنفيذ حتى يختار المعلم
+  }
   
   // Show main app container
   const mainApp = document.getElementById('mainApp');
   if (mainApp) {
     mainApp.style.display = 'block';
+    console.log('✅ تم إظهار التطبيق الرئيسي');
   }
   
   // Hide main dashboard
@@ -4977,8 +3859,24 @@ function loadClassSelection() {
   // التحقق من وجود البيانات
   if (!studentData || Object.keys(studentData).length === 0) {
     console.warn('⚠️ لا توجد بيانات طلاب');
-    // تحميل البيانات فوراً
-    loadDataFromFile();
+    classGrid.innerHTML = `
+      <div style="text-align: center; color: #ff6b6b; padding: 2rem; grid-column: 1 / -1;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+        <h3>لم يتم تحميل بيانات الطلاب</h3>
+        <p>جاري إعادة التحميل...</p>
+        <button class="neural-button" onclick="reloadStudentData()" style="margin-top: 1rem;">
+          🔄 إعادة التحميل
+        </button>
+      </div>
+    `;
+    
+    // إعادة تحميل البيانات
+    loadStudentData().then(() => {
+      loadClassSelection(); // إعادة استدعاء الدالة بعد التحميل
+    }).catch(error => {
+      console.error('❌ فشل في إعادة تحميل البيانات:', error);
+    });
+    return;
   }
   
   const classNames = Object.keys(studentData);
@@ -4992,10 +3890,21 @@ function loadClassSelection() {
     // ربط الحدث بطريقة آمنة
     classCard.addEventListener('click', function() {
       console.log('🖱️ تم النقر على صف:', className);
+      
+      // تأثير بصري فوري
+      this.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        this.style.transform = '';
+      }, 150);
+      
+      // تأثير صوتي
+      playCosmicSound('button-click', { volume: 0.3 });
+      
+      // استدعاء دالة الاختيار
       selectClass(className);
     });
     
-    const studentCount = Array.isArray(studentData[className]) ? studentData[className].length : 0;
+    const studentCount = studentData[className].length;
     
     classCard.innerHTML = `
       <div style="font-size: 3rem; margin-bottom: 1rem;">🏫</div>
@@ -5003,10 +3912,24 @@ function loadClassSelection() {
       <div class="student-count" style="color: #00ffff; margin-top: 0.5rem;">${studentCount} طالب</div>
     `;
     
+    // إضافة تأثيرات hover
+    classCard.addEventListener('mouseenter', () => {
+      playCosmicSound('button-hover', { volume: 0.2 });
+    });
+    
     classGrid.appendChild(classCard);
   });
   
-  console.log('✅ تم تحميل الصفوف بنجاح');
+  playCosmicSound('panel-slide');
+  
+  // رسالة تأكيد تحميل الصفوف
+  showQuantumNotification(
+    `📚 تم تحميل ${Object.keys(studentData).length} صفوف`,
+    'اختر صفك لبدء المغامرة',
+    'success'
+  );
+  
+  console.log('✅ تم تحميل بطاقات الصفوف بنجاح');
 }
 
 // إعادة تحميل بيانات الطلاب
@@ -5014,26 +3937,11 @@ async function reloadStudentData() {
   showQuantumNotification('🔄 جاري إعادة تحميل البيانات...', '', 'info');
   
   try {
-    await loadDataFromFile();
+    await loadStudentData();
     loadClassSelection();
     showQuantumNotification('✅ تم تحميل بيانات الطلاب بنجاح', '', 'success');
   } catch (error) {
     showQuantumNotification('❌ فشل في تحميل البيانات', 'سيتم استخدام البيانات الاحتياطية', 'error');
-  }
-}
-
-// دالة تحديث البيانات
-async function refreshData() {
-  showQuantumNotification('🔄 جاري تحديث البيانات...', '', 'info');
-  playCosmicSound('ai-beep');
-  
-  try {
-    await loadDataFromFile();
-    loadClassSelection();
-    showQuantumNotification('✅ تم تحديث البيانات بنجاح', '', 'success');
-  } catch (error) {
-    console.error('❌ خطأ في تحديث البيانات:', error);
-    showQuantumNotification('❌ فشل في تحديث البيانات', 'سيتم استخدام البيانات الحالية', 'error');
   }
 }
 
@@ -5328,30 +4236,24 @@ function updateSelectedCount() {
 }
 
 function startKingdomGame() {
-  console.log('🚀 محاولة بدء مملكة التحديات...');
-  console.log('📊 عدد الطلاب المختارين:', selectedStudentsList.length);
-  console.log('👥 قائمة الطلاب:', selectedStudentsList);
-  
   if (selectedStudentsList.length < 2) {
-    console.warn('⚠️ عدد الطلاب غير كافي للبدء');
     showQuantumNotification('⚠️ تحذير', 'يجب اختيار طالبين على الأقل لبدء اللعبة', 'warning');
     return;
   }
   
-  console.log('✅ بدء اللعبة مع الطلاب المختارين');
   gameState.selectedStudents = [...selectedStudentsList];
   gameState.gameStarted = true;
   
-  // Hide selection panel and show kingdom selection menu
+  // 💾 حفظ جلسة المعلم تلقائياً
+  saveTeacherSession();
+  
+  // Hide selection panel and show game interface
   document.getElementById('selectionPanel').style.display = 'none';
+  document.getElementById('kingdomContent').style.display = 'block';
   document.getElementById('gameInterface').style.display = 'block';
-  document.getElementById('kingdomSelectionMenu').style.display = 'block';
   
   // Generate teams from selected students
   generateTeamsFromStudents();
-  
-  // Show success notification
-  showQuantumNotification('🎉 مرحباً بكم!', 'تم بدء مملكة التحديات بنجاح', 'success');
   
   // Play epic start sequence
   playSoundSequence([
@@ -5370,98 +4272,6 @@ function startKingdomGame() {
   setTimeout(() => {
     showWelcomeMessage();
   }, 2000);
-}
-
-// دالة اختبار سريع للتجربة
-function quickTestStart() {
-  console.log('🧪 بدء الاختبار السريع...');
-  
-  // إضافة طلاب تجريبيين
-  selectedStudentsList = [
-    'أحمد محمد التجريبي',
-    'فاطمة علي التجريبية',
-    'محمد سالم التجريبي'
-  ];
-  
-  // تعيين صف تجريبي
-  gameState.selectedClass = 'صف تجريبي';
-  
-  console.log('👥 تم إضافة طلاب تجريبيين:', selectedStudentsList);
-  
-  // تحديث العد وتفعيل الزر
-  updateSelectedCount();
-  
-  // بدء اللعبة مباشرة
-  setTimeout(() => {
-    startKingdomGame();
-  }, 500);
-}
-
-// دوال الدخول للممالك المختلفة
-function enterLightningKingdom() {
-  console.log('⚡ الدخول إلى تحدي البرق');
-  
-  // إخفاء قائمة الممالك
-  document.getElementById('kingdomSelectionMenu').style.display = 'none';
-  
-  // إظهار منطقة تحدي البرق
-  document.getElementById('lightningArena').style.display = 'block';
-  
-  // تهيئة تحدي البرق
-  initializeLightningCompetitors();
-  
-  // رسالة ترحيب
-  showQuantumNotification('⚡ مرحباً!', 'دخلت إلى تحدي البرق - منافسة 5 دقائق!', 'success');
-  
-  // صوت دخول
-  playCosmicSound('kingdom-enter');
-}
-
-function enterCreativeKingdom() {
-  console.log('🎨 الدخول إلى مملكة الإبداع');
-  
-  // إخفاء قائمة الممالك وإظهار مملكة الإبداع
-  document.getElementById('kingdomSelectionMenu').style.display = 'none';
-  document.getElementById('creativeArena').style.display = 'block';
-  
-  showQuantumNotification('🎨 مرحباً!', 'دخلت إلى مملكة الإبداع!', 'success');
-  playCosmicSound('kingdom-enter');
-}
-
-function enterStrategyKingdom() {
-  console.log('🧠 الدخول إلى مملكة الاستراتيجية');
-  
-  showQuantumNotification('🧠 قريباً!', 'مملكة الاستراتيجية قيد التطوير', 'info');
-}
-
-function enterKnowledgeKingdom() {
-  console.log('📚 الدخول إلى مملكة المعرفة');
-  
-  showQuantumNotification('📚 قريباً!', 'مملكة المعرفة قيد التطوير', 'info');
-}
-
-function returnToStudentSelection() {
-  console.log('🔙 العودة لاختيار الطلاب');
-  
-  // إخفاء واجهة اللعبة وإظهار لوحة الاختيار
-  document.getElementById('gameInterface').style.display = 'none';
-  document.getElementById('selectionPanel').style.display = 'block';
-  
-  showQuantumNotification('🔙 تم الرجوع', 'يمكنك تعديل اختيار الطلاب', 'info');
-}
-
-function returnToKingdom() {
-  console.log('🏰 العودة لقائمة الممالك');
-  
-  // إخفاء جميع المناطق
-  document.getElementById('lightningArena').style.display = 'none';
-  document.getElementById('creativeArena').style.display = 'none';
-  document.getElementById('kingdomContent').style.display = 'none';
-  
-  // إظهار قائمة الممالك
-  document.getElementById('kingdomSelectionMenu').style.display = 'block';
-  
-  showQuantumNotification('🏰 العودة للممالك', 'اختر تحدي آخر', 'info');
 }
 
 function generateTeamsFromStudents() {
@@ -5568,57 +4378,37 @@ function initParticles() {
 
 async function loadStudentData() {
   try {
-    console.log('🔄 محاولة تحميل بيانات الطلاب من: ../data/studentData.json');
     const response = await fetch('../data/studentData.json');
-    console.log('📡 استجابة الخادم:', response.status, response.statusText);
-    
     if (response.ok) {
       studentData = await response.json();
       console.log('✅ تم تحميل بيانات الطلاب بنجاح:', Object.keys(studentData));
-      showQuantumNotification('✅ تم التحميل', 'تم تحميل بيانات الطلاب من الملف', 'success');
-      return;
     } else {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      throw new Error('فشل تحميل البيانات');
     }
   } catch (error) {
-    console.error('❌ خطأ في تحميل البيانات:', error);
-    
-    // تحميل البيانات من الملف مباشرة
-    await loadDataFromFile();
-  }
-}
-
-function loadDataFromFile() {
-  console.log('🔄 تحميل البيانات السريع...');
-  
-  // تحميل فوري للبيانات الاحتياطية
-  studentData = {
-    "خامس 1": [
-      "أحمد بن ماجد السيابي", "ابراهيم بن خليل البلوشي", "العز بن طارق البلوشي", 
-      "المهلب بن فهد البوسعيدي", "الياس بن عيسى الجابري", "اليزن بن ادريس الفورى",
-      "بدر بن فؤاد الرمضاني", "حسين بن مسعود الحوسني", "حمزة بن نصر الحارثي", 
-      "خليل بن ابراهيم المحرمي", "راشد بن نصر الرواحي", "زكريا بن ماجد اليوسفي",
-      "سعد بن خالد الهطالي", "سعيد بن يوسف الحارثي", "سلطان بن سامي المسلمي"
-    ],
-    "خامس 2": [
-      "آدم بن محمد الفارسي", "أنس بن أحمد الزدجالي", "أنور محمد البلوشي", 
-      "أوّاب بن ناصر العمري", "الوليد بن خالد الحديدي", "انس بن ابراهيم اليحيائي",
-      "بدر بن موسى الفوري", "بدر بن هاشم الفارسي", "تيمور بن فيصل اليوسفي"
-    ],
-    "سادس 1": [
-      "أحمد بن سلطان الفارسي", "أحمد بن علي اليوسفي", "البراء بن يزيد المحرمي",
-      "الخطاب بن سالم السيابي", "المختار بن علي الزدجالي", "بسام بن أحمد الحوسني"
-    ],
-    "سادس 2": [
-      "أسعد بن محمد الفارسي", "البراء بن سيف البلوشي", "الحمراء بنت عبدالله المسافر",
-      "الخطاب بن محمد السيابي", "المختار بن ناصر الزدجالي", "أمير بن علي الحوسني"
-    ]
-  };
-  
-  console.log('✅ تم تحميل البيانات بنجاح:', Object.keys(studentData));
-  return Promise.resolve();
-}
-    console.error('❌ خطأ في تحميل البيانات الاحتياطية:', fallbackError);
+    console.warn('⚠️ استخدام البيانات الاحتياطية:', error);
+    // بيانات احتياطية أكثر تفصيلاً
+    studentData = {
+      "خامس 1": [
+        "أحمد محمد السيابي", "فاطمة علي الحارثي", "عبدالله سالم الجابري", 
+        "مريم أحمد البلوشي", "سعيد يوسف المحرمي", "نور حسن الرواحي",
+        "خالد طارق البوسعيدي", "عائشة سليمان الفارسي"
+      ],
+      "خامس 2": [
+        "سارة حسن اليحيائي", "محمد عمر الحديدي", "نور الدين المسافر", 
+        "عائشة خالد الضامري", "راشد سالم الوهيبي", "زينب أحمد الحبسي",
+        "عبدالرحمن ناصر البريكي", "لطيفة محمد الصبحي"
+      ],
+      "سادس 1": [
+        "علي محمد الزدجالي", "حليمة أحمد العمري", "يوسف سعيد الخربوشي",
+        "خديجة علي الحوسني", "طارق خليل البلوشي", "آمنة حمود الحضرمي"
+      ],
+      "سادس 2": [
+        "إبراهيم سالم الليثي", "رقية محمد الرمضاني", "حمزة أحمد اليوسفي",
+        "فاطمة سيف السعيدي", "عثمان ناصر الهطالي", "خولة عبدالله المسلمي"
+      ]
+    };
+    console.log('📚 تم تحميل البيانات الاحتياطية:', Object.keys(studentData));
   }
 }
 
@@ -8583,11 +7373,8 @@ let lightningState = {
   currentRound: 1,
   timer: null,
   isPaused: false,
-  timeLeft: 300, // 5 minutes = 300 seconds
-  reactions: [],
-  isActive: false,
-  challengeStarted: false,
-  completedChallenges: 0
+  timeLeft: 30,
+  reactions: []
 };
 
 function startLightningChallenge() {
@@ -8628,7 +7415,6 @@ function initializeLightningCompetitors() {
   }
   
   displayLightningCompetitors();
-  setupStudentScoringButtons();
 }
 
 function displayLightningCompetitors() {
@@ -8672,37 +7458,13 @@ function getCompetitorStatusText(status) {
   }
 }
 
-
-function setupStudentScoringButtons() {
-  const container = document.getElementById('studentScoringButtons');
+function setupQuickAnswerButtons() {
+  const container = document.getElementById('quickAnswerButtons');
   if (!container) return;
   
   container.innerHTML = lightningState.competitors.map((competitor, index) => `
-    <button class="neural-button scoring-btn" onclick="scoreStudentEnhanced('${competitor.name}')" style="
-      background: linear-gradient(45deg, #43e97b, #38d9a9);
-      color: #1a1a2e; font-weight: bold; padding: 0.8rem; font-size: 1rem;
-      border: 2px solid rgba(67,233,123,0.5); position: relative; overflow: hidden;
-      transition: all 0.3s ease;
-    " onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 0 20px rgba(67,233,123,0.6)'" 
-       onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'">
-      ⚡ ${competitor.name}
-      <div style="font-size: 0.8rem; margin-top: 0.2rem;">النقاط: ${competitor.score}</div>
-    </button>
-  `).join('');
-}
-
-function disableStudentScoringButtons() {
-  const container = document.getElementById('studentScoringButtons');
-  if (!container) return;
-  
-  container.innerHTML = lightningState.competitors.map((competitor, index) => `
-    <button class="neural-button scoring-btn" disabled style="
-      background: linear-gradient(45deg, #666, #555);
-      color: #999; font-weight: bold; padding: 0.8rem; font-size: 1rem;
-      border: 2px solid rgba(150,150,150,0.3); opacity: 0.6; cursor: not-allowed;
-    ">
-      ⚡ ${competitor.name}
-      <div style="font-size: 0.8rem; margin-top: 0.2rem;">النقاط النهائية: ${competitor.score}</div>
+    <button class="neural-button" onclick="selectLightningWinner(${index})" style="font-size: 0.9rem; padding: 0.6rem;">
+      🏆 ${competitor.name}
     </button>
   `).join('');
 }
@@ -8863,361 +7625,6 @@ function createLightningExplosion(element) {
     explosion.remove();
   }, 1000);
 }
-
-// ===== ENHANCED 5-MINUTE LIGHTNING CHALLENGE =====
-
-function startFiveMinuteChallenge() {
-  // Reset and initialize
-  lightningState.isActive = true;
-  lightningState.challengeStarted = true;
-  lightningState.timeLeft = 300; // 5 minutes
-  lightningState.isPaused = false;
-  
-  // Initialize competitors if not already done
-  initializeLightningCompetitors();
-  
-  // Update all UI elements
-  updateChallengeButtons(true);
-  updateTimerDisplay();
-  updateTimerStatus('التحدي نشط - اطرح الأسئلة!');
-  setupStudentScoringButtons(); // Enable scoring buttons
-  
-  // Start countdown with enhanced effects
-  startEnhancedTimer();
-  
-  // Audio and visual effects
-  playCosmicSound('battle-horn');
-  createLightningBurst();
-  
-  // Show simple notification
-  showQuantumNotification('⚡ بدء التحدي!', 'تحدي 5 دقائق بدأ الآن!', 'success');
-}
-
-function startEnhancedTimer() {
-  if (lightningState.timer) {
-    clearInterval(lightningState.timer);
-  }
-  
-  lightningState.timer = setInterval(() => {
-    if (!lightningState.isPaused && lightningState.isActive) {
-      lightningState.timeLeft--;
-      updateTimerDisplay();
-      updateTimerProgress();
-      
-      // Sound effects based on time remaining
-      if (lightningState.timeLeft === 60) {
-        playCosmicSound('countdown-tick');
-        showQuantumNotification('⏰ دقيقة واحدة!', 'دقيقة واحدة باقية!', 'warning');
-      } else if (lightningState.timeLeft === 10) {
-        playCosmicSound('countdown-beep');
-        showQuantumNotification('🔥 10 ثواني!', '10 ثواني فقط!', 'warning');
-        createUrgentEffect();
-      } else if (lightningState.timeLeft <= 3 && lightningState.timeLeft > 0) {
-        playCosmicSound('long-beep');
-        createCriticalEffect();
-      }
-      
-      if (lightningState.timeLeft <= 0) {
-        endChallenge();
-      }
-    }
-  }, 1000);
-}
-
-function updateTimerDisplay() {
-  const timerElement = document.getElementById('lightningCountdown');
-  if (!timerElement) return;
-  
-  const minutes = Math.floor(lightningState.timeLeft / 60);
-  const seconds = lightningState.timeLeft % 60;
-  const timeString = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-  
-  timerElement.textContent = timeString;
-  
-  // Apply visual effects based on time remaining
-  if (lightningState.timeLeft <= 10) {
-    timerElement.classList.add('timer-critical');
-    timerElement.classList.remove('timer-warning');
-  } else if (lightningState.timeLeft <= 60) {
-    timerElement.classList.add('timer-warning');
-    timerElement.classList.remove('timer-critical');
-  } else {
-    timerElement.classList.remove('timer-warning', 'timer-critical');
-  }
-}
-
-function updateTimerProgress() {
-  const progressElement = document.querySelector('.timer-progress');
-  if (!progressElement) return;
-  
-  const totalTime = 300; // 5 minutes
-  const elapsed = totalTime - lightningState.timeLeft;
-  const percentage = (elapsed / totalTime) * 360;
-  
-  let color = '#ffd700';
-  if (lightningState.timeLeft <= 10) {
-    color = '#ff0000';
-  } else if (lightningState.timeLeft <= 60) {
-    color = '#ff4757';
-  }
-  
-  progressElement.style.background = `conic-gradient(${color} ${percentage}deg, transparent ${percentage}deg)`;
-}
-
-function updateTimerStatus(message) {
-  const statusElement = document.getElementById('timerStatusText');
-  if (statusElement) {
-    statusElement.textContent = message;
-  }
-}
-
-function updateChallengeButtons(challengeActive) {
-  const startBtn = document.getElementById('startChallengeBtn');
-  const endBtn = document.getElementById('endChallengeBtn');
-  
-  if (challengeActive) {
-    if (startBtn) {
-      startBtn.style.opacity = '0.5';
-      startBtn.style.pointerEvents = 'none';
-    }
-    if (endBtn) {
-      endBtn.style.opacity = '1';
-      endBtn.style.pointerEvents = 'auto';
-    }
-  } else {
-    if (startBtn) {
-      startBtn.style.opacity = '1';
-      startBtn.style.pointerEvents = 'auto';
-    }
-    if (endBtn) {
-      endBtn.style.opacity = '0.5';
-      endBtn.style.pointerEvents = 'none';
-    }
-  }
-}
-
-function endChallenge() {
-  // Stop timer
-  if (lightningState.timer) {
-    clearInterval(lightningState.timer);
-  }
-  
-  lightningState.isActive = false;
-  lightningState.challengeStarted = false;
-  lightningState.completedChallenges++;
-  
-  // Update UI
-  updateChallengeButtons(false);
-  updateTimerStatus('التحدي انتهى');
-  disableStudentScoringButtons(); // Disable scoring
-  
-  // Audio and visual effects
-  playCosmicSound('epic-victory');
-  createCompletionEffect();
-  
-  // Check for achievements
-  checkForNewAchievements();
-}
-
-function createLightningBurst() {
-  const arena = document.getElementById('lightningArena');
-  if (!arena) return;
-  
-  const burst = document.createElement('div');
-  burst.style.cssText = `
-    position: absolute; top: 50%; left: 50%; 
-    width: 300px; height: 300px;
-    background: radial-gradient(circle, rgba(255,215,0,0.8) 0%, transparent 70%);
-    border-radius: 50%; transform: translate(-50%, -50%) scale(0);
-    animation: lightningBurst 0.8s ease-out; pointer-events: none; z-index: 1000;
-  `;
-  
-  arena.appendChild(burst);
-  
-  setTimeout(() => {
-    if (burst.parentNode) {
-      burst.parentNode.removeChild(burst);
-    }
-  }, 800);
-}
-
-function createUrgentEffect() {
-  const timerContainer = document.querySelector('.lightning-timer-container');
-  if (!timerContainer) return;
-  
-  timerContainer.style.animation = 'shake 0.5s ease-in-out';
-  setTimeout(() => {
-    timerContainer.style.animation = '';
-  }, 500);
-}
-
-function createCriticalEffect() {
-  const arena = document.getElementById('lightningArena');
-  if (!arena) return;
-  
-  arena.style.background = 'linear-gradient(135deg, rgba(255,0,0,0.2), rgba(255,71,87,0.1))';
-  setTimeout(() => {
-    arena.style.background = '';
-  }, 300);
-}
-
-function createCompletionEffect() {
-  // Create simple celebration overlay
-  const overlay = document.createElement('div');
-  overlay.style.cssText = `
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center;
-    z-index: 10000; animation: fadeIn 0.5s ease-out;
-  `;
-  
-  overlay.innerHTML = `
-    <div style="
-      background: linear-gradient(135deg, #1a1a2e, #16213e); 
-      padding: 3rem; border-radius: 20px; text-align: center; border: 2px solid #ffd700;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-    ">
-      <div style="font-size: 4rem; margin-bottom: 1rem;">🎉</div>
-      <h2 style="font-size: 2rem; color: #ffd700; margin-bottom: 1rem;">انتهى التحدي!</h2>
-      <p style="font-size: 1.2rem; margin-bottom: 2rem; color: white;">تم إكمال تحدي 5 دقائق</p>
-      <button onclick="this.closest('div').closest('div').remove(); showLightningLeaderboard();" style="
-        background: linear-gradient(135deg, #ffd700, #ffed4e);
-        border: none; color: #1a1a2e; padding: 1rem 2rem; border-radius: 15px;
-        font-size: 1rem; font-weight: bold; cursor: pointer;
-      ">
-        🏆 عرض النتائج
-      </button>
-    </div>
-  `;
-  
-  document.body.appendChild(overlay);
-  
-  // Auto remove after 5 seconds
-  setTimeout(() => {
-    if (overlay.parentNode) {
-      overlay.parentNode.removeChild(overlay);
-      showLightningLeaderboard();
-    }
-  }, 5000);
-}
-
-
-
-function saveLightningResults() {
-  // إزالة نظام الحفظ - النتائج مؤقتة فقط
-  console.log('النتائج مؤقتة - لا يتم حفظها');
-}
-
-// Enhanced student scoring with effects
-function scoreStudentEnhanced(studentName, points = 10) {
-  if (!lightningState.isActive) {
-    showQuantumNotification('⚠️ تحذير!', 'يجب بدء التحدي أولاً!', 'warning');
-    return;
-  }
-  
-  const competitor = lightningState.competitors.find(c => c.name === studentName);
-  if (!competitor) return;
-  
-  competitor.score += points;
-  competitor.totalCorrect++;
-  
-  // Visual and audio effects
-  playCosmicSound('achievement-unlock');
-  createStudentScoreEffect(studentName, points);
-  
-  // Update displays
-  displayLightningCompetitors();
-  setupStudentScoringButtons();
-  
-  // Show notification
-  showQuantumNotification('🎯 نقاط مسجلة!', `${studentName} حصل على ${points} نقطة`, 'success');
-}
-
-function createStudentScoreEffect(studentName, points) {
-  const studentBtn = Array.from(document.querySelectorAll('.lightning-competitor-card'))
-    .find(card => card.textContent.includes(studentName));
-  
-  if (studentBtn) {
-    studentBtn.classList.add('student-glow');
-    
-    // Create floating points effect
-    const pointsElement = document.createElement('div');
-    pointsElement.textContent = `+${points}`;
-    pointsElement.style.cssText = `
-      position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
-      color: #43e97b; font-size: 1.5rem; font-weight: bold;
-      animation: floatUp 1.5s ease-out forwards; pointer-events: none; z-index: 1000;
-    `;
-    
-    studentBtn.style.position = 'relative';
-    studentBtn.appendChild(pointsElement);
-    
-    setTimeout(() => {
-      studentBtn.classList.remove('student-glow');
-      if (pointsElement.parentNode) {
-        pointsElement.parentNode.removeChild(pointsElement);
-      }
-    }, 1500);
-  }
-}
-
-function checkForNewAchievements() {
-  // Check if any competitor reached milestones
-  lightningState.competitors.forEach(competitor => {
-    if (competitor.score >= 100 && competitor.score < 110) {
-      showQuantumNotification('🎯 إنجاز جديد!', `${competitor.name} وصل للمئة نقطة!`, 'achievement');
-    } else if (competitor.score >= 200 && competitor.score < 210) {
-      showQuantumNotification('🔥 إنجاز مذهل!', `${competitor.name} تجاوز المئتين نقطة!`, 'achievement');
-    }
-  });
-}
-
-// Additional CSS for enhanced effects
-const enhancedStyles = document.createElement('style');
-enhancedStyles.textContent = `
-  @keyframes lightningBurst {
-    0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
-    100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
-  }
-  
-  @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-10px); }
-    75% { transform: translateX(10px); }
-  }
-  
-  @keyframes floatUp {
-    0% { transform: translateX(-50%) translateY(0); opacity: 1; }
-    100% { transform: translateX(-50%) translateY(-50px); opacity: 0; }
-  }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  
-  @keyframes bounceIn {
-    0% { transform: scale(0.3); opacity: 0; }
-    50% { transform: scale(1.05); }
-    70% { transform: scale(0.9); }
-    100% { transform: scale(1); opacity: 1; }
-  }
-  
-  .student-glow {
-    animation: studentGlow 1.5s ease-out;
-    transform: scale(1.02);
-  }
-  
-  @keyframes studentGlow {
-    0% { box-shadow: 0 0 5px rgba(67, 233, 123, 0.5); }
-    50% { box-shadow: 0 0 20px rgba(67, 233, 123, 0.8), 0 0 30px rgba(67, 233, 123, 0.6); }
-    100% { box-shadow: 0 0 5px rgba(67, 233, 123, 0.5); }
-  }
-  
-  .challenge-complete-overlay {
-    backdrop-filter: blur(10px);
-  }
-`;
-document.head.appendChild(enhancedStyles);
 
 function endLightningQuestion() {
   updateLightningCompetitionStatus('⏰ انتهى الوقت! جولة جديدة؟');
@@ -10312,8 +8719,16 @@ function showAchievementNotification(achievement) {
 }
 
 function checkForNewAchievements() {
-  // تم إزالة نظام الإنجازات لتبسيط النظام
-  console.log('تم تبسيط النظام - إزالة نظام الإنجازات');
+  const totalPoints = getTotalPoints();
+  const completedChallenges = gameState.completedChallenges || 0;
+  
+  // فحص مختلف الإنجازات
+  if (completedChallenges >= 1) checkAchievement('firstSteps');
+  if (totalPoints >= 100) checkAchievement('brainiac');
+  if (gameState.visitedRealms && gameState.visitedRealms.length >= 4) checkAchievement('explorer');
+  
+  playCosmicSound('data-process');
+  showQuantumNotification('🔍 فحص الإنجازات', 'تم فحص جميع الإنجازات المتاحة', 'info');
 }
 
 function showAllAchievements() {
@@ -10548,78 +8963,6 @@ setTimeout(() => {
     );
   }
 }, 2000);
-
-// تهيئة التطبيق عند تحميل الصفحة
-document.addEventListener('DOMContentLoaded', function() {
-  console.log('🚀 بدء تحميل مملكة التحديات...');
-  initializeApplication();
-});
-
-// وظيفة تهيئة التطبيق الرئيسية
-async function initializeApplication() {
-  try {
-    console.log('⚡ تحميل سريع...');
-    
-    // إخفاء اللودر فوراً
-    const loader = document.getElementById('universalLoader');
-    if (loader) {
-      loader.style.display = 'none';
-    }
-    
-    // إظهار لوحة اختيار الطلاب فوراً
-    document.getElementById('selectionPanel').style.display = 'block';
-    document.getElementById('gameInterface').style.display = 'none';
-    
-    // تحميل بيانات الطلاب (فوري الآن)
-    loadDataFromFile();
-    
-    // تحميل خيارات الصفوف فوراً
-    loadClassSelection();
-    
-    console.log('✅ تم التحميل السريع!');
-    
-    // رسالة ترحيب فورية
-    showQuantumNotification(
-      '⚡ برق السرعة',
-      'اختر الصف للبدء!',
-      'success'
-    );
-    
-  } catch (error) {
-    console.error('❌ خطأ:', error);
-    
-    // إظهار رسالة خطأ
-    const errorPanel = document.createElement('div');
-    errorPanel.innerHTML = `
-      <div style="
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-        color: white;
-        padding: 2rem;
-        border-radius: 20px;
-        text-align: center;
-        z-index: 10000;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-      ">
-        <h2 style="margin-bottom: 1rem;">⚠️ خطأ</h2>
-        <p style="margin-bottom: 1.5rem;">حدث خطأ أثناء التحميل</p>
-        <button onclick="location.reload()" style="
-          background: white;
-          color: #ff6b6b;
-          border: none;
-          padding: 0.8rem 1.5rem;
-          border-radius: 10px;
-          font-weight: bold;
-          cursor: pointer;
-        ">🔄 إعادة المحاولة</button>
-      </div>
-    `;
-    document.body.appendChild(errorPanel);
-  }
-}
 </script>
 </body>
 </html>
