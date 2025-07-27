@@ -2666,10 +2666,6 @@
                     <span class="btn-icon">⚙️</span>
                     <span class="btn-tooltip">الإعدادات</span>
                 </button>
-                <button class="cosmic-control-btn" id="sessionBtn" title="إدارة جلسة المعلم">
-                    <span class="btn-icon">💾</span>
-                    <span class="btn-tooltip">الجلسة</span>
-                </button>
                 <button class="cosmic-control-btn" id="statsBtn" title="إحصائيات اللعبة">
                     <span class="btn-icon">📊</span>
                     <span class="btn-tooltip">الإحصائيات</span>
@@ -2690,11 +2686,6 @@
       
       <!-- Real-time Stats -->
       <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 2rem;">
-        <div style="text-align: center; color: white;">
-          <div style="font-size: 2rem; font-weight: 900;">⏱️</div>
-          <div>وقت الجلسة</div>
-          <div id="sessionTime" style="font-weight: 700;">00:00</div>
-        </div>
         <div style="text-align: center; color: white;">
           <div style="font-size: 2rem; font-weight: 900;">🎯</div>
           <div>التحديات المكتملة</div>
@@ -3268,19 +3259,6 @@
                   </div>
               </div>
           </div>
-          
-          <!-- أزرار الحفظ والإجراءات -->
-          <div style="display: flex; gap: 1rem; margin-top: 2rem; padding-top: 1rem; border-top: 2px solid rgba(255,215,0,0.3);">
-              <button class="neural-button" onclick="saveAllSettings()" style="flex: 2; background: linear-gradient(45deg, #4facfe, #00f2fe);">
-                  💾 حفظ جميع الإعدادات
-              </button>
-              <button class="neural-button secondary" onclick="resetAllSettings()" style="flex: 1;">
-                  🔄 إعادة تعيين الكل
-              </button>
-              <button class="neural-button" onclick="exportSettings()" style="flex: 1; background: linear-gradient(45deg, #43e97b, #38f9d7);">
-                  📤 تصدير الإعدادات
-              </button>
-          </div>
       </div>
   </div>
 
@@ -3482,91 +3460,10 @@ let gameState = {
   selectedClass: null,
   selectedStudents: [],
   gameStarted: false,
-  waitingForAnswer: false,  // لتحدي البرق
-  hasActiveSession: false   // للتحقق من وجود جلسة نشطة
+  waitingForAnswer: false  // لتحدي البرق
 };
 
-// ===== TEACHER CONVENIENCE SYSTEM =====
-// نظام راحة المعلم - حفظ واستعادة الاختيارات
-function saveTeacherSession() {
-  if (gameState.selectedClass && selectedStudentsList.length > 0) {
-    const teacherSession = {
-      selectedClass: gameState.selectedClass,
-      selectedStudents: [...selectedStudentsList],
-      timestamp: Date.now(),
-      sessionId: `session_${Date.now()}`
-    };
-    
-    localStorage.setItem('teacherActiveSession', JSON.stringify(teacherSession));
-    gameState.hasActiveSession = true;
-    console.log('💾 تم حفظ جلسة المعلم:', teacherSession);
-    
-    // إشعار المعلم
-    showQuantumNotification('💾 تم الحفظ التلقائي', 
-      `حُفظت اختياراتك: ${gameState.selectedClass} (${selectedStudentsList.length} طلاب)`, 
-      'success');
-    
-    // تحديث أيقونة زر الجلسة
-    setTimeout(() => updateSessionButtonStatus(), 500);
-  }
-}
-
-function loadTeacherSession() {
-  const savedSession = localStorage.getItem('teacherActiveSession');
-  if (savedSession) {
-    try {
-      const session = JSON.parse(savedSession);
-      
-      // التحقق من أن الجلسة ليست قديمة جداً (أقل من 24 ساعة)
-      const hoursPassed = (Date.now() - session.timestamp) / (1000 * 60 * 60);
-      if (hoursPassed < 24) {
-        return session;
-      } else {
-        // إزالة الجلسة القديمة
-        localStorage.removeItem('teacherActiveSession');
-      }
-    } catch (e) {
-      console.error('خطأ في قراءة جلسة المعلم:', e);
-    }
-  }
-  return null;
-}
-
-function restoreTeacherSession(session) {
-  gameState.selectedClass = session.selectedClass;
-  selectedStudentsList = [...session.selectedStudents];
-  gameState.selectedStudents = [...session.selectedStudents];
-  gameState.hasActiveSession = true;
-  
-  console.log('🔄 تم استعادة جلسة المعلم:', session);
-  
-  // إشعار المعلم بالاستعادة
-  showQuantumNotification('🔄 تم استعادة الجلسة', 
-    `استُعيدت اختياراتك: ${session.selectedClass} (${session.selectedStudents.length} طلاب)`, 
-    'info');
-}
-
-function clearTeacherSession() {
-  localStorage.removeItem('teacherActiveSession');
-  gameState.hasActiveSession = false;
-  gameState.selectedClass = null;
-  selectedStudentsList = [];
-  gameState.selectedStudents = [];
-  
-  showQuantumNotification('🗑️ تم مسح الجلسة', 
-    'تم مسح الاختيارات السابقة، يمكنك البدء من جديد', 
-    'info');
-  
-  // تحديث أيقونة زر الجلسة
-  setTimeout(() => updateSessionButtonStatus(), 500);
-}
-
-// عرض خيارات الجلسة المحفوظة للمعلم
-function showTeacherSessionOptions(savedSession) {
-  const mainApp = document.getElementById('mainApp');
-  if (mainApp) {
-    mainApp.style.display = 'block';
-  }
+// ===== ENHANCED TEACHER CONVENIENCE SYSTEM =====
   
   // إخفاء المحتويات الأخرى
   document.getElementById('kingdomContent').style.display = 'none';
@@ -4243,9 +4140,6 @@ function startKingdomGame() {
   
   gameState.selectedStudents = [...selectedStudentsList];
   gameState.gameStarted = true;
-  
-  // 💾 حفظ جلسة المعلم تلقائياً
-  saveTeacherSession();
   
   // Hide selection panel and show game interface
   document.getElementById('selectionPanel').style.display = 'none';
@@ -5087,16 +4981,6 @@ function updateBattleTimer() {
   const seconds = gameState.battleDuration % 60;
   document.getElementById('challengeTimer').textContent = 
     `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-}
-
-function startSessionTimer() {
-  setInterval(() => {
-    const elapsed = Math.floor((Date.now() - gameState.sessionStartTime) / 1000);
-    const minutes = Math.floor(elapsed / 60);
-    const seconds = elapsed % 60;
-    document.getElementById('sessionTime').textContent = 
-      `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  }, 1000);
 }
 
 function showKingdoms() {
@@ -6595,7 +6479,6 @@ async function initializeKingdom() {
     // Debug info
     console.log('✅ تم تحميل البيانات بنجاح');
     
-    startSessionTimer();
     // showWelcomeMessage(); // Will be shown after student selection
   }, 1000);
 }
@@ -6694,12 +6577,6 @@ function initializeControlButtons() {
         // إظهار الممالك
         showKingdoms();
         
-        // التأكد من تشغيل مؤقت الجلسة
-        if (!gameState.sessionStartTime) {
-          gameState.sessionStartTime = Date.now();
-          startSessionTimer();
-        }
-        
         const studentsCount = gameState.selectedStudents?.length || selectedStudentsList?.length || 0;
         showQuantumNotification('🏰 العودة للممالك', `محتفظ بـ ${studentsCount} طلاب - اختر مملكة جديدة!`, 'success');
       } else {
@@ -6751,21 +6628,6 @@ function initializeControlButtons() {
     console.log('✅ تم ربط زر الإعدادات');
   } else {
     console.error('❌ لم يتم العثور على زر الإعدادات');
-  }
-
-  // زر إدارة الجلسة
-  const sessionBtn = document.getElementById('sessionBtn');
-  if (sessionBtn) {
-    sessionBtn.addEventListener('click', function() {
-      playCosmicSound('ui-click');
-      showSessionManagement();
-    });
-    console.log('✅ تم ربط زر إدارة الجلسة');
-    
-    // تحديث أيقونة الزر حسب حالة الجلسة
-    updateSessionButtonStatus();
-  } else {
-    console.error('❌ لم يتم العثور على زر إدارة الجلسة');
   }
 
   // زر الإحصائيات
@@ -7221,30 +7083,6 @@ function exportSession() {
     URL.revokeObjectURL(url);
     
     showQuantumNotification('📤 تم التصدير', 'تم تصدير بيانات الجلسة بنجاح', 'success');
-  }
-}
-
-// تحديث حالة زر إدارة الجلسة
-function updateSessionButtonStatus() {
-  const sessionBtn = document.getElementById('sessionBtn');
-  if (!sessionBtn) return;
-  
-  const savedSession = loadTeacherSession();
-  const iconElement = sessionBtn.querySelector('.btn-icon');
-  const tooltipElement = sessionBtn.querySelector('.btn-tooltip');
-  
-  if (savedSession) {
-    // توجد جلسة محفوظة
-    iconElement.textContent = '💾';
-    tooltipElement.textContent = 'جلسة محفوظة';
-    sessionBtn.style.boxShadow = '0 0 10px rgba(79, 172, 254, 0.5)';
-    sessionBtn.title = `جلسة محفوظة: ${savedSession.selectedClass} (${savedSession.selectedStudents.length} طلاب)`;
-  } else {
-    // لا توجد جلسة
-    iconElement.textContent = '💾';
-    tooltipElement.textContent = 'إدارة الجلسة';
-    sessionBtn.style.boxShadow = '';
-    sessionBtn.title = 'إدارة جلسة المعلم';
   }
 }
 
@@ -8908,9 +8746,6 @@ loadSavedSettings();
 
 // تحديث زر الصوت
 updateSoundButton();
-
-// تحديث زر إدارة الجلسة
-updateSessionButtonStatus();
 
 // تفعيل نظام الإنجازات
 initializeAchievements();
