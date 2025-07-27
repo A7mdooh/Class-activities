@@ -1018,9 +1018,113 @@
       animation: notificationSlide 0.5s ease-out !important;
     }
 
-    @keyframes notificationSlide {
-      0% { transform: translateY(-100px) scale(0.8); opacity: 0; }
-      100% { transform: translateY(0) scale(1); opacity: 1; }
+    /* تحسينات لوحة المتصدرين المرنة */
+    .leaderboard-modal {
+      backdrop-filter: blur(20px) saturate(1.2) !important;
+    }
+
+    .leaderboard-content {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .leaderboard-list {
+      scrollbar-width: thin;
+      scrollbar-color: #ffd700 rgba(255,255,255,0.1);
+    }
+
+    .competitor-item {
+      animation: competitorSlideIn 0.5s ease-out;
+      animation-fill-mode: both;
+    }
+
+    .competitor-item:nth-child(1) { animation-delay: 0.1s; }
+    .competitor-item:nth-child(2) { animation-delay: 0.2s; }
+    .competitor-item:nth-child(3) { animation-delay: 0.3s; }
+    .competitor-item:nth-child(4) { animation-delay: 0.4s; }
+    .competitor-item:nth-child(5) { animation-delay: 0.5s; }
+
+    @keyframes competitorSlideIn {
+      0% { 
+        opacity: 0; 
+        transform: translateX(-50px) scale(0.9); 
+      }
+      100% { 
+        opacity: 1; 
+        transform: translateX(0) scale(1); 
+      }
+    }
+
+    /* تحسين شريط التمرير للمتصفحات المختلفة */
+    .leaderboard-list::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .leaderboard-list::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      margin: 10px 0;
+    }
+
+    .leaderboard-list::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #ffd700, #ffed4e);
+      border-radius: 10px;
+      border: 2px solid rgba(255,255,255,0.1);
+    }
+
+    .leaderboard-list::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, #ffed4e, #ffd700);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    .leaderboard-list::-webkit-scrollbar-corner {
+      background: rgba(255,255,255,0.05);
+    }
+
+    /* تحسين استجابة الشاشات الصغيرة */
+    @media (max-width: 768px) {
+      .leaderboard-content {
+        width: 98% !important;
+        height: 90vh !important;
+        padding: 1.5rem !important;
+      }
+      
+      .leaderboard-header h2 {
+        font-size: 1.8rem !important;
+      }
+      
+      .leaderboard-stats {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)) !important;
+      }
+      
+      .competitor-item {
+        padding: 1rem !important;
+        flex-direction: column !important;
+        gap: 0.8rem !important;
+        text-align: center !important;
+      }
+      
+      .competitor-item > div:first-child {
+        order: -1 !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .leaderboard-content {
+        width: 95% !important;
+        height: 95vh !important;
+        padding: 1rem !important;
+      }
+      
+      .leaderboard-header {
+        flex-direction: column !important;
+        gap: 1rem !important;
+        text-align: center !important;
+      }
+      
+      .leaderboard-stats {
+        grid-template-columns: 1fr !important;
+      }
     }
 
     /* تحسينات إضافية */
@@ -7533,39 +7637,663 @@ function showLightningLeaderboard() {
   const sortedCompetitors = [...lightningState.competitors].sort((a, b) => b.score - a.score);
   
   const leaderboardModal = document.createElement('div');
-  leaderboardModal.className = 'modal-overlay';
+  leaderboardModal.className = 'modal-overlay leaderboard-modal';
   leaderboardModal.style.cssText = `
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.9); z-index: 10000; display: flex;
-    align-items: center; justify-content: center; backdrop-filter: blur(10px);
+    background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(26,26,46,0.95)); 
+    z-index: 10000; display: flex;
+    align-items: center; justify-content: center; 
+    backdrop-filter: blur(15px);
+    padding: 20px;
   `;
   
   leaderboardModal.innerHTML = `
-    <div style="background: linear-gradient(135deg, #1a1a2e, #16213e); border: 3px solid #ffd700; border-radius: 20px; padding: 2rem; max-width: 600px; width: 90%; color: white;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-        <h2 style="color: #ffd700; margin: 0;">🏆 لوحة متصدري البرق</h2>
-        <button onclick="this.closest('.modal-overlay').remove()" style="background: #ff4757; border: none; color: white; padding: 0.5rem; border-radius: 50%; width: 40px; height: 40px; cursor: pointer;">✕</button>
+    <div class="leaderboard-content" style="
+      background: linear-gradient(135deg, rgba(26, 26, 46, 0.95), rgba(16, 21, 35, 0.95)); 
+      border: 3px solid #ffd700; 
+      border-radius: 25px; 
+      padding: 2rem; 
+      width: 95%; 
+      max-width: 800px; 
+      height: 85vh;
+      max-height: 700px;
+      color: white; 
+      display: flex; 
+      flex-direction: column;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.5), inset 0 0 30px rgba(255,215,0,0.1);
+      position: relative;
+      overflow: hidden;
+    ">
+      <!-- خلفية متحركة -->
+      <div style="
+        position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+        background: radial-gradient(circle, rgba(255,215,0,0.05) 0%, transparent 70%);
+        animation: backgroundPulse 4s ease-in-out infinite;
+        pointer-events: none;
+      "></div>
+      
+      <!-- رأس اللوحة -->
+      <div class="leaderboard-header" style="
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        margin-bottom: 2rem;
+        border-bottom: 2px solid rgba(255,215,0,0.3);
+        padding-bottom: 1rem;
+        position: relative;
+        z-index: 1;
+      ">
+        <h2 style="
+          color: #ffd700; 
+          margin: 0; 
+          font-size: 2.5rem;
+          background: linear-gradient(45deg, #ffd700, #ffed4e, #ffd700);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          text-shadow: 0 5px 15px rgba(255,215,0,0.3);
+          animation: titleShimmer 2s ease-in-out infinite;
+        ">🏆 لوحة متصدري البرق</h2>
+        
+        <button onclick="this.closest('.modal-overlay').remove()" style="
+          background: linear-gradient(135deg, #ff4757, #ff3742); 
+          border: none; 
+          color: white; 
+          padding: 0.5rem; 
+          border-radius: 50%; 
+          width: 50px; 
+          height: 50px; 
+          cursor: pointer;
+          font-size: 1.3rem;
+          transition: all 0.3s ease;
+          box-shadow: 0 5px 15px rgba(255,71,87,0.4);
+        " onmouseover="this.style.transform='rotate(90deg) scale(1.1)'" onmouseout="this.style.transform='rotate(0deg) scale(1)'">✕</button>
       </div>
       
-      <div style="display: grid; gap: 1rem;">
-        ${sortedCompetitors.map((competitor, index) => `
-          <div style="background: ${index === 0 ? 'linear-gradient(45deg, rgba(255,215,0,0.3), rgba(255,165,0,0.3))' : 'rgba(255,255,255,0.1)'}; padding: 1rem; border-radius: 10px; display: flex; align-items: center; gap: 1rem; border: 2px solid ${index === 0 ? '#ffd700' : 'transparent'};">
-            <div style="font-size: 2rem;">${index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '🏅'}</div>
-            <div style="flex: 1;">
-              <div style="font-weight: bold; font-size: 1.1rem;">${competitor.name}</div>
-              <div style="color: #ffd700;">⚡ ${competitor.score} نقطة • ✅ ${competitor.totalCorrect} صحيحة</div>
+      <!-- معلومات إحصائية -->
+      <div class="leaderboard-stats" style="
+        display: grid; 
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
+        gap: 1rem; 
+        margin-bottom: 1.5rem;
+        position: relative;
+        z-index: 1;
+      ">
+        <div style="
+          background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)); 
+          padding: 1rem; 
+          border-radius: 15px; 
+          text-align: center;
+          border: 1px solid rgba(255,215,0,0.3);
+        ">
+          <div style="font-size: 1.8rem; color: #ffd700;">👥</div>
+          <div style="color: #ffd700; font-weight: bold;">${sortedCompetitors.length}</div>
+          <div style="font-size: 0.9rem; color: rgba(255,255,255,0.7);">متنافسين</div>
+        </div>
+        
+        <div style="
+          background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)); 
+          padding: 1rem; 
+          border-radius: 15px; 
+          text-align: center;
+          border: 1px solid rgba(255,215,0,0.3);
+        ">
+          <div style="font-size: 1.8rem; color: #43e97b;">⚡</div>
+          <div style="color: #43e97b; font-weight: bold;">${sortedCompetitors.reduce((sum, c) => sum + c.score, 0)}</div>
+          <div style="font-size: 0.9rem; color: rgba(255,255,255,0.7);">مجموع النقاط</div>
+        </div>
+        
+        <div style="
+          background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)); 
+          padding: 1rem; 
+          border-radius: 15px; 
+          text-align: center;
+          border: 1px solid rgba(255,215,0,0.3);
+        ">
+          <div style="font-size: 1.8rem; color: #00ffff;">📊</div>
+          <div style="color: #00ffff; font-weight: bold;">${sortedCompetitors.length > 0 ? Math.round(sortedCompetitors.reduce((sum, c) => sum + c.score, 0) / sortedCompetitors.length) : 0}</div>
+          <div style="font-size: 0.9rem; color: rgba(255,255,255,0.7);">متوسط النقاط</div>
+        </div>
+      </div>
+      
+      <!-- شريط البحث والفلترة -->
+      <div class="search-filter-bar" style="
+        display: flex; 
+        gap: 1rem; 
+        margin-bottom: 1.5rem;
+        position: relative;
+        z-index: 1;
+        flex-wrap: wrap;
+        align-items: center;
+      ">
+        <div style="flex: 1; min-width: 200px; position: relative;">
+          <input 
+            type="text" 
+            id="competitorSearch" 
+            placeholder="🔍 ابحث عن متنافس..." 
+            oninput="filterCompetitors(this.value)"
+            style="
+              width: 100%; 
+              padding: 0.8rem 1rem 0.8rem 2.5rem; 
+              border: 2px solid rgba(255,215,0,0.3); 
+              border-radius: 25px; 
+              background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)); 
+              color: white; 
+              font-size: 1rem;
+              backdrop-filter: blur(10px);
+              transition: all 0.3s ease;
+            "
+            onfocus="
+              this.style.borderColor = '#ffd700'; 
+              this.style.boxShadow = '0 0 0 3px rgba(255,215,0,0.3)';
+            " 
+            onblur="
+              this.style.borderColor = 'rgba(255,215,0,0.3)'; 
+              this.style.boxShadow = 'none';
+            ">
+          <div style="
+            position: absolute; 
+            left: 12px; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            color: rgba(255,255,255,0.5); 
+            font-size: 1.2rem;
+            pointer-events: none;
+          ">🔍</div>
+        </div>
+        
+        <select 
+          id="sortOrder" 
+          onchange="sortCompetitors(this.value)"
+          style="
+            padding: 0.8rem 1rem; 
+            border: 2px solid rgba(255,215,0,0.3); 
+            border-radius: 12px; 
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)); 
+            color: white; 
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+          ">
+          <option value="score_desc">الأعلى نقاطاً</option>
+          <option value="score_asc">الأقل نقاطاً</option>
+          <option value="name_asc">الاسم (أ-ي)</option>
+          <option value="name_desc">الاسم (ي-أ)</option>
+          <option value="correct_desc">الأكثر صحة</option>
+        </select>
+        
+        <button onclick="refreshLeaderboard()" style="
+          background: linear-gradient(135deg, #43e97b, #38f9d7); 
+          border: none; 
+          color: white; 
+          padding: 0.8rem 1.5rem; 
+          border-radius: 12px; 
+          cursor: pointer; 
+          font-weight: bold;
+          transition: all 0.3s ease;
+          white-space: nowrap;
+        " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+          🔄 تحديث
+        </button>
+      </div>
+      
+      <!-- قائمة المتصدرين القابلة للتمرير -->
+      <div class="leaderboard-list" style="
+        flex: 1; 
+        overflow-y: auto; 
+        overflow-x: hidden;
+        padding-right: 10px;
+        position: relative;
+        z-index: 1;
+      ">
+        <!-- شريط التمرير المخصص -->
+        <style>
+          .leaderboard-list::-webkit-scrollbar {
+            width: 8px;
+          }
+          .leaderboard-list::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+          }
+          .leaderboard-list::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            border-radius: 10px;
+          }
+          .leaderboard-list::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #ffed4e, #ffd700);
+          }
+        </style>
+        
+        <div style="display: grid; gap: 0.8rem; padding-right: 5px;">
+          ${sortedCompetitors.map((competitor, index) => {
+            const isTop3 = index < 3;
+            const medalColors = ['#ffd700', '#c0c0c0', '#cd7f32'];
+            const medalEmojis = ['🥇', '🥈', '🥉'];
+            
+            return `
+              <div class="competitor-item" style="
+                background: ${isTop3 ? 
+                  `linear-gradient(45deg, rgba(255,215,0,0.2), rgba(255,165,0,0.15))` : 
+                  `linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03))`
+                }; 
+                padding: 1.2rem; 
+                border-radius: 15px; 
+                display: flex; 
+                align-items: center; 
+                gap: 1rem; 
+                border: 2px solid ${isTop3 ? '#ffd700' : 'rgba(255,255,255,0.1)'}; 
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+                cursor: pointer;
+              " 
+              onmouseover="
+                this.style.transform = 'translateY(-3px) scale(1.02)'; 
+                this.style.boxShadow = '0 10px 25px rgba(255,215,0,0.3)';
+                this.style.borderColor = '#ffd700';
+              " 
+              onmouseout="
+                this.style.transform = 'translateY(0) scale(1)'; 
+                this.style.boxShadow = 'none';
+                this.style.borderColor = '${isTop3 ? '#ffd700' : 'rgba(255,255,255,0.1)'}';
+              ">
+                
+                <!-- تأثير الضوء المتحرك -->
+                <div style="
+                  position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+                  background: linear-gradient(90deg, transparent, rgba(255,215,0,0.1), transparent);
+                  transition: left 0.8s ease;
+                  pointer-events: none;
+                " class="light-effect"></div>
+                
+                <!-- رقم المركز والميدالية -->
+                <div style="
+                  display: flex; 
+                  align-items: center; 
+                  justify-content: center; 
+                  width: 60px; 
+                  height: 60px; 
+                  border-radius: 50%; 
+                  background: ${isTop3 ? 
+                    `linear-gradient(135deg, ${medalColors[index]}, ${medalColors[index]}88)` : 
+                    'linear-gradient(135deg, rgba(108,117,125,0.8), rgba(73,80,87,0.8))'
+                  };
+                  font-size: 1.5rem; 
+                  font-weight: bold;
+                  border: 2px solid ${isTop3 ? medalColors[index] : '#6c757d'};
+                  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                ">
+                  ${isTop3 ? medalEmojis[index] : `#${index + 1}`}
+                </div>
+                
+                <!-- معلومات المتنافس -->
+                <div style="flex: 1; min-width: 0;">
+                  <div style="
+                    font-weight: bold; 
+                    font-size: 1.2rem; 
+                    color: ${isTop3 ? '#ffd700' : 'white'};
+                    margin-bottom: 0.3rem;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                  ">${competitor.name}</div>
+                  
+                  <div style="
+                    display: flex; 
+                    gap: 1rem; 
+                    font-size: 0.9rem; 
+                    color: rgba(255,255,255,0.8);
+                    flex-wrap: wrap;
+                  ">
+                    <span style="color: #ffd700;">⚡ ${competitor.score} نقطة</span>
+                    <span style="color: #43e97b;">✅ ${competitor.totalCorrect} صحيحة</span>
+                    <span style="color: #ff4757;">❌ ${competitor.totalWrong || 0} خاطئة</span>
+                  </div>
+                </div>
+                
+                <!-- شارة الإنجاز -->
+                ${isTop3 ? `
+                  <div style="
+                    background: linear-gradient(135deg, ${medalColors[index]}, ${medalColors[index]}88);
+                    color: white;
+                    padding: 0.5rem 1rem;
+                    border-radius: 20px;
+                    font-size: 0.8rem;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                    animation: achievementGlow 2s ease-in-out infinite;
+                  ">
+                    ${index === 0 ? 'بطل البرق' : index === 1 ? 'نائب البطل' : 'المركز الثالث'}
+                  </div>
+                ` : ''}
+              </div>
+            `;
+          }).join('')}
+          
+          ${sortedCompetitors.length === 0 ? `
+            <div style="
+              text-align: center; 
+              padding: 3rem; 
+              color: rgba(255,255,255,0.6);
+              font-size: 1.1rem;
+            ">
+              <div style="font-size: 4rem; margin-bottom: 1rem;">⚡</div>
+              <div>لا يوجد متنافسين بعد</div>
+              <div style="font-size: 0.9rem; margin-top: 0.5rem;">ابدأ التحدي لإضافة متنافسين!</div>
             </div>
-            <div style="text-align: right; color: #00ffff;">
-              <div>#${index + 1}</div>
-            </div>
-          </div>
-        `).join('')}
+          ` : ''}
+        </div>
+      </div>
+      
+      <!-- أزرار التحكم -->
+      <div style="
+        display: flex; 
+        gap: 1rem; 
+        margin-top: 1.5rem; 
+        padding-top: 1rem; 
+        border-top: 2px solid rgba(255,215,0,0.3);
+        position: relative;
+        z-index: 1;
+        flex-wrap: wrap;
+      ">
+        <button onclick="exportLeaderboard()" style="
+          flex: 1;
+          min-width: 150px;
+          background: linear-gradient(135deg, #4facfe, #00f2fe); 
+          border: none; 
+          color: white; 
+          padding: 1rem; 
+          border-radius: 12px; 
+          cursor: pointer; 
+          font-weight: bold;
+          transition: all 0.3s ease;
+        " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+          📊 تصدير النتائج
+        </button>
+        
+        <button onclick="resetAllScores()" style="
+          flex: 1;
+          min-width: 150px;
+          background: linear-gradient(135deg, #ff4757, #ff3742); 
+          border: none; 
+          color: white; 
+          padding: 1rem; 
+          border-radius: 12px; 
+          cursor: pointer; 
+          font-weight: bold;
+          transition: all 0.3s ease;
+        " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+          🔄 إعادة تعيين
+        </button>
       </div>
     </div>
   `;
   
+  // إضافة تأثيرات التحريك للضوء المتحرك
+  setTimeout(() => {
+    const lightEffects = leaderboardModal.querySelectorAll('.light-effect');
+    lightEffects.forEach((effect, index) => {
+      setTimeout(() => {
+        effect.style.left = '100%';
+      }, index * 200);
+    });
+  }, 500);
+  
   document.body.appendChild(leaderboardModal);
   playCosmicSound('epic-victory');
+}
+
+// دالة تصدير لوحة المتصدرين
+function exportLeaderboard() {
+  const sortedCompetitors = [...lightningState.competitors].sort((a, b) => b.score - a.score);
+  
+  let exportText = "🏆 لوحة متصدري البرق - " + new Date().toLocaleString('ar-SA') + "\n";
+  exportText += "=" * 50 + "\n\n";
+  
+  sortedCompetitors.forEach((competitor, index) => {
+    const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '🏅';
+    exportText += `${medal} المركز ${index + 1}: ${competitor.name}\n`;
+    exportText += `   النقاط: ${competitor.score} ⚡\n`;
+    exportText += `   الإجابات الصحيحة: ${competitor.totalCorrect} ✅\n`;
+    exportText += `   الإجابات الخاطئة: ${competitor.totalWrong || 0} ❌\n\n`;
+  });
+  
+  exportText += "\n" + "=" * 50 + "\n";
+  exportText += `إجمالي المتنافسين: ${sortedCompetitors.length}\n`;
+  exportText += `مجموع النقاط: ${sortedCompetitors.reduce((sum, c) => sum + c.score, 0)}\n`;
+  exportText += `متوسط النقاط: ${sortedCompetitors.length > 0 ? Math.round(sortedCompetitors.reduce((sum, c) => sum + c.score, 0) / sortedCompetitors.length) : 0}\n`;
+  
+  // إنشاء ملف للتحميل
+  const blob = new Blob([exportText], { type: 'text/plain;charset=utf-8' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.style.display = 'none';
+  a.href = url;
+  a.download = `leaderboard_${new Date().toISOString().split('T')[0]}.txt`;
+  document.body.appendChild(a);
+  a.click();
+  window.URL.revokeObjectURL(url);
+  document.body.removeChild(a);
+  
+  showQuantumNotification('📊 تم التصدير', 'تم تصدير لوحة المتصدرين بنجاح', 'success');
+  playCosmicSound('data-process');
+}
+
+// دالة إعادة تعيين جميع النقاط
+function resetAllScores() {
+  if (confirm('هل أنت متأكد من إعادة تعيين جميع النقاط؟\nسيتم حذف جميع النتائج نهائياً!')) {
+    lightningState.competitors = [];
+    localStorage.removeItem('lightningCompetitors');
+    
+    showQuantumNotification('🔄 تم إعادة التعيين', 'تم مسح جميع النتائج بنجاح', 'info');
+    playCosmicSound('dimensional-shift');
+    
+    // إغلاق النافذة وإعادة فتحها لإظهار التغيير
+    setTimeout(() => {
+      document.querySelector('.leaderboard-modal').remove();
+      showLightningLeaderboard();
+    }, 1500);
+  }
+}
+
+// دوال البحث والفلترة في لوحة المتصدرين
+let currentCompetitors = [];
+let filteredCompetitors = [];
+
+function filterCompetitors(searchTerm) {
+  const competitorItems = document.querySelectorAll('.competitor-item');
+  const searchLower = searchTerm.toLowerCase().trim();
+  
+  competitorItems.forEach(item => {
+    const nameElement = item.querySelector('div:nth-child(3) > div:first-child');
+    if (nameElement) {
+      const name = nameElement.textContent.toLowerCase();
+      if (name.includes(searchLower) || searchTerm === '') {
+        item.style.display = 'flex';
+        item.style.animation = 'competitorSlideIn 0.3s ease-out';
+      } else {
+        item.style.display = 'none';
+      }
+    }
+  });
+  
+  // تحديث العداد
+  const visibleItems = Array.from(competitorItems).filter(item => item.style.display !== 'none');
+  updateCompetitorCount(visibleItems.length);
+}
+
+function sortCompetitors(sortType) {
+  const sortedCompetitors = [...lightningState.competitors];
+  
+  switch(sortType) {
+    case 'score_desc':
+      sortedCompetitors.sort((a, b) => b.score - a.score);
+      break;
+    case 'score_asc':
+      sortedCompetitors.sort((a, b) => a.score - b.score);
+      break;
+    case 'name_asc':
+      sortedCompetitors.sort((a, b) => a.name.localeCompare(b.name, 'ar'));
+      break;
+    case 'name_desc':
+      sortedCompetitors.sort((a, b) => b.name.localeCompare(a.name, 'ar'));
+      break;
+    case 'correct_desc':
+      sortedCompetitors.sort((a, b) => b.totalCorrect - a.totalCorrect);
+      break;
+  }
+  
+  // إعادة بناء القائمة
+  refreshLeaderboardWithData(sortedCompetitors);
+}
+
+function refreshLeaderboard() {
+  playCosmicSound('data-process');
+  showQuantumNotification('🔄 تحديث', 'جاري تحديث لوحة المتصدرين...', 'info');
+  
+  setTimeout(() => {
+    const modal = document.querySelector('.leaderboard-modal');
+    if (modal) {
+      modal.remove();
+      showLightningLeaderboard();
+    }
+  }, 500);
+}
+
+function refreshLeaderboardWithData(competitors) {
+  const listContainer = document.querySelector('.leaderboard-list > div');
+  if (!listContainer) return;
+  
+  listContainer.innerHTML = '';
+  
+  competitors.forEach((competitor, index) => {
+    const isTop3 = index < 3;
+    const medalColors = ['#ffd700', '#c0c0c0', '#cd7f32'];
+    const medalEmojis = ['🥇', '🥈', '🥉'];
+    
+    const competitorDiv = document.createElement('div');
+    competitorDiv.className = 'competitor-item';
+    competitorDiv.style.cssText = `
+      background: ${isTop3 ? 
+        `linear-gradient(45deg, rgba(255,215,0,0.2), rgba(255,165,0,0.15))` : 
+        `linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03))`
+      }; 
+      padding: 1.2rem; 
+      border-radius: 15px; 
+      display: flex; 
+      align-items: center; 
+      gap: 1rem; 
+      border: 2px solid ${isTop3 ? '#ffd700' : 'rgba(255,255,255,0.1)'}; 
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      margin-bottom: 0.8rem;
+    `;
+    
+    competitorDiv.innerHTML = `
+      <div style="
+        position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,215,0,0.1), transparent);
+        transition: left 0.8s ease;
+        pointer-events: none;
+      " class="light-effect"></div>
+      
+      <div style="
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        width: 60px; 
+        height: 60px; 
+        border-radius: 50%; 
+        background: ${isTop3 ? 
+          `linear-gradient(135deg, ${medalColors[index]}, ${medalColors[index]}88)` : 
+          'linear-gradient(135deg, rgba(108,117,125,0.8), rgba(73,80,87,0.8))'
+        };
+        font-size: 1.5rem; 
+        font-weight: bold;
+        border: 2px solid ${isTop3 ? medalColors[index] : '#6c757d'};
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      ">
+        ${isTop3 ? medalEmojis[index] : `#${index + 1}`}
+      </div>
+      
+      <div style="flex: 1; min-width: 0;">
+        <div style="
+          font-weight: bold; 
+          font-size: 1.2rem; 
+          color: ${isTop3 ? '#ffd700' : 'white'};
+          margin-bottom: 0.3rem;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        ">${competitor.name}</div>
+        
+        <div style="
+          display: flex; 
+          gap: 1rem; 
+          font-size: 0.9rem; 
+          color: rgba(255,255,255,0.8);
+          flex-wrap: wrap;
+        ">
+          <span style="color: #ffd700;">⚡ ${competitor.score} نقطة</span>
+          <span style="color: #43e97b;">✅ ${competitor.totalCorrect} صحيحة</span>
+          <span style="color: #ff4757;">❌ ${competitor.totalWrong || 0} خاطئة</span>
+        </div>
+      </div>
+      
+      ${isTop3 ? `
+        <div style="
+          background: linear-gradient(135deg, ${medalColors[index]}, ${medalColors[index]}88);
+          color: white;
+          padding: 0.5rem 1rem;
+          border-radius: 20px;
+          font-size: 0.8rem;
+          font-weight: bold;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          animation: achievementGlow 2s ease-in-out infinite;
+        ">
+          ${index === 0 ? 'بطل البرق' : index === 1 ? 'نائب البطل' : 'المركز الثالث'}
+        </div>
+      ` : ''}
+    `;
+    
+    // إضافة تأثيرات التفاعل
+    competitorDiv.addEventListener('mouseover', () => {
+      competitorDiv.style.transform = 'translateY(-3px) scale(1.02)';
+      competitorDiv.style.boxShadow = '0 10px 25px rgba(255,215,0,0.3)';
+      competitorDiv.style.borderColor = '#ffd700';
+      competitorDiv.querySelector('.light-effect').style.left = '100%';
+    });
+    
+    competitorDiv.addEventListener('mouseout', () => {
+      competitorDiv.style.transform = 'translateY(0) scale(1)';
+      competitorDiv.style.boxShadow = 'none';
+      competitorDiv.style.borderColor = isTop3 ? '#ffd700' : 'rgba(255,255,255,0.1)';
+    });
+    
+    listContainer.appendChild(competitorDiv);
+  });
+  
+  // تطبيق تأثيرات الرسوم المتحركة
+  setTimeout(() => {
+    const items = listContainer.querySelectorAll('.competitor-item');
+    items.forEach((item, index) => {
+      setTimeout(() => {
+        item.style.animation = 'competitorSlideIn 0.5s ease-out';
+      }, index * 100);
+    });
+  }, 100);
+}
+
+function updateCompetitorCount(count) {
+  const statsContainer = document.querySelector('.leaderboard-stats');
+  if (statsContainer) {
+    const competitorCountElement = statsContainer.querySelector('div:first-child div:nth-child(2)');
+    if (competitorCountElement) {
+      competitorCountElement.textContent = count;
+    }
+  }
 }
 
 function resetLightningRound() {
