@@ -3092,17 +3092,9 @@
           </div>
         </div>
 
-        <!-- Quick Answer Selection -->
-        <div class="quick-answer-selection" style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 15px; margin-top: 1rem;">
-          <h4 style="color: #00ffff; text-align: center; margin-bottom: 1rem;">⚡ اختيار سريع للفائز ⚡</h4>
-          <div id="quickAnswerButtons" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.8rem;">
-            <!-- Quick selection buttons will be generated -->
-          </div>
-        </div>
-
-        <!-- Enhanced Student Scoring Panel -->
+        <!-- Student Scoring Panel -->
         <div class="student-scoring-panel" style="background: rgba(67,233,123,0.1); padding: 1.5rem; border-radius: 15px; margin-top: 1rem; border: 2px solid rgba(67,233,123,0.3);">
-          <h4 style="color: #43e97b; text-align: center; margin-bottom: 1rem;">🎯 تسجيل النقاط المطور 🎯</h4>
+          <h4 style="color: #43e97b; text-align: center; margin-bottom: 1rem;">🎯 تسجيل النقاط للطلاب 🎯</h4>
           <div style="text-align: center; margin-bottom: 1rem; color: rgba(255,255,255,0.8);">
             اضغط على اسم الطالب لإعطائه نقاط عند الإجابة الصحيحة
           </div>
@@ -3722,75 +3714,17 @@ let gameState = {
 // نظام راحة المعلم - حفظ واستعادة الاختيارات
 function saveTeacherSession() {
   if (gameState.selectedClass && selectedStudentsList.length > 0) {
-    const teacherSession = {
-      selectedClass: gameState.selectedClass,
-      selectedStudents: [...selectedStudentsList],
-      timestamp: Date.now(),
-      sessionId: `session_${Date.now()}`
-    };
+    // تحديث حالة اللعبة بدون حفظ
+    gameState.selectedClass = selectedClass;
+    gameState.selectedStudents = [...selectedStudentsList];
     
-    localStorage.setItem('teacherActiveSession', JSON.stringify(teacherSession));
-    gameState.hasActiveSession = true;
-    console.log('💾 تم حفظ جلسة المعلم:', teacherSession);
+    console.log('✅ تم تحديث اختيار الطلاب:', selectedStudentsList);
     
     // إشعار المعلم
-    showQuantumNotification('💾 تم الحفظ التلقائي', 
-      `حُفظت اختياراتك: ${gameState.selectedClass} (${selectedStudentsList.length} طلاب)`, 
+    showQuantumNotification('✅ تم التحديث', 
+      `تم اختيار: ${gameState.selectedClass} (${selectedStudentsList.length} طلاب)`, 
       'success');
-    
-    // تحديث أيقونة زر الجلسة
-    setTimeout(() => updateSessionButtonStatus(), 500);
   }
-}
-
-function loadTeacherSession() {
-  const savedSession = localStorage.getItem('teacherActiveSession');
-  if (savedSession) {
-    try {
-      const session = JSON.parse(savedSession);
-      
-      // التحقق من أن الجلسة ليست قديمة جداً (أقل من 24 ساعة)
-      const hoursPassed = (Date.now() - session.timestamp) / (1000 * 60 * 60);
-      if (hoursPassed < 24) {
-        return session;
-      } else {
-        // إزالة الجلسة القديمة
-        localStorage.removeItem('teacherActiveSession');
-      }
-    } catch (e) {
-      console.error('خطأ في قراءة جلسة المعلم:', e);
-    }
-  }
-  return null;
-}
-
-function restoreTeacherSession(session) {
-  gameState.selectedClass = session.selectedClass;
-  selectedStudentsList = [...session.selectedStudents];
-  gameState.selectedStudents = [...session.selectedStudents];
-  gameState.hasActiveSession = true;
-  
-  console.log('🔄 تم استعادة جلسة المعلم:', session);
-  
-  // إشعار المعلم بالاستعادة
-  showQuantumNotification('🔄 تم استعادة الجلسة', 
-    `استُعيدت اختياراتك: ${session.selectedClass} (${session.selectedStudents.length} طلاب)`, 
-    'info');
-}
-
-function clearTeacherSession() {
-  localStorage.removeItem('teacherActiveSession');
-  gameState.hasActiveSession = false;
-  gameState.selectedClass = null;
-  selectedStudentsList = [];
-  gameState.selectedStudents = [];
-  
-  showQuantumNotification('🗑️ تم مسح الجلسة', 
-    'تم مسح الاختيارات السابقة، يمكنك البدء من جديد', 
-    'info');
-  
-  // تحديث أيقونة زر الجلسة
-  setTimeout(() => updateSessionButtonStatus(), 500);
 }
 
 // عرض خيارات الجلسة المحفوظة للمعلم
@@ -7650,7 +7584,6 @@ function initializeLightningCompetitors() {
   }
   
   displayLightningCompetitors();
-  setupQuickAnswerButtons();
   setupStudentScoringButtons();
 }
 
@@ -7695,16 +7628,6 @@ function getCompetitorStatusText(status) {
   }
 }
 
-function setupQuickAnswerButtons() {
-  const container = document.getElementById('quickAnswerButtons');
-  if (!container) return;
-  
-  container.innerHTML = lightningState.competitors.map((competitor, index) => `
-    <button class="neural-button" onclick="selectLightningWinner(${index})" style="font-size: 0.9rem; padding: 0.6rem;">
-      🏆 ${competitor.name}
-    </button>
-  `).join('');
-}
 
 function setupStudentScoringButtons() {
   const container = document.getElementById('studentScoringButtons');
@@ -7922,11 +7845,8 @@ function startFiveMinuteChallenge() {
   playCosmicSound('battle-horn');
   createLightningBurst();
   
-  // Show notification
-  showQuantumNotification('⚡ بدء التحدي!', 'تحدي الخمس دقائق بدأ الآن!', 'success');
-  
-  // Add to reactions
-  addLightningReaction('🚀 بدأ تحدي الخمس دقائق! المنافسة مشتعلة!', 'system');
+  // Show simple notification
+  showQuantumNotification('⚡ بدء التحدي!', 'تحدي 5 دقائق بدأ الآن!', 'success');
 }
 
 function startEnhancedTimer() {
@@ -7943,14 +7863,10 @@ function startEnhancedTimer() {
       // Sound effects based on time remaining
       if (lightningState.timeLeft === 60) {
         playCosmicSound('countdown-tick');
-        showQuantumNotification('⏰ تحذير!', 'دقيقة واحدة باقية!', 'warning');
-        addLightningReaction('⏰ دقيقة واحدة باقية! أسرعوا!', 'system');
-      } else if (lightningState.timeLeft === 30) {
+        showQuantumNotification('⏰ دقيقة واحدة!', 'دقيقة واحدة باقية!', 'warning');
+      } else if (lightningState.timeLeft === 10) {
         playCosmicSound('countdown-beep');
-        showQuantumNotification('🔥 تحذير نهائي!', '30 ثانية فقط!', 'warning');
-        addLightningReaction('🔥 30 ثانية فقط! اللحظات الأخيرة!', 'system');
-      } else if (lightningState.timeLeft <= 10 && lightningState.timeLeft > 0) {
-        playCosmicSound('countdown-beep');
+        showQuantumNotification('🔥 10 ثواني!', '10 ثواني فقط!', 'warning');
         createUrgentEffect();
       } else if (lightningState.timeLeft <= 3 && lightningState.timeLeft > 0) {
         playCosmicSound('long-beep');
@@ -8051,20 +7967,9 @@ function endChallenge() {
   updateTimerStatus('التحدي انتهى');
   disableStudentScoringButtons(); // Disable scoring
   
-  // Save results
-  saveLightningResults();
-  
   // Audio and visual effects
   playCosmicSound('epic-victory');
   createCompletionEffect();
-  
-  // Show completion message
-  setTimeout(() => {
-    showChallengeCompletionMessage();
-  }, 1000);
-  
-  // Add to reactions
-  addLightningReaction('🏁 انتهى التحدي! تم حفظ النتائج', 'system');
   
   // Check for achievements
   checkForNewAchievements();
@@ -8113,9 +8018,8 @@ function createCriticalEffect() {
 }
 
 function createCompletionEffect() {
-  // Create celebration overlay
+  // Create simple celebration overlay
   const overlay = document.createElement('div');
-  overlay.className = 'challenge-complete-overlay';
   overlay.style.cssText = `
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center;
@@ -8123,19 +8027,19 @@ function createCompletionEffect() {
   `;
   
   overlay.innerHTML = `
-    <div class="completion-message" style="
+    <div style="
       background: linear-gradient(135deg, #1a1a2e, #16213e); 
       padding: 3rem; border-radius: 20px; text-align: center; border: 2px solid #ffd700;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.5); animation: bounceIn 0.6s ease-out;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
     ">
-      <div style="font-size: 6rem; margin-bottom: 1rem;">🎉</div>
-      <h2 style="font-size: 3rem; color: #ffd700; margin-bottom: 1rem;">انتهى التحدي!</h2>
-      <p style="font-size: 1.5rem; margin-bottom: 2rem; color: white;">تم إكمال تحدي الخمس دقائق بنجاح</p>
-      <button onclick="this.closest('.challenge-complete-overlay').remove(); showLightningLeaderboard();" style="
+      <div style="font-size: 4rem; margin-bottom: 1rem;">🎉</div>
+      <h2 style="font-size: 2rem; color: #ffd700; margin-bottom: 1rem;">انتهى التحدي!</h2>
+      <p style="font-size: 1.2rem; margin-bottom: 2rem; color: white;">تم إكمال تحدي 5 دقائق</p>
+      <button onclick="this.closest('div').closest('div').remove(); showLightningLeaderboard();" style="
         background: linear-gradient(135deg, #ffd700, #ffed4e);
         border: none; color: #1a1a2e; padding: 1rem 2rem; border-radius: 15px;
-        font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: transform 0.2s;
-      " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+        font-size: 1rem; font-weight: bold; cursor: pointer;
+      ">
         🏆 عرض النتائج
       </button>
     </div>
@@ -8143,30 +8047,20 @@ function createCompletionEffect() {
   
   document.body.appendChild(overlay);
   
-  // Auto remove after 8 seconds
+  // Auto remove after 5 seconds
   setTimeout(() => {
     if (overlay.parentNode) {
       overlay.parentNode.removeChild(overlay);
       showLightningLeaderboard();
     }
-  }, 8000);
+  }, 5000);
 }
 
-function showChallengeCompletionMessage() {
-  const completedCount = lightningState.completedChallenges;
-  let message = `تم إكمال ${completedCount} تحدي`;
-  if (completedCount === 1) message = 'تم إكمال التحدي الأول!';
-  
-  showQuantumNotification('🏁 تحدي مكتمل!', message, 'success');
-}
+
 
 function saveLightningResults() {
-  try {
-    localStorage.setItem('lightningCompetitors', JSON.stringify(lightningState.competitors));
-    localStorage.setItem('lightningCompletedChallenges', lightningState.completedChallenges.toString());
-  } catch (error) {
-    console.log('Could not save to localStorage:', error);
-  }
+  // إزالة نظام الحفظ - النتائج مؤقتة فقط
+  console.log('النتائج مؤقتة - لا يتم حفظها');
 }
 
 // Enhanced student scoring with effects
@@ -8186,18 +8080,11 @@ function scoreStudentEnhanced(studentName, points = 10) {
   playCosmicSound('achievement-unlock');
   createStudentScoreEffect(studentName, points);
   
-  // Update all displays
+  // Update displays
   displayLightningCompetitors();
-  setupStudentScoringButtons(); // Update scoring buttons
-  setupQuickAnswerButtons(); // Update quick answer buttons
+  setupStudentScoringButtons();
   
-  // Add reaction
-  addLightningReaction(`⚡ ${studentName} حصل على ${points} نقطة! المجموع: ${competitor.score}`, 'score');
-  
-  // Save progress
-  saveLightningResults();
-  
-  // Show floating notification
+  // Show notification
   showQuantumNotification('🎯 نقاط مسجلة!', `${studentName} حصل على ${points} نقطة`, 'success');
 }
 
@@ -9381,16 +9268,8 @@ function showAchievementNotification(achievement) {
 }
 
 function checkForNewAchievements() {
-  const totalPoints = getTotalPoints();
-  const completedChallenges = gameState.completedChallenges || 0;
-  
-  // فحص مختلف الإنجازات
-  if (completedChallenges >= 1) checkAchievement('firstSteps');
-  if (totalPoints >= 100) checkAchievement('brainiac');
-  if (gameState.visitedRealms && gameState.visitedRealms.length >= 4) checkAchievement('explorer');
-  
-  playCosmicSound('data-process');
-  showQuantumNotification('🔍 فحص الإنجازات', 'تم فحص جميع الإنجازات المتاحة', 'info');
+  // تم إزالة نظام الإنجازات لتبسيط النظام
+  console.log('تم تبسيط النظام - إزالة نظام الإنجازات');
 }
 
 function showAllAchievements() {
