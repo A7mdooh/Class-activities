@@ -1081,16 +1081,17 @@
       background: rgba(255,255,255,0.05);
     }
 
-    /* تحسين استجابة الشاشات الصغيرة */
+    /* تحسين استجابة الشاشات المختلفة */
     @media (max-width: 768px) {
       .leaderboard-content {
-        width: 98% !important;
-        height: 90vh !important;
+        width: 99% !important;
+        height: 99vh !important;
         padding: 1.5rem !important;
+        border-radius: 15px !important;
       }
       
       .leaderboard-header h2 {
-        font-size: 1.8rem !important;
+        font-size: 2rem !important;
       }
       
       .leaderboard-stats {
@@ -1098,9 +1099,9 @@
       }
       
       .competitor-item {
-        padding: 1rem !important;
+        padding: 1.5rem !important;
         flex-direction: column !important;
-        gap: 0.8rem !important;
+        gap: 1rem !important;
         text-align: center !important;
       }
       
@@ -1111,9 +1112,10 @@
 
     @media (max-width: 480px) {
       .leaderboard-content {
-        width: 95% !important;
-        height: 95vh !important;
+        width: 99% !important;
+        height: 99vh !important;
         padding: 1rem !important;
+        border-radius: 10px !important;
       }
       
       .leaderboard-header {
@@ -1122,8 +1124,42 @@
         text-align: center !important;
       }
       
+      .leaderboard-header h2 {
+        font-size: 1.5rem !important;
+      }
+      
       .leaderboard-stats {
         grid-template-columns: 1fr !important;
+      }
+      
+      .competitor-item {
+        padding: 1rem !important;
+      }
+    }
+
+    /* تحسين الشاشات الكبيرة */
+    @media (min-width: 1920px) {
+      .leaderboard-content {
+        max-width: none !important;
+      }
+      
+      .competitor-item {
+        padding: 2.5rem !important;
+        gap: 2rem !important;
+      }
+      
+      .competitor-item div:first-child {
+        width: 100px !important;
+        height: 100px !important;
+        font-size: 2.5rem !important;
+      }
+      
+      .competitor-item div:nth-child(3) > div:first-child {
+        font-size: 2.2rem !important;
+      }
+      
+      .competitor-item div:nth-child(3) > div:nth-child(2) {
+        font-size: 1.4rem !important;
       }
     }
 
@@ -7653,10 +7689,8 @@ function showLightningLeaderboard() {
       border: 3px solid #ffd700; 
       border-radius: 25px; 
       padding: 2rem; 
-      width: 95%; 
-      max-width: 800px; 
-      height: 85vh;
-      max-height: 700px;
+      width: 98%; 
+      height: 98vh;
       color: white; 
       display: flex; 
       flex-direction: column;
@@ -7755,86 +7789,6 @@ function showLightningLeaderboard() {
         </div>
       </div>
       
-      <!-- شريط البحث والفلترة -->
-      <div class="search-filter-bar" style="
-        display: flex; 
-        gap: 1rem; 
-        margin-bottom: 1.5rem;
-        position: relative;
-        z-index: 1;
-        flex-wrap: wrap;
-        align-items: center;
-      ">
-        <div style="flex: 1; min-width: 200px; position: relative;">
-          <input 
-            type="text" 
-            id="competitorSearch" 
-            placeholder="🔍 ابحث عن متنافس..." 
-            oninput="filterCompetitors(this.value)"
-            style="
-              width: 100%; 
-              padding: 0.8rem 1rem 0.8rem 2.5rem; 
-              border: 2px solid rgba(255,215,0,0.3); 
-              border-radius: 25px; 
-              background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)); 
-              color: white; 
-              font-size: 1rem;
-              backdrop-filter: blur(10px);
-              transition: all 0.3s ease;
-            "
-            onfocus="
-              this.style.borderColor = '#ffd700'; 
-              this.style.boxShadow = '0 0 0 3px rgba(255,215,0,0.3)';
-            " 
-            onblur="
-              this.style.borderColor = 'rgba(255,215,0,0.3)'; 
-              this.style.boxShadow = 'none';
-            ">
-          <div style="
-            position: absolute; 
-            left: 12px; 
-            top: 50%; 
-            transform: translateY(-50%); 
-            color: rgba(255,255,255,0.5); 
-            font-size: 1.2rem;
-            pointer-events: none;
-          ">🔍</div>
-        </div>
-        
-        <select 
-          id="sortOrder" 
-          onchange="sortCompetitors(this.value)"
-          style="
-            padding: 0.8rem 1rem; 
-            border: 2px solid rgba(255,215,0,0.3); 
-            border-radius: 12px; 
-            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)); 
-            color: white; 
-            backdrop-filter: blur(10px);
-            cursor: pointer;
-          ">
-          <option value="score_desc">الأعلى نقاطاً</option>
-          <option value="score_asc">الأقل نقاطاً</option>
-          <option value="name_asc">الاسم (أ-ي)</option>
-          <option value="name_desc">الاسم (ي-أ)</option>
-          <option value="correct_desc">الأكثر صحة</option>
-        </select>
-        
-        <button onclick="refreshLeaderboard()" style="
-          background: linear-gradient(135deg, #43e97b, #38f9d7); 
-          border: none; 
-          color: white; 
-          padding: 0.8rem 1.5rem; 
-          border-radius: 12px; 
-          cursor: pointer; 
-          font-weight: bold;
-          transition: all 0.3s ease;
-          white-space: nowrap;
-        " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-          🔄 تحديث
-        </button>
-      </div>
-      
       <!-- قائمة المتصدرين القابلة للتمرير -->
       <div class="leaderboard-list" style="
         flex: 1; 
@@ -7862,7 +7816,7 @@ function showLightningLeaderboard() {
           }
         </style>
         
-        <div style="display: grid; gap: 0.8rem; padding-right: 5px;">
+        <div style="display: grid; gap: 1.2rem; padding-right: 5px;">
           ${sortedCompetitors.map((competitor, index) => {
             const isTop3 = index < 3;
             const medalColors = ['#ffd700', '#c0c0c0', '#cd7f32'];
@@ -7874,11 +7828,11 @@ function showLightningLeaderboard() {
                   `linear-gradient(45deg, rgba(255,215,0,0.2), rgba(255,165,0,0.15))` : 
                   `linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03))`
                 }; 
-                padding: 1.2rem; 
-                border-radius: 15px; 
+                padding: 2rem; 
+                border-radius: 20px; 
                 display: flex; 
                 align-items: center; 
-                gap: 1rem; 
+                gap: 1.5rem; 
                 border: 2px solid ${isTop3 ? '#ffd700' : 'rgba(255,255,255,0.1)'}; 
                 transition: all 0.3s ease;
                 position: relative;
@@ -7909,17 +7863,17 @@ function showLightningLeaderboard() {
                   display: flex; 
                   align-items: center; 
                   justify-content: center; 
-                  width: 60px; 
-                  height: 60px; 
+                  width: 80px; 
+                  height: 80px; 
                   border-radius: 50%; 
                   background: ${isTop3 ? 
                     `linear-gradient(135deg, ${medalColors[index]}, ${medalColors[index]}88)` : 
                     'linear-gradient(135deg, rgba(108,117,125,0.8), rgba(73,80,87,0.8))'
                   };
-                  font-size: 1.5rem; 
+                  font-size: 2rem; 
                   font-weight: bold;
-                  border: 2px solid ${isTop3 ? medalColors[index] : '#6c757d'};
-                  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                  border: 3px solid ${isTop3 ? medalColors[index] : '#6c757d'};
+                  box-shadow: 0 6px 18px rgba(0,0,0,0.4);
                 ">
                   ${isTop3 ? medalEmojis[index] : `#${index + 1}`}
                 </div>
@@ -7928,9 +7882,9 @@ function showLightningLeaderboard() {
                 <div style="flex: 1; min-width: 0;">
                   <div style="
                     font-weight: bold; 
-                    font-size: 1.2rem; 
+                    font-size: 1.8rem; 
                     color: ${isTop3 ? '#ffd700' : 'white'};
-                    margin-bottom: 0.3rem;
+                    margin-bottom: 0.8rem;
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
@@ -7938,14 +7892,14 @@ function showLightningLeaderboard() {
                   
                   <div style="
                     display: flex; 
-                    gap: 1rem; 
-                    font-size: 0.9rem; 
+                    gap: 1.5rem; 
+                    font-size: 1.2rem; 
                     color: rgba(255,255,255,0.8);
                     flex-wrap: wrap;
                   ">
-                    <span style="color: #ffd700;">⚡ ${competitor.score} نقطة</span>
-                    <span style="color: #43e97b;">✅ ${competitor.totalCorrect} صحيحة</span>
-                    <span style="color: #ff4757;">❌ ${competitor.totalWrong || 0} خاطئة</span>
+                    <span style="color: #ffd700; font-weight: bold;">⚡ ${competitor.score} نقطة</span>
+                    <span style="color: #43e97b; font-weight: bold;">✅ ${competitor.totalCorrect} صحيحة</span>
+                    <span style="color: #ff4757; font-weight: bold;">❌ ${competitor.totalWrong || 0} خاطئة</span>
                   </div>
                 </div>
                 
@@ -7954,13 +7908,16 @@ function showLightningLeaderboard() {
                   <div style="
                     background: linear-gradient(135deg, ${medalColors[index]}, ${medalColors[index]}88);
                     color: white;
-                    padding: 0.5rem 1rem;
-                    border-radius: 20px;
-                    font-size: 0.8rem;
+                    padding: 1rem 1.5rem;
+                    border-radius: 25px;
+                    font-size: 1rem;
                     font-weight: bold;
                     text-transform: uppercase;
-                    letter-spacing: 1px;
+                    letter-spacing: 2px;
                     animation: achievementGlow 2s ease-in-out infinite;
+                    text-align: center;
+                    min-width: 120px;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
                   ">
                     ${index === 0 ? 'بطل البرق' : index === 1 ? 'نائب البطل' : 'المركز الثالث'}
                   </div>
@@ -7972,13 +7929,13 @@ function showLightningLeaderboard() {
           ${sortedCompetitors.length === 0 ? `
             <div style="
               text-align: center; 
-              padding: 3rem; 
+              padding: 5rem; 
               color: rgba(255,255,255,0.6);
-              font-size: 1.1rem;
+              font-size: 1.5rem;
             ">
-              <div style="font-size: 4rem; margin-bottom: 1rem;">⚡</div>
-              <div>لا يوجد متنافسين بعد</div>
-              <div style="font-size: 0.9rem; margin-top: 0.5rem;">ابدأ التحدي لإضافة متنافسين!</div>
+              <div style="font-size: 6rem; margin-bottom: 2rem;">⚡</div>
+              <div style="font-size: 2rem; margin-bottom: 1rem;">لا يوجد متنافسين بعد</div>
+              <div style="font-size: 1.3rem; margin-top: 1rem;">ابدأ التحدي لإضافة متنافسين!</div>
             </div>
           ` : ''}
         </div>
@@ -7987,41 +7944,45 @@ function showLightningLeaderboard() {
       <!-- أزرار التحكم -->
       <div style="
         display: flex; 
-        gap: 1rem; 
-        margin-top: 1.5rem; 
-        padding-top: 1rem; 
-        border-top: 2px solid rgba(255,215,0,0.3);
+        gap: 1.5rem; 
+        margin-top: 2rem; 
+        padding-top: 1.5rem; 
+        border-top: 3px solid rgba(255,215,0,0.4);
         position: relative;
         z-index: 1;
         flex-wrap: wrap;
       ">
         <button onclick="exportLeaderboard()" style="
           flex: 1;
-          min-width: 150px;
+          min-width: 200px;
           background: linear-gradient(135deg, #4facfe, #00f2fe); 
           border: none; 
           color: white; 
-          padding: 1rem; 
-          border-radius: 12px; 
+          padding: 1.5rem 2rem; 
+          border-radius: 15px; 
           cursor: pointer; 
           font-weight: bold;
+          font-size: 1.2rem;
           transition: all 0.3s ease;
-        " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+          box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
+        " onmouseover="this.style.transform='translateY(-3px) scale(1.02)'" onmouseout="this.style.transform='translateY(0) scale(1)'">
           📊 تصدير النتائج
         </button>
         
         <button onclick="resetAllScores()" style="
           flex: 1;
-          min-width: 150px;
+          min-width: 200px;
           background: linear-gradient(135deg, #ff4757, #ff3742); 
           border: none; 
           color: white; 
-          padding: 1rem; 
-          border-radius: 12px; 
+          padding: 1.5rem 2rem; 
+          border-radius: 15px; 
           cursor: pointer; 
           font-weight: bold;
+          font-size: 1.2rem;
           transition: all 0.3s ease;
-        " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+          box-shadow: 0 6px 20px rgba(255, 71, 87, 0.4);
+        " onmouseover="this.style.transform='translateY(-3px) scale(1.02)'" onmouseout="this.style.transform='translateY(0) scale(1)'">
           🔄 إعادة تعيين
         </button>
       </div>
