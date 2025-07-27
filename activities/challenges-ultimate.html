@@ -2750,6 +2750,52 @@
 
     <!-- Main Game Interface (initially hidden) -->
     <div class="game-interface" id="gameInterface" style="display: none;">
+    
+    <!-- Kingdom Selection Menu -->
+    <div id="kingdomSelectionMenu" style="display: none;">
+      <header class="main-header">
+        <h1 class="kingdom-title">🏆 مملكة التحديات الذكية</h1>
+        <p class="subtitle">⚡ اختر التحدي المناسب لطلابك</p>
+      </header>
+
+      <!-- Kingdoms Grid -->
+      <div class="kingdoms-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; padding: 2rem; max-width: 1200px; margin: 0 auto;">
+        
+        <!-- Lightning Kingdom -->
+        <div class="realm-card" onclick="enterLightningKingdom()" style="background: linear-gradient(135deg, #ffd700, #ff6347); cursor: pointer; padding: 2rem; border-radius: 20px; text-align: center; transition: transform 0.3s;">
+          <div style="font-size: 4rem; margin-bottom: 1rem;">⚡</div>
+          <h3 style="color: #1a1a2e; font-size: 1.8rem; margin-bottom: 1rem;">تحدي البرق</h3>
+          <p style="color: #1a1a2e; font-size: 1.1rem;">منافسة سريعة لمدة 5 دقائق مع أسئلة شفوية</p>
+        </div>
+
+        <!-- Creative Kingdom -->
+        <div class="realm-card" onclick="enterCreativeKingdom()" style="background: linear-gradient(135deg, #32cd32, #00ff7f); cursor: pointer; padding: 2rem; border-radius: 20px; text-align: center; transition: transform 0.3s;">
+          <div style="font-size: 4rem; margin-bottom: 1rem;">🎨</div>
+          <h3 style="color: #1a1a2e; font-size: 1.8rem; margin-bottom: 1rem;">مملكة الإبداع</h3>
+          <p style="color: #1a1a2e; font-size: 1.1rem;">تحديات إبداعية في الفن والكتابة والتفكير</p>
+        </div>
+
+        <!-- Strategy Kingdom -->
+        <div class="realm-card" onclick="enterStrategyKingdom()" style="background: linear-gradient(135deg, #4169e1, #1e90ff); cursor: pointer; padding: 2rem; border-radius: 20px; text-align: center; transition: transform 0.3s;">
+          <div style="font-size: 4rem; margin-bottom: 1rem;">🧠</div>
+          <h3 style="color: white; font-size: 1.8rem; margin-bottom: 1rem;">مملكة الاستراتيجية</h3>
+          <p style="color: white; font-size: 1.1rem;">تحديات تفكير استراتيجي وحل المشاكل</p>
+        </div>
+
+        <!-- Knowledge Kingdom -->
+        <div class="realm-card" onclick="enterKnowledgeKingdom()" style="background: linear-gradient(135deg, #9370db, #8a2be2); cursor: pointer; padding: 2rem; border-radius: 20px; text-align: center; transition: transform 0.3s;">
+          <div style="font-size: 4rem; margin-bottom: 1rem;">📚</div>
+          <h3 style="color: white; font-size: 1.8rem; margin-bottom: 1rem;">مملكة المعرفة</h3>
+          <p style="color: white; font-size: 1.1rem;">أسئلة معرفية متنوعة وتحديات علمية</p>
+        </div>
+      </div>
+
+      <!-- Back Button -->
+      <div style="text-align: center; margin-top: 2rem;">
+        <button class="neural-button secondary" onclick="returnToStudentSelection()">🔙 العودة لاختيار الطلاب</button>
+      </div>
+    </div>
+    
     <!-- أزرار التحكم العلوية الاحترافية -->
     <div class="cosmic-control-header">
         <div class="control-buttons-container">
@@ -2796,7 +2842,7 @@
     </div>
 
     <!-- Kingdom Header -->
-    <div id="kingdomContent">
+    <div id="kingdomContent" style="display: none;">
     <header class="main-header">
       <h1 class="kingdom-title">🏆 مملكة التحديات الذكية</h1>
       <p class="subtitle">⚡ نظام التعلم التفاعلي المتقدم بتقنية الذكاء الاصطناعي</p>
@@ -4411,10 +4457,10 @@ function startKingdomGame() {
   gameState.selectedStudents = [...selectedStudentsList];
   gameState.gameStarted = true;
   
-  // Hide selection panel and show game interface
+  // Hide selection panel and show kingdom selection menu
   document.getElementById('selectionPanel').style.display = 'none';
-  document.getElementById('kingdomContent').style.display = 'block';
   document.getElementById('gameInterface').style.display = 'block';
+  document.getElementById('kingdomSelectionMenu').style.display = 'block';
   
   // Generate teams from selected students
   generateTeamsFromStudents();
@@ -4464,6 +4510,73 @@ function quickTestStart() {
   setTimeout(() => {
     startKingdomGame();
   }, 500);
+}
+
+// دوال الدخول للممالك المختلفة
+function enterLightningKingdom() {
+  console.log('⚡ الدخول إلى تحدي البرق');
+  
+  // إخفاء قائمة الممالك
+  document.getElementById('kingdomSelectionMenu').style.display = 'none';
+  
+  // إظهار منطقة تحدي البرق
+  document.getElementById('lightningArena').style.display = 'block';
+  
+  // تهيئة تحدي البرق
+  initializeLightningCompetitors();
+  
+  // رسالة ترحيب
+  showQuantumNotification('⚡ مرحباً!', 'دخلت إلى تحدي البرق - منافسة 5 دقائق!', 'success');
+  
+  // صوت دخول
+  playCosmicSound('kingdom-enter');
+}
+
+function enterCreativeKingdom() {
+  console.log('🎨 الدخول إلى مملكة الإبداع');
+  
+  // إخفاء قائمة الممالك وإظهار مملكة الإبداع
+  document.getElementById('kingdomSelectionMenu').style.display = 'none';
+  document.getElementById('creativeArena').style.display = 'block';
+  
+  showQuantumNotification('🎨 مرحباً!', 'دخلت إلى مملكة الإبداع!', 'success');
+  playCosmicSound('kingdom-enter');
+}
+
+function enterStrategyKingdom() {
+  console.log('🧠 الدخول إلى مملكة الاستراتيجية');
+  
+  showQuantumNotification('🧠 قريباً!', 'مملكة الاستراتيجية قيد التطوير', 'info');
+}
+
+function enterKnowledgeKingdom() {
+  console.log('📚 الدخول إلى مملكة المعرفة');
+  
+  showQuantumNotification('📚 قريباً!', 'مملكة المعرفة قيد التطوير', 'info');
+}
+
+function returnToStudentSelection() {
+  console.log('🔙 العودة لاختيار الطلاب');
+  
+  // إخفاء واجهة اللعبة وإظهار لوحة الاختيار
+  document.getElementById('gameInterface').style.display = 'none';
+  document.getElementById('selectionPanel').style.display = 'block';
+  
+  showQuantumNotification('🔙 تم الرجوع', 'يمكنك تعديل اختيار الطلاب', 'info');
+}
+
+function returnToKingdom() {
+  console.log('🏰 العودة لقائمة الممالك');
+  
+  // إخفاء جميع المناطق
+  document.getElementById('lightningArena').style.display = 'none';
+  document.getElementById('creativeArena').style.display = 'none';
+  document.getElementById('kingdomContent').style.display = 'none';
+  
+  // إظهار قائمة الممالك
+  document.getElementById('kingdomSelectionMenu').style.display = 'block';
+  
+  showQuantumNotification('🏰 العودة للممالك', 'اختر تحدي آخر', 'info');
 }
 
 function generateTeamsFromStudents() {
