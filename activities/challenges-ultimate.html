@@ -3991,16 +3991,6 @@ function loadClassSelection() {
   console.log('🎓 بدء تحميل اختيار الصفوف');
   console.log('📊 بيانات الطلاب المتاحة:', Object.keys(studentData));
   
-  // التحقق من وجود جلسة محفوظة للمعلم
-  const savedSession = loadTeacherSession();
-  if (savedSession) {
-    console.log('💾 تم العثور على جلسة محفوظة للمعلم');
-    
-    // عرض خيارات للمعلم
-    showTeacherSessionOptions(savedSession);
-    return; // إيقاف التنفيذ حتى يختار المعلم
-  }
-  
   // Show main app container
   const mainApp = document.getElementById('mainApp');
   if (mainApp) {
@@ -4544,15 +4534,35 @@ function initParticles() {
 
 async function loadStudentData() {
   try {
+    console.log('🔄 محاولة تحميل بيانات الطلاب من: ../data/studentData.json');
     const response = await fetch('../data/studentData.json');
+    console.log('📡 استجابة الخادم:', response.status, response.statusText);
+    
     if (response.ok) {
       studentData = await response.json();
       console.log('✅ تم تحميل بيانات الطلاب بنجاح:', Object.keys(studentData));
+      showQuantumNotification('✅ تم التحميل', 'تم تحميل بيانات الطلاب من الملف', 'success');
+      return;
     } else {
-      throw new Error('فشل تحميل البيانات');
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
   } catch (error) {
-    console.warn('⚠️ استخدام البيانات الاحتياطية:', error);
+    console.error('❌ خطأ في تحميل البيانات:', error);
+    
+    // تحميل البيانات من الملف مباشرة
+    await loadDataFromFile();
+  }
+}
+
+async function loadDataFromFile() {
+  try {
+    // محاولة تحميل البيانات الأساسية من ملف studentData.json
+    console.log('🔄 محاولة تحميل البيانات مباشرة...');
+    
+    // استخدام البيانات الاحتياطية إذا فشل التحميل
+    console.warn('⚠️ فشل تحميل الملف - استخدام البيانات الاحتياطية');
+    showQuantumNotification('⚠️ بيانات احتياطية', 'تم استخدام البيانات الاحتياطية', 'warning');
+    
     // بيانات احتياطية أكثر تفصيلاً
     studentData = {
       "خامس 1": [
@@ -4575,6 +4585,8 @@ async function loadStudentData() {
       ]
     };
     console.log('📚 تم تحميل البيانات الاحتياطية:', Object.keys(studentData));
+  } catch (fallbackError) {
+    console.error('❌ خطأ في تحميل البيانات الاحتياطية:', fallbackError);
   }
 }
 
