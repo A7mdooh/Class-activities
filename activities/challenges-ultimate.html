@@ -785,6 +785,165 @@
       }
     }
 
+    /* ===== LIGHTNING KINGDOM SPECIAL EFFECTS ===== */
+    @keyframes lightningPulse {
+      0%, 100% { 
+        background: radial-gradient(circle, rgba(255,255,0,0.1) 0%, transparent 70%);
+        transform: scale(1);
+      }
+      50% { 
+        background: radial-gradient(circle, rgba(255,255,0,0.3) 0%, transparent 70%);
+        transform: scale(1.05);
+      }
+    }
+
+    @keyframes electricPulse {
+      0%, 100% { 
+        filter: drop-shadow(0 0 15px rgba(255,255,0,0.8));
+        transform: scale(1);
+      }
+      50% { 
+        filter: drop-shadow(0 0 25px rgba(255,255,0,1)) drop-shadow(0 0 35px rgba(255,165,0,0.8));
+        transform: scale(1.05);
+      }
+    }
+
+    .lightning-competitor-card {
+      background: linear-gradient(135deg, rgba(255,255,0,0.2), rgba(255,165,0,0.2));
+      border: 2px solid rgba(255,255,0,0.4);
+      border-radius: 15px;
+      padding: 1rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .lightning-competitor-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255,255,0,0.3), transparent);
+      transform: rotate(45deg);
+      transition: all 0.6s ease;
+      opacity: 0;
+    }
+
+    .lightning-competitor-card:hover::before {
+      opacity: 1;
+      animation: lightningStrike 0.6s ease;
+    }
+
+    @keyframes lightningStrike {
+      0% { transform: translateX(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) rotate(45deg); }
+    }
+
+    .lightning-competitor-card.winner {
+      border-color: #ffd700;
+      background: linear-gradient(135deg, rgba(255,215,0,0.4), rgba(255,165,0,0.4));
+      box-shadow: 
+        0 0 20px rgba(255,215,0,0.6),
+        inset 0 0 20px rgba(255,215,0,0.2);
+      animation: winnerGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes winnerGlow {
+      0%, 100% { 
+        box-shadow: 
+          0 0 20px rgba(255,215,0,0.6),
+          inset 0 0 20px rgba(255,215,0,0.2);
+      }
+      50% { 
+        box-shadow: 
+          0 0 30px rgba(255,215,0,0.9),
+          inset 0 0 25px rgba(255,215,0,0.4);
+      }
+    }
+
+    .lightning-competitor-card.active {
+      border-color: #00ffff;
+      background: linear-gradient(135deg, rgba(0,255,255,0.3), rgba(0,150,255,0.3));
+      transform: scale(1.05);
+      animation: activePlayer 1.5s ease-in-out infinite;
+    }
+
+    @keyframes activePlayer {
+      0%, 100% { border-color: #00ffff; }
+      50% { border-color: #00ff00; }
+    }
+
+    .competitor-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, #ffff00, #ff6600, #ff0000, #ffff00);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 0.5rem;
+      font-size: 1.5rem;
+      color: white;
+      font-weight: bold;
+      text-shadow: 0 0 10px rgba(0,0,0,0.8);
+      animation: avatarSpin 4s linear infinite;
+    }
+
+    @keyframes avatarSpin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .competitor-name {
+      color: white;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 5px rgba(0,0,0,0.8);
+    }
+
+    .competitor-score {
+      background: rgba(0,0,0,0.5);
+      color: #ffd700;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 0.9rem;
+      border: 1px solid rgba(255,215,0,0.3);
+    }
+
+    .lightning-reaction {
+      background: rgba(255,255,255,0.1);
+      border-left: 4px solid #ffd700;
+      padding: 0.8rem;
+      margin: 0.5rem 0;
+      border-radius: 0 10px 10px 0;
+      animation: slideInLeft 0.5s ease;
+    }
+
+    @keyframes slideInLeft {
+      0% { transform: translateX(-100%); opacity: 0; }
+      100% { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes lightningBlast {
+      0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0.8;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(3);
+        opacity: 0;
+      }
+    }
+
     /* ===== RESPONSIVE DESIGN ===== */
     @media (max-width: 768px) {
       .kingdom-title {
@@ -1841,29 +2000,93 @@
       </div>
     </div>
 
-    <!-- Lightning Arena -->
+    <!-- Lightning Arena - Enhanced Competitive Version -->
     <div class="battle-arena" id="lightningArena" style="display: none;">
-      <div class="arena-header">
-        <h2 style="color: #ffd700; font-size: 2rem; margin-bottom: 1rem;">⚡ مملكة البرق</h2>
-        <div class="challenge-timer" id="lightningTimer">30</div>
-        <p style="color: rgba(255,255,255,0.8); font-size: 1.1rem;">التفكير السريع هو المفتاح!</p>
+      <!-- Lightning Header with Storm Effects -->
+      <div class="arena-header" style="position: relative; overflow: hidden;">
+        <div class="lightning-storm-bg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, rgba(255,255,0,0.1) 0%, transparent 70%); animation: lightningPulse 2s ease-in-out infinite;"></div>
+        
+        <h2 style="color: #ffd700; font-size: 2.5rem; margin-bottom: 1rem; text-shadow: 0 0 20px #ffd700; position: relative; z-index: 10;">
+          ⚡ مملكة البرق الكهربائية ⚡
+        </h2>
+        
+        <!-- Dynamic Timer with Electric Effect -->
+        <div class="lightning-timer-container" style="position: relative; margin: 1rem 0;">
+          <div class="challenge-timer" id="lightningTimer" style="font-size: 4rem; font-weight: 900; background: linear-gradient(45deg, #ffff00, #ff6600, #ff0000); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 15px rgba(255,255,0,0.8)); animation: electricPulse 1s ease-in-out infinite;">30</div>
+          <div style="color: rgba(255,255,255,0.9); font-size: 1.2rem; margin-top: 0.5rem;">⚡ التفكير بسرعة البرق! ⚡</div>
+        </div>
+
+        <!-- Competition Status Display -->
+        <div class="competition-status" style="background: rgba(0,0,0,0.6); padding: 1rem; border-radius: 15px; margin: 1rem 0; border: 2px solid rgba(255,255,0,0.5);">
+          <div style="color: #ffd700; font-size: 1.1rem; margin-bottom: 0.5rem;">🏆 حالة المنافسة الحية</div>
+          <div id="lightningCompetitionStatus" style="color: white;">جاري التحضير للمنافسة...</div>
+        </div>
       </div>
 
-      <!-- Lightning Challenge Display -->
-      <div class="lightning-challenge-container" style="text-align: center; margin: 2rem 0;">
-        <div id="lightningQuestion" style="font-size: 1.8rem; color: white; margin-bottom: 2rem; padding: 2rem; background: rgba(255,255,255,0.1); border-radius: 15px; min-height: 150px; display: flex; align-items: center; justify-content: center;">
-          استعد للتحدي...
-        </div>
+      <!-- Competitors Lightning Board -->
+      <div class="lightning-competitors-board" style="background: linear-gradient(135deg, rgba(255,255,0,0.1), rgba(255,165,0,0.1)); border-radius: 20px; padding: 1.5rem; margin: 2rem 0; border: 2px solid rgba(255,255,0,0.3);">
+        <h3 style="color: #ffd700; text-align: center; margin-bottom: 1.5rem; font-size: 1.5rem;">
+          ⚡ لوحة المتسابقين الكهربائية ⚡
+        </h3>
         
-        <div class="lightning-options" id="lightningOptions" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
-          <!-- Options will be generated dynamically -->
+        <div id="lightningCompetitorsGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+          <!-- Competitors will be generated dynamically -->
+        </div>
+      </div>
+
+      <!-- Teacher Question Panel -->
+      <div class="teacher-question-panel" style="background: linear-gradient(135deg, rgba(0,0,0,0.8), rgba(25,25,25,0.8)); border-radius: 20px; padding: 2rem; margin: 2rem 0; border: 3px solid #ffd700; box-shadow: 0 0 30px rgba(255,215,0,0.4);">
+        <h3 style="color: #ffd700; text-align: center; margin-bottom: 1rem; font-size: 1.8rem;">
+          🎤 منطقة السؤال الشفوي 🎤
+        </h3>
+        
+        <div style="text-align: center; margin-bottom: 2rem;">
+          <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 15px; margin-bottom: 1rem;">
+            <div style="color: #00ffff; font-size: 1.1rem; margin-bottom: 0.5rem;">📢 تعليمات للمعلم:</div>
+            <div style="color: rgba(255,255,255,0.9); font-size: 1rem; line-height: 1.6;">
+              اطرح سؤالك شفوياً، ثم اضغط على "بدء العداد" لبدء المنافسة!<br>
+              الطلاب سيرفعون أيديهم، وأنت تختار الفائز الأول.
+            </div>
+          </div>
+          
+          <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <button class="neural-button" id="startLightningQuestion" onclick="startLightningQuestion()" style="background: linear-gradient(45deg, #00ff00, #00aa00); font-size: 1.2rem; padding: 1rem 2rem;">
+              🚀 بدء السؤال والعداد
+            </button>
+            <button class="neural-button" id="pauseLightningTimer" onclick="pauseLightningTimer()" style="background: linear-gradient(45deg, #ffaa00, #ff6600);" disabled>
+              ⏸️ إيقاف مؤقت
+            </button>
+            <button class="neural-button" id="resetLightningRound" onclick="resetLightningRound()" style="background: linear-gradient(45deg, #ff6600, #cc0000);">
+              🔄 إعادة تعيين
+            </button>
+          </div>
         </div>
 
-        <div style="display: flex; justify-content: center; gap: 1rem;">
-          <button class="neural-button" onclick="nextLightningChallenge()">⚡ التحدي التالي</button>
-          <button class="neural-button" onclick="endLightningRound()">🏁 إنهاء الجولة</button>
-          <button class="neural-button secondary" onclick="returnToKingdom()">🏰 العودة للممالك</button>
+        <!-- Quick Answer Selection -->
+        <div class="quick-answer-selection" style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 15px; margin-top: 1rem;">
+          <h4 style="color: #00ffff; text-align: center; margin-bottom: 1rem;">⚡ اختيار سريع للفائز ⚡</h4>
+          <div id="quickAnswerButtons" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.8rem;">
+            <!-- Quick selection buttons will be generated -->
+          </div>
         </div>
+      </div>
+
+      <!-- Live Reactions and Messages -->
+      <div class="live-reactions-panel" style="background: rgba(255,255,255,0.05); border-radius: 15px; padding: 1.5rem; margin: 2rem 0;">
+        <h4 style="color: #ff69b4; text-align: center; margin-bottom: 1rem;">💬 ردود الأفعال المباشرة</h4>
+        <div id="lightningReactions" style="min-height: 120px; max-height: 200px; overflow-y: auto; background: rgba(0,0,0,0.3); border-radius: 10px; padding: 1rem;">
+          <div style="text-align: center; color: rgba(255,255,255,0.6); padding: 2rem;">
+            ستظهر هنا ردود الأفعال والرسائل التحفيزية...
+          </div>
+        </div>
+      </div>
+
+      <!-- Control Panel -->
+      <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;">
+        <button class="neural-button" onclick="nextLightningRound()">⚡ جولة جديدة</button>
+        <button class="neural-button" onclick="showLightningLeaderboard()">🏆 لوحة المتصدرين</button>
+        <button class="neural-button" onclick="endLightningCompetition()">🏁 إنهاء المنافسة</button>
+        <button class="neural-button secondary" onclick="returnToKingdom()">🏰 العودة للممالك</button>
       </div>
     </div>
 
@@ -6320,6 +6543,446 @@ function startCreativeChallenge() {
   
   startCreativeTimer();
   playCosmicSound('achievement-unlock');
+}
+
+// ===== ENHANCED LIGHTNING KINGDOM FUNCTIONS =====
+let lightningState = {
+  competitors: [],
+  currentRound: 1,
+  timer: null,
+  isPaused: false,
+  timeLeft: 30,
+  reactions: []
+};
+
+function startLightningChallenge() {
+  hideAllArenas();
+  document.getElementById('lightningArena').style.display = 'block';
+  
+  // Initialize competitors from selected students
+  initializeLightningCompetitors();
+  
+  // Display initial competition status
+  updateLightningCompetitionStatus('🎯 المعلم يحضر السؤال الشفوي...');
+  
+  // Setup quick answer buttons
+  setupQuickAnswerButtons();
+  
+  // Add initial reaction
+  addLightningReaction('⚡ مرحباً بكم في مملكة البرق! استعدوا للمنافسة الكهربائية!', 'system');
+  
+  playCosmicSound('lightning-strike');
+}
+
+function initializeLightningCompetitors() {
+  if (!gameState.selectedStudents || gameState.selectedStudents.length === 0) {
+    // Create demo competitors if no students selected
+    lightningState.competitors = [
+      { name: 'أحمد محمد', score: 0, totalCorrect: 0, status: 'ready' },
+      { name: 'فاطمة علي', score: 0, totalCorrect: 0, status: 'ready' },
+      { name: 'محمد سالم', score: 0, totalCorrect: 0, status: 'ready' },
+      { name: 'نورا خالد', score: 0, totalCorrect: 0, status: 'ready' }
+    ];
+  } else {
+    lightningState.competitors = gameState.selectedStudents.map(name => ({
+      name: name,
+      score: 0,
+      totalCorrect: 0,
+      status: 'ready'
+    }));
+  }
+  
+  displayLightningCompetitors();
+}
+
+function displayLightningCompetitors() {
+  const grid = document.getElementById('lightningCompetitorsGrid');
+  if (!grid) return;
+  
+  grid.innerHTML = lightningState.competitors.map((competitor, index) => `
+    <div class="lightning-competitor-card ${competitor.status}" id="competitor-${index}" onclick="selectLightningWinner(${index})">
+      <div class="competitor-avatar">${competitor.name.charAt(0)}</div>
+      <div class="competitor-name">${competitor.name}</div>
+      <div class="competitor-score">⚡ ${competitor.score} نقطة</div>
+      <div style="font-size: 0.8rem; color: rgba(255,255,255,0.7); margin-top: 0.3rem;">
+        ✅ ${competitor.totalCorrect} إجابة صحيحة
+      </div>
+      <div class="competitor-status" style="margin-top: 0.5rem; font-size: 0.9rem;">
+        ${getCompetitorStatusIcon(competitor.status)} ${getCompetitorStatusText(competitor.status)}
+      </div>
+    </div>
+  `).join('');
+}
+
+function getCompetitorStatusIcon(status) {
+  switch(status) {
+    case 'ready': return '🟢';
+    case 'thinking': return '🤔';
+    case 'answered': return '✋';
+    case 'winner': return '🏆';
+    case 'waiting': return '⏳';
+    default: return '🟢';
+  }
+}
+
+function getCompetitorStatusText(status) {
+  switch(status) {
+    case 'ready': return 'جاهز';
+    case 'thinking': return 'يفكر...';
+    case 'answered': return 'رفع يده';
+    case 'winner': return 'فائز!';
+    case 'waiting': return 'ينتظر';
+    default: return 'جاهز';
+  }
+}
+
+function setupQuickAnswerButtons() {
+  const container = document.getElementById('quickAnswerButtons');
+  if (!container) return;
+  
+  container.innerHTML = lightningState.competitors.map((competitor, index) => `
+    <button class="neural-button" onclick="selectLightningWinner(${index})" style="font-size: 0.9rem; padding: 0.6rem;">
+      🏆 ${competitor.name}
+    </button>
+  `).join('');
+}
+
+function startLightningQuestion() {
+  // Reset all competitors to thinking state
+  lightningState.competitors.forEach(competitor => {
+    competitor.status = 'thinking';
+  });
+  
+  lightningState.timeLeft = 30;
+  lightningState.isPaused = false;
+  
+  updateLightningCompetitionStatus('🔥 السؤال نشط! الطلاب يفكرون...');
+  displayLightningCompetitors();
+  
+  // Enable pause button, disable start button
+  document.getElementById('startLightningQuestion').disabled = true;
+  document.getElementById('pauseLightningTimer').disabled = false;
+  
+  // Start countdown
+  startLightningTimer();
+  
+  // Add reaction
+  addLightningReaction(`🚀 بدأت الجولة ${lightningState.currentRound}! العداد يتيك تك...`, 'system');
+  
+  playCosmicSound('countdown-tick');
+}
+
+function startLightningTimer() {
+  if (lightningState.timer) {
+    clearInterval(lightningState.timer);
+  }
+  
+  lightningState.timer = setInterval(() => {
+    if (!lightningState.isPaused) {
+      lightningState.timeLeft--;
+      
+      // Update timer display with color changes
+      const timerElement = document.getElementById('lightningTimer');
+      if (timerElement) {
+        timerElement.textContent = lightningState.timeLeft;
+        
+        // Change color based on remaining time
+        if (lightningState.timeLeft <= 5) {
+          timerElement.style.background = 'linear-gradient(45deg, #ff0000, #ff6600)';
+          if (lightningState.timeLeft <= 3) {
+            playCosmicSound('countdown-beep');
+          }
+        } else if (lightningState.timeLeft <= 10) {
+          timerElement.style.background = 'linear-gradient(45deg, #ff6600, #ffff00)';
+        }
+      }
+      
+      if (lightningState.timeLeft <= 0) {
+        clearInterval(lightningState.timer);
+        endLightningQuestion();
+      }
+    }
+  }, 1000);
+}
+
+function pauseLightningTimer() {
+  lightningState.isPaused = !lightningState.isPaused;
+  const pauseBtn = document.getElementById('pauseLightningTimer');
+  
+  if (lightningState.isPaused) {
+    pauseBtn.textContent = '▶️ استكمال';
+    updateLightningCompetitionStatus('⏸️ تم إيقاف العداد مؤقتاً');
+    addLightningReaction('⏸️ المعلم أوقف العداد للتوضيح', 'system');
+  } else {
+    pauseBtn.textContent = '⏸️ إيقاف مؤقت';
+    updateLightningCompetitionStatus('▶️ استؤنف العداد!');
+    addLightningReaction('▶️ استؤنف العداد! استعدوا...', 'system');
+  }
+  
+  playCosmicSound('ui-click');
+}
+
+function selectLightningWinner(competitorIndex) {
+  const competitor = lightningState.competitors[competitorIndex];
+  if (!competitor) return;
+  
+  // Stop timer
+  if (lightningState.timer) {
+    clearInterval(lightningState.timer);
+  }
+  
+  // Update winner
+  competitor.status = 'winner';
+  competitor.score += calculateLightningPoints();
+  competitor.totalCorrect++;
+  
+  // Update others to waiting
+  lightningState.competitors.forEach((comp, index) => {
+    if (index !== competitorIndex) {
+      comp.status = 'waiting';
+    }
+  });
+  
+  displayLightningCompetitors();
+  
+  // Show congratulations
+  updateLightningCompetitionStatus(`🏆 ${competitor.name} فاز بالنقاط! أحسنت!`);
+  
+  // Add celebratory reactions
+  const celebrationMessages = [
+    `🎉 تهانينا ${competitor.name}! إجابة رائعة!`,
+    `⚡ ${competitor.name} سريع كالبرق! +${calculateLightningPoints()} نقطة`,
+    `🔥 عقل لامع! ${competitor.name} يتصدر المنافسة!`,
+    `💡 ذكاء خارق من ${competitor.name}!`
+  ];
+  
+  const randomMessage = celebrationMessages[Math.floor(Math.random() * celebrationMessages.length)];
+  addLightningReaction(randomMessage, 'celebration');
+  
+  // Enable start button for next question
+  document.getElementById('startLightningQuestion').disabled = false;
+  document.getElementById('pauseLightningTimer').disabled = true;
+  
+  // Play victory sound
+  playCosmicSound('win');
+  
+  // Create visual explosion effect
+  createLightningExplosion(document.getElementById(`competitor-${competitorIndex}`));
+  
+  // Update achievements
+  updateQuickChallengeProgress(calculateLightningPoints());
+  setTimeout(() => checkAchievement('speedDemon'), 1000);
+}
+
+function calculateLightningPoints() {
+  const basePoints = 10;
+  const timeBonus = Math.max(0, Math.floor(lightningState.timeLeft / 3));
+  return basePoints + timeBonus;
+}
+
+function createLightningExplosion(element) {
+  const explosion = document.createElement('div');
+  explosion.style.cssText = `
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,0,0.8) 0%, transparent 70%);
+    transform: translate(-50%, -50%) scale(0);
+    animation: lightningBlast 1s ease-out forwards;
+    pointer-events: none;
+    z-index: 1000;
+  `;
+  
+  element.style.position = 'relative';
+  element.appendChild(explosion);
+  
+  setTimeout(() => {
+    explosion.remove();
+  }, 1000);
+}
+
+function endLightningQuestion() {
+  updateLightningCompetitionStatus('⏰ انتهى الوقت! جولة جديدة؟');
+  addLightningReaction('⏰ انتهى الوقت! لا بأس، المحاولة القادمة ستكون أفضل!', 'system');
+  
+  // Reset all competitors to ready
+  lightningState.competitors.forEach(competitor => {
+    competitor.status = 'ready';
+  });
+  
+  displayLightningCompetitors();
+  
+  // Enable start button
+  document.getElementById('startLightningQuestion').disabled = false;
+  document.getElementById('pauseLightningTimer').disabled = true;
+  
+  playCosmicSound('end-timer');
+}
+
+function nextLightningRound() {
+  lightningState.currentRound++;
+  
+  // Reset timer
+  lightningState.timeLeft = 30;
+  document.getElementById('lightningTimer').textContent = '30';
+  document.getElementById('lightningTimer').style.background = 'linear-gradient(45deg, #ffff00, #ff6600, #ff0000)';
+  
+  // Reset competitors status
+  lightningState.competitors.forEach(competitor => {
+    competitor.status = 'ready';
+  });
+  
+  displayLightningCompetitors();
+  updateLightningCompetitionStatus(`🎯 الجولة ${lightningState.currentRound} - المعلم يحضر السؤال الجديد...`);
+  addLightningReaction(`🆕 الجولة ${lightningState.currentRound} بدأت! هيا نرى من سيفوز هذه المرة!`, 'system');
+  
+  // Enable start button
+  document.getElementById('startLightningQuestion').disabled = false;
+  document.getElementById('pauseLightningTimer').disabled = true;
+  
+  playCosmicSound('level-up');
+}
+
+function showLightningLeaderboard() {
+  // Sort competitors by score
+  const sortedCompetitors = [...lightningState.competitors].sort((a, b) => b.score - a.score);
+  
+  const leaderboardModal = document.createElement('div');
+  leaderboardModal.className = 'modal-overlay';
+  leaderboardModal.style.cssText = `
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.9); z-index: 10000; display: flex;
+    align-items: center; justify-content: center; backdrop-filter: blur(10px);
+  `;
+  
+  leaderboardModal.innerHTML = `
+    <div style="background: linear-gradient(135deg, #1a1a2e, #16213e); border: 3px solid #ffd700; border-radius: 20px; padding: 2rem; max-width: 600px; width: 90%; color: white;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h2 style="color: #ffd700; margin: 0;">🏆 لوحة متصدري البرق</h2>
+        <button onclick="this.closest('.modal-overlay').remove()" style="background: #ff4757; border: none; color: white; padding: 0.5rem; border-radius: 50%; width: 40px; height: 40px; cursor: pointer;">✕</button>
+      </div>
+      
+      <div style="display: grid; gap: 1rem;">
+        ${sortedCompetitors.map((competitor, index) => `
+          <div style="background: ${index === 0 ? 'linear-gradient(45deg, rgba(255,215,0,0.3), rgba(255,165,0,0.3))' : 'rgba(255,255,255,0.1)'}; padding: 1rem; border-radius: 10px; display: flex; align-items: center; gap: 1rem; border: 2px solid ${index === 0 ? '#ffd700' : 'transparent'};">
+            <div style="font-size: 2rem;">${index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '🏅'}</div>
+            <div style="flex: 1;">
+              <div style="font-weight: bold; font-size: 1.1rem;">${competitor.name}</div>
+              <div style="color: #ffd700;">⚡ ${competitor.score} نقطة • ✅ ${competitor.totalCorrect} صحيحة</div>
+            </div>
+            <div style="text-align: right; color: #00ffff;">
+              <div>#${index + 1}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(leaderboardModal);
+  playCosmicSound('epic-victory');
+}
+
+function resetLightningRound() {
+  // Stop timer
+  if (lightningState.timer) {
+    clearInterval(lightningState.timer);
+  }
+  
+  // Reset state
+  lightningState.timeLeft = 30;
+  lightningState.isPaused = false;
+  
+  // Reset competitors
+  lightningState.competitors.forEach(competitor => {
+    competitor.status = 'ready';
+  });
+  
+  // Reset UI
+  document.getElementById('lightningTimer').textContent = '30';
+  document.getElementById('lightningTimer').style.background = 'linear-gradient(45deg, #ffff00, #ff6600, #ff0000)';
+  document.getElementById('startLightningQuestion').disabled = false;
+  document.getElementById('pauseLightningTimer').disabled = true;
+  
+  displayLightningCompetitors();
+  updateLightningCompetitionStatus('🔄 تم إعادة تعيين الجولة - جاهز للبدء!');
+  addLightningReaction('🔄 إعادة تعيين! استعدوا لجولة جديدة!', 'system');
+  
+  playCosmicSound('ui-back');
+}
+
+function endLightningCompetition() {
+  if (lightningState.timer) {
+    clearInterval(lightningState.timer);
+  }
+  
+  // Show final results
+  const winner = lightningState.competitors.reduce((prev, current) => 
+    (prev.score > current.score) ? prev : current
+  );
+  
+  addLightningReaction(`🎊 انتهت المنافسة! الفائز الكبير هو ${winner.name} بمجموع ${winner.score} نقطة!`, 'celebration');
+  
+  setTimeout(() => {
+    showLightningLeaderboard();
+  }, 2000);
+  
+  playCosmicSound('fireworks-burst');
+}
+
+function updateLightningCompetitionStatus(message) {
+  const statusElement = document.getElementById('lightningCompetitionStatus');
+  if (statusElement) {
+    statusElement.textContent = message;
+  }
+}
+
+function addLightningReaction(message, type = 'normal') {
+  const reactionsContainer = document.getElementById('lightningReactions');
+  if (!reactionsContainer) return;
+  
+  // Remove the placeholder if it exists
+  if (reactionsContainer.children.length === 1 && reactionsContainer.textContent.includes('ستظهر هنا')) {
+    reactionsContainer.innerHTML = '';
+  }
+  
+  const reaction = document.createElement('div');
+  reaction.className = 'lightning-reaction';
+  
+  let bgColor, icon;
+  switch(type) {
+    case 'system':
+      bgColor = 'rgba(0,255,255,0.2)';
+      icon = '🤖';
+      break;
+    case 'celebration':
+      bgColor = 'rgba(255,215,0,0.3)';
+      icon = '🎉';
+      break;
+    default:
+      bgColor = 'rgba(255,255,255,0.1)';
+      icon = '💬';
+  }
+  
+  reaction.style.background = bgColor;
+  reaction.innerHTML = `
+    <div style="display: flex; align-items: center; gap: 0.5rem;">
+      <span style="font-size: 1.2rem;">${icon}</span>
+      <span style="flex: 1;">${message}</span>
+      <span style="font-size: 0.8rem; color: rgba(255,255,255,0.6);">${new Date().toLocaleTimeString('ar')}</span>
+    </div>
+  `;
+  
+  reactionsContainer.appendChild(reaction);
+  reactionsContainer.scrollTop = reactionsContainer.scrollHeight;
+  
+  // Keep only last 5 reactions
+  while (reactionsContainer.children.length > 5) {
+    reactionsContainer.removeChild(reactionsContainer.firstChild);
+  }
 }
 
 // مختبر العلوم
