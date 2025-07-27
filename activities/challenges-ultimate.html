@@ -27,7 +27,84 @@
       --shadow-heavy: 0 20px 40px rgba(0,0,0,0.15);
       
       --arabic-font: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      
+      /* متغيرات برق السرعة */
+      --lightning-primary: #ffd700;
+      --lightning-secondary: #ffed4e;
+      --lightning-accent: #ff6347;
+      --lightning-dark: #1a1a2e;
     }
+
+    /* ===== تأثيرات برق السرعة ===== */
+    @keyframes lightningGlow {
+      0%, 100% { text-shadow: 0 0 30px var(--lightning-primary), 0 0 60px var(--lightning-primary); }
+      50% { text-shadow: 0 0 50px var(--lightning-primary), 0 0 100px var(--lightning-primary); }
+    }
+
+    @keyframes lightningButtonPulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 10px 30px rgba(255,215,0,0.4); }
+      50% { transform: scale(1.05); box-shadow: 0 15px 40px rgba(255,215,0,0.6); }
+    }
+
+    @keyframes lightningWarning {
+      0%, 100% { color: var(--lightning-primary); }
+      50% { color: #ffff66; }
+    }
+
+    @keyframes scoreFloat {
+      0% { 
+        opacity: 1; 
+        transform: translate(-50%, -50%) scale(1); 
+      }
+      100% { 
+        opacity: 0; 
+        transform: translate(-50%, -150%) scale(1.5); 
+      }
+    }
+
+    @keyframes slideInFromRight {
+      0% { 
+        transform: translateX(100%); 
+        opacity: 0; 
+      }
+      100% { 
+        transform: translateX(0); 
+        opacity: 1; 
+      }
+    }
+
+    @keyframes slideOutToRight {
+      0% { 
+        transform: translateX(0); 
+        opacity: 1; 
+      }
+      100% { 
+        transform: translateX(100%); 
+        opacity: 0; 
+      }
+    }
+
+    .speed-lightning-phase {
+      padding: 2rem;
+      min-height: 100vh;
+    }
+
+    .speed-student-card:hover {
+      transform: scale(1.05) !important;
+      box-shadow: 0 10px 30px rgba(255,215,0,0.6) !important;
+    }
+
+    .lightning-start-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 15px 40px rgba(255,215,0,0.6);
+    }
+
+    .action-btn:hover {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+
+    /* ===== نهاية تأثيرات برق السرعة =====
 
     * {
       margin: 0;
@@ -2764,8 +2841,8 @@
         <!-- Lightning Kingdom -->
         <div class="realm-card" onclick="enterLightningKingdom()" style="background: linear-gradient(135deg, #ffd700, #ff6347); cursor: pointer; padding: 2rem; border-radius: 20px; text-align: center; transition: transform 0.3s;">
           <div style="font-size: 4rem; margin-bottom: 1rem;">⚡</div>
-          <h3 style="color: #1a1a2e; font-size: 1.8rem; margin-bottom: 1rem;">تحدي البرق</h3>
-          <p style="color: #1a1a2e; font-size: 1.1rem;">منافسة سريعة لمدة 5 دقائق مع أسئلة شفوية</p>
+          <h3 style="color: #1a1a2e; font-size: 1.8rem; margin-bottom: 1rem;">برق السرعة</h3>
+          <p style="color: #1a1a2e; font-size: 1.1rem;">منافسة برق سريعة - 5 دقائق من الإثارة الخالصة!</p>
         </div>
 
         <!-- Creative Kingdom -->
@@ -2968,128 +3045,133 @@
       </div>
     </div>
 
-    <!-- Lightning Arena - Enhanced 5-Minute Challenge -->
+    <!-- Lightning Arena - شيطان السرعة -->
     <div class="battle-arena" id="lightningArena" style="display: none;">
-      <!-- Lightning Header with Advanced Timer -->
-      <div class="arena-header" style="position: relative; overflow: hidden; margin-bottom: 2rem;">
-        <div class="lightning-storm-bg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, rgba(255,255,0,0.1) 0%, transparent 70%); animation: lightningPulse 2s ease-in-out infinite;"></div>
-        
-        <h2 style="color: #ffd700; font-size: 2.8rem; margin-bottom: 1rem; text-shadow: 0 0 20px #ffd700; position: relative; z-index: 10; text-align: center;">
-          ⚡ تحدي البرق الخمس دقائق ⚡
-        </h2>
-
-        <!-- Advanced Countdown Timer -->
-        <div class="lightning-timer-container" style="
-          position: relative; 
-          text-align: center; 
-          margin: 2rem auto;
-          max-width: 400px;
-        ">
-          <div id="lightningCountdown" style="
-            font-size: 4rem; 
-            font-weight: 900; 
-            color: #ffd700; 
-            text-shadow: 0 0 30px #ffd700, 0 0 60px #ffd700;
-            background: linear-gradient(135deg, rgba(0,0,0,0.8), rgba(255,215,0,0.1));
-            border: 3px solid #ffd700;
-            border-radius: 50%;
-            width: 200px;
-            height: 200px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto;
-            position: relative;
-            overflow: hidden;
-            animation: timerPulse 1s ease-in-out infinite;
-          ">
-            5:00
-            
-            <!-- Timer Progress Ring -->
-            <div class="timer-progress" style="
-              position: absolute;
-              top: -3px;
-              left: -3px;
-              width: 200px;
-              height: 200px;
-              border-radius: 50%;
-              background: conic-gradient(#ffd700 0deg, transparent 0deg);
-              transition: all 0.5s ease;
-            "></div>
+      <!-- شاشة البداية -->
+      <div id="speedDemonStart" class="speed-lightning-phase">
+        <div class="lightning-header">
+          <button onclick="returnToKingdom()" class="return-btn" style="position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 10px; cursor: pointer;">← العودة</button>
+          
+          <h1 style="color: #ffd700; font-size: 4rem; text-align: center; margin: 2rem 0; text-shadow: 0 0 30px #ffd700; animation: lightningGlow 2s ease-in-out infinite;">
+            ⚡ برق السرعة ⚡
+          </h1>
+          
+          <div class="countdown-display" style="text-align: center; margin: 3rem 0;">
+            <div class="countdown-circle" style="width: 250px; height: 250px; border: 5px solid #ffd700; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(255,215,0,0.3)); box-shadow: 0 0 40px rgba(255,215,0,0.5);">
+              <div style="text-align: center;">
+                <div style="font-size: 3rem; color: #ffd700; font-weight: bold;">5:00</div>
+                <div style="color: rgba(255,255,255,0.8); font-size: 1.2rem;">دقائق من الإثارة</div>
+              </div>
+            </div>
           </div>
           
-          <div class="timer-status" style="
-            margin-top: 1rem;
-            font-size: 1.2rem;
-            color: rgba(255,255,255,0.8);
-            font-weight: bold;
-          ">
-            <span id="timerStatusText">اضغط "بدء التحدي" للبدء</span>
+          <div style="text-align: center; margin: 2rem 0;">
+            <p style="color: rgba(255,255,255,0.9); font-size: 1.4rem; margin: 1rem 0;">المعلم يطرح الأسئلة... الطلاب يتسابقون للإجابة!</p>
+            <p style="color: #ffd700; font-size: 1.2rem;">انقر على اسم الطالب الذي يجيب ← نقاط فورية + مؤثرات!</p>
+          </div>
+          
+          <div style="text-align: center;">
+            <button onclick="startSpeedDemon()" class="lightning-start-btn" style="
+              background: linear-gradient(135deg, #ffd700, #ffed4e);
+              border: none;
+              color: #1a1a2e;
+              padding: 1.5rem 3rem;
+              font-size: 1.5rem;
+              font-weight: bold;
+              border-radius: 20px;
+              cursor: pointer;
+              text-transform: uppercase;
+              letter-spacing: 2px;
+              box-shadow: 0 10px 30px rgba(255,215,0,0.4);
+              animation: lightningButtonPulse 2s ease-in-out infinite;
+              transition: all 0.3s ease;
+            ">
+              ⚡ ابدأ برق السرعة ⚡
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- شاشة اللعب النشط -->
+      <div id="speedDemonActive" class="speed-lightning-phase" style="display: none;">
+        <div class="active-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 15px;">
+          <div class="lightning-timer" style="text-align: center;">
+            <div id="activeDemonTimer" style="font-size: 3rem; color: #ffd700; font-weight: bold; text-shadow: 0 0 20px #ffd700;">5:00</div>
+            <div style="color: rgba(255,255,255,0.7);">الوقت المتبقي</div>
+          </div>
+          
+          <div class="game-stats" style="text-align: center;">
+            <div id="totalClicks" style="font-size: 2rem; color: #ffd700; font-weight: bold;">0</div>
+            <div style="color: rgba(255,255,255,0.7);">إجمالي النقرات</div>
+          </div>
+          
+          <button onclick="endSpeedDemon()" class="emergency-stop" style="background: #ff4757; border: none; color: white; padding: 1rem; border-radius: 10px; cursor: pointer; font-weight: bold;">🛑 إيقاف</button>
+        </div>
+
+        <!-- شبكة الطلاب للنقر السريع -->
+        <div class="speed-students-grid" id="speedStudentsGrid" style="
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 1rem;
+          margin: 2rem 0;
+        ">
+          <!-- سيتم ملء الطلاب هنا -->
+        </div>
+
+        <!-- النقاط الحية -->
+        <div class="live-scores" style="background: rgba(0,0,0,0.3); padding: 1.5rem; border-radius: 15px; margin-top: 2rem;">
+          <h3 style="color: #ffd700; text-align: center; margin-bottom: 1rem;">🏆 النقاط الحية 🏆</h3>
+          <div id="liveScoresList" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.5rem;">
+            <!-- النقاط الحية هنا -->
+          </div>
+        </div>
+      </div>
+
+      <!-- شاشة النتائج النهائية -->
+      <div id="speedDemonResults" class="speed-lightning-phase" style="display: none;">
+        <div class="results-header" style="text-align: center; margin: 2rem 0;">
+          <h2 style="color: #ff4757; font-size: 3rem; margin-bottom: 1rem;">🎉 انتهى برق السرعة! 🎉</h2>
+          <div style="color: rgba(255,255,255,0.8); font-size: 1.2rem;">المدة: 5 دقائق كاملة من الإثارة</div>
+        </div>
+        
+        <div class="final-leaderboard" style="background: rgba(0,0,0,0.3); padding: 2rem; border-radius: 20px; margin: 2rem 0;">
+          <h3 style="color: #ffd700; text-align: center; margin-bottom: 2rem; font-size: 2rem;">👑 المتصدرون النهائيون 👑</h3>
+          <div id="finalLeaderboard">
+            <!-- المتصدرون هنا -->
           </div>
         </div>
 
-        <!-- Challenge Control Panel -->
-        <div class="challenge-controls" style="
-          display: flex;
-          gap: 1rem;
-          justify-content: center;
-          margin: 2rem 0;
-          flex-wrap: wrap;
-        ">
-          <button id="startChallengeBtn" onclick="startFiveMinuteChallenge()" class="lightning-control-btn" style="
+        <div class="action-buttons" style="text-align: center; margin: 2rem 0;">
+          <button onclick="restartSpeedDemon()" class="action-btn" style="
             background: linear-gradient(135deg, #43e97b, #38f9d7);
             border: none;
             color: white;
             padding: 1rem 2rem;
+            margin: 0 1rem;
             border-radius: 15px;
             font-size: 1.2rem;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 20px rgba(67, 233, 123, 0.4);
-            text-transform: uppercase;
-            letter-spacing: 1px;
           ">
-            🚀 بدء التحدي
+            � جولة أخرى
           </button>
           
-          <button id="endChallengeBtn" onclick="endChallenge()" class="lightning-control-btn" style="
-            background: linear-gradient(135deg, #ff4757, #ff3742);
-            border: none;
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 15px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 20px rgba(255, 71, 87, 0.4);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            opacity: 0.5;
-            pointer-events: none;
-          ">
-            🛑 إنهاء التحدي
-          </button>
-          
-          <button onclick="showLightningLeaderboard()" class="lightning-control-btn" style="
+          <button onclick="returnToKingdom()" class="action-btn" style="
             background: linear-gradient(135deg, #ffd700, #ffed4e);
             border: none;
             color: #1a1a2e;
             padding: 1rem 2rem;
+            margin: 0 1rem;
             border-radius: 15px;
             font-size: 1.2rem;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
-            text-transform: uppercase;
-            letter-spacing: 1px;
           ">
-            🏆 لوحة المتصدرين
+            👑 العودة للمملكة
           </button>
         </div>
       </div>
+    </div>
         
         <!-- Dynamic Timer with Electric Effect -->
         <div class="lightning-timer-container" style="position: relative; margin: 1rem 0;">
@@ -3743,6 +3825,403 @@
   </div>
 
 <script>
+// ===== برق السرعة - نظام بسيط وفعال =====
+
+// متغيرات برق السرعة
+let speedLightningState = {
+  isActive: false,
+  timeRemaining: 300, // 5 دقائق بالثواني
+  timer: null,
+  studentScores: {},
+  totalClicks: 0,
+  phase: 'start' // start, active, results
+};
+
+// بدء برق السرعة
+function startSpeedDemon() {
+  console.log('⚡ بدء برق السرعة!');
+  
+  // تغيير المرحلة
+  speedLightningState.phase = 'active';
+  speedLightningState.isActive = true;
+  speedLightningState.timeRemaining = 300; // 5 دقائق
+  speedLightningState.totalClicks = 0;
+  speedLightningState.studentScores = {};
+  
+  // إخفاء شاشة البداية وإظهار شاشة اللعب
+  document.getElementById('speedDemonStart').style.display = 'none';
+  document.getElementById('speedDemonActive').style.display = 'block';
+  
+  // إنشاء الطلاب
+  createSpeedStudentsGrid();
+  
+  // بدء المؤقت
+  startLightningTimer();
+  
+  // صوت البداية
+  playLightningSound('start');
+  
+  // رسالة ترحيب
+  showLightningNotification('⚡ بدأ برق السرعة!', 'انقر على الطلاب للنقاط!', 'lightning');
+}
+
+// إنشاء شبكة الطلاب
+function createSpeedStudentsGrid() {
+  const grid = document.getElementById('speedStudentsGrid');
+  grid.innerHTML = '';
+  
+  // التأكد من وجود الطلاب
+  if (!selectedStudentsList || selectedStudentsList.length === 0) {
+    grid.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.7); grid-column: 1/-1;">لا توجد طلاب محددون</div>';
+    return;
+  }
+  
+  selectedStudentsList.forEach(student => {
+    // تهيئة النقاط
+    speedLightningState.studentScores[student.id] = 0;
+    
+    const studentCard = document.createElement('div');
+    studentCard.className = 'speed-student-card';
+    studentCard.innerHTML = `
+      <div class="student-avatar" style="font-size: 2rem; margin-bottom: 0.5rem;">${student.avatar || '👤'}</div>
+      <div class="student-name" style="font-weight: bold; margin-bottom: 0.5rem;">${student.name}</div>
+      <div class="student-score" id="score-${student.id}" style="font-size: 1.5rem; color: #ffd700;">0</div>
+      <div style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">نقطة</div>
+    `;
+    
+    studentCard.style.cssText = `
+      background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,215,0,0.4));
+      border: 2px solid #ffd700;
+      border-radius: 15px;
+      padding: 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: white;
+    `;
+    
+    // إضافة تأثير النقر
+    studentCard.onclick = () => clickSpeedStudent(student.id, student.name);
+    
+    // تأثيرات التفاعل
+    studentCard.onmouseenter = () => {
+      studentCard.style.transform = 'scale(1.05)';
+      studentCard.style.boxShadow = '0 10px 30px rgba(255,215,0,0.6)';
+    };
+    
+    studentCard.onmouseleave = () => {
+      studentCard.style.transform = 'scale(1)';
+      studentCard.style.boxShadow = 'none';
+    };
+    
+    grid.appendChild(studentCard);
+  });
+}
+
+// النقر على الطالب
+function clickSpeedStudent(studentId, studentName) {
+  if (!speedLightningState.isActive) return;
+  
+  // زيادة النقاط
+  speedLightningState.studentScores[studentId]++;
+  speedLightningState.totalClicks++;
+  
+  // تحديث العرض
+  document.getElementById(`score-${studentId}`).textContent = speedLightningState.studentScores[studentId];
+  document.getElementById('totalClicks').textContent = speedLightningState.totalClicks;
+  
+  // مؤثرات بصرية
+  showScoreAnimation(studentId, studentName);
+  
+  // مؤثرات صوتية
+  playLightningSound('point');
+  
+  // تحديث النقاط الحية
+  updateLiveScores();
+}
+
+// تحديث النقاط الحية
+function updateLiveScores() {
+  const liveScoresList = document.getElementById('liveScoresList');
+  
+  // ترتيب الطلاب حسب النقاط
+  const sortedStudents = Object.entries(speedLightningState.studentScores)
+    .sort(([,a], [,b]) => b - a)
+    .slice(0, 5); // أعلى 5 طلاب
+  
+  liveScoresList.innerHTML = sortedStudents.map(([studentId, score], index) => {
+    const student = selectedStudentsList.find(s => s.id == studentId);
+    const medals = ['🥇', '🥈', '🥉', '🏅', '⭐'];
+    
+    return `
+      <div style="
+        background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,215,0,0.4));
+        padding: 0.5rem;
+        border-radius: 10px;
+        text-align: center;
+        border: 1px solid #ffd700;
+      ">
+        <div style="font-size: 1.2rem;">${medals[index] || '🌟'}</div>
+        <div style="font-size: 0.9rem; font-weight: bold;">${student ? student.name : 'طالب'}</div>
+        <div style="color: #ffd700; font-weight: bold;">${score}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// بدء المؤقت
+function startLightningTimer() {
+  speedLightningState.timer = setInterval(() => {
+    speedLightningState.timeRemaining--;
+    
+    // تحديث العرض
+    const minutes = Math.floor(speedLightningState.timeRemaining / 60);
+    const seconds = speedLightningState.timeRemaining % 60;
+    const timeDisplay = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    
+    document.getElementById('activeDemonTimer').textContent = timeDisplay;
+    
+    // تحقق من انتهاء الوقت
+    if (speedLightningState.timeRemaining <= 0) {
+      endSpeedDemon();
+    }
+    
+    // تأثيرات تحذيرية في آخر 10 ثوانٍ
+    if (speedLightningState.timeRemaining <= 10) {
+      document.getElementById('activeDemonTimer').style.color = '#ff4757';
+      document.getElementById('activeDemonTimer').style.animation = 'lightningWarning 1s ease-in-out infinite';
+      
+      if (speedLightningState.timeRemaining <= 3) {
+        playLightningSound('countdown');
+      }
+    }
+  }, 1000);
+}
+
+// إنهاء برق السرعة
+function endSpeedDemon() {
+  console.log('🏁 انتهى برق السرعة!');
+  
+  // إيقاف المؤقت
+  if (speedLightningState.timer) {
+    clearInterval(speedLightningState.timer);
+    speedLightningState.timer = null;
+  }
+  
+  speedLightningState.isActive = false;
+  speedLightningState.phase = 'results';
+  
+  // إخفاء اللعب النشط وإظهار النتائج
+  document.getElementById('speedDemonActive').style.display = 'none';
+  document.getElementById('speedDemonResults').style.display = 'block';
+  
+  // إنشاء المتصدرين النهائيين
+  createFinalLeaderboard();
+  
+  // أصوات النهاية
+  playLightningSound('end');
+  
+  // رسالة النهاية
+  showLightningNotification('🎉 انتهى برق السرعة!', 'تحقق من المتصدرين!', 'success');
+}
+
+// إنشاء المتصدرين النهائيين
+function createFinalLeaderboard() {
+  const leaderboard = document.getElementById('finalLeaderboard');
+  
+  // ترتيب الطلاب حسب النقاط
+  const sortedStudents = Object.entries(speedLightningState.studentScores)
+    .sort(([,a], [,b]) => b - a)
+    .map(([studentId, score]) => {
+      const student = selectedStudentsList.find(s => s.id == studentId);
+      return { student, score };
+    });
+  
+  const medals = ['🥇', '🥈', '🥉'];
+  const colors = ['#ffd700', '#c0c0c0', '#cd7f32'];
+  
+  leaderboard.innerHTML = sortedStudents.map((item, index) => {
+    const isTop3 = index < 3;
+    return `
+      <div style="
+        background: linear-gradient(135deg, ${isTop3 ? colors[index] + '20' : 'rgba(255,255,255,0.1)'}, ${isTop3 ? colors[index] + '40' : 'rgba(255,255,255,0.2)'});
+        border: 2px solid ${isTop3 ? colors[index] : 'rgba(255,255,255,0.3)'};
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin: 1rem 0;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      ">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <div style="font-size: 2rem;">${isTop3 ? medals[index] : `#${index + 1}`}</div>
+          <div>
+            <div style="font-size: 1.2rem; font-weight: bold; color: white;">${item.student ? item.student.name : 'طالب'}</div>
+            <div style="color: rgba(255,255,255,0.7);">المرتبة ${index + 1}</div>
+          </div>
+        </div>
+        <div style="text-align: center;">
+          <div style="font-size: 2rem; font-weight: bold; color: ${isTop3 ? colors[index] : '#ffd700'};">${item.score}</div>
+          <div style="color: rgba(255,255,255,0.7);">نقطة</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// إعادة تشغيل برق السرعة
+function restartSpeedDemon() {
+  console.log('🔄 إعادة تشغيل برق السرعة');
+  
+  // إعادة تعيين الحالة
+  speedLightningState = {
+    isActive: false,
+    timeRemaining: 300,
+    timer: null,
+    studentScores: {},
+    totalClicks: 0,
+    phase: 'start'
+  };
+  
+  // إخفاء النتائج وإظهار البداية
+  document.getElementById('speedDemonResults').style.display = 'none';
+  document.getElementById('speedDemonStart').style.display = 'block';
+  document.getElementById('speedDemonActive').style.display = 'none';
+  
+  showLightningNotification('🔄 تمت إعادة التعيين', 'مستعد لجولة جديدة!', 'info');
+}
+
+// عرض تأثيرات النقاط
+function showScoreAnimation(studentId, studentName) {
+  // إنشاء تأثير بصري للنقطة
+  const animation = document.createElement('div');
+  animation.innerHTML = `+1 ⚡`;
+  animation.style.cssText = `
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+    color: #ffd700;
+    font-weight: bold;
+    z-index: 10000;
+    pointer-events: none;
+    animation: scoreFloat 1s ease-out forwards;
+  `;
+  
+  document.body.appendChild(animation);
+  
+  // إزالة التأثير بعد انتهاء الأنيميشن
+  setTimeout(() => {
+    if (animation.parentNode) {
+      animation.parentNode.removeChild(animation);
+    }
+  }, 1000);
+}
+
+// تشغيل الأصوات
+function playLightningSound(type) {
+  try {
+    let soundFile = '';
+    switch(type) {
+      case 'start':
+        soundFile = '../assets/media/sounds/startapp.mp3';
+        break;
+      case 'point':
+        soundFile = '../assets/media/sounds/Click.mp3';
+        break;
+      case 'countdown':
+        soundFile = '../assets/media/sounds/countdown-beep.mp3';
+        break;
+      case 'end':
+        soundFile = '../assets/media/sounds/win.mp3';
+        break;
+      default:
+        soundFile = '../assets/media/sounds/Click.mp3';
+    }
+    
+    const audio = new Audio(soundFile);
+    audio.volume = 0.5;
+    audio.play().catch(e => console.log('لا يمكن تشغيل الصوت:', e));
+  } catch (error) {
+    console.log('خطأ في تشغيل الصوت:', error);
+  }
+}
+
+// عرض الإشعارات
+function showLightningNotification(title, message, type) {
+  console.log(`${title}: ${message}`);
+  
+  // يمكن استخدام نظام الإشعارات الموجود أو إنشاء إشعار بسيط
+  const notification = document.createElement('div');
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #1a1a2e;
+    padding: 1rem 2rem;
+    border-radius: 10px;
+    z-index: 10000;
+    font-weight: bold;
+    box-shadow: 0 10px 30px rgba(255,215,0,0.4);
+    animation: slideInFromRight 0.5s ease-out;
+  `;
+  
+  notification.innerHTML = `
+    <div style="font-size: 1.1rem; margin-bottom: 0.5rem;">${title}</div>
+    <div style="font-size: 0.9rem; opacity: 0.9;">${message}</div>
+  `;
+  
+  document.body.appendChild(notification);
+  
+  // إزالة الإشعار بعد 3 ثوانٍ
+  setTimeout(() => {
+    if (notification.parentNode) {
+      notification.style.animation = 'slideOutToRight 0.5s ease-out';
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.parentNode.removeChild(notification);
+        }
+      }, 500);
+    }
+  }, 3000);
+}
+
+// تحديث دالة enterLightningKingdom لاستخدام برق السرعة الجديد
+function enterLightningKingdom() {
+  console.log('⚡ الدخول إلى برق السرعة');
+  
+  // إخفاء قائمة الممالك
+  document.getElementById('kingdomSelectionMenu').style.display = 'none';
+  
+  // إظهار منطقة برق السرعة
+  document.getElementById('lightningArena').style.display = 'block';
+  
+  // إعادة تعيين برق السرعة
+  speedLightningState = {
+    isActive: false,
+    timeRemaining: 300,
+    timer: null,
+    studentScores: {},
+    totalClicks: 0,
+    phase: 'start'
+  };
+  
+  // إظهار شاشة البداية
+  document.getElementById('speedDemonStart').style.display = 'block';
+  document.getElementById('speedDemonActive').style.display = 'none';
+  document.getElementById('speedDemonResults').style.display = 'none';
+  
+  // رسالة ترحيب
+  showLightningNotification('⚡ أهلاً بك في برق السرعة!', 'استعد لـ 5 دقائق من الإثارة!', 'lightning');
+  
+  // صوت دخول
+  playLightningSound('start');
+}
+
+// ===== نهاية كود برق السرعة =====
 // ===== GLOBAL VARIABLES =====
 let gameState = {
   currentRealm: null,
