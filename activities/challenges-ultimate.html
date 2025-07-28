@@ -5039,6 +5039,23 @@ function activateRealm(realmType) {
   const hasSelectedStudents = (selectedStudentsList && selectedStudentsList.length > 0) || 
                               (gameState.selectedStudents && gameState.selectedStudents.length > 0);
   
+  // التحقق من أن اللعبة بدأت
+  if (!gameState.gameStarted) {
+    console.log('❌ اللعبة لم تبدأ بعد');
+    showQuantumNotification(
+      '⚠️ يجب بدء اللعبة أولاً', 
+      'الرجاء اختيار الطلاب ثم الضغط على زر "بدء اللعبة" من الشاشة السابقة', 
+      'warning'
+    );
+    
+    // إرجاع المستخدم لشاشة اختيار الطلاب إذا لم تبدأ اللعبة
+    document.getElementById('kingdomContent').style.display = 'none';
+    document.getElementById('selectionPanel').style.display = 'block';
+    
+    playCosmicSound('wrong_answer');
+    return;
+  }
+  
   if (!hasSelectedStudents) {
     console.log('❌ لا يوجد طلاب مختارون');
     
@@ -12509,12 +12526,40 @@ document.addEventListener('DOMContentLoaded', function () {
     // إضافة طلاب تلقائياً للاختبار
     selectedStudentsList = ['أحمد التجريبي', 'فاطمة الاختبار', 'محمد النموذج'];
     gameState.selectedStudents = [...selectedStudentsList];
+    gameState.gameStarted = true; // تفعيل اللعبة للاختبار
+    
+    // إظهار الممالك مباشرة
+    document.getElementById('selectionPanel').style.display = 'none';
+    document.getElementById('kingdomContent').style.display = 'block';
     
     console.log('✅ تم إعداد طلاب الاختبار');
     
     // استدعاء المملكة مباشرة
     activateRealm(realmType);
     
+    return true;
+  }
+
+  // دالة مساعدة للوصول المباشر للممالك
+  function goToKingdoms() {
+    console.log('🏰 الانتقال المباشر للممالك');
+    
+    if (!selectedStudentsList || selectedStudentsList.length === 0) {
+      // إضافة طلاب افتراضيين
+      selectedStudentsList = ['طالب 1', 'طالب 2', 'طالب 3'];
+      gameState.selectedStudents = [...selectedStudentsList];
+    }
+    
+    // تفعيل اللعبة
+    gameState.gameStarted = true;
+    
+    // إظهار الممالك
+    document.getElementById('selectionPanel').style.display = 'none';
+    document.getElementById('kingdomContent').style.display = 'block';
+    
+    showQuantumNotification('🏰 مرحباً بك في الممالك!', 'اختر المملكة التي تريد دخولها', 'success');
+    
+    console.log('✅ تم الوصول للممالك');
     return true;
   }
 
@@ -12562,6 +12607,7 @@ document.addEventListener('DOMContentLoaded', function () {
   window.quickTestArena = quickTestArena;
   window.testAllKingdoms = testAllKingdoms;
   window.checkSystemReadiness = checkSystemReadiness;
+  window.goToKingdoms = goToKingdoms;
   window.selectedStudentsList = selectedStudentsList;
   window.gameState = gameState;
 
