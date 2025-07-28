@@ -12459,8 +12459,43 @@ document.addEventListener('DOMContentLoaded', function () {
     activateRealm(realmType);
   }
 
+  // دالة اختبار مباشر للممالك
+  function quickTestArena(realmType = 'lightning') {
+    console.log('🚀 اختبار سريع للساحة:', realmType);
+    
+    // إضافة طلاب تلقائياً للاختبار
+    selectedStudentsList = ['أحمد التجريبي', 'فاطمة الاختبار', 'محمد النموذج'];
+    gameState.selectedStudents = [...selectedStudentsList];
+    
+    console.log('✅ تم إعداد طلاب الاختبار');
+    
+    // استدعاء المملكة مباشرة
+    activateRealm(realmType);
+    
+    return true;
+  }
+
+  // اختبار جميع الممالك تلقائياً  
+  function testAllKingdoms() {
+    const realms = ['lightning', 'wisdom', 'creative', 'science', 'language', 'math', 'history', 'mystery', 'battle'];
+    
+    realms.forEach((realm, index) => {
+      setTimeout(() => {
+        console.log(`🧪 اختبار المملكة ${index + 1}/9: ${realm}`);
+        quickTestArena(realm);
+        
+        // العودة للقائمة الرئيسية بعد 3 ثوان
+        setTimeout(() => {
+          returnToKingdom();
+        }, 3000);
+      }, index * 4000);
+    });
+  }
+
   // إتاحة الوظائف للاختبار العام
   window.testKingdomEntry = testKingdomEntry;
+  window.quickTestArena = quickTestArena;
+  window.testAllKingdoms = testAllKingdoms;
   window.selectedStudentsList = selectedStudentsList;
   window.gameState = gameState;
 
