@@ -9168,18 +9168,20 @@ setTimeout(() => {
 </script>
 
 <script>
+document.addEventListener('DOMContentLoaded', function () {
   const soundBtn = document.getElementById('soundBtn');
   if (soundBtn) {
     let isMuted = false;
     soundBtn.addEventListener('click', () => {
       isMuted = !isMuted;
-      const audios = document.querySelectorAll('audio, video');
-      audios.forEach(media => {
-        media.muted = isMuted;
+      document.querySelectorAll('audio, video').forEach(el => {
+        el.muted = isMuted;
       });
-      soundBtn.querySelector('.btn-icon').textContent = isMuted ? '🔇' : '🔊';
+      const icon = soundBtn.querySelector('.btn-icon');
+      if (icon) icon.textContent = isMuted ? '🔇' : '🔊';
     });
   }
+});
 </script>
 
 </body>
