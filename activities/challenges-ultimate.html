@@ -9939,6 +9939,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // Load student data first, then start with class selection
   loadStudentData().then(() => {
     loadClassSelection();
+    
+    // رسالة ترحيب وإرشاد للمستخدم
+    setTimeout(() => {
+      showQuantumNotification(
+        '🎉 مرحباً بك في مملكة التحديات!', 
+        'اختر الطلاب من القائمة ثم اضغط "بدء مملكة التحديات" أو استخدم goToKingdoms() في Console للوصول المباشر', 
+        'info'
+      );
+    }, 2000);
   }).catch(error => {
     console.error('❌ فشل في تحميل بيانات الطلاب:', error);
     loadClassSelection(); // Try to load anyway
@@ -12550,12 +12559,23 @@ document.addEventListener('DOMContentLoaded', function () {
       gameState.selectedStudents = [...selectedStudentsList];
     }
     
+    // تحديث عدد الطلاب وتفعيل زر البدء
+    updateSelectedCount();
+    
     // تفعيل اللعبة
     gameState.gameStarted = true;
     
     // إظهار الممالك
     document.getElementById('selectionPanel').style.display = 'none';
     document.getElementById('kingdomContent').style.display = 'block';
+    
+    // التأكد من إظهار لوحة الممالك
+    const kingdomDashboard = document.getElementById('kingdomDashboard');
+    if (kingdomDashboard) {
+      kingdomDashboard.style.display = 'grid';
+      kingdomDashboard.style.visibility = 'visible';
+      kingdomDashboard.style.opacity = '1';
+    }
     
     showQuantumNotification('🏰 مرحباً بك في الممالك!', 'اختر المملكة التي تريد دخولها', 'success');
     
@@ -12570,6 +12590,12 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('📋 الطلاب المختارون:', selectedStudentsList.length > 0 ? `${selectedStudentsList.length} طلاب ✅` : 'لا يوجد ❌');
     console.log('🎮 حالة اللعبة:', gameState.currentRealm || 'الواجهة الرئيسية');
     
+    // فحص زر البدء
+    const startBtn = document.getElementById('startGameBtn');
+    if (startBtn) {
+      console.log('🚀 زر البدء:', startBtn.disabled ? 'معطل ❌' : 'مفعل ✅');
+    }
+    
     // تقديم اقتراحات
     if (Object.keys(studentData).length === 0) {
       console.log('💡 اقتراح: تشغيل loadStudentData()');
@@ -12577,12 +12603,45 @@ document.addEventListener('DOMContentLoaded', function () {
     if (selectedStudentsList.length === 0) {
       console.log('💡 اقتراح: اختيار طلاب أو تشغيل quickTestArena()');
     }
+    if (startBtn && startBtn.disabled) {
+      console.log('💡 اقتراح: تشغيل enableStartButton() أو goToKingdoms()');
+    }
     
     return {
       dataLoaded: Object.keys(studentData).length > 0,
       studentsSelected: selectedStudentsList.length > 0,
+      startButtonEnabled: startBtn ? !startBtn.disabled : false,
       ready: Object.keys(studentData).length > 0 && selectedStudentsList.length > 0
     };
+  }
+
+  // دالة لتفعيل زر البدء مباشرة للاختبار
+  function enableStartButton() {
+    console.log('🚀 تفعيل زر البدء...');
+    
+    // إضافة طلاب إذا لم يوجدوا
+    if (!selectedStudentsList || selectedStudentsList.length === 0) {
+      selectedStudentsList = ['طالب اختبار 1', 'طالب اختبار 2'];
+      gameState.selectedStudents = [...selectedStudentsList];
+      console.log('✅ تم إضافة طلاب للاختبار');
+    }
+    
+    // تحديث العد وتفعيل الزر
+    updateSelectedCount();
+    
+    const startBtn = document.getElementById('startGameBtn');
+    if (startBtn) {
+      startBtn.disabled = false;
+      startBtn.style.opacity = '1';
+      startBtn.style.cursor = 'pointer';
+      console.log('✅ تم تفعيل زر البدء');
+      
+      showQuantumNotification('🎯 جاهز للبدء!', 'يمكنك الآن الضغط على زر "بدء مملكة التحديات"', 'success');
+    } else {
+      console.error('❌ لم يتم العثور على زر البدء');
+    }
+    
+    return true;
   }
 
   // اختبار جميع الممالك تلقائياً  
@@ -12607,6 +12666,7 @@ document.addEventListener('DOMContentLoaded', function () {
   window.quickTestArena = quickTestArena;
   window.testAllKingdoms = testAllKingdoms;
   window.checkSystemReadiness = checkSystemReadiness;
+  window.enableStartButton = enableStartButton;
   window.goToKingdoms = goToKingdoms;
   window.selectedStudentsList = selectedStudentsList;
   window.gameState = gameState;
