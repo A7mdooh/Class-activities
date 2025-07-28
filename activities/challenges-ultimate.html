@@ -5025,7 +5025,25 @@ function ensureControlHeaderVisible() {
 
 // ===== REALM ACTIVATION =====
 function activateRealm(realmType) {
+  console.log('🏰 محاولة دخول المملكة:', realmType);
+  console.log('📊 الطلاب المختارون:', selectedStudentsList);
+  
+  // التحقق من اختيار الطلاب أولاً
+  if (!selectedStudentsList || selectedStudentsList.length === 0) {
+    console.log('❌ لا يوجد طلاب مختارون');
+    showQuantumNotification(
+      '⚠️ يجب اختيار الطلاب أولاً', 
+      'الرجاء اختيار الطلاب من الواجهة الرئيسية قبل دخول أي مملكة!', 
+      'warning'
+    );
+    playCosmicSound('wrong_answer');
+    return; // إيقاف التنفيذ
+  }
+
+  console.log('✅ تم التحقق من الطلاب، جاري الدخول للمملكة...');
+  
   gameState.currentRealm = realmType;
+  gameState.selectedStudents = [...selectedStudentsList]; // نسخ قائمة الطلاب
   
   // تتبع الممالك المزارة للإنجازات
   if (!gameState.visitedRealms.includes(realmType)) {
@@ -5037,7 +5055,15 @@ function activateRealm(realmType) {
     }
   }
   
-  createCosmicExplosion(event.target);
+  // إظهار رسالة تحميل
+  showQuantumNotification(
+    '🏰 جاري الدخول للمملكة...', 
+    `دخول ${selectedStudentsList.length} طلاب للمملكة`, 
+    'info'
+  );
+  
+  // تأثير بصري للدخول (بدون event.target)
+  createCosmicStars();
   
   // Enhanced realm-specific sound effects
   switch(realmType) {
@@ -12416,6 +12442,27 @@ document.addEventListener('DOMContentLoaded', function () {
       playCosmicSound(soundName);
     }
   }
+
+  // ===== DIAGNOSTIC FUNCTIONS =====
+  function testKingdomEntry(realmType = 'lightning') {
+    console.log('🧪 اختبار دخول المملكة:', realmType);
+    console.log('📊 الطلاب المختارون:', selectedStudentsList);
+    console.log('🎮 حالة اللعبة:', gameState);
+    
+    if (!selectedStudentsList || selectedStudentsList.length === 0) {
+      console.log('❌ يجب اختيار الطلاب أولاً');
+      // إضافة طلاب تجريبيين للاختبار
+      selectedStudentsList = ['أحمد محمد', 'فاطمة علي', 'عبدالله سالم'];
+      console.log('✅ تم إضافة طلاب تجريبيين:', selectedStudentsList);
+    }
+    
+    activateRealm(realmType);
+  }
+
+  // إتاحة الوظائف للاختبار العام
+  window.testKingdomEntry = testKingdomEntry;
+  window.selectedStudentsList = selectedStudentsList;
+  window.gameState = gameState;
 
 });
 </script>
