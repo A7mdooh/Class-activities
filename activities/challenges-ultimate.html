@@ -4317,6 +4317,12 @@ function loadClassSelection() {
   console.log('🎓 بدء تحميل اختيار الصفوف');
   console.log('📊 بيانات الطلاب المتاحة:', Object.keys(studentData));
   
+  // التحقق من وجود طلاب مختارين مسبقاً
+  if (selectedStudentsList && selectedStudentsList.length > 0) {
+    console.log('📋 طلاب مختارون مسبقاً:', selectedStudentsList);
+    gameState.selectedStudents = [...selectedStudentsList];
+  }
+  
   // Show main app container
   const mainApp = document.getElementById('mainApp');
   if (mainApp) {
@@ -5027,10 +5033,30 @@ function ensureControlHeaderVisible() {
 function activateRealm(realmType) {
   console.log('🏰 محاولة دخول المملكة:', realmType);
   console.log('📊 الطلاب المختارون:', selectedStudentsList);
+  console.log('📊 حالة gameState.selectedStudents:', gameState.selectedStudents);
   
-  // التحقق من اختيار الطلاب أولاً
-  if (!selectedStudentsList || selectedStudentsList.length === 0) {
+  // التحقق من اختيار الطلاب بطرق متعددة
+  const hasSelectedStudents = (selectedStudentsList && selectedStudentsList.length > 0) || 
+                              (gameState.selectedStudents && gameState.selectedStudents.length > 0);
+  
+  if (!hasSelectedStudents) {
     console.log('❌ لا يوجد طلاب مختارون');
+    
+    // التحقق من حالة تحميل البيانات
+    if (!studentData || Object.keys(studentData).length === 0) {
+      showQuantumNotification(
+        '⚠️ جاري تحميل البيانات', 
+        'الرجاء انتظار تحميل بيانات الطلاب...', 
+        'warning'
+      );
+      // إعادة محاولة تحميل البيانات
+      loadStudentData().then(() => {
+        loadClassSelection();
+        showQuantumNotification('✅ تم التحديث', 'يمكنك الآن اختيار الطلاب ثم دخول المملكة', 'success');
+      });
+      return;
+    }
+    
     showQuantumNotification(
       '⚠️ يجب اختيار الطلاب أولاً', 
       'الرجاء اختيار الطلاب من الواجهة الرئيسية قبل دخول أي مملكة!', 
@@ -5042,8 +5068,16 @@ function activateRealm(realmType) {
 
   console.log('✅ تم التحقق من الطلاب، جاري الدخول للمملكة...');
   
+  // استخدام القائمة المتاحة
+  const currentStudents = selectedStudentsList.length > 0 ? selectedStudentsList : gameState.selectedStudents;
+  
   gameState.currentRealm = realmType;
-  gameState.selectedStudents = [...selectedStudentsList]; // نسخ قائمة الطلاب
+  gameState.selectedStudents = [...currentStudents]; // نسخ قائمة الطلاب
+  
+  // تحديث selectedStudentsList إذا كانت فارغة
+  if (!selectedStudentsList || selectedStudentsList.length === 0) {
+    selectedStudentsList = [...currentStudents];
+  }
   
   // تتبع الممالك المزارة للإنجازات
   if (!gameState.visitedRealms.includes(realmType)) {
@@ -5058,7 +5092,7 @@ function activateRealm(realmType) {
   // إظهار رسالة تحميل
   showQuantumNotification(
     '🏰 جاري الدخول للمملكة...', 
-    `دخول ${selectedStudentsList.length} طلاب للمملكة`, 
+    `دخول ${currentStudents.length} طلاب للمملكة`, 
     'info'
   );
   
@@ -12463,6 +12497,15 @@ document.addEventListener('DOMContentLoaded', function () {
   function quickTestArena(realmType = 'lightning') {
     console.log('🚀 اختبار سريع للساحة:', realmType);
     
+    // التحقق من تحميل البيانات أولاً
+    if (!studentData || Object.keys(studentData).length === 0) {
+      console.log('❌ بيانات الطلاب غير محملة');
+      loadStudentData().then(() => {
+        quickTestArena(realmType); // إعادة المحاولة
+      });
+      return;
+    }
+    
     // إضافة طلاب تلقائياً للاختبار
     selectedStudentsList = ['أحمد التجريبي', 'فاطمة الاختبار', 'محمد النموذج'];
     gameState.selectedStudents = [...selectedStudentsList];
@@ -12473,6 +12516,28 @@ document.addEventListener('DOMContentLoaded', function () {
     activateRealm(realmType);
     
     return true;
+  }
+
+  // فحص جاهزية النظام
+  function checkSystemReadiness() {
+    console.log('🔍 فحص جاهزية النظام:');
+    console.log('📊 بيانات الطلاب:', Object.keys(studentData).length > 0 ? 'محملة ✅' : 'غير محملة ❌');
+    console.log('📋 الطلاب المختارون:', selectedStudentsList.length > 0 ? `${selectedStudentsList.length} طلاب ✅` : 'لا يوجد ❌');
+    console.log('🎮 حالة اللعبة:', gameState.currentRealm || 'الواجهة الرئيسية');
+    
+    // تقديم اقتراحات
+    if (Object.keys(studentData).length === 0) {
+      console.log('💡 اقتراح: تشغيل loadStudentData()');
+    }
+    if (selectedStudentsList.length === 0) {
+      console.log('💡 اقتراح: اختيار طلاب أو تشغيل quickTestArena()');
+    }
+    
+    return {
+      dataLoaded: Object.keys(studentData).length > 0,
+      studentsSelected: selectedStudentsList.length > 0,
+      ready: Object.keys(studentData).length > 0 && selectedStudentsList.length > 0
+    };
   }
 
   // اختبار جميع الممالك تلقائياً  
@@ -12496,6 +12561,7 @@ document.addEventListener('DOMContentLoaded', function () {
   window.testKingdomEntry = testKingdomEntry;
   window.quickTestArena = quickTestArena;
   window.testAllKingdoms = testAllKingdoms;
+  window.checkSystemReadiness = checkSystemReadiness;
   window.selectedStudentsList = selectedStudentsList;
   window.gameState = gameState;
 
