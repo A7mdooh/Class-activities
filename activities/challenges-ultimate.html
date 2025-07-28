@@ -2747,10 +2747,6 @@
                     <span class="btn-icon">🏠</span>
                     <span class="btn-tooltip">الرئيسية</span>
                 </button>
-                <button class="cosmic-control-btn" id="kingdomsBtn" style="display: none"> title="العودة للممالك" style="display: none">
-                    <span class="btn-icon">�</span>
-                    <span class="btn-tooltip">الممالك</span>
-                </button>
                 <button class="cosmic-control-btn" id="soundBtn" title="التحكم في الصوت">
                     <span class="btn-icon">🔊</span>
                     <span class="btn-tooltip">الصوت</span>
@@ -9170,5 +9166,21 @@ setTimeout(() => {
   }
 }, 2000);
 </script>
+
+<script>
+  const soundBtn = document.getElementById('soundBtn');
+  if (soundBtn) {
+    let isMuted = false;
+    soundBtn.addEventListener('click', () => {
+      isMuted = !isMuted;
+      const audios = document.querySelectorAll('audio, video');
+      audios.forEach(media => {
+        media.muted = isMuted;
+      });
+      soundBtn.querySelector('.btn-icon').textContent = isMuted ? '🔇' : '🔊';
+    });
+  }
+</script>
+
 </body>
 </html>
