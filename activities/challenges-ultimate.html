@@ -6,6 +6,8 @@
   <title>🏆 مملكة التحديات الذكية | نظام التعلم التفاعلي المتقدم</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/modal-centering.css">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
   <style>
@@ -2747,12 +2749,9 @@
                     <span class="btn-icon">🏠</span>
                     <span class="btn-tooltip">الرئيسية</span>
                 </button>
-                <button class="cosmic-control-btn" id="kingdomsBtn" title="العودة للممالك">
-                    <span class="btn-icon">�</span>
-                    <span class="btn-tooltip">الممالك</span>
-                </button>
+                <!-- زر المماليك مخفي حسب طلب المستخدم -->
                 <button class="cosmic-control-btn" id="soundToggleBtn" title="التحكم في الصوت">
-                    <span class="btn-icon">🔊</span>
+                    <span class="btn-icon" id="soundIcon">🔊</span>
                     <span class="btn-tooltip">الصوت</span>
                 </button>
                 <button class="cosmic-control-btn" id="teacherGuideBtn" title="دليل المعلم">
@@ -3531,16 +3530,7 @@
         </ul>
       </div>
 
-      <div class="guide-section">
-        <h3>🔧 استكشاف الأخطاء</h3>
-        <p><strong>مشاكل شائعة وحلولها:</strong></p>
-        <ul>
-          <li><strong>عدم عمل الصوت:</strong> تحقق من إعدادات المتصفح والصوت</li>
-          <li><strong>بطء في التحميل:</strong> تأكد من سرعة الإنترنت</li>
-          <li><strong>عدم ظهور الطلاب:</strong> تحقق من ملف studentData.json</li>
-          <li><strong>مشاكل في العرض:</strong> استخدم متصفح حديث (Chrome, Firefox, Edge)</li>
-        </ul>
-      </div>
+      <!-- قسم استكشاف الأخطاء تم إزالته بناءً على طلب المستخدم -->
 
       <div class="guide-section">
         <h3>🎯 أهداف تعليمية</h3>
@@ -5932,7 +5922,7 @@ function endLightningChallengeWithLeaderboard() {
   }, 2000);
 }
 
-// عرض لوحة متصدرين احترافية بسيطة
+// عرض لوحة متصدرين احترافية محسنة
 function showProfessionalLeaderboard() {
   // ترتيب المتنافسين حسب النقاط
   const sortedCompetitors = [...lightningState.competitors].sort((a, b) => b.score - a.score);
@@ -5946,94 +5936,273 @@ function showProfessionalLeaderboard() {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, rgba(0,0,0,0.95), rgba(26,26,46,0.98));
+    background: linear-gradient(135deg, 
+      rgba(0,0,0,0.95) 0%, 
+      rgba(26,26,46,0.98) 30%, 
+      rgba(16,21,62,0.99) 60%, 
+      rgba(15,52,96,0.95) 100%);
     z-index: 10000;
     display: flex;
     align-items: center;
     justify-content: center;
-    backdrop-filter: blur(20px);
-    animation: leaderboardEnter 0.8s ease-out;
+    backdrop-filter: blur(25px);
+    animation: leaderboardEnter 1s ease-out;
   `;
   
   leaderboardModal.innerHTML = `
     <div class="leaderboard-content" style="
-      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(0,255,255,0.05));
-      border: 3px solid rgba(255,215,0,0.6);
-      border-radius: 25px;
-      padding: 3rem;
-      max-width: 600px;
-      width: 90%;
-      max-height: 80vh;
+      background: linear-gradient(145deg, 
+        rgba(255,255,255,0.15) 0%,
+        rgba(255,215,0,0.1) 25%, 
+        rgba(0,255,255,0.08) 50%,
+        rgba(255,255,255,0.12) 100%);
+      border: 4px solid transparent;
+      background-clip: padding-box;
+      border-radius: 30px;
+      padding: 3rem 2.5rem;
+      max-width: 650px;
+      width: 92%;
+      max-height: 85vh;
       overflow-y: auto;
       text-align: center;
-      box-shadow: 0 20px 60px rgba(255,215,0,0.3);
-      backdrop-filter: blur(15px);
+      box-shadow: 
+        0 25px 80px rgba(255,215,0,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.2),
+        inset 0 -1px 0 rgba(0,0,0,0.2);
+      backdrop-filter: blur(20px);
+      position: relative;
     ">
-      <div style="margin-bottom: 2rem;">
-        <div style="font-size: 4rem; margin-bottom: 1rem;">🏆</div>
-        <h2 style="color: #ffd700; font-size: 2.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 20px rgba(255,215,0,0.8);">
-          🌟 لوحة المتصدرين 🌟
-        </h2>
-        <p style="color: #00ffff; font-size: 1.2rem; text-shadow: 0 0 10px rgba(0,255,255,0.5);">
-          نتائج تحدي مملكة البرق
-        </p>
+      <!-- تأثير الضوء المتحرك -->
+      <div style="
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(45deg, #ffd700, #ffff00, #00ffff, #ffd700);
+        border-radius: 30px;
+        z-index: -1;
+        animation: borderGlow 3s linear infinite;
+      "></div>
+      
+      <!-- رأس اللوحة -->
+      <div style="margin-bottom: 2.5rem; position: relative;">
+        <div style="
+          font-size: 5rem; 
+          margin-bottom: 1rem;
+          background: linear-gradient(45deg, #ffd700, #ffff00);
+          background-clip: text;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          filter: drop-shadow(0 0 20px rgba(255,215,0,0.8));
+          animation: crownFloat 3s ease-in-out infinite;
+        ">👑</div>
+        <h1 style="
+          color: #ffd700; 
+          font-size: 2.8rem; 
+          margin-bottom: 0.8rem; 
+          text-shadow: 0 0 30px rgba(255,215,0,0.9);
+          font-weight: 900;
+          letter-spacing: 2px;
+        ">⚡ لوحة متصدري البرق ⚡</h1>
+        <div style="
+          background: linear-gradient(90deg, transparent, #00ffff, transparent);
+          height: 2px;
+          margin: 1rem auto;
+          width: 60%;
+          border-radius: 2px;
+          box-shadow: 0 0 10px rgba(0,255,255,0.8);
+        "></div>
+        <p style="
+          color: #00ffff; 
+          font-size: 1.3rem; 
+          text-shadow: 0 0 15px rgba(0,255,255,0.7);
+          margin-top: 1rem;
+        ">⚡ أبطال الذكاء البرقي ⚡</p>
       </div>
       
-      <div class="competitors-list" style="margin-bottom: 2rem;">
+      <!-- قائمة المتنافسين -->
+      <div class="competitors-list" style="margin-bottom: 3rem;">
         ${sortedCompetitors.map((competitor, index) => {
-          const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '🏅';
-          const bgColor = index === 0 ? 'rgba(255,215,0,0.2)' : 
-                         index === 1 ? 'rgba(192,192,192,0.2)' : 
-                         index === 2 ? 'rgba(205,127,50,0.2)' : 'rgba(255,255,255,0.1)';
+          const medals = ['👑', '🥇', '🥈', '�'];
+          const medal = medals[index] || '🏅';
+          const rankColors = ['#ffd700', '#c0c0c0', '#cd7f32', 'rgba(255,255,255,0.7)'];
+          const bgGradients = [
+            'linear-gradient(135deg, rgba(255,215,0,0.3), rgba(255,255,0,0.2))',
+            'linear-gradient(135deg, rgba(192,192,192,0.3), rgba(220,220,220,0.2))',
+            'linear-gradient(135deg, rgba(205,127,50,0.3), rgba(184,134,11,0.2))',
+            'linear-gradient(135deg, rgba(255,255,255,0.15), rgba(200,200,200,0.1))'
+          ];
+          
+          const isWinner = index === 0;
           
           return `
             <div style="
-              background: ${bgColor};
-              border: 2px solid ${index < 3 ? '#ffd700' : 'rgba(255,255,255,0.3)'};
-              border-radius: 15px;
-              padding: 1.5rem;
-              margin-bottom: 1rem;
+              background: ${bgGradients[index] || bgGradients[3]};
+              border: 3px solid ${rankColors[index] || rankColors[3]};
+              border-radius: 20px;
+              padding: ${isWinner ? '2rem 1.5rem' : '1.5rem'};
+              margin-bottom: 1.2rem;
               display: flex;
               align-items: center;
-              gap: 1rem;
-              transition: transform 0.3s ease;
-            " onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
-              <div style="font-size: 2.5rem;">${medal}</div>
+              gap: 1.5rem;
+              transition: all 0.4s ease;
+              position: relative;
+              overflow: hidden;
+              ${isWinner ? 'transform: scale(1.05); box-shadow: 0 15px 40px rgba(255,215,0,0.6);' : ''}
+            " onmouseover="
+              this.style.transform='${isWinner ? 'scale(1.08)' : 'scale(1.03)'} translateY(-5px)'; 
+              this.style.boxShadow='0 20px 50px rgba(255,215,0,0.4)';
+            " onmouseout="
+              this.style.transform='${isWinner ? 'scale(1.05)' : 'scale(1)'} translateY(0)'; 
+              this.style.boxShadow='${isWinner ? '0 15px 40px rgba(255,215,0,0.6)' : 'none'}';
+            ">
+              ${isWinner ? `
+                <div style="
+                  position: absolute;
+                  top: -2px;
+                  left: -2px;
+                  right: -2px;
+                  bottom: -2px;
+                  background: linear-gradient(45deg, #ffd700, #ffff00, #ffd700);
+                  border-radius: 20px;
+                  z-index: -1;
+                  animation: winnerGlow 2s ease-in-out infinite;
+                "></div>
+              ` : ''}
+              
+              <div style="
+                font-size: ${isWinner ? '4rem' : '3rem'}; 
+                ${isWinner ? 'animation: winnerBounce 2s ease-in-out infinite;' : ''}
+              ">${medal}</div>
+              
               <div style="flex: 1; text-align: right;">
-                <div style="color: white; font-size: 1.3rem; font-weight: 700; margin-bottom: 0.3rem;">
-                  ${competitor.name}
-                </div>
-                <div style="color: #ffff00; font-size: 1.1rem; font-weight: 600;">
-                  ${competitor.score} نقطة ⚡
+                <div style="
+                  color: white; 
+                  font-size: ${isWinner ? '1.6rem' : '1.4rem'}; 
+                  font-weight: 900; 
+                  margin-bottom: 0.5rem;
+                  text-shadow: 0 0 15px rgba(255,255,255,0.8);
+                  ${isWinner ? 'color: #ffd700;' : ''}
+                ">${competitor.name}</div>
+                <div style="
+                  color: #ffff00; 
+                  font-size: ${isWinner ? '1.4rem' : '1.2rem'}; 
+                  font-weight: 700;
+                  text-shadow: 0 0 10px rgba(255,255,0,0.8);
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-end;
+                  gap: 0.5rem;
+                ">
+                  <span>${competitor.score}</span>
+                  <span style="font-size: 1.1rem;">⚡</span>
                 </div>
               </div>
-              <div style="font-size: 1.5rem; color: #ffd700; font-weight: 900;">
-                #${index + 1}
-              </div>
+              
+              <div style="
+                font-size: ${isWinner ? '2rem' : '1.8rem'}; 
+                color: ${rankColors[index] || rankColors[3]}; 
+                font-weight: 900;
+                text-shadow: 0 0 10px ${rankColors[index] || rankColors[3]};
+                min-width: 50px;
+                text-align: center;
+              ">#${index + 1}</div>
             </div>
           `;
         }).join('')}
       </div>
       
-      <button onclick="closeProfessionalLeaderboard()" style="
-        background: linear-gradient(135deg, #ff6b6b, #ee5a52);
-        border: 2px solid rgba(255,107,107,0.6);
-        color: white;
-        padding: 1rem 2rem;
-        border-radius: 15px;
-        font-size: 1.2rem;
-        font-weight: 700;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 5px 15px rgba(255,107,107,0.4);
-      " onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 25px rgba(255,107,107,0.6)'" 
-         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px 15px rgba(255,107,107,0.4)'">
+      <!-- أزرار التحكم -->
+      <div style="
+        display: flex; 
+        gap: 1.5rem; 
+        justify-content: center;
+        flex-wrap: wrap;
+      ">
+        <button onclick="resetLightningCompetition()" style="
+          background: linear-gradient(135deg, #ff9500, #ff6b35);
+          border: 3px solid rgba(255,149,0,0.6);
+          color: white;
+          padding: 1.2rem 2rem;
+          border-radius: 18px;
+          font-size: 1.2rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          box-shadow: 0 8px 25px rgba(255,149,0,0.4);
+          display: flex;
+          align-items: center;
+          gap: 0.8rem;
+        " onmouseover="
+          this.style.transform='translateY(-4px) scale(1.05)'; 
+          this.style.boxShadow='0 12px 35px rgba(255,149,0,0.6)';
+        " onmouseout="
+          this.style.transform='translateY(0) scale(1)'; 
+          this.style.boxShadow='0 8px 25px rgba(255,149,0,0.4)';
+        ">
+          <span style="font-size: 1.4rem;">🔄</span>
+          <span>إعادة التعيين</span>
+        </button>
+        
+        <button onclick="returnToKingdomFromLeaderboard()" style="
+          background: linear-gradient(135deg, #00ffff, #0099cc);
+          border: 3px solid rgba(0,255,255,0.6);
+          color: white;
+          padding: 1.2rem 2rem;
+          border-radius: 18px;
+          font-size: 1.2rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          box-shadow: 0 8px 25px rgba(0,255,255,0.4);
+          display: flex;
+          align-items: center;
+          gap: 0.8rem;
+        " onmouseover="
+          this.style.transform='translateY(-4px) scale(1.05)'; 
+          this.style.boxShadow='0 12px 35px rgba(0,255,255,0.6)';
+        " onmouseout="
+          this.style.transform='translateY(0) scale(1)'; 
+          this.style.boxShadow='0 8px 25px rgba(0,255,255,0.4)';
+        ">
+          <span style="font-size: 1.4rem;">🏰</span>
+          <span>العودة للممالك</span>
+        </button>
+        
+        <button onclick="closeProfessionalLeaderboard()" style="
+          background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+          border: 3px solid rgba(255,107,107,0.6);
+          color: white;
+          padding: 1.2rem 2rem;
+          border-radius: 18px;
+          font-size: 1.2rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          box-shadow: 0 8px 25px rgba(255,107,107,0.4);
+          display: flex;
+          align-items: center;
+          gap: 0.8rem;
+        " onmouseover="
+          this.style.transform='translateY(-4px) scale(1.05)'; 
+          this.style.boxShadow='0 12px 35px rgba(255,107,107,0.6)';
+        " onmouseout="
+          this.style.transform='translateY(0) scale(1)'; 
+          this.style.boxShadow='0 8px 25px rgba(255,107,107,0.4)';
+        ">
+          <span style="font-size: 1.4rem;">❌</span>
+          <span>إغلاق</span>
+        </button>
+      </div>
+    </div>
+  `;
         � إغلاق
       </button>
     </div>
   `;
   
-  // إضافة التأثيرات المتحركة
+  // إضافة التأثيرات المتحركة المحسنة
   const style = document.createElement('style');
   style.textContent = `
     @keyframes leaderboardEnter {
@@ -6049,6 +6218,26 @@ function showProfessionalLeaderboard() {
         opacity: 1;
         transform: scale(1) rotateY(0deg);
       }
+    }
+    
+    @keyframes borderGlow {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    @keyframes crownFloat {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(5deg); }
+    }
+    
+    @keyframes winnerGlow {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+    
+    @keyframes winnerBounce {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.1) rotate(10deg); }
     }
   `;
   document.head.appendChild(style);
@@ -6066,49 +6255,73 @@ function closeProfessionalLeaderboard() {
     modal.style.animation = 'leaderboardExit 0.5s ease-in forwards';
     setTimeout(() => {
       modal.remove();
-      // العودة للوحة الرئيسية
-      returnToKingdom();
     }, 500);
   }
   
   playCosmicSound('ui-back');
 }
 
+// إعادة تعيين المنافسة
+function resetLightningCompetition() {
+  if (confirm('🔄 هل أنت متأكد من إعادة تعيين جميع النقاط؟\nسيتم حذف جميع النتائج نهائياً!')) {
+    // إعادة تعيين نقاط جميع المتنافسين
+    lightningState.competitors.forEach(competitor => {
+      competitor.score = 0;
+      competitor.totalCorrect = 0;
+      competitor.totalWrong = 0;
+      competitor.status = 'ready';
+    });
+    
+    // إعادة تعيين المؤقت
+    lightningTimeLeft = 300;
+    
+    showQuantumNotification('🔄 تم إعادة التعيين', 'تم مسح جميع النتائج بنجاح', 'info');
+    playCosmicSound('dimensional-shift');
+    
+    // إغلاق النافذة والعودة للعبة
+    closeProfessionalLeaderboard();
+    
+    // إعادة بدء التحدي
+    setTimeout(() => {
+      startLightningChallenge();
+    }, 1000);
+  }
+}
+
+// العودة للممالك من لوحة المتصدرين
+function returnToKingdomFromLeaderboard() {
+  showQuantumNotification('🏰 العودة للممالك', 'جاري العودة لاختيار مملكة جديدة...', 'info');
+  playCosmicSound('ui-back');
+  
+  // إغلاق لوحة المتصدرين
+  const modal = document.querySelector('.professional-leaderboard-modal');
+  if (modal) {
+    modal.style.animation = 'leaderboardExit 0.5s ease-in forwards';
+    setTimeout(() => {
+      modal.remove();
+      // العودة للممالك مباشرة
+      returnToKingdom();
+    }, 500);
+  }
+}
+
 // بدء سؤال جديد
 function startNewQuestion() {
   playCosmicSound('question-start');
   
-  // رسائل تحفيزية عشوائية للسؤال
-  const questionStartMessages = [
-    '🔥 السؤال البرقي القادم سيحرق العقول!',
-    '⚡ انطلقت شرارة السؤال الكهربائية!',
-    '🌩️ عاصفة ذهنية قادمة... استعدوا!',
-    '💫 طاقة السؤال تملأ الفضاء!',
-    '🎯 التركيز الآن... اللحظة الحاسمة!',
-    '🔥⚡ دماغكم سيحترق من قوة هذا السؤال!',
-    '🌟 بريق الذكاء يلمع في عيونكم!'
-  ];
-  
-  const randomQuestionMessage = questionStartMessages[Math.floor(Math.random() * questionStartMessages.length)];
-  
   const questionDisplay = document.getElementById('questionDisplay');
   questionDisplay.className = 'question-display question-active';
   
-  questionDisplay.innerHTML = `
-    <div class="question-content">
-      <div class="question-icon">❓</div>
-      <h2>السؤال جاهز!</h2>
-      <p style="font-size: 1.2rem; color: #00ffff; margin: 1rem 0;">
-        اطرح سؤالك شفوياً الآن
-      </p>
-      <div class="instruction-text">
-        انقر على اسم الطالب الذي يجيب بشكل صحيح لإعطائه صاعقة ⚡
-      </div>
-      <button class="lightning-btn" onclick="cancelQuestion()" style="margin-top: 1rem;">
-        ❌ إلغاء السؤال
-      </button>
-    </div>
-  `;
+  const questionContent = document.createElement('div');
+  questionContent.className = 'question-content';
+  questionContent.innerHTML = '<div class="question-icon">❓</div>' +
+    '<h2>السؤال جاهز!</h2>' +
+    '<p style="font-size: 1.2rem; color: #00ffff; margin: 1rem 0;">اطرح سؤالك شفوياً الآن</p>' +
+    '<div class="instruction-text">انقر على اسم الطالب الذي يجيب بشكل صحيح لإعطائه صاعقة ⚡</div>' +
+    '<button class="lightning-btn" onclick="cancelQuestion()" style="margin-top: 1rem;">❌ إلغاء السؤال</button>';
+  
+  questionDisplay.innerHTML = '';
+  questionDisplay.appendChild(questionContent);
   
   // تأثيرات بصرية
   createLightningStorm();
@@ -6116,8 +6329,8 @@ function startNewQuestion() {
   // تفعيل وضع الإجابة
   gameState.waitingForAnswer = true;
   
-  // إشعار للمعلم مع رسالة عشوائية
-  showQuantumNotification('❓ السؤال نشط', randomQuestionMessage, 'info');
+  // إشعار للمعلم
+  showQuantumNotification('❓ السؤال نشط', '🔥 السؤال البرقي القادم سيحرق العقول!', 'info');
   
   // رسالة تحفيزية إضافية للطلاب
   setTimeout(() => {
@@ -6134,25 +6347,25 @@ function selectCompetitor(index, studentName) {
   
   // رسائل تهنئة إبداعية عشوائية
   const congratsMessages = [
-    `🔥⚡ ${studentName} اشتعل مثل البرق!`,
-    `💫 ${studentName} أضاء السماء بذكائه!`,
-    `⚡🧠 عقل ${studentName} أسرع من البرق!`,
-    `🌟 ${studentName} لمع كالنجم الساطع!`,
-    `🔥 ${studentName} أحرق الإجابة بقوة!`,
-    `⚡🎯 ${studentName} ضرب الهدف بدقة البرق!`,
-    `💥 انفجار ذكاء من ${studentName}!`,
-    `🌩️ ${studentName} عاصفة ذهنية قوية!`
+    '🔥⚡ اشتعل مثل البرق!',
+    '💫 أضاء السماء بذكائه!',
+    '⚡🧠 عقل أسرع من البرق!',
+    '🌟 لمع كالنجم الساطع!',
+    '🔥 أحرق الإجابة بقوة!',
+    '⚡🎯 ضرب الهدف بدقة البرق!',
+    '💥 انفجار ذكاء!',
+    '🌩️ عاصفة ذهنية قوية!'
   ];
   
   const randomCongratsMessage = congratsMessages[Math.floor(Math.random() * congratsMessages.length)];
   
   // إضافة نقطة للطالب
-  const scoreElement = document.getElementById(`score-${index}`);
+  const scoreElement = document.getElementById('score-' + index);
   const currentScore = parseInt(scoreElement.textContent) + 1;
   scoreElement.textContent = currentScore;
   
   // تأثيرات بصرية ومرئية
-  const competitorCard = document.getElementById(`competitor-${index}`);
+  const competitorCard = document.getElementById('competitor-' + index);
   competitorCard.classList.add('answered-correct');
   
   setTimeout(() => {
@@ -6173,18 +6386,18 @@ function selectCompetitor(index, studentName) {
   resetQuestionZone();
   
   // إشعار رئيسي مع رسالة عشوائية
-  showQuantumNotification('⚡ إجابة صحيحة!', randomCongratsMessage, 'success');
+  showQuantumNotification('⚡ إجابة صحيحة!', studentName + ' ' + randomCongratsMessage, 'success');
   
   // رسائل إضافية حسب عدد النقاط
   setTimeout(() => {
     if (currentScore === 1) {
-      showQuantumNotification('🌟 البداية القوية!', `${studentName} بدأ رحلة البرق!`, 'info');
+      showQuantumNotification('🌟 البداية القوية!', studentName + ' بدأ رحلة البرق!', 'info');
     } else if (currentScore === 3) {
-      showQuantumNotification('🔥 ثلاث صواعق!', `${studentName} يحترق بالذكاء!`, 'warning');
+      showQuantumNotification('🔥 ثلاث صواعق!', studentName + ' يحترق بالذكاء!', 'warning');
     } else if (currentScore === 5) {
-      showQuantumNotification('⚡👑 ملك البرق!', `${studentName} يقترب من العرش!`, 'battle');
+      showQuantumNotification('⚡👑 ملك البرق!', studentName + ' يقترب من العرش!', 'battle');
     } else if (currentScore >= 7) {
-      showQuantumNotification('🌩️💥 إعصار ذهني!', `${studentName} لا يُوقف!`, 'success');
+      showQuantumNotification('🌩️💥 إعصار ذهني!', studentName + ' لا يُوقف!', 'success');
     }
   }, 1000);
   
@@ -6947,6 +7160,15 @@ function initializeControlButtons() {
         'info'
       );
     });
+    function updateSoundButton() {
+      const soundIcon = document.getElementById('soundIcon');
+      if (gameState.soundEnabled) {
+        soundIcon.textContent = '🔊';
+      } else {
+        soundIcon.textContent = '🔇';
+      }
+    }
+    updateSoundButton();
     console.log('✅ تم ربط زر الصوت');
   } else {
     console.error('❌ لم يتم العثور على زر الصوت');
@@ -7574,19 +7796,35 @@ let lightningState = {
   currentRound: 1,
   timer: null,
   isPaused: false,
-  timeLeft: 30,
+  timeLeft: 300, // 5 دقائق
   reactions: []
 };
 
 function startLightningChallenge() {
+  console.log('⚡ بدء تحدي مملكة البرق!');
+  
+  // Lightning realm entrance effects
+  playSoundSequence([
+    'lightning-strike',
+    'electric-charge',
+    'thunder-rumble'
+  ], 600);
+  
+  // إخفاء لوحة القيادة وإظهار ساحة البرق
   hideAllArenas();
-  document.getElementById('lightningArena').style.display = 'block';
+  
+  // إنشاء أو إظهار ساحة البرق
+  createLightningArena();
   
   // Initialize competitors from selected students
   initializeLightningCompetitors();
   
-  // Display initial competition status
-  updateLightningCompetitionStatus('🎯 المعلم يحضر السؤال الشفوي...');
+  // بدء المؤقت
+  startLightningTimer();
+  
+  // رسالة ترحيب
+  showQuantumNotification('⚡ مرحباً بكم في مملكة البرق!', 'استعدوا للمنافسة الكهربائية!', 'battle');
+}
   
   // Setup quick answer buttons
   setupQuickAnswerButtons();
@@ -7615,7 +7853,34 @@ function initializeLightningCompetitors() {
     }));
   }
   
-  displayLightningCompetitors();
+  // تحديث عرض المتنافسين
+  updateCompetitorsDisplay();
+}
+
+function updateCompetitorsDisplay() {
+  const grid = document.getElementById('competitorsGrid');
+  if (!grid) {
+    console.warn('⚠️ competitors grid not found');
+    return;
+  }
+  
+  grid.innerHTML = lightningState.competitors.map((competitor, index) => 
+    `<div class="competitor-card" onclick="selectLightningWinner(${index})">
+      <div class="competitor-name">${competitor.name}</div>
+      <div class="competitor-score">${competitor.score} ⚡</div>
+      <div class="competitor-status">${getStatusText(competitor.status)}</div>
+    </div>`
+  ).join('');
+}
+
+function getStatusText(status) {
+  switch(status) {
+    case 'ready': return '🟢 جاهز';
+    case 'thinking': return '🤔 يفكر';
+    case 'answered': return '✋ أجاب';
+    case 'winner': return '🏆 فائز';
+    default: return '⏳ ينتظر';
+  }
 }
 
 function displayLightningCompetitors() {
@@ -7749,52 +8014,37 @@ function selectLightningWinner(competitorIndex) {
   const competitor = lightningState.competitors[competitorIndex];
   if (!competitor) return;
   
-  // Stop timer
-  if (lightningState.timer) {
-    clearInterval(lightningState.timer);
-  }
+  // حساب النقاط حسب الوقت المتبقي
+  const timeBonus = Math.max(0, Math.floor(lightningTimeLeft / 10));
+  const points = 10 + timeBonus;
   
-  // Update winner
-  competitor.status = 'winner';
-  competitor.score += calculateLightningPoints();
+  // تحديث نقاط الفائز
+  competitor.score += points;
   competitor.totalCorrect++;
+  competitor.status = 'winner';
   
-  // Update others to waiting
+  // تحديث حالة باقي المتنافسين
   lightningState.competitors.forEach((comp, index) => {
     if (index !== competitorIndex) {
-      comp.status = 'waiting';
+      comp.status = 'ready';
     }
   });
   
-  displayLightningCompetitors();
+  // تحديث العرض
+  updateCompetitorsDisplay();
   
-  // Show congratulations
-  updateLightningCompetitionStatus(`🏆 ${competitor.name} فاز بالنقاط! أحسنت!`);
+  // رسالة تهنئة
+  showQuantumNotification(
+    `� ${competitor.name} فاز!`, 
+    `حصل على ${points} نقطة ⚡`, 
+    'success'
+  );
   
-  // Add celebratory reactions
-  const celebrationMessages = [
-    `🎉 تهانينا ${competitor.name}! إجابة رائعة!`,
-    `⚡ ${competitor.name} سريع كالبرق! +${calculateLightningPoints()} نقطة`,
-    `🔥 عقل لامع! ${competitor.name} يتصدر المنافسة!`,
-    `💡 ذكاء خارق من ${competitor.name}!`
-  ];
-  
-  const randomMessage = celebrationMessages[Math.floor(Math.random() * celebrationMessages.length)];
-  addLightningReaction(randomMessage, 'celebration');
-  
-  // Enable start button for next question
-  document.getElementById('startLightningQuestion').disabled = false;
-  document.getElementById('pauseLightningTimer').disabled = true;
-  
-  // Play victory sound
+  // تشغيل صوت النصر
   playCosmicSound('win');
   
-  // Create visual explosion effect
-  createLightningExplosion(document.getElementById(`competitor-${competitorIndex}`));
-  
-  // Update achievements
-  updateQuickChallengeProgress(calculateLightningPoints());
-  setTimeout(() => checkAchievement('speedDemon'), 1000);
+  // تأثيرات بصرية
+  createLightningExplosion(document.querySelector(`#competitor-${competitorIndex}`));
 }
 
 function calculateLightningPoints() {
