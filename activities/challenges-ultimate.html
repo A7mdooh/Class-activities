@@ -4742,13 +4742,16 @@ function startKingdomGame() {
   // 💾 حفظ جلسة المعلم تلقائياً
   saveTeacherSession();
   
-  // Hide selection panel and show game interface
-  document.getElementById('selectionPanel').style.display = 'none';
-  document.getElementById('kingdomContent').style.display = 'block';
-  document.getElementById('gameInterface').style.display = 'block';
+  // 🚀 التوجه إلى مركز الممالك
+  showQuantumNotification('🚀 انطلاق!', 'جاري التوجه إلى مركز الممالك...', 'success');
   
-  // Generate teams from selected students
-  generateTeamsFromStudents();
+  setTimeout(() => {
+    window.location.href = 'kingdoms-center.html';
+  }, 1500);
+}
+
+// دالة إضافية لتوليد الفرق (إذا كانت مطلوبة في مكان آخر)
+function generateTeamsFromStudents() {
   
   // Play epic start sequence
   playSoundSequence([
@@ -12678,48 +12681,8 @@ document.addEventListener('DOMContentLoaded', function () {
   window.selectedStudentsList = selectedStudentsList;
   window.gameState = gameState;
 
-  // 🚀 إظهار الممالك مباشرة عند تحميل الصفحة
-  setTimeout(() => {
-    console.log('🚀 إظهار الممالك مباشرة...');
-    
-    // إخفاء شاشة اختيار الطلاب
-    const studentSelection = document.getElementById('studentSelection');
-    if (studentSelection) {
-      studentSelection.style.display = 'none';
-    }
-    
-    // إظهار محتوى الممالك
-    const kingdomContent = document.getElementById('kingdomContent');
-    if (kingdomContent) {
-      kingdomContent.style.display = 'block';
-      kingdomContent.style.visibility = 'visible';
-      kingdomContent.style.opacity = '1';
-    }
-    
-    // إظهار لوحة الممالك
-    const kingdomDashboard = document.getElementById('kingdomDashboard');
-    if (kingdomDashboard) {
-      kingdomDashboard.style.display = 'grid';
-      kingdomDashboard.style.visibility = 'visible';
-      kingdomDashboard.style.opacity = '1';
-    }
-    
-    // تعيين طلاب افتراضيين
-    if (selectedStudentsList.length === 0) {
-      selectedStudentsList.push({
-        name: 'طالب تجريبي 1',
-        id: 'test1',
-        grade: '10'
-      });
-      selectedStudentsList.push({
-        name: 'طالب تجريبي 2', 
-        id: 'test2',
-        grade: '10'
-      });
-    }
-    
-    console.log('✅ تم إظهار الممالك مباشرة');
-  }, 2000); // انتظار ثانيتين بعد تحميل الصفحة
+  // تم إزالة التوجه التلقائي - الآن يتم التوجه عند الضغط على زر "بدء مملكة التحديات"
+  console.log('🎮 نظام الممالك جاهز! اضغط على "بدء مملكة التحديات" للانطلاق');
 
 });
 </script>
