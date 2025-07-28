@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ مملكة البرق | التحديات السريعة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --lightning-primary: #FFD700;
+            --lightning-secondary: #FF6B35;
+            --lightning-dark: #1a1a2e;
+            --lightning-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: var(--lightning-bg);
+            min-height: 100vh;
+            color: white;
+            direction: rtl;
+        }
+
+        .kingdom-header {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .kingdom-title {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .kingdom-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.1);
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--lightning-primary);
+        }
+
+        .game-arena {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: rgba(0,0,0,0.2);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+        }
+
+        .question-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .question-text {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        .timer-display {
+            font-size: 2rem;
+            color: var(--lightning-primary);
+            margin: 1rem 0;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .control-btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .start-btn {
+            background: linear-gradient(45deg, #00f260, #0575e6);
+            color: white;
+        }
+
+        .pause-btn {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            color: white;
+        }
+
+        .answer-btn {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            color: white;
+        }
+
+        .back-btn {
+            background: linear-gradient(45deg, #fa709a, #fee140);
+            color: white;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .score-display {
+            text-align: center;
+            margin: 1rem 0;
+            font-size: 1.2rem;
+        }
+
+        .leaderboard {
+            background: rgba(0,0,0,0.3);
+            padding: 1rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+        }
+
+        .leaderboard h3 {
+            text-align: center;
+            margin-bottom: 1rem;
+            color: var(--lightning-primary);
+        }
+
+        .player-score {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+        }
+
+        .progress-indicator {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--lightning-primary), var(--lightning-secondary));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="kingdom-header">
+        <div class="kingdom-title">⚡ مملكة البرق</div>
+        <p>تحديات سريعة لاختبار سرعة التفكير والذكاء</p>
+        
+        <div class="kingdom-stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalChallenges">0</div>
+                <div>التحديات المكتملة</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="currentScore">0</div>
+                <div>النقاط الحالية</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="timeRecord">00:00</div>
+                <div>أفضل وقت</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="game-arena">
+        <div class="question-container">
+            <div class="question-text" id="questionText">اضغط على "بدء التحدي" للبدء</div>
+            <div class="timer-display" id="timerDisplay">30</div>
+            
+            <div class="progress-indicator">
+                <div>التقدم: <span id="progressText">0/10</span></div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="control-btn start-btn" onclick="startChallenge()">🚀 بدء التحدي</button>
+            <button class="control-btn pause-btn" onclick="pauseChallenge()">⏸️ إيقاف مؤقت</button>
+            <button class="control-btn answer-btn" onclick="correctAnswer()">✅ إجابة صحيحة</button>
+            <button class="control-btn back-btn" onclick="goBack()">🔙 العودة للممالك</button>
+        </div>
+
+        <div class="score-display">
+            <div>🎯 النقاط: <span id="scoreValue">0</span></div>
+            <div>⚡ الطاقة: <span id="energyValue">100%</span></div>
+        </div>
+
+        <div class="leaderboard">
+            <h3>🏆 لوحة المتصدرين</h3>
+            <div id="leaderboardList">
+                <!-- سيتم ملؤها بـ JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // متغيرات اللعبة
+        let gameData = {
+            currentQuestion: 0,
+            totalQuestions: 10,
+            score: 0,
+            timer: 30,
+            isRunning: false,
+            isPaused: false,
+            completedChallenges: 0,
+            bestTime: localStorage.getItem('lightning-best-time') || '00:00',
+            energy: 100
+        };
+
+        // أسئلة مملكة البرق
+        const lightningQuestions = [
+            "ما هو الرقم الذي يأتي بعد 5 في متتالية فيبوناتشي؟",
+            "كم عدد الثواني في الدقيقة الواحدة؟",
+            "ما هي عاصمة المملكة العربية السعودية؟",
+            "كم عدد أضلاع المثلث؟",
+            "ما هو لون السماء في النهار الصافي؟",
+            "كم عدد أيام الأسبوع؟",
+            "ما هو أكبر محيط في العالم؟",
+            "كم عدد فصول السنة؟",
+            "ما هي الكلمة المضادة لكلمة 'ساخن'؟",
+            "كم عدد الألوان في قوس قزح؟"
+        ];
+
+        let gameInterval;
+
+        // تحميل البيانات المحفوظة
+        function loadGameData() {
+            const saved = localStorage.getItem('lightning-kingdom-data');
+            if (saved) {
+                const data = JSON.parse(saved);
+                gameData.completedChallenges = data.completedChallenges || 0;
+                gameData.score = data.totalScore || 0;
+            }
+            updateDisplay();
+        }
+
+        // حفظ البيانات
+        function saveGameData() {
+            const dataToSave = {
+                completedChallenges: gameData.completedChallenges,
+                totalScore: gameData.score,
+                lastPlayed: new Date().toISOString()
+            };
+            localStorage.setItem('lightning-kingdom-data', JSON.stringify(dataToSave));
+        }
+
+        // بدء التحدي
+        function startChallenge() {
+            if (gameData.isRunning) return;
+            
+            gameData.isRunning = true;
+            gameData.isPaused = false;
+            gameData.currentQuestion = 0;
+            gameData.timer = 30;
+            
+            // صوت البداية
+            playSound('start');
+            
+            showQuestion();
+            startTimer();
+            
+            document.querySelector('.start-btn').textContent = '🔄 إعادة البدء';
+        }
+
+        // إيقاف مؤقت
+        function pauseChallenge() {
+            if (!gameData.isRunning) return;
+            
+            gameData.isPaused = !gameData.isPaused;
+            
+            if (gameData.isPaused) {
+                clearInterval(gameInterval);
+                document.querySelector('.pause-btn').textContent = '▶️ متابعة';
+                playSound('pause');
+            } else {
+                startTimer();
+                document.querySelector('.pause-btn').textContent = '⏸️ إيقاف مؤقت';
+            }
+        }
+
+        // إجابة صحيحة
+        function correctAnswer() {
+            if (!gameData.isRunning || gameData.isPaused) return;
+            
+            gameData.score += 10;
+            gameData.currentQuestion++;
+            
+            // صوت النجاح
+            playSound('success');
+            
+            // تحديث التقدم
+            updateProgress();
+            
+            if (gameData.currentQuestion >= gameData.totalQuestions) {
+                endChallenge();
+            } else {
+                showQuestion();
+                gameData.timer = 30; // إعادة تعيين المؤقت
+            }
+            
+            updateDisplay();
+        }
+
+        // عرض السؤال
+        function showQuestion() {
+            if (gameData.currentQuestion < lightningQuestions.length) {
+                document.getElementById('questionText').textContent = 
+                    lightningQuestions[gameData.currentQuestion];
+            }
+        }
+
+        // بدء المؤقت
+        function startTimer() {
+            gameInterval = setInterval(() => {
+                if (!gameData.isPaused) {
+                    gameData.timer--;
+                    document.getElementById('timerDisplay').textContent = gameData.timer;
+                    
+                    if (gameData.timer <= 0) {
+                        // وقت منتهي - انتقال للسؤال التالي
+                        gameData.currentQuestion++;
+                        if (gameData.currentQuestion >= gameData.totalQuestions) {
+                            endChallenge();
+                        } else {
+                            gameData.timer = 30;
+                            showQuestion();
+                        }
+                    }
+                }
+            }, 1000);
+        }
+
+        // انتهاء التحدي
+        function endChallenge() {
+            gameData.isRunning = false;
+            clearInterval(gameInterval);
+            
+            // حفظ النتيجة
+            gameData.completedChallenges++;
+            saveGameData();
+            
+            // عرض النتيجة النهائية
+            document.getElementById('questionText').textContent = 
+                `🎉 تهانينا! لقد أكملت التحدي بنجاح!\nالنقاط: ${gameData.score}`;
+            
+            // صوت الانتهاء
+            playSound('complete');
+            
+            // إضافة للوحة المتصدرين
+            addToLeaderboard();
+            
+            updateDisplay();
+            
+            // إعادة تعيين للتحدي التالي
+            setTimeout(() => {
+                gameData.currentQuestion = 0;
+                gameData.timer = 30;
+                document.getElementById('questionText').textContent = 'اضغط على "بدء التحدي" للبدء';
+                document.querySelector('.start-btn').textContent = '🚀 بدء التحدي';
+            }, 3000);
+        }
+
+        // تحديث العرض
+        function updateDisplay() {
+            document.getElementById('totalChallenges').textContent = gameData.completedChallenges;
+            document.getElementById('currentScore').textContent = gameData.score;
+            document.getElementById('timeRecord').textContent = gameData.bestTime;
+            document.getElementById('scoreValue').textContent = gameData.score;
+            document.getElementById('energyValue').textContent = gameData.energy + '%';
+        }
+
+        // تحديث التقدم
+        function updateProgress() {
+            const progress = (gameData.currentQuestion / gameData.totalQuestions) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = 
+                `${gameData.currentQuestion}/${gameData.totalQuestions}`;
+        }
+
+        // إضافة للوحة المتصدرين
+        function addToLeaderboard() {
+            const leaderboard = JSON.parse(localStorage.getItem('lightning-leaderboard') || '[]');
+            const entry = {
+                score: gameData.score,
+                date: new Date().toLocaleDateString('ar'),
+                time: new Date().toLocaleTimeString('ar')
+            };
+            
+            leaderboard.push(entry);
+            leaderboard.sort((a, b) => b.score - a.score);
+            leaderboard.splice(5); // الاحتفاظ بأفضل 5 نتائج فقط
+            
+            localStorage.setItem('lightning-leaderboard', JSON.stringify(leaderboard));
+            displayLeaderboard();
+        }
+
+        // عرض لوحة المتصدرين
+        function displayLeaderboard() {
+            const leaderboard = JSON.parse(localStorage.getItem('lightning-leaderboard') || '[]');
+            const container = document.getElementById('leaderboardList');
+            
+            container.innerHTML = '';
+            
+            leaderboard.forEach((entry, index) => {
+                const div = document.createElement('div');
+                div.className = 'player-score';
+                div.innerHTML = `
+                    <span>${index + 1}. ${entry.date}</span>
+                    <span>${entry.score} نقطة</span>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // تشغيل الأصوات
+        function playSound(type) {
+            try {
+                const audio = new Audio();
+                switch(type) {
+                    case 'start':
+                        audio.src = '../assets/media/sounds/start-timer.mp3';
+                        break;
+                    case 'success':
+                        audio.src = '../assets/media/sounds/win.mp3';
+                        break;
+                    case 'complete':
+                        audio.src = '../assets/media/sounds/clap.mp3';
+                        break;
+                    case 'pause':
+                        audio.src = '../assets/media/sounds/Click.mp3';
+                        break;
+                }
+                audio.play().catch(e => console.log('لا يمكن تشغيل الصوت'));
+            } catch (e) {
+                console.log('خطأ في تشغيل الصوت');
+            }
+        }
+
+        // العودة للممالك
+        function goBack() {
+            if (confirm('هل تريد العودة إلى الممالك؟ سيتم حفظ تقدمك.')) {
+                saveGameData();
+                window.location.href = 'challenges-ultimate.html';
+            }
+        }
+
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            loadGameData();
+            displayLeaderboard();
+            updateProgress();
+        });
+    </script>
+</body>
+</html>

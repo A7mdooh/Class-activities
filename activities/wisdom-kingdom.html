@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧠 مملكة الحكمة | التحديات الفكرية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --wisdom-primary: #9B59B6;
+            --wisdom-secondary: #3498DB;
+            --wisdom-dark: #2C3E50;
+            --wisdom-bg: linear-gradient(135deg, #8360c3 0%, #2ebf91 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: var(--wisdom-bg);
+            min-height: 100vh;
+            color: white;
+            direction: rtl;
+        }
+
+        .kingdom-header {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .kingdom-title {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .kingdom-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.1);
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--wisdom-primary);
+        }
+
+        .game-arena {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: rgba(0,0,0,0.2);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+        }
+
+        .question-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            line-height: 1.6;
+        }
+
+        .timer-display {
+            font-size: 2rem;
+            color: var(--wisdom-primary);
+            margin: 1rem 0;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+
+        .start-btn {
+            background: linear-gradient(45deg, #8360c3, #2ebf91);
+            color: white;
+        }
+
+        .pause-btn {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            color: white;
+        }
+
+        .answer-btn {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            color: white;
+        }
+
+        .back-btn {
+            background: linear-gradient(45deg, #fa709a, #fee140);
+            color: white;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .thinking-indicator {
+            text-align: center;
+            margin: 1rem 0;
+            font-style: italic;
+            color: var(--wisdom-primary);
+        }
+
+        .wisdom-quotes {
+            background: rgba(155, 89, 182, 0.2);
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .difficulty-level {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .difficulty-star {
+            color: var(--wisdom-primary);
+            font-size: 1.5rem;
+        }
+
+        .achievements {
+            background: rgba(0,0,0,0.3);
+            padding: 1rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+        }
+
+        .achievements h3 {
+            text-align: center;
+            margin-bottom: 1rem;
+            color: var(--wisdom-primary);
+        }
+
+        .achievement-badge {
+            display: inline-block;
+            background: rgba(155, 89, 182, 0.3);
+            padding: 0.5rem 1rem;
+            margin: 0.5rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .progress-indicator {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--wisdom-primary), var(--wisdom-secondary));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="kingdom-header">
+        <div class="kingdom-title">🧠 مملكة الحكمة</div>
+        <p>تحديات فكرية عميقة لتطوير الذكاء والإبداع</p>
+        
+        <div class="kingdom-stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalChallenges">0</div>
+                <div>التحديات المكتملة</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="currentScore">0</div>
+                <div>نقاط الحكمة</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="wisdomLevel">1</div>
+                <div>مستوى الحكمة</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="game-arena">
+        <div class="wisdom-quotes" id="wisdomQuote">
+            "الحكمة هي معرفة ما يجب فعله تالياً"
+        </div>
+
+        <div class="question-container">
+            <div class="difficulty-level" id="difficultyStars">
+                ⭐⭐⭐
+            </div>
+            <div class="question-text" id="questionText">اضغط على "بدء التأمل" لبدء رحلة الحكمة</div>
+            <div class="timer-display" id="timerDisplay">60</div>
+            
+            <div class="thinking-indicator" id="thinkingTime">
+                وقت التفكير المتاح: <span id="thinkingTimer">60</span> ثانية
+            </div>
+            
+            <div class="progress-indicator">
+                <div>التقدم في الرحلة: <span id="progressText">0/8</span></div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="control-btn start-btn" onclick="startWisdomJourney()">🧘 بدء التأمل</button>
+            <button class="control-btn pause-btn" onclick="pauseThinking()">⏸️ توقف للتفكير</button>
+            <button class="control-btn answer-btn" onclick="shareWisdom()">💡 مشاركة الحكمة</button>
+            <button class="control-btn back-btn" onclick="goBack()">🔙 العودة للممالك</button>
+        </div>
+
+        <div class="achievements">
+            <h3>🏆 إنجازات الحكمة</h3>
+            <div id="achievementsList">
+                <!-- سيتم ملؤها بـ JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // متغيرات مملكة الحكمة
+        let wisdomData = {
+            currentQuestion: 0,
+            totalQuestions: 8,
+            score: 0,
+            timer: 60,
+            isRunning: false,
+            isPaused: false,
+            completedChallenges: 0,
+            wisdomLevel: 1,
+            achievements: []
+        };
+
+        // أسئلة الحكمة المتدرجة الصعوبة
+        const wisdomQuestions = [
+            {
+                question: "ما هو الشيء الذي كلما زاد نقص؟",
+                difficulty: 1,
+                hint: "فكر في شيء يتناقص بالاستخدام"
+            },
+            {
+                question: "إذا كان لديك صندوق بدون مفتاح، كيف يمكنك فتحه؟",
+                difficulty: 2,
+                hint: "ليس كل قفل يحتاج مفتاح معدني"
+            },
+            {
+                question: "ما هو الشيء الذي يمكن كسره بدون لمسه؟",
+                difficulty: 2,
+                hint: "شيء معنوي وليس مادي"
+            },
+            {
+                question: "رجل يعيش في الطابق العشرين، في الصباح ينزل بالمصعد، وفي المساء يصعد للطابق السابع ثم يمشي. لماذا؟",
+                difficulty: 3,
+                hint: "فكر في قيود جسدية معينة"
+            },
+            {
+                question: "ما هو الشيء الذي يزداد عندما تقسمه؟",
+                difficulty: 3,
+                hint: "شيء رياضي"
+            },
+            {
+                question: "لديك 12 كرة، إحداها مختلفة الوزن. كيف تجدها بثلاث محاولات فقط باستخدام ميزان؟",
+                difficulty: 4,
+                hint: "قسم الكرات إلى مجموعات متساوية"
+            },
+            {
+                question: "ما هو الشيء الذي يمكن أن يسافر حول العالم وهو في مكانه؟",
+                difficulty: 3,
+                hint: "شيء تجده في البريد"
+            },
+            {
+                question: "إذا كان غداً هو أمس، فماذا سيكون اليوم؟",
+                difficulty: 4,
+                hint: "فكر في الزمن والأيام"
+            }
+        ];
+
+        // أقوال الحكمة
+        const wisdomQuotes = [
+            "الحكمة هي معرفة ما يجب فعله تالياً",
+            "العقل الذي ينفتح لفكرة جديدة لن يعود أبداً إلى حجمه الأصلي",
+            "التعلم لا ينتهي إلا بانتهاء الحياة",
+            "الحكيم يتعلم من أخطاء الآخرين، والغبي لا يتعلم حتى من أخطائه",
+            "المعرفة قوة، والحكمة هي استخدام هذه القوة بشكل صحيح"
+        ];
+
+        let gameInterval;
+
+        // تحميل البيانات المحفوظة
+        function loadWisdomData() {
+            const saved = localStorage.getItem('wisdom-kingdom-data');
+            if (saved) {
+                const data = JSON.parse(saved);
+                wisdomData.completedChallenges = data.completedChallenges || 0;
+                wisdomData.score = data.totalScore || 0;
+                wisdomData.wisdomLevel = data.wisdomLevel || 1;
+                wisdomData.achievements = data.achievements || [];
+            }
+            updateDisplay();
+            showRandomQuote();
+        }
+
+        // حفظ البيانات
+        function saveWisdomData() {
+            const dataToSave = {
+                completedChallenges: wisdomData.completedChallenges,
+                totalScore: wisdomData.score,
+                wisdomLevel: wisdomData.wisdomLevel,
+                achievements: wisdomData.achievements,
+                lastPlayed: new Date().toISOString()
+            };
+            localStorage.setItem('wisdom-kingdom-data', JSON.stringify(dataToSave));
+        }
+
+        // بدء رحلة الحكمة
+        function startWisdomJourney() {
+            if (wisdomData.isRunning) return;
+            
+            wisdomData.isRunning = true;
+            wisdomData.isPaused = false;
+            wisdomData.currentQuestion = 0;
+            wisdomData.timer = 60;
+            
+            playSound('start');
+            showWisdomQuestion();
+            startThinkingTimer();
+            
+            document.querySelector('.start-btn').textContent = '🔄 بدء رحلة جديدة';
+        }
+
+        // إيقاف للتفكير
+        function pauseThinking() {
+            if (!wisdomData.isRunning) return;
+            
+            wisdomData.isPaused = !wisdomData.isPaused;
+            
+            if (wisdomData.isPaused) {
+                clearInterval(gameInterval);
+                document.querySelector('.pause-btn').textContent = '▶️ متابعة التفكير';
+                document.getElementById('thinkingTime').textContent = 'متوقف للتأمل العميق...';
+                playSound('pause');
+            } else {
+                startThinkingTimer();
+                document.querySelector('.pause-btn').textContent = '⏸️ توقف للتفكير';
+            }
+        }
+
+        // مشاركة الحكمة (إجابة صحيحة)
+        function shareWisdom() {
+            if (!wisdomData.isRunning || wisdomData.isPaused) return;
+            
+            const currentQ = wisdomQuestions[wisdomData.currentQuestion];
+            const points = currentQ.difficulty * 15; // نقاط حسب الصعوبة
+            
+            wisdomData.score += points;
+            wisdomData.currentQuestion++;
+            
+            playSound('success');
+            
+            // تحديث التقدم
+            updateProgress();
+            
+            // إضافة إنجاز
+            addAchievement(`حل لغز الحكمة رقم ${wisdomData.currentQuestion}`);
+            
+            if (wisdomData.currentQuestion >= wisdomData.totalQuestions) {
+                completeWisdomJourney();
+            } else {
+                showWisdomQuestion();
+                wisdomData.timer = 60;
+            }
+            
+            updateDisplay();
+        }
+
+        // عرض سؤال الحكمة
+        function showWisdomQuestion() {
+            if (wisdomData.currentQuestion < wisdomQuestions.length) {
+                const currentQ = wisdomQuestions[wisdomData.currentQuestion];
+                document.getElementById('questionText').textContent = currentQ.question;
+                
+                // عرض نجوم الصعوبة
+                const stars = '⭐'.repeat(currentQ.difficulty);
+                document.getElementById('difficultyStars').textContent = stars;
+                
+                // عرض تلميح بعد 30 ثانية
+                setTimeout(() => {
+                    if (wisdomData.isRunning && wisdomData.timer < 30) {
+                        document.getElementById('questionText').innerHTML = 
+                            currentQ.question + '<br><small style="color: #f39c12;">💡 تلميح: ' + currentQ.hint + '</small>';
+                    }
+                }, 30000);
+            }
+        }
+
+        // بدء مؤقت التفكير
+        function startThinkingTimer() {
+            gameInterval = setInterval(() => {
+                if (!wisdomData.isPaused) {
+                    wisdomData.timer--;
+                    document.getElementById('timerDisplay').textContent = wisdomData.timer;
+                    document.getElementById('thinkingTimer').textContent = wisdomData.timer;
+                    
+                    if (wisdomData.timer <= 0) {
+                        // انتهى وقت التفكير
+                        wisdomData.currentQuestion++;
+                        if (wisdomData.currentQuestion >= wisdomData.totalQuestions) {
+                            completeWisdomJourney();
+                        } else {
+                            wisdomData.timer = 60;
+                            showWisdomQuestion();
+                        }
+                    }
+                }
+            }, 1000);
+        }
+
+        // إكمال رحلة الحكمة
+        function completeWisdomJourney() {
+            wisdomData.isRunning = false;
+            clearInterval(gameInterval);
+            
+            // حساب مستوى الحكمة الجديد
+            const newLevel = Math.floor(wisdomData.score / 100) + 1;
+            if (newLevel > wisdomData.wisdomLevel) {
+                wisdomData.wisdomLevel = newLevel;
+                addAchievement(`وصول لمستوى الحكمة ${newLevel}`);
+            }
+            
+            wisdomData.completedChallenges++;
+            saveWisdomData();
+            
+            document.getElementById('questionText').innerHTML = 
+                `🎉 تهانينا! لقد أكملت رحلة الحكمة!<br>
+                النقاط المكتسبة: ${wisdomData.score}<br>
+                مستوى الحكمة: ${wisdomData.wisdomLevel}`;
+            
+            playSound('complete');
+            showRandomQuote();
+            updateDisplay();
+            
+            setTimeout(() => {
+                wisdomData.currentQuestion = 0;
+                wisdomData.timer = 60;
+                document.getElementById('questionText').textContent = 'اضغط على "بدء التأمل" لبدء رحلة الحكمة';
+                document.querySelector('.start-btn').textContent = '🧘 بدء التأمل';
+                showRandomQuote();
+            }, 5000);
+        }
+
+        // عرض قول حكيم عشوائي
+        function showRandomQuote() {
+            const randomQuote = wisdomQuotes[Math.floor(Math.random() * wisdomQuotes.length)];
+            document.getElementById('wisdomQuote').textContent = randomQuote;
+        }
+
+        // إضافة إنجاز
+        function addAchievement(achievement) {
+            if (!wisdomData.achievements.includes(achievement)) {
+                wisdomData.achievements.push(achievement);
+                displayAchievements();
+            }
+        }
+
+        // عرض الإنجازات
+        function displayAchievements() {
+            const container = document.getElementById('achievementsList');
+            container.innerHTML = '';
+            
+            wisdomData.achievements.forEach(achievement => {
+                const badge = document.createElement('div');
+                badge.className = 'achievement-badge';
+                badge.textContent = '🏆 ' + achievement;
+                container.appendChild(badge);
+            });
+        }
+
+        // تحديث العرض
+        function updateDisplay() {
+            document.getElementById('totalChallenges').textContent = wisdomData.completedChallenges;
+            document.getElementById('currentScore').textContent = wisdomData.score;
+            document.getElementById('wisdomLevel').textContent = wisdomData.wisdomLevel;
+        }
+
+        // تحديث التقدم
+        function updateProgress() {
+            const progress = (wisdomData.currentQuestion / wisdomData.totalQuestions) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = 
+                `${wisdomData.currentQuestion}/${wisdomData.totalQuestions}`;
+        }
+
+        // تشغيل الأصوات
+        function playSound(type) {
+            try {
+                const audio = new Audio();
+                switch(type) {
+                    case 'start':
+                        audio.src = '../assets/media/sounds/kingdom-sounds/mystic-wind.mp3';
+                        break;
+                    case 'success':
+                        audio.src = '../assets/media/sounds/kingdom-sounds/knowledge-unlock.mp3';
+                        break;
+                    case 'complete':
+                        audio.src = '../assets/media/sounds/kingdom-sounds/brain-activate.mp3';
+                        break;
+                    case 'pause':
+                        audio.src = '../assets/media/sounds/Click.mp3';
+                        break;
+                }
+                audio.play().catch(e => console.log('لا يمكن تشغيل الصوت'));
+            } catch (e) {
+                console.log('خطأ في تشغيل الصوت');
+            }
+        }
+
+        // العودة للممالك
+        function goBack() {
+            if (confirm('هل تريد العودة إلى الممالك؟ سيتم حفظ رحلتك في الحكمة.')) {
+                saveWisdomData();
+                window.location.href = 'challenges-ultimate.html';
+            }
+        }
+
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            loadWisdomData();
+            displayAchievements();
+            updateProgress();
+            
+            // تغيير الأقوال كل 10 ثوان
+            setInterval(showRandomQuote, 10000);
+        });
+    </script>
+</body>
+</html>
