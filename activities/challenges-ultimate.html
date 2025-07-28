@@ -4577,6 +4577,11 @@ function activateRealm(realmType) {
   gameState.currentRealm = realmType;
   
   // تتبع الممالك المزارة للإنجازات
+  // التأكد من تهيئة visitedRealms قبل الاستخدام
+  if (!gameState.visitedRealms) {
+    gameState.visitedRealms = [];
+  }
+  
   if (!gameState.visitedRealms.includes(realmType)) {
     gameState.visitedRealms.push(realmType);
     
