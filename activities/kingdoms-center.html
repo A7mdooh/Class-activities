@@ -1312,6 +1312,46 @@
             }
         }
 
+        // حفظ واستعادة بيانات اللاعبين
+        function savePlayersData() {
+            if (window.playersData) {
+                localStorage.setItem('squidGamePlayers', JSON.stringify(window.playersData));
+            }
+        }
+
+        function loadPlayersData() {
+            const saved = localStorage.getItem('squidGamePlayers');
+            if (saved) {
+                try {
+                    const playersData = JSON.parse(saved);
+                    // التأكد من أن جميع اللاعبين لديهم الحقول المطلوبة
+                    window.playersData = playersData.map(player => ({
+                        ...player,
+                        totalEarnings: player.totalEarnings || 0,
+                        eliminationRound: player.eliminationRound || null,
+                        eliminationReason: player.eliminationReason || null
+                    }));
+                    return true;
+                } catch (e) {
+                    console.log('خطأ في تحميل بيانات اللاعبين:', e);
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        function resetAllPlayersToAlive() {
+            if (window.playersData) {
+                window.playersData.forEach(player => {
+                    player.status = 'alive';
+                    player.eliminationRound = null;
+                    player.eliminationReason = null;
+                });
+                savePlayersData();
+                console.log('✅ تم إعادة تعيين جميع اللاعبين كأحياء');
+            }
+        }
+
         // ===== INITIALIZATION =====
         
         function addEconomyPanel() {
@@ -1507,8 +1547,15 @@
                             classData = data.selectedClass;
                             studentsData = data.selectedStudents;
                             
-                            // إنشاء بيانات اللاعبين مع إحصائيات أولية
-                            createPlayersData();
+                            // إنشاء أو تحميل بيانات اللاعبين
+                            if (!loadPlayersData()) {
+                                createPlayersData();
+                            } else {
+                                // التأكد من أن جميع اللاعبين أحياء في البداية إذا لم تبدأ اللعبة
+                                if (!gameEconomy.gameActive) {
+                                    resetAllPlayersToAlive();
+                                }
+                            }
                             
                             console.log('✅ تم تحميل بيانات النقل بنجاح');
                             updateClassInfo();
@@ -1566,8 +1613,15 @@
                                 console.log(`📚 الصف: ${classData}`);
                                 console.log(`👥 الطلاب: ${studentsData.length} طالب`);
                                 
-                                // إنشاء بيانات اللاعبين
-                                createPlayersData();
+                                // إنشاء أو تحميل بيانات اللاعبين
+                                if (!loadPlayersData()) {
+                                    createPlayersData();
+                                } else {
+                                    // التأكد من أن جميع اللاعبين أحياء في البداية إذا لم تبدأ اللعبة
+                                    if (!gameEconomy.gameActive) {
+                                        resetAllPlayersToAlive();
+                                    }
+                                }
                                 
                                 dataFound = true;
                                 updateClassInfo();
@@ -1606,13 +1660,12 @@
             
             // بيانات اللاعبين مستوحاة من لعبة الحبار
             const playerNumbers = generatePlayerNumbers(studentsData.length);
-            const playerStatuses = ['alive', 'alive', 'alive', 'eliminated', 'alive']; // للتنويع
             
             window.playersData = studentsData.map((student, index) => ({
                 id: index + 1,
                 playerNumber: playerNumbers[index],
                 name: student,
-                status: playerStatuses[index % playerStatuses.length] || 'alive',
+                status: 'alive', // جميع اللاعبين أحياء في البداية
                 score: Math.floor(Math.random() * 1000) + 100, // نقاط عشوائية ابتدائية
                 level: Math.floor(Math.random() * 5) + 1,
                 gamesWon: Math.floor(Math.random() * 3),
@@ -1620,7 +1673,10 @@
                 lastActivity: new Date(Date.now() - Math.random() * 86400000).toISOString(), // آخر 24 ساعة
                 joinDate: new Date(Date.now() - Math.random() * 2592000000).toISOString(), // آخر 30 يوم
                 avatar: `👤`, // يمكن تخصيصها لاحقاً
-                achievements: generateRandomAchievements()
+                achievements: generateRandomAchievements(),
+                totalEarnings: 0, // بدء بدون مكاسب
+                eliminationRound: null, // لم يتم الاستبعاد بعد
+                eliminationReason: null // لا يوجد سبب استبعاد
             }));
             
             // حفظ بيانات اللاعبين
@@ -3319,6 +3375,10 @@
                             <i class="fas fa-download"></i>
                             تصدير البيانات
                         </button>
+                        <button class="action-btn secondary" onclick="resetAllPlayersToAliveAction()">
+                            <i class="fas fa-heart"></i>
+                            إحياء جميع اللاعبين
+                        </button>
                         <button class="action-btn danger" onclick="resetGameEconomy()">
                             <i class="fas fa-trash"></i>
                             إعادة تعيين الاقتصاد
@@ -3545,6 +3605,37 @@
             linkElement.click();
 
             showNotification('تم تصدير بيانات الاقتصاد بنجاح!', 'success');
+        }
+
+        function resetAllPlayersToAliveAction() {
+            playClickSound();
+            
+            if (confirm('هل تريد جعل جميع اللاعبين أحياء؟ هذا سيلغي جميع حالات الاستبعاد.')) {
+                resetAllPlayersToAlive();
+                
+                // تحديث العرض
+                updateEconomyDisplay();
+                
+                // إذا كانت نافذة البطاقات مفتوحة، حدثها
+                const playersGrid = document.getElementById('playersGrid');
+                if (playersGrid) {
+                    playersGrid.innerHTML = generatePlayersCards();
+                }
+                
+                // تحديث إحصائيات اللعبة
+                if (window.playersData) {
+                    gameEconomy.playersAlive = window.playersData.length;
+                    gameEconomy.playersEliminated = 0;
+                    saveGameEconomy();
+                }
+                
+                showNotification('تم إحياء جميع اللاعبين بنجاح!', 'success');
+                playSound('achievement-unlock');
+                
+                setTimeout(() => {
+                    closeEconomyModal();
+                }, 1500);
+            }
         }
 
         function resetPlayersStats() {
