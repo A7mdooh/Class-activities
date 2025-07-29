@@ -52,10 +52,30 @@
       --transition-slow: 0.5s ease-out;
     }
 
+    html {
+      overflow-x: hidden; /* منع التمرير الأفقي للصفحة كاملة */
+      width: 100%;
+      max-width: 100vw; /* تحديد العرض الأقصى */
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      max-width: 100%; /* منع أي عنصر من تجاوز عرض الوالد */
+    }
+
+    /* منع تجاوز النصوص والصور */
+    img, video, canvas, iframe, svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* منع تجاوز النصوص الطويلة */
+    p, h1, h2, h3, h4, h5, h6, span, div {
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      hyphens: auto;
     }
 
     body {
@@ -69,13 +89,15 @@
       background-attachment: fixed;
       color: var(--text-primary);
       min-height: 100vh;
+      width: 100%;
+      max-width: 100vw; /* منع تجاوز عرض الشاشة */
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: var(--spacing-lg);
       position: relative;
-      overflow-x: hidden;
+      overflow-x: hidden; /* منع التمرير الأفقي */
     }
 
     /* خلفية متحركة */
@@ -189,6 +211,7 @@
     .main-container {
       width: 100%;
       max-width: 500px;
+      min-width: 0; /* منع تجاوز الحد الأدنى للعرض */
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -196,6 +219,8 @@
       text-align: center;
       z-index: 10;
       animation: pageLoad 0.8s ease-out;
+      box-sizing: border-box; /* تأكيد box-sizing */
+      overflow: hidden; /* منع المحتوى من التجاوز */
     }
 
     @keyframes pageLoad {
@@ -261,10 +286,14 @@
       margin-bottom: var(--spacing-xl);
       width: 100%;
       max-width: 450px;
+      min-width: 0; /* منع تجاوز الحد الأدنى */
       box-shadow: 0 8px 32px var(--shadow-medium);
       backdrop-filter: blur(15px);
       border: 1px solid rgba(255, 255, 255, 0.2);
       transition: all var(--transition-normal);
+      box-sizing: border-box; /* تأكيد box-sizing */
+      overflow: hidden; /* منع تجاوز المحتوى */
+      word-wrap: break-word; /* كسر النصوص الطويلة */
     }
 
     .info-card:hover {
@@ -1110,49 +1139,177 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* التجاوب مع الشاشات المختلفة */
+    /* التجاوب مع الشاشات المختلفة - محسن */
     @media (max-width: 768px) {
-      .main-container {
-        max-width: 90%;
+      body {
+        padding: var(--spacing-sm); /* تقليل الحشو للشاشات الصغيرة */
+        width: 100%;
+        max-width: 100vw;
       }
+      
+      .main-container {
+        max-width: 95%; /* زيادة العرض للاستفادة من المساحة */
+        width: 100%;
+        padding: var(--spacing-sm);
+      }
+      
       .school-logo {
         width: 100px;
         height: 100px;
       }
+      
       .info-card {
         padding: var(--spacing-md);
+        margin: var(--spacing-sm) 0;
+        width: 100%;
+        max-width: 100%;
       }
+      
       .control-btn {
         width: 45px;
         height: 45px;
         font-size: 18px;
       }
+      
+      .control-buttons {
+        top: var(--spacing-sm);
+        right: var(--spacing-sm);
+        gap: var(--spacing-xs);
+      }
+      
       .designer-btn {
         width: 55px;
         height: 55px;
         font-size: 22px;
+        bottom: var(--spacing-sm);
+        left: var(--spacing-sm);
       }
+      
       .exit-btn {
         width: 45px;
         height: 45px;
         font-size: 18px;
       }
+      
+      /* تحسين النماذج المنبثقة للشاشات الصغيرة */
+      .modal-content {
+        width: 95% !important;
+        max-width: 95% !important;
+        margin: 5% auto !important;
+        padding: var(--spacing-md) !important;
+      }
+      
+      .settings-modal {
+        max-width: 95% !important;
+        margin: 2% auto !important;
+        max-height: 90vh;
+        width: 95% !important;
+      }
     }
 
     @media (max-width: 480px) {
       body {
-        padding: var(--spacing-md);
+        padding: var(--spacing-xs); /* حشو أصغر للشاشات الصغيرة جداً */
+        width: 100%;
+        max-width: 100vw;
       }
+      
+      .main-container {
+        max-width: 98%;
+        width: 100%;
+        padding: var(--spacing-xs);
+      }
+      
       .school-logo {
         width: 80px;
         height: 80px;
       }
+      
       .info-card {
         padding: var(--spacing-sm);
+        margin: var(--spacing-xs) 0;
+        width: 100%;
       }
+      
       .modal-content {
-        margin: 15% auto;
-        padding: var(--spacing-lg);
+        width: 98% !important;
+        max-width: 98% !important;
+        margin: 2% auto !important;
+        padding: var(--spacing-sm) !important;
+      }
+      
+      .settings-modal {
+        max-width: 98% !important;
+        margin: 1% auto !important;
+        width: 98% !important;
+      }
+      
+      .control-buttons {
+        top: var(--spacing-xs);
+        right: var(--spacing-xs);
+      }
+      
+      .designer-btn {
+        bottom: var(--spacing-xs);
+        left: var(--spacing-xs);
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+      }
+    }
+
+    /* شاشات صغيرة جداً (الهواتف الصغيرة) */
+    @media (max-width: 360px) {
+      body {
+        padding: 4px;
+        width: 100%;
+        max-width: 100vw;
+      }
+      
+      .main-container {
+        max-width: 99%;
+        width: 100%;
+        padding: 4px;
+      }
+      
+      .info-card {
+        padding: 8px;
+        margin: 4px 0;
+        width: 100%;
+      }
+      
+      .modal-content {
+        width: 99% !important;
+        max-width: 99% !important;
+        margin: 1% auto !important;
+        padding: 8px !important;
+      }
+      
+      .control-buttons {
+        top: 4px;
+        right: 4px;
+        gap: 4px;
+      }
+      
+      .designer-btn {
+        bottom: 4px;
+        left: 4px;
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+      }
+      
+      .control-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+      }
+    }
+
+    /* شاشات كبيرة */
+    @media (min-width: 1200px) {
+      .main-container {
+        max-width: 600px; /* حد أقصى للعرض في الشاشات الكبيرة */
       }
     }
 
