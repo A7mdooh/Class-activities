@@ -1666,17 +1666,24 @@
                 playerNumber: playerNumbers[index],
                 name: student,
                 status: 'alive', // جميع اللاعبين أحياء في البداية
-                score: Math.floor(Math.random() * 1000) + 100, // نقاط عشوائية ابتدائية
-                level: Math.floor(Math.random() * 5) + 1,
-                gamesWon: Math.floor(Math.random() * 3),
-                gamesLost: Math.floor(Math.random() * 2),
-                lastActivity: new Date(Date.now() - Math.random() * 86400000).toISOString(), // آخر 24 ساعة
-                joinDate: new Date(Date.now() - Math.random() * 2592000000).toISOString(), // آخر 30 يوم
-                avatar: `👤`, // يمكن تخصيصها لاحقاً
-                achievements: generateRandomAchievements(),
+                score: 0, // البداية بصفر نقطة
+                level: 1, // البداية بالمستوى الأول
+                gamesWon: 0, // لا انتصارات في البداية
+                gamesLost: 0, // لا خسائر في البداية
+                currentStreak: 0, // سلسلة انتصارات حالية
+                bestStreak: 0, // أفضل سلسلة انتصارات
+                kingdomsCompleted: 0, // الممالك المكتملة
+                questionsAnswered: 0, // الأسئلة المجاب عليها
+                correctAnswers: 0, // الإجابات الصحيحة
+                lastActivity: new Date().toISOString(),
+                joinDate: new Date().toISOString(),
+                avatar: `👤`,
+                achievements: getStarterAchievements(),
                 totalEarnings: 0, // بدء بدون مكاسب
                 eliminationRound: null, // لم يتم الاستبعاد بعد
-                eliminationReason: null // لا يوجد سبب استبعاد
+                eliminationReason: null, // لا يوجد سبب استبعاد
+                experiencePoints: 0, // نقاط الخبرة
+                rank: 'مبتدئ' // الرتبة الابتدائية
             }));
             
             // حفظ بيانات اللاعبين
@@ -1701,16 +1708,217 @@
         }
 
         // ===== GENERATE RANDOM ACHIEVEMENTS =====
+        function getStarterAchievements() {
+            return [
+                { name: 'مرحباً', icon: '👋', earned: true, description: 'انضم إلى مركز الممالك' },
+                { name: 'البداية', icon: '🎯', earned: true, description: 'أول خطوة في الرحلة' }
+            ];
+        }
+
         function generateRandomAchievements() {
-            const achievements = [
-                { name: 'المبتدئ', icon: '🥉', earned: true },
-                { name: 'المحارب', icon: '⚔️', earned: Math.random() > 0.5 },
-                { name: 'العبقري', icon: '🧠', earned: Math.random() > 0.7 },
-                { name: 'البطل', icon: '🏆', earned: Math.random() > 0.8 },
-                { name: 'الأسطورة', icon: '👑', earned: Math.random() > 0.9 }
+            const allAchievements = [
+                { name: 'المبتدئ', icon: '🥉', earned: false, description: 'أجب على 5 أسئلة صحيحة' },
+                { name: 'الباحث', icon: '🔍', earned: false, description: 'اكمل مملكة واحدة' },
+                { name: 'المحارب', icon: '⚔️', earned: false, description: 'اربح 3 مباريات متتالية' },
+                { name: 'العالم', icon: '🧠', earned: false, description: 'احصل على 90% إجابات صحيحة' },
+                { name: 'الأسطورة', icon: '👑', earned: false, description: 'اكمل جميع الممالك' },
+                { name: 'الخبير', icon: '🎓', earned: false, description: 'وصل للمستوى 10' },
+                { name: 'السريع', icon: '⚡', earned: false, description: 'أجب على سؤال في أقل من 5 ثوان' },
+                { name: 'المثابر', icon: '💪', earned: false, description: 'اربح 10 مباريات' }
             ];
             
-            return achievements.filter(a => a.earned);
+            return allAchievements.slice(0, 2); // إعطاء إنجازين ابتدائيين فقط
+        }
+
+        // ===== SCORING AND LEVEL SYSTEM =====
+        function updatePlayerScore(playerId, points, reason = 'نشاط عام') {
+            const player = window.playersData.find(p => p.id === playerId);
+            if (!player) return false;
+
+            const oldScore = player.score;
+            player.score += points;
+            player.experiencePoints += points;
+            
+            // تحديث آخر نشاط
+            player.lastActivity = new Date().toISOString();
+            
+            // فحص ترقية المستوى
+            checkLevelUp(player);
+            
+            // تحديث الرتبة
+            updatePlayerRank(player);
+            
+            // فحص الإنجازات
+            checkAchievements(player);
+            
+            // حفظ البيانات
+            savePlayersData();
+            
+            console.log(`📈 ${player.name}: ${oldScore} → ${player.score} (+${points}) - ${reason}`);
+            return true;
+        }
+
+        function checkLevelUp(player) {
+            const requiredXP = player.level * 100; // كل مستوى يحتاج 100 نقطة إضافية
+            
+            if (player.experiencePoints >= requiredXP) {
+                const oldLevel = player.level;
+                player.level = Math.floor(player.experiencePoints / 100) + 1;
+                
+                if (player.level > oldLevel) {
+                    // منح نقاط إضافية عند الترقية
+                    player.score += player.level * 50;
+                    
+                    // إضافة إنجاز جديد إذا وصل لمستوى معين
+                    if (player.level === 5) {
+                        addAchievement(player, 'متمرس', '🔥', 'وصل للمستوى 5');
+                    } else if (player.level === 10) {
+                        addAchievement(player, 'الخبير', '🎓', 'وصل للمستوى 10');
+                    }
+                    
+                    console.log(`🎉 ${player.name} ترقى للمستوى ${player.level}!`);
+                }
+            }
+        }
+
+        function updatePlayerRank(player) {
+            const score = player.score;
+            
+            if (score >= 5000) {
+                player.rank = 'أسطورة';
+            } else if (score >= 3000) {
+                player.rank = 'خبير';
+            } else if (score >= 2000) {
+                player.rank = 'محترف';
+            } else if (score >= 1000) {
+                player.rank = 'متقدم';
+            } else if (score >= 500) {
+                player.rank = 'متوسط';
+            } else if (score >= 100) {
+                player.rank = 'مبتدئ متقدم';
+            } else {
+                player.rank = 'مبتدئ';
+            }
+        }
+
+        function recordVictory(playerId, gameType = 'تحدي عام') {
+            const player = window.playersData.find(p => p.id === playerId);
+            if (!player) return false;
+
+            player.gamesWon++;
+            player.currentStreak++;
+            
+            if (player.currentStreak > player.bestStreak) {
+                player.bestStreak = player.currentStreak;
+            }
+            
+            // منح نقاط للانتصار
+            const victoryPoints = 100 + (player.currentStreak * 20); // مكافأة إضافية للسلسلة
+            updatePlayerScore(playerId, victoryPoints, `انتصار في ${gameType}`);
+            
+            // فحص إنجازات الانتصارات
+            if (player.currentStreak >= 3) {
+                addAchievement(player, 'المحارب', '⚔️', 'سلسلة 3 انتصارات');
+            }
+            
+            if (player.gamesWon >= 10) {
+                addAchievement(player, 'المثابر', '💪', '10 انتصارات');
+            }
+            
+            console.log(`🏆 ${player.name} انتصر في ${gameType}! السلسلة: ${player.currentStreak}`);
+            return true;
+        }
+
+        function recordDefeat(playerId, gameType = 'تحدي عام') {
+            const player = window.playersData.find(p => p.id === playerId);
+            if (!player) return false;
+
+            player.gamesLost++;
+            player.currentStreak = 0; // قطع السلسلة
+            
+            // خصم نقاط قليلة للخسارة
+            updatePlayerScore(playerId, -20, `خسارة في ${gameType}`);
+            
+            console.log(`💔 ${player.name} خسر في ${gameType}`);
+            return true;
+        }
+
+        function recordCorrectAnswer(playerId, difficulty = 'متوسط') {
+            const player = window.playersData.find(p => p.id === playerId);
+            if (!player) return false;
+
+            player.questionsAnswered++;
+            player.correctAnswers++;
+            
+            // نقاط حسب الصعوبة
+            const difficultyPoints = {
+                'سهل': 10,
+                'متوسط': 20,
+                'صعب': 30
+            };
+            
+            const points = difficultyPoints[difficulty] || 20;
+            updatePlayerScore(playerId, points, `إجابة صحيحة (${difficulty})`);
+            
+            // فحص معدل الإجابات الصحيحة
+            const accuracy = (player.correctAnswers / player.questionsAnswered) * 100;
+            if (accuracy >= 90 && player.questionsAnswered >= 10) {
+                addAchievement(player, 'العالم', '🧠', 'دقة 90% في الإجابات');
+            }
+            
+            return true;
+        }
+
+        function recordWrongAnswer(playerId) {
+            const player = window.playersData.find(p => p.id === playerId);
+            if (!player) return false;
+
+            player.questionsAnswered++;
+            // لا نخصم نقاط للإجابة الخاطئة، فقط نسجلها
+            
+            return true;
+        }
+
+        function completeKingdom(playerId, kingdomName) {
+            const player = window.playersData.find(p => p.id === playerId);
+            if (!player) return false;
+
+            player.kingdomsCompleted++;
+            
+            // مكافأة كبيرة لإكمال المملكة
+            updatePlayerScore(playerId, 500, `إكمال مملكة ${kingdomName}`);
+            
+            // إنجازات الممالك
+            if (player.kingdomsCompleted === 1) {
+                addAchievement(player, 'الباحث', '🔍', 'أكمل مملكة واحدة');
+            } else if (player.kingdomsCompleted >= 4) {
+                addAchievement(player, 'الأسطورة', '👑', 'أكمل جميع الممالك');
+            }
+            
+            return true;
+        }
+
+        function addAchievement(player, name, icon, description) {
+            // فحص إذا كان الإنجاز موجود مسبقاً
+            const existingAchievement = player.achievements.find(a => a.name === name);
+            if (existingAchievement) {
+                existingAchievement.earned = true;
+                return;
+            }
+            
+            // إضافة إنجاز جديد
+            player.achievements.push({
+                name: name,
+                icon: icon,
+                earned: true,
+                description: description,
+                earnedDate: new Date().toISOString()
+            });
+            
+            // مكافأة للإنجاز
+            player.score += 100;
+            
+            console.log(`🏅 ${player.name} حصل على إنجاز: ${icon} ${name}`);
         }
 
         // ===== DIAGNOSTIC FUNCTION =====
@@ -3081,6 +3289,27 @@
                     border-radius: 12px;
                     font-size: 0.7rem;
                     color: #ffd700;
+                    cursor: help;
+                }
+
+                .player-rank {
+                    text-align: center;
+                    margin: 1rem 0;
+                }
+
+                .rank-badge {
+                    background: linear-gradient(135deg, #667eea, #764ba2);
+                    color: white;
+                    padding: 0.5rem 1rem;
+                    border-radius: 20px;
+                    font-size: 0.9rem;
+                    font-weight: 700;
+                    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+                    display: inline-block;
+                }
+
+                .rank-badge:before {
+                    content: '🎖️ ';
                 }
 
                 .elimination-info {
@@ -3106,7 +3335,43 @@
 
                 .player-actions {
                     margin-top: 1rem;
-                    text-align: center;
+                    display: flex;
+                    gap: 0.5rem;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                }
+
+                .action-btn-small {
+                    padding: 0.25rem 0.5rem;
+                    border: none;
+                    border-radius: 15px;
+                    font-size: 0.7rem;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.25rem;
+                    font-weight: 600;
+                }
+
+                .action-btn-small.success {
+                    background: #4caf50;
+                    color: white;
+                }
+
+                .action-btn-small.success:hover {
+                    background: #45a049;
+                    transform: scale(1.05);
+                }
+
+                .action-btn-small.warning {
+                    background: #ff9800;
+                    color: white;
+                }
+
+                .action-btn-small.warning:hover {
+                    background: #f57c00;
+                    transform: scale(1.05);
                 }
 
                 .eliminate-btn {
@@ -3121,7 +3386,7 @@
                     display: flex;
                     align-items: center;
                     gap: 0.5rem;
-                    margin: 0 auto;
+                    margin: 0.5rem auto 0;
                 }
 
                 .eliminate-btn:hover {
@@ -3265,9 +3530,21 @@
                                 <span class="stat-text">انتصارات</span>
                             </div>
                             <div class="stat">
-                                <span class="stat-number">${player.totalEarnings || 0}</span>
-                                <span class="stat-text">مكاسب (ر.ع)</span>
+                                <span class="stat-number">${player.currentStreak || 0}</span>
+                                <span class="stat-text">سلسلة حالية</span>
                             </div>
+                            <div class="stat">
+                                <span class="stat-number">${player.kingdomsCompleted || 0}</span>
+                                <span class="stat-text">ممالك مكتملة</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number">${Math.round((player.correctAnswers || 0) / (player.questionsAnswered || 1) * 100)}%</span>
+                                <span class="stat-text">دقة الإجابات</span>
+                            </div>
+                        </div>
+                        
+                        <div class="player-rank">
+                            <span class="rank-badge">${player.rank || 'مبتدئ'}</span>
                         </div>
                         
                         ${player.status === 'eliminated' ? `
@@ -3278,16 +3555,37 @@
                         ` : ''}
                         
                         <div class="player-achievements">
-                            ${player.achievements.map(achievement => 
-                                `<span class="achievement">${achievement.icon} ${achievement.name}</span>`
+                            ${player.achievements.filter(a => a.earned).map(achievement => 
+                                `<span class="achievement" title="${achievement.description || ''}">${achievement.icon} ${achievement.name}</span>`
                             ).join('')}
                         </div>
                         
                         ${player.status === 'alive' && gameEconomy.gameActive ? `
                         <div class="player-actions">
+                            <button class="action-btn-small success" onclick="addPlayerPoints('${player.id}', 50)" title="إضافة 50 نقطة">
+                                <i class="fas fa-plus"></i> +50
+                            </button>
+                            <button class="action-btn-small success" onclick="recordVictoryFromCard('${player.id}')" title="تسجيل انتصار">
+                                <i class="fas fa-trophy"></i> انتصار
+                            </button>
+                            <button class="action-btn-small warning" onclick="recordDefeatFromCard('${player.id}')" title="تسجيل خسارة">
+                                <i class="fas fa-minus"></i> خسارة
+                            </button>
                             <button class="eliminate-btn" onclick="eliminatePlayerFromCard('${player.id}')">
                                 <i class="fas fa-times"></i>
-                                استبعاد اللاعب
+                                استبعاد
+                            </button>
+                        </div>
+                        ` : player.status === 'alive' ? `
+                        <div class="player-actions">
+                            <button class="action-btn-small success" onclick="addPlayerPoints('${player.id}', 50)" title="إضافة 50 نقطة">
+                                <i class="fas fa-plus"></i> +50
+                            </button>
+                            <button class="action-btn-small success" onclick="recordVictoryFromCard('${player.id}')" title="تسجيل انتصار">
+                                <i class="fas fa-trophy"></i> انتصار
+                            </button>
+                            <button class="action-btn-small warning" onclick="recordDefeatFromCard('${player.id}')" title="تسجيل خسارة">
+                                <i class="fas fa-minus"></i> خسارة
                             </button>
                         </div>
                         ` : ''}
@@ -3847,23 +4145,84 @@
             });
         }
 
+        function addPlayerPoints(playerId, points) {
+            playClickSound();
+            
+            if (updatePlayerScore(parseInt(playerId), points, 'مكافأة من المعلم')) {
+                // تحديث العرض
+                refreshPlayerCard(playerId);
+                showNotification(`تم إضافة ${points} نقطة!`, 'success', 2000);
+                playSound('crystal-bonus');
+            }
+        }
+
+        function recordVictoryFromCard(playerId) {
+            playClickSound();
+            
+            if (recordVictory(parseInt(playerId), 'نشاط في الفصل')) {
+                // تحديث العرض
+                refreshPlayerCard(playerId);
+                showNotification('تم تسجيل انتصار!', 'success', 2000);
+                playSound('win');
+            }
+        }
+
+        function recordDefeatFromCard(playerId) {
+            playClickSound();
+            
+            if (recordDefeat(parseInt(playerId), 'نشاط في الفصل')) {
+                // تحديث العرض
+                refreshPlayerCard(playerId);
+                showNotification('تم تسجيل خسارة', 'info', 2000);
+                playSound('wrong_answer');
+            }
+        }
+
+        function refreshPlayerCard(playerId) {
+            const playersGrid = document.getElementById('playersGrid');
+            if (playersGrid) {
+                playersGrid.innerHTML = generatePlayersCards();
+            }
+            
+            // تحديث إحصائيات الرأس أيضاً
+            updateEconomyDisplay();
+        }
+
         function showPlayerDetails(playerId) {
             const player = window.playersData.find(p => p.id === playerId);
             if (!player) return;
 
+            const accuracy = player.questionsAnswered > 0 ? 
+                Math.round((player.correctAnswers / player.questionsAnswered) * 100) : 0;
+
             const detailsMessage = `🎮 تفاصيل اللاعب ${player.playerNumber}
 
 👤 الاسم: ${player.name}
-🏆 النقاط: ${player.score}
+�️ الرتبة: ${player.rank || 'مبتدئ'}
+�🏆 النقاط: ${player.score}
 📊 المستوى: ${player.level}
+⚡ نقاط الخبرة: ${player.experiencePoints || 0}
+
+📈 الإحصائيات:
 ✅ الانتصارات: ${player.gamesWon}
-💰 المكاسب: ${player.totalEarnings || 0} ريال عماني
+❌ الخسائر: ${player.gamesLost}
+� السلسلة الحالية: ${player.currentStreak || 0}
+🏅 أفضل سلسلة: ${player.bestStreak || 0}
+
+🎯 الأسئلة:
+📝 إجمالي الأسئلة: ${player.questionsAnswered || 0}
+✔️ الإجابات الصحيحة: ${player.correctAnswers || 0}
+📊 دقة الإجابات: ${accuracy}%
+
+🏰 التقدم:
+🗺️ الممالك المكتملة: ${player.kingdomsCompleted || 0}
+�💰 المكاسب: ${player.totalEarnings || 0} ريال عماني
 ⚡ الحالة: ${player.status === 'alive' ? 'حي ونشط' : 'مُستبعد'}
 
 🏅 الإنجازات:
-${player.achievements.map(a => `${a.icon} ${a.name}`).join('\n')}`;
+${player.achievements.filter(a => a.earned).map(a => `${a.icon} ${a.name}`).join('\n')}`;
 
-            showNotification(detailsMessage, 'info', 5000);
+            showNotification(detailsMessage, 'info', 8000);
         }
 
         function eliminatePlayerFromCard(playerId) {
