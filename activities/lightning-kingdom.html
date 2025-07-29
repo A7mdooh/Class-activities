@@ -1412,6 +1412,19 @@
             updateDisplay();
             setupSoundSystem();
             
+            // Initialize smart notification system
+            addNotificationStyles();
+            
+            // Show welcome notification
+            setTimeout(() => {
+                showSmartNotification(
+                    '🏰 مرحباً في مملكة البرق!',
+                    'استعد لخوض أكثر المنافسات إثارة وتشويقاً!',
+                    'lightning',
+                    5000
+                );
+            }, 1000);
+            
             // Setup event listeners for settings
             if (document.getElementById('autoCalculateThreshold')) {
                 document.getElementById('autoCalculateThreshold').addEventListener('change', toggleManualThreshold);
@@ -1589,7 +1602,14 @@
                     'fanfare': '../assets/media/sounds/kingdom-sounds/crowd-cheer.mp3',
                     'epic-finish': '../assets/media/sounds/kingdom-sounds/epic-victory.mp3',
                     'confetti': '../assets/media/sounds/kingdom-sounds/fireworks-burst.mp3',
-                    'applause': '../assets/media/sounds/kingdom-sounds/crowd-cheer.mp3'
+                    'applause': '../assets/media/sounds/kingdom-sounds/crowd-cheer.mp3',
+                    
+                    // Smart notification sounds
+                    'notification-pop': '../assets/media/sounds/kingdom-sounds/notification-pop.mp3',
+                    'brain-activate': '../assets/media/sounds/kingdom-sounds/brain-activate.mp3',
+                    'epic-charge': '../assets/media/sounds/kingdom-sounds/epic-charge.mp3',
+                    'countdown-tick': '../assets/media/sounds/kingdom-sounds/countdown-tick.mp3',
+                    'ai-notification': '../assets/media/sounds/kingdom-sounds/ai-notification.mp3'
                 };
                 
                 const soundPath = soundMap[soundType];
@@ -1838,6 +1858,9 @@
             
             displayStudentsList();
             
+            // Show smart hints for current student
+            showStudentSmartHints(currentStudent);
+            
             // Play student transition sound with lightning effect
             playSound('next-student');
             setTimeout(() => {
@@ -1846,6 +1869,157 @@
 
             // Show modal for new student
             showStudentModal(currentStudent);
+        }
+
+        // ===== SMART STUDENT HINTS SYSTEM =====
+        function showStudentSmartHints(student) {
+            const attempts = student.attempts || 0;
+            const weakCount = student.weakCount || 0;
+            const roundInfo = `الجولة ${competitionData.currentRound}/${competitionData.eliminationSettings.opportunitiesPerStudent}`;
+            
+            // Different hints based on student situation
+            if (attempts === 0) {
+                // First time playing
+                showSmartNotification(
+                    '🎯 بداية جديدة!',
+                    `${student.name}, هذه فرصتك الأولى في ${roundInfo}. خذ وقتك وفكر جيداً!`,
+                    'tip',
+                    4000
+                );
+            } else if (weakCount >= 2) {
+                // In danger
+                showSmartNotification(
+                    '⚠️ خطر الاستبعاد!',
+                    `${student.name}, لديك ${weakCount} إجابات ضعيفة. إجابة ضعيفة أخرى = استبعاد تلقائي!`,
+                    'danger',
+                    5000
+                );
+            } else if (attempts >= 2 && student.score < 150) {
+                // Low performance
+                showSmartNotification(
+                    '💪 وقت التحسن!',
+                    `${student.name}, نقاطك ${student.score}. حان وقت إظهار قوتك الحقيقية!`,
+                    'warning',
+                    4000
+                );
+            } else if (student.score >= 200) {
+                // Good performance
+                showSmartNotification(
+                    '🌟 أداء ممتاز!',
+                    `${student.name}, نقاطك ${student.score}! استمر على هذا المستوى الرائع!`,
+                    'success',
+                    3000
+                );
+            }
+            
+            // Round-specific hints
+            if (competitionData.currentRound === competitionData.eliminationSettings.opportunitiesPerStudent) {
+                showSmartNotification(
+                    '🔥 الفرصة الأخيرة!',
+                    `هذه آخر فرصة في هذه المرحلة. اجعلها تحسب!`,
+                    'lightning',
+                    4000
+                );
+            }
+            
+            // Phase-specific hints
+            if (competitionData.currentPhase > 1) {
+                const survivorsCount = competitionData.students.filter(s => s.status !== 'eliminated').length;
+                showSmartNotification(
+                    `⚡ المرحلة ${competitionData.currentPhase}`,
+                    `${survivorsCount} طالب متبقي فقط. المنافسة تشتد!`,
+                    'info',
+                    3000
+                );
+            }
+        }
+
+        function showEliminationWarning(student) {
+            showSmartNotification(
+                '🚨 تحذير نهائي!',
+                `${student.name}, إجابة ضعيفة واحدة أخرى وستكون خارج المنافسة نهائياً!`,
+                'danger',
+                6000
+            );
+            
+            // Play warning sound sequence
+            playSound('warning');
+            setTimeout(() => playSound('thunder'), 500);
+        }
+
+        function showPerformanceEncouragement(student, evaluation) {
+            const encouragements = {
+                'excellent': {
+                    title: '🏆 إنجاز خارق!',
+                    message: `${student.name} يضرب بقوة! +100 نقطة للمحارب الشجاع!`,
+                    type: 'success'
+                },
+                'very-good': {
+                    title: '✨ أداء رائع!',
+                    message: `${student.name} يظهر مهارات عالية! +85 نقطة محترمة!`,
+                    type: 'success'
+                },
+                'good': {
+                    title: '👍 أداء جيد!',
+                    message: `${student.name} في الطريق الصحيح! +70 نقطة نحو النجاة!`,
+                    type: 'info'
+                },
+                'weak': {
+                    title: '⚠️ يمكن تحسينه!',
+                    message: `${student.name}, +40 نقطة فقط. المرة القادمة ستكون أفضل!`,
+                    type: 'warning'
+                }
+            };
+            
+            const encouragement = encouragements[evaluation];
+            if (encouragement) {
+                setTimeout(() => {
+                    showSmartNotification(
+                        encouragement.title,
+                        encouragement.message,
+                        encouragement.type,
+                        4000
+                    );
+                }, 1000);
+            }
+        }
+
+        function showPhaseProgressUpdate() {
+            const survivors = competitionData.students.filter(s => s.status !== 'eliminated').length;
+            const totalStudents = competitionData.students.length;
+            const eliminationPercentage = Math.round(((totalStudents - survivors) / totalStudents) * 100);
+            
+            showSmartNotification(
+                `📊 تقرير المرحلة ${competitionData.currentPhase}`,
+                `نسبة الاستبعاد: ${eliminationPercentage}% • المتبقون: ${survivors} طالب`,
+                'info',
+                5000
+            );
+        }
+
+        function showTimeWarning(timeLeft) {
+            if (timeLeft === 300) { // 5 minutes
+                showSmartNotification(
+                    '⏰ 5 دقائق متبقية!',
+                    'الوقت ينفد! استعدوا للنهاية المثيرة!',
+                    'warning',
+                    4000
+                );
+            } else if (timeLeft === 60) { // 1 minute
+                showSmartNotification(
+                    '🔥 دقيقة واحدة متبقية!',
+                    'اللحظات الأخيرة! من سينجو من معركة البرق؟',
+                    'danger',
+                    5000
+                );
+            } else if (timeLeft === 10) { // 10 seconds
+                showSmartNotification(
+                    '⚡ العد التنازلي النهائي!',
+                    '10... 9... 8... معركة البرق تنتهي!',
+                    'lightning',
+                    6000
+                );
+            }
         }
 
         function startNewRound() {
@@ -1860,8 +2034,17 @@
                 }
             });
             
+            // Show round start notification
+            showSmartNotification(
+                `🔄 بداية الجولة ${competitionData.currentRound}`,
+                `ترتيب جديد! جميع الطلاب يحصلون على فرصة أخرى للتألق!`,
+                'info',
+                4000
+            );
+            
             // Check if round exceeds opportunities per student
             if (competitionData.currentRound > competitionData.eliminationSettings.opportunitiesPerStudent) {
+                showPhaseProgressUpdate();
                 checkPhaseElimination();
                 return;
             }
@@ -1979,19 +2162,360 @@
             });
 
             startTimer();
-            showCompetitionStartModal();
             
-            setTimeout(() => {
-                closeModal();
-                showCurrentStudent();
-            }, 3500);
-            
-            // Play epic start sequence
-            playSequentialSounds(['start', 'lightning', 'thunder'], 600);
+            // Start smart tutorial sequence
+            showSmartTutorialSequence();
 
             // Update button
             const startBtn = document.querySelector('.start-competition');
             startBtn.innerHTML = '<i class="fas fa-refresh"></i> إعادة البدء';
+        }
+
+        // ===== SMART TUTORIAL SYSTEM =====
+        function showSmartTutorialSequence() {
+            const tutorialSteps = [
+                {
+                    title: '🎮 مرحباً بكم في مملكة البرق!',
+                    message: `
+                        <div style="text-align: center; font-size: 1.3rem; color: #FFD700; margin-bottom: 1.5rem;">
+                            <i class="fas fa-bolt"></i> ستخوضون منافسة شرسة للبقاء!
+                        </div>
+                        <div style="color: #fff; font-size: 1.1rem; line-height: 1.6;">
+                            💫 في هذه المملكة، فقط الأقوياء سينجون<br>
+                            ⚡ كل طالب سيحصل على فرص محدودة<br>
+                            🏆 النقاط والأداء يحددان مصيركم!
+                        </div>
+                    `,
+                    duration: 4000,
+                    sound: 'start',
+                    color: '#FFD700'
+                },
+                {
+                    title: '📊 نظام التقييم الذكي',
+                    message: `
+                        <div style="background: linear-gradient(135deg, #4CAF50, #2E7D32); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem;">
+                            <div style="color: white; font-size: 1.1rem; text-align: center; margin-bottom: 1rem;">
+                                <i class="fas fa-star"></i> درجات التقييم
+                            </div>
+                            <div style="color: white; line-height: 1.8;">
+                                🌟 <strong>ممتاز:</strong> 100 نقطة + مكافآت خاصة<br>
+                                ✨ <strong>جيد جداً:</strong> 85 نقطة + حماية من الاستبعاد<br>
+                                👍 <strong>جيد:</strong> 70 نقطة<br>
+                                ⚠️ <strong>ضعيف:</strong> 40 نقطة فقط (خطر!)
+                            </div>
+                        </div>
+                        <div style="color: #ff9800; text-align: center; font-weight: bold;">
+                            ⚠️ تحذير: 3 إجابات ضعيفة = استبعاد تلقائي!
+                        </div>
+                    `,
+                    duration: 5000,
+                    sound: 'notification-pop',
+                    color: '#4CAF50'
+                },
+                {
+                    title: '🔥 نظام التصفيات المتدرج',
+                    message: `
+                        <div style="background: linear-gradient(135deg, #FF6B35, #F7931E); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem;">
+                            <div style="color: white; font-size: 1.1rem; text-align: center; margin-bottom: 1rem;">
+                                <i class="fas fa-layer-group"></i> مراحل الاستبعاد
+                            </div>
+                            <div style="color: white; line-height: 1.8;">
+                                📈 <strong>المرحلة 1:</strong> ${competitionData.students.length} طالب<br>
+                                📉 <strong>تصفيات تدريجية</strong> حسب الأداء<br>
+                                🎯 <strong>المرحلة الأخيرة:</strong> الأقوى فقط!<br>
+                                ⏰ <strong>كل مرحلة:</strong> ${competitionData.eliminationSettings?.opportunitiesPerStudent || 3} فرص لكل طالب
+                            </div>
+                        </div>
+                        <div style="color: #fff; text-align: center;">
+                            💡 كلما تقدمت، زادت صعوبة النجاة!
+                        </div>
+                    `,
+                    duration: 5000,
+                    sound: 'phase-transition',
+                    color: '#FF6B35'
+                },
+                {
+                    title: '🎯 استراتيجيات النجاة',
+                    message: `
+                        <div style="background: linear-gradient(135deg, #9C27B0, #673AB7); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem;">
+                            <div style="color: white; font-size: 1.1rem; text-align: center; margin-bottom: 1rem;">
+                                <i class="fas fa-brain"></i> نصائح للنجاح
+                            </div>
+                            <div style="color: white; line-height: 1.8;">
+                                🧠 <strong>فكر قبل الإجابة:</strong> لا تتسرع<br>
+                                💪 <strong>استخدم معرفتك:</strong> كل سؤال فرصة<br>
+                                🔄 <strong>تعلم من الأخطاء:</strong> لديك فرص متعددة<br>
+                                ⚡ <strong>حافظ على هدوئك:</strong> التوتر عدو النجاح
+                            </div>
+                        </div>
+                        <div style="color: #E1BEE7; text-align: center; font-style: italic;">
+                            "في مملكة البرق، العقل الهادئ ينتصر دائماً"
+                        </div>
+                    `,
+                    duration: 5000,
+                    sound: 'brain-activate',
+                    color: '#9C27B0'
+                },
+                {
+                    title: '⚡ لحظة الحقيقة!',
+                    message: `
+                        <div style="text-align: center; margin-bottom: 2rem;">
+                            <div style="font-size: 1.5rem; color: #FFD700; margin-bottom: 1rem; animation: pulse 2s infinite;">
+                                <i class="fas fa-bolt"></i> معركة البرق تبدأ الآن!
+                            </div>
+                            <div style="background: linear-gradient(135deg, #FFD700, #FF6B35); padding: 1.5rem; border-radius: 15px; color: white; font-size: 1.1rem; line-height: 1.6;">
+                                🏆 ${competitionData.students.length} محارب جاهز للمعركة<br>
+                                ⏱️ ${Math.floor(competitionData.totalTime / 60)} دقيقة من التحدي الخالص<br>
+                                🔥 ${competitionData.phases?.length || 3} مرحلة من الإثارة
+                            </div>
+                        </div>
+                        <div style="text-align: center; color: #fff; font-size: 1.2rem; font-weight: bold;">
+                            هل أنتم مستعدون لإثبات قوتكم؟ ⚔️
+                        </div>
+                    `,
+                    duration: 6000,
+                    sound: 'epic-charge',
+                    color: '#FFD700',
+                    isLast: true
+                }
+            ];
+            
+            showTutorialStep(0, tutorialSteps);
+        }
+
+        function showTutorialStep(stepIndex, steps) {
+            if (stepIndex >= steps.length) {
+                // Tutorial finished, start the actual competition
+                setTimeout(() => {
+                    showCompetitionStartModal();
+                    setTimeout(() => {
+                        closeModal();
+                        showCurrentStudent();
+                    }, 3500);
+                    playSequentialSounds(['start', 'lightning', 'thunder'], 600);
+                }, 1000);
+                return;
+            }
+            
+            const step = steps[stepIndex];
+            
+            // Show tutorial step
+            setModalContent(step.title, step.message, step.color);
+            showModal('resultModal');
+            
+            // Play step sound with notification effect
+            playTutorialSound(step.sound);
+            
+            // Show progress indicator
+            showTutorialProgress(stepIndex + 1, steps.length);
+            
+            // Auto advance to next step
+            setTimeout(() => {
+                if (step.isLast) {
+                    // Add continue button for last step
+                    addContinueButton(() => {
+                        closeModal();
+                        showTutorialStep(stepIndex + 1, steps);
+                    });
+                } else {
+                    closeModal();
+                    setTimeout(() => {
+                        showTutorialStep(stepIndex + 1, steps);
+                    }, 800);
+                }
+            }, step.duration);
+        }
+
+        function playTutorialSound(soundType) {
+            // Play main sound
+            playSound(soundType);
+            
+            // Add notification effect
+            setTimeout(() => {
+                playSound('notification-pop');
+            }, 200);
+            
+            // Add ambient effect for better immersion
+            setTimeout(() => {
+                playSound('cosmic-click');
+            }, 400);
+        }
+
+        function showTutorialProgress(current, total) {
+            // Create or update progress indicator
+            let progressContainer = document.getElementById('tutorialProgress');
+            if (!progressContainer) {
+                progressContainer = document.createElement('div');
+                progressContainer.id = 'tutorialProgress';
+                progressContainer.style.cssText = `
+                    position: fixed;
+                    bottom: 20px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: rgba(0,0,0,0.8);
+                    padding: 10px 20px;
+                    border-radius: 25px;
+                    color: white;
+                    font-size: 0.9rem;
+                    z-index: 10001;
+                    backdrop-filter: blur(10px);
+                    border: 1px solid rgba(255,255,255,0.2);
+                `;
+                document.body.appendChild(progressContainer);
+            }
+            
+            const percentage = (current / total) * 100;
+            progressContainer.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>التعليم التفاعلي</span>
+                    <div style="width: 100px; height: 6px; background: rgba(255,255,255,0.3); border-radius: 3px; overflow: hidden;">
+                        <div style="width: ${percentage}%; height: 100%; background: linear-gradient(90deg, #FFD700, #FF6B35); transition: width 0.5s ease;"></div>
+                    </div>
+                    <span>${current}/${total}</span>
+                </div>
+            `;
+            
+            // Remove after tutorial
+            if (current === total) {
+                setTimeout(() => {
+                    if (progressContainer.parentNode) {
+                        progressContainer.parentNode.removeChild(progressContainer);
+                    }
+                }, 2000);
+            }
+        }
+
+        function addContinueButton(callback) {
+            const messageEl = document.getElementById('modalMessage');
+            if (messageEl) {
+                const continueBtn = document.createElement('div');
+                continueBtn.style.cssText = `
+                    text-align: center;
+                    margin-top: 2rem;
+                `;
+                continueBtn.innerHTML = `
+                    <button class="modal-btn primary" onclick="this.parentElement.parentElement.callback()" style="
+                        background: linear-gradient(135deg, #4CAF50, #2E7D32);
+                        border: none;
+                        color: white;
+                        padding: 1rem 2rem;
+                        border-radius: 12px;
+                        font-size: 1.1rem;
+                        cursor: pointer;
+                        transition: transform 0.3s ease;
+                        animation: pulse 2s infinite;
+                    ">
+                        <i class="fas fa-play"></i> ابدأ المعركة الآن!
+                    </button>
+                `;
+                continueBtn.callback = callback;
+                messageEl.appendChild(continueBtn);
+                
+                // Add click sound
+                continueBtn.querySelector('button').addEventListener('click', () => {
+                    playSound('cosmic-click');
+                    callback();
+                });
+            }
+        }
+
+        // ===== SMART NOTIFICATION SYSTEM =====
+        function showSmartNotification(title, message, type = 'info', duration = 4000) {
+            const notification = document.createElement('div');
+            notification.className = `smart-notification ${type}`;
+            
+            const typeConfig = {
+                'info': { icon: 'fas fa-info-circle', color: '#2196F3' },
+                'success': { icon: 'fas fa-check-circle', color: '#4CAF50' },
+                'warning': { icon: 'fas fa-exclamation-triangle', color: '#FF9800' },
+                'danger': { icon: 'fas fa-times-circle', color: '#F44336' },
+                'tip': { icon: 'fas fa-lightbulb', color: '#FFD700' },
+                'lightning': { icon: 'fas fa-bolt', color: '#FFD700' }
+            };
+            
+            const config = typeConfig[type] || typeConfig['info'];
+            
+            notification.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: linear-gradient(135deg, ${config.color}, ${config.color}dd);
+                    color: white;
+                    padding: 1rem 1.5rem;
+                    border-radius: 12px;
+                    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                    z-index: 10000;
+                    max-width: 350px;
+                    backdrop-filter: blur(10px);
+                    border: 1px solid rgba(255,255,255,0.2);
+                    animation: slideInRight 0.5s ease-out;
+                ">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;">
+                        <i class="${config.icon}" style="font-size: 1.2rem;"></i>
+                        <strong style="font-size: 1rem;">${title}</strong>
+                    </div>
+                    <div style="font-size: 0.9rem; line-height: 1.4; opacity: 0.95;">
+                        ${message}
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Play notification sound
+            playSound('notification-pop');
+            
+            // Auto remove
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.style.animation = 'slideOutRight 0.5s ease-in';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 500);
+                }
+            }, duration);
+        }
+
+        // Add CSS animations for notifications
+        function addNotificationStyles() {
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideInRight {
+                    from {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                }
+                
+                @keyframes slideOutRight {
+                    from {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                    to {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                }
+                
+                @keyframes pulse {
+                    0%, 100% {
+                        transform: scale(1);
+                    }
+                    50% {
+                        transform: scale(1.05);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
         }
 
         function showCompetitionStartModal() {
@@ -2064,13 +2588,24 @@
                     competitionData.remainingTime--;
                     updateDisplay();
                     
+                    // Show smart time warnings
+                    showTimeWarning(competitionData.remainingTime);
+                    
                     // Warning sounds
                     if (competitionData.remainingTime === 60 || competitionData.remainingTime === 30) {
                         playSound('warning');
                     }
                     
                     if (competitionData.remainingTime <= 0) {
-                        endCompetition();
+                        showSmartNotification(
+                            '⏰ انتهى الوقت!',
+                            'معركة البرق انتهت! سيتم عرض النتائج النهائية.',
+                            'lightning',
+                            5000
+                        );
+                        setTimeout(() => {
+                            endCompetition();
+                        }, 2000);
                     }
                 }
             }, 1000);
@@ -2108,6 +2643,11 @@
             if (evaluation === 'weak') {
                 currentStudent.weakCount++;
                 
+                // Show weakness warning
+                if (currentStudent.weakCount === 2) {
+                    showEliminationWarning(currentStudent);
+                }
+                
                 // Auto-eliminate after 3 weak performances
                 if (currentStudent.weakCount >= 3) {
                     showAutoEliminationWarning(currentStudent);
@@ -2120,6 +2660,9 @@
                 // Reset weak count on good performance
                 currentStudent.weakCount = 0;
             }
+            
+            // Show performance encouragement
+            showPerformanceEncouragement(currentStudent, evaluation);
             
             competitionData.completedStudents++;
 
