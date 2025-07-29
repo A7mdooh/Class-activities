@@ -1297,6 +1297,9 @@
             gameActive: false
         };
 
+        // متغير للتحكم في عرض الرسائل الترحيبية
+        let welcomeShown = false;
+
         // حفظ واستعادة بيانات الاقتصاد
         function saveGameEconomy() {
             localStorage.setItem('gameEconomy', JSON.stringify(gameEconomy));
@@ -1406,8 +1409,8 @@
                         setTimeout(() => {
                             playWelcomeSound();
                             
-                            // Show student welcome if available
-                            if (classData && studentsData.length > 0) {
+                            // Show student welcome if available - تم إزالة التكرار
+                            if (classData && studentsData.length > 0 && !welcomeShown) {
                                 setTimeout(() => {
                                     showStudentsWelcome();
                                 }, 2000);
@@ -1490,6 +1493,9 @@
             try {
                 console.log('🔍 محاولة تحميل بيانات الطلاب...');
                 
+                // إعادة تعيين حالة الترحيب للبيانات الجديدة
+                resetWelcomeState();
+                
                 // أولاً: فحص بيانات النقل المباشر
                 const transferData = localStorage.getItem('kingdomTransferData');
                 if (transferData) {
@@ -1509,10 +1515,7 @@
                             showGameGuide();
                             playWelcomeSound();
                             
-                            // إظهار ترحيب بالطلاب بعد التحميل
-                            setTimeout(() => {
-                                showSquidGameWelcome();
-                            }, 2000);
+                            // تم إزالة الاستدعاء المكرر لـ showSquidGameWelcome
                             
                             return;
                         }
@@ -2672,6 +2675,10 @@
 
         // ===== INTERACTIVE FUNCTIONS =====
         function showStudentsWelcome() {
+            // منع التكرار
+            if (welcomeShown) return;
+            welcomeShown = true;
+            
             showSquidGamePlayersView();
         }
 
@@ -3558,7 +3565,9 @@
         }
 
         function showSquidGameWelcome() {
-            if (!classData || !studentsData || studentsData.length === 0) return;
+            if (!classData || !studentsData || studentsData.length === 0 || welcomeShown) return;
+            
+            welcomeShown = true; // منع التكرار
             
             const welcomeMessage = `� مرحباً بكم في مركز الممالك الذكية!
 
@@ -3578,6 +3587,10 @@
                     colors: ['#00ff41', '#ff1744', '#1976d2']
                 });
             }
+        }
+
+        function resetWelcomeState() {
+            welcomeShown = false;
         }
 
         function closeWelcomeModal() {
