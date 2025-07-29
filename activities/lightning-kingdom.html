@@ -1021,6 +1021,25 @@
             };
             
             currentStudent.score = scoreMap[evaluation];
+            
+            // Track weak performances for auto-elimination
+            if (!currentStudent.weakCount) currentStudent.weakCount = 0;
+            if (evaluation === 'weak') {
+                currentStudent.weakCount++;
+                
+                // Auto-eliminate after 3 weak performances
+                if (currentStudent.weakCount >= 3) {
+                    showAutoEliminationWarning(currentStudent);
+                    setTimeout(() => {
+                        eliminateStudentAuto(currentStudent, 'ثلاث إجابات ضعيفة متتالية');
+                    }, 2000);
+                    return;
+                }
+            } else if (evaluation === 'excellent' || evaluation === 'very-good') {
+                // Reset weak count on good performance
+                currentStudent.weakCount = 0;
+            }
+            
             competitionData.completedStudents++;
 
             // Show evaluation result
@@ -1042,6 +1061,81 @@
             
             displayStudentsList();
             updateDisplay();
+        }
+
+        function showAutoEliminationWarning(student) {
+            const modal = document.getElementById('resultModal');
+            const title = document.getElementById('modalTitle');
+            const message = document.getElementById('modalMessage');
+            
+            title.innerHTML = '⚠️ تحذير استبعاد تلقائي';
+            title.style.color = '#ff9800';
+            
+            message.innerHTML = `
+                <div style="font-size: 1.3rem; margin-bottom: 1rem; color: #ff9800;">
+                    <i class="fas fa-exclamation-triangle"></i> الطالب ${student.name}
+                </div>
+                <div style="font-size: 1.1rem; color: #fff;">
+                    حصل على 3 تقييمات ضعيفة متتالية<br>
+                    سيتم استبعاده تلقائياً...
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+            playSound('warning');
+        }
+
+        function eliminateStudentAuto(student, reason) {
+            student.status = 'eliminated';
+            student.evaluation = 'auto-eliminated';
+            student.eliminationReason = reason;
+            student.score = -30; // Less penalty for auto-elimination
+            student.timestamp = new Date().toISOString();
+
+            showAutoEliminationResult(student, reason);
+            
+            competitionData.currentStudentIndex++;
+            
+            setTimeout(() => {
+                if (competitionData.currentStudentIndex < competitionData.students.length && competitionData.remainingTime > 0) {
+                    showCurrentStudent();
+                } else {
+                    endCompetition();
+                }
+            }, 3000);
+            
+            displayStudentsList();
+            updateDisplay();
+        }
+
+        function showAutoEliminationResult(student, reason) {
+            const modal = document.getElementById('resultModal');
+            const title = document.getElementById('modalTitle');
+            const message = document.getElementById('modalMessage');
+            
+            title.innerHTML = '🤖 استبعاد تلقائي';
+            title.style.color = '#ff5722';
+            
+            message.innerHTML = `
+                <div style="font-size: 1.3rem; margin-bottom: 1rem; color: #ff5722;">
+                    <i class="fas fa-robot"></i> تم استبعاد الطالب تلقائياً
+                </div>
+                <div style="font-size: 1.2rem; margin-bottom: 1rem;">
+                    <strong>${student.name}</strong>
+                </div>
+                <div style="font-size: 1rem; color: #ff9800;">
+                    السبب: ${reason}
+                </div>
+                <div style="font-size: 1rem; color: #ff9800; margin-top: 0.5rem;">
+                    تم خصم 30 نقطة كعقوبة
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+            
+            setTimeout(() => {
+                closeModal();
+            }, 3000);
         }
 
         function eliminateStudent() {
