@@ -590,6 +590,13 @@
                     راسب (0 نقطة)
                 </button>
             </div>
+            
+            <div class="elimination-section" style="margin-top: 1.5rem; text-align: center;">
+                <button class="eval-btn" onclick="eliminateStudent()" style="background: linear-gradient(45deg, #8e44ad, #e74c3c); color: white; padding: 1rem 2rem;">
+                    <i class="fas fa-user-times"></i>
+                    استبعاد الطالب نهائياً
+                </button>
+            </div>
         </div>
 
         <!-- Students Queue -->
@@ -1037,6 +1044,74 @@
             updateDisplay();
         }
 
+        function eliminateStudent() {
+            if (!competitionData.isRunning || competitionData.isPaused) return;
+            
+            const currentStudent = competitionData.students[competitionData.currentStudentIndex];
+            if (!currentStudent) return;
+
+            // Confirm elimination
+            if (!confirm(`هل أنت متأكد من استبعاد الطالب "${currentStudent.name}" نهائياً؟\nهذا الإجراء لا يمكن التراجع عنه!`)) {
+                return;
+            }
+
+            // Set as eliminated
+            currentStudent.status = 'eliminated';
+            currentStudent.evaluation = 'eliminated';
+            currentStudent.score = -50; // Penalty for elimination
+            currentStudent.timestamp = new Date().toISOString();
+
+            // Show elimination result
+            showEliminationResult(currentStudent);
+            
+            // Play elimination sound
+            playSound('fail');
+            
+            // Move to next student
+            competitionData.currentStudentIndex++;
+            
+            setTimeout(() => {
+                if (competitionData.currentStudentIndex < competitionData.students.length && competitionData.remainingTime > 0) {
+                    showCurrentStudent();
+                } else {
+                    endCompetition();
+                }
+            }, 3000);
+            
+            displayStudentsList();
+            updateDisplay();
+        }
+
+        function showEliminationResult(student) {
+            const modal = document.getElementById('resultModal');
+            const title = document.getElementById('modalTitle');
+            const message = document.getElementById('modalMessage');
+            
+            title.innerHTML = '🚫 تم الاستبعاد';
+            title.style.color = '#f44336';
+            
+            message.innerHTML = `
+                <div style="font-size: 1.3rem; margin-bottom: 1rem; color: #f44336;">
+                    <i class="fas fa-user-times"></i> تم استبعاد الطالب
+                </div>
+                <div style="font-size: 1.2rem; margin-bottom: 1rem;">
+                    <strong>${student.name}</strong>
+                </div>
+                <div style="font-size: 1rem; color: #ff9800;">
+                    تم خصم 50 نقطة كعقوبة للاستبعاد
+                </div>
+                <div style="font-size: 0.9rem; color: #ccc; margin-top: 1rem;">
+                    لن يتمكن هذا الطالب من المشاركة في بقية الأنشطة
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+            
+            setTimeout(() => {
+                closeModal();
+            }, 3000);
+        }
+
         function showEvaluationResult(student, evaluation) {
             const modal = document.getElementById('resultModal');
             const title = document.getElementById('modalTitle');
@@ -1080,6 +1155,8 @@
             const modal = document.getElementById('competitionEndModal');
             const message = document.getElementById('finalResults');
             
+            const eliminatedStudents = competitionData.students.filter(s => s.status === 'eliminated');
+            
             let resultsHTML = `
                 <div style="margin-bottom: 2rem;">
                     <div style="font-size: 1.2rem; margin-bottom: 1rem;">
@@ -1088,6 +1165,11 @@
                     <div style="color: var(--lightning-primary);">
                         تم تقييم ${competitionData.completedStudents} طالب
                     </div>
+                    ${eliminatedStudents.length > 0 ? `
+                        <div style="color: #f44336; margin-top: 0.5rem;">
+                            تم استبعاد ${eliminatedStudents.length} طالب
+                        </div>
+                    ` : ''}
                 </div>
             `;
             
@@ -1102,6 +1184,20 @@
                         <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; margin: 0.5rem 0; background: rgba(255,255,255,0.1); border-radius: 8px;">
                             <span>${medal} ${student.name}</span>
                             <span style="color: var(--lightning-primary); font-weight: 700;">${student.score} نقطة</span>
+                        </div>
+                    `;
+                });
+            }
+            
+            // Show eliminated students
+            if (eliminatedStudents.length > 0) {
+                resultsHTML += '<div style="text-align: right; margin: 1rem 0; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 1rem;"><strong>🚫 الطلاب المستبعدون:</strong></div>';
+                
+                eliminatedStudents.forEach(student => {
+                    resultsHTML += `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; margin: 0.5rem 0; background: rgba(244,67,54,0.2); border-radius: 8px; border-left: 3px solid #f44336;">
+                            <span>❌ ${student.name}</span>
+                            <span style="color: #f44336; font-weight: 700;">مُستبعد</span>
                         </div>
                     `;
                 });
@@ -1167,8 +1263,9 @@
                     timestamp: new Date().toISOString(),
                     totalStudents: competitionData.students.length,
                     completedStudents: competitionData.completedStudents,
+                    eliminatedStudents: competitionData.students.filter(s => s.status === 'eliminated').length,
                     duration: competitionData.totalTime - competitionData.remainingTime,
-                    results: competitionData.students.filter(s => s.status === 'completed')
+                    results: competitionData.students.filter(s => s.status === 'completed' || s.status === 'eliminated')
                 };
                 
                 localStorage.setItem('lightning-kingdom-results', JSON.stringify(competitionResults));
@@ -1180,10 +1277,24 @@
                     
                     competitionData.students.forEach(student => {
                         const player = players.find(p => p.name === student.name);
-                        if (player && student.status === 'completed') {
-                            // Update player stats based on performance
+                        if (player && (student.status === 'completed' || student.status === 'eliminated')) {
+                            
+                            // Handle elimination
+                            if (student.status === 'eliminated') {
+                                player.status = 'eliminated';
+                                player.eliminationReason = 'استبعاد من مملكة البرق';
+                                player.eliminationDate = new Date().toISOString();
+                                player.score = Math.max(0, (player.score || 0) + student.score); // Add penalty (negative score)
+                                player.gamesLost = (player.gamesLost || 0) + 1;
+                                player.questionsAnswered = (player.questionsAnswered || 0) + 1;
+                                player.currentStreak = 0; // Reset streak
+                                player.isEliminated = true;
+                                player.lastActivity = new Date().toISOString();
+                                return; // Skip further processing for eliminated students
+                            }
+                            
+                            // Update player stats based on performance for completed students
                             if (student.evaluation === 'excellent') {
-                                // Record victory and correct answer for excellent performance
                                 player.gamesWon = (player.gamesWon || 0) + 1;
                                 player.questionsAnswered = (player.questionsAnswered || 0) + 1;
                                 player.correctAnswers = (player.correctAnswers || 0) + 1;
@@ -1203,9 +1314,9 @@
                                 player.currentStreak = 0; // Reset streak
                             }
                             
-                            // Add score and experience
+                            // Add score and experience (only for non-eliminated)
                             player.score = (player.score || 0) + student.score;
-                            player.experiencePoints = (player.experiencePoints || 0) + student.score;
+                            player.experiencePoints = (player.experiencePoints || 0) + Math.max(0, student.score);
                             
                             // Update level based on experience
                             const newLevel = Math.floor(player.experiencePoints / 100) + 1;
@@ -1222,7 +1333,7 @@
                     localStorage.setItem('squidGamePlayers', JSON.stringify(players));
                 }
                 
-                console.log('✅ تم حفظ نتائج المنافسة');
+                console.log('✅ تم حفظ نتائج المنافسة مع بيانات الاستبعاد');
             } catch (e) {
                 console.error('خطأ في حفظ النتائج:', e);
             }
