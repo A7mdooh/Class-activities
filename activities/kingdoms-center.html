@@ -1284,15 +1284,114 @@
         let classData = null;
         let studentsData = [];
 
+        // ===== GAME ECONOMY SYSTEM =====
+        let gameEconomy = {
+            entryFee: 100, // ريال عماني لكل لاعب
+            totalPrize: 0,
+            playersAlive: 0,
+            playersEliminated: 0,
+            prizeHistory: [],
+            kingdomsCompleted: 0,
+            currentRound: 1,
+            eliminationBonus: 100, // مكافأة إضافية لكل لاعب مُستبعد
+            gameActive: false
+        };
+
+        // حفظ واستعادة بيانات الاقتصاد
+        function saveGameEconomy() {
+            localStorage.setItem('gameEconomy', JSON.stringify(gameEconomy));
+        }
+
+        function loadGameEconomy() {
+            const saved = localStorage.getItem('gameEconomy');
+            if (saved) {
+                gameEconomy = {...gameEconomy, ...JSON.parse(saved)};
+            }
+        }
+
         // ===== INITIALIZATION =====
+        
+        function addEconomyPanel() {
+            // إضافة لوحة الاقتصاد إلى الواجهة الرئيسية
+            const mainContent = document.querySelector('.main-content');
+            if (mainContent && !document.getElementById('economyInfo')) {
+                const economyDiv = document.createElement('div');
+                economyDiv.id = 'economyInfo';
+                economyDiv.className = 'economy-display';
+                economyDiv.innerHTML = generateEconomyHTML();
+                
+                // إضافة ستايل للوحة
+                const economyStyle = document.createElement('style');
+                economyStyle.textContent = `
+                    .economy-display {
+                        background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+                        border: 2px solid #FFD700;
+                        border-radius: 15px;
+                        padding: 1.5rem;
+                        margin: 2rem 0;
+                        box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+                    }
+                    
+                    .economy-display .economy-panel {
+                        background: transparent;
+                        padding: 0;
+                    }
+                    
+                    .economy-display .economy-header h3 {
+                        text-align: center;
+                        font-size: 1.8rem;
+                        margin-bottom: 1rem;
+                    }
+                    
+                    .economy-display .game-status {
+                        text-align: center;
+                        display: block;
+                        margin-bottom: 1.5rem;
+                        font-size: 1.2rem;
+                    }
+                    
+                    .economy-display .economy-stats {
+                        margin-bottom: 1.5rem;
+                    }
+                    
+                    .economy-display .stat-box {
+                        background: rgba(0, 0, 0, 0.5);
+                        border: 1px solid #FFD700;
+                    }
+                `;
+                
+                if (!document.getElementById('economyDisplayStyle')) {
+                    economyStyle.id = 'economyDisplayStyle';
+                    document.head.appendChild(economyStyle);
+                }
+                
+                // إدراج بعد عنصر التقدم
+                const progressSection = document.querySelector('.progress-section');
+                if (progressSection) {
+                    progressSection.parentNode.insertBefore(economyDiv, progressSection.nextSibling);
+                } else {
+                    mainContent.appendChild(economyDiv);
+                }
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             // Load sound preferences first
             loadSoundPreference();
+            
+            // تحميل البيانات الاقتصادية
+            loadGameEconomy();
             
             initializeParticles();
             loadClassAndStudentsData();
             loadAllKingdomsData();
             updateProgressSummary();
+            
+            // إضافة لوحة الاقتصاد
+            setTimeout(() => {
+                addEconomyPanel();
+                updateEconomyDisplay();
+            }, 1000);
             
             // Hide loading overlay
             setTimeout(() => {
@@ -2076,6 +2175,306 @@
             }
         });
 
+        // ===== GAME ECONOMY FUNCTIONS =====
+        
+        function initializeGameEconomy() {
+            if (!studentsData || studentsData.length === 0) {
+                showNotification('لا يمكن بدء اللعبة بدون طلاب!', 'error');
+                return false;
+            }
+
+            const totalPlayers = studentsData.length;
+            gameEconomy.playersAlive = totalPlayers;
+            gameEconomy.playersEliminated = 0;
+            gameEconomy.totalPrize = totalPlayers * gameEconomy.entryFee;
+            gameEconomy.gameActive = true;
+            gameEconomy.currentRound = 1;
+            gameEconomy.kingdomsCompleted = 0;
+            gameEconomy.prizeHistory = [];
+
+            // تسجيل بداية اللعبة
+            gameEconomy.prizeHistory.push({
+                round: 0,
+                action: 'بداية اللعبة',
+                players: totalPlayers,
+                prize: gameEconomy.totalPrize,
+                timestamp: new Date().toLocaleString('ar-EG')
+            });
+
+            saveGameEconomy();
+            updateEconomyDisplay();
+            
+            showNotification(`🎮 بدأت اللعبة!
+            💰 إجمالي الجائزة: ${gameEconomy.totalPrize} ريال عماني
+            👥 عدد اللاعبين: ${totalPlayers}
+            💵 مساهمة كل لاعب: ${gameEconomy.entryFee} ريال عماني`, 'success', 6000);
+
+            playSound('crown-ceremony');
+            return true;
+        }
+
+        function eliminatePlayer(playerId, reason = 'خسر في التحدي') {
+            if (!gameEconomy.gameActive) {
+                showNotification('اللعبة غير نشطة!', 'error');
+                return false;
+            }
+
+            const player = window.playersData.find(p => p.id === playerId);
+            if (!player) {
+                showNotification('اللاعب غير موجود!', 'error');
+                return false;
+            }
+
+            if (player.status === 'eliminated') {
+                showNotification('اللاعب مُستبعد مسبقاً!', 'warning');
+                return false;
+            }
+
+            // استبعاد اللاعب
+            player.status = 'eliminated';
+            player.eliminationRound = gameEconomy.currentRound;
+            player.eliminationReason = reason;
+
+            // تحديث الإحصائيات
+            gameEconomy.playersAlive--;
+            gameEconomy.playersEliminated++;
+            
+            // إضافة مكافأة الاستبعاد للجائزة
+            const oldPrize = gameEconomy.totalPrize;
+            gameEconomy.totalPrize += gameEconomy.eliminationBonus;
+
+            // تسجيل الاستبعاد
+            gameEconomy.prizeHistory.push({
+                round: gameEconomy.currentRound,
+                action: `استبعاد ${player.name}`,
+                reason: reason,
+                playersRemaining: gameEconomy.playersAlive,
+                prizeIncrease: gameEconomy.eliminationBonus,
+                newPrize: gameEconomy.totalPrize,
+                timestamp: new Date().toLocaleString('ar-EG')
+            });
+
+            saveGameEconomy();
+            updateEconomyDisplay();
+
+            // تحديث بيانات اللاعب
+            savePlayersData();
+
+            showNotification(`❌ ${player.name} تم استبعاده!
+            💰 الجائزة ازدادت من ${oldPrize} إلى ${gameEconomy.totalPrize} ريال عماني
+            👥 اللاعبون المتبقون: ${gameEconomy.playersAlive}`, 'info', 5000);
+
+            playSound('battle-victory');
+
+            // فحص إنهاء اللعبة
+            if (gameEconomy.playersAlive === 1) {
+                finishGame();
+            } else if (gameEconomy.playersAlive === 0) {
+                showNotification('لا يوجد فائزون! اللعبة انتهت.', 'error');
+                gameEconomy.gameActive = false;
+                saveGameEconomy();
+            }
+
+            return true;
+        }
+
+        function finishGame() {
+            if (!gameEconomy.gameActive) return;
+
+            const winner = window.playersData.find(p => p.status === 'alive');
+            if (!winner) {
+                showNotification('خطأ: لا يمكن العثور على الفائز!', 'error');
+                return;
+            }
+
+            gameEconomy.gameActive = false;
+            
+            // تسجيل انتهاء اللعبة
+            gameEconomy.prizeHistory.push({
+                round: gameEconomy.currentRound,
+                action: `انتهاء اللعبة - الفائز: ${winner.name}`,
+                winner: winner.name,
+                finalPrize: gameEconomy.totalPrize,
+                totalEliminated: gameEconomy.playersEliminated,
+                timestamp: new Date().toLocaleString('ar-EG')
+            });
+
+            // إضافة الجائزة للفائز
+            winner.totalEarnings = (winner.totalEarnings || 0) + gameEconomy.totalPrize;
+            winner.wins = (winner.wins || 0) + 1;
+
+            saveGameEconomy();
+            savePlayersData();
+            updateEconomyDisplay();
+
+            // عرض رسالة التهنئة
+            showWinnerCelebration(winner);
+        }
+
+        function showWinnerCelebration(winner) {
+            const celebrationMessage = `🎉 تهانينا للفائز! 🎉
+
+            🏆 الفائز: ${winner.name}
+            💰 الجائزة الكبرى: ${gameEconomy.totalPrize} ريال عماني
+            👥 اللاعبون المُستبعدون: ${gameEconomy.playersEliminated}
+            🎮 عدد الجولات: ${gameEconomy.currentRound}
+
+            🎊 مبروك على الفوز بالجائزة الكبرى!`;
+
+            showNotification(celebrationMessage, 'success', 10000);
+
+            // تأثيرات الاحتفال
+            if (typeof confetti !== 'undefined') {
+                // انفجار احتفالي كبير
+                confetti({
+                    particleCount: 300,
+                    spread: 100,
+                    origin: { y: 0.6 },
+                    colors: ['#FFD700', '#FF6B35', '#9B59B6', '#00ff41']
+                });
+
+                // احتفال متواصل
+                setTimeout(() => {
+                    confetti({
+                        particleCount: 200,
+                        angle: 60,
+                        spread: 55,
+                        origin: { x: 0 }
+                    });
+                }, 500);
+
+                setTimeout(() => {
+                    confetti({
+                        particleCount: 200,
+                        angle: 120,
+                        spread: 55,
+                        origin: { x: 1 }
+                    });
+                }, 1000);
+            }
+
+            // تشغيل الأصوات الاحتفالية
+            playSound('epic-victory');
+            setTimeout(() => playSound('crowd-cheer'), 1000);
+            setTimeout(() => playSound('crown-ceremony'), 2000);
+            setTimeout(() => playSound('fireworks-burst'), 3000);
+        }
+
+        function nextRound() {
+            if (!gameEconomy.gameActive) {
+                showNotification('اللعبة غير نشطة!', 'error');
+                return;
+            }
+
+            gameEconomy.currentRound++;
+            gameEconomy.kingdomsCompleted++;
+            
+            gameEconomy.prizeHistory.push({
+                round: gameEconomy.currentRound,
+                action: `بداية الجولة ${gameEconomy.currentRound}`,
+                playersRemaining: gameEconomy.playersAlive,
+                currentPrize: gameEconomy.totalPrize,
+                timestamp: new Date().toLocaleString('ar-EG')
+            });
+
+            saveGameEconomy();
+            updateEconomyDisplay();
+
+            showNotification(`🎮 الجولة ${gameEconomy.currentRound}
+            👥 اللاعبون المتبقون: ${gameEconomy.playersAlive}
+            💰 الجائزة الحالية: ${gameEconomy.totalPrize} ريال عماني`, 'info', 4000);
+
+            playSound('battle-horn');
+        }
+
+        function resetGameEconomy() {
+            if (confirm('هل تريد إعادة تعيين الاقتصاد واللعبة؟ سيتم فقدان جميع البيانات!')) {
+                gameEconomy = {
+                    entryFee: 100,
+                    totalPrize: 0,
+                    playersAlive: 0,
+                    playersEliminated: 0,
+                    prizeHistory: [],
+                    kingdomsCompleted: 0,
+                    currentRound: 1,
+                    eliminationBonus: 100,
+                    gameActive: false
+                };
+
+                // إعادة تعيين حالة اللاعبين
+                if (window.playersData) {
+                    window.playersData.forEach(player => {
+                        player.status = 'alive';
+                        delete player.eliminationRound;
+                        delete player.eliminationReason;
+                    });
+                    savePlayersData();
+                }
+
+                saveGameEconomy();
+                updateEconomyDisplay();
+
+                showNotification('تم إعادة تعيين اللعبة بنجاح!', 'success');
+                playSound('achievement-unlock');
+            }
+        }
+
+        function updateEconomyDisplay() {
+            // تحديث عرض الاقتصاد في الواجهة
+            const economyInfo = document.getElementById('economyInfo');
+            if (economyInfo) {
+                economyInfo.innerHTML = generateEconomyHTML();
+            }
+        }
+
+        function generateEconomyHTML() {
+            const gameStatus = gameEconomy.gameActive ? 'نشطة' : 'غير نشطة';
+            const statusColor = gameEconomy.gameActive ? '#00ff41' : '#ff6b6b';
+
+            return `
+                <div class="economy-panel">
+                    <div class="economy-header">
+                        <h3>💰 نظام الجوائز</h3>
+                        <span class="game-status" style="color: ${statusColor}">
+                            🎮 ${gameStatus}
+                        </span>
+                    </div>
+                    
+                    <div class="economy-stats">
+                        <div class="stat-box">
+                            <div class="stat-number">${gameEconomy.totalPrize}</div>
+                            <div class="stat-label">ريال عماني - الجائزة الكبرى</div>
+                        </div>
+                        
+                        <div class="stat-box">
+                            <div class="stat-number">${gameEconomy.playersAlive}</div>
+                            <div class="stat-label">لاعب حي</div>
+                        </div>
+                        
+                        <div class="stat-box">
+                            <div class="stat-number">${gameEconomy.playersEliminated}</div>
+                            <div class="stat-label">لاعب مُستبعد</div>
+                        </div>
+                        
+                        <div class="stat-box">
+                            <div class="stat-number">${gameEconomy.currentRound}</div>
+                            <div class="stat-label">الجولة الحالية</div>
+                        </div>
+                    </div>
+                    
+                    <div class="economy-rules">
+                        <h4>📜 القواعد:</h4>
+                        <ul>
+                            <li>💵 مساهمة كل لاعب: ${gameEconomy.entryFee} ريال عماني</li>
+                            <li>💰 مكافأة الاستبعاد: ${gameEconomy.eliminationBonus} ريال عماني</li>
+                            <li>🏆 الفائز يحصل على كامل الجائزة</li>
+                            <li>❌ لا انسحاب بعد بدء اللعبة</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+
         // ===== SOUND SYSTEM =====
         let soundEnabled = true;
 
@@ -2324,6 +2723,10 @@
                                 <span class="stat-label">الأحياء</span>
                                 <span class="stat-value">${window.playersData ? window.playersData.filter(p => p.status === 'alive').length : studentsData.length}</span>
                             </div>
+                            <div class="stat-item">
+                                <span class="stat-label">الجائزة</span>
+                                <span class="stat-value" style="color: #FFD700;">${gameEconomy.totalPrize} ر.ع</span>
+                            </div>
                         </div>
                         <button class="close-btn" onclick="closeSquidGameModal()">✕</button>
                     </div>
@@ -2334,6 +2737,10 @@
                         <button class="action-btn primary" onclick="startSquidGame()">
                             <i class="fas fa-play"></i>
                             بدء اللعبة
+                        </button>
+                        <button class="action-btn economic" onclick="showEconomyPanel()">
+                            <i class="fas fa-coins"></i>
+                            نظام الجوائز
                         </button>
                         <button class="action-btn secondary" onclick="resetPlayersStats()">
                             <i class="fas fa-refresh"></i>
@@ -2613,6 +3020,52 @@
                     color: #ffd700;
                 }
 
+                .elimination-info {
+                    margin: 1rem 0;
+                    padding: 0.75rem;
+                    background: rgba(255, 23, 68, 0.1);
+                    border: 1px solid #ff1744;
+                    border-radius: 8px;
+                    text-align: center;
+                }
+
+                .elimination-round {
+                    font-weight: 700;
+                    color: #ff6b6b;
+                    margin-bottom: 0.25rem;
+                }
+
+                .elimination-reason {
+                    font-size: 0.8rem;
+                    color: #ffcccb;
+                    opacity: 0.9;
+                }
+
+                .player-actions {
+                    margin-top: 1rem;
+                    text-align: center;
+                }
+
+                .eliminate-btn {
+                    background: #ff1744;
+                    color: white;
+                    border: none;
+                    padding: 0.5rem 1rem;
+                    border-radius: 20px;
+                    font-size: 0.8rem;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    margin: 0 auto;
+                }
+
+                .eliminate-btn:hover {
+                    background: #d50000;
+                    transform: scale(1.05);
+                }
+
                 .squid-game-footer {
                     padding: 1.5rem 2rem;
                     background: linear-gradient(135deg, #2d2d2d, #1a1a1a);
@@ -2666,6 +3119,17 @@
                 .action-btn.danger:hover {
                     background: #ff1744;
                     color: white;
+                }
+
+                .action-btn.economic {
+                    background: transparent;
+                    color: #FFD700;
+                    border-color: #FFD700;
+                }
+
+                .action-btn.economic:hover {
+                    background: #FFD700;
+                    color: #000;
                 }
 
                 /* تجاوب الشاشات */
@@ -2738,16 +3202,32 @@
                                 <span class="stat-text">انتصارات</span>
                             </div>
                             <div class="stat">
-                                <span class="stat-number">${player.gamesLost}</span>
-                                <span class="stat-text">خسائر</span>
+                                <span class="stat-number">${player.totalEarnings || 0}</span>
+                                <span class="stat-text">مكاسب (ر.ع)</span>
                             </div>
                         </div>
+                        
+                        ${player.status === 'eliminated' ? `
+                        <div class="elimination-info">
+                            <div class="elimination-round">الجولة ${player.eliminationRound || 'غير محدد'}</div>
+                            <div class="elimination-reason">${player.eliminationReason || 'سبب غير معروف'}</div>
+                        </div>
+                        ` : ''}
                         
                         <div class="player-achievements">
                             ${player.achievements.map(achievement => 
                                 `<span class="achievement">${achievement.icon} ${achievement.name}</span>`
                             ).join('')}
                         </div>
+                        
+                        ${player.status === 'alive' && gameEconomy.gameActive ? `
+                        <div class="player-actions">
+                            <button class="eliminate-btn" onclick="eliminatePlayerFromCard('${player.id}')">
+                                <i class="fas fa-times"></i>
+                                استبعاد اللاعب
+                            </button>
+                        </div>
+                        ` : ''}
                     </div>
                 </div>
             `).join('');
@@ -2764,21 +3244,300 @@
 
         function startSquidGame() {
             playSuccessSound();
-            showNotification('🎮 جاري بدء اللعبة...', 'success');
+            
+            // تحقق من بدء الاقتصاد
+            if (!gameEconomy.gameActive) {
+                if (initializeGameEconomy()) {
+                    showNotification('🎮 تم بدء اللعبة بنجاح! نظام الجوائز مفعل الآن.', 'success');
+                } else {
+                    return;
+                }
+            } else {
+                showNotification('🎮 اللعبة نشطة بالفعل!', 'info');
+            }
             
             if (typeof confetti !== 'undefined') {
                 confetti({
                     particleCount: 200,
                     spread: 100,
                     origin: { y: 0.6 },
-                    colors: ['#00ff41', '#ff1744', '#1976d2']
+                    colors: ['#00ff41', '#ff1744', '#1976d2', '#FFD700']
                 });
             }
             
             setTimeout(() => {
-                closeSquidGameModal();
-                showNotification('اختر مملكة لبدء التحديات! 🏰', 'info');
+                updateEconomyDisplay();
+                showNotification(`💰 إجمالي الجائزة: ${gameEconomy.totalPrize} ريال عماني\n🏰 اختر مملكة لبدء التحديات!`, 'info');
             }, 2000);
+        }
+
+        function showEconomyPanel() {
+            playClickSound();
+            
+            // إنشاء نافذة نظام الجوائز
+            const economyModal = document.createElement('div');
+            economyModal.id = 'economyModal';
+            economyModal.innerHTML = `
+                <div class="economy-backdrop" onclick="closeEconomyModal()"></div>
+                <div class="economy-container">
+                    <div class="economy-header">
+                        <h2>💰 نظام الجوائز والاقتصاد</h2>
+                        <button class="close-btn" onclick="closeEconomyModal()">✕</button>
+                    </div>
+                    
+                    <div class="economy-content">
+                        ${generateEconomyHTML()}
+                        
+                        <div class="prize-history">
+                            <h3>📜 تاريخ الجوائز</h3>
+                            <div class="history-list">
+                                ${gameEconomy.prizeHistory.map(entry => `
+                                    <div class="history-entry">
+                                        <div class="history-action">${entry.action}</div>
+                                        <div class="history-details">
+                                            ${entry.reason ? `<span>السبب: ${entry.reason}</span>` : ''}
+                                            ${entry.playersRemaining !== undefined ? `<span>اللاعبون المتبقون: ${entry.playersRemaining}</span>` : ''}
+                                            ${entry.prizeIncrease ? `<span class="prize-increase">+${entry.prizeIncrease} ر.ع</span>` : ''}
+                                            ${entry.newPrize !== undefined ? `<span class="total-prize">المجموع: ${entry.newPrize} ر.ع</span>` : ''}
+                                        </div>
+                                        <div class="history-time">${entry.timestamp}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="economy-footer">
+                        <button class="action-btn economic" onclick="exportEconomyData()">
+                            <i class="fas fa-download"></i>
+                            تصدير البيانات
+                        </button>
+                        <button class="action-btn danger" onclick="resetGameEconomy()">
+                            <i class="fas fa-trash"></i>
+                            إعادة تعيين الاقتصاد
+                        </button>
+                        <button class="action-btn secondary" onclick="closeEconomyModal()">
+                            <i class="fas fa-times"></i>
+                            إغلاق
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // إضافة الستايل
+            const economyStyle = document.createElement('style');
+            economyStyle.textContent = `
+                #economyModal {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 10001;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-family: var(--arabic-font);
+                }
+
+                .economy-backdrop {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.95);
+                    backdrop-filter: blur(10px);
+                }
+
+                .economy-container {
+                    position: relative;
+                    width: 90%;
+                    max-width: 1000px;
+                    max-height: 90vh;
+                    background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+                    border-radius: 20px;
+                    border: 3px solid #FFD700;
+                    box-shadow: 0 0 50px rgba(255, 215, 0, 0.3);
+                    overflow: hidden;
+                    animation: modalAppear 0.5s ease-out;
+                }
+
+                .economy-header {
+                    padding: 2rem;
+                    background: linear-gradient(135deg, #FFD700, #FFA500);
+                    color: #000;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    font-weight: 900;
+                }
+
+                .economy-content {
+                    padding: 2rem;
+                    max-height: 60vh;
+                    overflow-y: auto;
+                }
+
+                .economy-panel {
+                    background: #2a2a2a;
+                    border-radius: 15px;
+                    padding: 1.5rem;
+                    margin-bottom: 2rem;
+                }
+
+                .economy-header h3 {
+                    color: #FFD700;
+                    margin-bottom: 1rem;
+                }
+
+                .game-status {
+                    font-size: 1.1rem;
+                    font-weight: 700;
+                }
+
+                .economy-stats {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                    gap: 1rem;
+                    margin: 1.5rem 0;
+                }
+
+                .stat-box {
+                    background: rgba(0, 0, 0, 0.3);
+                    padding: 1rem;
+                    border-radius: 10px;
+                    text-align: center;
+                    border: 1px solid #333;
+                }
+
+                .stat-number {
+                    font-size: 2rem;
+                    font-weight: 900;
+                    color: #FFD700;
+                    display: block;
+                }
+
+                .stat-label {
+                    color: white;
+                    font-size: 0.9rem;
+                    margin-top: 0.5rem;
+                }
+
+                .economy-rules {
+                    color: white;
+                }
+
+                .economy-rules ul {
+                    list-style: none;
+                    padding: 0;
+                }
+
+                .economy-rules li {
+                    padding: 0.5rem 0;
+                    border-bottom: 1px solid #333;
+                }
+
+                .prize-history {
+                    color: white;
+                }
+
+                .history-list {
+                    max-height: 300px;
+                    overflow-y: auto;
+                }
+
+                .history-entry {
+                    background: rgba(0, 0, 0, 0.3);
+                    margin: 1rem 0;
+                    padding: 1rem;
+                    border-radius: 8px;
+                    border-left: 4px solid #FFD700;
+                }
+
+                .history-action {
+                    font-weight: 700;
+                    color: #FFD700;
+                    margin-bottom: 0.5rem;
+                }
+
+                .history-details {
+                    display: flex;
+                    gap: 1rem;
+                    flex-wrap: wrap;
+                    margin-bottom: 0.5rem;
+                }
+
+                .history-details span {
+                    background: rgba(255, 255, 255, 0.1);
+                    padding: 0.25rem 0.5rem;
+                    border-radius: 4px;
+                    font-size: 0.8rem;
+                }
+
+                .prize-increase {
+                    color: #00ff41 !important;
+                    font-weight: 700;
+                }
+
+                .total-prize {
+                    color: #FFD700 !important;
+                    font-weight: 700;
+                }
+
+                .history-time {
+                    font-size: 0.7rem;
+                    opacity: 0.7;
+                    text-align: left;
+                }
+
+                .economy-footer {
+                    padding: 1.5rem 2rem;
+                    background: linear-gradient(135deg, #2d2d2d, #1a1a1a);
+                    border-top: 2px solid #FFD700;
+                    display: flex;
+                    gap: 1rem;
+                    justify-content: center;
+                }
+            `;
+
+            document.body.appendChild(economyStyle);
+            document.body.appendChild(economyModal);
+
+            playSound('cosmic-portal');
+        }
+
+        function closeEconomyModal() {
+            playClickSound();
+            const modal = document.getElementById('economyModal');
+            if (modal) {
+                modal.style.animation = 'modalDisappear 0.3s ease-in';
+                setTimeout(() => modal.remove(), 300);
+            }
+        }
+
+        function exportEconomyData() {
+            playClickSound();
+            
+            const exportData = {
+                gameEconomy: gameEconomy,
+                exportTime: new Date().toLocaleString('ar-EG'),
+                classData: classData,
+                totalStudents: studentsData.length,
+                playersData: window.playersData
+            };
+
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `لعبة-الممالك-الاقتصاد-${new Date().toLocaleDateString('ar-EG').replace(/\//g, '-')}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+
+            showNotification('تم تصدير بيانات الاقتصاد بنجاح!', 'success');
         }
 
         function resetPlayersStats() {
@@ -2994,13 +3753,52 @@
 🏆 النقاط: ${player.score}
 📊 المستوى: ${player.level}
 ✅ الانتصارات: ${player.gamesWon}
-❌ الخسائر: ${player.gamesLost}
+💰 المكاسب: ${player.totalEarnings || 0} ريال عماني
 ⚡ الحالة: ${player.status === 'alive' ? 'حي ونشط' : 'مُستبعد'}
 
 🏅 الإنجازات:
 ${player.achievements.map(a => `${a.icon} ${a.name}`).join('\n')}`;
 
             showNotification(detailsMessage, 'info', 5000);
+        }
+
+        function eliminatePlayerFromCard(playerId) {
+            playClickSound();
+            
+            const player = window.playersData.find(p => p.id === playerId);
+            if (!player) return;
+
+            const reasons = [
+                'خسر في التحدي',
+                'لم يجب على السؤال',
+                'انتهك القواعد',
+                'وقت منتهي',
+                'خطأ في الإجابة'
+            ];
+
+            // اختيار سبب عشوائي أو يمكن إضافة نافذة اختيار
+            const randomReason = reasons[Math.floor(Math.random() * reasons.length)];
+
+            if (confirm(`هل تريد استبعاد ${player.name}؟\nالسبب: ${randomReason}`)) {
+                if (eliminatePlayer(playerId, randomReason)) {
+                    // تحديث العرض
+                    const playersGrid = document.getElementById('playersGrid');
+                    if (playersGrid) {
+                        playersGrid.innerHTML = generatePlayersCards();
+                    }
+                    
+                    // تحديث إحصائيات الرأس
+                    const aliveCount = document.querySelector('.game-stats .stat-item:nth-child(3) .stat-value');
+                    if (aliveCount) {
+                        aliveCount.textContent = window.playersData.filter(p => p.status === 'alive').length;
+                    }
+                    
+                    const prizeDisplay = document.querySelector('.game-stats .stat-item:nth-child(4) .stat-value');
+                    if (prizeDisplay) {
+                        prizeDisplay.textContent = `${gameEconomy.totalPrize} ر.ع`;
+                    }
+                }
+            }
         }
 
         // ===== INITIALIZATION =====
