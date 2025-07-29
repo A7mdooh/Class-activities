@@ -905,8 +905,8 @@
 
     <div class="modal" id="resultModal">
         <div class="modal-content">
-            <div class="modal-title" id="modalTitle">عنوان النافذة</div>
-            <div class="modal-message" id="modalMessage">رسالة النافذة</div>
+            <div class="modal-title" id="modalTitle"></div>
+            <div class="modal-message" id="modalMessage"></div>
             <div class="modal-buttons">
                 <button class="modal-btn primary" onclick="closeModal()">متابعة</button>
             </div>
@@ -1362,8 +1362,11 @@
 
         // ===== INITIALIZATION =====
         document.addEventListener('DOMContentLoaded', function() {
-            // Close all modals first
-            closeAllModals();
+            // Hide all modals initially
+            const allModals = ['resultModal', 'competitionEndModal', 'settingsModal'];
+            allModals.forEach(modalId => {
+                hideModal(modalId);
+            });
             
             loadStudentsData();
             updateDisplay();
@@ -1389,9 +1392,6 @@
             modals.forEach(modalId => {
                 hideModal(modalId);
             });
-            
-            // Reset game state to prevent auto-showing modals
-            resetGameState();
         }
 
         function resetGameState() {
@@ -1404,9 +1404,6 @@
             if (studentSection) {
                 studentSection.style.display = 'none';
             }
-            
-            // Reset modal content
-            resetModalContent();
         }
 
         // ===== LOAD STUDENTS DATA =====
@@ -1844,12 +1841,8 @@
         }
 
         function showStudentModal(student) {
-            const modal = document.getElementById('resultModal');
-            const title = document.getElementById('modalTitle');
-            const message = document.getElementById('modalMessage');
-            
-            title.innerHTML = '🎯 الطالب الحالي';
-            message.innerHTML = `
+            const title = '🎯 الطالب الحالي';
+            const message = `
                 <div style="font-size: 1.5rem; color: var(--lightning-primary); margin-bottom: 1rem;">
                     <i class="fas fa-user"></i> ${student.name}
                 </div>
@@ -1859,6 +1852,8 @@
                 </div>
             `;
             
+            // Set content and show modal
+            setModalContent(title, message);
             showModal('resultModal');
             
             // Play student modal sound
@@ -1871,9 +1866,6 @@
 
         // ===== COMPETITION CONTROL FUNCTIONS =====
         function startCompetition() {
-            // Close any open modals first
-            closeAllModals();
-            
             if (competitionData.students.length === 0) {
                 alert('لا توجد بيانات طلاب! يرجى العودة لمركز الممالك وتحديد الطلاب.');
                 return;
@@ -1920,18 +1912,12 @@
         }
 
         function showCompetitionStartModal() {
-            const modal = document.getElementById('resultModal');
-            const title = document.getElementById('modalTitle');
-            const message = document.getElementById('modalMessage');
-            
             const totalStudents = competitionData.students.length;
             const opportunities = competitionData.eliminationSettings.opportunitiesPerStudent;
             const phases = competitionData.phases.length;
             
-            title.innerHTML = '⚡ بداية معركة البرق!';
-            title.style.color = '#FFD700';
-            
-            message.innerHTML = `
+            const title = '⚡ بداية معركة البرق!';
+            const message = `
                 <div style="font-size: 1.3rem; margin-bottom: 1rem; color: #FFD700;">
                     <i class="fas fa-bolt"></i> المنافسة الآن مباشرة!
                 </div>
@@ -1945,6 +1931,8 @@
                 </div>
             `;
             
+            // Set content and show modal
+            setModalContent(title, message, '#FFD700');
             showModal('resultModal');
         }
 
@@ -2271,12 +2259,23 @@
         }
 
         function showModal(modalId) {
-            // Close all other modals first
-            closeAllModals();
+            // Hide all other modals first (except the one we want to show)
+            const allModals = ['resultModal', 'competitionEndModal', 'settingsModal'];
+            allModals.forEach(id => {
+                if (id !== modalId) {
+                    hideModal(id);
+                }
+            });
             
+            // Show the requested modal
             const modal = document.getElementById(modalId);
             if (modal) {
                 modal.classList.add('show');
+                
+                // Play modal open sound
+                if (audioEnabled) {
+                    playSound('modal-open');
+                }
             }
         }
 
@@ -2284,6 +2283,21 @@
             const modal = document.getElementById(modalId);
             if (modal) {
                 modal.classList.remove('show');
+            }
+        }
+
+        // Helper function to set modal content safely
+        function setModalContent(title, message, titleColor = '#FFD700') {
+            const titleEl = document.getElementById('modalTitle');
+            const messageEl = document.getElementById('modalMessage');
+            
+            if (titleEl && title) {
+                titleEl.innerHTML = title;
+                titleEl.style.color = titleColor;
+            }
+            
+            if (messageEl && message) {
+                messageEl.innerHTML = message;
             }
         }
 
@@ -2300,25 +2314,9 @@
                 hideModal(modalId);
             });
             
-            // Reset modal content to prevent showing old data
-            resetModalContent();
-            
+            // Play close sound
             if (audioEnabled) {
                 playSound('modal-close');
-            }
-        }
-
-        function resetModalContent() {
-            const titleEl = document.getElementById('modalTitle');
-            const messageEl = document.getElementById('modalMessage');
-            
-            if (titleEl) {
-                titleEl.innerHTML = 'عنوان النافذة';
-                titleEl.style.color = '#FFD700';
-            }
-            
-            if (messageEl) {
-                messageEl.innerHTML = 'رسالة النافذة';
             }
         }
 
