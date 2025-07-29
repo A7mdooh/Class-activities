@@ -3,12 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🏰 مركز الممالك | نظام التحديات المتقدم</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <title>🏰 مركز الممالك الذكية | نظام التعلم التفاعلي المتقدم</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
             --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --kingdom-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --danger-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --royal-gradient: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF6347 100%);
+            --wisdom-gradient: linear-gradient(135deg, #8A2BE2 0%, #4169E1 50%, #00CED1 100%);
+            
+            --text-primary: #2d3748;
+            --text-secondary: #4a5568;
+            --text-light: #a0aec0;
+            --text-royal: #FFD700;
+            --bg-primary: #f7fafc;
+            --bg-secondary: #edf2f7;
+            --border-radius: 20px;
+            --shadow-light: 0 10px 25px rgba(0,0,0,0.1);
+            --shadow-heavy: 0 20px 40px rgba(0,0,0,0.15);
+            --shadow-royal: 0 15px 35px rgba(255, 215, 0, 0.3);
+            
+            --arabic-font: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --royal-font: 'Amiri', 'Cairo', serif;
         }
 
         * {
@@ -18,62 +40,269 @@
         }
 
         body {
-            font-family: 'Cairo', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            font-family: var(--arabic-font);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #43e97b 75%, #f5576c 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
             min-height: 100vh;
             color: white;
             direction: rtl;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ===== PARTICLES BACKGROUND ===== */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* ===== CONTENT WRAPPER ===== */
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
             padding: 2rem;
+            min-height: 100vh;
+        }
+
+        /* ===== WELCOME SECTION ===== */
+        .welcome-section {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: var(--shadow-royal);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(transparent, rgba(255, 215, 0, 0.1), transparent 30%);
+            animation: rotate 10s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .royal-crown {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            background: var(--royal-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
 
         .main-header {
+            position: relative;
+            z-index: 3;
             text-align: center;
             margin-bottom: 3rem;
         }
 
         .main-title {
-            font-size: 3.5rem;
+            font-family: var(--royal-font);
+            font-size: clamp(2.5rem, 5vw, 4rem);
             margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            background: var(--royal-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.4));
         }
 
         .subtitle {
-            font-size: 1.3rem;
-            opacity: 0.9;
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            opacity: 0.95;
             margin-bottom: 2rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .class-info {
+            display: inline-block;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            margin: 1rem 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .class-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-royal);
+            margin-bottom: 0.5rem;
+        }
+
+        .students-count {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .students-preview {
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            opacity: 0.8;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .game-guide {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .guide-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: var(--text-royal);
+        }
+
+        .guide-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .guide-step {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .guide-step:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .step-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .step-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-royal);
+        }
+
+        .step-description {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            line-height: 1.5;
         }
 
         .overall-stats {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-bottom: 3rem;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .stat-card {
             background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(10px);
-            padding: 1.5rem;
-            border-radius: 15px;
+            backdrop-filter: blur(15px);
+            padding: 2rem 1.5rem;
+            border-radius: 20px;
             text-align: center;
-            min-width: 150px;
+            border: 2px solid transparent;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(255, 215, 0, 0.5);
+            box-shadow: var(--shadow-royal);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .stat-card:hover::before {
+            left: 100%;
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
         }
 
         .stat-number {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             font-weight: 900;
-            color: #FFD700;
+            color: var(--text-royal);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
 
         .stat-label {
             font-size: 1rem;
-            margin-top: 0.5rem;
+            opacity: 0.9;
+            font-weight: 500;
         }
 
         .kingdoms-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
             gap: 2rem;
             max-width: 1400px;
             margin: 0 auto;
@@ -81,21 +310,23 @@
 
         .kingdom-card {
             background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(15px);
-            border-radius: 20px;
-            padding: 2rem;
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 2.5rem;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             border: 2px solid transparent;
             position: relative;
             overflow: hidden;
-            min-height: 280px;
+            min-height: 320px;
+            display: flex;
+            flex-direction: column;
         }
 
         .kingdom-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: var(--kingdom-shadow);
-            border-color: rgba(255,255,255,0.3);
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            border-color: rgba(255,255,255,0.4);
         }
 
         .kingdom-card::before {
@@ -105,9 +336,9 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.15), transparent);
             transform: translateX(-100%);
-            transition: transform 0.6s;
+            transition: transform 0.8s;
         }
 
         .kingdom-card:hover::before {
@@ -115,87 +346,98 @@
         }
 
         .kingdom-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
+            font-size: 4.5rem;
+            margin-bottom: 1.5rem;
             display: block;
             text-align: center;
+            filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5));
+            animation: iconPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         .kingdom-name {
-            font-size: 1.8rem;
+            font-family: var(--royal-font);
+            font-size: 2rem;
             font-weight: 700;
             margin-bottom: 1rem;
             text-align: center;
+            background: var(--royal-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .kingdom-description {
-            font-size: 1rem;
-            opacity: 0.9;
+            font-size: 1.1rem;
+            opacity: 0.95;
             text-align: center;
-            margin-bottom: 1.5rem;
-            line-height: 1.5;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            flex-grow: 1;
         }
 
         .kingdom-stats {
-            display: flex;
-            justify-content: space-between;
-            background: rgba(0,0,0,0.2);
-            padding: 1rem;
-            border-radius: 10px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            background: rgba(0,0,0,0.25);
+            padding: 1.5rem;
+            border-radius: 15px;
             margin-top: auto;
         }
 
         .kingdom-stat {
             text-align: center;
-            flex: 1;
         }
 
         .kingdom-stat-number {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
-            color: #FFD700;
+            color: var(--text-royal);
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
         }
 
         .kingdom-stat-label {
-            font-size: 0.8rem;
-            opacity: 0.8;
+            font-size: 0.85rem;
+            opacity: 0.85;
+            margin-top: 0.3rem;
         }
 
-        /* ألوان مخصصة لكل مملكة */
+        .kingdom-status {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: var(--success-gradient);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-shadow: none;
+        }
+
+        .coming-soon {
+            background: var(--warning-gradient);
+        }
+
+        /* ألوان مخصصة للممالك */
         .lightning-kingdom {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 107, 53, 0.2));
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.25), rgba(255, 107, 53, 0.25));
+            border-color: rgba(255, 215, 0, 0.3);
         }
 
         .wisdom-kingdom {
-            background: linear-gradient(135deg, rgba(155, 89, 182, 0.2), rgba(52, 152, 219, 0.2));
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.25), rgba(52, 152, 219, 0.25));
+            border-color: rgba(155, 89, 182, 0.3);
         }
 
         .creative-kingdom {
-            background: linear-gradient(135deg, rgba(241, 196, 15, 0.2), rgba(230, 126, 34, 0.2));
-        }
-
-        .science-kingdom {
-            background: linear-gradient(135deg, rgba(46, 204, 113, 0.2), rgba(52, 152, 219, 0.2));
-        }
-
-        .language-kingdom {
-            background: linear-gradient(135deg, rgba(155, 89, 182, 0.2), rgba(142, 68, 173, 0.2));
-        }
-
-        .math-kingdom {
-            background: linear-gradient(135deg, rgba(52, 152, 219, 0.2), rgba(41, 128, 185, 0.2));
-        }
-
-        .history-kingdom {
-            background: linear-gradient(135deg, rgba(211, 84, 0, 0.2), rgba(192, 57, 43, 0.2));
-        }
-
-        .mystery-kingdom {
-            background: linear-gradient(135deg, rgba(44, 62, 80, 0.3), rgba(52, 73, 94, 0.3));
-        }
-
-        .battle-kingdom {
-            background: linear-gradient(135deg, rgba(192, 57, 43, 0.2), rgba(231, 76, 60, 0.2));
+            background: linear-gradient(135deg, rgba(241, 196, 15, 0.25), rgba(230, 126, 34, 0.25));
+            border-color: rgba(241, 196, 15, 0.3);
         }
 
         .navigation-controls {
@@ -204,6 +446,7 @@
             right: 20px;
             display: flex;
             gap: 1rem;
+            z-index: 1000;
         }
 
         .nav-btn {
@@ -215,428 +458,928 @@
             cursor: pointer;
             font-size: 1.2rem;
             transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .nav-btn:hover {
             background: rgba(255,255,255,0.2);
             transform: scale(1.1);
+            color: var(--text-royal);
         }
 
-        .progress-summary {
-            background: rgba(0,0,0,0.3);
-            backdrop-filter: blur(10px);
-            padding: 2rem;
-            border-radius: 20px;
-            margin: 3rem auto;
-            max-width: 800px;
-            text-align: center;
-        }
-
-        .progress-title {
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-            color: #FFD700;
-        }
-
-        .progress-details {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .progress-item {
-            background: rgba(255,255,255,0.1);
-            padding: 1rem;
-            border-radius: 10px;
-        }
-
+        /* ===== RESPONSIVE DESIGN ===== */
         @media (max-width: 768px) {
+            .content-wrapper {
+                padding: 1rem;
+            }
+            
             .kingdoms-grid {
                 grid-template-columns: 1fr;
-                padding: 0 1rem;
+                gap: 1.5rem;
             }
             
             .overall-stats {
-                flex-direction: column;
-                align-items: center;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
             }
             
             .main-title {
                 font-size: 2.5rem;
             }
+            
+            .welcome-section {
+                padding: 1.5rem;
+            }
+            
+            .guide-steps {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .overall-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .kingdom-card {
+                min-height: 280px;
+                padding: 2rem;
+            }
+            
+            .stat-card {
+                padding: 1.5rem 1rem;
+            }
+        }
+
+        /* ===== LOADING ANIMATION ===== */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #FFD700;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <div class="navigation-controls">
-        <button class="nav-btn" onclick="refreshData()" title="تحديث البيانات">🔄</button>
-        <button class="nav-btn" onclick="resetProgress()" title="إعادة تعيين التقدم">🗑️</button>
-        <button class="nav-btn" onclick="exportData()" title="تصدير البيانات">📊</button>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h3>🏰 تحميل مركز الممالك الذكية...</h3>
+            <p>جاري إعداد رحلتك التعليمية المميزة</p>
+        </div>
     </div>
 
-    <div class="main-header">
-        <h1 class="main-title">🏰 مركز الممالك الذكية</h1>
-        <p class="subtitle">⚡ نظام التعلم التفاعلي المتقدم | رحلتك في عالم المعرفة</p>
-        
+    <!-- Particles Background -->
+    <div id="particles-js"></div>
+
+    <!-- Navigation Controls -->
+    <div class="navigation-controls">
+        <button class="nav-btn" onclick="refreshData()" title="تحديث البيانات">
+            <i class="fas fa-sync-alt"></i>
+        </button>
+        <button class="nav-btn" onclick="resetProgress()" title="إعادة تعيين التقدم">
+            <i class="fas fa-trash-alt"></i>
+        </button>
+        <button class="nav-btn" onclick="exportData()" title="تصدير البيانات">
+            <i class="fas fa-download"></i>
+        </button>
+        <button class="nav-btn" onclick="goHome()" title="العودة للرئيسية">
+            <i class="fas fa-home"></i>
+        </button>
+    </div>
+
+    <!-- Content Wrapper -->
+    <div class="content-wrapper">
+        <!-- Welcome Section -->
+        <div class="welcome-section" id="welcomeSection">
+            <div class="royal-crown">👑</div>
+            <div class="main-header">
+                <h1 class="main-title">🏰 مركز الممالك الذكية</h1>
+                <p class="subtitle">⚡ نظام التعلم التفاعلي المتقدم | رحلتك في عالم المعرفة والإبداع</p>
+                
+                <!-- Class and Students Info -->
+                <div class="class-info" id="classInfo" style="display: none;">
+                    <div class="class-name" id="className">لم يتم اختيار صف</div>
+                    <div class="students-count" id="studentsCount">0 طالب مختار</div>
+                    <div class="students-preview" id="studentsPreview"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Guide Section -->
+        <div class="game-guide" id="gameGuide" style="display: none;">
+            <h2 class="guide-title">📖 دليل اللعب السريع</h2>
+            <div class="guide-steps">
+                <div class="guide-step">
+                    <span class="step-icon">🎯</span>
+                    <h3 class="step-title">اختر مملكتك</h3>
+                    <p class="step-description">انقر على المملكة التي تريد استكشافها وبدء التحديات الممتعة</p>
+                </div>
+                <div class="guide-step">
+                    <span class="step-icon">⚡</span>
+                    <h3 class="step-title">واجه التحديات</h3>
+                    <p class="step-description">حل الألغاز والمسائل لكسب النقاط والتقدم في المستويات</p>
+                </div>
+                <div class="guide-step">
+                    <span class="step-icon">🏆</span>
+                    <h3 class="step-title">احصل على الجوائز</h3>
+                    <p class="step-description">اجمع النقاط واحصل على الإنجازات والمكافآت المميزة</p>
+                </div>
+                <div class="guide-step">
+                    <span class="step-icon">👥</span>
+                    <h3 class="step-title">تنافس مع الأصدقاء</h3>
+                    <p class="step-description">شارك طلابك في المنافسات والتحديات الجماعية</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overall Statistics -->
         <div class="overall-stats">
             <div class="stat-card">
+                <span class="stat-icon">🎯</span>
                 <div class="stat-number" id="totalCompletedChallenges">0</div>
                 <div class="stat-label">إجمالي التحديات المكتملة</div>
             </div>
             <div class="stat-card">
+                <span class="stat-icon">⭐</span>
                 <div class="stat-number" id="totalScore">0</div>
                 <div class="stat-label">إجمالي النقاط</div>
             </div>
             <div class="stat-card">
+                <span class="stat-icon">📈</span>
                 <div class="stat-number" id="averageLevel">1</div>
                 <div class="stat-label">متوسط المستوى</div>
             </div>
             <div class="stat-card">
+                <span class="stat-icon">🏁</span>
                 <div class="stat-number" id="completionRate">0%</div>
                 <div class="stat-label">نسبة الإكمال</div>
             </div>
         </div>
-    </div>
 
-    <div class="kingdoms-grid">
-        <!-- مملكة البرق -->
-        <div class="kingdom-card lightning-kingdom" onclick="goToKingdom('lightning-kingdom.html')">
-            <div class="kingdom-icon">⚡</div>
-            <h3 class="kingdom-name">مملكة البرق</h3>
-            <p class="kingdom-description">تحديات سريعة لاختبار سرعة التفكير والذكاء الفوري</p>
-            <div class="kingdom-stats">
-                <div class="kingdom-stat">
-                    <div class="kingdom-stat-number" id="lightning-challenges">0</div>
-                    <div class="kingdom-stat-label">تحديات</div>
-                </div>
-                <div class="kingdom-stat">
-                    <div class="kingdom-stat-number" id="lightning-score">0</div>
-                    <div class="kingdom-stat-label">نقاط</div>
-                </div>
-                <div class="kingdom-stat">
-                    <div class="kingdom-stat-number" id="lightning-level">1</div>
-                    <div class="kingdom-stat-label">مستوى</div>
+        <!-- Kingdoms Grid -->
+        <div class="kingdoms-grid">
+            <!-- مملكة البرق -->
+            <div class="kingdom-card lightning-kingdom" onclick="goToKingdom('lightning-kingdom.html')">
+                <div class="kingdom-status">✅ متاحة</div>
+                <div class="kingdom-icon">⚡</div>
+                <h3 class="kingdom-name">مملكة البرق</h3>
+                <p class="kingdom-description">تحديات سريعة لاختبار سرعة التفكير والذكاء الفوري. استعد لمواجهة أسئلة متنوعة تتطلب سرعة البديهة والتفكير السريع!</p>
+                <div class="kingdom-stats">
+                    <div class="kingdom-stat">
+                        <div class="kingdom-stat-number" id="lightning-challenges">0</div>
+                        <div class="kingdom-stat-label">تحديات</div>
+                    </div>
+                    <div class="kingdom-stat">
+                        <div class="kingdom-stat-number" id="lightning-score">0</div>
+                        <div class="kingdom-stat-label">نقاط</div>
+                    </div>
+                    <div class="kingdom-stat">
+                        <div class="kingdom-stat-number" id="lightning-level">1</div>
+                        <div class="kingdom-stat-label">مستوى</div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- مملكة الحكمة -->
-        <div class="kingdom-card wisdom-kingdom" onclick="goToKingdom('wisdom-kingdom.html')">
-            <div class="kingdom-icon">🧠</div>
-            <h3 class="kingdom-name">مملكة الحكمة</h3>
-            <p class="kingdom-description">تحديات فكرية عميقة لتطوير الذكاء والإبداع</p>
-            <div class="kingdom-stats">
-                <div class="kingdom-stat">
-                    <div class="kingdom-stat-number" id="wisdom-challenges">0</div>
-                    <div class="kingdom-stat-label">تحديات</div>
-                </div>
-                <div class="kingdom-stat">
-                    <div class="kingdom-stat-number" id="wisdom-score">0</div>
-                    <div class="kingdom-stat-label">نقاط</div>
-                </div>
-                <div class="kingdom-stat">
-                    <div class="kingdom-stat-number" id="wisdom-level">1</div>
-                    <div class="kingdom-stat-label">مستوى</div>
+            <!-- مملكة الحكمة -->
+            <div class="kingdom-card wisdom-kingdom" onclick="goToKingdom('wisdom-kingdom.html')">
+                <div class="kingdom-status">✅ متاحة</div>
+                <div class="kingdom-icon">🧠</div>
+                <h3 class="kingdom-name">مملكة الحكمة</h3>
+                <p class="kingdom-description">تحديات فكرية عميقة لتطوير الذكاء والإبداع. اختبر قدراتك المنطقية وحل المسائل المعقدة بطريقة إبداعية!</p>
+                <div class="kingdom-stats">
+                    <div class="kingdom-stat">
+                        <div class="kingdom-stat-number" id="wisdom-challenges">0</div>
+                        <div class="kingdom-stat-label">تحديات</div>
+                    </div>
+                    <div class="kingdom-stat">
+                        <div class="kingdom-stat-number" id="wisdom-score">0</div>
+                        <div class="kingdom-stat-label">نقاط</div>
+                    </div>
+                    <div class="kingdom-stat">
+                        <div class="kingdom-stat-number" id="wisdom-level">1</div>
+                        <div class="kingdom-stat-label">مستوى</div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- مملكة الإبداع -->
-        <div class="kingdom-card creative-kingdom" onclick="alert('قريباً: مملكة الإبداع')">
-            <div class="kingdom-icon">🎨</div>
-            <h3 class="kingdom-name">مملكة الإبداع</h3>
-            <p class="kingdom-description">تحديات إبداعية لتنمية الخيال والابتكار</p>
-            <div class="kingdom-stats">
-                <div class="kingdom-stat">
-                    <div class="kingdom-stat-number">قريباً</div>
-                    <div class="kingdom-stat-label">في التطوير</div>
+            <!-- التحديات النهائية -->
+            <div class="kingdom-card creative-kingdom" onclick="goToKingdom('challenges-ultimate.html')">
+                <div class="kingdom-status">🔥 مميزة</div>
+                <div class="kingdom-icon">🏆</div>
+                <h3 class="kingdom-name">التحديات النهائية</h3>
+                <p class="kingdom-description">نظام التحديات المتقدم والشامل مع اختيار الصفوف والطلاب. التجربة الأكثر تطورًا وتفاعلية!</p>
+                <div class="kingdom-stats">
+                    <div class="kingdom-stat">
+                        <div class="kingdom-stat-number" id="ultimate-challenges">∞</div>
+                        <div class="kingdom-stat-label">تحديات</div>
+                    </div>
+                    <div class="kingdom-stat">
+                        <div class="kingdom-stat-number" id="ultimate-score">0</div>
+                        <div class="kingdom-stat-label">نقاط</div>
+                    </div>
+                    <div class="kingdom-stat">
+                        <div class="kingdom-stat-number" id="ultimate-level">MAX</div>
+                        <div class="kingdom-stat-label">مستوى</div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- مملكة العلوم -->
-        <div class="kingdom-card science-kingdom" onclick="alert('قريباً: مملكة العلوم')">
-            <div class="kingdom-icon">🔬</div>
-            <h3 class="kingdom-name">مملكة العلوم</h3>
-            <p class="kingdom-description">تجارب علمية تفاعلية واكتشافات مذهلة</p>
-            <div class="kingdom-stats">
-                <div class="kingdom-stat">
-                    <div class="kingdom-stat-number">قريباً</div>
-                    <div class="kingdom-stat-label">في التطوير</div>
+            <!-- مملكة الإبداع -->
+            <div class="kingdom-card creative-kingdom" onclick="showComingSoon('مملكة الإبداع')">
+                <div class="kingdom-status coming-soon">🚧 قريباً</div>
+                <div class="kingdom-icon">🎨</div>
+                <h3 class="kingdom-name">مملكة الإبداع</h3>
+                <p class="kingdom-description">تحديات إبداعية لتنمية الخيال والابتكار. ارسم، أبدع، واخترع حلولاً فريدة للمشاكل!</p>
+                <div class="kingdom-stats">
+                    <div class="kingdom-stat">
+                        <div class="kingdom-stat-number">قريباً</div>
+                        <div class="kingdom-stat-label">في التطوير</div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- مملكة اللغة -->
-        <div class="kingdom-card language-kingdom" onclick="alert('قريباً: مملكة اللغة')">
-            <div class="kingdom-icon">📚</div>
-            <h3 class="kingdom-name">مملكة اللغة</h3>
-            <p class="kingdom-description">تحديات لغوية لإثراء المفردات والبلاغة</p>
-            <div class="kingdom-stats">
-                <div class="kingdom-stat">
-                    <div class="kingdom-stat-number">قريباً</div>
-                    <div class="kingdom-stat-label">في التطوير</div>
+            <!-- مملكة العلوم -->
+            <div class="kingdom-card science-kingdom" onclick="showComingSoon('مملكة العلوم')">
+                <div class="kingdom-status coming-soon">🚧 قريباً</div>
+                <div class="kingdom-icon">🔬</div>
+                <h3 class="kingdom-name">مملكة العلوم</h3>
+                <p class="kingdom-description">تجارب علمية تفاعلية واكتشافات مذهلة. استكشف عجائب الكون والطبيعة!</p>
+                <div class="kingdom-stats">
+                    <div class="kingdom-stat">
+                        <div class="kingdom-stat-number">قريباً</div>
+                        <div class="kingdom-stat-label">في التطوير</div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- مملكة الرياضيات -->
-        <div class="kingdom-card math-kingdom" onclick="alert('قريباً: مملكة الرياضيات')">
-            <div class="kingdom-icon">🔢</div>
-            <h3 class="kingdom-name">مملكة الرياضيات</h3>
-            <p class="kingdom-description">مسائل رياضية ممتعة وألغاز حسابية</p>
-            <div class="kingdom-stats">
-                <div class="kingdom-stat">
-                    <div class="kingdom-stat-number">قريباً</div>
-                    <div class="kingdom-stat-label">في التطوير</div>
+            <!-- مملكة اللغة -->
+            <div class="kingdom-card language-kingdom" onclick="showComingSoon('مملكة اللغة')">
+                <div class="kingdom-status coming-soon">🚧 قريباً</div>
+                <div class="kingdom-icon">📚</div>
+                <h3 class="kingdom-name">مملكة اللغة</h3>
+                <p class="kingdom-description">تحديات لغوية لإثراء المفردات والبلاغة. اكتشف جمال اللغة العربية وأسرارها!</p>
+                <div class="kingdom-stats">
+                    <div class="kingdom-stat">
+                        <div class="kingdom-stat-number">قريباً</div>
+                        <div class="kingdom-stat-label">في التطوير</div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- مملكة التاريخ -->
-        <div class="kingdom-card history-kingdom" onclick="alert('قريباً: مملكة التاريخ')">
-            <div class="kingdom-icon">📜</div>
-            <h3 class="kingdom-name">مملكة التاريخ</h3>
-            <p class="kingdom-description">رحلة عبر التاريخ والحضارات العريقة</p>
-            <div class="kingdom-stats">
-                <div class="kingdom-stat">
-                    <div class="kingdom-stat-number">قريباً</div>
-                    <div class="kingdom-stat-label">في التطوير</div>
+            <!-- مملكة الرياضيات -->
+            <div class="kingdom-card math-kingdom" onclick="showComingSoon('مملكة الرياضيات')">
+                <div class="kingdom-status coming-soon">🚧 قريباً</div>
+                <div class="kingdom-icon">🔢</div>
+                <h3 class="kingdom-name">مملكة الرياضيات</h3>
+                <p class="kingdom-description">مسائل رياضية ممتعة وألغاز حسابية. اكتشف عالم الأرقام والمعادلات الساحر!</p>
+                <div class="kingdom-stats">
+                    <div class="kingdom-stat">
+                        <div class="kingdom-stat-number">قريباً</div>
+                        <div class="kingdom-stat-label">في التطوير</div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- مملكة الألغاز -->
-        <div class="kingdom-card mystery-kingdom" onclick="alert('قريباً: مملكة الألغاز')">
-            <div class="kingdom-icon">🔮</div>
-            <h3 class="kingdom-name">مملكة الألغاز</h3>
-            <p class="kingdom-description">ألغاز معقدة وأحاجي تتحدى العقل</p>
-            <div class="kingdom-stats">
-                <div class="kingdom-stat">
-                    <div class="kingdom-stat-number">قريباً</div>
-                    <div class="kingdom-stat-label">في التطوير</div>
+            <!-- مملكة التاريخ -->
+            <div class="kingdom-card history-kingdom" onclick="showComingSoon('مملكة التاريخ')">
+                <div class="kingdom-status coming-soon">🚧 قريباً</div>
+                <div class="kingdom-icon">📜</div>
+                <h3 class="kingdom-name">مملكة التاريخ</h3>
+                <p class="kingdom-description">رحلة عبر التاريخ والحضارات العريقة. استكشف قصص الماضي العظيم!</p>
+                <div class="kingdom-stats">
+                    <div class="kingdom-stat">
+                        <div class="kingdom-stat-number">قريباً</div>
+                        <div class="kingdom-stat-label">في التطوير</div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- ساحة المعركة -->
-        <div class="kingdom-card battle-kingdom" onclick="alert('قريباً: ساحة المعركة')">
-            <div class="kingdom-icon">⚔️</div>
-            <h3 class="kingdom-name">ساحة المعركة</h3>
-            <p class="kingdom-description">معارك جماعية ملحمية بين الفرق</p>
-            <div class="kingdom-stats">
-                <div class="kingdom-stat">
-                    <div class="kingdom-stat-number">قريباً</div>
-                    <div class="kingdom-stat-label">في التطوير</div>
+            <!-- مملكة الألغاز -->
+            <div class="kingdom-card mystery-kingdom" onclick="showComingSoon('مملكة الألغاز')">
+                <div class="kingdom-status coming-soon">🚧 قريباً</div>
+                <div class="kingdom-icon">🔮</div>
+                <h3 class="kingdom-name">مملكة الألغاز</h3>
+                <p class="kingdom-description">ألغاز معقدة وأحاجي تتحدى العقل. فك الشيفرات واكتشف الأسرار المخفية!</p>
+                <div class="kingdom-stats">
+                    <div class="kingdom-stat">
+                        <div class="kingdom-stat-number">قريباً</div>
+                        <div class="kingdom-stat-label">في التطوير</div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="progress-summary">
-        <h2 class="progress-title">📈 ملخص التقدم الإجمالي</h2>
-        <p>رحلتك التعليمية عبر الممالك المختلفة</p>
-        <div class="progress-details">
-            <div class="progress-item">
-                <h4>🏆 الإنجازات</h4>
-                <div id="totalAchievements">0</div>
-            </div>
-            <div class="progress-item">
-                <h4>⏱️ الوقت المستغرق</h4>
-                <div id="totalTimeSpent">0 دقيقة</div>
-            </div>
-            <div class="progress-item">
-                <h4>🎯 المملكة المفضلة</h4>
-                <div id="favoriteKingdom">لم يتم تحديدها بعد</div>
-            </div>
-            <div class="progress-item">
-                <h4>📅 آخر نشاط</h4>
-                <div id="lastActivity">لم يتم تسجيله</div>
             </div>
         </div>
     </div>
 
+    <!-- Confetti for celebrations -->
     <script>
-        // بيانات الممالك
+        // ===== GLOBAL VARIABLES =====
         const kingdomsData = {
             lightning: { key: 'lightning-kingdom-data', challenges: 0, score: 0, level: 1 },
-            wisdom: { key: 'wisdom-kingdom-data', challenges: 0, score: 0, level: 1 }
+            wisdom: { key: 'wisdom-kingdom-data', challenges: 0, score: 0, level: 1 },
+            ultimate: { key: 'kingdomGameState', challenges: 0, score: 0, level: 1 }
         };
 
-        // تحميل بيانات جميع الممالك
+        let classData = null;
+        let studentsData = [];
+
+        // ===== INITIALIZATION =====
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeParticles();
+            loadClassAndStudentsData();
+            loadAllKingdomsData();
+            updateProgressSummary();
+            
+            // Hide loading overlay
+            setTimeout(() => {
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                loadingOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    loadingOverlay.style.display = 'none';
+                    showWelcomeAnimation();
+                }, 500);
+            }, 2000);
+        });
+
+        // ===== PARTICLES BACKGROUND =====
+        function initializeParticles() {
+            if (typeof particlesJS !== 'undefined') {
+                particlesJS('particles-js', {
+                    particles: {
+                        number: { value: 80, density: { enable: true, value_area: 800 } },
+                        color: { value: ['#FFD700', '#FFA500', '#FF6347', '#4169E1', '#8A2BE2'] },
+                        shape: {
+                            type: ['circle', 'triangle', 'polygon'],
+                            polygon: { nb_sides: 6 }
+                        },
+                        opacity: {
+                            value: 0.6,
+                            random: true,
+                            anim: { enable: true, speed: 1, opacity_min: 0.3 }
+                        },
+                        size: {
+                            value: 4,
+                            random: true,
+                            anim: { enable: true, speed: 2, size_min: 1 }
+                        },
+                        line_linked: {
+                            enable: true,
+                            distance: 150,
+                            color: '#ffffff',
+                            opacity: 0.2,
+                            width: 1
+                        },
+                        move: {
+                            enable: true,
+                            speed: 2,
+                            direction: 'none',
+                            random: true,
+                            straight: false,
+                            out_mode: 'out',
+                            bounce: false
+                        }
+                    },
+                    interactivity: {
+                        detect_on: 'canvas',
+                        events: {
+                            onhover: { enable: true, mode: 'repulse' },
+                            onclick: { enable: true, mode: 'push' },
+                            resize: true
+                        },
+                        modes: {
+                            repulse: { distance: 100, duration: 0.4 },
+                            push: { particles_nb: 4 }
+                        }
+                    },
+                    retina_detect: true
+                });
+            }
+        }
+
+        // ===== WELCOME ANIMATION =====
+        function showWelcomeAnimation() {
+            if (typeof confetti !== 'undefined') {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#FFD700', '#FFA500', '#FF6347', '#4169E1', '#8A2BE2']
+                });
+            }
+        }
+
+        // ===== LOAD CLASS AND STUDENTS DATA =====
+        function loadClassAndStudentsData() {
+            try {
+                // Load from challenges-ultimate.html storage
+                const ultimateSettings = JSON.parse(localStorage.getItem('kingdomSettingsAdvanced') || '{}');
+                const gameState = JSON.parse(localStorage.getItem('kingdomGameState') || '{}');
+                
+                if (gameState.selectedClass && gameState.selectedStudents && gameState.selectedStudents.length > 0) {
+                    classData = gameState.selectedClass;
+                    studentsData = gameState.selectedStudents;
+                    updateClassInfo();
+                    showGameGuide();
+                } else if (ultimateSettings.selectedClass && ultimateSettings.selectedStudents) {
+                    classData = ultimateSettings.selectedClass;
+                    studentsData = ultimateSettings.selectedStudents;
+                    updateClassInfo();
+                    showGameGuide();
+                } else {
+                    // Try alternative storage keys
+                    const altSettings = JSON.parse(localStorage.getItem('kingdomSettings') || '{}');
+                    if (altSettings.selectedClass) {
+                        classData = altSettings.selectedClass;
+                        studentsData = altSettings.selectedStudents || [];
+                        updateClassInfo();
+                        showGameGuide();
+                    }
+                }
+            } catch (error) {
+                console.log('🔍 لم يتم العثور على بيانات الصف والطلاب');
+            }
+        }
+
+        // ===== UPDATE CLASS INFO =====
+        function updateClassInfo() {
+            const classInfo = document.getElementById('classInfo');
+            const className = document.getElementById('className');
+            const studentsCount = document.getElementById('studentsCount');
+            const studentsPreview = document.getElementById('studentsPreview');
+            
+            if (classData && studentsData.length > 0) {
+                className.textContent = `📚 ${classData}`;
+                studentsCount.textContent = `� ${studentsData.length} طالب مختار`;
+                
+                // Show preview of students
+                if (studentsData.length <= 5) {
+                    studentsPreview.textContent = `الطلاب: ${studentsData.join(' • ')}`;
+                } else {
+                    studentsPreview.textContent = `الطلاب: ${studentsData.slice(0, 3).join(' • ')} وآخرون...`;
+                }
+                
+                classInfo.style.display = 'block';
+                
+                // Add welcome message
+                updateWelcomeMessage();
+            }
+        }
+
+        // ===== UPDATE WELCOME MESSAGE =====
+        function updateWelcomeMessage() {
+            if (classData && studentsData.length > 0) {
+                const subtitle = document.querySelector('.subtitle');
+                const originalText = subtitle.textContent;
+                
+                setTimeout(() => {
+                    subtitle.innerHTML = `
+                        <span style="color: #FFD700;">🎉 أهلاً وسهلاً بصف ${classData}!</span><br>
+                        <span style="font-size: 1.1rem;">مرحباً بكم ${studentsData.length} طالب في رحلة التعلم المذهلة</span><br>
+                        <span style="font-size: 0.95rem; opacity: 0.9;">${originalText}</span>
+                    `;
+                }, 1000);
+            }
+        }
+
+        // ===== SHOW GAME GUIDE =====
+        function showGameGuide() {
+            const gameGuide = document.getElementById('gameGuide');
+            gameGuide.style.display = 'block';
+            gameGuide.style.opacity = '0';
+            gameGuide.style.transform = 'translateY(30px)';
+            
+            setTimeout(() => {
+                gameGuide.style.transition = 'all 0.6s ease';
+                gameGuide.style.opacity = '1';
+                gameGuide.style.transform = 'translateY(0)';
+            }, 500);
+        }
+
+        // ===== LOAD ALL KINGDOMS DATA =====
         function loadAllKingdomsData() {
             let totalChallenges = 0;
             let totalScore = 0;
             let totalLevels = 0;
             let activeKingdoms = 0;
 
-            // مملكة البرق
-            const lightningData = JSON.parse(localStorage.getItem('lightning-kingdom-data') || '{}');
-            kingdomsData.lightning.challenges = lightningData.completedChallenges || 0;
-            kingdomsData.lightning.score = lightningData.totalScore || 0;
-            kingdomsData.lightning.level = Math.floor(kingdomsData.lightning.score / 100) + 1;
+            try {
+                // مملكة البرق
+                const lightningData = JSON.parse(localStorage.getItem('lightning-kingdom-data') || '{}');
+                kingdomsData.lightning.challenges = lightningData.completedChallenges || 0;
+                kingdomsData.lightning.score = lightningData.totalScore || 0;
+                kingdomsData.lightning.level = Math.floor(kingdomsData.lightning.score / 100) + 1;
 
-            // مملكة الحكمة
-            const wisdomData = JSON.parse(localStorage.getItem('wisdom-kingdom-data') || '{}');
-            kingdomsData.wisdom.challenges = wisdomData.completedChallenges || 0;
-            kingdomsData.wisdom.score = wisdomData.totalScore || 0;
-            kingdomsData.wisdom.level = wisdomData.wisdomLevel || 1;
+                // مملكة الحكمة
+                const wisdomData = JSON.parse(localStorage.getItem('wisdom-kingdom-data') || '{}');
+                kingdomsData.wisdom.challenges = wisdomData.completedChallenges || 0;
+                kingdomsData.wisdom.score = wisdomData.totalScore || 0;
+                kingdomsData.wisdom.level = wisdomData.wisdomLevel || 1;
 
-            // حساب الإجماليات
-            Object.values(kingdomsData).forEach(kingdom => {
-                totalChallenges += kingdom.challenges;
-                totalScore += kingdom.score;
-                totalLevels += kingdom.level;
-                if (kingdom.challenges > 0) activeKingdoms++;
-            });
+                // التحديات النهائية
+                const ultimateData = JSON.parse(localStorage.getItem('kingdomGameState') || '{}');
+                kingdomsData.ultimate.challenges = ultimateData.completedChallenges || 0;
+                kingdomsData.ultimate.score = ultimateData.totalScore || 0;
+                kingdomsData.ultimate.level = ultimateData.currentLevel || 1;
 
-            // تحديث الواجهة
-            updateOverallStats(totalChallenges, totalScore, totalLevels, activeKingdoms);
-            updateKingdomStats();
+                // حساب الإجماليات
+                Object.values(kingdomsData).forEach(kingdom => {
+                    totalChallenges += kingdom.challenges;
+                    totalScore += kingdom.score;
+                    totalLevels += kingdom.level;
+                    if (kingdom.challenges > 0) activeKingdoms++;
+                });
+
+                // تحديث الواجهة
+                updateOverallStats(totalChallenges, totalScore, totalLevels, activeKingdoms);
+                updateKingdomStats();
+                
+                console.log('📊 تم تحديث بيانات جميع الممالك بنجاح');
+            } catch (error) {
+                console.error('❌ خطأ في تحميل بيانات الممالك:', error);
+            }
         }
 
-        // تحديث الإحصائيات العامة
+        // ===== UPDATE OVERALL STATS =====
         function updateOverallStats(challenges, score, levels, activeKingdoms) {
             document.getElementById('totalCompletedChallenges').textContent = challenges;
-            document.getElementById('totalScore').textContent = score;
+            document.getElementById('totalScore').textContent = score.toLocaleString();
             
             const averageLevel = activeKingdoms > 0 ? (levels / Object.keys(kingdomsData).length).toFixed(1) : 1;
             document.getElementById('averageLevel').textContent = averageLevel;
             
-            const totalPossibleChallenges = Object.keys(kingdomsData).length * 10; // 10 تحديات لكل مملكة
+            const totalPossibleChallenges = Object.keys(kingdomsData).length * 20; // افتراض 20 تحدي لكل مملكة
             const completionRate = ((challenges / totalPossibleChallenges) * 100).toFixed(0);
             document.getElementById('completionRate').textContent = completionRate + '%';
+            
+            // إضافة تأثيرات بصرية للإحصائيات
+            animateNumbers();
         }
 
-        // تحديث إحصائيات الممالك
+        // ===== UPDATE KINGDOM STATS =====
         function updateKingdomStats() {
             // مملكة البرق
             document.getElementById('lightning-challenges').textContent = kingdomsData.lightning.challenges;
-            document.getElementById('lightning-score').textContent = kingdomsData.lightning.score;
+            document.getElementById('lightning-score').textContent = kingdomsData.lightning.score.toLocaleString();
             document.getElementById('lightning-level').textContent = kingdomsData.lightning.level;
 
             // مملكة الحكمة
             document.getElementById('wisdom-challenges').textContent = kingdomsData.wisdom.challenges;
-            document.getElementById('wisdom-score').textContent = kingdomsData.wisdom.score;
+            document.getElementById('wisdom-score').textContent = kingdomsData.wisdom.score.toLocaleString();
             document.getElementById('wisdom-level').textContent = kingdomsData.wisdom.level;
+
+            // التحديات النهائية
+            if (document.getElementById('ultimate-score')) {
+                document.getElementById('ultimate-score').textContent = kingdomsData.ultimate.score.toLocaleString();
+            }
         }
 
-        // الانتقال لمملكة معينة
+        // ===== ANIMATE NUMBERS =====
+        function animateNumbers() {
+            const numbers = document.querySelectorAll('.stat-number, .kingdom-stat-number');
+            numbers.forEach(num => {
+                if (!isNaN(parseInt(num.textContent))) {
+                    num.style.transform = 'scale(1.1)';
+                    num.style.color = '#FFD700';
+                    setTimeout(() => {
+                        num.style.transform = 'scale(1)';
+                        num.style.color = '';
+                    }, 300);
+                }
+            });
+        }
+
+        // ===== GO TO KINGDOM =====
         function goToKingdom(kingdomPage) {
-            // حفظ البيانات الحالية
-            const centerData = {
-                lastVisited: new Date().toISOString(),
-                totalVisits: (JSON.parse(localStorage.getItem('kingdoms-center-data') || '{}')).totalVisits + 1 || 1
-            };
-            localStorage.setItem('kingdoms-center-data', JSON.stringify(centerData));
-            
-            // الانتقال للمملكة
-            window.location.href = kingdomPage;
+            try {
+                // حفظ البيانات الحالية
+                const centerData = {
+                    lastVisited: new Date().toISOString(),
+                    totalVisits: (JSON.parse(localStorage.getItem('kingdoms-center-data') || '{}')).totalVisits + 1 || 1,
+                    fromClass: classData,
+                    withStudents: studentsData
+                };
+                localStorage.setItem('kingdoms-center-data', JSON.stringify(centerData));
+                
+                // تأثير بصري للانتقال
+                if (typeof confetti !== 'undefined') {
+                    confetti({
+                        particleCount: 50,
+                        spread: 60,
+                        origin: { y: 0.8 },
+                        colors: ['#FFD700', '#FFA500', '#FF6347']
+                    });
+                }
+                
+                // الانتقال للمملكة مع تأخير قصير للتأثير
+                setTimeout(() => {
+                    window.location.href = kingdomPage;
+                }, 500);
+                
+                console.log(`🚀 الانتقال إلى: ${kingdomPage}`);
+            } catch (error) {
+                console.error('❌ خطأ في الانتقال:', error);
+                alert('❌ حدث خطأ في الانتقال للمملكة');
+            }
         }
 
-        // تحديث البيانات
+        // ===== SHOW COMING SOON =====
+        function showComingSoon(kingdomName) {
+            if (typeof confetti !== 'undefined') {
+                confetti({
+                    particleCount: 30,
+                    spread: 50,
+                    origin: { y: 0.7 },
+                    colors: ['#43e97b', '#38f9d7']
+                });
+            }
+            
+            setTimeout(() => {
+                alert(`🚧 ${kingdomName} قريباً!\n\n🎯 هذه المملكة تحت التطوير وستكون متاحة قريباً\n✨ ترقبوا المزيد من التحديات الرائعة!`);
+            }, 200);
+        }
+
+        // ===== REFRESH DATA =====
         function refreshData() {
+            loadClassAndStudentsData();
             loadAllKingdomsData();
+            updateProgressSummary();
             
             // تأثير بصري للتحديث
+            if (typeof confetti !== 'undefined') {
+                confetti({
+                    particleCount: 70,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#4facfe', '#00f2fe']
+                });
+            }
+            
+            // تأثير على الأرقام
             const stats = document.querySelectorAll('.stat-number, .kingdom-stat-number');
             stats.forEach(stat => {
-                stat.style.transform = 'scale(1.1)';
+                stat.style.transform = 'scale(1.2)';
                 stat.style.color = '#FFD700';
                 setTimeout(() => {
                     stat.style.transform = 'scale(1)';
                     stat.style.color = '';
-                }, 300);
+                }, 400);
             });
             
-            alert('✅ تم تحديث البيانات بنجاح!');
+            setTimeout(() => {
+                alert('✅ تم تحديث البيانات بنجاح!\n📊 جميع الإحصائيات محدثة الآن');
+            }, 600);
         }
 
-        // إعادة تعيين التقدم
+        // ===== RESET PROGRESS =====
         function resetProgress() {
-            if (confirm('هل أنت متأكد من رغبتك في إعادة تعيين جميع البيانات؟ هذا الإجراء لا يمكن التراجع عنه.')) {
-                localStorage.removeItem('lightning-kingdom-data');
-                localStorage.removeItem('wisdom-kingdom-data');
-                localStorage.removeItem('lightning-leaderboard');
-                localStorage.removeItem('kingdoms-center-data');
-                
-                // إعادة تحميل الصفحة
-                location.reload();
+            const confirmMessage = `
+🚨 تحذير: إعادة تعيين جميع البيانات
+
+هل أنت متأكد من رغبتك في حذف جميع البيانات التالية؟
+
+📊 جميع النقاط والمستويات
+🏆 الإنجازات والشارات
+📈 إحصائيات التقدم
+👥 بيانات الصف والطلاب
+
+⚠️ هذا الإجراء لا يمكن التراجع عنه!
+            `;
+            
+            if (confirm(confirmMessage.trim())) {
+                if (confirm('❓ هل أنت متأكد 100%؟ سيتم حذف كل شيء!')) {
+                    try {
+                        // حذف جميع البيانات
+                        const keysToRemove = [
+                            'lightning-kingdom-data',
+                            'wisdom-kingdom-data',
+                            'kingdomGameState',
+                            'kingdomSettingsAdvanced',
+                            'kingdomSettings',
+                            'lightning-leaderboard',
+                            'kingdoms-center-data',
+                            'kingdomAchievements'
+                        ];
+                        
+                        keysToRemove.forEach(key => localStorage.removeItem(key));
+                        
+                        alert('🗑️ تم حذف جميع البيانات بنجاح!\n🔄 سيتم إعادة تحميل الصفحة الآن');
+                        
+                        // إعادة تحميل الصفحة
+                        setTimeout(() => location.reload(), 1000);
+                    } catch (error) {
+                        console.error('❌ خطأ في إعادة التعيين:', error);
+                        alert('❌ حدث خطأ في إعادة تعيين البيانات');
+                    }
+                }
             }
         }
 
-        // تصدير البيانات
+        // ===== EXPORT DATA =====
         function exportData() {
-            const allData = {
-                lightningKingdom: JSON.parse(localStorage.getItem('lightning-kingdom-data') || '{}'),
-                wisdomKingdom: JSON.parse(localStorage.getItem('wisdom-kingdom-data') || '{}'),
-                lightningLeaderboard: JSON.parse(localStorage.getItem('lightning-leaderboard') || '[]'),
-                centerData: JSON.parse(localStorage.getItem('kingdoms-center-data') || '{}'),
-                exportDate: new Date().toISOString()
-            };
+            try {
+                const allData = {
+                    exportInfo: {
+                        date: new Date().toISOString(),
+                        version: '2.0',
+                        className: classData,
+                        studentsCount: studentsData.length,
+                        students: studentsData
+                    },
+                    kingdomsData: {
+                        lightningKingdom: JSON.parse(localStorage.getItem('lightning-kingdom-data') || '{}'),
+                        wisdomKingdom: JSON.parse(localStorage.getItem('wisdom-kingdom-data') || '{}'),
+                        ultimateChallenges: JSON.parse(localStorage.getItem('kingdomGameState') || '{}'),
+                        settings: JSON.parse(localStorage.getItem('kingdomSettingsAdvanced') || '{}')
+                    },
+                    leaderboards: {
+                        lightning: JSON.parse(localStorage.getItem('lightning-leaderboard') || '[]')
+                    },
+                    achievements: JSON.parse(localStorage.getItem('kingdomAchievements') || '[]'),
+                    centerData: JSON.parse(localStorage.getItem('kingdoms-center-data') || '{}')
+                };
 
-            const dataStr = JSON.stringify(allData, null, 2);
-            const dataBlob = new Blob([dataStr], {type: 'application/json'});
-            
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(dataBlob);
-            link.download = `kingdoms-data-${new Date().toISOString().split('T')[0]}.json`;
-            link.click();
-            
-            alert('📊 تم تصدير البيانات بنجاح!');
+                const dataStr = JSON.stringify(allData, null, 2);
+                const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(dataBlob);
+                const fileName = `kingdoms-data-${classData || 'unknown'}-${new Date().toISOString().split('T')[0]}.json`;
+                link.download = fileName;
+                link.click();
+                
+                if (typeof confetti !== 'undefined') {
+                    confetti({
+                        particleCount: 100,
+                        spread: 70,
+                        origin: { y: 0.6 },
+                        colors: ['#43e97b', '#38f9d7', '#4facfe']
+                    });
+                }
+                
+                setTimeout(() => {
+                    alert(`📊 تم تصدير البيانات بنجاح!\n📁 اسم الملف: ${fileName}\n💾 يحتوي على جميع بياناتك وإحصائياتك`);
+                }, 500);
+            } catch (error) {
+                console.error('❌ خطأ في تصدير البيانات:', error);
+                alert('❌ حدث خطأ في تصدير البيانات');
+            }
         }
 
-        // تحديث ملخص التقدم
+        // ===== GO HOME =====
+        function goHome() {
+            if (confirm('🏠 هل تريد العودة للصفحة الرئيسية؟')) {
+                window.location.href = '../index.html';
+            }
+        }
+
+        // ===== UPDATE PROGRESS SUMMARY =====
         function updateProgressSummary() {
-            // حساب إجمالي الإنجازات
-            const lightningData = JSON.parse(localStorage.getItem('lightning-kingdom-data') || '{}');
-            const wisdomData = JSON.parse(localStorage.getItem('wisdom-kingdom-data') || '{}');
-            
-            const totalAchievements = (lightningData.completedChallenges || 0) + 
-                                    (wisdomData.achievements ? wisdomData.achievements.length : 0);
-            
-            document.getElementById('totalAchievements').textContent = totalAchievements;
+            try {
+                // حساب إجمالي الإنجازات
+                const lightningData = JSON.parse(localStorage.getItem('lightning-kingdom-data') || '{}');
+                const wisdomData = JSON.parse(localStorage.getItem('wisdom-kingdom-data') || '{}');
+                const ultimateData = JSON.parse(localStorage.getItem('kingdomGameState') || '{}');
+                const achievements = JSON.parse(localStorage.getItem('kingdomAchievements') || '[]');
+                
+                const totalAchievements = (lightningData.completedChallenges || 0) + 
+                                        (wisdomData.completedChallenges || 0) + 
+                                        (ultimateData.completedChallenges || 0) +
+                                        achievements.length;
+                
+                document.getElementById('totalAchievements').textContent = totalAchievements;
 
-            // المملكة المفضلة
-            let favoriteKingdom = 'لم يتم تحديدها بعد';
-            if (lightningData.completedChallenges > (wisdomData.completedChallenges || 0)) {
-                favoriteKingdom = '⚡ مملكة البرق';
-            } else if ((wisdomData.completedChallenges || 0) > 0) {
-                favoriteKingdom = '🧠 مملكة الحكمة';
-            }
-            
-            document.getElementById('favoriteKingdom').textContent = favoriteKingdom;
+                // حساب الوقت المستغرق (تقدير)
+                const totalTime = ((lightningData.completedChallenges || 0) * 2) + 
+                                ((wisdomData.completedChallenges || 0) * 3) + 
+                                ((ultimateData.completedChallenges || 0) * 4);
+                document.getElementById('totalTimeSpent').textContent = totalTime + ' دقيقة';
 
-            // آخر نشاط
-            const lastActivity = lightningData.lastPlayed || wisdomData.lastPlayed || null;
-            if (lastActivity) {
-                const date = new Date(lastActivity);
-                document.getElementById('lastActivity').textContent = date.toLocaleDateString('ar');
+                // المملكة المفضلة
+                let favoriteKingdom = 'لم يتم تحديدها بعد';
+                const scores = {
+                    lightning: lightningData.totalScore || 0,
+                    wisdom: wisdomData.totalScore || 0,
+                    ultimate: ultimateData.totalScore || 0
+                };
+                
+                const maxScore = Math.max(...Object.values(scores));
+                if (maxScore > 0) {
+                    const favorite = Object.keys(scores).find(key => scores[key] === maxScore);
+                    const kingdomNames = {
+                        lightning: '⚡ مملكة البرق',
+                        wisdom: '🧠 مملكة الحكمة',
+                        ultimate: '🏆 التحديات النهائية'
+                    };
+                    favoriteKingdom = kingdomNames[favorite] || favoriteKingdom;
+                }
+                
+                document.getElementById('favoriteKingdom').textContent = favoriteKingdom;
+
+                // آخر نشاط
+                const lastActivities = [
+                    lightningData.lastPlayed,
+                    wisdomData.lastPlayed,
+                    ultimateData.lastPlayed
+                ].filter(Boolean);
+                
+                if (lastActivities.length > 0) {
+                    const lastActivity = new Date(Math.max(...lastActivities.map(d => new Date(d))));
+                    document.getElementById('lastActivity').textContent = lastActivity.toLocaleDateString('ar-SA');
+                } else {
+                    document.getElementById('lastActivity').textContent = 'لم يتم تسجيله';
+                }
+            } catch (error) {
+                console.error('❌ خطأ في تحديث ملخص التقدم:', error);
             }
         }
 
-        // تهيئة الصفحة
-        document.addEventListener('DOMContentLoaded', function() {
-            loadAllKingdomsData();
-            updateProgressSummary();
-        });
-
-        // تحديث البيانات عند العودة للصفحة (عندما يعود المستخدم من مملكة)
+        // ===== EVENT LISTENERS =====
+        
+        // تحديث البيانات عند العودة للصفحة
         window.addEventListener('focus', function() {
+            loadClassAndStudentsData();
             loadAllKingdomsData();
             updateProgressSummary();
-            console.log('🔄 تم تحديث بيانات المركز تلقائياً');
+            console.log('🔄 تم تحديث بيانات المركز تلقائياً (focus)');
         });
 
         // تحديث البيانات عند إظهار الصفحة مرة أخرى
         document.addEventListener('visibilitychange', function() {
             if (!document.hidden) {
+                loadClassAndStudentsData();
                 loadAllKingdomsData();
                 updateProgressSummary();
                 console.log('👁️ تم تحديث البيانات عند إظهار الصفحة');
             }
         });
+
+        // إضافة مؤثرات صوتية (اختيارية)
+        function playSound(soundName) {
+            try {
+                const audio = new Audio(`../assets/media/sounds/kingdom-sounds/${soundName}.mp3`);
+                audio.volume = 0.3;
+                audio.play().catch(() => {
+                    // تجاهل أخطاء الصوت
+                });
+            } catch (error) {
+                // تجاهل أخطاء الصوت
+            }
+        }
+
+        // إضافة keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey) {
+                switch(e.key) {
+                    case 'r':
+                        e.preventDefault();
+                        refreshData();
+                        break;
+                    case 'h':
+                        e.preventDefault();
+                        goHome();
+                        break;
+                    case 'e':
+                        e.preventDefault();
+                        exportData();
+                        break;
+                }
+            }
+        });
+
+        console.log('🏰 مركز الممالك الذكية جاهز للاستخدام!');
+        console.log('⌨️ اختصارات لوحة المفاتيح:');
+        console.log('   Ctrl+R: تحديث البيانات');
+        console.log('   Ctrl+H: العودة للرئيسية');
+        console.log('   Ctrl+E: تصدير البيانات');
     </script>
 </body>
 </html>
