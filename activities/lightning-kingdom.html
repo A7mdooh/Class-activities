@@ -968,11 +968,15 @@
             }, 100);
             
             // Play settings sound
-            playSound('cosmic-click');
+            playSound('modal-open');
+            setTimeout(() => {
+                playSound('cosmic-click');
+            }, 200);
         }
 
         function closeSettingsModal() {
             document.getElementById('settingsModal').style.display = 'none';
+            playSound('modal-close');
         }
 
         function updateOpportunities(value) {
@@ -1237,7 +1241,12 @@
             student.score = Math.max(0, (student.score || 0) - 20); // Small penalty
             
             showPhaseEliminationResult(student, reason);
-            playSound('warning');
+            
+            // Play elimination sound sequence
+            playSound('elimination');
+            setTimeout(() => {
+                playSound('thunder');
+            }, 600);
         }
 
         function showPhaseEliminationResult(student, reason) {
@@ -1283,10 +1292,13 @@
             
             showPhaseTransitionModal();
             
+            // Play phase transition sound sequence
+            playSequentialSounds(['phase-transition', 'lightning', 'thunder'], 400);
+            
             setTimeout(() => {
                 closeModal();
                 showCurrentStudent();
-            }, 3000);
+            }, 3500);
         }
 
         function showPhaseTransitionModal() {
@@ -1314,7 +1326,9 @@
             `;
             
             modal.style.display = 'flex';
-            playSound('start');
+            
+            // Play epic phase transition sound
+            playSound('phase-transition');
         }
 
         function showNotification(message, type = 'info') {
@@ -1348,8 +1362,16 @@
             setupSoundSystem();
             
             // Setup event listeners for settings
-            document.getElementById('autoCalculateThreshold').addEventListener('change', toggleManualThreshold);
-            document.getElementById('eliminationPercentage').addEventListener('change', updateSettingsPreview);
+            if (document.getElementById('autoCalculateThreshold')) {
+                document.getElementById('autoCalculateThreshold').addEventListener('change', toggleManualThreshold);
+            }
+            if (document.getElementById('eliminationPercentage')) {
+                document.getElementById('eliminationPercentage').addEventListener('change', updateSettingsPreview);
+            }
+            
+            // Hide any modals that might be open
+            closeModal();
+            closeSettingsModal();
         });
 
         // ===== LOAD STUDENTS DATA =====
@@ -1458,24 +1480,108 @@
             try {
                 const audio = new Audio();
                 const soundMap = {
+                    // Competition sounds
                     'start': '../assets/media/sounds/kingdom-sounds/battle-horn.mp3',
                     'success': '../assets/media/sounds/kingdom-sounds/achievement-unlock.mp3',
+                    'end': '../assets/media/sounds/kingdom-sounds/crown-ceremony.mp3',
+                    'pause': '../assets/media/sounds/kingdom-sounds/button-hover.mp3',
+                    'warning': '../assets/media/sounds/kingdom-sounds/countdown-tick.mp3',
+                    
+                    // Evaluation sounds
                     'excellent': '../assets/media/sounds/kingdom-sounds/epic-victory.mp3',
                     'very-good': '../assets/media/sounds/kingdom-sounds/achievement-unlock.mp3',
                     'good': '../assets/media/sounds/kingdom-sounds/level-up.mp3',
                     'weak': '../assets/media/sounds/kingdom-sounds/notification-pop.mp3',
-                    'next': '../assets/media/sounds/kingdom-sounds/cosmic-click.mp3',
-                    'end': '../assets/media/sounds/kingdom-sounds/crown-ceremony.mp3',
-                    'pause': '../assets/media/sounds/kingdom-sounds/button-hover.mp3',
-                    'warning': '../assets/media/sounds/kingdom-sounds/countdown-tick.mp3'
+                    'fail': '../assets/media/sounds/wrong_answer.mp3',
+                    
+                    // Student and round transition sounds
+                    'next-student': '../assets/media/sounds/kingdom-sounds/cosmic-click.mp3',
+                    'new-round': '../assets/media/sounds/kingdom-sounds/dimensional-shift.mp3',
+                    'phase-transition': '../assets/media/sounds/kingdom-sounds/epic-charge.mp3',
+                    'elimination': '../assets/media/sounds/kingdom-sounds/lightning-strike.mp3',
+                    
+                    // UI interaction sounds
+                    'cosmic-click': '../assets/media/sounds/kingdom-sounds/cosmic-click.mp3',
+                    'hover': '../assets/media/sounds/kingdom-sounds/button-hover.mp3',
+                    'modal-open': '../assets/media/sounds/kingdom-sounds/mystic-wind.mp3',
+                    'modal-close': '../assets/media/sounds/kingdom-sounds/crystal-ping.mp3',
+                    
+                    // Special effects
+                    'lightning': '../assets/media/sounds/kingdom-sounds/lightning-whoosh.mp3',
+                    'thunder': '../assets/media/sounds/kingdom-sounds/electric-charge.mp3',
+                    'magic': '../assets/media/sounds/kingdom-sounds/magic-sparkle.mp3',
+                    'victory': '../assets/media/sounds/kingdom-sounds/fireworks-burst.mp3'
                 };
                 
-                audio.src = soundMap[soundType] || soundMap['success'];
-                audio.volume = 0.6;
-                audio.play().catch(e => console.log('تعذر تشغيل الصوت:', e));
+                audio.src = soundMap[soundType] || soundMap['cosmic-click'];
+                audio.volume = getSoundVolume(soundType);
+                
+                // Add fade in effect for some sounds
+                if (['start', 'phase-transition', 'new-round'].includes(soundType)) {
+                    audio.volume = 0;
+                    audio.play().then(() => {
+                        fadeInAudio(audio, getSoundVolume(soundType));
+                    });
+                } else {
+                    audio.play().catch(e => console.log('تعذر تشغيل الصوت:', soundType, e));
+                }
+                
             } catch (e) {
                 console.log('خطأ في تشغيل الصوت:', e);
             }
+        }
+
+        function getSoundVolume(soundType) {
+            const volumeMap = {
+                'start': 0.8,
+                'excellent': 0.9,
+                'very-good': 0.7,
+                'good': 0.6,
+                'weak': 0.5,
+                'elimination': 0.8,
+                'phase-transition': 0.9,
+                'new-round': 0.7,
+                'next-student': 0.4,
+                'cosmic-click': 0.3,
+                'hover': 0.2,
+                'modal-open': 0.5,
+                'modal-close': 0.4,
+                'lightning': 0.8,
+                'thunder': 0.9,
+                'magic': 0.6,
+                'victory': 1.0
+            };
+            return volumeMap[soundType] || 0.6;
+        }
+
+        function fadeInAudio(audio, targetVolume, duration = 1000) {
+            const steps = 20;
+            const stepTime = duration / steps;
+            const volumeStep = targetVolume / steps;
+            let currentStep = 0;
+            
+            const fadeInterval = setInterval(() => {
+                currentStep++;
+                audio.volume = Math.min(volumeStep * currentStep, targetVolume);
+                
+                if (currentStep >= steps) {
+                    clearInterval(fadeInterval);
+                }
+            }, stepTime);
+        }
+
+        function playSequentialSounds(sounds, delay = 500) {
+            sounds.forEach((sound, index) => {
+                setTimeout(() => {
+                    playSound(sound);
+                }, index * delay);
+            });
+        }
+
+        function playRandomLightningEffect() {
+            const effects = ['lightning', 'thunder', 'magic'];
+            const randomEffect = effects[Math.floor(Math.random() * effects.length)];
+            playSound(randomEffect);
         }
 
         function setupSoundSystem() {
@@ -1486,14 +1592,43 @@
                 testAudio.volume = 0.1;
                 testAudio.play().then(() => {
                     testAudio.pause();
-                    console.log('✅ نظام الصوت جاهز');
+                    audioEnabled = true;
+                    console.log('✅ نظام الصوت جاهز - مملكة البرق');
+                    
+                    // Play welcome sound
+                    setTimeout(() => {
+                        playSound('modal-open');
+                    }, 500);
+                    
                 }).catch(() => {
-                    console.log('⚠️ تعذر تشغيل الأصوات');
+                    console.log('⚠️ تعذر تشغيل الأصوات - وضع صامت');
                     audioEnabled = false;
                 });
             } catch (e) {
                 audioEnabled = false;
+                console.log('❌ نظام الصوت غير متاح');
             }
+            
+            // Add hover sounds to buttons
+            addHoverSounds();
+        }
+
+        function addHoverSounds() {
+            // Add hover sounds to all buttons
+            const buttons = document.querySelectorAll('.control-btn, .eval-btn, .modal-btn');
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', () => {
+                    if (audioEnabled) {
+                        playSound('hover');
+                    }
+                });
+                
+                button.addEventListener('click', () => {
+                    if (audioEnabled) {
+                        playSound('cosmic-click');
+                    }
+                });
+            });
         }
 
         // ===== DISPLAY FUNCTIONS =====
@@ -1587,7 +1722,12 @@
             document.getElementById('studentSection').style.display = 'block';
             
             displayStudentsList();
-            playSound('next');
+            
+            // Play student transition sound with lightning effect
+            playSound('next-student');
+            setTimeout(() => {
+                playRandomLightningEffect();
+            }, 300);
 
             // Show modal for new student
             showStudentModal(currentStudent);
@@ -1628,7 +1768,13 @@
             setTimeout(() => {
                 closeModal();
                 showCurrentStudent();
-            }, 2000);
+            }, 2500);
+            
+            // Play new round sound sequence
+            playSound('new-round');
+            setTimeout(() => {
+                playSound('thunder');
+            }, 800);
         }
 
         function showRoundStartModal() {
@@ -1657,7 +1803,9 @@
             `;
             
             modal.style.display = 'flex';
-            playSound('start');
+            
+            // Play round start sound
+            playSound('new-round');
         }
 
         function showStudentModal(student) {
@@ -1677,7 +1825,9 @@
             `;
             
             modal.style.display = 'flex';
-            playSound('start');
+            
+            // Play student modal sound
+            playSound('modal-open');
             
             setTimeout(() => {
                 closeModal();
@@ -1721,9 +1871,10 @@
             setTimeout(() => {
                 closeModal();
                 showCurrentStudent();
-            }, 3000);
+            }, 3500);
             
-            playSound('start');
+            // Play epic start sequence
+            playSequentialSounds(['start', 'lightning', 'thunder'], 600);
 
             // Update button
             const startBtn = document.querySelector('.start-competition');
@@ -1772,6 +1923,7 @@
             } else {
                 startTimer();
                 pauseBtn.innerHTML = '<i class="fas fa-pause"></i> إيقاف مؤقت';
+                playSound('cosmic-click');
             }
         }
 
@@ -1793,7 +1945,8 @@
             // Save results to kingdoms center
             saveResultsToKingdomsCenter(results);
             
-            playSound('end');
+            // Play end competition sound sequence
+            playSequentialSounds(['end', 'victory', 'magic'], 500);
         }
 
         function startTimer() {
@@ -1864,8 +2017,18 @@
             // Show evaluation result with round info
             showEvaluationResult(currentStudent, evaluation);
             
-            // Play appropriate sound
-            playSound(evaluation);
+            // Play appropriate sound with effects
+            if (evaluation === 'excellent') {
+                playSound('excellent');
+                setTimeout(() => playSound('victory'), 500);
+            } else if (evaluation === 'very-good') {
+                playSound('very-good');
+                setTimeout(() => playSound('magic'), 300);
+            } else if (evaluation === 'good') {
+                playSound('good');
+            } else if (evaluation === 'weak') {
+                playSound('weak');
+            }
             
             // Move to next student
             competitionData.currentStudentIndex++;
@@ -2073,6 +2236,7 @@
         function closeModal() {
             document.getElementById('resultModal').style.display = 'none';
             document.getElementById('competitionEndModal').style.display = 'none';
+            playSound('modal-close');
         }
 
         function showFinalResults(results) {
