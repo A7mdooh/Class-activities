@@ -4032,7 +4032,29 @@ let gameState = {
 
 // Function placeholders to maintain code structure
 function saveTeacherSession() {
-  // Session saving functionality removed
+  // حفظ بيانات شاملة للمعلم والطلاب
+  const sessionData = {
+    selectedClass: gameState.selectedClass,
+    selectedStudents: gameState.selectedStudents || selectedStudentsList || [],
+    timestamp: new Date().toISOString(),
+    gameStarted: gameState.gameStarted,
+    totalQuestions: gameState.totalQuestions,
+    currentLevel: gameState.currentLevel,
+    difficulty: gameState.difficulty,
+    sessionId: generateSessionId()
+  };
+  
+  // حفظ في عدة مفاتيح للتوافق
+  localStorage.setItem('kingdomGameState', JSON.stringify(sessionData));
+  localStorage.setItem('kingdomSettingsAdvanced', JSON.stringify(sessionData));
+  localStorage.setItem('teacherSession', JSON.stringify(sessionData));
+  
+  console.log('💾 تم حفظ جلسة المعلم:', sessionData);
+  return sessionData;
+}
+
+function generateSessionId() {
+  return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 }
 
 function loadTeacherSession() {
@@ -4740,14 +4762,42 @@ function startKingdomGame() {
   gameState.gameStarted = true;
   
   // 💾 حفظ جلسة المعلم تلقائياً
-  saveTeacherSession();
+  const sessionData = saveTeacherSession();
+  
+  // 🎵 تشغيل الأصوات المتتالية
+  playSoundSequence([
+    'achievement-unlock',
+    'crown-ceremony', 
+    'epic-victory'
+  ]);
   
   // 🚀 التوجه إلى مركز الممالك
-  showQuantumNotification('🚀 انطلاق!', 'جاري التوجه إلى مركز الممالك...', 'success');
+  showQuantumNotification('🚀 انطلاق!', 'جاري التوجه إلى مركز الممالك الذكية...', 'success');
+  
+  // إضافة تأثيرات بصرية
+  if (typeof confetti !== 'undefined') {
+    confetti({
+      particleCount: 150,
+      spread: 120,
+      origin: { y: 0.6 },
+      colors: ['#FFD700', '#FF6B35', '#9B59B6', '#3498DB']
+    });
+  }
   
   setTimeout(() => {
+    // نقل البيانات المؤكدة
+    const transferData = {
+      ...sessionData,
+      transferTime: new Date().toISOString(),
+      fromPage: 'challenges-ultimate',
+      toPage: 'kingdoms-center'
+    };
+    
+    localStorage.setItem('kingdomTransferData', JSON.stringify(transferData));
+    console.log('🚀 نقل البيانات لمركز الممالك:', transferData);
+    
     window.location.href = 'kingdoms-center.html';
-  }, 1500);
+  }, 2000);
 }
 
 // دالة إضافية لتوليد الفرق (إذا كانت مطلوبة في مكان آخر)
