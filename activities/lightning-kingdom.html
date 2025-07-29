@@ -1415,6 +1415,11 @@
             // Initialize smart notification system
             addNotificationStyles();
             
+            // Run sound system diagnosis
+            setTimeout(() => {
+                diagnoseSoundSystem();
+            }, 2000);
+            
             // Show welcome notification
             setTimeout(() => {
                 showSmartNotification(
@@ -1423,7 +1428,7 @@
                     'lightning',
                     5000
                 );
-            }, 1000);
+            }, 3000);
             
             // Setup event listeners for settings
             if (document.getElementById('autoCalculateThreshold')) {
@@ -1607,7 +1612,7 @@
                     // Smart notification sounds
                     'notification-pop': '../assets/media/sounds/kingdom-sounds/notification-pop.mp3',
                     'brain-activate': '../assets/media/sounds/kingdom-sounds/brain-activate.mp3',
-                    'epic-charge': '../assets/media/sounds/kingdom-sounds/epic-charge.mp3',
+                    'epic-charge-tutorial': '../assets/media/sounds/kingdom-sounds/energy-boost.mp3',
                     'countdown-tick': '../assets/media/sounds/kingdom-sounds/countdown-tick.mp3',
                     'ai-notification': '../assets/media/sounds/kingdom-sounds/ai-notification.mp3'
                 };
@@ -1665,12 +1670,23 @@
                 'thunder': 0.9,
                 'magic': 0.6,
                 'victory': 1.0,
+                'warning': 0.7,
+                'fail': 0.6,
+                'success': 0.8,
+                'end': 0.9,
+                'pause': 0.4,
                 // Celebration sounds
                 'celebration': 1.0,
                 'fanfare': 0.9,
                 'epic-finish': 1.0,
                 'confetti': 0.8,
-                'applause': 0.8
+                'applause': 0.8,
+                // Smart notification sounds
+                'notification-pop': 0.6,
+                'brain-activate': 0.7,
+                'epic-charge': 0.8,
+                'countdown-tick': 0.7,
+                'ai-notification': 0.6
             };
             return volumeMap[soundType] || 0.6;
         }
@@ -1706,30 +1722,58 @@
         }
 
         function setupSoundSystem() {
-            // Test audio support
+            // Test audio support with multiple sound files
             try {
                 const testAudio = new Audio();
-                testAudio.src = '../assets/media/sounds/kingdom-sounds/cosmic-click.mp3';
-                testAudio.volume = 0.1;
                 
-                const playPromise = testAudio.play();
-                if (playPromise !== undefined) {
-                    playPromise.then(() => {
-                        testAudio.pause();
-                        testAudio.currentTime = 0;
-                        audioEnabled = true;
-                        console.log('✅ نظام الصوت جاهز - مملكة البرق');
-                        
-                        // Play welcome sound after a short delay
-                        setTimeout(() => {
-                            playSound('modal-open');
-                        }, 500);
-                        
-                    }).catch((error) => {
-                        console.log('⚠️ تعذر تشغيل الأصوات - وضع صامت:', error.message);
+                // Test with a simple sound first
+                const testSounds = [
+                    '../assets/media/sounds/kingdom-sounds/cosmic-click.mp3',
+                    '../assets/media/sounds/kingdom-sounds/button-hover.mp3',
+                    '../assets/media/sounds/kingdom-sounds/notification-pop.mp3'
+                ];
+                
+                let soundTestIndex = 0;
+                
+                function testNextSound() {
+                    if (soundTestIndex >= testSounds.length) {
+                        console.log('❌ جميع اختبارات الصوت فشلت - وضع صامت');
                         audioEnabled = false;
-                    });
+                        return;
+                    }
+                    
+                    testAudio.src = testSounds[soundTestIndex];
+                    testAudio.volume = 0.1;
+                    
+                    const playPromise = testAudio.play();
+                    if (playPromise !== undefined) {
+                        playPromise.then(() => {
+                            testAudio.pause();
+                            testAudio.currentTime = 0;
+                            audioEnabled = true;
+                            console.log(`✅ نظام الصوت جاهز - مملكة البرق (اختبر ${testSounds[soundTestIndex]})`);
+                            
+                            // Test a few more sounds to verify system integrity
+                            testSoundIntegrity();
+                            
+                            // Play welcome sound after a short delay
+                            setTimeout(() => {
+                                playSound('modal-open');
+                            }, 500);
+                            
+                        }).catch((error) => {
+                            console.log(`⚠️ فشل اختبار الصوت ${soundTestIndex + 1}:`, error.message);
+                            soundTestIndex++;
+                            setTimeout(testNextSound, 100);
+                        });
+                    } else {
+                        soundTestIndex++;
+                        testNextSound();
+                    }
                 }
+                
+                testNextSound();
+                
             } catch (e) {
                 audioEnabled = false;
                 console.log('❌ نظام الصوت غير متاح:', e.message);
@@ -1739,6 +1783,48 @@
             setTimeout(() => {
                 addHoverSounds();
             }, 1000);
+        }
+
+        function testSoundIntegrity() {
+            const criticalSounds = [
+                'excellent', 'very-good', 'good', 'weak', 
+                'notification-pop', 'lightning', 'victory'
+            ];
+            
+            let workingSounds = 0;
+            let totalSounds = criticalSounds.length;
+            
+            criticalSounds.forEach(soundType => {
+                const testAudio = new Audio();
+                const soundMap = {
+                    'excellent': '../assets/media/sounds/kingdom-sounds/epic-victory.mp3',
+                    'very-good': '../assets/media/sounds/kingdom-sounds/achievement-unlock.mp3',
+                    'good': '../assets/media/sounds/kingdom-sounds/level-up.mp3',
+                    'weak': '../assets/media/sounds/kingdom-sounds/notification-pop.mp3',
+                    'notification-pop': '../assets/media/sounds/kingdom-sounds/notification-pop.mp3',
+                    'lightning': '../assets/media/sounds/kingdom-sounds/lightning-whoosh.mp3',
+                    'victory': '../assets/media/sounds/kingdom-sounds/fireworks-burst.mp3'
+                };
+                
+                testAudio.src = soundMap[soundType];
+                testAudio.volume = 0.05;
+                
+                testAudio.addEventListener('canplaythrough', () => {
+                    workingSounds++;
+                    console.log(`✅ صوت ${soundType} جاهز`);
+                    
+                    if (workingSounds === totalSounds) {
+                        console.log(`🔊 جميع الأصوات الأساسية جاهزة (${workingSounds}/${totalSounds})`);
+                    }
+                });
+                
+                testAudio.addEventListener('error', () => {
+                    console.warn(`⚠️ مشكلة في تحميل صوت ${soundType}`);
+                });
+                
+                // Trigger loading
+                testAudio.load();
+            });
         }
 
         function addHoverSounds() {
@@ -1765,6 +1851,138 @@
                 });
             });
         }
+
+        // ===== SOUND DIAGNOSTIC SYSTEM =====
+        function diagnoseSoundSystem() {
+            console.log('🔍 تشخيص النظام الصوتي - مملكة البرق...');
+            
+            const diagnosticReport = {
+                audioEnabled: audioEnabled,
+                userAgent: navigator.userAgent,
+                audioContext: typeof AudioContext !== 'undefined' || typeof webkitAudioContext !== 'undefined',
+                htmlAudio: typeof Audio !== 'undefined',
+                timestamp: new Date().toISOString(),
+                soundsAvailable: 0,
+                soundsTotal: 0
+            };
+            
+            console.log('📊 تقرير تشخيص الصوت:', diagnosticReport);
+            
+            // Test critical sound files
+            const criticalSounds = [
+                'excellent', 'very-good', 'good', 'weak', 'fail',
+                'notification-pop', 'lightning', 'victory', 'start', 'brain-activate'
+            ];
+            
+            console.log('🧪 اختبار الملفات الصوتية الأساسية...');
+            diagnosticReport.soundsTotal = criticalSounds.length;
+            
+            criticalSounds.forEach(soundType => {
+                testSoundFile(soundType, diagnosticReport);
+            });
+            
+            setTimeout(() => {
+                console.log(`📈 ملخص الأصوات: ${diagnosticReport.soundsAvailable}/${diagnosticReport.soundsTotal} متاح`);
+                if (diagnosticReport.soundsAvailable < diagnosticReport.soundsTotal) {
+                    console.warn('⚠️ بعض الأصوات غير متاحة - قد تحتاج للتحقق من مسارات الملفات');
+                }
+            }, 2000);
+            
+            return diagnosticReport;
+        }
+
+        function testSoundFile(soundType, report) {
+            const soundMap = {
+                'excellent': '../assets/media/sounds/kingdom-sounds/epic-victory.mp3',
+                'very-good': '../assets/media/sounds/kingdom-sounds/achievement-unlock.mp3',
+                'good': '../assets/media/sounds/kingdom-sounds/level-up.mp3',
+                'weak': '../assets/media/sounds/kingdom-sounds/notification-pop.mp3',
+                'fail': '../assets/media/sounds/wrong_answer.mp3',
+                'notification-pop': '../assets/media/sounds/kingdom-sounds/notification-pop.mp3',
+                'lightning': '../assets/media/sounds/kingdom-sounds/lightning-whoosh.mp3',
+                'victory': '../assets/media/sounds/kingdom-sounds/fireworks-burst.mp3',
+                'start': '../assets/media/sounds/kingdom-sounds/battle-horn.mp3',
+                'brain-activate': '../assets/media/sounds/kingdom-sounds/brain-activate.mp3'
+            };
+            
+            const soundPath = soundMap[soundType];
+            if (!soundPath) {
+                console.warn(`❌ ${soundType}: غير موجود في الخريطة`);
+                return;
+            }
+            
+            const testAudio = new Audio();
+            testAudio.src = soundPath;
+            
+            testAudio.addEventListener('canplaythrough', () => {
+                console.log(`✅ ${soundType}: جاهز للتشغيل`);
+                if (report) report.soundsAvailable++;
+            });
+            
+            testAudio.addEventListener('error', (e) => {
+                console.error(`❌ ${soundType}: فشل التحميل (${soundPath})`);
+            });
+            
+            // Trigger loading
+            testAudio.load();
+        }
+
+        function getSoundSystemStatus() {
+            const status = {
+                enabled: audioEnabled,
+                totalSounds: 25, // عدد الأصوات المختلفة
+                browser: navigator.userAgent.includes('Chrome') ? 'Chrome' : 
+                        navigator.userAgent.includes('Firefox') ? 'Firefox' : 
+                        navigator.userAgent.includes('Safari') ? 'Safari' : 'Other',
+                recommendations: []
+            };
+            
+            if (!audioEnabled) {
+                status.recommendations.push('قم بالنقر على الصفحة أولاً لتفعيل الأصوات');
+                status.recommendations.push('تأكد من أن الصوت غير مكتوم في المتصفح');
+            }
+            
+            return status;
+        }
+
+        // Global functions for testing and debugging
+        window.testSound = function(soundType = 'notification-pop') {
+            console.log(`🎵 اختبار صوت: ${soundType}`);
+            if (!audioEnabled) {
+                console.warn('❌ نظام الصوت غير مفعل');
+                return false;
+            }
+            playSound(soundType);
+            return true;
+        };
+
+        window.diagnoseSounds = function() {
+            return diagnoseSoundSystem();
+        };
+
+        window.getSoundStatus = function() {
+            const status = getSoundSystemStatus();
+            console.table(status);
+            return status;
+        };
+
+        window.testAllSounds = function() {
+            const sounds = ['excellent', 'very-good', 'good', 'weak', 'notification-pop', 'lightning', 'victory'];
+            let index = 0;
+            
+            function playNext() {
+                if (index < sounds.length) {
+                    console.log(`🎵 اختبار ${index + 1}/${sounds.length}: ${sounds[index]}`);
+                    playSound(sounds[index]);
+                    index++;
+                    setTimeout(playNext, 1500);
+                } else {
+                    console.log('✅ انتهى اختبار جميع الأصوات');
+                }
+            }
+            
+            playNext();
+        };
 
         // ===== DISPLAY FUNCTIONS =====
         function updateDisplay() {
@@ -2337,7 +2555,11 @@
             
             // Add ambient effect for better immersion
             setTimeout(() => {
-                playSound('cosmic-click');
+                if (soundType === 'epic-charge') {
+                    playSound('lightning'); // Use lightning instead of epic-charge-tutorial
+                } else {
+                    playSound('cosmic-click');
+                }
             }, 400);
         }
 
