@@ -985,6 +985,10 @@
                     <i class="fas fa-users"></i>
                     <span>الطلاب</span>
                 </button>
+                <button class="cosmic-btn" onclick="showDiagnosticInfo()" title="تشخيص البيانات">
+                    <i class="fas fa-bug"></i>
+                    <span>تشخيص</span>
+                </button>
                 <button class="cosmic-btn" onclick="exportData()" title="تصدير البيانات">
                     <i class="fas fa-download"></i>
                     <span>تصدير</span>
@@ -1385,36 +1389,152 @@
         // ===== LOAD CLASS AND STUDENTS DATA =====
         function loadClassAndStudentsData() {
             try {
-                // Load from challenges-ultimate.html storage
-                const ultimateSettings = JSON.parse(localStorage.getItem('kingdomSettingsAdvanced') || '{}');
-                const gameState = JSON.parse(localStorage.getItem('kingdomGameState') || '{}');
+                console.log('🔍 محاولة تحميل بيانات الطلاب...');
                 
-                if (gameState.selectedClass && gameState.selectedStudents && gameState.selectedStudents.length > 0) {
-                    classData = gameState.selectedClass;
-                    studentsData = gameState.selectedStudents;
-                    updateClassInfo();
-                    showGameGuide();
-                } else if (ultimateSettings.selectedClass && ultimateSettings.selectedStudents) {
-                    classData = ultimateSettings.selectedClass;
-                    studentsData = ultimateSettings.selectedStudents;
-                    updateClassInfo();
-                    showGameGuide();
-                } else {
-                    // Try alternative storage keys
-                    const altSettings = JSON.parse(localStorage.getItem('kingdomSettings') || '{}');
-                    if (altSettings.selectedClass) {
-                        classData = altSettings.selectedClass;
-                        studentsData = altSettings.selectedStudents || [];
-                        updateClassInfo();
-                        showGameGuide();
+                // طرق متعددة لتحميل البيانات
+                const dataSources = [
+                    // من challenges-ultimate.html
+                    {
+                        key: 'kingdomGameState',
+                        classField: 'selectedClass',
+                        studentsField: 'selectedStudents'
+                    },
+                    {
+                        key: 'kingdomGameState',
+                        classField: 'currentClass',
+                        studentsField: 'selectedStudents'
+                    },
+                    // من الإعدادات المتقدمة
+                    {
+                        key: 'kingdomSettingsAdvanced',
+                        classField: 'selectedClass',
+                        studentsField: 'selectedStudents'
+                    },
+                    // من الإعدادات العادية
+                    {
+                        key: 'kingdomSettings',
+                        classField: 'selectedClass',
+                        studentsField: 'selectedStudents'
+                    },
+                    // من بيانات الألعاب المختلفة
+                    {
+                        key: 'lightning-kingdom-data',
+                        classField: 'className',
+                        studentsField: 'students'
+                    }
+                ];
+                
+                let dataFound = false;
+                
+                for (const source of dataSources) {
+                    try {
+                        const data = JSON.parse(localStorage.getItem(source.key) || '{}');
+                        console.log(`🔍 فحص ${source.key}:`, data);
+                        
+                        if (data[source.classField] && data[source.studentsField]) {
+                            classData = data[source.classField];
+                            studentsData = Array.isArray(data[source.studentsField]) ? 
+                                         data[source.studentsField] : 
+                                         Object.values(data[source.studentsField]);
+                            
+                            if (studentsData.length > 0) {
+                                console.log(`✅ تم العثور على البيانات في ${source.key}`);
+                                console.log(`📚 الصف: ${classData}`);
+                                console.log(`👥 الطلاب: ${studentsData.length} طالب`);
+                                
+                                dataFound = true;
+                                updateClassInfo();
+                                showGameGuide();
+                                break;
+                            }
+                        }
+                    } catch (e) {
+                        console.log(`❌ خطأ في قراءة ${source.key}:`, e);
                     }
                 }
+                
+                if (!dataFound) {
+                    console.log('❌ لم يتم العثور على بيانات الطلاب في أي مصدر');
+                    console.log('📋 محتويات localStorage:');
+                    for (let i = 0; i < localStorage.length; i++) {
+                        const key = localStorage.key(i);
+                        if (key.includes('kingdom') || key.includes('class') || key.includes('student')) {
+                            console.log(`${key}:`, localStorage.getItem(key));
+                        }
+                    }
+                    
+                    // إظهار معلومات عدم وجود البيانات
+                    updateClassInfo();
+                    showGameGuide();
+                }
+                
             } catch (error) {
-                console.log('🔍 لم يتم العثور على بيانات الصف والطلاب');
+                console.error('❌ خطأ في تحميل بيانات الصف والطلاب:', error);
             }
         }
 
-        // ===== UPDATE CLASS INFO =====
+        // ===== DIAGNOSTIC FUNCTION =====
+        function diagnosisStudentData() {
+            console.log('🔍 === تشخيص شامل لبيانات الطلاب ===');
+            
+            // فحص جميع مفاتيح localStorage
+            const allKeys = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                allKeys.push(localStorage.key(i));
+            }
+            
+            console.log('📋 جميع مفاتيح localStorage:', allKeys);
+            
+            // فحص المفاتيح ذات الصلة
+            const relevantKeys = allKeys.filter(key => 
+                key.includes('kingdom') || 
+                key.includes('class') || 
+                key.includes('student') ||
+                key.includes('game')
+            );
+            
+            console.log('🎯 المفاتيح ذات الصلة:', relevantKeys);
+            
+            relevantKeys.forEach(key => {
+                try {
+                    const data = localStorage.getItem(key);
+                    const parsed = JSON.parse(data);
+                    console.log(`📁 ${key}:`, parsed);
+                    
+                    // البحث عن بيانات الصف والطلاب
+                    Object.keys(parsed).forEach(field => {
+                        if (field.toLowerCase().includes('class') || 
+                            field.toLowerCase().includes('student')) {
+                            console.log(`  🔎 ${field}:`, parsed[field]);
+                        }
+                    });
+                } catch (e) {
+                    console.log(`📁 ${key} (نص خام):`, localStorage.getItem(key));
+                }
+            });
+            
+            // عرض الحالة الحالية
+            console.log('📊 الحالة الحالية:');
+            console.log('  📚 classData:', classData);
+            console.log('  👥 studentsData:', studentsData);
+            console.log('  📈 studentsData.length:', studentsData ? studentsData.length : 'undefined');
+        }
+
+        // إضافة دالة للوحة المفاتيح للتشخيص
+        function showDiagnosticInfo() {
+            diagnosisStudentData();
+            
+            const diagnosticMessage = `
+🔍 تشخيص البيانات:
+📚 الصف الحالي: ${classData || 'غير محدد'}
+👥 عدد الطلاب: ${studentsData ? studentsData.length : 0}
+📊 الطلاب: ${studentsData ? studentsData.slice(0, 3).join('، ') + (studentsData.length > 3 ? '...' : '') : 'لا توجد'}
+
+ℹ️ تم عرض تفاصيل أكثر في وحدة التحكم (F12)
+            `;
+            
+            showNotification(diagnosticMessage, 'info', 8000);
+        }
         function updateClassInfo() {
             const classInfo = document.getElementById('classInfo');
             const className = document.getElementById('className');
@@ -1433,9 +1553,27 @@
                 }
                 
                 classInfo.style.display = 'block';
+                classInfo.style.background = 'linear-gradient(135deg, rgba(76, 175, 80, 0.2), rgba(139, 195, 74, 0.2))';
+                classInfo.style.borderColor = 'rgba(76, 175, 80, 0.5)';
                 
                 // Add welcome message
                 updateWelcomeMessage();
+                
+                console.log('✅ تم تحديث معلومات الصف بنجاح');
+            } else {
+                // إظهار حالة عدم وجود البيانات
+                className.textContent = '⚠️ لم يتم اختيار صف';
+                studentsCount.textContent = '👥 0 طالب مختار';
+                studentsPreview.innerHTML = `
+                    <span style="color: #FF9800;">⚠️ يرجى اختيار صف وطلاب من صفحة التحديات أولاً</span><br>
+                    <span style="font-size: 0.85rem; opacity: 0.8;">انقر على زر "تشخيص" لمزيد من المعلومات</span>
+                `;
+                
+                classInfo.style.display = 'block';
+                classInfo.style.background = 'linear-gradient(135deg, rgba(255, 152, 0, 0.2), rgba(255, 193, 7, 0.2))';
+                classInfo.style.borderColor = 'rgba(255, 152, 0, 0.5)';
+                
+                console.log('⚠️ لا توجد بيانات صف أو طلاب');
             }
         }
 
@@ -2110,7 +2248,14 @@
                         e.preventDefault();
                         exportData();
                         break;
+                    case 'd':
+                        e.preventDefault();
+                        showDiagnosticInfo();
+                        break;
                 }
+            } else if (e.key === 'F9') {
+                e.preventDefault();
+                showDiagnosticInfo();
             }
         });
 
@@ -2119,6 +2264,7 @@
         console.log('   Ctrl+R: تحديث البيانات');
         console.log('   Ctrl+H: العودة للرئيسية');
         console.log('   Ctrl+E: تصدير البيانات');
+        console.log('   Ctrl+D أو F9: تشخيص البيانات');
     </script>
 </body>
 </html>
