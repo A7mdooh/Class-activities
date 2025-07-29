@@ -132,6 +132,116 @@
             color: white;
         }
 
+        .settings-btn {
+            background: linear-gradient(45deg, #9c27b0, #673ab7);
+            color: white;
+        }
+
+        /* ===== SETTINGS MODAL STYLES ===== */
+        .settings-section {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border-left: 4px solid var(--lightning-primary);
+        }
+
+        .settings-section h4 {
+            color: var(--lightning-primary);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .setting-group {
+            margin: 1rem 0;
+        }
+
+        .setting-group label {
+            display: block;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .setting-group input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .setting-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--lightning-primary);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .slider-value {
+            text-align: center;
+            margin-top: 0.5rem;
+            font-size: 1.2rem;
+            color: var(--lightning-primary);
+            font-weight: 700;
+        }
+
+        .setting-group select {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .setting-group input[type="number"] {
+            width: 100px;
+            padding: 0.5rem;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            text-align: center;
+        }
+
+        .setting-group input[type="checkbox"] {
+            margin-left: 0.5rem;
+            transform: scale(1.2);
+        }
+
+        .competition-preview {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            border: 2px solid var(--lightning-primary);
+        }
+
+        .preview-title {
+            color: var(--lightning-primary);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .phase-info {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem;
+            margin: 0.25rem 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+            border-left: 3px solid var(--lightning-secondary);
+        }
+
         .control-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(0,0,0,0.3);
@@ -505,6 +615,18 @@
             color: var(--danger-color);
         }
 
+        /* ===== ANIMATIONS ===== */
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
         /* ===== RESPONSIVE DESIGN ===== */
         @media (max-width: 768px) {
             .main-timer {
@@ -609,6 +731,10 @@
 
         <!-- Competition Controls -->
         <div class="competition-controls">
+            <button class="control-btn settings-btn" onclick="showCompetitionSettings()">
+                <i class="fas fa-cog"></i>
+                إعدادات المنافسة
+            </button>
             <button class="control-btn start-competition" onclick="startCompetition()">
                 <i class="fas fa-play"></i>
                 بدء المنافسة
@@ -628,8 +754,66 @@
         </div>
     </div>
 
-    <!-- Modals -->
+    <!-- Competition Settings Modal -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-title">⚙️ إعدادات المنافسة</div>
+            <div class="modal-message">
+                <div class="settings-section">
+                    <h4>🎯 عدد الفرص لكل طالب</h4>
+                    <div class="setting-group">
+                        <input type="range" id="opportunitiesSlider" min="1" max="3" value="2" oninput="updateOpportunities(this.value)">
+                        <div class="slider-value">
+                            <span id="opportunitiesValue">2</span> فرصة لكل طالب
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h4>📊 نظام الاستبعاد</h4>
+                    <div class="setting-group">
+                        <label>نسبة الاستبعاد في كل مرحلة:</label>
+                        <select id="eliminationPercentage">
+                            <option value="25">25% - استبعاد خفيف</option>
+                            <option value="33">33% - استبعاد متوسط</option>
+                            <option value="50" selected>50% - استبعاد قوي</option>
+                            <option value="66">66% - استبعاد شديد</option>
+                        </select>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <label>
+                            <input type="checkbox" id="autoCalculateThreshold" checked>
+                            حساب تلقائي لعتبة النجاح حسب الأداء
+                        </label>
+                    </div>
+                    
+                    <div class="setting-group" id="manualThresholdGroup" style="display: none;">
+                        <label>الحد الأدنى للنقاط للنجاح:</label>
+                        <input type="number" id="manualThreshold" min="30" max="100" value="70">
+                    </div>
+                </div>
+                
+                <div class="competition-preview" id="competitionPreview">
+                    <!-- سيتم ملؤها بـ JavaScript -->
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn primary" onclick="applySettings()">تطبيق الإعدادات</button>
+                <button class="modal-btn secondary" onclick="closeSettingsModal()">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
     <div class="modal" id="resultModal">
+        <div class="modal-content">
+            <div class="modal-title" id="modalTitle">تقييم الطالب</div>
+            <div class="modal-message" id="modalMessage">تم تقييم الطالب بنجاح!</div>
+            <div class="modal-buttons">
+                <button class="modal-btn primary" onclick="closeModal()">متابعة</button>
+            </div>
+        </div>
+    </div>
         <div class="modal-content">
             <div class="modal-title" id="modalTitle">تقييم الطالب</div>
             <div class="modal-message" id="modalMessage">تم تقييم الطالب بنجاح!</div>
@@ -660,17 +844,374 @@
             isRunning: false,
             isPaused: false,
             results: [],
-            completedStudents: 0
+            completedStudents: 0,
+            currentRound: 1,
+            maxRounds: 2, // عدد الجولات لكل طالب
+            studentsPerRound: [],
+            eliminationSettings: {
+                opportunitiesPerStudent: 2, // 1-3 فرص لكل طالب
+                eliminationPercentage: 50, // نسبة الاستبعاد في كل مرحلة
+                minimumPassingScore: 70, // الحد الأدنى للنقاط للنجاح
+                autoCalculateThreshold: true // حساب تلقائي لعتبة النجاح
+            },
+            phases: [], // مراحل الاستبعاد
+            currentPhase: 1,
+            totalPhases: 1
         };
 
         let competitionTimer;
         let audioEnabled = true;
+
+        // ===== COMPETITION SETTINGS =====
+        function showCompetitionSettings() {
+            updateSettingsPreview();
+            document.getElementById('settingsModal').style.display = 'flex';
+            
+            // Set current values
+            document.getElementById('opportunitiesSlider').value = competitionData.eliminationSettings.opportunitiesPerStudent;
+            document.getElementById('opportunitiesValue').textContent = competitionData.eliminationSettings.opportunitiesPerStudent;
+            document.getElementById('eliminationPercentage').value = competitionData.eliminationSettings.eliminationPercentage;
+            document.getElementById('autoCalculateThreshold').checked = competitionData.eliminationSettings.autoCalculateThreshold;
+            document.getElementById('manualThreshold').value = competitionData.eliminationSettings.minimumPassingScore;
+            
+            toggleManualThreshold();
+        }
+
+        function closeSettingsModal() {
+            document.getElementById('settingsModal').style.display = 'none';
+        }
+
+        function updateOpportunities(value) {
+            document.getElementById('opportunitiesValue').textContent = value;
+            updateSettingsPreview();
+        }
+
+        function toggleManualThreshold() {
+            const isAuto = document.getElementById('autoCalculateThreshold').checked;
+            document.getElementById('manualThresholdGroup').style.display = isAuto ? 'none' : 'block';
+            updateSettingsPreview();
+        }
+
+        function applySettings() {
+            // Apply settings
+            competitionData.eliminationSettings.opportunitiesPerStudent = parseInt(document.getElementById('opportunitiesSlider').value);
+            competitionData.eliminationSettings.eliminationPercentage = parseInt(document.getElementById('eliminationPercentage').value);
+            competitionData.eliminationSettings.autoCalculateThreshold = document.getElementById('autoCalculateThreshold').checked;
+            competitionData.eliminationSettings.minimumPassingScore = parseInt(document.getElementById('manualThreshold').value);
+            
+            // Update max rounds
+            competitionData.maxRounds = competitionData.eliminationSettings.opportunitiesPerStudent;
+            
+            // Calculate elimination phases
+            calculateEliminationPhases();
+            
+            closeSettingsModal();
+            displayStudentsList();
+            
+            // Show confirmation
+            showNotification('✅ تم تطبيق الإعدادات بنجاح!', 'success');
+        }
+
+        function updateSettingsPreview() {
+            const totalStudents = competitionData.students.length;
+            const opportunities = parseInt(document.getElementById('opportunitiesSlider')?.value || competitionData.eliminationSettings.opportunitiesPerStudent);
+            const eliminationRate = parseInt(document.getElementById('eliminationPercentage')?.value || competitionData.eliminationSettings.eliminationPercentage);
+            
+            if (totalStudents === 0) {
+                document.getElementById('competitionPreview').innerHTML = `
+                    <div class="preview-title">📋 معاينة المنافسة</div>
+                    <div style="text-align: center; color: #ff9800;">
+                        لا توجد بيانات طلاب لعرض المعاينة<br>
+                        يرجى العودة لمركز الممالك وتحديد الطلاب
+                    </div>
+                `;
+                return;
+            }
+            
+            // Calculate phases
+            const phases = calculatePreviewPhases(totalStudents, eliminationRate);
+            
+            let previewHTML = `
+                <div class="preview-title">📋 معاينة المنافسة</div>
+                <div style="margin-bottom: 1rem; text-align: center;">
+                    <strong>${totalStudents}</strong> طالب • <strong>${opportunities}</strong> فرصة لكل طالب
+                </div>
+            `;
+            
+            phases.forEach((phase, index) => {
+                const isWinner = index === phases.length - 1;
+                previewHTML += `
+                    <div class="phase-info">
+                        <span>${isWinner ? '🏆 الفائزون' : `المرحلة ${index + 1}`}</span>
+                        <span style="color: ${isWinner ? '#4caf50' : '#ff9800'};">
+                            ${phase.remaining} طالب ${isWinner ? 'فائز' : 'متبقي'}
+                        </span>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('competitionPreview').innerHTML = previewHTML;
+        }
+
+        function calculatePreviewPhases(totalStudents, eliminationRate) {
+            const phases = [];
+            let currentStudents = totalStudents;
+            let phaseNumber = 1;
+            
+            while (currentStudents > Math.ceil(totalStudents * 0.1) && phaseNumber <= 5) { // حد أقصى 5 مراحل أو 10% من الطلاب
+                phases.push({
+                    phase: phaseNumber,
+                    starting: currentStudents,
+                    remaining: currentStudents
+                });
+                
+                // Calculate elimination for next phase
+                const toEliminate = Math.floor(currentStudents * (eliminationRate / 100));
+                currentStudents = Math.max(1, currentStudents - toEliminate);
+                phaseNumber++;
+            }
+            
+            // Final winners
+            phases.push({
+                phase: phaseNumber,
+                starting: currentStudents,
+                remaining: currentStudents,
+                isFinal: true
+            });
+            
+            return phases;
+        }
+
+        // ===== SMART ELIMINATION ALGORITHM =====
+        function calculateEliminationPhases() {
+            const totalStudents = competitionData.students.length;
+            const eliminationRate = competitionData.eliminationSettings.eliminationPercentage;
+            
+            competitionData.phases = [];
+            competitionData.totalPhases = 1;
+            
+            if (totalStudents <= 4) {
+                // Small groups - no elimination, just ranking
+                competitionData.phases = [{
+                    phaseNumber: 1,
+                    studentsAtStart: totalStudents,
+                    studentsAtEnd: totalStudents,
+                    eliminationThreshold: 0,
+                    isRanking: true
+                }];
+                return;
+            }
+            
+            let currentStudents = totalStudents;
+            let phaseNumber = 1;
+            const targetWinners = Math.max(2, Math.ceil(totalStudents * 0.1)); // 10% فائزين كحد أدنى
+            
+            while (currentStudents > targetWinners && phaseNumber <= 5) {
+                const toEliminate = Math.floor(currentStudents * (eliminationRate / 100));
+                const studentsRemaining = Math.max(targetWinners, currentStudents - toEliminate);
+                
+                competitionData.phases.push({
+                    phaseNumber: phaseNumber,
+                    studentsAtStart: currentStudents,
+                    studentsAtEnd: studentsRemaining,
+                    toEliminate: currentStudents - studentsRemaining,
+                    eliminationThreshold: 0, // سيتم حسابه ديناميكياً
+                    isActive: phaseNumber === 1
+                });
+                
+                currentStudents = studentsRemaining;
+                phaseNumber++;
+            }
+            
+            competitionData.totalPhases = competitionData.phases.length;
+            competitionData.currentPhase = 1;
+            
+            console.log('📊 مراحل الاستبعاد:', competitionData.phases);
+        }
+
+        function calculateDynamicThreshold() {
+            if (!competitionData.eliminationSettings.autoCalculateThreshold) {
+                return competitionData.eliminationSettings.minimumPassingScore;
+            }
+            
+            const currentPhaseData = competitionData.phases[competitionData.currentPhase - 1];
+            if (!currentPhaseData) return 70;
+            
+            // Get current scores of all active students
+            const activeStudents = competitionData.students.filter(s => s.status !== 'eliminated');
+            const scores = activeStudents.map(s => s.score || 0).sort((a, b) => b - a);
+            
+            if (scores.length === 0) return 70;
+            
+            // Calculate threshold based on target elimination
+            const targetRemaining = currentPhaseData.studentsAtEnd;
+            const thresholdIndex = Math.min(targetRemaining - 1, scores.length - 1);
+            
+            // Dynamic threshold with some flexibility
+            const dynamicThreshold = scores[thresholdIndex] || 0;
+            const minThreshold = Math.max(40, dynamicThreshold * 0.8); // حد أدنى 40 نقطة
+            const maxThreshold = Math.min(95, dynamicThreshold * 1.2); // حد أقصى 95 نقطة
+            
+            return Math.max(minThreshold, Math.min(maxThreshold, dynamicThreshold));
+        }
+
+        function checkPhaseElimination() {
+            const currentPhaseData = competitionData.phases[competitionData.currentPhase - 1];
+            if (!currentPhaseData || currentPhaseData.isRanking) return;
+            
+            // Check if all students have completed their opportunities for this phase
+            const activeStudents = competitionData.students.filter(s => s.status !== 'eliminated');
+            const allCompleted = activeStudents.every(student => 
+                (student.attempts || 0) >= competitionData.eliminationSettings.opportunitiesPerStudent
+            );
+            
+            if (!allCompleted) return;
+            
+            // Calculate elimination threshold
+            const threshold = calculateDynamicThreshold();
+            
+            // Sort students by score and eliminate bottom performers
+            const sortedStudents = activeStudents.sort((a, b) => (b.score || 0) - (a.score || 0));
+            const studentsToKeep = Math.min(currentPhaseData.studentsAtEnd, sortedStudents.length);
+            
+            // Eliminate students below threshold
+            sortedStudents.slice(studentsToKeep).forEach(student => {
+                eliminateStudentPhase(student, `المرحلة ${competitionData.currentPhase} - أقل من ${threshold} نقطة`);
+            });
+            
+            // Move to next phase if there are more phases
+            if (competitionData.currentPhase < competitionData.totalPhases) {
+                setTimeout(() => {
+                    startNextPhase();
+                }, 3000);
+            } else {
+                // Competition ended
+                setTimeout(() => {
+                    endCompetition();
+                }, 2000);
+            }
+        }
+
+        function eliminateStudentPhase(student, reason) {
+            student.status = 'eliminated';
+            student.eliminationReason = reason;
+            student.eliminationPhase = competitionData.currentPhase;
+            student.score = Math.max(0, (student.score || 0) - 20); // Small penalty
+            
+            showPhaseEliminationResult(student, reason);
+            playSound('warning');
+        }
+
+        function showPhaseEliminationResult(student, reason) {
+            const modal = document.getElementById('resultModal');
+            const title = document.getElementById('modalTitle');
+            const message = document.getElementById('modalMessage');
+            
+            title.innerHTML = '⚡ استبعاد المرحلة';
+            title.style.color = '#ff9800';
+            
+            message.innerHTML = `
+                <div style="font-size: 1.3rem; margin-bottom: 1rem; color: #ff9800;">
+                    <i class="fas fa-lightning-bolt"></i> ${student.name}
+                </div>
+                <div style="font-size: 1rem; color: #fff; margin-bottom: 1rem;">
+                    ${reason}
+                </div>
+                <div style="font-size: 0.9rem; color: #ccc;">
+                    المنافسة قوية في مملكة البرق!<br>
+                    فرصة أخرى في الأنشطة القادمة
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+            
+            setTimeout(() => {
+                closeModal();
+            }, 2500);
+        }
+
+        function startNextPhase() {
+            competitionData.currentPhase++;
+            competitionData.currentRound = 1;
+            competitionData.currentStudentIndex = 0;
+            
+            // Reset attempts for remaining students
+            competitionData.students.forEach(student => {
+                if (student.status !== 'eliminated') {
+                    student.attempts = 0;
+                    student.status = 'waiting';
+                }
+            });
+            
+            showPhaseTransitionModal();
+            
+            setTimeout(() => {
+                closeModal();
+                showCurrentStudent();
+            }, 3000);
+        }
+
+        function showPhaseTransitionModal() {
+            const modal = document.getElementById('resultModal');
+            const title = document.getElementById('modalTitle');
+            const message = document.getElementById('modalMessage');
+            
+            const currentPhaseData = competitionData.phases[competitionData.currentPhase - 1];
+            const remainingStudents = competitionData.students.filter(s => s.status !== 'eliminated').length;
+            
+            title.innerHTML = `🔥 المرحلة ${competitionData.currentPhase}`;
+            title.style.color = '#FFD700';
+            
+            message.innerHTML = `
+                <div style="font-size: 1.3rem; margin-bottom: 1rem; color: var(--lightning-primary);">
+                    <i class="fas fa-bolt"></i> مرحلة جديدة في مملكة البرق!
+                </div>
+                <div style="font-size: 1.1rem; color: #fff; margin-bottom: 1rem;">
+                    ${remainingStudents} طالب متبقي في المنافسة
+                </div>
+                <div style="font-size: 1rem; color: #ff9800;">
+                    المنافسة تزداد شراسة...<br>
+                    فقط الأفضل سيتأهل للمرحلة التالية!
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+            playSound('start');
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#4caf50' : type === 'error' ? '#f44336' : '#2196f3'};
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 10px;
+                z-index: 2000;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                animation: slideIn 0.3s ease-out;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
 
         // ===== INITIALIZATION =====
         document.addEventListener('DOMContentLoaded', function() {
             loadStudentsData();
             updateDisplay();
             setupSoundSystem();
+            
+            // Setup event listeners for settings
+            document.getElementById('autoCalculateThreshold').addEventListener('change', toggleManualThreshold);
+            document.getElementById('eliminationPercentage').addEventListener('change', updateSettingsPreview);
         });
 
         // ===== LOAD STUDENTS DATA =====
@@ -750,6 +1291,10 @@
             competitionData.students = shuffleArray(competitionData.students);
             
             console.log('✅ تم تحميل بيانات الطلاب:', competitionData.students);
+            
+            // Calculate elimination phases after loading students
+            calculateEliminationPhases();
+            
             displayStudentsList();
         }
 
@@ -841,10 +1386,18 @@
             competitionData.students.forEach((student, index) => {
                 const studentCard = document.createElement('div');
                 studentCard.className = `student-card ${student.status}`;
+                
+                // Count total attempts for this student
+                const attempts = (student.attempts || 0) + (student.status === 'completed' ? 1 : 0);
+                
                 studentCard.innerHTML = `
                     <div class="student-name">${student.name}</div>
                     <div class="student-status status-${student.status}">
                         ${getStatusText(student.status)}
+                    </div>
+                    <div style="font-size: 0.7rem; color: #ccc; margin-top: 0.25rem;">
+                        المحاولات: ${attempts}/${competitionData.eliminationSettings.opportunitiesPerStudent}
+                        ${competitionData.currentPhase > 1 ? ` | المرحلة ${competitionData.currentPhase}` : ''}
                     </div>
                     ${student.score > 0 ? `<div style="color: var(--lightning-primary); font-weight: 700; margin-top: 0.5rem;">${student.score} نقطة</div>` : ''}
                 `;
@@ -863,9 +1416,15 @@
         }
 
         function showCurrentStudent() {
+            // Check if we need to start a new round
             if (competitionData.currentStudentIndex >= competitionData.students.length) {
-                endCompetition();
-                return;
+                if (competitionData.currentRound < competitionData.maxRounds) {
+                    startNewRound();
+                    return;
+                } else {
+                    endCompetition();
+                    return;
+                }
             }
 
             const currentStudent = competitionData.students[competitionData.currentStudentIndex];
@@ -883,8 +1442,10 @@
             });
             currentStudent.status = 'current';
 
-            // Display current student
-            document.getElementById('currentStudentName').textContent = currentStudent.name;
+            // Display current student with round info and phase
+            const phaseInfo = competitionData.currentPhase > 1 ? ` - المرحلة ${competitionData.currentPhase}` : '';
+            document.getElementById('currentStudentName').textContent = 
+                `${currentStudent.name} - الجولة ${competitionData.currentRound}${phaseInfo}`;
             document.getElementById('studentSection').style.display = 'block';
             
             displayStudentsList();
@@ -892,6 +1453,73 @@
 
             // Show modal for new student
             showStudentModal(currentStudent);
+        }
+
+        function startNewRound() {
+            competitionData.currentRound++;
+            competitionData.currentStudentIndex = 0;
+            
+            // Reset students for new round (except eliminated ones)
+            competitionData.students.forEach(student => {
+                if (student.status !== 'eliminated') {
+                    student.status = 'waiting';
+                    // Keep previous scores but allow new attempts
+                }
+            });
+            
+            // Check if round exceeds opportunities per student
+            if (competitionData.currentRound > competitionData.eliminationSettings.opportunitiesPerStudent) {
+                checkPhaseElimination();
+                return;
+            }
+            
+            // Shuffle again for new round
+            const availableStudents = competitionData.students.filter(s => s.status !== 'eliminated');
+            const shuffledStudents = shuffleArray(availableStudents);
+            
+            // Replace available students in original array with shuffled order
+            let shuffleIndex = 0;
+            for (let i = 0; i < competitionData.students.length; i++) {
+                if (competitionData.students[i].status !== 'eliminated') {
+                    competitionData.students[i] = shuffledStudents[shuffleIndex];
+                    shuffleIndex++;
+                }
+            }
+            
+            showRoundStartModal();
+            setTimeout(() => {
+                closeModal();
+                showCurrentStudent();
+            }, 2000);
+        }
+
+        function showRoundStartModal() {
+            const modal = document.getElementById('resultModal');
+            const title = document.getElementById('modalTitle');
+            const message = document.getElementById('modalMessage');
+            
+            const activeStudents = competitionData.students.filter(s => s.status !== 'eliminated').length;
+            const currentPhaseData = competitionData.phases[competitionData.currentPhase - 1];
+            
+            title.innerHTML = `🔄 الجولة ${competitionData.currentRound}`;
+            message.innerHTML = `
+                <div style="font-size: 1.3rem; color: var(--lightning-primary); margin-bottom: 1rem;">
+                    <i class="fas fa-refresh"></i> جولة جديدة!
+                </div>
+                <div style="color: #fff;">
+                    ${activeStudents} طالب متبقي في المرحلة ${competitionData.currentPhase}<br>
+                    ${competitionData.eliminationSettings.opportunitiesPerStudent - competitionData.currentRound + 1} فرصة متبقية لكل طالب<br>
+                    الترتيب العشوائي الجديد جاهز
+                </div>
+                ${currentPhaseData && !currentPhaseData.isRanking ? `
+                    <div style="color: #ff9800; margin-top: 1rem; font-size: 0.9rem;">
+                        الهدف: ${currentPhaseData.studentsAtEnd} طالب للمرحلة التالية
+                    </div>
+                ` : ''}
+            `;
+            
+            modal.style.display = 'flex';
+            playSound('start');
         }
 
         function showStudentModal(student) {
@@ -925,25 +1553,72 @@
                 return;
             }
 
+            // Show settings first if not configured
+            if (!competitionData.phases || competitionData.phases.length === 0) {
+                showCompetitionSettings();
+                return;
+            }
+
             competitionData.isRunning = true;
             competitionData.isPaused = false;
             competitionData.currentStudentIndex = 0;
             competitionData.remainingTime = competitionData.totalTime;
+            competitionData.currentRound = 1;
+            competitionData.currentPhase = 1;
+            competitionData.studentsPerRound = [];
             
-            // Reset all students to waiting
+            // Reset all students to waiting and clear previous scores/attempts
             competitionData.students.forEach(student => {
-                if (student.status !== 'eliminated') {
-                    student.status = 'waiting';
-                }
+                student.status = 'waiting';
+                student.score = 0;
+                student.attempts = 0;
+                student.weakCount = 0;
+                student.eliminationReason = null;
+                student.eliminationPhase = null;
             });
 
             startTimer();
-            showCurrentStudent();
+            showCompetitionStartModal();
+            
+            setTimeout(() => {
+                closeModal();
+                showCurrentStudent();
+            }, 3000);
+            
             playSound('start');
 
             // Update button
             const startBtn = document.querySelector('.start-competition');
             startBtn.innerHTML = '<i class="fas fa-refresh"></i> إعادة البدء';
+        }
+
+        function showCompetitionStartModal() {
+            const modal = document.getElementById('resultModal');
+            const title = document.getElementById('modalTitle');
+            const message = document.getElementById('modalMessage');
+            
+            const totalStudents = competitionData.students.length;
+            const opportunities = competitionData.eliminationSettings.opportunitiesPerStudent;
+            const phases = competitionData.phases.length;
+            
+            title.innerHTML = '⚡ بداية معركة البرق!';
+            title.style.color = '#FFD700';
+            
+            message.innerHTML = `
+                <div style="font-size: 1.3rem; margin-bottom: 1rem; color: #FFD700;">
+                    <i class="fas fa-bolt"></i> المنافسة الآن مباشرة!
+                </div>
+                <div style="font-size: 1.1rem; color: #fff; margin-bottom: 1rem;">
+                    ${totalStudents} طالب متنافس<br>
+                    ${opportunities} فرصة لكل طالب<br>
+                    ${phases} مرحلة استبعاد
+                </div>
+                <div style="font-size: 1rem; color: #ff9800;">
+                    فقط الأقوى سينجو من معركة البرق!
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
         }
 
         function pauseCompetition() {
@@ -969,10 +1644,10 @@
             // Hide current student section
             document.getElementById('studentSection').style.display = 'none';
             
-            // Calculate final results
+            // Calculate final results (include all students with scores)
             const results = competitionData.students
-                .filter(s => s.status === 'completed')
-                .sort((a, b) => b.score - a.score);
+                .filter(s => s.score > 0 || s.status === 'completed')
+                .sort((a, b) => (b.score || 0) - (a.score || 0));
             
             // Show final results modal
             showFinalResults(results);
@@ -1008,6 +1683,10 @@
             const currentStudent = competitionData.students[competitionData.currentStudentIndex];
             if (!currentStudent) return;
 
+            // Track attempts
+            if (!currentStudent.attempts) currentStudent.attempts = 0;
+            currentStudent.attempts++;
+
             // Set evaluation and score
             currentStudent.evaluation = evaluation;
             currentStudent.status = 'completed';
@@ -1020,7 +1699,9 @@
                 'weak': 40
             };
             
-            currentStudent.score = scoreMap[evaluation];
+            // Add to existing score
+            const newScore = scoreMap[evaluation];
+            currentStudent.score = (currentStudent.score || 0) + newScore;
             
             // Track weak performances for auto-elimination
             if (!currentStudent.weakCount) currentStudent.weakCount = 0;
@@ -1042,7 +1723,7 @@
             
             competitionData.completedStudents++;
 
-            // Show evaluation result
+            // Show evaluation result with round info
             showEvaluationResult(currentStudent, evaluation);
             
             // Play appropriate sound
@@ -1054,8 +1735,11 @@
             setTimeout(() => {
                 if (competitionData.currentStudentIndex < competitionData.students.length && competitionData.remainingTime > 0) {
                     showCurrentStudent();
+                } else if (competitionData.currentRound < competitionData.eliminationSettings.opportunitiesPerStudent && competitionData.remainingTime > 0) {
+                    startNewRound();
                 } else {
-                    endCompetition();
+                    // Check for phase elimination
+                    checkPhaseElimination();
                 }
             }, 2000);
             
@@ -1219,6 +1903,8 @@
             };
             
             const evalData = evaluationMap[evaluation];
+            const currentScore = student.score || 0;
+            const attempts = student.attempts || 1;
             
             title.innerHTML = `${evalData.icon} ${evalData.text}`;
             title.style.color = evalData.color;
@@ -1227,9 +1913,15 @@
                 <div style="font-size: 1.3rem; margin-bottom: 1rem;">
                     الطالب: <strong>${student.name}</strong>
                 </div>
-                <div style="font-size: 1.5rem; color: ${evalData.color}; font-weight: 700;">
-                    النقاط: ${student.score}
+                <div style="font-size: 1.2rem; margin-bottom: 0.5rem; color: #666;">
+                    المحاولة ${attempts} - الجولة ${competitionData.currentRound}/${competitionData.eliminationSettings.opportunitiesPerStudent}
+                    ${competitionData.currentPhase > 1 ? ` - المرحلة ${competitionData.currentPhase}` : ''}
                 </div>
+                <div style="font-size: 1.5rem; color: ${evalData.color}; font-weight: 700;">
+                    إجمالي النقاط: ${currentScore}
+                </div>
+                ${evaluation === 'weak' && student.weakCount >= 3 ? 
+                    '<div style="color: #f44336; margin-top: 0.5rem; font-weight: bold;">⚠️ خطر الاستبعاد!</div>' : ''}
             `;
             
             modal.style.display = 'flex';
