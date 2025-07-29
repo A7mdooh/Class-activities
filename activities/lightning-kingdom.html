@@ -135,111 +135,173 @@
         .settings-btn {
             background: linear-gradient(45deg, #9c27b0, #673ab7);
             color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .settings-btn:hover {
+            background: linear-gradient(45deg, #673ab7, #9c27b0);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(156, 39, 176, 0.4);
+        }
+
+        .settings-btn:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.3s ease;
+        }
+
+        .settings-btn:hover:before {
+            width: 100%;
+            height: 100%;
         }
 
         /* ===== SETTINGS MODAL STYLES ===== */
         .settings-section {
             margin: 1.5rem 0;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
             border-left: 4px solid var(--lightning-primary);
+            backdrop-filter: blur(10px);
         }
 
         .settings-section h4 {
             color: var(--lightning-primary);
             margin-bottom: 1rem;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
         }
 
         .setting-group {
-            margin: 1rem 0;
+            margin: 1.5rem 0;
         }
 
         .setting-group label {
             display: block;
             color: #fff;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
             font-weight: 600;
+            font-size: 1rem;
         }
 
         .setting-group input[type="range"] {
             width: 100%;
-            height: 8px;
+            height: 10px;
             border-radius: 5px;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.3);
             outline: none;
             -webkit-appearance: none;
             appearance: none;
+            cursor: pointer;
         }
 
         .setting-group input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 20px;
-            height: 20px;
+            width: 25px;
+            height: 25px;
             border-radius: 50%;
             background: var(--lightning-primary);
             cursor: pointer;
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+            border: 3px solid #fff;
+        }
+
+        .setting-group input[type="range"]::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: var(--lightning-primary);
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+            border: 3px solid #fff;
         }
 
         .slider-value {
             text-align: center;
-            margin-top: 0.5rem;
-            font-size: 1.2rem;
+            margin-top: 1rem;
+            font-size: 1.5rem;
             color: var(--lightning-primary);
             font-weight: 700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
 
         .setting-group select {
             width: 100%;
-            padding: 0.5rem;
-            border-radius: 8px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 10px;
+            border: 2px solid var(--lightning-primary);
+            background: rgba(0, 0, 0, 0.5);
             color: white;
             font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .setting-group select:focus {
+            outline: none;
+            border-color: var(--lightning-secondary);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
         }
 
         .setting-group input[type="number"] {
-            width: 100px;
-            padding: 0.5rem;
+            width: 120px;
+            padding: 0.8rem;
             border-radius: 8px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--lightning-primary);
+            background: rgba(0, 0, 0, 0.5);
             color: white;
             text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
         }
 
         .setting-group input[type="checkbox"] {
-            margin-left: 0.5rem;
-            transform: scale(1.2);
+            margin-left: 1rem;
+            transform: scale(1.5);
+            accent-color: var(--lightning-primary);
         }
 
         .competition-preview {
-            margin-top: 1.5rem;
-            padding: 1rem;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
             border: 2px solid var(--lightning-primary);
+            backdrop-filter: blur(10px);
         }
 
         .preview-title {
             color: var(--lightning-primary);
             font-weight: 700;
-            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
             text-align: center;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
 
         .phase-info {
             display: flex;
             justify-content: space-between;
-            padding: 0.5rem;
-            margin: 0.25rem 0;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 5px;
-            border-left: 3px solid var(--lightning-secondary);
+            align-items: center;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid var(--lightning-secondary);
+        }
+
+        .phase-info:last-child {
+            border-left-color: #4caf50;
+            background: rgba(76, 175, 80, 0.2);
         }
 
         .control-btn:hover {
@@ -471,11 +533,13 @@
             border: 3px solid var(--lightning-primary);
             border-radius: 25px;
             padding: 3rem;
-            max-width: 600px;
+            max-width: 700px;
+            max-height: 90vh;
             width: 90%;
             text-align: center;
             box-shadow: 0 0 50px rgba(255, 215, 0, 0.3);
             animation: modalSlideIn 0.5s ease-out;
+            overflow-y: auto;
         }
 
         @keyframes modalSlideIn {
@@ -501,6 +565,7 @@
             color: white;
             margin: 1.5rem 0;
             line-height: 1.6;
+            text-align: right;
         }
 
         .modal-buttons {
@@ -757,50 +822,70 @@
     <!-- Competition Settings Modal -->
     <div class="modal" id="settingsModal">
         <div class="modal-content">
-            <div class="modal-title">⚙️ إعدادات المنافسة</div>
+            <div class="modal-title">⚙️ إعدادات المنافسة المتقدمة</div>
             <div class="modal-message">
                 <div class="settings-section">
                     <h4>🎯 عدد الفرص لكل طالب</h4>
                     <div class="setting-group">
+                        <label>اختر عدد الفرص التي سيحصل عليها كل طالب:</label>
                         <input type="range" id="opportunitiesSlider" min="1" max="3" value="2" oninput="updateOpportunities(this.value)">
                         <div class="slider-value">
                             <span id="opportunitiesValue">2</span> فرصة لكل طالب
+                        </div>
+                        <div style="font-size: 0.9rem; color: #ccc; margin-top: 0.5rem;">
+                            كلما زاد العدد، كانت المنافسة أكثر عدالة
                         </div>
                     </div>
                 </div>
                 
                 <div class="settings-section">
-                    <h4>📊 نظام الاستبعاد</h4>
+                    <h4>📊 نظام الاستبعاد التدريجي</h4>
                     <div class="setting-group">
                         <label>نسبة الاستبعاد في كل مرحلة:</label>
-                        <select id="eliminationPercentage">
-                            <option value="25">25% - استبعاد خفيف</option>
-                            <option value="33">33% - استبعاد متوسط</option>
-                            <option value="50" selected>50% - استبعاد قوي</option>
-                            <option value="66">66% - استبعاد شديد</option>
+                        <select id="eliminationPercentage" onchange="updateSettingsPreview()">
+                            <option value="25">25% - استبعاد خفيف (مناسب للمراجعة)</option>
+                            <option value="33">33% - استبعاد متوسط (متوازن)</option>
+                            <option value="50" selected>50% - استبعاد قوي (تنافسي)</option>
+                            <option value="66">66% - استبعاد شديد (للأقوياء فقط)</option>
                         </select>
+                        <div style="font-size: 0.9rem; color: #ccc; margin-top: 0.5rem;">
+                            يحدد كم طالب سيتم استبعادهم في كل مرحلة
+                        </div>
                     </div>
                     
                     <div class="setting-group">
                         <label>
-                            <input type="checkbox" id="autoCalculateThreshold" checked>
-                            حساب تلقائي لعتبة النجاح حسب الأداء
+                            <input type="checkbox" id="autoCalculateThreshold" checked onchange="toggleManualThreshold()">
+                            حساب تلقائي لعتبة النجاح حسب أداء الطلاب
                         </label>
+                        <div style="font-size: 0.9rem; color: #ccc; margin-top: 0.5rem;">
+                            ينصح بتفعيل هذا الخيار للحصول على أفضل النتائج
+                        </div>
                     </div>
                     
                     <div class="setting-group" id="manualThresholdGroup" style="display: none;">
                         <label>الحد الأدنى للنقاط للنجاح:</label>
-                        <input type="number" id="manualThreshold" min="30" max="100" value="70">
+                        <input type="number" id="manualThreshold" min="30" max="100" value="70" step="5">
+                        <div style="font-size: 0.9rem; color: #ccc; margin-top: 0.5rem;">
+                            الطلاب الذين يحصلون على أقل من هذا العدد سيتم استبعادهم
+                        </div>
                     </div>
                 </div>
                 
                 <div class="competition-preview" id="competitionPreview">
-                    <!-- سيتم ملؤها بـ JavaScript -->
+                    <div class="preview-title">📋 معاينة المنافسة</div>
+                    <div style="text-align: center; color: #ff9800;">
+                        جارٍ تحميل المعاينة...
+                    </div>
                 </div>
             </div>
             <div class="modal-buttons">
-                <button class="modal-btn primary" onclick="applySettings()">تطبيق الإعدادات</button>
-                <button class="modal-btn secondary" onclick="closeSettingsModal()">إلغاء</button>
+                <button class="modal-btn primary" onclick="applySettings()">
+                    <i class="fas fa-check"></i> تطبيق الإعدادات وبدء المنافسة
+                </button>
+                <button class="modal-btn secondary" onclick="closeSettingsModal()">
+                    <i class="fas fa-times"></i> إلغاء
+                </button>
             </div>
         </div>
     </div>
@@ -864,7 +949,7 @@
 
         // ===== COMPETITION SETTINGS =====
         function showCompetitionSettings() {
-            updateSettingsPreview();
+            // Show modal first
             document.getElementById('settingsModal').style.display = 'flex';
             
             // Set current values
@@ -874,7 +959,16 @@
             document.getElementById('autoCalculateThreshold').checked = competitionData.eliminationSettings.autoCalculateThreshold;
             document.getElementById('manualThreshold').value = competitionData.eliminationSettings.minimumPassingScore;
             
+            // Update display
             toggleManualThreshold();
+            
+            // Update preview after a short delay to ensure DOM is ready
+            setTimeout(() => {
+                updateSettingsPreview();
+            }, 100);
+            
+            // Play settings sound
+            playSound('cosmic-click');
         }
 
         function closeSettingsModal() {
@@ -883,7 +977,10 @@
 
         function updateOpportunities(value) {
             document.getElementById('opportunitiesValue').textContent = value;
-            updateSettingsPreview();
+            // Update preview after a short delay for smooth UI
+            setTimeout(() => {
+                updateSettingsPreview();
+            }, 50);
         }
 
         function toggleManualThreshold() {
@@ -920,9 +1017,10 @@
             if (totalStudents === 0) {
                 document.getElementById('competitionPreview').innerHTML = `
                     <div class="preview-title">📋 معاينة المنافسة</div>
-                    <div style="text-align: center; color: #ff9800;">
-                        لا توجد بيانات طلاب لعرض المعاينة<br>
-                        يرجى العودة لمركز الممالك وتحديد الطلاب
+                    <div style="text-align: center; color: #ff9800; padding: 2rem;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i><br>
+                        <strong>لا توجد بيانات طلاب لعرض المعاينة</strong><br>
+                        <span style="font-size: 0.9rem;">يرجى العودة لمركز الممالك وتحديد الطلاب أولاً</span>
                     </div>
                 `;
                 return;
@@ -932,23 +1030,63 @@
             const phases = calculatePreviewPhases(totalStudents, eliminationRate);
             
             let previewHTML = `
-                <div class="preview-title">📋 معاينة المنافسة</div>
-                <div style="margin-bottom: 1rem; text-align: center;">
-                    <strong>${totalStudents}</strong> طالب • <strong>${opportunities}</strong> فرصة لكل طالب
+                <div class="preview-title">📋 معاينة المنافسة التفصيلية</div>
+                <div style="margin-bottom: 1.5rem; text-align: center; background: rgba(255,215,0,0.1); padding: 1rem; border-radius: 10px;">
+                    <div style="font-size: 1.1rem; color: var(--lightning-primary); margin-bottom: 0.5rem;">
+                        <i class="fas fa-users"></i> <strong>${totalStudents}</strong> طالب متنافس
+                    </div>
+                    <div style="font-size: 1rem; color: #fff;">
+                        <i class="fas fa-redo"></i> <strong>${opportunities}</strong> فرصة لكل طالب
+                    </div>
+                </div>
+                
+                <div style="text-align: right; margin-bottom: 1rem;">
+                    <strong style="color: var(--lightning-primary);">🏟️ مراحل المنافسة:</strong>
                 </div>
             `;
             
             phases.forEach((phase, index) => {
                 const isWinner = index === phases.length - 1;
+                const eliminatedCount = index < phases.length - 1 ? phase.starting - phases[index + 1].starting : 0;
+                
                 previewHTML += `
                     <div class="phase-info">
-                        <span>${isWinner ? '🏆 الفائزون' : `المرحلة ${index + 1}`}</span>
-                        <span style="color: ${isWinner ? '#4caf50' : '#ff9800'};">
-                            ${phase.remaining} طالب ${isWinner ? 'فائز' : 'متبقي'}
-                        </span>
+                        <div>
+                            <span style="font-weight: 700;">
+                                ${isWinner ? '🏆 الفائزون النهائيون' : `⚡ المرحلة ${index + 1}`}
+                            </span>
+                            ${!isWinner && eliminatedCount > 0 ? 
+                                `<div style="font-size: 0.8rem; color: #ff9800; margin-top: 0.25rem;">
+                                    سيتم استبعاد ${eliminatedCount} طالب
+                                </div>` : ''}
+                        </div>
+                        <div style="text-align: left;">
+                            <span style="color: ${isWinner ? '#4caf50' : '#FFD700'}; font-weight: 700; font-size: 1.1rem;">
+                                ${phase.remaining} طالب
+                            </span>
+                            <div style="font-size: 0.8rem; color: #ccc;">
+                                ${isWinner ? 'مؤهلون للفوز' : 'ينتقلون للمرحلة التالية'}
+                            </div>
+                        </div>
                     </div>
                 `;
             });
+            
+            // Add summary
+            const totalEliminated = totalStudents - phases[phases.length - 1].remaining;
+            const winnerPercentage = Math.round((phases[phases.length - 1].remaining / totalStudents) * 100);
+            
+            previewHTML += `
+                <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 10px; text-align: center;">
+                    <div style="color: #ff9800; margin-bottom: 0.5rem;">
+                        <i class="fas fa-chart-pie"></i> ملخص النتائج المتوقعة
+                    </div>
+                    <div style="font-size: 0.9rem; color: #ccc;">
+                        سيتم استبعاد <strong style="color: #f44336;">${totalEliminated}</strong> طالب<br>
+                        سيفوز <strong style="color: #4caf50;">${phases[phases.length - 1].remaining}</strong> طالب (${winnerPercentage}%)
+                    </div>
+                </div>
+            `;
             
             document.getElementById('competitionPreview').innerHTML = previewHTML;
         }
