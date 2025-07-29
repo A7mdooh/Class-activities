@@ -285,6 +285,11 @@
             color: white;
         }
 
+        .eval-btn.very-good {
+            background: linear-gradient(45deg, #00bcd4, #4caf50);
+            color: white;
+        }
+
         .eval-btn.good {
             background: linear-gradient(45deg, #2196f3, #03dac6);
             color: white;
@@ -292,11 +297,6 @@
 
         .eval-btn.weak {
             background: linear-gradient(45deg, #ff9800, #ffc107);
-            color: white;
-        }
-
-        .eval-btn.fail {
-            background: linear-gradient(45deg, #f44336, #e91e63);
             color: white;
         }
 
@@ -577,17 +577,17 @@
                     <i class="fas fa-star"></i>
                     ممتاز (100 نقطة)
                 </button>
-                <button class="eval-btn good" onclick="evaluateStudent('good')">
+                <button class="eval-btn very-good" onclick="evaluateStudent('very-good')">
                     <i class="fas fa-thumbs-up"></i>
-                    جيد (75 نقطة)
+                    جيد جداً (85 نقطة)
+                </button>
+                <button class="eval-btn good" onclick="evaluateStudent('good')">
+                    <i class="fas fa-check"></i>
+                    جيد (70 نقطة)
                 </button>
                 <button class="eval-btn weak" onclick="evaluateStudent('weak')">
                     <i class="fas fa-hand-paper"></i>
-                    ضعيف (50 نقطة)
-                </button>
-                <button class="eval-btn fail" onclick="evaluateStudent('fail')">
-                    <i class="fas fa-times"></i>
-                    راسب (0 نقطة)
+                    ضعيف (40 نقطة)
                 </button>
             </div>
             
@@ -778,9 +778,9 @@
                     'start': '../assets/media/sounds/kingdom-sounds/battle-horn.mp3',
                     'success': '../assets/media/sounds/kingdom-sounds/achievement-unlock.mp3',
                     'excellent': '../assets/media/sounds/kingdom-sounds/epic-victory.mp3',
+                    'very-good': '../assets/media/sounds/kingdom-sounds/achievement-unlock.mp3',
                     'good': '../assets/media/sounds/kingdom-sounds/level-up.mp3',
                     'weak': '../assets/media/sounds/kingdom-sounds/notification-pop.mp3',
-                    'fail': '../assets/media/sounds/kingdom-sounds/wrong_answer.mp3',
                     'next': '../assets/media/sounds/kingdom-sounds/cosmic-click.mp3',
                     'end': '../assets/media/sounds/kingdom-sounds/crown-ceremony.mp3',
                     'pause': '../assets/media/sounds/kingdom-sounds/button-hover.mp3',
@@ -1015,9 +1015,9 @@
             
             const scoreMap = {
                 'excellent': 100,
-                'good': 75,
-                'weak': 50,
-                'fail': 0
+                'very-good': 85,
+                'good': 70,
+                'weak': 40
             };
             
             currentStudent.score = scoreMap[evaluation];
@@ -1119,9 +1119,9 @@
             
             const evaluationMap = {
                 'excellent': { text: 'ممتاز!', icon: '🌟', color: '#4caf50' },
-                'good': { text: 'جيد!', icon: '👍', color: '#2196f3' },
-                'weak': { text: 'ضعيف', icon: '👋', color: '#ff9800' },
-                'fail': { text: 'راسب', icon: '❌', color: '#f44336' }
+                'very-good': { text: 'جيد جداً!', icon: '✨', color: '#00bcd4' },
+                'good': { text: 'جيد!', icon: '�', color: '#2196f3' },
+                'weak': { text: 'ضعيف', icon: '👋', color: '#ff9800' }
             };
             
             const evalData = evaluationMap[evaluation];
@@ -1302,16 +1302,21 @@
                                 if (player.currentStreak > (player.bestStreak || 0)) {
                                     player.bestStreak = player.currentStreak;
                                 }
+                            } else if (student.evaluation === 'very-good') {
+                                player.gamesWon = (player.gamesWon || 0) + 1;
+                                player.questionsAnswered = (player.questionsAnswered || 0) + 1;
+                                player.correctAnswers = (player.correctAnswers || 0) + 1;
+                                player.currentStreak = (player.currentStreak || 0) + 1;
+                                if (player.currentStreak > (player.bestStreak || 0)) {
+                                    player.bestStreak = player.currentStreak;
+                                }
                             } else if (student.evaluation === 'good') {
                                 player.questionsAnswered = (player.questionsAnswered || 0) + 1;
                                 player.correctAnswers = (player.correctAnswers || 0) + 1;
                             } else if (student.evaluation === 'weak') {
                                 player.questionsAnswered = (player.questionsAnswered || 0) + 1;
                                 // No correct answer added for weak performance
-                            } else if (student.evaluation === 'fail') {
-                                player.gamesLost = (player.gamesLost || 0) + 1;
-                                player.questionsAnswered = (player.questionsAnswered || 0) + 1;
-                                player.currentStreak = 0; // Reset streak
+                                player.currentStreak = Math.max(0, (player.currentStreak || 0) - 1);
                             }
                             
                             // Add score and experience (only for non-eliminated)
