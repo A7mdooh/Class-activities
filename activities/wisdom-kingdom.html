@@ -12,12 +12,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --wisdom-primary: #9B59B6;
+            --wisdom-primary: #2E8B57;
             --wisdom-secondary: #3498DB;
             --wisdom-tertiary: #E67E22;
             --wisdom-dark: #2C3E50;
-            --wisdom-bg: linear-gradient(135deg, #8360c3 0%, #2ebf91 100%);
-            --wisdom-glow: 0 0 30px rgba(155, 89, 182, 0.3);
+            --wisdom-bg: linear-gradient(135deg, #2E8B57 0%, #20B2AA 100%);
+            --wisdom-glow: 0 0 30px rgba(46, 139, 87, 0.3);
             --success-color: #27AE60;
             --warning-color: #F39C12;
             --danger-color: #E74C3C;
@@ -562,7 +562,7 @@
             padding: 0.8rem;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 8px;
-            border-left: 4px solid #9b59b6;
+            border-left: 4px solid #2E8B57;
         }
 
         .point-row span:first-child {
@@ -581,14 +581,14 @@
         }
 
         .point-row span:last-child {
-            color: #9b59b6;
+            color: #2E8B57;
             font-weight: bold;
         }
 
         /* معاينة الحكمة */
         .wisdom-preview {
-            background: linear-gradient(135deg, rgba(155, 89, 182, 0.2), rgba(142, 68, 173, 0.2));
-            border: 2px solid #9b59b6;
+            background: linear-gradient(135deg, rgba(46, 139, 87, 0.2), rgba(32, 178, 170, 0.2));
+            border: 2px solid #2E8B57;
             border-radius: 15px;
             padding: 1.5rem;
             margin-top: 1.5rem;
@@ -598,7 +598,7 @@
             text-align: center;
             font-size: 1.2rem;
             font-weight: bold;
-            color: #9b59b6;
+            color: #2E8B57;
             margin-bottom: 1rem;
         }
 
@@ -608,7 +608,7 @@
             padding: 1rem;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
-            border-left: 4px solid #9b59b6;
+            border-left: 4px solid #2E8B57;
             color: #ffffff;
         }
 
@@ -632,7 +632,7 @@
         .slider-value {
             text-align: center;
             margin: 0.5rem 0;
-            color: #9b59b6;
+            color: #2E8B57;
             font-weight: bold;
         }
 
@@ -1179,6 +1179,9 @@
             <div class="timer-label">⏰ وقت التأمل والحكمة</div>
         </div>
 
+        <!-- Phase Information -->
+        <div id="phaseInfo" style="margin: 1rem 0;"></div>
+
         <!-- Wisdom Quote Section -->
         <div class="wisdom-quotes" id="wisdomQuote">
             "الحكمة هي معرفة ما يجب فعله تالياً، والمهارة هي معرفة كيف تفعله، والفضيلة هي فعله"
@@ -1189,7 +1192,7 @@
             <div class="student-spotlight" id="currentStudentName">اسم الطالب</div>
             
             <div class="oral-question-prompt">
-                <div style="font-size: 1.8rem; color: #9B59B6; margin-bottom: 1rem;">
+                <div style="font-size: 1.8rem; color: #2E8B57; margin-bottom: 1rem;">
                     <i class="fas fa-microphone"></i> سؤال شفوي للطالب
                 </div>
                 <div style="font-size: 1.2rem; color: #fff; line-height: 1.6;">
@@ -1348,6 +1351,53 @@
                 </div>
                 
                 <div class="settings-section">
+                    <h4>🏆 التصفيات المرحلية (مثل مملكة البرق)</h4>
+                    <div class="setting-group">
+                        <label>
+                            <input type="checkbox" id="enablePhaseElimination" checked onchange="togglePhaseEliminationSettings()">
+                            تفعيل نظام التصفيات المرحلية المتقدم
+                        </label>
+                        <div style="font-size: 0.9rem; color: #ccc; margin-top: 0.5rem;">
+                            تطبيق نظام مراحل تصفيات تدريجية للوصول للأفضل (مثل دوريات كرة القدم)
+                        </div>
+                    </div>
+                    
+                    <div class="setting-group" id="phaseEliminationSettings">
+                        <label>نسبة الاستبعاد في كل مرحلة:</label>
+                        <select id="eliminationPercentage" onchange="updateSettingsPreview()">
+                            <option value="20">20% - تصفيات خفيفة</option>
+                            <option value="30" selected>30% - تصفيات متوسطة</option>
+                            <option value="40">40% - تصفيات قوية</option>
+                            <option value="50">50% - تصفيات حادة</option>
+                        </select>
+                        <div style="font-size: 0.9rem; color: #ccc; margin-top: 0.5rem;">
+                            النسبة المستبعدة من كل مرحلة للوصول للطلاب الأفضل
+                        </div>
+                    </div>
+                    
+                    <div class="setting-group" id="questionsPerPhaseGroup">
+                        <label>عدد الأسئلة لكل مرحلة:</label>
+                        <input type="range" id="questionsPerPhase" min="2" max="6" value="3" oninput="updateQuestionsPerPhase(this.value)">
+                        <div class="slider-value">
+                            <span id="questionsPerPhaseValue">3</span> أسئلة لكل مرحلة
+                        </div>
+                        <div style="font-size: 0.9rem; color: #ccc; margin-top: 0.5rem;">
+                            عدد الأسئلة المطلوبة قبل الانتقال للمرحلة التالية
+                        </div>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <label>
+                            <input type="checkbox" id="dynamicThreshold" checked>
+                            حساب تلقائي لحد التأهل حسب أداء الطلاب
+                        </label>
+                        <div style="font-size: 0.9rem; color: #ccc; margin-top: 0.5rem;">
+                            يتم حساب حد التأهل ديناميكياً بناءً على توزيع درجات الطلاب
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
                     <h4>🎨 تخصيص التجربة</h4>
                     <div class="setting-group">
                         <label>
@@ -1379,7 +1429,7 @@
                 
                 <div class="wisdom-preview" id="wisdomPreview">
                     <div class="preview-title">📋 معاينة إعدادات الحكمة</div>
-                    <div style="text-align: center; color: #9b59b6;">
+                    <div style="text-align: center; color: #2E8B57;">
                         جارٍ تحميل المعاينة...
                     </div>
                 </div>
@@ -1429,10 +1479,22 @@
             isRunning: false,
             isPaused: false,
             completedStudents: 0,
+            currentPhase: 1,
+            phases: [],
+            totalPhases: 1,
             settings: {
                 totalTime: 600, // 10 دقائق إجمالية
-                studentsCount: 20 // عدد متوقع
-            }
+                studentsCount: 20, // عدد متوقع
+                enablePhaseElimination: true, // تفعيل التصفيات المرحلية
+                eliminationPercentage: 30, // نسبة الاستبعاد في كل مرحلة
+                questionsPerPhase: 3, // عدد الأسئلة لكل مرحلة
+                dynamicThreshold: true // حساب تلقائي لحد التأهل
+            },
+            autoAdvance: false,
+            autoAdvanceDelay: 3,
+            enableElimination: false,
+            minimumScore: 3,
+            excellentPoints: 10
         };
 
         // أقوال الحكمة الملهمة
@@ -1515,7 +1577,7 @@
             } else if (wisdomData.remainingTime <= 300) { // 5 دقائق
                 timerElement.style.color = '#F39C12';
             } else {
-                timerElement.style.color = '#9B59B6';
+                timerElement.style.color = '#2E8B57';
             }
         }
 
@@ -1592,6 +1654,226 @@
             });
         }
 
+        // ===== تحديث عرض الحكمة =====
+        function updateWisdomDisplay() {
+            displayStudentsList();
+            updateDisplay();
+            updateProgressBar();
+            
+            // عرض معلومات المرحلة الحالية
+            if (wisdomData.settings.enablePhaseElimination && wisdomData.phases.length > 0) {
+                const currentPhaseData = wisdomData.phases[wisdomData.currentPhase - 1];
+                const activeStudents = wisdomData.students.filter(s => s.status !== 'eliminated').length;
+                
+                if (currentPhaseData) {
+                    const phaseInfoElement = document.getElementById('phaseInfo');
+                    if (phaseInfoElement) {
+                        phaseInfoElement.innerHTML = `
+                            <div style="background: rgba(46, 139, 87, 0.1); padding: 0.8rem; border-radius: 8px; margin-bottom: 1rem;">
+                                <div style="color: #2E8B57; font-weight: bold; margin-bottom: 0.5rem;">
+                                    🏆 المرحلة ${wisdomData.currentPhase} من ${wisdomData.totalPhases}
+                                </div>
+                                <div style="color: #2E8B57; font-size: 0.9rem;">
+                                    ${activeStudents} طالب متبقي • الهدف: ${currentPhaseData.studentsAtEnd} طالب
+                                </div>
+                                ${currentPhaseData.isRanking ? 
+                                    '<div style="color: #f39c12; font-size: 0.8rem; margin-top: 0.3rem;">مرحلة ترتيب نهائي</div>' : 
+                                    '<div style="color: #e74c3c; font-size: 0.8rem; margin-top: 0.3rem;">مرحلة تصفيات</div>'
+                                }
+                            </div>
+                        `;
+                    }
+                }
+            }
+        }
+
+        // ===== نظام التصفيات المرحلي =====
+        function calculateWisdomPhases() {
+            const totalStudents = wisdomData.students.filter(s => s.status !== 'eliminated').length;
+            const eliminationRate = wisdomData.settings.eliminationPercentage;
+            
+            wisdomData.phases = [];
+            wisdomData.totalPhases = 1;
+            
+            if (totalStudents <= 6) {
+                // مجموعات صغيرة - لا توجد تصفيات، فقط ترتيب
+                wisdomData.phases = [{
+                    phaseNumber: 1,
+                    studentsAtStart: totalStudents,
+                    studentsAtEnd: totalStudents,
+                    eliminationThreshold: 0,
+                    isRanking: true,
+                    questionsCompleted: 0,
+                    questionsRequired: wisdomData.settings.questionsPerPhase
+                }];
+                return;
+            }
+            
+            let currentStudents = totalStudents;
+            let phaseNumber = 1;
+            const targetFinalists = Math.max(3, Math.ceil(totalStudents * 0.15)); // 15% كحد أدنى للفائزين
+            
+            while (currentStudents > targetFinalists && phaseNumber <= 4) {
+                const toEliminate = Math.floor(currentStudents * (eliminationRate / 100));
+                const studentsRemaining = Math.max(targetFinalists, currentStudents - toEliminate);
+                
+                wisdomData.phases.push({
+                    phaseNumber: phaseNumber,
+                    studentsAtStart: currentStudents,
+                    studentsAtEnd: studentsRemaining,
+                    eliminationThreshold: 0,
+                    isRanking: phaseNumber === 1 && studentsRemaining === currentStudents,
+                    questionsCompleted: 0,
+                    questionsRequired: wisdomData.settings.questionsPerPhase
+                });
+                
+                currentStudents = studentsRemaining;
+                phaseNumber++;
+                
+                if (studentsRemaining === currentStudents) break;
+            }
+            
+            wisdomData.totalPhases = wisdomData.phases.length;
+            wisdomData.currentPhase = 1;
+        }
+
+        function calculateDynamicWisdomThreshold() {
+            const activeStudents = wisdomData.students.filter(s => s.status !== 'eliminated');
+            const scores = activeStudents.map(s => s.score || 0).sort((a, b) => b - a);
+            
+            if (scores.length <= 3) return 0;
+            
+            const currentPhaseData = wisdomData.phases[wisdomData.currentPhase - 1];
+            if (!currentPhaseData || currentPhaseData.isRanking) return 0;
+            
+            // حساب الحد الأدنى بناءً على عدد الطلاب المطلوب الاحتفاظ بهم
+            const studentsToKeep = currentPhaseData.studentsAtEnd;
+            const thresholdIndex = Math.min(studentsToKeep - 1, scores.length - 1);
+            const dynamicThreshold = scores[thresholdIndex] || 0;
+            
+            // تطبيق حدود منطقية
+            const minThreshold = Math.max(15, dynamicThreshold * 0.7); // حد أدنى 15 نقطة
+            const maxThreshold = Math.min(45, dynamicThreshold * 1.3); // حد أقصى 45 نقطة
+            
+            return Math.max(minThreshold, Math.min(maxThreshold, dynamicThreshold));
+        }
+
+        function checkWisdomPhaseProgress() {
+            if (!wisdomData.settings.enablePhaseElimination) return;
+            
+            const currentPhaseData = wisdomData.phases[wisdomData.currentPhase - 1];
+            if (!currentPhaseData || currentPhaseData.isRanking) return;
+            
+            // التحقق من إكمال جميع الطلاب لعدد الأسئلة المطلوبة للمرحلة
+            const activeStudents = wisdomData.students.filter(s => s.status !== 'eliminated');
+            const minQuestionsForPhase = currentPhaseData.questionsRequired * wisdomData.currentPhase;
+            
+            const allCompletedPhase = activeStudents.every(student => 
+                (student.questionsAnswered || 0) >= minQuestionsForPhase
+            );
+            
+            if (!allCompletedPhase) return;
+            
+            // تطبيق التصفيات
+            processPhaseElimination();
+        }
+
+        function processPhaseElimination() {
+            const currentPhaseData = wisdomData.phases[wisdomData.currentPhase - 1];
+            if (!currentPhaseData || currentPhaseData.isRanking) return;
+            
+            const activeStudents = wisdomData.students.filter(s => s.status !== 'eliminated');
+            const threshold = wisdomData.settings.dynamicThreshold ? 
+                calculateDynamicWisdomThreshold() : wisdomData.settings.minimumPassingScore || 20;
+            
+            // ترتيب الطلاب حسب النقاط
+            const sortedStudents = activeStudents.sort((a, b) => (b.score || 0) - (a.score || 0));
+            const studentsToKeep = Math.min(currentPhaseData.studentsAtEnd, sortedStudents.length);
+            
+            // استبعاد الطلاب الأقل أداءً
+            const studentsToEliminate = sortedStudents.slice(studentsToKeep);
+            
+            if (studentsToEliminate.length > 0) {
+                showPhaseTransitionModal(studentsToEliminate, threshold);
+            } else {
+                // الانتقال للمرحلة التالية
+                advanceToNextPhase();
+            }
+        }
+
+        function showPhaseTransitionModal(eliminatedStudents, threshold) {
+            const currentPhase = wisdomData.currentPhase;
+            const remainingStudents = wisdomData.students.filter(s => s.status !== 'eliminated').length - eliminatedStudents.length;
+            
+            let modalContent = `
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <div style="font-size: 1.8rem; color: #2E8B57; margin-bottom: 1rem;">
+                        🏆 انتهاء المرحلة ${currentPhase}
+                    </div>
+                    <div style="font-size: 1.2rem; margin-bottom: 1.5rem;">
+                        تم تحديد الطلاب المتأهلين للمرحلة التالية
+                    </div>
+                </div>
+                
+                <div style="background: rgba(231, 76, 60, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                    <h4 style="color: #e74c3c; margin-bottom: 1rem;">الطلاب المستبعدون:</h4>
+            `;
+            
+            eliminatedStudents.forEach(student => {
+                modalContent += `
+                    <div style="margin-bottom: 0.5rem; color: #e74c3c;">
+                        • ${student.name} - ${student.score || 0} نقطة
+                    </div>
+                `;
+            });
+            
+            modalContent += `
+                </div>
+                
+                <div style="background: rgba(46, 139, 87, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                    <h4 style="color: #2E8B57; margin-bottom: 1rem;">✅ المتأهلون: ${remainingStudents} طالب</h4>
+                    <div style="color: #2E8B57;">الحد الأدنى للتأهل: ${threshold} نقطة</div>
+                </div>
+            `;
+            
+            // تطبيق الاستبعاد فعلياً
+            eliminatedStudents.forEach(student => {
+                student.status = 'eliminated';
+                student.eliminationReason = `المرحلة ${currentPhase} - أقل من ${threshold} نقطة`;
+            });
+            
+            setModalContent('🏆 نتائج المرحلة', modalContent, '#2E8B57');
+            showModal('gameModal');
+            
+            // الانتقال للمرحلة التالية بعد 4 ثوانٍ
+            setTimeout(() => {
+                hideModal('gameModal');
+                advanceToNextPhase();
+            }, 4000);
+        }
+
+        function advanceToNextPhase() {
+            wisdomData.currentPhase++;
+            
+            if (wisdomData.currentPhase > wisdomData.totalPhases) {
+                // انتهاء جميع المراحل - عرض النتائج النهائية
+                completeWisdomJourney();
+                return;
+            }
+            
+            // إعادة تعيين عداد الأسئلة للمرحلة الجديدة
+            const activeStudents = wisdomData.students.filter(s => s.status !== 'eliminated');
+            
+            showSmartNotification(
+                `بدء المرحلة ${wisdomData.currentPhase}`,
+                `${activeStudents.length} طالب متأهل`,
+                'success',
+                2000
+            );
+            
+            updateWisdomDisplay();
+        }
+
         // ===== بدء رحلة الحكمة =====
         function startWisdomJourney() {
             if (wisdomData.students.length === 0) {
@@ -1619,6 +1901,9 @@
                 student.timestamp = null;
                 student.insights = [];
             });
+
+            // حساب مراحل التصفيات
+            calculateWisdomPhases();
 
             startWisdomTimer();
             showWisdomTutorial();
@@ -1676,7 +1961,7 @@
                     title: '⏰ آلية العمل',
                     message: `
                         <div style="text-align: center; margin-bottom: 1.5rem;">
-                            <div style="font-size: 2rem; color: #9B59B6; margin-bottom: 1rem;">
+                            <div style="font-size: 2rem; color: #2E8B57; margin-bottom: 1rem;">
                                 ${formatTime(wisdomData.remainingTime)}
                             </div>
                             <div style="text-align: right; line-height: 1.6;">
@@ -1711,7 +1996,7 @@
                 }
                 
                 const step = steps[currentStep];
-                setModalContent(step.title, step.message, '#9B59B6');
+                setModalContent(step.title, step.message, '#2E8B57');
                 showModal('resultModal');
                 
                 playSound(step.sound);
@@ -1812,9 +2097,10 @@
             // تشغيل صوت مناسب
             playEvaluationSound(evaluation);
             
-            displayStudentsList();
-            updateDisplay();
-            updateProgressBar();
+            updateWisdomDisplay();
+            
+            // فحص التقدم المرحلي بعد كل تقييم
+            checkWisdomPhaseProgress();
             
             // إخفاء أزرار التقييم مؤقتاً
             const evalButtons = document.querySelectorAll('.evaluation-buttons .eval-btn');
@@ -2106,8 +2392,8 @@
             // إضافة رسالة الانتقال التلقائي إذا كان مفعلاً
             if (wisdomData.autoAdvance) {
                 message += `
-                    <div style="margin-top: 1.5rem; padding: 0.8rem; background: rgba(155, 89, 182, 0.3); border-radius: 8px; border-left: 4px solid #9b59b6;">
-                        <div style="color: #9b59b6; font-size: 0.9rem;">
+                    <div style="margin-top: 1.5rem; padding: 0.8rem; background: rgba(46, 139, 87, 0.3); border-radius: 8px; border-left: 4px solid #2E8B57;">
+                        <div style="color: #2E8B57; font-size: 0.9rem;">
                             <i class="fas fa-forward"></i> الانتقال التلقائي مُفعل
                         </div>
                         <div style="color: #fff; font-size: 0.8rem; margin-top: 0.3rem;">
@@ -2258,7 +2544,7 @@
         function showFinalWisdomResults(results) {
             let resultsHTML = `
                 <div style="text-align: center; margin-bottom: 2rem;">
-                    <h2 style="color: #9b59b6; margin-bottom: 1rem;">🏆 النتائج النهائية لمملكة الحكمة</h2>
+                    <h2 style="color: #2E8B57; margin-bottom: 1rem;">🏆 النتائج النهائية لمملكة الحكمة</h2>
                     <p style="color: #ccc;">تم تقييم ${results.length} طالب في هذه الرحلة</p>
                 </div>
                 <div style="max-height: 400px; overflow-y: auto;">
@@ -2287,7 +2573,7 @@
                         rankColor = '#CD7F32';
                     } else {
                         rankIcon = `#${index + 1}`;
-                        rankColor = '#9b59b6';
+                        rankColor = '#2E8B57';
                     }
 
                     const statusDisplay = student.status === 'eliminated' ? 
@@ -2377,7 +2663,7 @@
             
             let resultsHTML = `
                 <div style="margin-bottom: 2rem; text-align: center;">
-                    <div style="font-size: 1.5rem; margin-bottom: 1rem; color: #9B59B6;">
+                    <div style="font-size: 1.5rem; margin-bottom: 1rem; color: #2E8B57;">
                         🧠 تقرير مملكة الحكمة النهائي 🧠
                     </div>
                     <div style="color: var(--wisdom-primary); font-size: 1.1rem;">
@@ -2392,13 +2678,13 @@
             `;
             
             if (results.length > 0) {
-                resultsHTML += '<div style="margin: 2rem 0;"><div style="text-align: center; margin-bottom: 1rem; font-size: 1.2rem; color: #9B59B6;"><strong>🏆 ترتيب الطلاب</strong></div>';
+                resultsHTML += '<div style="margin: 2rem 0;"><div style="text-align: center; margin-bottom: 1rem; font-size: 1.2rem; color: #2E8B57;"><strong>🏆 ترتيب الطلاب</strong></div>';
                 
                 results.forEach((student, index) => {
                     const medals = ['🥇', '🥈', '🥉'];
                     const medal = medals[index] || '🏅';
-                    const rankColors = ['#FFD700', '#C0C0C0', '#CD7F32', '#9B59B6'];
-                    const rankColor = rankColors[index] || '#9B59B6';
+                    const rankColors = ['#FFD700', '#C0C0C0', '#CD7F32', '#2E8B57'];
+                    const rankColor = rankColors[index] || '#2E8B57';
                     
                     const wisdomTitle = student.score >= 30 ? 'ممتاز' :
                                       student.score >= 25 ? 'جيد جداً' :
@@ -2426,7 +2712,7 @@
                 resultsHTML += '</div>';
             }
             
-            setModalContent('🏆 انتهاء مملكة الحكمة', resultsHTML, '#9B59B6');
+            setModalContent('🏆 انتهاء مملكة الحكمة', resultsHTML, '#2E8B57');
             showModal('wisdomEndModal');
         }
 
@@ -2539,6 +2825,11 @@
                         const autoAdvance = document.getElementById('autoAdvance');
                         const autoAdvanceDelay = document.getElementById('autoAdvanceDelay');
                         const autoAdvanceDelayValue = document.getElementById('autoAdvanceDelayValue');
+                        const enablePhaseElimination = document.getElementById('enablePhaseElimination');
+                        const eliminationPercentage = document.getElementById('eliminationPercentage');
+                        const questionsPerPhase = document.getElementById('questionsPerPhase');
+                        const questionsPerPhaseValue = document.getElementById('questionsPerPhaseValue');
+                        const dynamicThreshold = document.getElementById('dynamicThreshold');
 
                         // تعيين القيم مع التحقق من الوجود
                         if (timeSlider) timeSlider.value = wisdomData.timePerStudent || 120;
@@ -2555,9 +2846,17 @@
                         if (autoAdvanceDelay) autoAdvanceDelay.value = wisdomData.autoAdvanceDelay || 3;
                         if (autoAdvanceDelayValue) autoAdvanceDelayValue.textContent = wisdomData.autoAdvanceDelay || 3;
                         
+                        // تحميل إعدادات التصفيات المرحلية
+                        if (enablePhaseElimination) enablePhaseElimination.checked = wisdomData.settings?.enablePhaseElimination !== false;
+                        if (eliminationPercentage) eliminationPercentage.value = wisdomData.settings?.eliminationPercentage || 30;
+                        if (questionsPerPhase) questionsPerPhase.value = wisdomData.settings?.questionsPerPhase || 3;
+                        if (questionsPerPhaseValue) questionsPerPhaseValue.textContent = wisdomData.settings?.questionsPerPhase || 3;
+                        if (dynamicThreshold) dynamicThreshold.checked = wisdomData.settings?.dynamicThreshold !== false;
+                        
                         // تحديث العرض
                         if (typeof toggleEliminationSettings === 'function') toggleEliminationSettings();
                         if (typeof toggleAutoAdvanceSettings === 'function') toggleAutoAdvanceSettings();
+                        if (typeof togglePhaseEliminationSettings === 'function') togglePhaseEliminationSettings();
                         if (typeof updateWisdomPreview === 'function') updateWisdomPreview();
                         
                         console.log('تم تحميل إعدادات الحكمة بنجاح');
@@ -2630,6 +2929,24 @@
             updateWisdomPreview();
         }
 
+        function togglePhaseEliminationSettings() {
+            const isEnabled = document.getElementById('enablePhaseElimination').checked;
+            const settingsDiv = document.getElementById('phaseEliminationSettings');
+            const questionsGroup = document.getElementById('questionsPerPhaseGroup');
+            if (settingsDiv) {
+                settingsDiv.style.display = isEnabled ? 'block' : 'none';
+            }
+            if (questionsGroup) {
+                questionsGroup.style.display = isEnabled ? 'block' : 'none';
+            }
+            updateWisdomPreview();
+        }
+
+        function updateQuestionsPerPhase(value) {
+            document.getElementById('questionsPerPhaseValue').textContent = value;
+            updateWisdomPreview();
+        }
+
         function applyWisdomSettings() {
             try {
                 console.log('بدء تطبيق إعدادات الحكمة...');
@@ -2646,6 +2963,10 @@
                 const enableAnimations = document.getElementById('enableAnimations');
                 const autoAdvance = document.getElementById('autoAdvance');
                 const autoAdvanceDelay = document.getElementById('autoAdvanceDelay');
+                const enablePhaseElimination = document.getElementById('enablePhaseElimination');
+                const eliminationPercentage = document.getElementById('eliminationPercentage');
+                const questionsPerPhase = document.getElementById('questionsPerPhase');
+                const dynamicThreshold = document.getElementById('dynamicThreshold');
 
                 if (!timeSlider || !excellentPoints) {
                     console.error('بعض العناصر المطلوبة غير موجودة');
@@ -2667,6 +2988,12 @@
                 wisdomData.animationsEnabled = enableAnimations ? enableAnimations.checked : true;
                 wisdomData.autoAdvance = autoAdvance ? autoAdvance.checked : false;
                 wisdomData.autoAdvanceDelay = parseInt(autoAdvanceDelay?.value) || 3;
+                
+                // إعدادات التصفيات المرحلية
+                wisdomData.settings.enablePhaseElimination = enablePhaseElimination ? enablePhaseElimination.checked : true;
+                wisdomData.settings.eliminationPercentage = parseInt(eliminationPercentage?.value) || 30;
+                wisdomData.settings.questionsPerPhase = parseInt(questionsPerPhase?.value) || 3;
+                wisdomData.settings.dynamicThreshold = dynamicThreshold ? dynamicThreshold.checked : true;
                 
                 console.log('إعدادات الحكمة المطبقة:', wisdomData);
                 
@@ -2712,8 +3039,22 @@
             const minimumScore = parseInt(document.getElementById('minimumScore')?.value || 3);
             const excellentPoints = parseInt(document.getElementById('excellentPoints')?.value || 10);
             const autoAdvance = document.getElementById('autoAdvance')?.checked;
+            const enablePhaseElimination = document.getElementById('enablePhaseElimination')?.checked;
+            const eliminationPercentage = parseInt(document.getElementById('eliminationPercentage')?.value || 30);
+            const questionsPerPhase = parseInt(document.getElementById('questionsPerPhase')?.value || 3);
             
             const estimatedTime = Math.ceil((totalStudents * timePerStudent) / 60);
+            
+            // حساب عدد المراحل المتوقعة
+            let estimatedPhases = 1;
+            if (enablePhaseElimination && totalStudents > 6) {
+                let remainingStudents = totalStudents;
+                const targetFinalists = Math.max(3, Math.ceil(totalStudents * 0.15));
+                while (remainingStudents > targetFinalists && estimatedPhases < 4) {
+                    remainingStudents = Math.max(targetFinalists, remainingStudents - Math.floor(remainingStudents * (eliminationPercentage / 100)));
+                    estimatedPhases++;
+                }
+            }
             
             const previewHTML = `
                 <div class="preview-title">📋 معاينة إعدادات الحكمة</div>
@@ -2723,8 +3064,19 @@
                     <div style="margin-bottom: 0.5rem;">🎯 <strong>أعلى نقاط:</strong> ${excellentPoints} (للإجابة الممتازة)</div>
                     <div style="margin-bottom: 0.5rem;">🚫 <strong>نظام الاستبعاد:</strong> ${eliminationEnabled ? `مُفعل (أقل من ${minimumScore} نقاط)` : 'مُعطل'}</div>
                     <div style="margin-bottom: 0.5rem;">🔄 <strong>الانتقال التلقائي:</strong> ${autoAdvance ? 'مُفعل' : 'يدوي'}</div>
+                    ${enablePhaseElimination ? `
+                        <div style="margin-top: 1rem; padding: 0.8rem; background: rgba(46, 139, 87, 0.2); border-radius: 8px; border-left: 3px solid #2E8B57;">
+                            <div style="color: #2E8B57; font-weight: bold; margin-bottom: 0.5rem;">🏆 التصفيات المرحلية</div>
+                            <div style="font-size: 0.9rem; color: #2E8B57;">
+                                • عدد المراحل المتوقعة: ${estimatedPhases}<br>
+                                • نسبة الاستبعاد: ${eliminationPercentage}% لكل مرحلة<br>
+                                • أسئلة لكل مرحلة: ${questionsPerPhase}<br>
+                                • الفائزون المتوقعون: ${Math.max(3, Math.ceil(totalStudents * 0.15))} طالب
+                            </div>
+                        </div>
+                    ` : ''}
                 </div>
-                <div style="text-align: center; color: #9b59b6; font-style: italic; margin-top: 1rem;">
+                <div style="text-align: center; color: #2E8B57; font-style: italic; margin-top: 1rem;">
                     ${totalStudents > 0 ? '🌟 جاهز لبدء رحلة الحكمة!' : '⚠️ يرجى إضافة الطلاب أولاً'}
                 </div>
             `;
@@ -2774,7 +3126,7 @@
                 'success': { icon: 'fas fa-check-circle', color: '#27AE60' },
                 'warning': { icon: 'fas fa-exclamation-triangle', color: '#F39C12' },
                 'danger': { icon: 'fas fa-times-circle', color: '#E74C3C' },
-                'wisdom': { icon: 'fas fa-brain', color: '#9B59B6' },
+                'wisdom': { icon: 'fas fa-brain', color: '#2E8B57' },
                 'tip': { icon: 'fas fa-lightbulb', color: '#FFD700' }
             };
             
@@ -2847,7 +3199,7 @@
                 </div>
             `;
             
-            setModalContent(title, message, '#9B59B6');
+            setModalContent(title, message, '#2E8B57');
             showModal('resultModal');
             
             // تأثيرات صوتية وبصرية
@@ -2861,7 +3213,7 @@
 
         // ===== إنشاء تأثيرات الحكمة =====
         function createWisdomParticles() {
-            const colors = ['#9B59B6', '#3498DB', '#FFD700', '#E67E22'];
+            const colors = ['#2E8B57', '#3498DB', '#FFD700', '#E67E22'];
             const particles = 20;
             
             for (let i = 0; i < particles; i++) {
@@ -2924,7 +3276,7 @@
             }
         }
 
-        function setModalContent(title, message, titleColor = '#9B59B6') {
+        function setModalContent(title, message, titleColor = '#2E8B57') {
             const titleEl = document.getElementById('modalTitle');
             const messageEl = document.getElementById('modalMessage');
             
