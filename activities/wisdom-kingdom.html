@@ -809,12 +809,6 @@
             transform: none;
             background: linear-gradient(135deg, rgba(231, 76, 60, 0.3), rgba(192, 57, 43, 0.3));
         }
-        
-        .student-card.skipped {
-            background: linear-gradient(135deg, rgba(149, 165, 166, 0.3), rgba(127, 140, 141, 0.3));
-            border: 2px solid #95a5a6;
-            opacity: 0.8;
-        }
 
         /* تنسيق نقاط التقييم */
         .evaluation-points {
@@ -1530,15 +1524,7 @@
             </div>
             
             <div class="elimination-section" style="margin-top: 1.5rem; text-align: center;">
-                <button class="eval-btn next-student" onclick="nextStudent()" style="background: linear-gradient(45deg, #3498DB, #2ECC71); color: white; padding: 1rem 2rem;">
-                    <i class="fas fa-arrow-left"></i>
-                    الطالب التالي
-                </button>
-                <button class="eval-btn skip-student" onclick="skipStudent()" style="background: linear-gradient(45deg, #95A5A6, #7F8C8D); color: white; padding: 1rem 2rem; margin-right: 1rem;">
-                    <i class="fas fa-forward"></i>
-                    تخطي الطالب
-                </button>
-                <button class="eval-btn eliminate-student" onclick="eliminateStudent()" style="background: linear-gradient(45deg, #8e44ad, #e74c3c); color: white; padding: 1rem 2rem; margin-right: 1rem;">
+                <button class="eval-btn eliminate-student" onclick="eliminateStudent()" style="background: linear-gradient(45deg, #8e44ad, #e74c3c); color: white; padding: 1rem 2rem;">
                     <i class="fas fa-user-times"></i>
                     استبعاد نهائي
                 </button>
@@ -1727,8 +1713,6 @@
             phases: [], // مراحل الاستبعاد
             currentPhase: 1,
             totalPhases: 1,
-            autoAdvance: false,
-            autoAdvanceDelay: 3,
             enableElimination: false,
             minimumScore: 3,
             excellentPoints: 10
@@ -1886,11 +1870,6 @@
                         statusIcon = '✅';
                         statusText = 'مكتمل';
                         cardColor = 'rgba(39, 174, 96, 0.3)';
-                        break;
-                    case 'skipped':
-                        statusIcon = '⏭️';
-                        statusText = 'تم التخطي';
-                        cardColor = 'rgba(149, 165, 166, 0.3)';
                         break;
                     case 'eliminated':
                         statusIcon = '🚫';
@@ -2438,22 +2417,12 @@
             const evalButtons = document.querySelectorAll('.evaluation-buttons .eval-btn');
             evalButtons.forEach(btn => btn.disabled = true);
             
-            // التحقق من إعداد الانتقال التلقائي
-            if (wisdomData.autoAdvance) {
-                // انتقال تلقائي بعد التأخير المحدد
-                const delay = (wisdomData.autoAdvanceDelay || 3) * 1000;
-                setTimeout(() => {
-                    closeModal();
-                    evalButtons.forEach(btn => btn.disabled = false);
-                    moveToNextStudent(); // الانتقال التلقائي للطالب التالي
-                }, delay);
-            } else {
-                // انتقال يدوي - انتظار إغلاق المودال يدوياً
-                setTimeout(() => {
-                    closeModal();
-                    evalButtons.forEach(btn => btn.disabled = false);
-                }, 2500);
-            }
+            // انتقال تلقائي للطالب التالي مثل مملكة البرق
+            setTimeout(() => {
+                closeModal();
+                evalButtons.forEach(btn => btn.disabled = false);
+                moveToNextStudent(); // الانتقال التلقائي للطالب التالي
+            }, 2500);
         }
 
         // ===== عرض نتيجة الاستبعاد =====
@@ -2549,27 +2518,6 @@
                 container.appendChild(particle);
             }
         }
-        function nextStudent() {
-            // استخدام الدالة المحسنة للانتقال
-            moveToNextStudent();
-            playSound('transition');
-        }
-
-        // ===== تخطي الطالب =====
-        function skipStudent() {
-            const currentStudent = wisdomData.students[wisdomData.currentStudentIndex];
-            if (currentStudent) {
-                currentStudent.status = 'skipped';
-                
-                showSmartNotification(
-                    'تم تخطي الطالب',
-                    `${currentStudent.name} تم تخطيه`,
-                    'info'
-                );
-            }
-            
-            nextStudent();
-        }
 
         // ===== استبعاد الطالب نهائياً =====
         function eliminateStudent() {
@@ -2595,16 +2543,10 @@
             // تشغيل صوت الاستبعاد
             playSound('notification-pop');
             
-            // الانتقال للطالب التالي
-            wisdomData.currentStudentIndex++;
-            
+            // الانتقال للطالب التالي تلقائياً مثل مملكة البرق
             setTimeout(() => {
                 closeModal();
-                if (wisdomData.currentStudentIndex < wisdomData.students.length && wisdomData.remainingTime > 0) {
-                    showCurrentStudent();
-                } else {
-                    completeWisdomJourney();
-                }
+                moveToNextStudent();
             }, 3000);
             
             displayStudentsList();
@@ -2720,20 +2662,6 @@
                     ${student.insights[student.insights.length - 1]?.insight || ''}
                 </div>
             `;
-
-            // إضافة رسالة الانتقال التلقائي إذا كان مفعلاً
-            if (wisdomData.autoAdvance) {
-                message += `
-                    <div style="margin-top: 1.5rem; padding: 0.8rem; background: rgba(46, 139, 87, 0.3); border-radius: 8px; border-left: 4px solid #2E8B57;">
-                        <div style="color: #2E8B57; font-size: 0.9rem;">
-                            <i class="fas fa-forward"></i> الانتقال التلقائي مُفعل
-                        </div>
-                        <div style="color: #fff; font-size: 0.8rem; margin-top: 0.3rem;">
-                            سيتم الانتقال للطالب التالي خلال ${wisdomData.autoAdvanceDelay || 3} ثوانٍ
-                        </div>
-                    </div>
-                `;
-            }
             
             setModalContent(title, message, evalData.color);
             showModal('resultModal');
@@ -3190,20 +3118,6 @@
             updateWisdomPreview();
         }
 
-        function toggleAutoAdvanceSettings() {
-            const isEnabled = document.getElementById('autoAdvance').checked;
-            const settingsDiv = document.getElementById('autoAdvanceSettings');
-            if (settingsDiv) {
-                settingsDiv.style.display = isEnabled ? 'block' : 'none';
-            }
-            updateWisdomPreview();
-        }
-
-        function updateAutoAdvanceDelay(value) {
-            document.getElementById('autoAdvanceDelayValue').textContent = value;
-            updateWisdomPreview();
-        }
-
         function togglePhaseEliminationSettings() {
             const isEnabled = document.getElementById('enablePhaseElimination').checked;
             const settingsDiv = document.getElementById('phaseEliminationSettings');
@@ -3646,7 +3560,6 @@
                     <div style="margin-bottom: 0.5rem;">⏱️ <strong>الوقت المقدر:</strong> ${estimatedTime} دقيقة تقريباً</div>
                     <div style="margin-bottom: 0.5rem;">🎯 <strong>أعلى نقاط:</strong> ${excellentPoints} (للإجابة الممتازة)</div>
                     <div style="margin-bottom: 0.5rem;">🚫 <strong>نظام الاستبعاد:</strong> ${eliminationEnabled ? `مُفعل (أقل من ${minimumScore} نقاط)` : 'مُعطل'}</div>
-                    <div style="margin-bottom: 0.5rem;">🔄 <strong>الانتقال التلقائي:</strong> ${autoAdvance ? 'مُفعل' : 'يدوي'}</div>
                     ${enablePhaseElimination ? `
                         <div style="margin-top: 1rem; padding: 0.8rem; background: rgba(46, 139, 87, 0.2); border-radius: 8px; border-left: 3px solid #2E8B57;">
                             <div style="color: #2E8B57; font-weight: bold; margin-bottom: 0.5rem;">🏆 التصفيات المرحلية</div>
@@ -3972,9 +3885,7 @@
                 eliminationEnabled: true,
                 minimumScore: 3,
                 soundsEnabled: true,
-                animationsEnabled: true,
-                autoAdvance: false,
-                autoAdvanceDelay: 3
+                animationsEnabled: true
             };
         }
 
