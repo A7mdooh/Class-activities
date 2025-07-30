@@ -2324,13 +2324,25 @@
 
         // ===== عرض الطالب الحالي =====
         function showCurrentStudent() {
-            if (wisdomData.currentStudentIndex >= wisdomData.students.length) {
-                // انتهاء الجولة
+            // التحقق من وجود طلاب لم يكملوا التقييم بعد
+            const remainingStudents = wisdomData.students.filter(s => 
+                s.status !== 'eliminated' && s.status !== 'completed'
+            );
+            
+            if (remainingStudents.length === 0 || wisdomData.currentStudentIndex >= wisdomData.students.length) {
+                // انتهاء جميع الطلاب المؤهلين
                 completeWisdomJourney();
                 return;
             }
 
             const currentStudent = wisdomData.students[wisdomData.currentStudentIndex];
+            
+            // التأكد من أن الطالب الحالي لم يكمل التقييم بعد
+            if (currentStudent.status === 'completed' || currentStudent.status === 'eliminated') {
+                // البحث عن أول طالب غير مكتمل
+                moveToNextStudent();
+                return;
+            }
             
             // تحديث حالة الطلاب
             wisdomData.students.forEach(s => {
@@ -2610,13 +2622,20 @@
                 
                 wisdomData.currentStudentIndex++;
                 
-                // البحث عن أول طالب غير مستبعد
+                // البحث عن أول طالب غير مستبعد وغير مكتمل
                 while (wisdomData.currentStudentIndex < wisdomData.students.length && 
-                       wisdomData.students[wisdomData.currentStudentIndex].status === 'eliminated') {
+                       (wisdomData.students[wisdomData.currentStudentIndex].status === 'eliminated' || 
+                        wisdomData.students[wisdomData.currentStudentIndex].status === 'completed')) {
                     wisdomData.currentStudentIndex++;
                 }
                 
-                if (wisdomData.currentStudentIndex < wisdomData.students.length && wisdomData.remainingTime > 0) {
+                // التحقق من وجود طلاب لم يكملوا التقييم بعد
+                const remainingStudents = wisdomData.students.filter(s => 
+                    s.status !== 'eliminated' && s.status !== 'completed'
+                );
+                
+                if (remainingStudents.length > 0 && wisdomData.remainingTime > 0) {
+                    // هناك طلاب لم يكملوا التقييم بعد
                     wisdomData.students[wisdomData.currentStudentIndex].status = 'current';
                     showCurrentStudent();
                     displayStudentsList();
@@ -2633,6 +2652,7 @@
                         }
                     }, 100);
                 } else {
+                    // انتهاء جميع الطلاب أو انتهاء الوقت
                     completeWisdomJourney();
                 }
             }, 500);
