@@ -156,6 +156,16 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             border: 2px solid rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(20px);
+            color: #ffffff;
+        }
+
+        .modal-content * {
+            color: inherit;
+        }
+
+        .modal-content input, .modal-content select, .modal-content textarea {
+            color: #2c3e50;
+            background: rgba(255, 255, 255, 0.9);
         }
 
         .modal-title {
@@ -169,6 +179,7 @@
             font-size: 1.2rem;
             line-height: 1.6;
             margin-bottom: 2rem;
+            color: #ffffff;
         }
 
         .modal-btn {
@@ -589,6 +600,40 @@
             font-weight: bold;
             color: #9b59b6;
             margin-bottom: 1rem;
+        }
+
+        /* إعدادات شاشة الإعدادات */
+        .settings-section {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            border-left: 4px solid #9b59b6;
+            color: #ffffff;
+        }
+
+        .settings-section h4 {
+            color: #FFD700;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .setting-group {
+            margin: 1rem 0;
+            color: #ffffff;
+        }
+
+        .setting-group label {
+            color: #ffffff;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .slider-value {
+            text-align: center;
+            margin: 0.5rem 0;
+            color: #9b59b6;
+            font-weight: bold;
         }
 
         /* Timer Section */
@@ -2703,7 +2748,8 @@
                 'success': { icon: 'fas fa-check-circle', color: '#27AE60' },
                 'warning': { icon: 'fas fa-exclamation-triangle', color: '#F39C12' },
                 'danger': { icon: 'fas fa-times-circle', color: '#E74C3C' },
-                'wisdom': { icon: 'fas fa-brain', color: '#9B59B6' }
+                'wisdom': { icon: 'fas fa-brain', color: '#9B59B6' },
+                'tip': { icon: 'fas fa-lightbulb', color: '#FFD700' }
             };
             
             const config = typeConfig[type] || typeConfig['info'];
@@ -3042,6 +3088,14 @@
             updateDisplay();
             displayStudentsList();
             
+            // تهيئة نظام الإشعارات الذكية
+            setupSmartNotifications();
+            
+            // عرض رسالة الترحيب التفاعلية
+            setTimeout(() => {
+                showWelcomeSequence();
+            }, 1000);
+            
             console.log('تم تحميل مملكة الحكمة بنجاح');
             
             // إضافة معالجات للأزرار لضمان عملها
@@ -3049,6 +3103,85 @@
                 addButtonListeners();
             }, 500);
         });
+
+        // ===== تهيئة نظام الإشعارات الذكية =====
+        function setupSmartNotifications() {
+            // إضافة أنماط CSS للإشعارات إذا لم تكن موجودة
+            if (!document.getElementById('smart-notification-styles')) {
+                const style = document.createElement('style');
+                style.id = 'smart-notification-styles';
+                style.textContent = `
+                    .smart-notification {
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        z-index: 10000;
+                        max-width: 400px;
+                        border-radius: 12px;
+                        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+                        backdrop-filter: blur(10px);
+                        animation: slideInRight 0.5s ease-out;
+                        font-family: 'Cairo', sans-serif;
+                    }
+                    
+                    @keyframes slideInRight {
+                        from {
+                            transform: translateX(100%);
+                            opacity: 0;
+                        }
+                        to {
+                            transform: translateX(0);
+                            opacity: 1;
+                        }
+                    }
+                    
+                    @keyframes slideOutRight {
+                        from {
+                            transform: translateX(0);
+                            opacity: 1;
+                        }
+                        to {
+                            transform: translateX(100%);
+                            opacity: 0;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+
+        // ===== تسلسل الترحيب التفاعلي =====
+        function showWelcomeSequence() {
+            // رسالة الترحيب الأولى
+            setTimeout(() => {
+                showSmartNotification(
+                    '🧠 مرحباً في مملكة الحكمة!',
+                    'استعد لرحلة فكرية عميقة مع الأسئلة الشفوية التفاعلية',
+                    'wisdom',
+                    4000
+                );
+            }, 500);
+
+            // نصيحة حول الاستخدام
+            setTimeout(() => {
+                showSmartNotification(
+                    '💡 نصيحة ذكية',
+                    'ابدأ بإعداد الطلاب أولاً، ثم اضبط إعدادات الحكمة حسب احتياجاتك',
+                    'tip',
+                    5000
+                );
+            }, 5500);
+
+            // تذكير بالميزات
+            setTimeout(() => {
+                showSmartNotification(
+                    '⚙️ ميزات متقدمة',
+                    'استخدم الإعدادات لتخصيص نظام النقاط ووقت التفكير لكل طالب',
+                    'info',
+                    4000
+                );
+            }, 11000);
+        }
 
         // ===== إضافة معالجات الأزرار =====
         function addButtonListeners() {
