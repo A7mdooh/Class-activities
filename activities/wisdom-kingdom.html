@@ -843,7 +843,7 @@
         }
 
         /* معاينة الحكمة */
-        .wisdom-preview {
+        .wisdom-preview, .competition-preview {
             background: linear-gradient(135deg, rgba(46, 139, 87, 0.2), rgba(32, 178, 170, 0.2));
             border: 2px solid #2E8B57;
             border-radius: 15px;
@@ -857,6 +857,18 @@
             font-weight: bold;
             color: #2E8B57;
             margin-bottom: 1rem;
+        }
+
+        /* معاينة المراحل */
+        .phase-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            border-radius: 8px;
+            border-left: 3px solid #2E8B57;
         }
 
         /* إعدادات شاشة الإعدادات */
@@ -1567,164 +1579,68 @@
     <!-- Wisdom Settings Modal -->
     <div class="modal" id="wisdomSettingsModal">
         <div class="modal-content">
-            <div class="modal-title">⚙️ إعدادات مملكة الحكمة المتقدمة</div>
+            <div class="modal-title">⚙️ إعدادات المنافسة المتقدمة</div>
             <div class="modal-message">
                 <div class="settings-section">
-                    <h4>🕒 مدة التقييم لكل طالب</h4>
+                    <h4>🎯 عدد الفرص لكل طالب</h4>
                     <div class="setting-group">
-                        <label>اختر الوقت المناسب لكل طالب للتفكير والإجابة:</label>
-                        <input type="range" id="timePerStudentSlider" min="60" max="300" value="120" oninput="updateTimePerStudent(this.value)">
+                        <label>اختر عدد الفرص التي سيحصل عليها كل طالب:</label>
+                        <input type="range" id="opportunitiesSlider" min="1" max="3" value="2" oninput="updateOpportunities(this.value)">
                         <div class="slider-value">
-                            <span id="timePerStudentValue">2</span> دقيقة لكل طالب
+                            <span id="opportunitiesValue">2</span> فرصة لكل طالب
                         </div>
                         <div style="font-size: 0.9rem; color: #ccc; margin-top: 0.5rem;">
-                            كلما زاد الوقت، كان التقييم أكثر عمقاً ودقة
+                            كلما زاد العدد، كانت المنافسة أكثر عدالة
                         </div>
                     </div>
                 </div>
                 
                 <div class="settings-section">
-                    <h4>🎯 نظام التقييم الشامل</h4>
-                    
-                    <!-- نظام النقاط -->
+                    <h4>📊 نظام الاستبعاد التدريجي</h4>
                     <div class="setting-group">
-                        <label><strong>توزيع النقاط حسب مستوى الإجابة:</strong></label>
-                        <div class="evaluation-points">
-                            <div class="point-row">
-                                <span>🌟 ممتاز (إجابة شاملة ومبدعة):</span>
-                                <input type="number" id="excellentPoints" min="8" max="15" value="10" step="1">
-                                <span>نقاط</span>
-                            </div>
-                            <div class="point-row">
-                                <span>⭐ جيد جداً (إجابة واضحة ومفصلة):</span>
-                                <input type="number" id="veryGoodPoints" min="6" max="12" value="8" step="1">
-                                <span>نقاط</span>
-                            </div>
-                            <div class="point-row">
-                                <span>✨ جيد (إجابة مقبولة):</span>
-                                <input type="number" id="goodPoints" min="3" max="8" value="5" step="1">
-                                <span>نقاط</span>
-                            </div>
-                            <div class="point-row">
-                                <span>💭 ضعيف (إجابة غير مكتملة):</span>
-                                <input type="number" id="weakPoints" min="0" max="3" value="1" step="1">
-                                <span>نقاط</span>
-                            </div>
+                        <label>نسبة الاستبعاد في كل مرحلة:</label>
+                        <select id="eliminationPercentage" onchange="updateSettingsPreview()">
+                            <option value="25">25% - استبعاد خفيف (مناسب للمراجعة)</option>
+                            <option value="33">33% - استبعاد متوسط (متوازن)</option>
+                            <option value="50" selected>50% - استبعاد قوي (تنافسي)</option>
+                            <option value="66">66% - استبعاد شديد (للأقوياء فقط)</option>
+                        </select>
+                        <div style="font-size: 0.9rem; color: #ccc; margin-top: 0.5rem;">
+                            يحدد كم طالب سيتم استبعادهم في كل مرحلة
                         </div>
                     </div>
                     
-                    <!-- خط فاصل -->
-                    <div style="height: 1px; background: rgba(46, 139, 87, 0.3); margin: 1.5rem 0;"></div>
-                    
-                    <!-- نظام الاستبعاد -->
                     <div class="setting-group">
                         <label>
-                            <input type="checkbox" id="enableElimination" checked onchange="toggleEliminationSettings()">
-                            <strong>🚫 تفعيل نظام الاستبعاد للطلاب ضعيفي الأداء</strong>
+                            <input type="checkbox" id="autoCalculateThreshold" checked onchange="toggleManualThreshold()">
+                            حساب تلقائي لعتبة النجاح حسب أداء الطلاب
                         </label>
                         <div style="font-size: 0.9rem; color: #ccc; margin-top: 0.5rem;">
-                            يساعد على التركيز على الطلاب المتميزين في المراحل المتقدمة
+                            ينصح بتفعيل هذا الخيار للحصول على أفضل النتائج
                         </div>
                     </div>
                     
-                    <div class="setting-group" id="eliminationSettings">
-                        <label>الحد الأدنى للنقاط لتجنب الاستبعاد:</label>
-                        <input type="number" id="minimumScore" min="0" max="20" value="3" step="1">
+                    <div class="setting-group" id="manualThresholdGroup" style="display: none;">
+                        <label>الحد الأدنى للنقاط للنجاح:</label>
+                        <input type="number" id="manualThreshold" min="30" max="100" value="70" step="5">
                         <div style="font-size: 0.9rem; color: #ccc; margin-top: 0.5rem;">
                             الطلاب الذين يحصلون على أقل من هذا العدد سيتم استبعادهم
                         </div>
                     </div>
                 </div>
                 
-                <div class="settings-section">
-                    <h4>🏆 التصفيات المرحلية (مثل مملكة البرق)</h4>
-                    <div class="setting-group">
-                        <label>
-                            <input type="checkbox" id="enablePhaseElimination" checked onchange="togglePhaseEliminationSettings()">
-                            تفعيل نظام التصفيات المرحلية المتقدم
-                        </label>
-                        <div style="font-size: 0.9rem; color: #ccc; margin-top: 0.5rem;">
-                            تطبيق نظام مراحل تصفيات تدريجية للوصول للأفضل (مثل دوريات كرة القدم)
-                        </div>
-                    </div>
-                    
-                    <div class="setting-group" id="phaseEliminationSettings">
-                        <label>نسبة الاستبعاد في كل مرحلة:</label>
-                        <select id="eliminationPercentage" onchange="updateSettingsPreview()">
-                            <option value="20">20% - تصفيات خفيفة</option>
-                            <option value="30" selected>30% - تصفيات متوسطة</option>
-                            <option value="40">40% - تصفيات قوية</option>
-                            <option value="50">50% - تصفيات حادة</option>
-                        </select>
-                        <div style="font-size: 0.9rem; color: #ccc; margin-top: 0.5rem;">
-                            النسبة المستبعدة من كل مرحلة للوصول للطلاب الأفضل
-                        </div>
-                    </div>
-                    
-                    <div class="setting-group" id="questionsPerPhaseGroup">
-                        <label>عدد الأسئلة لكل مرحلة:</label>
-                        <input type="range" id="questionsPerPhase" min="2" max="6" value="3" oninput="updateQuestionsPerPhase(this.value)">
-                        <div class="slider-value">
-                            <span id="questionsPerPhaseValue">3</span> أسئلة لكل مرحلة
-                        </div>
-                        <div style="font-size: 0.9rem; color: #ccc; margin-top: 0.5rem;">
-                            عدد الأسئلة المطلوبة قبل الانتقال للمرحلة التالية
-                        </div>
-                    </div>
-                    
-                    <div class="setting-group">
-                        <label>
-                            <input type="checkbox" id="dynamicThreshold" checked>
-                            حساب تلقائي لحد التأهل حسب أداء الطلاب
-                        </label>
-                        <div style="font-size: 0.9rem; color: #ccc; margin-top: 0.5rem;">
-                            يتم حساب حد التأهل ديناميكياً بناءً على توزيع درجات الطلاب
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="settings-section">
-                    <h4>🎨 تخصيص التجربة</h4>
-                    <div class="setting-group">
-                        <label>
-                            <input type="checkbox" id="enableSounds" checked>
-                            تشغيل الأصوات والتأثيرات الصوتية
-                        </label>
-                    </div>
-                    <div class="setting-group">
-                        <label>
-                            <input type="checkbox" id="enableAnimations" checked>
-                            تفعيل الانتقالات والحركات المرئية
-                        </label>
-                    </div>
-                    <div class="setting-group">
-                        <label>
-                            <input type="checkbox" id="autoAdvance" onchange="toggleAutoAdvanceSettings()">
-                            الانتقال التلقائي للطالب التالي بعد التقييم
-                        </label>
-                    </div>
-                    
-                    <div class="setting-group" id="autoAdvanceSettings" style="display: none;">
-                        <label>مدة التأخير قبل الانتقال التلقائي:</label>
-                        <input type="range" id="autoAdvanceDelay" min="2" max="10" value="3" oninput="updateAutoAdvanceDelay(this.value)">
-                        <div class="slider-value">
-                            <span id="autoAdvanceDelayValue">3</span> ثوانٍ
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="wisdom-preview" id="wisdomPreview">
-                    <div class="preview-title">📋 معاينة إعدادات الحكمة</div>
+                <div class="competition-preview" id="competitionPreview">
+                    <div class="preview-title">📋 معاينة المنافسة</div>
                     <div style="text-align: center; color: #2E8B57;">
                         جارٍ تحميل المعاينة...
                     </div>
                 </div>
             </div>
             <div class="modal-buttons">
-                <button class="modal-btn primary" onclick="applyWisdomSettings()">
-                    <i class="fas fa-check"></i> تطبيق الإعدادات وبدء الحكمة
+                <button class="modal-btn primary" onclick="applySettings()">
+                    <i class="fas fa-check"></i> تطبيق الإعدادات وبدء المنافسة
                 </button>
-                <button class="modal-btn secondary" onclick="closeWisdomSettingsModal()">
+                <button class="modal-btn secondary" onclick="closeSettingsModal()">
                     <i class="fas fa-times"></i> إلغاء
                 </button>
             </div>
@@ -1786,8 +1702,17 @@
             isRunning: false,
             isPaused: false,
             completedStudents: 0,
+            currentRound: 1,
+            maxRounds: 2, // عدد الجولات لكل طالب
+            studentsPerRound: [],
+            eliminationSettings: {
+                opportunitiesPerStudent: 2, // 1-3 فرص لكل طالب
+                eliminationPercentage: 50, // نسبة الاستبعاد في كل مرحلة
+                minimumPassingScore: 70, // الحد الأدنى للنقاط للنجاح
+                autoCalculateThreshold: true // حساب تلقائي لعتبة النجاح
+            },
+            phases: [], // مراحل الاستبعاد
             currentPhase: 1,
-            phases: [],
             totalPhases: 1,
             settings: {
                 totalTime: 600, // 10 دقائق إجمالية
@@ -3023,6 +2948,25 @@
             showModal('wisdomEndModal');
         }
 
+        // ===== خوارزمية حساب العتبة الديناميكية =====
+        function calculateDynamicThreshold() {
+            if (!wisdomData.eliminationSettings.autoCalculateThreshold) {
+                return wisdomData.eliminationSettings.minimumPassingScore;
+            }
+            
+            const completedStudents = wisdomData.students.filter(s => s.totalScore > 0);
+            if (completedStudents.length === 0) return 50; // القيمة الافتراضية
+            
+            const scores = completedStudents.map(s => s.totalScore).sort((a, b) => b - a);
+            const studentsToEliminate = Math.floor(completedStudents.length * (wisdomData.eliminationSettings.eliminationPercentage / 100));
+            
+            if (studentsToEliminate === 0) return Math.min(...scores) - 1;
+            if (studentsToEliminate >= scores.length) return Math.max(...scores) + 1;
+            
+            // العتبة = النقاط للطالب الذي سيكون آخر المقبولين
+            return scores[scores.length - studentsToEliminate - 1] || 0;
+        }
+
         // ===== حفظ نتائج الحكمة =====
         function saveWisdomResults(results) {
             try {
@@ -3107,83 +3051,7 @@
             }
         }
 
-        // ===== إعدادات الحكمة المتقدمة =====
-        function showWisdomSettings() {
-            try {
-                console.log('فتح مودال إعدادات الحكمة...');
-                
-                // إظهار المودال أولاً
-                showModal('wisdomSettingsModal');
-                
-                // انتظار قصير للتأكد من تحميل DOM
-                setTimeout(() => {
-                    try {
-                        // تعيين القيم الحالية مع التحقق من وجود العناصر
-                        const timeSlider = document.getElementById('timePerStudentSlider');
-                        const timeValue = document.getElementById('timePerStudentValue');
-                        const excellentPoints = document.getElementById('excellentPoints');
-                        const veryGoodPoints = document.getElementById('veryGoodPoints');
-                        const goodPoints = document.getElementById('goodPoints');
-                        const weakPoints = document.getElementById('weakPoints');
-                        const enableElimination = document.getElementById('enableElimination');
-                        const minimumScore = document.getElementById('minimumScore');
-                        const enableSounds = document.getElementById('enableSounds');
-                        const enableAnimations = document.getElementById('enableAnimations');
-                        const autoAdvance = document.getElementById('autoAdvance');
-                        const autoAdvanceDelay = document.getElementById('autoAdvanceDelay');
-                        const autoAdvanceDelayValue = document.getElementById('autoAdvanceDelayValue');
-                        const enablePhaseElimination = document.getElementById('enablePhaseElimination');
-                        const eliminationPercentage = document.getElementById('eliminationPercentage');
-                        const questionsPerPhase = document.getElementById('questionsPerPhase');
-                        const questionsPerPhaseValue = document.getElementById('questionsPerPhaseValue');
-                        const dynamicThreshold = document.getElementById('dynamicThreshold');
-
-                        // تعيين القيم مع التحقق من الوجود
-                        if (timeSlider) timeSlider.value = wisdomData.timePerStudent || 120;
-                        if (timeValue) timeValue.textContent = Math.floor((wisdomData.timePerStudent || 120) / 60);
-                        if (excellentPoints) excellentPoints.value = wisdomData.pointSystem?.excellent || 10;
-                        if (veryGoodPoints) veryGoodPoints.value = wisdomData.pointSystem?.veryGood || 8;
-                        if (goodPoints) goodPoints.value = wisdomData.pointSystem?.good || 5;
-                        if (weakPoints) weakPoints.value = wisdomData.pointSystem?.weak || 1;
-                        if (enableElimination) enableElimination.checked = wisdomData.eliminationEnabled !== false;
-                        if (minimumScore) minimumScore.value = wisdomData.minimumScore || 3;
-                        if (enableSounds) enableSounds.checked = wisdomData.soundsEnabled !== false;
-                        if (enableAnimations) enableAnimations.checked = wisdomData.animationsEnabled !== false;
-                        if (autoAdvance) autoAdvance.checked = wisdomData.autoAdvance || false;
-                        if (autoAdvanceDelay) autoAdvanceDelay.value = wisdomData.autoAdvanceDelay || 3;
-                        if (autoAdvanceDelayValue) autoAdvanceDelayValue.textContent = wisdomData.autoAdvanceDelay || 3;
-                        
-                        // تحميل إعدادات التصفيات المرحلية
-                        if (enablePhaseElimination) enablePhaseElimination.checked = wisdomData.settings?.enablePhaseElimination !== false;
-                        if (eliminationPercentage) eliminationPercentage.value = wisdomData.settings?.eliminationPercentage || 30;
-                        if (questionsPerPhase) questionsPerPhase.value = wisdomData.settings?.questionsPerPhase || 3;
-                        if (questionsPerPhaseValue) questionsPerPhaseValue.textContent = wisdomData.settings?.questionsPerPhase || 3;
-                        if (dynamicThreshold) dynamicThreshold.checked = wisdomData.settings?.dynamicThreshold !== false;
-                        
-                        // تحديث العرض
-                        if (typeof toggleEliminationSettings === 'function') toggleEliminationSettings();
-                        if (typeof toggleAutoAdvanceSettings === 'function') toggleAutoAdvanceSettings();
-                        if (typeof togglePhaseEliminationSettings === 'function') togglePhaseEliminationSettings();
-                        if (typeof updateWisdomPreview === 'function') updateWisdomPreview();
-                        
-                        console.log('تم تحميل إعدادات الحكمة بنجاح');
-                        
-                    } catch (innerError) {
-                        console.error('خطأ في تحميل القيم:', innerError);
-                    }
-                }, 100);
-                
-                playSound('modal-open');
-                
-            } catch (error) {
-                console.error('خطأ في فتح مودال إعدادات الحكمة:', error);
-                showSmartNotification(
-                    'خطأ',
-                    'فشل في فتح شاشة الإعدادات',
-                    'danger'
-                );
-            }
-        }
+        // ===== نهاية القسم القديم =====
 
         function closeWisdomSettingsModal() {
             try {
@@ -3254,124 +3122,228 @@
             updateWisdomPreview();
         }
 
-        function applyWisdomSettings() {
-            try {
-                console.log('🔧 بدء تطبيق إعدادات الحكمة...');
-                
-                // التأكد من فتح النافذة
-                const modal = document.getElementById('wisdomSettingsModal');
-                if (!modal || !modal.classList.contains('show')) {
-                    console.error('❌ النافذة غير مفتوحة');
-                    showSmartNotification('خطأ', 'يجب فتح نافذة الإعدادات أولاً', 'danger');
-                    return;
-                }
-                
-                // انتظار قصير للتأكد من تحميل العناصر
-                setTimeout(() => {
-                    try {
-                        console.log('🔍 البحث عن العناصر...');
-                        
-                        // العناصر الأساسية
-                        const timeSlider = document.getElementById('timePerStudentSlider');
-                        const excellentPoints = document.getElementById('excellentPoints');
-                        const veryGoodPoints = document.getElementById('veryGoodPoints');
-                        const goodPoints = document.getElementById('goodPoints');
-                        const weakPoints = document.getElementById('weakPoints');
-                        const enableElimination = document.getElementById('enableElimination');
-                        const minimumScore = document.getElementById('minimumScore');
-                        
-                        // العناصر الاختيارية
-                        const enableSounds = document.getElementById('enableSounds');
-                        const enableAnimations = document.getElementById('enableAnimations');
-                        const autoAdvance = document.getElementById('autoAdvance');
-                        const autoAdvanceDelay = document.getElementById('autoAdvanceDelay');
-                        const enablePhaseElimination = document.getElementById('enablePhaseElimination');
-                        const eliminationPercentage = document.getElementById('eliminationPercentage');
-                        const questionsPerPhase = document.getElementById('questionsPerPhase');
-                        const dynamicThreshold = document.getElementById('dynamicThreshold');
+        // ===== إعدادات المنافسة =====
+        function showWisdomSettings() {
+            // Show modal first
+            showModal('wisdomSettingsModal');
+            
+            // Set current values
+            document.getElementById('opportunitiesSlider').value = wisdomData.eliminationSettings.opportunitiesPerStudent;
+            document.getElementById('opportunitiesValue').textContent = wisdomData.eliminationSettings.opportunitiesPerStudent;
+            document.getElementById('eliminationPercentage').value = wisdomData.eliminationSettings.eliminationPercentage;
+            document.getElementById('autoCalculateThreshold').checked = wisdomData.eliminationSettings.autoCalculateThreshold;
+            document.getElementById('manualThreshold').value = wisdomData.eliminationSettings.minimumPassingScore;
+            
+            // Update display
+            toggleManualThreshold();
+            
+            // Update preview after a short delay to ensure DOM is ready
+            setTimeout(() => {
+                updateSettingsPreview();
+            }, 100);
+            
+            // Play settings sound
+            playSound('modal-open');
+            setTimeout(() => {
+                playSound('cosmic-click');
+            }, 200);
+        }
 
-                        console.log('✅ العناصر الموجودة:', {
-                            timeSlider: !!timeSlider,
-                            excellentPoints: !!excellentPoints,
-                            veryGoodPoints: !!veryGoodPoints,
-                            goodPoints: !!goodPoints,
-                            weakPoints: !!weakPoints,
-                            enableElimination: !!enableElimination
-                        });
+        function closeSettingsModal() {
+            hideModal('wisdomSettingsModal');
+            playSound('modal-close');
+        }
 
-                        // التحقق من العناصر الأساسية فقط
-                        if (!timeSlider || !excellentPoints || !veryGoodPoints || !goodPoints || !weakPoints) {
-                            console.error('❌ بعض العناصر الأساسية مفقودة');
-                            showSmartNotification('خطأ', 'بعض عناصر الإعدادات غير موجودة. تحقق من فتح النافذة بشكل صحيح.', 'danger');
-                            return;
-                        }
+        function updateOpportunities(value) {
+            document.getElementById('opportunitiesValue').textContent = value;
+            // Update preview after a short delay for smooth UI
+            setTimeout(() => {
+                updateSettingsPreview();
+            }, 50);
+        }
 
-                        // تطبيق الإعدادات
-                        wisdomData.timePerStudent = parseInt(timeSlider.value) || 120;
-                        wisdomData.pointSystem = {
-                            excellent: parseInt(excellentPoints.value) || 10,
-                            veryGood: parseInt(veryGoodPoints.value) || 8,
-                            good: parseInt(goodPoints.value) || 5,
-                            weak: parseInt(weakPoints.value) || 1
-                        };
-                        wisdomData.eliminationEnabled = enableElimination ? enableElimination.checked : true;
-                        wisdomData.minimumScore = parseInt(minimumScore?.value) || 3;
-                        wisdomData.soundsEnabled = enableSounds ? enableSounds.checked : true;
-                        wisdomData.animationsEnabled = enableAnimations ? enableAnimations.checked : true;
-                        wisdomData.autoAdvance = autoAdvance ? autoAdvance.checked : false;
-                        wisdomData.autoAdvanceDelay = parseInt(autoAdvanceDelay?.value) || 3;
-                        
-                        // إعدادات التصفيات المرحلية
-                        wisdomData.settings.enablePhaseElimination = enablePhaseElimination ? enablePhaseElimination.checked : true;
-                        wisdomData.settings.eliminationPercentage = parseInt(eliminationPercentage?.value) || 30;
-                        wisdomData.settings.questionsPerPhase = parseInt(questionsPerPhase?.value) || 3;
-                        wisdomData.settings.dynamicThreshold = dynamicThreshold ? dynamicThreshold.checked : true;
-                        
-                        console.log('✅ إعدادات الحكمة المطبقة:', wisdomData);
-                        
-                        // حفظ الإعدادات في localStorage
-                        try {
-                            localStorage.setItem('wisdomSettings', JSON.stringify(wisdomData));
-                            console.log('💾 تم حفظ الإعدادات في localStorage');
-                        } catch (e) {
-                            console.error('❌ خطأ في حفظ الإعدادات:', e);
-                        }
-                        
-                        // إغلاق المودال
-                        closeWisdomSettingsModal();
-                        
-                        // تحديث العرض
-                        if (typeof displayStudentsList === 'function') {
-                            displayStudentsList();
-                        }
-                        
-                        // إظهار رسالة النجاح
-                        showSmartNotification(
-                            '✅ تم تطبيق الإعدادات',
-                            'إعدادات مملكة الحكمة جاهزة للاستخدام',
-                            'success'
-                        );
-                        
-                        console.log('🎉 تم تطبيق إعدادات الحكمة بنجاح');
-                        
-                    } catch (innerError) {
-                        console.error('❌ خطأ في تطبيق الإعدادات:', innerError);
-                        showSmartNotification(
-                            'خطأ في التطبيق',
-                            'حدث خطأ أثناء تطبيق الإعدادات. تحقق من المتصفح console للتفاصيل.',
-                            'danger'
-                        );
-                    }
-                }, 100); // انتظار 100ms للتأكد من تحميل العناصر
-                
-            } catch (error) {
-                console.error('❌ خطأ عام في تطبيق إعدادات الحكمة:', error);
-                showSmartNotification(
-                    'خطأ',
-                    'فشل في تطبيق الإعدادات. يرجى المحاولة مرة أخرى.',
-                    'danger'
-                );
+        function toggleManualThreshold() {
+            const isAuto = document.getElementById('autoCalculateThreshold').checked;
+            document.getElementById('manualThresholdGroup').style.display = isAuto ? 'none' : 'block';
+            updateSettingsPreview();
+        }
+
+        function applySettings() {
+            // Apply settings
+            wisdomData.eliminationSettings.opportunitiesPerStudent = parseInt(document.getElementById('opportunitiesSlider').value);
+            wisdomData.eliminationSettings.eliminationPercentage = parseInt(document.getElementById('eliminationPercentage').value);
+            wisdomData.eliminationSettings.autoCalculateThreshold = document.getElementById('autoCalculateThreshold').checked;
+            wisdomData.eliminationSettings.minimumPassingScore = parseInt(document.getElementById('manualThreshold').value);
+            
+            // Update max rounds
+            wisdomData.maxRounds = wisdomData.eliminationSettings.opportunitiesPerStudent;
+            
+            // Calculate elimination phases
+            calculateEliminationPhases();
+            
+            closeSettingsModal();
+            displayStudentsList();
+            
+            // Show confirmation
+            showSmartNotification('✅ تم تطبيق الإعدادات بنجاح!', 'success');
+        }
+
+        function updateSettingsPreview() {
+            const totalStudents = wisdomData.students.length;
+            const opportunities = parseInt(document.getElementById('opportunitiesSlider')?.value || wisdomData.eliminationSettings.opportunitiesPerStudent);
+            const eliminationRate = parseInt(document.getElementById('eliminationPercentage')?.value || wisdomData.eliminationSettings.eliminationPercentage);
+            
+            if (totalStudents === 0) {
+                document.getElementById('competitionPreview').innerHTML = `
+                    <div class="preview-title">📋 معاينة المنافسة</div>
+                    <div style="text-align: center; color: #ff9800; padding: 2rem;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i><br>
+                        <strong>لا توجد بيانات طلاب لعرض المعاينة</strong><br>
+                        <span style="font-size: 0.9rem;">يرجى العودة لمركز الممالك وتحديد الطلاب أولاً</span>
+                    </div>
+                `;
+                return;
             }
+            
+            // Calculate phases
+            const phases = calculatePreviewPhases(totalStudents, eliminationRate);
+            
+            let previewHTML = `
+                <div class="preview-title">📋 معاينة المنافسة التفصيلية</div>
+                <div style="margin-bottom: 1.5rem; text-align: center; background: rgba(46,139,87,0.1); padding: 1rem; border-radius: 10px;">
+                    <div style="font-size: 1.1rem; color: var(--wisdom-primary); margin-bottom: 0.5rem;">
+                        <i class="fas fa-users"></i> <strong>${totalStudents}</strong> طالب متنافس
+                    </div>
+                    <div style="font-size: 1rem; color: #fff;">
+                        <i class="fas fa-redo"></i> <strong>${opportunities}</strong> فرصة لكل طالب
+                    </div>
+                </div>
+                
+                <div style="text-align: right; margin-bottom: 1rem;">
+                    <strong style="color: var(--wisdom-primary);">🏟️ مراحل المنافسة:</strong>
+                </div>
+            `;
+            
+            phases.forEach((phase, index) => {
+                const isWinner = index === phases.length - 1;
+                const eliminatedCount = index < phases.length - 1 ? phase.starting - phases[index + 1].starting : 0;
+                
+                previewHTML += `
+                    <div class="phase-info">
+                        <div>
+                            <span style="font-weight: 700;">
+                                ${isWinner ? '🏆 الفائزون النهائيون' : `⚡ المرحلة ${index + 1}`}
+                            </span>
+                            ${!isWinner && eliminatedCount > 0 ? 
+                                `<div style="font-size: 0.8rem; color: #ff9800; margin-top: 0.25rem;">
+                                    سيتم استبعاد ${eliminatedCount} طالب
+                                </div>` : ''}
+                        </div>
+                        <div style="text-align: left;">
+                            <span style="color: ${isWinner ? '#4caf50' : '#2E8B57'}; font-weight: 700; font-size: 1.1rem;">
+                                ${phase.remaining} طالب
+                            </span>
+                            <div style="font-size: 0.8rem; color: #ccc;">
+                                ${isWinner ? 'مؤهلون للفوز' : 'ينتقلون للمرحلة التالية'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Add summary
+            const totalEliminated = totalStudents - phases[phases.length - 1].remaining;
+            const winnerPercentage = Math.round((phases[phases.length - 1].remaining / totalStudents) * 100);
+            
+            previewHTML += `
+                <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 10px; text-align: center;">
+                    <div style="color: #ff9800; margin-bottom: 0.5rem;">
+                        <i class="fas fa-chart-pie"></i> ملخص النتائج المتوقعة
+                    </div>
+                    <div style="font-size: 0.9rem; color: #ccc;">
+                        سيتم استبعاد <strong style="color: #f44336;">${totalEliminated}</strong> طالب<br>
+                        سيفوز <strong style="color: #4caf50;">${phases[phases.length - 1].remaining}</strong> طالب (${winnerPercentage}%)
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('competitionPreview').innerHTML = previewHTML;
+        }
+
+        function calculatePreviewPhases(totalStudents, eliminationRate) {
+            const phases = [];
+            let currentStudents = totalStudents;
+            let phaseNumber = 1;
+            
+            while (currentStudents > Math.ceil(totalStudents * 0.1) && phaseNumber <= 5) { // حد أقصى 5 مراحل أو 10% من الطلاب
+                phases.push({
+                    phase: phaseNumber,
+                    starting: currentStudents,
+                    remaining: currentStudents
+                });
+                
+                // Calculate elimination for next phase
+                const toEliminate = Math.floor(currentStudents * (eliminationRate / 100));
+                currentStudents = Math.max(1, currentStudents - toEliminate);
+                phaseNumber++;
+            }
+            
+            // Final winners
+            phases.push({
+                phase: phaseNumber,
+                starting: currentStudents,
+                remaining: currentStudents,
+                isFinal: true
+            });
+            
+            return phases;
+        }
+
+        // ===== خوارزمية الاستبعاد الذكية =====
+        function calculateEliminationPhases() {
+            const totalStudents = wisdomData.students.length;
+            const eliminationRate = wisdomData.eliminationSettings.eliminationPercentage;
+            
+            wisdomData.phases = [];
+            wisdomData.totalPhases = 1;
+            
+            if (totalStudents <= 4) {
+                // Small groups - no elimination, just ranking
+                wisdomData.phases = [{
+                    phaseNumber: 1,
+                    studentsAtStart: totalStudents,
+                    studentsAtEnd: totalStudents,
+                    eliminationThreshold: 0,
+                    isRanking: true
+                }];
+                return;
+            }
+            
+            let currentStudents = totalStudents;
+            let phaseNumber = 1;
+            const targetWinners = Math.max(2, Math.ceil(totalStudents * 0.1)); // 10% فائزين كحد أدنى
+            
+            while (currentStudents > targetWinners && phaseNumber <= 5) {
+                const toEliminate = Math.floor(currentStudents * (eliminationRate / 100));
+                const studentsRemaining = Math.max(targetWinners, currentStudents - toEliminate);
+                
+                wisdomData.phases.push({
+                    phaseNumber: phaseNumber,
+                    studentsAtStart: currentStudents,
+                    studentsAtEnd: studentsRemaining,
+                    toEliminate: currentStudents - studentsRemaining,
+                    eliminationThreshold: 0, // سيتم حسابه ديناميكياً
+                    isActive: phaseNumber === 1
+                });
+                
+                currentStudents = studentsRemaining;
+                phaseNumber++;
+            }
+            
+            wisdomData.totalPhases = wisdomData.phases.length;
+            wisdomData.currentPhase = 1;
+            
+            console.log('📊 مراحل الاستبعاد:', wisdomData.phases);
         }
 
         function updateWisdomPreview() {
