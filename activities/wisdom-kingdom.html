@@ -1820,10 +1820,22 @@
             const evalButtons = document.querySelectorAll('.evaluation-buttons .eval-btn');
             evalButtons.forEach(btn => btn.disabled = true);
             
-            setTimeout(() => {
-                closeModal();
-                evalButtons.forEach(btn => btn.disabled = false);
-            }, 2500);
+            // التحقق من إعداد الانتقال التلقائي
+            if (wisdomData.autoAdvance) {
+                // انتقال تلقائي بعد التأخير المحدد
+                const delay = (wisdomData.autoAdvanceDelay || 3) * 1000;
+                setTimeout(() => {
+                    closeModal();
+                    evalButtons.forEach(btn => btn.disabled = false);
+                    moveToNextStudent(); // الانتقال التلقائي للطالب التالي
+                }, delay);
+            } else {
+                // انتقال يدوي - انتظار إغلاق المودال يدوياً
+                setTimeout(() => {
+                    closeModal();
+                    evalButtons.forEach(btn => btn.disabled = false);
+                }, 2500);
+            }
         }
 
         // ===== عرض نتيجة الاستبعاد =====
@@ -2076,7 +2088,7 @@
             const evalData = evaluationMap[evaluation];
             
             const title = `${evalData.icon} ${evalData.text}`;
-            const message = `
+            let message = `
                 <div style="font-size: 1.3rem; margin-bottom: 1rem;">
                     الطالب: <strong style="color: #FFD700;">${student.name}</strong>
                 </div>
@@ -2090,6 +2102,20 @@
                     ${student.insights[student.insights.length - 1]?.insight || ''}
                 </div>
             `;
+
+            // إضافة رسالة الانتقال التلقائي إذا كان مفعلاً
+            if (wisdomData.autoAdvance) {
+                message += `
+                    <div style="margin-top: 1.5rem; padding: 0.8rem; background: rgba(155, 89, 182, 0.3); border-radius: 8px; border-left: 4px solid #9b59b6;">
+                        <div style="color: #9b59b6; font-size: 0.9rem;">
+                            <i class="fas fa-forward"></i> الانتقال التلقائي مُفعل
+                        </div>
+                        <div style="color: #fff; font-size: 0.8rem; margin-top: 0.3rem;">
+                            سيتم الانتقال للطالب التالي خلال ${wisdomData.autoAdvanceDelay || 3} ثوانٍ
+                        </div>
+                    </div>
+                `;
+            }
             
             setModalContent(title, message, evalData.color);
             showModal('resultModal');
@@ -2925,7 +2951,7 @@
             );
             
             setTimeout(() => {
-                window.location.href = '../main.html';
+                window.location.href = '../index.html'; // تصحيح المسار لمركز الممالك
             }, 2000);
         }
 
@@ -3034,10 +3060,10 @@
                 if (confirm('رحلة الحكمة جارية! هل تريد العودة وحفظ النتائج؟')) {
                     const results = wisdomData.students.filter(s => s.score > 0);
                     saveWisdomResults(results);
-                    window.location.href = '../main.html';
+                    window.location.href = '../index.html'; // العودة لمركز الممالك
                 }
             } else {
-                window.location.href = '../main.html';
+                window.location.href = '../index.html'; // العودة لمركز الممالك
             }
         }
 
