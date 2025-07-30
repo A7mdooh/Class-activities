@@ -2445,34 +2445,84 @@
 
         // ===== إعدادات الحكمة المتقدمة =====
         function showWisdomSettings() {
-            showModal('wisdomSettingsModal');
-            
-            // تعيين القيم الحالية
-            document.getElementById('timePerStudentSlider').value = wisdomData.timePerStudent || 120;
-            document.getElementById('timePerStudentValue').textContent = Math.floor((wisdomData.timePerStudent || 120) / 60);
-            document.getElementById('excellentPoints').value = wisdomData.pointSystem?.excellent || 10;
-            document.getElementById('veryGoodPoints').value = wisdomData.pointSystem?.veryGood || 8;
-            document.getElementById('goodPoints').value = wisdomData.pointSystem?.good || 5;
-            document.getElementById('weakPoints').value = wisdomData.pointSystem?.weak || 1;
-            document.getElementById('enableElimination').checked = wisdomData.eliminationEnabled || true;
-            document.getElementById('minimumScore').value = wisdomData.minimumScore || 3;
-            document.getElementById('enableSounds').checked = wisdomData.soundsEnabled !== false;
-            document.getElementById('enableAnimations').checked = wisdomData.animationsEnabled !== false;
-            document.getElementById('autoAdvance').checked = wisdomData.autoAdvance || false;
-            document.getElementById('autoAdvanceDelay').value = wisdomData.autoAdvanceDelay || 3;
-            document.getElementById('autoAdvanceDelayValue').textContent = wisdomData.autoAdvanceDelay || 3;
-            
-            // تحديث العرض
-            toggleEliminationSettings();
-            toggleAutoAdvanceSettings();
-            updateWisdomPreview();
-            
-            playSound('modal-open');
+            try {
+                console.log('فتح مودال إعدادات الحكمة...');
+                
+                // إظهار المودال أولاً
+                showModal('wisdomSettingsModal');
+                
+                // انتظار قصير للتأكد من تحميل DOM
+                setTimeout(() => {
+                    try {
+                        // تعيين القيم الحالية مع التحقق من وجود العناصر
+                        const timeSlider = document.getElementById('timePerStudentSlider');
+                        const timeValue = document.getElementById('timePerStudentValue');
+                        const excellentPoints = document.getElementById('excellentPoints');
+                        const veryGoodPoints = document.getElementById('veryGoodPoints');
+                        const goodPoints = document.getElementById('goodPoints');
+                        const weakPoints = document.getElementById('weakPoints');
+                        const enableElimination = document.getElementById('enableElimination');
+                        const minimumScore = document.getElementById('minimumScore');
+                        const enableSounds = document.getElementById('enableSounds');
+                        const enableAnimations = document.getElementById('enableAnimations');
+                        const autoAdvance = document.getElementById('autoAdvance');
+                        const autoAdvanceDelay = document.getElementById('autoAdvanceDelay');
+                        const autoAdvanceDelayValue = document.getElementById('autoAdvanceDelayValue');
+
+                        // تعيين القيم مع التحقق من الوجود
+                        if (timeSlider) timeSlider.value = wisdomData.timePerStudent || 120;
+                        if (timeValue) timeValue.textContent = Math.floor((wisdomData.timePerStudent || 120) / 60);
+                        if (excellentPoints) excellentPoints.value = wisdomData.pointSystem?.excellent || 10;
+                        if (veryGoodPoints) veryGoodPoints.value = wisdomData.pointSystem?.veryGood || 8;
+                        if (goodPoints) goodPoints.value = wisdomData.pointSystem?.good || 5;
+                        if (weakPoints) weakPoints.value = wisdomData.pointSystem?.weak || 1;
+                        if (enableElimination) enableElimination.checked = wisdomData.eliminationEnabled !== false;
+                        if (minimumScore) minimumScore.value = wisdomData.minimumScore || 3;
+                        if (enableSounds) enableSounds.checked = wisdomData.soundsEnabled !== false;
+                        if (enableAnimations) enableAnimations.checked = wisdomData.animationsEnabled !== false;
+                        if (autoAdvance) autoAdvance.checked = wisdomData.autoAdvance || false;
+                        if (autoAdvanceDelay) autoAdvanceDelay.value = wisdomData.autoAdvanceDelay || 3;
+                        if (autoAdvanceDelayValue) autoAdvanceDelayValue.textContent = wisdomData.autoAdvanceDelay || 3;
+                        
+                        // تحديث العرض
+                        if (typeof toggleEliminationSettings === 'function') toggleEliminationSettings();
+                        if (typeof toggleAutoAdvanceSettings === 'function') toggleAutoAdvanceSettings();
+                        if (typeof updateWisdomPreview === 'function') updateWisdomPreview();
+                        
+                        console.log('تم تحميل إعدادات الحكمة بنجاح');
+                        
+                    } catch (innerError) {
+                        console.error('خطأ في تحميل القيم:', innerError);
+                    }
+                }, 100);
+                
+                playSound('modal-open');
+                
+            } catch (error) {
+                console.error('خطأ في فتح مودال إعدادات الحكمة:', error);
+                showSmartNotification(
+                    'خطأ',
+                    'فشل في فتح شاشة الإعدادات',
+                    'danger'
+                );
+            }
         }
 
         function closeWisdomSettingsModal() {
-            hideModal('wisdomSettingsModal');
-            playSound('modal-close');
+            try {
+                console.log('إغلاق مودال إعدادات الحكمة...');
+                hideModal('wisdomSettingsModal');
+                playSound('modal-close');
+                console.log('تم إغلاق مودال الإعدادات بنجاح');
+            } catch (error) {
+                console.error('خطأ في إغلاق مودال الإعدادات:', error);
+                // محاولة إغلاق بديلة
+                const modal = document.getElementById('wisdomSettingsModal');
+                if (modal) {
+                    modal.classList.remove('show');
+                    modal.style.display = 'none';
+                }
+            }
         }
 
         function updateTimePerStudent(value) {
@@ -2510,32 +2560,78 @@
         }
 
         function applyWisdomSettings() {
-            // تطبيق الإعدادات
-            wisdomData.timePerStudent = parseInt(document.getElementById('timePerStudentSlider').value);
-            wisdomData.pointSystem = {
-                excellent: parseInt(document.getElementById('excellentPoints').value),
-                veryGood: parseInt(document.getElementById('veryGoodPoints').value),
-                good: parseInt(document.getElementById('goodPoints').value),
-                weak: parseInt(document.getElementById('weakPoints').value)
-            };
-            wisdomData.eliminationEnabled = document.getElementById('enableElimination').checked;
-            wisdomData.minimumScore = parseInt(document.getElementById('minimumScore').value);
-            wisdomData.soundsEnabled = document.getElementById('enableSounds').checked;
-            wisdomData.animationsEnabled = document.getElementById('enableAnimations').checked;
-            wisdomData.autoAdvance = document.getElementById('autoAdvance').checked;
-            wisdomData.autoAdvanceDelay = parseInt(document.getElementById('autoAdvanceDelay').value);
-            
-            // حفظ الإعدادات في localStorage
-            localStorage.setItem('wisdomSettings', JSON.stringify(wisdomData));
-            
-            closeWisdomSettingsModal();
-            displayStudentsList();
-            
-            showSmartNotification(
-                '✅ تم تطبيق الإعدادات',
-                'إعدادات مملكة الحكمة جاهزة للاستخدام',
-                'success'
-            );
+            try {
+                console.log('بدء تطبيق إعدادات الحكمة...');
+                
+                // التحقق من وجود العناصر
+                const timeSlider = document.getElementById('timePerStudentSlider');
+                const excellentPoints = document.getElementById('excellentPoints');
+                const veryGoodPoints = document.getElementById('veryGoodPoints');
+                const goodPoints = document.getElementById('goodPoints');
+                const weakPoints = document.getElementById('weakPoints');
+                const enableElimination = document.getElementById('enableElimination');
+                const minimumScore = document.getElementById('minimumScore');
+                const enableSounds = document.getElementById('enableSounds');
+                const enableAnimations = document.getElementById('enableAnimations');
+                const autoAdvance = document.getElementById('autoAdvance');
+                const autoAdvanceDelay = document.getElementById('autoAdvanceDelay');
+
+                if (!timeSlider || !excellentPoints) {
+                    console.error('بعض العناصر المطلوبة غير موجودة');
+                    showSmartNotification('خطأ', 'فشل في تطبيق الإعدادات - عناصر مفقودة', 'danger');
+                    return;
+                }
+
+                // تطبيق الإعدادات
+                wisdomData.timePerStudent = parseInt(timeSlider.value) || 120;
+                wisdomData.pointSystem = {
+                    excellent: parseInt(excellentPoints.value) || 10,
+                    veryGood: parseInt(veryGoodPoints.value) || 8,
+                    good: parseInt(goodPoints.value) || 5,
+                    weak: parseInt(weakPoints.value) || 1
+                };
+                wisdomData.eliminationEnabled = enableElimination ? enableElimination.checked : true;
+                wisdomData.minimumScore = parseInt(minimumScore?.value) || 3;
+                wisdomData.soundsEnabled = enableSounds ? enableSounds.checked : true;
+                wisdomData.animationsEnabled = enableAnimations ? enableAnimations.checked : true;
+                wisdomData.autoAdvance = autoAdvance ? autoAdvance.checked : false;
+                wisdomData.autoAdvanceDelay = parseInt(autoAdvanceDelay?.value) || 3;
+                
+                console.log('إعدادات الحكمة المطبقة:', wisdomData);
+                
+                // حفظ الإعدادات في localStorage
+                try {
+                    localStorage.setItem('wisdomSettings', JSON.stringify(wisdomData));
+                    console.log('تم حفظ الإعدادات في localStorage');
+                } catch (e) {
+                    console.error('خطأ في حفظ الإعدادات:', e);
+                }
+                
+                // إغلاق المودال
+                closeWisdomSettingsModal();
+                
+                // تحديث العرض
+                if (typeof displayStudentsList === 'function') {
+                    displayStudentsList();
+                }
+                
+                // إظهار رسالة النجاح
+                showSmartNotification(
+                    '✅ تم تطبيق الإعدادات',
+                    'إعدادات مملكة الحكمة جاهزة للاستخدام',
+                    'success'
+                );
+                
+                console.log('تم تطبيق إعدادات الحكمة بنجاح');
+                
+            } catch (error) {
+                console.error('خطأ في تطبيق إعدادات الحكمة:', error);
+                showSmartNotification(
+                    'خطأ',
+                    'فشل في تطبيق الإعدادات. يرجى المحاولة مرة أخرى.',
+                    'danger'
+                );
+            }
         }
 
         function updateWisdomPreview() {
@@ -2733,6 +2829,14 @@
             }
         }
 
+        function hideModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('show');
+                playSound('modal-close');
+            }
+        }
+
         function closeModal(modalId = null) {
             if (modalId) {
                 const modal = document.getElementById(modalId);
@@ -2910,6 +3014,69 @@
                     "${randomQuote}"
                 </div>
             `;
+        }
+
+        // ===== تهيئة الصفحة عند التحميل =====
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('بدء تحميل مملكة الحكمة...');
+            
+            // تهيئة البيانات الأساسية إذا لم تكن موجودة
+            if (!window.wisdomData) {
+                resetWisdomData();
+                console.log('تم إنشاء بيانات الحكمة الافتراضية');
+            }
+            
+            // تحميل البيانات المحفوظة من localStorage
+            try {
+                const savedSettings = localStorage.getItem('wisdomSettings');
+                if (savedSettings) {
+                    const parsed = JSON.parse(savedSettings);
+                    window.wisdomData = { ...window.wisdomData, ...parsed };
+                    console.log('تم تحميل الإعدادات المحفوظة');
+                }
+            } catch (e) {
+                console.warn('فشل في تحميل الإعدادات المحفوظة:', e);
+            }
+            
+            // تحديث العرض الأولي
+            updateDisplay();
+            displayStudentsList();
+            
+            console.log('تم تحميل مملكة الحكمة بنجاح');
+            
+            // إضافة معالجات للأزرار لضمان عملها
+            setTimeout(() => {
+                addButtonListeners();
+            }, 500);
+        });
+
+        // ===== إضافة معالجات الأزرار =====
+        function addButtonListeners() {
+            try {
+                // زر تطبيق الإعدادات
+                const applyBtn = document.querySelector('button[onclick="applyWisdomSettings()"]');
+                if (applyBtn) {
+                    applyBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        console.log('تم النقر على زر تطبيق الإعدادات');
+                        applyWisdomSettings();
+                    });
+                }
+
+                // زر إغلاق الإعدادات
+                const closeBtn = document.querySelector('button[onclick="closeWisdomSettingsModal()"]');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        console.log('تم النقر على زر الإغلاق');
+                        closeWisdomSettingsModal();
+                    });
+                }
+
+                console.log('تم إضافة معالجات الأزرار بنجاح');
+            } catch (error) {
+                console.error('خطأ في إضافة معالجات الأزرار:', error);
+            }
         }
 
         // ===== نظام الصوت =====
