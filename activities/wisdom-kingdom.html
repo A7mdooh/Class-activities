@@ -40,9 +40,69 @@
         }
 
         /* Animated background particles */
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
+        @keyframes eliminationFloat {
+            0% {
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0.8;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* مودال الاستبعاد */
+        .elimination-result {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(231, 76, 60, 0.3);
+        }
+
+        .elimination-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .eliminated-student-info h4 {
+            font-size: 1.5rem;
+            margin: 0.5rem 0;
+            color: #fff;
+        }
+
+        .eliminated-student-info p {
+            color: rgba(255, 255, 255, 0.8);
+            margin: 0.3rem 0;
+        }
+
+        .elimination-message {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            font-weight: bold;
+        }
+
+        .elimination-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-3px); }
+            20%, 40%, 60%, 80% { transform: translateX(3px); }
         }
 
         @keyframes pulse {
@@ -443,6 +503,24 @@
             background: linear-gradient(135deg, rgba(52, 152, 219, 0.3), rgba(155, 89, 182, 0.3));
             border: 2px solid #3498DB;
             animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .student-card.eliminated {
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.3), rgba(192, 57, 43, 0.3));
+            border: 2px solid #e74c3c;
+            opacity: 0.7;
+            filter: grayscale(50%);
+        }
+        
+        .student-card.eliminated:hover {
+            transform: none;
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.3), rgba(192, 57, 43, 0.3));
+        }
+        
+        .student-card.skipped {
+            background: linear-gradient(135deg, rgba(149, 165, 166, 0.3), rgba(127, 140, 141, 0.3));
+            border: 2px solid #95a5a6;
+            opacity: 0.8;
         }
 
         /* Timer Section */
@@ -1039,6 +1117,10 @@
                     <i class="fas fa-forward"></i>
                     تخطي الطالب
                 </button>
+                <button class="eval-btn eliminate-student" onclick="eliminateStudent()" style="background: linear-gradient(45deg, #8e44ad, #e74c3c); color: white; padding: 1rem 2rem; margin-right: 1rem;">
+                    <i class="fas fa-user-times"></i>
+                    استبعاد نهائي
+                </button>
             </div>
         </div>
 
@@ -1253,38 +1335,54 @@
                 
                 let statusIcon = '';
                 let statusText = '';
+                let cardColor = '';
                 
                 switch(student.status) {
                     case 'waiting':
                         statusIcon = '⏳';
                         statusText = 'في الانتظار';
+                        cardColor = 'rgba(255, 255, 255, 0.1)';
                         break;
                     case 'current':
                         statusIcon = '🧠';
-                        statusText = 'يفكر الآن';
-                        break;
-                    case 'thinking':
-                        statusIcon = '💭';
-                        statusText = 'في تأمل عميق';
+                        statusText = 'يجيب الآن';
+                        cardColor = 'rgba(155, 89, 182, 0.3)';
+                        studentCard.style.animation = 'pulse 2s infinite';
                         break;
                     case 'completed':
-                        statusIcon = '✨';
+                        statusIcon = '✅';
                         statusText = 'مكتمل';
+                        cardColor = 'rgba(39, 174, 96, 0.3)';
+                        break;
+                    case 'skipped':
+                        statusIcon = '⏭️';
+                        statusText = 'تم التخطي';
+                        cardColor = 'rgba(149, 165, 166, 0.3)';
+                        break;
+                    case 'eliminated':
+                        statusIcon = '🚫';
+                        statusText = 'مستبعد';
+                        cardColor = 'rgba(231, 76, 60, 0.3)';
                         break;
                 }
                 
+                studentCard.style.background = cardColor;
+                
                 studentCard.innerHTML = `
-                    <div style="font-weight: bold; margin-bottom: 0.5rem;">
+                    <div style="font-weight: bold; margin-bottom: 0.5rem; color: #FFD700;">
                         ${statusIcon} ${student.name}
                     </div>
                     <div style="font-size: 0.8rem; color: #ccc; margin-bottom: 0.3rem;">
-                        ${student.className}
+                        ${student.className || 'غير محدد'}
                     </div>
-                    <div style="font-size: 0.8rem;">
+                    <div style="font-size: 0.8rem; color: #fff;">
                         ${statusText}
                     </div>
                     ${student.score > 0 ? `<div style="color: #FFD700; font-weight: bold; margin-top: 0.3rem;">
-                        ${student.score} نقطة حكمة
+                        ${student.score} نقطة
+                    </div>` : ''}
+                    ${student.score < 0 ? `<div style="color: #f44336; font-weight: bold; margin-top: 0.3rem;">
+                        مستبعد
                     </div>` : ''}
                 `;
                 
@@ -1444,7 +1542,7 @@
 
             // عرض اسم الطالب الحالي
             document.getElementById('currentStudentName').textContent = 
-                `${currentStudent.name} - ${currentStudent.className}`;
+                `${currentStudent.name} - ${currentStudent.className || 'غير محدد'}`;
             
             // إظهار قسم الطالب
             document.getElementById('studentSection').style.display = 'block';
@@ -1526,18 +1624,102 @@
             }, 2500);
         }
 
-        // ===== الانتقال للطالب التالي =====
-        function nextStudent() {
-            // الانتقال للطالب التالي
-            wisdomData.currentStudentIndex++;
-            
-            if (wisdomData.currentStudentIndex < wisdomData.students.length && 
-                wisdomData.remainingTime > 0) {
-                showCurrentStudent();
-            } else {
-                completeWisdomJourney();
+        // ===== عرض نتيجة الاستبعاد =====
+        function showEliminationResult(student) {
+            const modal = document.getElementById('eliminationModal');
+            if (!modal) {
+                // إنشاء مودال الاستبعاد إذا لم يكن موجوداً
+                const modalHTML = `
+                    <div id="eliminationModal" class="student-modal">
+                        <div class="modal-content elimination-result">
+                            <div class="elimination-icon">🚫</div>
+                            <h3>تم الاستبعاد نهائياً</h3>
+                            <div class="eliminated-student-info">
+                                <h4 id="eliminatedStudentName"></h4>
+                                <p id="eliminatedStudentClass"></p>
+                            </div>
+                            <div class="elimination-message">
+                                لا يمكن للطالب المشاركة في بقية الجولة
+                            </div>
+                            <button onclick="closeEliminationModal()" class="continue-btn">
+                                <i class="fas fa-arrow-right"></i>
+                                متابعة
+                            </button>
+                        </div>
+                        <div class="elimination-particles" id="eliminationParticles"></div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', modalHTML);
             }
             
+            // تحديث معلومات الطالب المستبعد
+            document.getElementById('eliminatedStudentName').textContent = student.name;
+            document.getElementById('eliminatedStudentClass').textContent = student.className || 'غير محدد';
+            
+            // عرض المودال مع تأثير
+            const eliminationModal = document.getElementById('eliminationModal');
+            eliminationModal.style.display = 'flex';
+            eliminationModal.style.opacity = '0';
+            eliminationModal.style.transform = 'scale(0.5)';
+            
+            // تأثير الظهور
+            setTimeout(() => {
+                eliminationModal.style.transition = 'all 0.3s ease';
+                eliminationModal.style.opacity = '1';
+                eliminationModal.style.transform = 'scale(1)';
+            }, 50);
+            
+            // إضافة جسيمات حمراء
+            createEliminationParticles();
+            
+            // تحديث قائمة الطلاب
+            displayStudentsList();
+        }
+
+        // ===== إغلاق مودال الاستبعاد =====
+        function closeEliminationModal() {
+            const modal = document.getElementById('eliminationModal');
+            if (modal) {
+                modal.style.transition = 'all 0.3s ease';
+                modal.style.opacity = '0';
+                modal.style.transform = 'scale(0.5)';
+                
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                    // الانتقال للطالب التالي مع التأثيرات
+                    moveToNextStudent();
+                }, 300);
+            }
+        }
+
+        // ===== إنشاء جسيمات الاستبعاد =====
+        function createEliminationParticles() {
+            const container = document.getElementById('eliminationParticles');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'elimination-particle';
+                particle.style.cssText = `
+                    position: absolute;
+                    width: 10px;
+                    height: 10px;
+                    background: #e74c3c;
+                    border-radius: 50%;
+                    pointer-events: none;
+                    opacity: 0.8;
+                    left: ${Math.random() * 100}%;
+                    top: ${Math.random() * 100}%;
+                    animation: eliminationFloat ${2 + Math.random() * 3}s ease-out infinite;
+                `;
+                container.appendChild(particle);
+            }
+        }
+        function nextStudent() {
+            // استخدام الدالة المحسنة للانتقال
+            moveToNextStudent();
             playSound('transition');
         }
 
@@ -1555,6 +1737,65 @@
             }
             
             nextStudent();
+        }
+
+        // ===== استبعاد الطالب نهائياً =====
+        function eliminateStudent() {
+            if (!wisdomData.isRunning || wisdomData.isPaused) return;
+            
+            const currentStudent = wisdomData.students[wisdomData.currentStudentIndex];
+            if (!currentStudent) return;
+
+            // تأكيد الاستبعاد
+            if (!confirm(`هل أنت متأكد من استبعاد الطالب "${currentStudent.name}" نهائياً؟\nهذا الإجراء لا يمكن التراجع عنه!`)) {
+                return;
+            }
+
+            // تعيين كمستبعد
+            currentStudent.status = 'eliminated';
+            currentStudent.evaluation = 'eliminated';
+            currentStudent.score = -10; // عقوبة للاستبعاد
+            currentStudent.timestamp = new Date().toISOString();
+
+            // عرض نتيجة الاستبعاد
+            showEliminationResult(currentStudent);
+            
+            // تشغيل صوت الاستبعاد
+            playSound('notification-pop');
+            
+            // الانتقال للطالب التالي
+            wisdomData.currentStudentIndex++;
+            
+            setTimeout(() => {
+                closeModal();
+                if (wisdomData.currentStudentIndex < wisdomData.students.length && wisdomData.remainingTime > 0) {
+                    showCurrentStudent();
+                } else {
+                    completeWisdomJourney();
+                }
+            }, 3000);
+            
+            displayStudentsList();
+            updateDisplay();
+        }
+
+        // ===== عرض نتيجة الاستبعاد =====
+        function showEliminationResult(student) {
+            const title = '🚫 تم الاستبعاد';
+            const message = `
+                <div style="font-size: 1.3rem; margin-bottom: 1rem; color: #f44336;">
+                    <i class="fas fa-user-times"></i> تم استبعاد الطالب
+                </div>
+                <div style="font-size: 1.2rem; margin-bottom: 1rem;">
+                    <strong style="color: #FFD700;">${student.name}</strong>
+                </div>
+                <div style="font-size: 1rem; color: #ff9800;">
+                    لن يشارك في باقي التقييم
+                </div>
+            `;
+            
+            setModalContent(title, message, '#f44336');
+            showModal('resultModal');
         }
 
         // ===== إضافة بصيرة للطالب =====
@@ -1577,7 +1818,51 @@
             }
         }
 
-        // ===== عرض نتيجة التقييم =====
+        // ===== الانتقال للطالب التالي مع تأثيرات =====
+        function moveToNextStudent() {
+            // إضافة تأثير انتقال سلس للطالب الحالي
+            const currentCard = document.querySelector('.student-card.current');
+            if (currentCard) {
+                currentCard.style.transition = 'all 0.5s ease';
+                currentCard.style.transform = 'scale(0.9)';
+                currentCard.style.opacity = '0.5';
+            }
+
+            setTimeout(() => {
+                // تحديث حالة الطالب الحالي
+                if (wisdomData.students[wisdomData.currentStudentIndex]) {
+                    wisdomData.students[wisdomData.currentStudentIndex].status = 'completed';
+                }
+                
+                wisdomData.currentStudentIndex++;
+                
+                // البحث عن أول طالب غير مستبعد
+                while (wisdomData.currentStudentIndex < wisdomData.students.length && 
+                       wisdomData.students[wisdomData.currentStudentIndex].status === 'eliminated') {
+                    wisdomData.currentStudentIndex++;
+                }
+                
+                if (wisdomData.currentStudentIndex < wisdomData.students.length && wisdomData.remainingTime > 0) {
+                    wisdomData.students[wisdomData.currentStudentIndex].status = 'current';
+                    showCurrentStudent();
+                    displayStudentsList();
+                    
+                    // تأثير الانتقال للطالب الجديد
+                    setTimeout(() => {
+                        const newCurrentCard = document.querySelector('.student-card.current');
+                        if (newCurrentCard) {
+                            newCurrentCard.style.transition = 'all 0.5s ease';
+                            newCurrentCard.style.transform = 'scale(1.05)';
+                            setTimeout(() => {
+                                newCurrentCard.style.transform = 'scale(1)';
+                            }, 500);
+                        }
+                    }, 100);
+                } else {
+                    completeWisdomJourney();
+                }
+            }, 500);
+        }
         function showEvaluationResult(student, evaluation, points) {
             const evaluationMap = {
                 'excellent': { text: 'ممتاز!', icon: '🌟', color: '#FFD700' },
@@ -1950,25 +2235,68 @@
         function showStudentModal(student) {
             const title = '🧠 المفكر الحالي';
             const message = `
-                <div style="font-size: 1.5rem; color: var(--wisdom-primary); margin-bottom: 1rem;">
+                <div style="font-size: 1.8rem; color: var(--wisdom-primary); margin-bottom: 1rem; animation: pulse 1s infinite;">
                     <i class="fas fa-user-graduate"></i> ${student.name}
                 </div>
-                <div style="color: #fff; font-size: 1.1rem; margin-bottom: 1rem;">
-                    من ${student.className}
+                <div style="color: #fff; font-size: 1.2rem; margin-bottom: 1rem;">
+                    من ${student.className || 'غير محدد'}
                 </div>
-                <div style="color: #ccc; font-size: 1rem;">
-                    استعد لسؤال يتطلب التفكير العميق والحكمة
+                <div style="color: #FFD700; font-size: 1.1rem; margin-bottom: 1rem;">
+                    <i class="fas fa-microphone"></i> جاهز للسؤال الشفوي
+                </div>
+                <div style="color: #ccc; font-size: 1rem; line-height: 1.5;">
+                    اطرح سؤالاً مناسباً لمستوى الطالب<br>
+                    واستمع لإجابته بعناية
+                </div>
+                <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(155, 89, 182, 0.2); border-radius: 10px; border-left: 4px solid var(--wisdom-primary);">
+                    <i class="fas fa-lightbulb" style="color: #FFD700;"></i>
+                    <strong style="color: #FFD700;"> نصيحة:</strong> قيم الإجابة بناءً على الوضوح والفهم والتفكير
                 </div>
             `;
             
             setModalContent(title, message, '#9B59B6');
             showModal('resultModal');
             
+            // تأثيرات صوتية وبصرية
             playSound('brain-activate');
+            createWisdomParticles();
             
             setTimeout(() => {
                 closeModal();
-            }, 3000);
+            }, 4000);
+        }
+
+        // ===== إنشاء تأثيرات الحكمة =====
+        function createWisdomParticles() {
+            const colors = ['#9B59B6', '#3498DB', '#FFD700', '#E67E22'];
+            const particles = 20;
+            
+            for (let i = 0; i < particles; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.style.cssText = `
+                        position: fixed;
+                        width: 8px;
+                        height: 8px;
+                        background: ${colors[Math.floor(Math.random() * colors.length)]};
+                        border-radius: 50%;
+                        pointer-events: none;
+                        z-index: 10000;
+                        left: ${Math.random() * 100}vw;
+                        top: ${Math.random() * 100}vh;
+                        animation: float 3s ease-out forwards;
+                        box-shadow: 0 0 10px currentColor;
+                    `;
+                    
+                    document.body.appendChild(particle);
+                    
+                    setTimeout(() => {
+                        if (particle.parentNode) {
+                            particle.parentNode.removeChild(particle);
+                        }
+                    }, 3000);
+                }, i * 100);
+            }
         }
 
         // ===== وظائف النوافذ المنبثقة =====
