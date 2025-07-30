@@ -7,7 +7,4578 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#667eea">
-    <title>⚡ مملكة البرق | تحدي الطلاب المتنافسين</title>
+    <title>⚡ مملكة البرق | تحدي الطلاب المتنافسين</title><!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#667eea">
+    <title>🧠 مملكة الحكمة | التحديات الفكرية والأسئلة الشفوية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --wisdom-primary: #FFD700;
+            --wisdom-secondary: #FF6B35;
+            --wisdom-dark: #1a1a2e;
+            --wisdom-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --wisdom-glow: 0 0 30px rgba(255, 215, 0, 0.3);
+            --student-card-bg: rgba(255, 255, 255, 0.1);
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: var(--wisdom-bg);
+            min-height: 100vh;
+            color: white;
+            direction: rtl;
+        }
+
+        /* Celebration animations */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            0% { transform: translateY(30px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.2); }
+        }
+
+        .celebration-effect {
+            animation: bounceIn 0.8s ease-out;
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .sparkle-effect {
+            animation: sparkle 1.5s infinite;
+        }
+
+        /* Ensure all modals are hidden by default */
+        .modal {
+            display: none !important;
+        }
+
+        .modal.show {
+            display: flex !important;
+        }
+
+        .kingdom-header {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .kingdom-title {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .kingdom-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.1);
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--lightning-primary);
+        }
+
+        .game-arena {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: rgba(0,0,0,0.2);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+        }
+
+        .question-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .question-text {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        .timer-display {
+            font-size: 2rem;
+            color: var(--lightning-primary);
+            margin: 1rem 0;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .control-btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .start-btn {
+            background: linear-gradient(45deg, #00f260, #0575e6);
+            color: white;
+        }
+
+        .pause-btn {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            color: white;
+        }
+
+        .answer-btn {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            color: white;
+        }
+
+        .back-btn {
+            background: linear-gradient(45deg, #fa709a, #fee140);
+            color: white;
+        }
+
+        .settings-btn {
+            background: linear-gradient(45deg, #9c27b0, #673ab7);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .settings-btn:hover {
+            background: linear-gradient(45deg, #673ab7, #9c27b0);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(156, 39, 176, 0.4);
+        }
+
+        .settings-btn:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.3s ease;
+        }
+
+        .settings-btn:hover:before {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ===== SETTINGS MODAL STYLES ===== */
+        .settings-section {
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            border-left: 4px solid var(--lightning-primary);
+            backdrop-filter: blur(10px);
+        }
+
+        .settings-section h4 {
+            color: var(--lightning-primary);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .setting-group {
+            margin: 1.5rem 0;
+        }
+
+        .setting-group label {
+            display: block;
+            color: #fff;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .setting-group input[type="range"] {
+            width: 100%;
+            height: 10px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.3);
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .setting-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: var(--lightning-primary);
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+            border: 3px solid #fff;
+        }
+
+        .setting-group input[type="range"]::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: var(--lightning-primary);
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+            border: 3px solid #fff;
+        }
+
+        .slider-value {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 1.5rem;
+            color: var(--lightning-primary);
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .setting-group select {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 10px;
+            border: 2px solid var(--lightning-primary);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .setting-group select:focus {
+            outline: none;
+            border-color: var(--lightning-secondary);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .setting-group input[type="number"] {
+            width: 120px;
+            padding: 0.8rem;
+            border-radius: 8px;
+            border: 2px solid var(--lightning-primary);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .setting-group input[type="checkbox"] {
+            margin-left: 1rem;
+            transform: scale(1.5);
+            accent-color: var(--lightning-primary);
+        }
+
+        .competition-preview {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            border: 2px solid var(--lightning-primary);
+            backdrop-filter: blur(10px);
+        }
+
+        .preview-title {
+            color: var(--lightning-primary);
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .phase-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid var(--lightning-secondary);
+        }
+
+        .phase-info:last-child {
+            border-left-color: #4caf50;
+            background: rgba(76, 175, 80, 0.2);
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .score-display {
+            text-align: center;
+            margin: 1rem 0;
+            font-size: 1.2rem;
+        }
+
+        .leaderboard {
+            background: rgba(0,0,0,0.3);
+            padding: 1rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+        }
+
+        .leaderboard h3 {
+            text-align: center;
+            margin-bottom: 1rem;
+            color: var(--lightning-primary);
+        }
+
+        .player-score {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+        }
+
+        .progress-indicator {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--lightning-primary), var(--lightning-secondary));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* ===== STUDENT COMPETITION STYLES ===== */
+        .competition-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+
+        .timer-section {
+            text-align: center;
+            margin-bottom: 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2rem;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            border: 2px solid var(--lightning-primary);
+            box-shadow: var(--lightning-glow);
+        }
+
+        .main-timer {
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--lightning-primary);
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            margin: 1rem 0;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .current-student-section {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 107, 53, 0.2));
+            border: 3px solid var(--lightning-primary);
+            border-radius: 25px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            box-shadow: var(--lightning-glow);
+            backdrop-filter: blur(20px);
+        }
+
+        .student-spotlight {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            margin-bottom: 1rem;
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7), 0 0 10px var(--lightning-primary); }
+            to { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7), 0 0 30px var(--lightning-primary); }
+        }
+
+        .teacher-instructions {
+            font-size: 1.3rem;
+            color: #fff;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            border-left: 5px solid var(--lightning-primary);
+        }
+
+        .evaluation-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .eval-btn {
+            padding: 1.5rem 3rem;
+            border: none;
+            border-radius: 20px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            min-width: 180px;
+        }
+
+        .eval-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .eval-btn.excellent {
+            background: linear-gradient(45deg, #4caf50, #8bc34a);
+            color: white;
+        }
+
+        .eval-btn.very-good {
+            background: linear-gradient(45deg, #00bcd4, #4caf50);
+            color: white;
+        }
+
+        .eval-btn.good {
+            background: linear-gradient(45deg, #2196f3, #03dac6);
+            color: white;
+        }
+
+        .eval-btn.weak {
+            background: linear-gradient(45deg, #ff9800, #ffc107);
+            color: white;
+        }
+
+        .competition-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .start-competition {
+            background: linear-gradient(45deg, #00f260, #0575e6);
+            color: white;
+        }
+
+        .pause-competition {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            color: white;
+        }
+
+        .end-competition {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+        }
+
+        .back-to-kingdoms {
+            background: linear-gradient(45deg, #fa709a, #fee140);
+            color: white;
+        }
+
+        /* ===== MODAL STYLES ===== */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none !important; /* Force hide by default */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.show {
+            display: flex !important; /* Show when needed */
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border: 3px solid var(--lightning-primary);
+            border-radius: 25px;
+            padding: 3rem;
+            max-width: 700px;
+            max-height: 90vh;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.3);
+            animation: modalSlideIn 0.5s ease-out;
+            overflow-y: auto;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            color: var(--lightning-primary);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .modal-message {
+            font-size: 1.2rem;
+            color: white;
+            margin: 1.5rem 0;
+            line-height: 1.6;
+            text-align: right;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .modal-btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn.primary {
+            background: var(--lightning-primary);
+            color: #000;
+        }
+
+        .modal-btn.secondary {
+            background: transparent;
+            color: var(--lightning-primary);
+            border: 2px solid var(--lightning-primary);
+        }
+
+        .students-queue {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .queue-title {
+            text-align: center;
+            font-size: 1.3rem;
+            color: var(--lightning-primary);
+            margin-bottom: 1rem;
+        }
+
+        .students-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .student-card {
+            background: var(--student-card-bg);
+            border: 2px solid transparent;
+            border-radius: 15px;
+            padding: 1rem;
+            min-width: 120px;
+            text-align: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .student-card.current {
+            border-color: var(--lightning-primary);
+            background: rgba(255, 215, 0, 0.2);
+            box-shadow: var(--lightning-glow);
+            transform: scale(1.05);
+        }
+
+        .student-card.completed {
+            border-color: var(--success-color);
+            background: rgba(76, 175, 80, 0.2);
+            opacity: 0.7;
+        }
+
+        .student-card.eliminated {
+            border-color: var(--danger-color);
+            background: rgba(244, 67, 54, 0.2);
+            opacity: 0.5;
+        }
+
+        .student-name {
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .student-status {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .status-waiting {
+            background: rgba(255, 152, 0, 0.3);
+            color: #ff9800;
+        }
+
+        .status-current {
+            background: rgba(255, 215, 0, 0.3);
+            color: var(--lightning-primary);
+        }
+
+        .status-completed {
+            background: rgba(76, 175, 80, 0.3);
+            color: var(--success-color);
+        }
+
+        .status-eliminated {
+            background: rgba(244, 67, 54, 0.3);
+            color: var(--danger-color);
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        /* Tablets and small laptops */
+        @media (max-width: 1024px) {
+            .kingdom-header {
+                padding: 1.5rem;
+            }
+            
+            .kingdom-title {
+                font-size: 2.5rem;
+            }
+            
+            .competition-container {
+                padding: 1.5rem;
+            }
+            
+            .kingdom-stats {
+                gap: 1.5rem;
+            }
+        }
+        
+        /* Tablets */
+        @media (max-width: 768px) {
+            .kingdom-header {
+                padding: 0.8rem;
+            }
+            
+            .kingdom-title {
+                font-size: 1.8rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .kingdom-header p {
+                font-size: 0.9rem;
+                margin-bottom: 1rem;
+            }
+            
+            .kingdom-stats {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 0.8rem;
+                justify-content: center;
+                margin: 1rem 0;
+            }
+            
+            .stat-card {
+                padding: 0.6rem 1rem;
+                min-width: 90px;
+                flex: 1;
+                max-width: 120px;
+            }
+            
+            .stat-number {
+                font-size: 1.3rem;
+            }
+            
+            .stat-card div:last-child {
+                font-size: 0.8rem;
+            }
+            
+            .main-timer {
+                font-size: 3rem;
+            }
+            
+            .student-spotlight {
+                font-size: 2rem;
+            }
+            
+            .evaluation-buttons {
+                gap: 1rem;
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .eval-btn {
+                padding: 1.2rem 2rem;
+                font-size: 1.1rem;
+                min-width: 200px;
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .competition-controls {
+                gap: 0.8rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .control-btn {
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+                min-width: 120px;
+                flex: 1;
+                max-width: 200px;
+            }
+            
+            .modal-content {
+                padding: 1.5rem;
+                margin: 1rem;
+                max-width: 90%;
+            }
+            
+            .game-arena {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+            
+            .timer-section {
+                padding: 1.5rem;
+            }
+            
+            .current-student-section {
+                padding: 1.5rem;
+                margin: 1rem 0;
+            }
+            
+            .teacher-instructions {
+                font-size: 1.1rem;
+                padding: 1rem;
+            }
+        }
+        
+        /* Mobile phones */
+        @media (max-width: 480px) {
+            .kingdom-header {
+                padding: 0.5rem;
+                background: rgba(0,0,0,0.4);
+            }
+            
+            .kingdom-title {
+                font-size: 1.4rem;
+                margin-bottom: 0.3rem;
+            }
+            
+            .kingdom-header p {
+                font-size: 0.75rem;
+                margin-bottom: 0.5rem;
+                display: none; /* إخفاء الوصف على الهواتف الصغيرة */
+            }
+            
+            .kingdom-stats {
+                flex-direction: row;
+                gap: 0.4rem;
+                margin: 0.5rem 0;
+                justify-content: space-around;
+            }
+            
+            .stat-card {
+                padding: 0.4rem 0.6rem;
+                margin: 0;
+                min-width: 70px;
+                flex: 1;
+                max-width: 90px;
+                border-radius: 8px;
+            }
+            
+            .stat-number {
+                font-size: 1rem;
+                margin-bottom: 0.2rem;
+            }
+            
+            .stat-card div:last-child {
+                font-size: 0.65rem;
+                line-height: 1.2;
+            }
+            
+            .competition-container {
+                padding: 0.5rem;
+                margin: 0.5rem auto;
+            }
+            
+            .main-timer {
+                font-size: 2rem;
+                margin: 0.5rem 0;
+            }
+            
+            .timer-section {
+                padding: 0.8rem;
+                margin-bottom: 0.8rem;
+            }
+            
+            .timer-label {
+                font-size: 0.9rem;
+                margin-top: 0.3rem;
+            }
+            
+            .student-spotlight {
+                font-size: 1.3rem;
+                line-height: 1.3;
+                margin-bottom: 0.8rem;
+            }
+            
+            .current-student-section {
+                padding: 0.8rem;
+                margin: 0.5rem 0;
+            }
+            
+            .teacher-instructions {
+                font-size: 0.85rem;
+                padding: 0.6rem;
+                margin: 0.6rem 0;
+            }
+            
+            .evaluation-buttons {
+                gap: 0.6rem;
+                margin: 1rem 0;
+            }
+            
+            .eval-btn {
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+                min-width: auto;
+                width: 100%;
+                max-width: 250px;
+            }
+            
+            .competition-controls {
+                gap: 0.4rem;
+                margin: 0.8rem 0;
+                flex-wrap: wrap;
+            }
+            
+            .control-btn {
+                padding: 0.6rem 0.8rem;
+                font-size: 0.75rem;
+                min-width: 80px;
+                flex: 1;
+                max-width: 120px;
+            }
+            
+            .control-btn i {
+                font-size: 0.8rem;
+                margin-left: 0.3rem;
+            }
+            
+            /* تحسين النصوص في الأزرار للهواتف */
+            .control-btn {
+                position: relative;
+                overflow: hidden;
+                white-space: nowrap;
+            }
+            
+            .control-btn .button-text {
+                display: none; /* إخفاء النص على الهواتف الصغيرة */
+            }
+            
+            .control-btn i {
+                font-size: 1rem;
+                margin: 0;
+            }
+            
+            /* إضافة tooltips للأزرار */
+            .control-btn:hover::after {
+                content: attr(data-tooltip);
+                position: absolute;
+                bottom: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(0,0,0,0.8);
+                color: white;
+                padding: 0.3rem 0.6rem;
+                border-radius: 4px;
+                font-size: 0.7rem;
+                white-space: nowrap;
+                z-index: 1000;
+                opacity: 0;
+                animation: fadeIn 0.3s ease forwards;
+            }
+            
+            .modal-content {
+                padding: 0.8rem;
+                margin: 0.3rem;
+                max-width: 98%;
+                border-radius: 12px;
+            }
+            
+            .game-arena {
+                padding: 0.8rem;
+                margin: 0.3rem;
+                border-radius: 12px;
+            }
+            
+            .settings-section {
+                padding: 0.8rem;
+                margin: 0.8rem 0;
+            }
+            
+            .setting-group {
+                margin: 0.8rem 0;
+            }
+            
+            .setting-group label {
+                font-size: 0.8rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .setting-group input[type="range"] {
+                height: 6px;
+            }
+            
+            .setting-group input[type="range"]::-webkit-slider-thumb {
+                width: 18px;
+                height: 18px;
+            }
+            
+            .slider-value {
+                font-size: 1rem;
+                margin-top: 0.6rem;
+            }
+            
+            .phase-info {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.4rem;
+                padding: 0.6rem;
+                margin: 0.4rem 0;
+            }
+            
+            .modal-btn {
+                width: 100%;
+                padding: 0.8rem;
+                margin: 0.4rem 0;
+                font-size: 0.9rem;
+            }
+            
+            .students-queue {
+                margin: 0.8rem 0;
+            }
+            
+            .queue-title {
+                font-size: 1rem;
+                margin-bottom: 0.8rem;
+            }
+        }
+        
+        /* Very small phones */
+        @media (max-width: 360px) {
+            .kingdom-header {
+                padding: 0.3rem;
+            }
+            
+            .kingdom-title {
+                font-size: 1.2rem;
+                margin-bottom: 0.2rem;
+            }
+            
+            .kingdom-header p {
+                display: none; /* إخفاء كامل للوصف */
+            }
+            
+            .kingdom-stats {
+                gap: 0.2rem;
+                margin: 0.3rem 0;
+            }
+            
+            .stat-card {
+                padding: 0.3rem 0.4rem;
+                min-width: 60px;
+                max-width: 75px;
+                border-radius: 6px;
+            }
+            
+            .stat-number {
+                font-size: 0.9rem;
+                margin-bottom: 0.1rem;
+            }
+            
+            .stat-card div:last-child {
+                font-size: 0.55rem;
+                line-height: 1.1;
+            }
+            
+            .main-timer {
+                font-size: 1.8rem;
+                margin: 0.3rem 0;
+            }
+            
+            .timer-section {
+                padding: 0.6rem;
+                margin-bottom: 0.6rem;
+            }
+            
+            .timer-label {
+                font-size: 0.8rem;
+                margin-top: 0.2rem;
+            }
+            
+            .student-spotlight {
+                font-size: 1.1rem;
+                margin-bottom: 0.6rem;
+            }
+            
+            .current-student-section {
+                padding: 0.6rem;
+                margin: 0.4rem 0;
+            }
+            
+            .teacher-instructions {
+                font-size: 0.75rem;
+                padding: 0.5rem;
+                margin: 0.5rem 0;
+            }
+            
+            .eval-btn {
+                padding: 0.6rem 0.8rem;
+                font-size: 0.8rem;
+                max-width: 220px;
+            }
+            
+            .control-btn {
+                padding: 0.5rem 0.6rem;
+                font-size: 0.7rem;
+                min-width: 60px;
+                max-width: 100px;
+            }
+            
+            .control-btn i {
+                font-size: 0.9rem;
+            }
+            
+            .competition-controls {
+                gap: 0.3rem;
+                margin: 0.6rem 0;
+            }
+            
+            /* تقليل حجم البطاقات الإحصائية أكثر */
+            .stat-card {
+                flex: 1;
+                text-align: center;
+            }
+            
+            /* إخفاء بعض العناصر غير الضرورية */
+            .elimination-section {
+                margin-top: 1rem;
+            }
+            
+            .elimination-section .eval-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.75rem;
+            }
+        }
+        
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            .eval-btn, .control-btn, .modal-btn {
+                min-height: 44px; /* Apple's recommended touch target size */
+                padding: 1rem;
+            }
+            
+            .eval-btn:active, .control-btn:active {
+                transform: scale(0.95);
+                transition: transform 0.1s ease;
+            }
+            
+            /* Remove hover effects for touch devices */
+            .eval-btn:hover, .control-btn:hover {
+                transform: none;
+                box-shadow: none;
+            }
+            
+            /* Disable tooltips on touch devices */
+            .control-btn:hover::after {
+                display: none;
+            }
+        }
+        
+        /* Show/hide button text based on screen size */
+        @media (min-width: 769px) {
+            .button-text {
+                display: inline !important;
+                margin-right: 0.5rem;
+            }
+        }
+        
+        @media (max-width: 768px) and (min-width: 481px) {
+            .button-text {
+                display: inline !important;
+                font-size: 0.8rem;
+                margin-right: 0.3rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .button-text {
+                display: none !important;
+            }
+            
+            .control-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            /* Compact header for mobile */
+            .kingdom-header {
+                position: relative;
+                background: rgba(0,0,0,0.5);
+                backdrop-filter: blur(15px);
+            }
+            
+            /* Make stats more compact */
+            .kingdom-stats {
+                background: rgba(0,0,0,0.2);
+                padding: 0.4rem;
+                border-radius: 10px;
+                backdrop-filter: blur(10px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="kingdom-header">
+        <div class="kingdom-title">🧠 مملكة الحكمة</div>
+        <p>تحدي الطلاب المتنافسين - 5 دقائق من الإثارة والتنافس</p>
+        
+        <div class="kingdom-stats">
+            <div class="stat-card">
+                <div class="stat-number" id="activeStudents">0</div>
+                <div>الطلاب النشطون</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="completedStudents">0</div>
+                <div>تم تقييمهم</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="timeRemaining">5:00</div>
+                <div>الوقت المتبقي</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="competition-container">
+        <!-- Timer Section -->
+        <div class="timer-section">
+            <div class="main-timer" id="mainTimer">5:00</div>
+            <div class="timer-label">⏰ وقت التحدي</div>
+        </div>
+
+        <!-- Current Student Section -->
+        <div class="current-student-section" id="studentSection" style="display: none;">
+            <div class="student-spotlight" id="currentStudentName">اسم الحكيم</div>
+            <div class="teacher-instructions">
+                <i class="fas fa-microphone"></i> 
+                وجه سؤالاً أو تحدياً للحكمة للطالب واستمع للإجابة
+            </div>
+            
+            <div class="evaluation-buttons">
+                <button class="eval-btn excellent" onclick="evaluateStudent('excellent')">
+                    <i class="fas fa-brain"></i>
+                    حكيم ممتاز (100 نقطة)
+                </button>
+                <button class="eval-btn very-good" onclick="evaluateStudent('very-good')">
+                    <i class="fas fa-lightbulb"></i>
+                    مفكر جيد جداً (85 نقطة)
+                </button>
+                <button class="eval-btn good" onclick="evaluateStudent('good')">
+                    <i class="fas fa-graduation-cap"></i>
+                    فهم جيد (70 نقطة)
+                </button>
+                <button class="eval-btn weak" onclick="evaluateStudent('weak')">
+                    <i class="fas fa-question-circle"></i>
+                    يحتاج تفكير (40 نقطة)
+                </button>
+            </div>
+            
+            <div class="elimination-section" style="margin-top: 1.5rem; text-align: center;">
+                <button class="eval-btn" onclick="eliminateStudent()" style="background: linear-gradient(45deg, #8e44ad, #e74c3c); color: white; padding: 1rem 2rem;">
+                    <i class="fas fa-ban"></i>
+                    استبعاد من رحلة الحكمة
+                </button>
+            </div>
+        </div>
+
+        <!-- Students Queue -->
+        <div class="students-queue">
+            <div class="queue-title">📋 قائمة الطلاب المتنافسين</div>
+            <div class="students-list" id="studentsList">
+                <!-- سيتم ملؤها بـ JavaScript -->
+            </div>
+        </div>
+
+        <!-- Competition Controls -->
+        <div class="competition-controls">
+            <button class="control-btn settings-btn" onclick="showCompetitionSettings()" data-tooltip="إعدادات رحلة الحكمة">
+                <i class="fas fa-brain"></i>
+                <span class="button-text">إعدادات الحكمة</span>
+            </button>
+            <button class="control-btn start-competition" onclick="startCompetition()" data-tooltip="بدء رحلة الحكمة">
+                <i class="fas fa-lightbulb"></i>
+                <span class="button-text">بدء رحلة الحكمة</span>
+            </button>
+            <button class="control-btn pause-competition" onclick="pauseCompetition()" data-tooltip="إيقاف مؤقت">
+                <i class="fas fa-pause"></i>
+                <span class="button-text">إيقاف مؤقت</span>
+            </button>
+            <button class="control-btn end-competition" onclick="endCompetition()" data-tooltip="إنهاء رحلة الحكمة">
+                <i class="fas fa-graduation-cap"></i>
+                <span class="button-text">إنهاء رحلة الحكمة</span>
+            </button>
+            <button class="control-btn back-to-kingdoms" onclick="goBackToKingdoms()" data-tooltip="العودة للممالك">
+                <i class="fas fa-home"></i>
+                <span class="button-text">العودة للممالك</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Competition Settings Modal -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-title">🧠 إعدادات رحلة الحكمة المتقدمة</div>
+            <div class="modal-message">
+                <div class="settings-section">
+                    <h4>🎯 عدد الفرص لكل حكيم</h4>
+                    <div class="setting-group">
+                        <label>اختر عدد الفرص التي سيحصل عليها كل حكيم:</label>
+                        <input type="range" id="opportunitiesSlider" min="1" max="3" value="2" oninput="updateOpportunities(this.value)">
+                        <div class="slider-value">
+                            <span id="opportunitiesValue">2</span> فرصة لكل حكيم
+                        </div>
+                        <div style="font-size: 0.9rem; color: #ccc; margin-top: 0.5rem;">
+                            كلما زاد العدد، كان تحدي الحكمة أكثر عدالة
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h4>🧩 نظام تصفية الحكماء</h4>
+                    <div class="setting-group">
+                        <label>نسبة التصفية في كل جولة حكمة:</label>
+                        <select id="eliminationPercentage" onchange="updateSettingsPreview()">
+                            <option value="25">25% - تصفية خفيفة (مناسبة للتعلم)</option>
+                            <option value="33">33% - تصفية متوسطة (متوازنة)</option>
+                            <option value="50" selected>50% - تصفية قوية (تحدي حكمة)</option>
+                            <option value="66">66% - تصفية شديدة (للحكماء المتميزين)</option>
+                        </select>
+                        <div style="font-size: 0.9rem; color: #ccc; margin-top: 0.5rem;">
+                            يحدد كم حكيم سيتم تصفيته في كل جولة
+                        </div>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <label>
+                            <input type="checkbox" id="autoCalculateThreshold" checked onchange="toggleManualThreshold()">
+                            حساب تلقائي لعتبة الحكمة حسب أداء الطلاب
+                        </label>
+                        <div style="font-size: 0.9rem; color: #ccc; margin-top: 0.5rem;">
+                            ينصح بتفعيل هذا الخيار للحصول على أفضل تقييم للحكمة
+                        </div>
+                    </div>
+                    
+                    <div class="setting-group" id="manualThresholdGroup" style="display: none;">
+                        <label>الحد الأدنى لنقاط الحكمة للنجاح:</label>
+                        <input type="number" id="manualThreshold" min="30" max="100" value="70" step="5">
+                        <div style="font-size: 0.9rem; color: #ccc; margin-top: 0.5rem;">
+                            الحكماء الذين يحصلون على أقل من هذا العدد سيتم تصفيتهم
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="competition-preview" id="competitionPreview">
+                    <div class="preview-title">🧠 معاينة تحدي الحكمة</div>
+                    <div style="text-align: center; color: #ff9800;">
+                        جارٍ تحميل معاينة التحدي...
+                    </div>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn primary" onclick="applySettings()">
+                    <i class="fas fa-brain"></i> تطبيق الإعدادات وبدء تحدي الحكمة
+                </button>
+                <button class="modal-btn secondary" onclick="closeSettingsModal()">
+                    <i class="fas fa-times"></i> إلغاء
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="resultModal">
+        <div class="modal-content">
+            <div class="modal-title" id="modalTitle"></div>
+            <div class="modal-message" id="modalMessage"></div>
+            <div class="modal-buttons">
+                <button class="modal-btn primary" onclick="closeModal()">متابعة</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="competitionEndModal">
+        <div class="modal-content">
+            <div class="modal-title" id="finalModalTitle">🧠 انتهى تحدي الحكمة!</div>
+            <div class="modal-message" id="finalResults">نتائج تحدي الحكمة</div>
+            <div class="modal-buttons" id="finalModalButtons">
+                <button class="modal-btn primary" onclick="returnToKingdomsCenterWithBonus()">
+                    <i class="fas fa-trophy"></i> العودة لمركز الممالك مع مكافآت الحكمة
+                </button>
+                <button class="modal-btn secondary" onclick="startNewCompetition()">
+                    <i class="fas fa-brain"></i> تحدي حكمة جديد
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== GLOBAL VARIABLES =====
+        let competitionData = {
+            students: [],
+            currentStudentIndex: 0,
+            totalTime: 5 * 60, // 5 minutes in seconds
+            remainingTime: 5 * 60,
+            isRunning: false,
+            isPaused: false,
+            results: [],
+            completedStudents: 0,
+            currentRound: 1,
+            maxRounds: 2, // عدد الجولات لكل حكيم
+            studentsPerRound: [],
+            eliminationSettings: {
+                opportunitiesPerStudent: 2, // 1-3 فرص لكل حكيم
+                eliminationPercentage: 50, // نسبة التصفية في كل جولة
+                minimumPassingScore: 70, // الحد الأدنى لنقاط الحكمة للنجاح
+                autoCalculateThreshold: true // حساب تلقائي لعتبة الحكمة
+            },
+            phases: [], // جولات تصفية الحكماء
+            currentPhase: 1,
+            totalPhases: 1
+        };
+
+        let competitionTimer;
+        let audioEnabled = true;
+
+        // ===== COMPETITION SETTINGS =====
+        function showCompetitionSettings() {
+            // Show modal first
+            showModal('settingsModal');
+            
+            // Set current values
+            document.getElementById('opportunitiesSlider').value = competitionData.eliminationSettings.opportunitiesPerStudent;
+            document.getElementById('opportunitiesValue').textContent = competitionData.eliminationSettings.opportunitiesPerStudent;
+            document.getElementById('eliminationPercentage').value = competitionData.eliminationSettings.eliminationPercentage;
+            document.getElementById('autoCalculateThreshold').checked = competitionData.eliminationSettings.autoCalculateThreshold;
+            document.getElementById('manualThreshold').value = competitionData.eliminationSettings.minimumPassingScore;
+            
+            // Update display
+            toggleManualThreshold();
+            
+            // Update preview after a short delay to ensure DOM is ready
+            setTimeout(() => {
+                updateSettingsPreview();
+            }, 100);
+            
+            // Play settings sound
+            playSound('modal-open');
+            setTimeout(() => {
+                playSound('cosmic-click');
+            }, 200);
+        }
+
+        function closeSettingsModal() {
+            hideModal('settingsModal');
+            playSound('modal-close');
+        }
+
+        function updateOpportunities(value) {
+            document.getElementById('opportunitiesValue').textContent = value;
+            // Update preview after a short delay for smooth UI
+            setTimeout(() => {
+                updateSettingsPreview();
+            }, 50);
+        }
+
+        function toggleManualThreshold() {
+            const isAuto = document.getElementById('autoCalculateThreshold').checked;
+            document.getElementById('manualThresholdGroup').style.display = isAuto ? 'none' : 'block';
+            updateSettingsPreview();
+        }
+
+        function applySettings() {
+            // Apply settings
+            competitionData.eliminationSettings.opportunitiesPerStudent = parseInt(document.getElementById('opportunitiesSlider').value);
+            competitionData.eliminationSettings.eliminationPercentage = parseInt(document.getElementById('eliminationPercentage').value);
+            competitionData.eliminationSettings.autoCalculateThreshold = document.getElementById('autoCalculateThreshold').checked;
+            competitionData.eliminationSettings.minimumPassingScore = parseInt(document.getElementById('manualThreshold').value);
+            
+            // Update max rounds
+            competitionData.maxRounds = competitionData.eliminationSettings.opportunitiesPerStudent;
+            
+            // Calculate elimination phases
+            calculateEliminationPhases();
+            
+            closeSettingsModal();
+            displayStudentsList();
+            
+            // Show confirmation
+            showNotification('✅ تم تطبيق الإعدادات بنجاح!', 'success');
+        }
+
+        function updateSettingsPreview() {
+            const totalStudents = competitionData.students.length;
+            const opportunities = parseInt(document.getElementById('opportunitiesSlider')?.value || competitionData.eliminationSettings.opportunitiesPerStudent);
+            const eliminationRate = parseInt(document.getElementById('eliminationPercentage')?.value || competitionData.eliminationSettings.eliminationPercentage);
+            
+            if (totalStudents === 0) {
+                document.getElementById('competitionPreview').innerHTML = `
+                    <div class="preview-title">📋 معاينة المنافسة</div>
+                    <div style="text-align: center; color: #ff9800; padding: 2rem;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i><br>
+                        <strong>لا توجد بيانات طلاب لعرض المعاينة</strong><br>
+                        <span style="font-size: 0.9rem;">يرجى العودة لمركز الممالك وتحديد الطلاب أولاً</span>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Calculate phases
+            const phases = calculatePreviewPhases(totalStudents, eliminationRate);
+            
+            let previewHTML = `
+                <div class="preview-title">🧠 معاينة تحدي الحكمة التفصيلية</div>
+                <div style="margin-bottom: 1.5rem; text-align: center; background: rgba(255,215,0,0.1); padding: 1rem; border-radius: 10px;">
+                    <div style="font-size: 1.1rem; color: var(--wisdom-primary); margin-bottom: 0.5rem;">
+                        <i class="fas fa-users"></i> <strong>${totalStudents}</strong> حكيم متحدي
+                    </div>
+                    <div style="font-size: 1rem; color: #fff;">
+                        <i class="fas fa-redo"></i> <strong>${opportunities}</strong> فرصة لكل حكيم
+                    </div>
+                </div>
+                
+                <div style="text-align: right; margin-bottom: 1rem;">
+                    <strong style="color: var(--wisdom-primary);">🧩 مراحل تحدي الحكمة:</strong>
+                </div>
+            `;
+            
+            phases.forEach((phase, index) => {
+                const isWinner = index === phases.length - 1;
+                const eliminatedCount = index < phases.length - 1 ? phase.starting - phases[index + 1].starting : 0;
+                
+                previewHTML += `
+                    <div class="phase-info">
+                        <div>
+                            <span style="font-weight: 700;">
+                                ${isWinner ? '🏆 الحكماء المتفوقون' : `🧠 جولة الحكمة ${index + 1}`}
+                            </span>
+                            ${!isWinner && eliminatedCount > 0 ? 
+                                `<div style="font-size: 0.8rem; color: #ff9800; margin-top: 0.25rem;">
+                                    سيتم تصفية ${eliminatedCount} حكيم
+                                </div>` : ''}
+                        </div>
+                        <div style="text-align: left;">
+                            <span style="color: ${isWinner ? '#4caf50' : '#FFD700'}; font-weight: 700; font-size: 1.1rem;">
+                                ${phase.remaining} حكيم
+                            </span>
+                            <div style="font-size: 0.8rem; color: #ccc;">
+                                ${isWinner ? 'حصلوا على لقب الحكيم المتفوق' : 'ينتقلون لجولة الحكمة التالية'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Add summary
+            const totalEliminated = totalStudents - phases[phases.length - 1].remaining;
+            const winnerPercentage = Math.round((phases[phases.length - 1].remaining / totalStudents) * 100);
+            
+            previewHTML += `
+                <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 10px; text-align: center;">
+                    <div style="color: #ff9800; margin-bottom: 0.5rem;">
+                        <i class="fas fa-chart-pie"></i> ملخص النتائج المتوقعة لتحدي الحكمة
+                    </div>
+                    <div style="font-size: 0.9rem; color: #ccc;">
+                        سيتم تصفية <strong style="color: #f44336;">${totalEliminated}</strong> حكيم<br>
+                        سيحصل على لقب الحكيم المتفوق <strong style="color: #4caf50;">${phases[phases.length - 1].remaining}</strong> حكيم (${winnerPercentage}%)
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('competitionPreview').innerHTML = previewHTML;
+        }
+
+        function calculatePreviewPhases(totalStudents, eliminationRate) {
+            const phases = [];
+            let currentStudents = totalStudents;
+            let phaseNumber = 1;
+            
+            while (currentStudents > Math.ceil(totalStudents * 0.1) && phaseNumber <= 5) { // حد أقصى 5 جولات أو 10% من الحكماء
+                phases.push({
+                    phase: phaseNumber,
+                    starting: currentStudents,
+                    remaining: currentStudents
+                });
+                
+                // Calculate elimination for next phase
+                const toEliminate = Math.floor(currentStudents * (eliminationRate / 100));
+                currentStudents = Math.max(1, currentStudents - toEliminate);
+                phaseNumber++;
+            }
+            
+            // Final winners
+            phases.push({
+                phase: phaseNumber,
+                starting: currentStudents,
+                remaining: currentStudents,
+                isFinal: true
+            });
+            
+            return phases;
+        }
+
+        // ===== SMART ELIMINATION ALGORITHM =====
+        function calculateEliminationPhases() {
+            const totalStudents = competitionData.students.length;
+            const eliminationRate = competitionData.eliminationSettings.eliminationPercentage;
+            
+            competitionData.phases = [];
+            competitionData.totalPhases = 1;
+            
+            if (totalStudents <= 4) {
+                // Small groups - no elimination, just ranking
+                competitionData.phases = [{
+                    phaseNumber: 1,
+                    studentsAtStart: totalStudents,
+                    studentsAtEnd: totalStudents,
+                    eliminationThreshold: 0,
+                    isRanking: true
+                }];
+                return;
+            }
+            
+            let currentStudents = totalStudents;
+            let phaseNumber = 1;
+            const targetWinners = Math.max(2, Math.ceil(totalStudents * 0.1)); // 10% فائزين كحد أدنى
+            
+            while (currentStudents > targetWinners && phaseNumber <= 5) {
+                const toEliminate = Math.floor(currentStudents * (eliminationRate / 100));
+                const studentsRemaining = Math.max(targetWinners, currentStudents - toEliminate);
+                
+                competitionData.phases.push({
+                    phaseNumber: phaseNumber,
+                    studentsAtStart: currentStudents,
+                    studentsAtEnd: studentsRemaining,
+                    toEliminate: currentStudents - studentsRemaining,
+                    eliminationThreshold: 0, // سيتم حسابه ديناميكياً
+                    isActive: phaseNumber === 1
+                });
+                
+                currentStudents = studentsRemaining;
+                phaseNumber++;
+            }
+            
+            competitionData.totalPhases = competitionData.phases.length;
+            competitionData.currentPhase = 1;
+            
+            console.log('📊 جولات تصفية الحكماء:', competitionData.phases);
+        }
+
+        function calculateDynamicThreshold() {
+            if (!competitionData.eliminationSettings.autoCalculateThreshold) {
+                return competitionData.eliminationSettings.minimumPassingScore;
+            }
+            
+            const currentPhaseData = competitionData.phases[competitionData.currentPhase - 1];
+            if (!currentPhaseData) return 70;
+            
+            // Get current scores of all active students
+            const activeStudents = competitionData.students.filter(s => s.status !== 'eliminated');
+            const scores = activeStudents.map(s => s.score || 0).sort((a, b) => b - a);
+            
+            if (scores.length === 0) return 70;
+            
+            // Calculate threshold based on target elimination
+            const targetRemaining = currentPhaseData.studentsAtEnd;
+            const thresholdIndex = Math.min(targetRemaining - 1, scores.length - 1);
+            
+            // Dynamic threshold with some flexibility
+            const dynamicThreshold = scores[thresholdIndex] || 0;
+            const minThreshold = Math.max(40, dynamicThreshold * 0.8); // حد أدنى 40 نقطة
+            const maxThreshold = Math.min(95, dynamicThreshold * 1.2); // حد أقصى 95 نقطة
+            
+            return Math.max(minThreshold, Math.min(maxThreshold, dynamicThreshold));
+        }
+
+        function checkPhaseElimination() {
+            const currentPhaseData = competitionData.phases[competitionData.currentPhase - 1];
+            if (!currentPhaseData || currentPhaseData.isRanking) return;
+            
+            // Check if all students have completed their opportunities for this phase
+            const activeStudents = competitionData.students.filter(s => s.status !== 'eliminated');
+            const allCompleted = activeStudents.every(student => 
+                (student.attempts || 0) >= competitionData.eliminationSettings.opportunitiesPerStudent
+            );
+            
+            if (!allCompleted) return;
+            
+            // Calculate elimination threshold
+            const threshold = calculateDynamicThreshold();
+            
+            // Sort students by score and eliminate bottom performers
+            const sortedStudents = activeStudents.sort((a, b) => (b.score || 0) - (a.score || 0));
+            const studentsToKeep = Math.min(currentPhaseData.studentsAtEnd, sortedStudents.length);
+            
+            // Eliminate students below threshold
+            sortedStudents.slice(studentsToKeep).forEach(student => {
+                eliminateStudentPhase(student, `جولة الحكمة ${competitionData.currentPhase} - أقل من ${threshold} نقطة`);
+            });
+            
+            // Move to next phase if there are more phases
+            if (competitionData.currentPhase < competitionData.totalPhases) {
+                setTimeout(() => {
+                    startNextPhase();
+                }, 3000);
+            } else {
+                // Competition ended
+                setTimeout(() => {
+                    endCompetition();
+                }, 2000);
+            }
+        }
+
+        function eliminateStudentPhase(student, reason) {
+            student.status = 'eliminated';
+            student.eliminationReason = reason;
+            student.eliminationPhase = competitionData.currentPhase;
+            student.score = Math.max(0, (student.score || 0) - 20); // Small penalty
+            
+            showPhaseEliminationResult(student, reason);
+            
+            // Play elimination sound sequence
+            playSound('elimination');
+            setTimeout(() => {
+                playSound('thunder');
+            }, 600);
+        }
+
+        function showPhaseEliminationResult(student, reason) {
+            const modal = document.getElementById('resultModal');
+            const title = document.getElementById('modalTitle');
+            const message = document.getElementById('modalMessage');
+            
+            title.innerHTML = '🧠 تصفية جولة الحكمة';
+            title.style.color = '#ff9800';
+            
+            message.innerHTML = `
+                <div style="font-size: 1.3rem; margin-bottom: 1rem; color: #ff9800;">
+                    <i class="fas fa-brain"></i> ${student.name}
+                </div>
+                <div style="font-size: 1rem; color: #fff; margin-bottom: 1rem;">
+                    ${reason}
+                </div>
+                <div style="font-size: 0.9rem; color: #ccc;">
+                    تحدي الحكمة قوي في مملكة الحكمة!<br>
+                    فرصة أخرى في التحديات القادمة لإظهار الحكمة
+                </div>
+            `;
+            
+            showModal('resultModal');
+            
+            setTimeout(() => {
+                closeModal();
+            }, 2500);
+        }
+
+        function startNextPhase() {
+            competitionData.currentPhase++;
+            competitionData.currentRound = 1;
+            competitionData.currentStudentIndex = 0;
+            
+            // Reset attempts for remaining students
+            competitionData.students.forEach(student => {
+                if (student.status !== 'eliminated') {
+                    student.attempts = 0;
+                    student.status = 'waiting';
+                }
+            });
+            
+            showPhaseTransitionModal();
+            
+            // Play phase transition sound sequence
+            playSequentialSounds(['phase-transition', 'lightning', 'thunder'], 400);
+            
+            setTimeout(() => {
+                closeModal();
+                showCurrentStudent();
+            }, 3500);
+        }
+
+        function showPhaseTransitionModal() {
+            const modal = document.getElementById('resultModal');
+            const title = document.getElementById('modalTitle');
+            const message = document.getElementById('modalMessage');
+            
+            const currentPhaseData = competitionData.phases[competitionData.currentPhase - 1];
+            const remainingStudents = competitionData.students.filter(s => s.status !== 'eliminated').length;
+            
+            title.innerHTML = `🧠 جولة الحكمة ${competitionData.currentPhase}`;
+            title.style.color = '#FFD700';
+            
+            message.innerHTML = `
+                <div style="font-size: 1.3rem; margin-bottom: 1rem; color: var(--wisdom-primary);">
+                    <i class="fas fa-brain"></i> جولة حكمة جديدة في مملكة الحكمة!
+                </div>
+                <div style="font-size: 1.1rem; color: #fff; margin-bottom: 1rem;">
+                    ${remainingStudents} حكيم متبقي في التحدي
+                </div>
+                <div style="font-size: 1rem; color: #ff9800;">
+                    تحدي الحكمة يزداد صعوبة...<br>
+                    فقط الحكماء المتميزون سيتأهلون للجولة التالية!
+                </div>
+            `;
+            
+            showModal('resultModal');
+            
+            // Play epic phase transition sound
+            playSound('phase-transition');
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#4caf50' : type === 'error' ? '#f44336' : '#2196f3'};
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 10px;
+                z-index: 2000;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                animation: slideIn 0.3s ease-out;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // ===== INITIALIZATION =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide all modals initially
+            const allModals = ['resultModal', 'competitionEndModal', 'settingsModal'];
+            allModals.forEach(modalId => {
+                hideModal(modalId);
+            });
+            
+            loadStudentsData();
+            updateDisplay();
+            setupSoundSystem();
+            
+            // Initialize smart notification system
+            addNotificationStyles();
+            
+            // Run sound system diagnosis
+            setTimeout(() => {
+                diagnoseSoundSystem();
+            }, 2000);
+            
+            // Show welcome notification
+            setTimeout(() => {
+                showSmartNotification(
+                    '🏰 مرحباً في مملكة البرق!',
+                    'استعد لخوض أكثر المنافسات إثارة وتشويقاً!',
+                    'lightning',
+                    5000
+                );
+            }, 3000);
+            
+            // Setup event listeners for settings
+            if (document.getElementById('autoCalculateThreshold')) {
+                document.getElementById('autoCalculateThreshold').addEventListener('change', toggleManualThreshold);
+            }
+            if (document.getElementById('eliminationPercentage')) {
+                document.getElementById('eliminationPercentage').addEventListener('change', updateSettingsPreview);
+            }
+        });
+
+        function closeAllModals() {
+            // Close all possible modals
+            const modals = [
+                'resultModal',
+                'competitionEndModal', 
+                'settingsModal'
+            ];
+            
+            modals.forEach(modalId => {
+                hideModal(modalId);
+            });
+        }
+
+        function resetGameState() {
+            // Reset competition state
+            competitionData.isRunning = false;
+            competitionData.isPaused = false;
+            
+            // Hide current student section
+            const studentSection = document.getElementById('studentSection');
+            if (studentSection) {
+                studentSection.style.display = 'none';
+            }
+        }
+
+        // ===== LOAD STUDENTS DATA =====
+        function loadStudentsData() {
+            // Load from kingdoms center data
+            const transferData = localStorage.getItem('kingdomTransferData');
+            const kingdomData = localStorage.getItem('kingdomGameState');
+            const playersData = localStorage.getItem('squidGamePlayers');
+
+            let studentsFound = false;
+
+            // Try different data sources
+            if (transferData) {
+                try {
+                    const data = JSON.parse(transferData);
+                    if (data.selectedStudents && data.selectedStudents.length > 0) {
+                        competitionData.students = data.selectedStudents.map((name, index) => ({
+                            id: index + 1,
+                            name: name,
+                            status: 'waiting', // waiting, current, completed, eliminated
+                            score: 0,
+                            evaluation: null,
+                            timestamp: null
+                        }));
+                        studentsFound = true;
+                    }
+                } catch (e) {
+                    console.log('Error loading transfer data:', e);
+                }
+            }
+
+            // Fallback to kingdom game state
+            if (!studentsFound && kingdomData) {
+                try {
+                    const data = JSON.parse(kingdomData);
+                    if (data.selectedStudents && data.selectedStudents.length > 0) {
+                        const students = Array.isArray(data.selectedStudents) ? 
+                                       data.selectedStudents : Object.values(data.selectedStudents);
+                        competitionData.students = students.map((name, index) => ({
+                            id: index + 1,
+                            name: name,
+                            status: 'waiting',
+                            score: 0,
+                            evaluation: null,
+                            timestamp: null
+                        }));
+                        studentsFound = true;
+                    }
+                } catch (e) {
+                    console.log('Error loading kingdom data:', e);
+                }
+            }
+
+            // Filter out eliminated students from previous games
+            if (studentsFound && playersData) {
+                try {
+                    const players = JSON.parse(playersData);
+                    competitionData.students = competitionData.students.filter(student => {
+                        const player = players.find(p => p.name === student.name);
+                        return !player || player.status === 'alive';
+                    });
+                } catch (e) {
+                    console.log('Error filtering eliminated students:', e);
+                }
+            }
+
+            // Default students if none found
+            if (!studentsFound || competitionData.students.length === 0) {
+                competitionData.students = [
+                    { id: 1, name: 'حكيم تجريبي 1', status: 'waiting', score: 0, evaluation: null, timestamp: null },
+                    { id: 2, name: 'حكيم تجريبي 2', status: 'waiting', score: 0, evaluation: null, timestamp: null },
+                    { id: 3, name: 'حكيم تجريبي 3', status: 'waiting', score: 0, evaluation: null, timestamp: null }
+                ];
+            }
+
+            // Shuffle students for random order
+            competitionData.students = shuffleArray(competitionData.students);
+            
+            console.log('✅ تم تحميل بيانات الحكماء:', competitionData.students);
+            
+            // Calculate elimination phases after loading students
+            calculateEliminationPhases();
+            
+            displayStudentsList();
+        }
+
+        // ===== UTILITY FUNCTIONS =====
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+
+        function playSound(soundType) {
+            if (!audioEnabled) return;
+            
+            try {
+                const audio = new Audio();
+                const soundMap = {
+                    // Competition sounds
+                    'start': '../assets/media/sounds/kingdom-sounds/battle-horn.mp3',
+                    'success': '../assets/media/sounds/kingdom-sounds/achievement-unlock.mp3',
+                    'end': '../assets/media/sounds/kingdom-sounds/crown-ceremony.mp3',
+                    'pause': '../assets/media/sounds/kingdom-sounds/button-hover.mp3',
+                    'warning': '../assets/media/sounds/kingdom-sounds/countdown-tick.mp3',
+                    
+                    // Evaluation sounds
+                    'excellent': '../assets/media/sounds/kingdom-sounds/epic-victory.mp3',
+                    'very-good': '../assets/media/sounds/kingdom-sounds/achievement-unlock.mp3',
+                    'good': '../assets/media/sounds/kingdom-sounds/level-up.mp3',
+                    'weak': '../assets/media/sounds/kingdom-sounds/notification-pop.mp3',
+                    'fail': '../assets/media/sounds/wrong_answer.mp3',
+                    
+                    // Student and round transition sounds
+                    'next-student': '../assets/media/sounds/kingdom-sounds/cosmic-click.mp3',
+                    'new-round': '../assets/media/sounds/kingdom-sounds/dimensional-shift.mp3',
+                    'phase-transition': '../assets/media/sounds/kingdom-sounds/epic-charge.mp3',
+                    'elimination': '../assets/media/sounds/kingdom-sounds/lightning-strike.mp3',
+                    
+                    // UI interaction sounds
+                    'cosmic-click': '../assets/media/sounds/kingdom-sounds/cosmic-click.mp3',
+                    'hover': '../assets/media/sounds/kingdom-sounds/button-hover.mp3',
+                    'modal-open': '../assets/media/sounds/kingdom-sounds/mystic-wind.mp3',
+                    'modal-close': '../assets/media/sounds/kingdom-sounds/crystal-ping.mp3',
+                    
+                    // Special effects
+                    'lightning': '../assets/media/sounds/kingdom-sounds/lightning-whoosh.mp3',
+                    'thunder': '../assets/media/sounds/kingdom-sounds/electric-charge.mp3',
+                    'magic': '../assets/media/sounds/kingdom-sounds/magic-sparkle.mp3',
+                    'victory': '../assets/media/sounds/kingdom-sounds/fireworks-burst.mp3',
+                    
+                    // Celebration sounds
+                    'celebration': '../assets/media/sounds/kingdom-sounds/golden-confetti.mp3',
+                    'fanfare': '../assets/media/sounds/kingdom-sounds/crowd-cheer.mp3',
+                    'epic-finish': '../assets/media/sounds/kingdom-sounds/epic-victory.mp3',
+                    'confetti': '../assets/media/sounds/kingdom-sounds/fireworks-burst.mp3',
+                    'applause': '../assets/media/sounds/kingdom-sounds/crowd-cheer.mp3',
+                    
+                    // Smart notification sounds
+                    'notification-pop': '../assets/media/sounds/kingdom-sounds/notification-pop.mp3',
+                    'brain-activate': '../assets/media/sounds/kingdom-sounds/brain-activate.mp3',
+                    'epic-charge-tutorial': '../assets/media/sounds/kingdom-sounds/energy-boost.mp3',
+                    'countdown-tick': '../assets/media/sounds/kingdom-sounds/countdown-tick.mp3',
+                    'ai-notification': '../assets/media/sounds/kingdom-sounds/ai-notification.mp3'
+                };
+                
+                const soundPath = soundMap[soundType];
+                if (!soundPath) {
+                    console.warn(`الصوت "${soundType}" غير موجود`);
+                    return;
+                }
+                
+                audio.src = soundPath;
+                audio.volume = getSoundVolume(soundType);
+                
+                // Add fade in effect for special sounds
+                if (['start', 'phase-transition', 'new-round', 'celebration'].includes(soundType)) {
+                    audio.volume = 0;
+                    audio.play().then(() => {
+                        fadeInAudio(audio, getSoundVolume(soundType));
+                    }).catch(e => {
+                        console.log(`تعذر تشغيل الصوت: ${soundType}`, e.message);
+                        // Fallback - try without fade
+                        audio.volume = getSoundVolume(soundType);
+                        audio.play().catch(() => {});
+                    });
+                } else {
+                    const playPromise = audio.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(e => {
+                            console.log(`تعذر تشغيل الصوت: ${soundType}`, e.message);
+                        });
+                    }
+                }
+                
+            } catch (e) {
+                console.log('خطأ في تشغيل الصوت:', e.message);
+            }
+        }
+
+        function getSoundVolume(soundType) {
+            const volumeMap = {
+                'start': 0.8,
+                'excellent': 0.9,
+                'very-good': 0.7,
+                'good': 0.6,
+                'weak': 0.5,
+                'elimination': 0.8,
+                'phase-transition': 0.9,
+                'new-round': 0.7,
+                'next-student': 0.4,
+                'cosmic-click': 0.3,
+                'hover': 0.2,
+                'modal-open': 0.5,
+                'modal-close': 0.4,
+                'lightning': 0.8,
+                'thunder': 0.9,
+                'magic': 0.6,
+                'victory': 1.0,
+                'warning': 0.7,
+                'fail': 0.6,
+                'success': 0.8,
+                'end': 0.9,
+                'pause': 0.4,
+                // Celebration sounds
+                'celebration': 1.0,
+                'fanfare': 0.9,
+                'epic-finish': 1.0,
+                'confetti': 0.8,
+                'applause': 0.8,
+                // Smart notification sounds
+                'notification-pop': 0.6,
+                'brain-activate': 0.7,
+                'epic-charge': 0.8,
+                'countdown-tick': 0.7,
+                'ai-notification': 0.6
+            };
+            return volumeMap[soundType] || 0.6;
+        }
+
+        function fadeInAudio(audio, targetVolume, duration = 1000) {
+            const steps = 20;
+            const stepTime = duration / steps;
+            const volumeStep = targetVolume / steps;
+            let currentStep = 0;
+            
+            const fadeInterval = setInterval(() => {
+                currentStep++;
+                audio.volume = Math.min(volumeStep * currentStep, targetVolume);
+                
+                if (currentStep >= steps) {
+                    clearInterval(fadeInterval);
+                }
+            }, stepTime);
+        }
+
+        function playSequentialSounds(sounds, delay = 500) {
+            sounds.forEach((sound, index) => {
+                setTimeout(() => {
+                    playSound(sound);
+                }, index * delay);
+            });
+        }
+
+        function playRandomLightningEffect() {
+            const effects = ['lightning', 'thunder', 'magic'];
+            const randomEffect = effects[Math.floor(Math.random() * effects.length)];
+            playSound(randomEffect);
+        }
+
+        function setupSoundSystem() {
+            // Test audio support with multiple sound files
+            try {
+                const testAudio = new Audio();
+                
+                // Test with a simple sound first
+                const testSounds = [
+                    '../assets/media/sounds/kingdom-sounds/cosmic-click.mp3',
+                    '../assets/media/sounds/kingdom-sounds/button-hover.mp3',
+                    '../assets/media/sounds/kingdom-sounds/notification-pop.mp3'
+                ];
+                
+                let soundTestIndex = 0;
+                
+                function testNextSound() {
+                    if (soundTestIndex >= testSounds.length) {
+                        console.log('❌ جميع اختبارات الصوت فشلت - وضع صامت');
+                        audioEnabled = false;
+                        return;
+                    }
+                    
+                    testAudio.src = testSounds[soundTestIndex];
+                    testAudio.volume = 0.1;
+                    
+                    const playPromise = testAudio.play();
+                    if (playPromise !== undefined) {
+                        playPromise.then(() => {
+                            testAudio.pause();
+                            testAudio.currentTime = 0;
+                            audioEnabled = true;
+                            console.log(`✅ نظام الصوت جاهز - مملكة الحكمة (اختبر ${testSounds[soundTestIndex]})`);
+                            
+                            // Test a few more sounds to verify system integrity
+                            testSoundIntegrity();
+                            
+                            // Play welcome sound after a short delay
+                            setTimeout(() => {
+                                playSound('modal-open');
+                            }, 500);
+                            
+                        }).catch((error) => {
+                            console.log(`⚠️ فشل اختبار الصوت ${soundTestIndex + 1}:`, error.message);
+                            soundTestIndex++;
+                            setTimeout(testNextSound, 100);
+                        });
+                    } else {
+                        soundTestIndex++;
+                        testNextSound();
+                    }
+                }
+                
+                testNextSound();
+                
+            } catch (e) {
+                audioEnabled = false;
+                console.log('❌ نظام الصوت غير متاح:', e.message);
+            }
+            
+            // Add hover sounds to buttons with proper event handling
+            setTimeout(() => {
+                addHoverSounds();
+            }, 1000);
+        }
+
+        function testSoundIntegrity() {
+            const criticalSounds = [
+                'excellent', 'very-good', 'good', 'weak', 
+                'notification-pop', 'lightning', 'victory'
+            ];
+            
+            let workingSounds = 0;
+            let totalSounds = criticalSounds.length;
+            
+            criticalSounds.forEach(soundType => {
+                const testAudio = new Audio();
+                const soundMap = {
+                    'excellent': '../assets/media/sounds/kingdom-sounds/epic-victory.mp3',
+                    'very-good': '../assets/media/sounds/kingdom-sounds/achievement-unlock.mp3',
+                    'good': '../assets/media/sounds/kingdom-sounds/level-up.mp3',
+                    'weak': '../assets/media/sounds/kingdom-sounds/notification-pop.mp3',
+                    'notification-pop': '../assets/media/sounds/kingdom-sounds/notification-pop.mp3',
+                    'lightning': '../assets/media/sounds/kingdom-sounds/lightning-whoosh.mp3',
+                    'victory': '../assets/media/sounds/kingdom-sounds/fireworks-burst.mp3'
+                };
+                
+                testAudio.src = soundMap[soundType];
+                testAudio.volume = 0.05;
+                
+                testAudio.addEventListener('canplaythrough', () => {
+                    workingSounds++;
+                    console.log(`✅ صوت ${soundType} جاهز`);
+                    
+                    if (workingSounds === totalSounds) {
+                        console.log(`🔊 جميع الأصوات الأساسية جاهزة (${workingSounds}/${totalSounds})`);
+                    }
+                });
+                
+                testAudio.addEventListener('error', () => {
+                    console.warn(`⚠️ مشكلة في تحميل صوت ${soundType}`);
+                });
+                
+                // Trigger loading
+                testAudio.load();
+            });
+        }
+
+        function addHoverSounds() {
+            // Add hover sounds to all buttons with throttling
+            const buttons = document.querySelectorAll('.control-btn, .eval-btn, .modal-btn, button');
+            let lastHoverTime = 0;
+            let lastClickTime = 0;
+            
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', () => {
+                    const now = Date.now();
+                    if (audioEnabled && now - lastHoverTime > 100) { // Throttle hover sounds
+                        playSound('hover');
+                        lastHoverTime = now;
+                    }
+                });
+                
+                button.addEventListener('click', () => {
+                    const now = Date.now();
+                    if (audioEnabled && now - lastClickTime > 200) { // Throttle click sounds
+                        playSound('cosmic-click');
+                        lastClickTime = now;
+                    }
+                });
+            });
+        }
+
+        // ===== SOUND DIAGNOSTIC SYSTEM =====
+        function diagnoseSoundSystem() {
+            console.log('🔍 تشخيص النظام الصوتي - مملكة البرق...');
+            
+            const diagnosticReport = {
+                audioEnabled: audioEnabled,
+                userAgent: navigator.userAgent,
+                audioContext: typeof AudioContext !== 'undefined' || typeof webkitAudioContext !== 'undefined',
+                htmlAudio: typeof Audio !== 'undefined',
+                timestamp: new Date().toISOString(),
+                soundsAvailable: 0,
+                soundsTotal: 0
+            };
+            
+            console.log('📊 تقرير تشخيص الصوت:', diagnosticReport);
+            
+            // Test critical sound files
+            const criticalSounds = [
+                'excellent', 'very-good', 'good', 'weak', 'fail',
+                'notification-pop', 'lightning', 'victory', 'start', 'brain-activate'
+            ];
+            
+            console.log('🧪 اختبار الملفات الصوتية الأساسية...');
+            diagnosticReport.soundsTotal = criticalSounds.length;
+            
+            criticalSounds.forEach(soundType => {
+                testSoundFile(soundType, diagnosticReport);
+            });
+            
+            setTimeout(() => {
+                console.log(`📈 ملخص الأصوات: ${diagnosticReport.soundsAvailable}/${diagnosticReport.soundsTotal} متاح`);
+                if (diagnosticReport.soundsAvailable < diagnosticReport.soundsTotal) {
+                    console.warn('⚠️ بعض الأصوات غير متاحة - قد تحتاج للتحقق من مسارات الملفات');
+                }
+            }, 2000);
+            
+            return diagnosticReport;
+        }
+
+        function testSoundFile(soundType, report) {
+            const soundMap = {
+                'excellent': '../assets/media/sounds/kingdom-sounds/epic-victory.mp3',
+                'very-good': '../assets/media/sounds/kingdom-sounds/achievement-unlock.mp3',
+                'good': '../assets/media/sounds/kingdom-sounds/level-up.mp3',
+                'weak': '../assets/media/sounds/kingdom-sounds/notification-pop.mp3',
+                'fail': '../assets/media/sounds/wrong_answer.mp3',
+                'notification-pop': '../assets/media/sounds/kingdom-sounds/notification-pop.mp3',
+                'lightning': '../assets/media/sounds/kingdom-sounds/lightning-whoosh.mp3',
+                'victory': '../assets/media/sounds/kingdom-sounds/fireworks-burst.mp3',
+                'start': '../assets/media/sounds/kingdom-sounds/battle-horn.mp3',
+                'brain-activate': '../assets/media/sounds/kingdom-sounds/brain-activate.mp3'
+            };
+            
+            const soundPath = soundMap[soundType];
+            if (!soundPath) {
+                console.warn(`❌ ${soundType}: غير موجود في الخريطة`);
+                return;
+            }
+            
+            const testAudio = new Audio();
+            testAudio.src = soundPath;
+            
+            testAudio.addEventListener('canplaythrough', () => {
+                console.log(`✅ ${soundType}: جاهز للتشغيل`);
+                if (report) report.soundsAvailable++;
+            });
+            
+            testAudio.addEventListener('error', (e) => {
+                console.error(`❌ ${soundType}: فشل التحميل (${soundPath})`);
+            });
+            
+            // Trigger loading
+            testAudio.load();
+        }
+
+        function getSoundSystemStatus() {
+            const status = {
+                enabled: audioEnabled,
+                totalSounds: 25, // عدد الأصوات المختلفة
+                browser: navigator.userAgent.includes('Chrome') ? 'Chrome' : 
+                        navigator.userAgent.includes('Firefox') ? 'Firefox' : 
+                        navigator.userAgent.includes('Safari') ? 'Safari' : 'Other',
+                recommendations: []
+            };
+            
+            if (!audioEnabled) {
+                status.recommendations.push('قم بالنقر على الصفحة أولاً لتفعيل الأصوات');
+                status.recommendations.push('تأكد من أن الصوت غير مكتوم في المتصفح');
+            }
+            
+            return status;
+        }
+
+        // Global functions for testing and debugging
+        window.testSound = function(soundType = 'notification-pop') {
+            console.log(`🎵 اختبار صوت: ${soundType}`);
+            if (!audioEnabled) {
+                console.warn('❌ نظام الصوت غير مفعل');
+                return false;
+            }
+            playSound(soundType);
+            return true;
+        };
+
+        window.diagnoseSounds = function() {
+            return diagnoseSoundSystem();
+        };
+
+        window.getSoundStatus = function() {
+            const status = getSoundSystemStatus();
+            console.table(status);
+            return status;
+        };
+
+        window.testAllSounds = function() {
+            const sounds = ['excellent', 'very-good', 'good', 'weak', 'notification-pop', 'lightning', 'victory'];
+            let index = 0;
+            
+            function playNext() {
+                if (index < sounds.length) {
+                    console.log(`🎵 اختبار ${index + 1}/${sounds.length}: ${sounds[index]}`);
+                    playSound(sounds[index]);
+                    index++;
+                    setTimeout(playNext, 1500);
+                } else {
+                    console.log('✅ انتهى اختبار جميع الأصوات');
+                }
+            }
+            
+            playNext();
+        };
+
+        // ===== DISPLAY FUNCTIONS =====
+        function updateDisplay() {
+            document.getElementById('activeStudents').textContent = competitionData.students.filter(s => s.status === 'waiting').length;
+            document.getElementById('completedStudents').textContent = competitionData.completedStudents;
+            document.getElementById('timeRemaining').textContent = formatTime(competitionData.remainingTime);
+            document.getElementById('mainTimer').textContent = formatTime(competitionData.remainingTime);
+            
+            // Update timer color based on remaining time
+            const timerElement = document.getElementById('mainTimer');
+            if (competitionData.remainingTime <= 60) {
+                timerElement.style.color = '#f44336';
+                if (competitionData.remainingTime <= 30) {
+                    timerElement.style.animation = 'pulse 1s infinite';
+                }
+            } else if (competitionData.remainingTime <= 120) {
+                timerElement.style.color = '#ff9800';
+            } else {
+                timerElement.style.color = 'var(--lightning-primary)';
+            }
+        }
+
+        function displayStudentsList() {
+            const container = document.getElementById('studentsList');
+            container.innerHTML = '';
+            
+            competitionData.students.forEach((student, index) => {
+                const studentCard = document.createElement('div');
+                studentCard.className = `student-card ${student.status}`;
+                
+                // Count total attempts for this student
+                const attempts = (student.attempts || 0) + (student.status === 'completed' ? 1 : 0);
+                
+                studentCard.innerHTML = `
+                    <div class="student-name">${student.name}</div>
+                    <div class="student-status status-${student.status}">
+                        ${getStatusText(student.status)}
+                    </div>
+                    <div style="font-size: 0.7rem; color: #ccc; margin-top: 0.25rem;">
+                        المحاولات: ${attempts}/${competitionData.eliminationSettings.opportunitiesPerStudent}
+                        ${competitionData.currentPhase > 1 ? ` | المرحلة ${competitionData.currentPhase}` : ''}
+                    </div>
+                    ${student.score > 0 ? `<div style="color: var(--lightning-primary); font-weight: 700; margin-top: 0.5rem;">${student.score} نقطة</div>` : ''}
+                `;
+                container.appendChild(studentCard);
+            });
+        }
+
+        function getStatusText(status) {
+            const statusMap = {
+                'waiting': 'في الانتظار',
+                'current': 'الدور الحالي',
+                'completed': 'تم تقييمه',
+                'eliminated': 'مُستبعد'
+            };
+            return statusMap[status] || status;
+        }
+
+        function showCurrentStudent() {
+            // Check if we need to start a new round
+            if (competitionData.currentStudentIndex >= competitionData.students.length) {
+                if (competitionData.currentRound < competitionData.maxRounds) {
+                    startNewRound();
+                    return;
+                } else {
+                    endCompetition();
+                    return;
+                }
+            }
+
+            const currentStudent = competitionData.students[competitionData.currentStudentIndex];
+            
+            // Skip eliminated students
+            if (currentStudent.status === 'eliminated') {
+                competitionData.currentStudentIndex++;
+                showCurrentStudent();
+                return;
+            }
+
+            // Update student status
+            competitionData.students.forEach(s => {
+                if (s.status === 'current') s.status = 'waiting';
+            });
+            currentStudent.status = 'current';
+
+            // Display current student with round info and phase
+            const phaseInfo = competitionData.currentPhase > 1 ? ` - المرحلة ${competitionData.currentPhase}` : '';
+            document.getElementById('currentStudentName').textContent = 
+                `${currentStudent.name} - الجولة ${competitionData.currentRound}${phaseInfo}`;
+            document.getElementById('studentSection').style.display = 'block';
+            
+            displayStudentsList();
+            
+            // Show smart hints for current student
+            showStudentSmartHints(currentStudent);
+            
+            // Play student transition sound with lightning effect
+            playSound('next-student');
+            setTimeout(() => {
+                playRandomLightningEffect();
+            }, 300);
+
+            // Show modal for new student
+            showStudentModal(currentStudent);
+        }
+
+        // ===== SMART STUDENT HINTS SYSTEM =====
+        function showStudentSmartHints(student) {
+            const attempts = student.attempts || 0;
+            const weakCount = student.weakCount || 0;
+            const roundInfo = `الجولة ${competitionData.currentRound}/${competitionData.eliminationSettings.opportunitiesPerStudent}`;
+            
+            // Different hints based on student situation
+            if (attempts === 0) {
+                // First time playing
+                showSmartNotification(
+                    '🎯 بداية جديدة!',
+                    `${student.name}, هذه فرصتك الأولى في ${roundInfo}. خذ وقتك وفكر جيداً!`,
+                    'tip',
+                    4000
+                );
+            } else if (weakCount >= 2) {
+                // In danger
+                showSmartNotification(
+                    '⚠️ خطر الاستبعاد!',
+                    `${student.name}, لديك ${weakCount} إجابات ضعيفة. إجابة ضعيفة أخرى = استبعاد تلقائي!`,
+                    'danger',
+                    5000
+                );
+            } else if (attempts >= 2 && student.score < 150) {
+                // Low performance
+                showSmartNotification(
+                    '💪 وقت التحسن!',
+                    `${student.name}, نقاطك ${student.score}. حان وقت إظهار قوتك الحقيقية!`,
+                    'warning',
+                    4000
+                );
+            } else if (student.score >= 200) {
+                // Good performance
+                showSmartNotification(
+                    '🌟 أداء ممتاز!',
+                    `${student.name}, نقاطك ${student.score}! استمر على هذا المستوى الرائع!`,
+                    'success',
+                    3000
+                );
+            }
+            
+            // Round-specific hints
+            if (competitionData.currentRound === competitionData.eliminationSettings.opportunitiesPerStudent) {
+                showSmartNotification(
+                    '🔥 الفرصة الأخيرة!',
+                    `هذه آخر فرصة في هذه المرحلة. اجعلها تحسب!`,
+                    'lightning',
+                    4000
+                );
+            }
+            
+            // Phase-specific hints
+            if (competitionData.currentPhase > 1) {
+                const survivorsCount = competitionData.students.filter(s => s.status !== 'eliminated').length;
+                showSmartNotification(
+                    `⚡ المرحلة ${competitionData.currentPhase}`,
+                    `${survivorsCount} طالب متبقي فقط. المنافسة تشتد!`,
+                    'info',
+                    3000
+                );
+            }
+        }
+
+        function showEliminationWarning(student) {
+            showSmartNotification(
+                '🚨 تحذير نهائي!',
+                `${student.name}, إجابة ضعيفة واحدة أخرى وستكون خارج المنافسة نهائياً!`,
+                'danger',
+                6000
+            );
+            
+            // Play warning sound sequence
+            playSound('warning');
+            setTimeout(() => playSound('thunder'), 500);
+        }
+
+        function showPerformanceEncouragement(student, evaluation) {
+            const encouragements = {
+                'excellent': {
+                    title: '🏆 إنجاز خارق!',
+                    message: `${student.name} يضرب بقوة! +100 نقطة للمحارب الشجاع!`,
+                    type: 'success'
+                },
+                'very-good': {
+                    title: '✨ أداء رائع!',
+                    message: `${student.name} يظهر مهارات عالية! +85 نقطة محترمة!`,
+                    type: 'success'
+                },
+                'good': {
+                    title: '👍 أداء جيد!',
+                    message: `${student.name} في الطريق الصحيح! +70 نقطة نحو النجاة!`,
+                    type: 'info'
+                },
+                'weak': {
+                    title: '⚠️ يمكن تحسينه!',
+                    message: `${student.name}, +40 نقطة فقط. المرة القادمة ستكون أفضل!`,
+                    type: 'warning'
+                }
+            };
+            
+            const encouragement = encouragements[evaluation];
+            if (encouragement) {
+                setTimeout(() => {
+                    showSmartNotification(
+                        encouragement.title,
+                        encouragement.message,
+                        encouragement.type,
+                        4000
+                    );
+                }, 1000);
+            }
+        }
+
+        function showPhaseProgressUpdate() {
+            const survivors = competitionData.students.filter(s => s.status !== 'eliminated').length;
+            const totalStudents = competitionData.students.length;
+            const eliminationPercentage = Math.round(((totalStudents - survivors) / totalStudents) * 100);
+            
+            showSmartNotification(
+                `📊 تقرير المرحلة ${competitionData.currentPhase}`,
+                `نسبة الاستبعاد: ${eliminationPercentage}% • المتبقون: ${survivors} طالب`,
+                'info',
+                5000
+            );
+        }
+
+        function showTimeWarning(timeLeft) {
+            if (timeLeft === 300) { // 5 minutes
+                showSmartNotification(
+                    '⏰ 5 دقائق متبقية!',
+                    'الوقت ينفد! استعدوا للنهاية المثيرة!',
+                    'warning',
+                    4000
+                );
+            } else if (timeLeft === 60) { // 1 minute
+                showSmartNotification(
+                    '🔥 دقيقة واحدة متبقية!',
+                    'اللحظات الأخيرة! من سينجو من معركة البرق؟',
+                    'danger',
+                    5000
+                );
+            } else if (timeLeft === 10) { // 10 seconds
+                showSmartNotification(
+                    '⚡ العد التنازلي النهائي!',
+                    '10... 9... 8... معركة البرق تنتهي!',
+                    'lightning',
+                    6000
+                );
+            }
+        }
+
+        function startNewRound() {
+            competitionData.currentRound++;
+            competitionData.currentStudentIndex = 0;
+            
+            // Reset students for new round (except eliminated ones)
+            competitionData.students.forEach(student => {
+                if (student.status !== 'eliminated') {
+                    student.status = 'waiting';
+                    // Keep previous scores but allow new attempts
+                }
+            });
+            
+            // Show round start notification
+            showSmartNotification(
+                `🔄 بداية الجولة ${competitionData.currentRound}`,
+                `ترتيب جديد! جميع الطلاب يحصلون على فرصة أخرى للتألق!`,
+                'info',
+                4000
+            );
+            
+            // Check if round exceeds opportunities per student
+            if (competitionData.currentRound > competitionData.eliminationSettings.opportunitiesPerStudent) {
+                showPhaseProgressUpdate();
+                checkPhaseElimination();
+                return;
+            }
+            
+            // Shuffle again for new round
+            const availableStudents = competitionData.students.filter(s => s.status !== 'eliminated');
+            const shuffledStudents = shuffleArray(availableStudents);
+            
+            // Replace available students in original array with shuffled order
+            let shuffleIndex = 0;
+            for (let i = 0; i < competitionData.students.length; i++) {
+                if (competitionData.students[i].status !== 'eliminated') {
+                    competitionData.students[i] = shuffledStudents[shuffleIndex];
+                    shuffleIndex++;
+                }
+            }
+            
+            showRoundStartModal();
+            setTimeout(() => {
+                closeModal();
+                showCurrentStudent();
+            }, 2500);
+            
+            // Play new round sound sequence
+            playSound('new-round');
+            setTimeout(() => {
+                playSound('thunder');
+            }, 800);
+        }
+
+        function showRoundStartModal() {
+            const modal = document.getElementById('resultModal');
+            const title = document.getElementById('modalTitle');
+            const message = document.getElementById('modalMessage');
+            
+            const activeStudents = competitionData.students.filter(s => s.status !== 'eliminated').length;
+            const currentPhaseData = competitionData.phases[competitionData.currentPhase - 1];
+            
+            title.innerHTML = `🔄 الجولة ${competitionData.currentRound}`;
+            message.innerHTML = `
+                <div style="font-size: 1.3rem; color: var(--lightning-primary); margin-bottom: 1rem;">
+                    <i class="fas fa-refresh"></i> جولة جديدة!
+                </div>
+                <div style="color: #fff;">
+                    ${activeStudents} طالب متبقي في المرحلة ${competitionData.currentPhase}<br>
+                    ${competitionData.eliminationSettings.opportunitiesPerStudent - competitionData.currentRound + 1} فرصة متبقية لكل طالب<br>
+                    الترتيب العشوائي الجديد جاهز
+                </div>
+                ${currentPhaseData && !currentPhaseData.isRanking ? `
+                    <div style="color: #ff9800; margin-top: 1rem; font-size: 0.9rem;">
+                        الهدف: ${currentPhaseData.studentsAtEnd} طالب للمرحلة التالية
+                    </div>
+                ` : ''}
+            `;
+            
+            showModal('resultModal');
+            
+            // Play round start sound
+            playSound('new-round');
+        }
+
+        function showStudentModal(student) {
+            const title = '🎯 الطالب الحالي';
+            const message = `
+                <div style="font-size: 1.5rem; color: var(--lightning-primary); margin-bottom: 1rem;">
+                    <i class="fas fa-user"></i> ${student.name}
+                </div>
+                <div style="color: #fff;">
+                    <i class="fas fa-microphone"></i> وجه سؤالاً شفوياً للطالب<br>
+                    <i class="fas fa-clock"></i> استمع للإجابة وقم بالتقييم
+                </div>
+            `;
+            
+            // Set content and show modal
+            setModalContent(title, message);
+            showModal('resultModal');
+            
+            // Play student modal sound
+            playSound('modal-open');
+            
+            setTimeout(() => {
+                closeModal();
+            }, 3000);
+        }
+
+        // ===== COMPETITION CONTROL FUNCTIONS =====
+        function startCompetition() {
+            if (competitionData.students.length === 0) {
+                alert('لا توجد بيانات طلاب! يرجى العودة لمركز الممالك وتحديد الطلاب.');
+                return;
+            }
+
+            // Show settings first if not configured
+            if (!competitionData.phases || competitionData.phases.length === 0) {
+                showCompetitionSettings();
+                return;
+            }
+
+            competitionData.isRunning = true;
+            competitionData.isPaused = false;
+            competitionData.currentStudentIndex = 0;
+            competitionData.remainingTime = competitionData.totalTime;
+            competitionData.currentRound = 1;
+            competitionData.currentPhase = 1;
+            competitionData.studentsPerRound = [];
+            
+            // Reset all students to waiting and clear previous scores/attempts
+            competitionData.students.forEach(student => {
+                student.status = 'waiting';
+                student.score = 0;
+                student.attempts = 0;
+                student.weakCount = 0;
+                student.eliminationReason = null;
+                student.eliminationPhase = null;
+            });
+
+            startTimer();
+            
+            // Start smart tutorial sequence
+            showSmartTutorialSequence();
+
+            // Update button
+            const startBtn = document.querySelector('.start-competition');
+            startBtn.innerHTML = '<i class="fas fa-refresh"></i> إعادة البدء';
+        }
+
+        // ===== SMART TUTORIAL SYSTEM =====
+        function showSmartTutorialSequence() {
+            const tutorialSteps = [
+                {
+                    title: '🎮 مرحباً بكم في مملكة البرق!',
+                    message: `
+                        <div style="text-align: center; font-size: 1.3rem; color: #FFD700; margin-bottom: 1.5rem;">
+                            <i class="fas fa-bolt"></i> ستخوضون منافسة شرسة للبقاء!
+                        </div>
+                        <div style="color: #fff; font-size: 1.1rem; line-height: 1.6;">
+                            💫 في هذه المملكة، فقط الأقوياء سينجون<br>
+                            ⚡ كل طالب سيحصل على فرص محدودة<br>
+                            🏆 النقاط والأداء يحددان مصيركم!
+                        </div>
+                    `,
+                    duration: 4000,
+                    sound: 'start',
+                    color: '#FFD700'
+                },
+                {
+                    title: '📊 نظام التقييم الذكي',
+                    message: `
+                        <div style="background: linear-gradient(135deg, #4CAF50, #2E7D32); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem;">
+                            <div style="color: white; font-size: 1.1rem; text-align: center; margin-bottom: 1rem;">
+                                <i class="fas fa-star"></i> درجات التقييم
+                            </div>
+                            <div style="color: white; line-height: 1.8;">
+                                🌟 <strong>ممتاز:</strong> 100 نقطة + مكافآت خاصة<br>
+                                ✨ <strong>جيد جداً:</strong> 85 نقطة + حماية من الاستبعاد<br>
+                                👍 <strong>جيد:</strong> 70 نقطة<br>
+                                ⚠️ <strong>ضعيف:</strong> 40 نقطة فقط (خطر!)
+                            </div>
+                        </div>
+                        <div style="color: #ff9800; text-align: center; font-weight: bold;">
+                            ⚠️ تحذير: 3 إجابات ضعيفة = استبعاد تلقائي!
+                        </div>
+                    `,
+                    duration: 5000,
+                    sound: 'notification-pop',
+                    color: '#4CAF50'
+                },
+                {
+                    title: '🔥 نظام التصفيات المتدرج',
+                    message: `
+                        <div style="background: linear-gradient(135deg, #FF6B35, #F7931E); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem;">
+                            <div style="color: white; font-size: 1.1rem; text-align: center; margin-bottom: 1rem;">
+                                <i class="fas fa-layer-group"></i> مراحل الاستبعاد
+                            </div>
+                            <div style="color: white; line-height: 1.8;">
+                                📈 <strong>المرحلة 1:</strong> ${competitionData.students.length} طالب<br>
+                                📉 <strong>تصفيات تدريجية</strong> حسب الأداء<br>
+                                🎯 <strong>المرحلة الأخيرة:</strong> الأقوى فقط!<br>
+                                ⏰ <strong>كل مرحلة:</strong> ${competitionData.eliminationSettings?.opportunitiesPerStudent || 3} فرص لكل طالب
+                            </div>
+                        </div>
+                        <div style="color: #fff; text-align: center;">
+                            💡 كلما تقدمت، زادت صعوبة النجاة!
+                        </div>
+                    `,
+                    duration: 5000,
+                    sound: 'phase-transition',
+                    color: '#FF6B35'
+                },
+                {
+                    title: '🎯 استراتيجيات النجاة',
+                    message: `
+                        <div style="background: linear-gradient(135deg, #9C27B0, #673AB7); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem;">
+                            <div style="color: white; font-size: 1.1rem; text-align: center; margin-bottom: 1rem;">
+                                <i class="fas fa-brain"></i> نصائح للنجاح
+                            </div>
+                            <div style="color: white; line-height: 1.8;">
+                                🧠 <strong>فكر قبل الإجابة:</strong> لا تتسرع<br>
+                                💪 <strong>استخدم معرفتك:</strong> كل سؤال فرصة<br>
+                                🔄 <strong>تعلم من الأخطاء:</strong> لديك فرص متعددة<br>
+                                ⚡ <strong>حافظ على هدوئك:</strong> التوتر عدو النجاح
+                            </div>
+                        </div>
+                        <div style="color: #E1BEE7; text-align: center; font-style: italic;">
+                            "في مملكة البرق، العقل الهادئ ينتصر دائماً"
+                        </div>
+                    `,
+                    duration: 5000,
+                    sound: 'brain-activate',
+                    color: '#9C27B0'
+                },
+                {
+                    title: '⚡ لحظة الحقيقة!',
+                    message: `
+                        <div style="text-align: center; margin-bottom: 2rem;">
+                            <div style="font-size: 1.5rem; color: #FFD700; margin-bottom: 1rem; animation: pulse 2s infinite;">
+                                <i class="fas fa-bolt"></i> معركة البرق تبدأ الآن!
+                            </div>
+                            <div style="background: linear-gradient(135deg, #FFD700, #FF6B35); padding: 1.5rem; border-radius: 15px; color: white; font-size: 1.1rem; line-height: 1.6;">
+                                🏆 ${competitionData.students.length} محارب جاهز للمعركة<br>
+                                ⏱️ ${Math.floor(competitionData.totalTime / 60)} دقيقة من التحدي الخالص<br>
+                                🔥 ${competitionData.phases?.length || 3} مرحلة من الإثارة
+                            </div>
+                        </div>
+                        <div style="text-align: center; color: #fff; font-size: 1.2rem; font-weight: bold;">
+                            هل أنتم مستعدون لإثبات قوتكم؟ ⚔️
+                        </div>
+                    `,
+                    duration: 6000,
+                    sound: 'epic-charge',
+                    color: '#FFD700',
+                    isLast: true
+                }
+            ];
+            
+            showTutorialStep(0, tutorialSteps);
+        }
+
+        function showTutorialStep(stepIndex, steps) {
+            if (stepIndex >= steps.length) {
+                // Tutorial finished, start the actual competition
+                setTimeout(() => {
+                    showCompetitionStartModal();
+                    setTimeout(() => {
+                        closeModal();
+                        showCurrentStudent();
+                    }, 3500);
+                    playSequentialSounds(['start', 'lightning', 'thunder'], 600);
+                }, 1000);
+                return;
+            }
+            
+            const step = steps[stepIndex];
+            
+            // Show tutorial step
+            setModalContent(step.title, step.message, step.color);
+            showModal('resultModal');
+            
+            // Play step sound with notification effect
+            playTutorialSound(step.sound);
+            
+            // Show progress indicator
+            showTutorialProgress(stepIndex + 1, steps.length);
+            
+            // Auto advance to next step
+            setTimeout(() => {
+                if (step.isLast) {
+                    // Add continue button for last step
+                    addContinueButton(() => {
+                        closeModal();
+                        showTutorialStep(stepIndex + 1, steps);
+                    });
+                } else {
+                    closeModal();
+                    setTimeout(() => {
+                        showTutorialStep(stepIndex + 1, steps);
+                    }, 800);
+                }
+            }, step.duration);
+        }
+
+        function playTutorialSound(soundType) {
+            // Play main sound
+            playSound(soundType);
+            
+            // Add notification effect
+            setTimeout(() => {
+                playSound('notification-pop');
+            }, 200);
+            
+            // Add ambient effect for better immersion
+            setTimeout(() => {
+                if (soundType === 'epic-charge') {
+                    playSound('lightning'); // Use lightning instead of epic-charge-tutorial
+                } else {
+                    playSound('cosmic-click');
+                }
+            }, 400);
+        }
+
+        function showTutorialProgress(current, total) {
+            // Create or update progress indicator
+            let progressContainer = document.getElementById('tutorialProgress');
+            if (!progressContainer) {
+                progressContainer = document.createElement('div');
+                progressContainer.id = 'tutorialProgress';
+                progressContainer.style.cssText = `
+                    position: fixed;
+                    bottom: 20px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: rgba(0,0,0,0.8);
+                    padding: 10px 20px;
+                    border-radius: 25px;
+                    color: white;
+                    font-size: 0.9rem;
+                    z-index: 10001;
+                    backdrop-filter: blur(10px);
+                    border: 1px solid rgba(255,255,255,0.2);
+                `;
+                document.body.appendChild(progressContainer);
+            }
+            
+            const percentage = (current / total) * 100;
+            progressContainer.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>التعليم التفاعلي</span>
+                    <div style="width: 100px; height: 6px; background: rgba(255,255,255,0.3); border-radius: 3px; overflow: hidden;">
+                        <div style="width: ${percentage}%; height: 100%; background: linear-gradient(90deg, #FFD700, #FF6B35); transition: width 0.5s ease;"></div>
+                    </div>
+                    <span>${current}/${total}</span>
+                </div>
+            `;
+            
+            // Remove after tutorial
+            if (current === total) {
+                setTimeout(() => {
+                    if (progressContainer.parentNode) {
+                        progressContainer.parentNode.removeChild(progressContainer);
+                    }
+                }, 2000);
+            }
+        }
+
+        function addContinueButton(callback) {
+            const messageEl = document.getElementById('modalMessage');
+            if (messageEl) {
+                const continueBtn = document.createElement('div');
+                continueBtn.style.cssText = `
+                    text-align: center;
+                    margin-top: 2rem;
+                `;
+                continueBtn.innerHTML = `
+                    <button class="modal-btn primary" onclick="this.parentElement.parentElement.callback()" style="
+                        background: linear-gradient(135deg, #4CAF50, #2E7D32);
+                        border: none;
+                        color: white;
+                        padding: 1rem 2rem;
+                        border-radius: 12px;
+                        font-size: 1.1rem;
+                        cursor: pointer;
+                        transition: transform 0.3s ease;
+                        animation: pulse 2s infinite;
+                    ">
+                        <i class="fas fa-play"></i> ابدأ المعركة الآن!
+                    </button>
+                `;
+                continueBtn.callback = callback;
+                messageEl.appendChild(continueBtn);
+                
+                // Add click sound
+                continueBtn.querySelector('button').addEventListener('click', () => {
+                    playSound('cosmic-click');
+                    callback();
+                });
+            }
+        }
+
+        // ===== SMART NOTIFICATION SYSTEM =====
+        function showSmartNotification(title, message, type = 'info', duration = 4000) {
+            const notification = document.createElement('div');
+            notification.className = `smart-notification ${type}`;
+            
+            const typeConfig = {
+                'info': { icon: 'fas fa-info-circle', color: '#2196F3' },
+                'success': { icon: 'fas fa-check-circle', color: '#4CAF50' },
+                'warning': { icon: 'fas fa-exclamation-triangle', color: '#FF9800' },
+                'danger': { icon: 'fas fa-times-circle', color: '#F44336' },
+                'tip': { icon: 'fas fa-lightbulb', color: '#FFD700' },
+                'lightning': { icon: 'fas fa-bolt', color: '#FFD700' }
+            };
+            
+            const config = typeConfig[type] || typeConfig['info'];
+            
+            notification.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: linear-gradient(135deg, ${config.color}, ${config.color}dd);
+                    color: white;
+                    padding: 1rem 1.5rem;
+                    border-radius: 12px;
+                    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                    z-index: 10000;
+                    max-width: 350px;
+                    backdrop-filter: blur(10px);
+                    border: 1px solid rgba(255,255,255,0.2);
+                    animation: slideInRight 0.5s ease-out;
+                ">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;">
+                        <i class="${config.icon}" style="font-size: 1.2rem;"></i>
+                        <strong style="font-size: 1rem;">${title}</strong>
+                    </div>
+                    <div style="font-size: 0.9rem; line-height: 1.4; opacity: 0.95;">
+                        ${message}
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Play notification sound
+            playSound('notification-pop');
+            
+            // Auto remove
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.style.animation = 'slideOutRight 0.5s ease-in';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 500);
+                }
+            }, duration);
+        }
+
+        // Add notification styles for better mobile experience
+        function addNotificationStyles() {
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideInRight {
+                    from {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                }
+                
+                @keyframes slideOutRight {
+                    from {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                    to {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                }
+                
+                @keyframes pulse {
+                    0%, 100% {
+                        transform: scale(1);
+                    }
+                    50% {
+                        transform: scale(1.05);
+                    }
+                }
+                
+                /* Mobile-specific notification adjustments */
+                @media (max-width: 768px) {
+                    .smart-notification {
+                        position: fixed !important;
+                        top: 10px !important;
+                        right: 10px !important;
+                        left: 10px !important;
+                        max-width: none !important;
+                        width: auto !important;
+                        transform: none !important;
+                        z-index: 10001 !important;
+                    }
+                    
+                    .smart-notification > div {
+                        font-size: 0.9rem !important;
+                        padding: 0.8rem 1rem !important;
+                    }
+                    
+                    .smart-notification h4 {
+                        font-size: 1rem !important;
+                        margin-bottom: 0.4rem !important;
+                    }
+                    
+                    .smart-notification p {
+                        font-size: 0.85rem !important;
+                        line-height: 1.3 !important;
+                    }
+                }
+                
+                @media (max-width: 480px) {
+                    .smart-notification > div {
+                        font-size: 0.8rem !important;
+                        padding: 0.6rem 0.8rem !important;
+                        border-radius: 8px !important;
+                    }
+                    
+                    .smart-notification h4 {
+                        font-size: 0.9rem !important;
+                    }
+                    
+                    .smart-notification p {
+                        font-size: 0.75rem !important;
+                    }
+                }
+                
+                /* Improved touch targets for mobile */
+                @media (hover: none) and (pointer: coarse) {
+                    .eval-btn, .control-btn, .modal-btn, button {
+                        min-height: 44px !important;
+                        min-width: 44px !important;
+                        padding: 12px 16px !important;
+                    }
+                    
+                    .eval-btn {
+                        margin: 8px 0 !important;
+                    }
+                    
+                    .control-btn {
+                        margin: 4px !important;
+                    }
+                    
+                    /* Add visual feedback for touch */
+                    .eval-btn:active, .control-btn:active, .modal-btn:active {
+                        transform: scale(0.95) !important;
+                        transition: transform 0.1s ease !important;
+                        background: rgba(255, 255, 255, 0.1) !important;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // ===== MOBILE OPTIMIZATION FUNCTIONS =====
+        function initializeMobileOptimizations() {
+            // Detect if device is mobile
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            
+            if (isMobile || isTouchDevice) {
+                // Add mobile-specific classes
+                document.body.classList.add('mobile-device');
+                
+                // Optimize scroll behavior for mobile
+                document.body.style.overscrollBehavior = 'contain';
+                
+                // Prevent zoom on input focus (iOS)
+                const metaViewport = document.querySelector('meta[name="viewport"]');
+                if (metaViewport) {
+                    metaViewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+                }
+                
+                // Add touch feedback to buttons
+                addTouchFeedback();
+                
+                // Optimize notification positioning for mobile
+                optimizeNotificationsForMobile();
+                
+                // Add swipe gestures for navigation (optional)
+                addSwipeGestures();
+                
+                console.log('📱 تم تفعيل التحسينات للأجهزة المحمولة');
+            }
+        }
+        
+        function addTouchFeedback() {
+            // Add touch feedback to all interactive elements
+            const interactiveElements = document.querySelectorAll('.eval-btn, .control-btn, .modal-btn, button');
+            
+            interactiveElements.forEach(element => {
+                element.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.95)';
+                    this.style.transition = 'transform 0.1s ease';
+                });
+                
+                element.addEventListener('touchend', function() {
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 100);
+                });
+                
+                element.addEventListener('touchcancel', function() {
+                    this.style.transform = '';
+                });
+            });
+        }
+        
+        function optimizeNotificationsForMobile() {
+            // Override notification positioning for mobile
+            const originalShowSmartNotification = showSmartNotification;
+            
+            window.showSmartNotification = function(title, message, type = 'info', duration = 4000) {
+                const isMobile = window.innerWidth <= 768;
+                
+                if (isMobile) {
+                    // Mobile-optimized notification
+                    const notification = document.createElement('div');
+                    notification.className = `smart-notification mobile-notification ${type}`;
+                    
+                    const typeConfig = {
+                        'info': { icon: 'fas fa-info-circle', color: '#2196F3' },
+                        'success': { icon: 'fas fa-check-circle', color: '#4CAF50' },
+                        'warning': { icon: 'fas fa-exclamation-triangle', color: '#FF9800' },
+                        'danger': { icon: 'fas fa-times-circle', color: '#F44336' },
+                        'tip': { icon: 'fas fa-lightbulb', color: '#FFD700' },
+                        'lightning': { icon: 'fas fa-bolt', color: '#FFD700' }
+                    };
+                    
+                    const config = typeConfig[type] || typeConfig['info'];
+                    
+                    notification.innerHTML = `
+                        <div style="
+                            position: fixed;
+                            top: 10px;
+                            left: 10px;
+                            right: 10px;
+                            background: linear-gradient(135deg, ${config.color}, ${config.color}dd);
+                            color: white;
+                            padding: 0.8rem 1rem;
+                            border-radius: 10px;
+                            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                            z-index: 10000;
+                            backdrop-filter: blur(10px);
+                            border: 1px solid rgba(255,255,255,0.2);
+                            animation: slideInDown 0.5s ease-out;
+                        ">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 0.4rem;">
+                                <i class="${config.icon}" style="font-size: 1rem;"></i>
+                                <span style="font-weight: 600; font-size: 0.9rem;">${title}</span>
+                            </div>
+                            <div style="font-size: 0.8rem; line-height: 1.3; opacity: 0.95;">
+                                ${message}
+                            </div>
+                        </div>
+                    `;
+                    
+                    document.body.appendChild(notification);
+                    
+                    // Play notification sound
+                    playSound('notification-pop');
+                    
+                    // Auto remove
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.style.animation = 'slideOutUp 0.5s ease-in';
+                            setTimeout(() => {
+                                if (notification.parentNode) {
+                                    notification.parentNode.removeChild(notification);
+                                }
+                            }, 500);
+                        }
+                    }, duration);
+                } else {
+                    // Use original function for desktop
+                    originalShowSmartNotification(title, message, type, duration);
+                }
+            };
+        }
+        
+        function addSwipeGestures() {
+            let startX, startY, distX, distY;
+            const threshold = 100; // Minimum distance for swipe
+            
+            document.addEventListener('touchstart', function(e) {
+                const touch = e.touches[0];
+                startX = touch.clientX;
+                startY = touch.clientY;
+            });
+            
+            document.addEventListener('touchmove', function(e) {
+                if (!startX || !startY) return;
+                
+                const touch = e.touches[0];
+                distX = touch.clientX - startX;
+                distY = touch.clientY - startY;
+            });
+            
+            document.addEventListener('touchend', function(e) {
+                if (!startX || !startY) return;
+                
+                // Only trigger swipe if horizontal movement is greater than vertical
+                if (Math.abs(distX) > Math.abs(distY) && Math.abs(distX) > threshold) {
+                    if (distX > 0) {
+                        // Swipe right - could be used for navigation
+                        // console.log('Swiped right');
+                    } else {
+                        // Swipe left - could be used for navigation
+                        // console.log('Swiped left');
+                    }
+                }
+                
+                // Reset values
+                startX = startY = distX = distY = 0;
+            });
+        }
+        
+        function adjustForScreenOrientation() {
+            // Handle orientation changes
+            window.addEventListener('orientationchange', function() {
+                setTimeout(() => {
+                    // Recalculate layout after orientation change
+                    const modals = document.querySelectorAll('.modal.show');
+                    modals.forEach(modal => {
+                        // Adjust modal positioning if needed
+                        const content = modal.querySelector('.modal-content');
+                        if (content) {
+                            content.style.maxHeight = window.innerHeight * 0.9 + 'px';
+                        }
+                    });
+                    
+                    // Refresh display
+                    updateDisplay();
+                }, 100);
+            });
+        }
+        
+        function optimizeMobileHeader() {
+            const isMobile = window.innerWidth <= 480;
+            const isTablet = window.innerWidth <= 768 && window.innerWidth > 480;
+            
+            if (isMobile) {
+                // إضافة فئة للتحكم في التخطيط
+                document.body.classList.add('mobile-compact');
+                
+                // إخفاء الوصف على الهواتف الصغيرة
+                const description = document.querySelector('.kingdom-header p');
+                if (description) {
+                    description.style.display = 'none';
+                }
+                
+                // تقليل ارتفاع الشريط العلوي
+                const header = document.querySelector('.kingdom-header');
+                if (header) {
+                    header.style.minHeight = 'auto';
+                    header.style.padding = '0.4rem';
+                }
+                
+                // تحسين عرض الإحصائيات
+                optimizeStatsForMobile();
+                
+            } else if (isTablet) {
+                document.body.classList.add('tablet-layout');
+                optimizeStatsForTablet();
+            }
+        }
+        
+        function optimizeStatsForMobile() {
+            const statsContainer = document.querySelector('.kingdom-stats');
+            if (statsContainer) {
+                // تطبيق تخطيط أفضل للإحصائيات
+                statsContainer.style.display = 'grid';
+                statsContainer.style.gridTemplateColumns = 'repeat(3, 1fr)';
+                statsContainer.style.gap = '0.3rem';
+                statsContainer.style.margin = '0.4rem 0';
+                
+                // تحسين البطاقات الفردية
+                const statCards = statsContainer.querySelectorAll('.stat-card');
+                statCards.forEach(card => {
+                    card.style.padding = '0.3rem 0.5rem';
+                    card.style.fontSize = '0.7rem';
+                    
+                    const number = card.querySelector('.stat-number');
+                    if (number) {
+                        number.style.fontSize = '0.9rem';
+                        number.style.marginBottom = '0.1rem';
+                    }
+                });
+            }
+        }
+        
+        function optimizeStatsForTablet() {
+            const statsContainer = document.querySelector('.kingdom-stats');
+            if (statsContainer) {
+                statsContainer.style.display = 'flex';
+                statsContainer.style.flexWrap = 'wrap';
+                statsContainer.style.justifyContent = 'center';
+                statsContainer.style.gap = '0.8rem';
+            }
+        }
+        
+        function createCollapsibleHeader() {
+            // إضافة إمكانية طي الشريط العلوي على الهواتف
+            const isMobile = window.innerWidth <= 480;
+            
+            if (isMobile) {
+                const header = document.querySelector('.kingdom-header');
+                const stats = document.querySelector('.kingdom-stats');
+                
+                if (header && stats) {
+                    // إضافة زر الطي
+                    const toggleButton = document.createElement('button');
+                    toggleButton.innerHTML = '<i class="fas fa-chevron-up"></i>';
+                    toggleButton.style.cssText = `
+                        position: absolute;
+                        top: 0.5rem;
+                        left: 1rem;
+                        background: rgba(255,215,0,0.2);
+                        border: 1px solid rgba(255,215,0,0.3);
+                        color: #FFD700;
+                        padding: 0.3rem 0.5rem;
+                        border-radius: 6px;
+                        font-size: 0.8rem;
+                        cursor: pointer;
+                        z-index: 10;
+                        transition: all 0.3s ease;
+                    `;
+                    
+                    let isCollapsed = false;
+                    
+                    toggleButton.onclick = function() {
+                        isCollapsed = !isCollapsed;
+                        
+                        if (isCollapsed) {
+                            stats.style.display = 'none';
+                            toggleButton.innerHTML = '<i class="fas fa-chevron-down"></i>';
+                            header.style.padding = '0.5rem';
+                        } else {
+                            stats.style.display = 'grid';
+                            toggleButton.innerHTML = '<i class="fas fa-chevron-up"></i>';
+                            header.style.padding = '0.4rem';
+                        }
+                    };
+                    
+                    header.style.position = 'relative';
+                    header.appendChild(toggleButton);
+                }
+            }
+        }
+        
+        // تطبيق التحسينات عند تحميل الصفحة وتغيير حجم الشاشة
+        function initializeResponsiveOptimizations() {
+            optimizeMobileHeader();
+            createCollapsibleHeader();
+            
+            // إعادة تطبيق التحسينات عند تغيير حجم الشاشة
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    // إزالة الفئات القديمة
+                    document.body.classList.remove('mobile-compact', 'tablet-layout');
+                    
+                    // إعادة تطبيق التحسينات
+                    optimizeMobileHeader();
+                }, 250);
+            });
+        }
+        
+        // تطبيق التحسينات عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeResponsiveOptimizations();
+            initializeMobileOptimizations();
+            adjustForScreenOrientation();
+            
+            // Add mobile-specific styles
+            const mobileStyles = document.createElement('style');
+            mobileStyles.textContent = `
+                @keyframes slideInDown {
+                    from {
+                        transform: translateY(-100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateY(0);
+                        opacity: 1;
+                    }
+                }
+                
+                @keyframes slideOutUp {
+                    from {
+                        transform: translateY(0);
+                        opacity: 1;
+                    }
+                    to {
+                        transform: translateY(-100%);
+                        opacity: 0;
+                    }
+                }
+                
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                
+                .mobile-device {
+                    -webkit-tap-highlight-color: transparent;
+                    -webkit-touch-callout: none;
+                    -webkit-user-select: none;
+                    user-select: none;
+                }
+                
+                .mobile-device .eval-btn,
+                .mobile-device .control-btn,
+                .mobile-device .modal-btn {
+                    -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
+                }
+                
+                /* Compact header styles */
+                .mobile-compact .kingdom-header {
+                    background: rgba(0,0,0,0.6) !important;
+                    backdrop-filter: blur(20px) !important;
+                    border-bottom: 1px solid rgba(255,215,0,0.2);
+                }
+                
+                .mobile-compact .kingdom-stats {
+                    background: rgba(0,0,0,0.3) !important;
+                    backdrop-filter: blur(10px) !important;
+                    border-radius: 8px !important;
+                    border: 1px solid rgba(255,255,255,0.1);
+                }
+                
+                .mobile-compact .stat-card {
+                    background: rgba(255,255,255,0.05) !important;
+                    border: 1px solid rgba(255,255,255,0.1) !important;
+                }
+                
+                /* Tablet layout styles */
+                .tablet-layout .kingdom-header {
+                    background: rgba(0,0,0,0.4) !important;
+                }
+                
+                .tablet-layout .kingdom-stats {
+                    background: rgba(255,255,255,0.05) !important;
+                    backdrop-filter: blur(15px) !important;
+                }
+            `;
+            document.head.appendChild(mobileStyles);
+        });
+
+        function showCompetitionStartModal() {
+            const totalStudents = competitionData.students.length;
+            const opportunities = competitionData.eliminationSettings.opportunitiesPerStudent;
+            const phases = competitionData.phases.length;
+            
+            const title = '⚡ بداية معركة البرق!';
+            const message = `
+                <div style="font-size: 1.3rem; margin-bottom: 1rem; color: #FFD700;">
+                    <i class="fas fa-bolt"></i> المنافسة الآن مباشرة!
+                </div>
+                <div style="font-size: 1.1rem; color: #fff; margin-bottom: 1rem;">
+                    ${totalStudents} طالب متنافس<br>
+                    ${opportunities} فرصة لكل طالب<br>
+                    ${phases} مرحلة استبعاد
+                </div>
+                <div style="font-size: 1rem; color: #ff9800;">
+                    فقط الأقوى سينجو من معركة البرق!
+                </div>
+            `;
+            
+            // Set content and show modal
+            setModalContent(title, message, '#FFD700');
+            showModal('resultModal');
+        }
+
+        function pauseCompetition() {
+            if (!competitionData.isRunning) return;
+            
+            competitionData.isPaused = !competitionData.isPaused;
+            const pauseBtn = document.querySelector('.pause-competition');
+            
+            if (competitionData.isPaused) {
+                clearInterval(competitionTimer);
+                pauseBtn.innerHTML = '<i class="fas fa-play"></i> متابعة';
+                playSound('pause');
+            } else {
+                startTimer();
+                pauseBtn.innerHTML = '<i class="fas fa-pause"></i> إيقاف مؤقت';
+                playSound('cosmic-click');
+            }
+        }
+
+        function endCompetition() {
+            competitionData.isRunning = false;
+            clearInterval(competitionTimer);
+            
+            // Hide current student section
+            document.getElementById('studentSection').style.display = 'none';
+            
+            // Calculate final results (include all students with scores)
+            const results = competitionData.students
+                .filter(s => s.score > 0 || s.status === 'completed')
+                .sort((a, b) => (b.score || 0) - (a.score || 0));
+            
+            // Show final results modal
+            showFinalResults(results);
+            
+            // Save results to kingdoms center
+            saveResultsToKingdomsCenter(results);
+            
+            // Play end competition sound sequence
+            playSequentialSounds(['end', 'victory', 'magic'], 500);
+        }
+
+        function startTimer() {
+            competitionTimer = setInterval(() => {
+                if (!competitionData.isPaused) {
+                    competitionData.remainingTime--;
+                    updateDisplay();
+                    
+                    // Show smart time warnings
+                    showTimeWarning(competitionData.remainingTime);
+                    
+                    // Warning sounds
+                    if (competitionData.remainingTime === 60 || competitionData.remainingTime === 30) {
+                        playSound('warning');
+                    }
+                    
+                    if (competitionData.remainingTime <= 0) {
+                        showSmartNotification(
+                            '⏰ انتهى الوقت!',
+                            'معركة البرق انتهت! سيتم عرض النتائج النهائية.',
+                            'lightning',
+                            5000
+                        );
+                        setTimeout(() => {
+                            endCompetition();
+                        }, 2000);
+                    }
+                }
+            }, 1000);
+        }
+
+        // ===== EVALUATION FUNCTIONS =====
+        function evaluateStudent(evaluation) {
+            if (!competitionData.isRunning || competitionData.isPaused) return;
+            
+            const currentStudent = competitionData.students[competitionData.currentStudentIndex];
+            if (!currentStudent) return;
+
+            // Track attempts
+            if (!currentStudent.attempts) currentStudent.attempts = 0;
+            currentStudent.attempts++;
+
+            // Set evaluation and score
+            currentStudent.evaluation = evaluation;
+            currentStudent.status = 'completed';
+            currentStudent.timestamp = new Date().toISOString();
+            
+            const scoreMap = {
+                'excellent': 100,
+                'very-good': 85,
+                'good': 70,
+                'weak': 40
+            };
+            
+            // Add to existing score
+            const newScore = scoreMap[evaluation];
+            currentStudent.score = (currentStudent.score || 0) + newScore;
+            
+            // Track weak performances for auto-elimination
+            if (!currentStudent.weakCount) currentStudent.weakCount = 0;
+            if (evaluation === 'weak') {
+                currentStudent.weakCount++;
+                
+                // Show weakness warning
+                if (currentStudent.weakCount === 2) {
+                    showEliminationWarning(currentStudent);
+                }
+                
+                // Auto-eliminate after 3 weak performances
+                if (currentStudent.weakCount >= 3) {
+                    showAutoEliminationWarning(currentStudent);
+                    setTimeout(() => {
+                        eliminateStudentAuto(currentStudent, 'ثلاث إجابات ضعيفة متتالية');
+                    }, 2000);
+                    return;
+                }
+            } else if (evaluation === 'excellent' || evaluation === 'very-good') {
+                // Reset weak count on good performance
+                currentStudent.weakCount = 0;
+            }
+            
+            // Show performance encouragement
+            showPerformanceEncouragement(currentStudent, evaluation);
+            
+            competitionData.completedStudents++;
+
+            // Show evaluation result with round info
+            showEvaluationResult(currentStudent, evaluation);
+            
+            // Play appropriate sound with effects
+            if (evaluation === 'excellent') {
+                playSound('excellent');
+                setTimeout(() => playSound('victory'), 500);
+            } else if (evaluation === 'very-good') {
+                playSound('very-good');
+                setTimeout(() => playSound('magic'), 300);
+            } else if (evaluation === 'good') {
+                playSound('good');
+            } else if (evaluation === 'weak') {
+                playSound('weak');
+            }
+            
+            // Move to next student
+            competitionData.currentStudentIndex++;
+            
+            setTimeout(() => {
+                if (competitionData.currentStudentIndex < competitionData.students.length && competitionData.remainingTime > 0) {
+                    showCurrentStudent();
+                } else if (competitionData.currentRound < competitionData.eliminationSettings.opportunitiesPerStudent && competitionData.remainingTime > 0) {
+                    startNewRound();
+                } else {
+                    // Check for phase elimination
+                    checkPhaseElimination();
+                }
+            }, 2000);
+            
+            displayStudentsList();
+            updateDisplay();
+        }
+
+        function showAutoEliminationWarning(student) {
+            const modal = document.getElementById('resultModal');
+            const title = document.getElementById('modalTitle');
+            const message = document.getElementById('modalMessage');
+            
+            title.innerHTML = '⚠️ تحذير استبعاد تلقائي';
+            title.style.color = '#ff9800';
+            
+            message.innerHTML = `
+                <div style="font-size: 1.3rem; margin-bottom: 1rem; color: #ff9800;">
+                    <i class="fas fa-exclamation-triangle"></i> الطالب ${student.name}
+                </div>
+                <div style="font-size: 1.1rem; color: #fff;">
+                    حصل على 3 تقييمات ضعيفة متتالية<br>
+                    سيتم استبعاده تلقائياً...
+                </div>
+            `;
+            
+            showModal('resultModal');
+            playSound('warning');
+        }
+
+        function eliminateStudentAuto(student, reason) {
+            student.status = 'eliminated';
+            student.evaluation = 'auto-eliminated';
+            student.eliminationReason = reason;
+            student.score = -30; // Less penalty for auto-elimination
+            student.timestamp = new Date().toISOString();
+
+            showAutoEliminationResult(student, reason);
+            
+            competitionData.currentStudentIndex++;
+            
+            setTimeout(() => {
+                if (competitionData.currentStudentIndex < competitionData.students.length && competitionData.remainingTime > 0) {
+                    showCurrentStudent();
+                } else {
+                    endCompetition();
+                }
+            }, 3000);
+            
+            displayStudentsList();
+            updateDisplay();
+        }
+
+        function showAutoEliminationResult(student, reason) {
+            const modal = document.getElementById('resultModal');
+            const title = document.getElementById('modalTitle');
+            const message = document.getElementById('modalMessage');
+            
+            title.innerHTML = '🤖 استبعاد تلقائي';
+            title.style.color = '#ff5722';
+            
+            message.innerHTML = `
+                <div style="font-size: 1.3rem; margin-bottom: 1rem; color: #ff5722;">
+                    <i class="fas fa-robot"></i> تم استبعاد الطالب تلقائياً
+                </div>
+                <div style="font-size: 1.2rem; margin-bottom: 1rem;">
+                    <strong>${student.name}</strong>
+                </div>
+                <div style="font-size: 1rem; color: #ff9800;">
+                    السبب: ${reason}
+                </div>
+                <div style="font-size: 1rem; color: #ff9800; margin-top: 0.5rem;">
+                    تم خصم 30 نقطة كعقوبة
+                </div>
+            `;
+            
+            showModal('resultModal');
+            
+            setTimeout(() => {
+                closeModal();
+            }, 3000);
+        }
+
+        function eliminateStudent() {
+            if (!competitionData.isRunning || competitionData.isPaused) return;
+            
+            const currentStudent = competitionData.students[competitionData.currentStudentIndex];
+            if (!currentStudent) return;
+
+            // Confirm elimination
+            if (!confirm(`هل أنت متأكد من استبعاد الطالب "${currentStudent.name}" نهائياً؟\nهذا الإجراء لا يمكن التراجع عنه!`)) {
+                return;
+            }
+
+            // Set as eliminated
+            currentStudent.status = 'eliminated';
+            currentStudent.evaluation = 'eliminated';
+            currentStudent.score = -50; // Penalty for elimination
+            currentStudent.timestamp = new Date().toISOString();
+
+            // Show elimination result
+            showEliminationResult(currentStudent);
+            
+            // Play elimination sound
+            playSound('fail');
+            
+            // Move to next student
+            competitionData.currentStudentIndex++;
+            
+            setTimeout(() => {
+                if (competitionData.currentStudentIndex < competitionData.students.length && competitionData.remainingTime > 0) {
+                    showCurrentStudent();
+                } else {
+                    endCompetition();
+                }
+            }, 3000);
+            
+            displayStudentsList();
+            updateDisplay();
+        }
+
+        function showEliminationResult(student) {
+            const modal = document.getElementById('resultModal');
+            const title = document.getElementById('modalTitle');
+            const message = document.getElementById('modalMessage');
+            
+            title.innerHTML = '🚫 تم الاستبعاد';
+            title.style.color = '#f44336';
+            
+            message.innerHTML = `
+                <div style="font-size: 1.3rem; margin-bottom: 1rem; color: #f44336;">
+                    <i class="fas fa-user-times"></i> تم استبعاد الطالب
+                </div>
+                <div style="font-size: 1.2rem; margin-bottom: 1rem;">
+                    <strong>${student.name}</strong>
+                </div>
+                <div style="font-size: 1rem; color: #ff9800;">
+                    تم خصم 50 نقطة كعقوبة للاستبعاد
+                </div>
+                <div style="font-size: 0.9rem; color: #ccc; margin-top: 1rem;">
+                    لن يتمكن هذا الطالب من المشاركة في بقية الأنشطة
+                </div>
+            `;
+            
+            showModal('resultModal');
+            
+            setTimeout(() => {
+                closeModal();
+            }, 3000);
+        }
+
+        function showEvaluationResult(student, evaluation) {
+            const modal = document.getElementById('resultModal');
+            const title = document.getElementById('modalTitle');
+            const message = document.getElementById('modalMessage');
+            
+            const evaluationMap = {
+                'excellent': { text: 'ممتاز!', icon: '🌟', color: '#4caf50' },
+                'very-good': { text: 'جيد جداً!', icon: '✨', color: '#00bcd4' },
+                'good': { text: 'جيد!', icon: '�', color: '#2196f3' },
+                'weak': { text: 'ضعيف', icon: '👋', color: '#ff9800' }
+            };
+            
+            const evalData = evaluationMap[evaluation];
+            const currentScore = student.score || 0;
+            const attempts = student.attempts || 1;
+            
+            title.innerHTML = `${evalData.icon} ${evalData.text}`;
+            title.style.color = evalData.color;
+            
+            message.innerHTML = `
+                <div style="font-size: 1.3rem; margin-bottom: 1rem;">
+                    الطالب: <strong>${student.name}</strong>
+                </div>
+                <div style="font-size: 1.2rem; margin-bottom: 0.5rem; color: #666;">
+                    المحاولة ${attempts} - الجولة ${competitionData.currentRound}/${competitionData.eliminationSettings.opportunitiesPerStudent}
+                    ${competitionData.currentPhase > 1 ? ` - المرحلة ${competitionData.currentPhase}` : ''}
+                </div>
+                <div style="font-size: 1.5rem; color: ${evalData.color}; font-weight: 700;">
+                    إجمالي النقاط: ${currentScore}
+                </div>
+                ${evaluation === 'weak' && student.weakCount >= 3 ? 
+                    '<div style="color: #f44336; margin-top: 0.5rem; font-weight: bold;">⚠️ خطر الاستبعاد!</div>' : ''}
+            `;
+            
+            showModal('resultModal');
+            
+            setTimeout(() => {
+                closeModal();
+            }, 2000);
+        }
+
+        function showModal(modalId) {
+            // Hide all other modals first (except the one we want to show)
+            const allModals = ['resultModal', 'competitionEndModal', 'settingsModal'];
+            allModals.forEach(id => {
+                if (id !== modalId) {
+                    hideModal(id);
+                }
+            });
+            
+            // Show the requested modal
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('show');
+                
+                // Play modal open sound
+                if (audioEnabled) {
+                    playSound('modal-open');
+                }
+            }
+        }
+
+        function hideModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('show');
+            }
+        }
+
+        // Helper function to set modal content safely
+        function setModalContent(title, message, titleColor = '#FFD700') {
+            const titleEl = document.getElementById('modalTitle');
+            const messageEl = document.getElementById('modalMessage');
+            
+            if (titleEl && title) {
+                titleEl.innerHTML = title;
+                titleEl.style.color = titleColor;
+            }
+            
+            if (messageEl && message) {
+                messageEl.innerHTML = message;
+            }
+        }
+
+        // ===== MODAL FUNCTIONS =====
+        function closeModal() {
+            // Close all modals
+            const modals = [
+                'resultModal',
+                'competitionEndModal',
+                'settingsModal'
+            ];
+            
+            modals.forEach(modalId => {
+                hideModal(modalId);
+            });
+            
+            // Play close sound
+            if (audioEnabled) {
+                playSound('modal-close');
+            }
+        }
+
+        function showFinalResults(results) {
+            // Show celebration first for survivors
+            const survivors = competitionData.students.filter(s => s.status !== 'eliminated' && s.score > 0);
+            if (survivors.length > 0) {
+                showSurvivorsCelebration(survivors, results);
+            } else {
+                showCompetitionSummary(results);
+            }
+        }
+
+        function showSurvivorsCelebration(survivors, results) {
+            const title = '🎉 تهانينا للطلاب المتبقين!';
+            const message = `
+                <div style="font-size: 1.5rem; margin-bottom: 2rem; color: #FFD700; text-align: center;" class="celebration-effect">
+                    <i class="fas fa-trophy sparkle-effect"></i> لقد نجوتم من معركة البرق!
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #FFD700, #FF6B35); padding: 1.5rem; border-radius: 15px; margin-bottom: 2rem;" class="fade-in-up">
+                    <div style="font-size: 1.2rem; color: white; text-align: center; margin-bottom: 1rem;">
+                        ⚡ الناجون من مملكة البرق ⚡
+                    </div>
+                    ${survivors.map((student, index) => `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.8rem; margin: 0.5rem 0; background: rgba(255,255,255,0.2); border-radius: 10px; animation: fadeInUp 0.6s ease-out ${index * 0.2}s both;">
+                            <span style="font-size: 1.1rem; font-weight: bold;">
+                                <i class="fas fa-star sparkle-effect" style="color: #FFD700;"></i> ${student.name}
+                            </span>
+                            <span style="color: white; font-weight: 700; font-size: 1.1rem;">
+                                ${student.score} نقطة
+                            </span>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div style="text-align: center; color: #fff; font-size: 1rem; margin-bottom: 1.5rem;" class="fade-in-up">
+                    🎊 ستحصلون على نقاط إضافية في مركز الممالك! 🎊
+                </div>
+                
+                <div style="text-align: center;" class="fade-in-up">
+                    <button class="modal-btn primary celebration-effect" onclick="showCompetitionSummary(${JSON.stringify(results).replace(/"/g, '&quot;')});" style="margin: 0.5rem; padding: 1rem 2rem; font-size: 1.1rem; background: linear-gradient(135deg, #4CAF50, #2E7D32); border: none; color: white; border-radius: 12px; cursor: pointer; transition: transform 0.3s ease;">
+                        <i class="fas fa-chart-bar"></i> عرض النتائج التفصيلية
+                    </button>
+                </div>
+            `;
+            
+            // Set content and show modal
+            setModalContent(title, message, '#FFD700');
+            showModal('resultModal');
+            
+            // Play celebration sequence
+            playCelebrationSequence();
+            
+            // Add particle effects
+            createCelebrationParticles();
+        }
+
+        function playCelebrationSequence() {
+            const celebrationSounds = ['celebration', 'fanfare', 'confetti', 'applause', 'epic-finish'];
+            
+            celebrationSounds.forEach((sound, index) => {
+                setTimeout(() => {
+                    playSound(sound);
+                }, index * 800);
+            });
+            
+            // Add random victory sounds
+            setTimeout(() => {
+                playRandomVictoryEffect();
+            }, 4000);
+            
+            setTimeout(() => {
+                playRandomVictoryEffect();
+            }, 6000);
+        }
+
+        function playRandomVictoryEffect() {
+            const effects = ['victory', 'magic', 'thunder', 'lightning'];
+            const randomEffect = effects[Math.floor(Math.random() * effects.length)];
+            playSound(randomEffect);
+        }
+
+        function createCelebrationParticles() {
+            // Create floating celebration particles
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    createParticle();
+                }, i * 100);
+            }
+        }
+
+        function createParticle() {
+            const particle = document.createElement('div');
+            const symbols = ['⭐', '✨', '🎉', '🎊', '⚡', '🏆', '👑'];
+            const symbol = symbols[Math.floor(Math.random() * symbols.length)];
+            
+            particle.innerHTML = symbol;
+            particle.style.cssText = `
+                position: fixed;
+                font-size: ${Math.random() * 20 + 15}px;
+                left: ${Math.random() * window.innerWidth}px;
+                top: ${window.innerHeight}px;
+                pointer-events: none;
+                z-index: 9999;
+                animation: float-up 3s ease-out forwards;
+                opacity: 0.9;
+            `;
+            
+            // Add float animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes float-up {
+                    0% {
+                        transform: translateY(0) rotate(0deg);
+                        opacity: 0.9;
+                    }
+                    50% {
+                        transform: translateY(-50vh) rotate(180deg);
+                        opacity: 1;
+                    }
+                    100% {
+                        transform: translateY(-100vh) rotate(360deg);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            document.body.appendChild(particle);
+            
+            // Remove particle after animation
+            setTimeout(() => {
+                if (particle.parentNode) {
+                    particle.parentNode.removeChild(particle);
+                }
+                if (style.parentNode) {
+                    style.parentNode.removeChild(style);
+                }
+            }, 3000);
+        }
+
+        function showCompetitionSummary(results) {
+            const eliminatedStudents = competitionData.students.filter(s => s.status === 'eliminated');
+            
+            let resultsHTML = `
+                <div style="margin-bottom: 2rem; text-align: center;">
+                    <div style="font-size: 1.5rem; margin-bottom: 1rem; color: #FFD700;">
+                        ⚡ تقرير معركة البرق النهائي ⚡
+                    </div>
+                    <div style="color: var(--lightning-primary); font-size: 1.1rem;">
+                        تم تقييم ${competitionData.completedStudents} طالب في ${competitionData.currentPhase} مرحلة
+                    </div>
+                    ${eliminatedStudents.length > 0 ? `
+                        <div style="color: #f44336; margin-top: 0.5rem; font-size: 1.1rem;">
+                            تم استبعاد ${eliminatedStudents.length} طالب خلال المنافسة
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            
+            if (results.length > 0) {
+                resultsHTML += '<div style="margin: 2rem 0;"><div style="text-align: center; margin-bottom: 1rem; font-size: 1.2rem; color: #FFD700;"><strong>🏆 ترتيب الطلاب النهائي</strong></div>';
+                
+                results.forEach((student, index) => {
+                    const medals = ['🥇', '🥈', '🥉'];
+                    const medal = medals[index] || '🏅';
+                    const rankColors = ['#FFD700', '#C0C0C0', '#CD7F32', '#4CAF50'];
+                    const rankColor = rankColors[index] || '#4CAF50';
+                    
+                    resultsHTML += `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; margin: 0.8rem 0; background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)); border-radius: 12px; border-left: 4px solid ${rankColor};">
+                            <span style="font-size: 1.1rem;">
+                                <span style="font-size: 1.3rem; margin-left: 0.5rem;">${medal}</span>
+                                <strong>${student.name}</strong>
+                                ${student.status !== 'eliminated' ? '<span style="color: #4CAF50; margin-right: 0.5rem;">✓ ناجي</span>' : '<span style="color: #f44336; margin-right: 0.5rem;">✗ مستبعد</span>'}
+                            </span>
+                            <span style="color: ${rankColor}; font-weight: 700; font-size: 1.2rem;">${student.score} نقطة</span>
+                        </div>
+                    `;
+                });
+                resultsHTML += '</div>';
+            }
+            
+            // Show eliminated students summary
+            if (eliminatedStudents.length > 0) {
+                resultsHTML += '<div style="margin-top: 2rem; padding-top: 1rem; border-top: 2px solid rgba(255,255,255,0.2);"><div style="text-align: center; margin-bottom: 1rem; color: #ff9800; font-size: 1.1rem;"><strong>⚠️ ملخص الاستبعادات</strong></div>';
+                
+                eliminatedStudents.forEach((student, index) => {
+                    resultsHTML += `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.8rem; margin: 0.5rem 0; background: rgba(244,67,54,0.15); border-radius: 10px; border-left: 3px solid #f44336;">
+                            <span>
+                                <i class="fas fa-user-times" style="color: #f44336; margin-left: 0.5rem;"></i>
+                                ${student.name}
+                                <span style="font-size: 0.9rem; color: #ff9800; margin-right: 0.5rem;">
+                                    ${student.eliminationReason || 'استبعاد عام'}
+                                </span>
+                            </span>
+                            <span style="color: #f44336; font-weight: 700;">مُستبعد</span>
+                        </div>
+                    `;
+                });
+                resultsHTML += '</div>';
+            }
+            
+            // Update modal content using the elements
+            const finalTitle = document.getElementById('finalModalTitle');
+            const finalMessage = document.getElementById('finalResults');
+            
+            if (finalTitle) {
+                finalTitle.innerHTML = '📊 تقرير المنافسة النهائي';
+                finalTitle.style.color = '#FFD700';
+            }
+            
+            if (finalMessage) {
+                finalMessage.innerHTML = resultsHTML;
+            }
+            
+            showModal('competitionEndModal');
+            
+            // Play final summary sound
+            playSound('end');
+        }
+
+        // ===== NAVIGATION FUNCTIONS WITH BONUS =====
+        function returnToKingdomsCenterWithBonus() {
+            // Calculate bonus points for survivors
+            const survivors = competitionData.students.filter(s => s.status !== 'eliminated' && s.score > 0);
+            
+            if (survivors.length > 0) {
+                // Add survival bonus to each survivor
+                survivors.forEach(student => {
+                    const survivalBonus = Math.floor(student.score * 0.5); // 50% bonus for surviving
+                    student.score += survivalBonus;
+                    student.survivalBonus = survivalBonus;
+                });
+                
+                // Show bonus notification
+                showBonusNotification(survivors);
+                
+                setTimeout(() => {
+                    saveResultsToKingdomsCenter();
+                    window.location.href = 'kingdoms-center.html';
+                }, 3000);
+            } else {
+                saveResultsToKingdomsCenter();
+                window.location.href = 'kingdoms-center.html';
+            }
+        }
+
+        function showBonusNotification(survivors) {
+            const title = '🎁 مكافأة الحكمة!';
+            const message = `
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <div style="font-size: 1.3rem; color: #FFD700; margin-bottom: 1rem;">
+                        <i class="fas fa-gift"></i> تم منح مكافآت الحكمة!
+                    </div>
+                    <div style="color: #4CAF50; font-size: 1.1rem;">
+                        حصل كل حكيم متفوق على مكافأة إضافية بنسبة 50% من نقاط الحكمة
+                    </div>
+                </div>
+                
+                ${survivors.map(student => `
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; margin: 0.5rem 0; background: linear-gradient(135deg, #4CAF50, #2E7D32); border-radius: 12px; color: white;">
+                        <span style="font-weight: bold;">
+                            <i class="fas fa-star" style="color: #FFD700;"></i> ${student.name}
+                        </span>
+                        <span style="font-weight: 700;">
+                            +${student.survivalBonus} نقطة إضافية
+                        </span>
+                    </div>
+                `).join('')}
+                
+                <div style="text-align: center; margin-top: 2rem; color: #ff9800;">
+                    <i class="fas fa-clock"></i> سيتم نقلك لمركز الممالك خلال 3 ثوانٍ...
+                </div>
+            `;
+            
+            setModalContent(title, message, '#FFD700');
+            showModal('resultModal');
+            
+            // Play bonus sound sequence
+            playSequentialSounds(['celebration', 'victory', 'magic'], 600);
+        }
+
+        // ===== NAVIGATION FUNCTIONS =====
+        function returnToKingdomsCenter() {
+            // Update kingdoms center with results
+            saveResultsToKingdomsCenter();
+            window.location.href = 'kingdoms-center.html';
+        }
+
+        function startNewCompetition() {
+            // Reset competition data
+            competitionData.currentStudentIndex = 0;
+            competitionData.remainingTime = competitionData.totalTime;
+            competitionData.completedStudents = 0;
+            competitionData.isRunning = false;
+            competitionData.isPaused = false;
+            
+            // Reset students
+            competitionData.students.forEach(student => {
+                if (student.status !== 'eliminated') {
+                    student.status = 'waiting';
+                    student.score = 0;
+                    student.evaluation = null;
+                    student.timestamp = null;
+                }
+            });
+            
+            // Shuffle again
+            competitionData.students = shuffleArray(competitionData.students);
+            
+            closeModal();
+            displayStudentsList();
+            updateDisplay();
+            
+            document.getElementById('studentSection').style.display = 'none';
+            document.querySelector('.start-competition').innerHTML = '<i class="fas fa-play"></i> بدء المنافسة';
+        }
+
+        function goBackToKingdoms() {
+            if (competitionData.isRunning) {
+                if (confirm('المنافسة جارية! هل تريد العودة وحفظ النتائج؟')) {
+                    saveResultsToKingdomsCenter();
+                    window.location.href = 'kingdoms-center.html';
+                }
+            } else {
+                window.location.href = 'kingdoms-center.html';
+            }
+        }
+
+        // ===== SAVE RESULTS =====
+        function saveResultsToKingdomsCenter() {
+            try {
+                // Save competition results
+                const competitionResults = {
+                    kingdom: 'lightning',
+                    timestamp: new Date().toISOString(),
+                    totalStudents: competitionData.students.length,
+                    completedStudents: competitionData.completedStudents,
+                    eliminatedStudents: competitionData.students.filter(s => s.status === 'eliminated').length,
+                    duration: competitionData.totalTime - competitionData.remainingTime,
+                    results: competitionData.students.filter(s => s.status === 'completed' || s.status === 'eliminated')
+                };
+                
+                localStorage.setItem('lightning-kingdom-results', JSON.stringify(competitionResults));
+                
+                // Update individual student records for kingdoms center
+                const playersData = localStorage.getItem('squidGamePlayers');
+                if (playersData) {
+                    const players = JSON.parse(playersData);
+                    
+                    competitionData.students.forEach(student => {
+                        const player = players.find(p => p.name === student.name);
+                        if (player && (student.status === 'completed' || student.status === 'eliminated')) {
+                            
+                            // Handle elimination
+                            if (student.status === 'eliminated') {
+                                player.status = 'eliminated';
+                                player.eliminationReason = 'استبعاد من مملكة البرق';
+                                player.eliminationDate = new Date().toISOString();
+                                player.score = Math.max(0, (player.score || 0) + student.score); // Add penalty (negative score)
+                                player.gamesLost = (player.gamesLost || 0) + 1;
+                                player.questionsAnswered = (player.questionsAnswered || 0) + 1;
+                                player.currentStreak = 0; // Reset streak
+                                player.isEliminated = true;
+                                player.lastActivity = new Date().toISOString();
+                                return; // Skip further processing for eliminated students
+                            }
+                            
+                            // Update player stats based on performance for completed students
+                            if (student.evaluation === 'excellent') {
+                                player.gamesWon = (player.gamesWon || 0) + 1;
+                                player.questionsAnswered = (player.questionsAnswered || 0) + 1;
+                                player.correctAnswers = (player.correctAnswers || 0) + 1;
+                                player.currentStreak = (player.currentStreak || 0) + 1;
+                                if (player.currentStreak > (player.bestStreak || 0)) {
+                                    player.bestStreak = player.currentStreak;
+                                }
+                            } else if (student.evaluation === 'very-good') {
+                                player.gamesWon = (player.gamesWon || 0) + 1;
+                                player.questionsAnswered = (player.questionsAnswered || 0) + 1;
+                                player.correctAnswers = (player.correctAnswers || 0) + 1;
+                                player.currentStreak = (player.currentStreak || 0) + 1;
+                                if (player.currentStreak > (player.bestStreak || 0)) {
+                                    player.bestStreak = player.currentStreak;
+                                }
+                            } else if (student.evaluation === 'good') {
+                                player.questionsAnswered = (player.questionsAnswered || 0) + 1;
+                                player.correctAnswers = (player.correctAnswers || 0) + 1;
+                            } else if (student.evaluation === 'weak') {
+                                player.questionsAnswered = (player.questionsAnswered || 0) + 1;
+                                // No correct answer added for weak performance
+                                player.currentStreak = Math.max(0, (player.currentStreak || 0) - 1);
+                            }
+                            
+                            // Add score and experience (only for non-eliminated)
+                            const totalScore = student.score + (student.survivalBonus || 0);
+                            player.score = (player.score || 0) + totalScore;
+                            player.experiencePoints = (player.experiencePoints || 0) + Math.max(0, totalScore);
+                            
+                            // Add special survival achievement
+                            if (student.survivalBonus && student.survivalBonus > 0) {
+                                player.achievements = player.achievements || [];
+                                const survivalAchievement = {
+                                    id: 'lightning-survivor',
+                                    name: 'ناجي مملكة البرق',
+                                    description: `نجا من معركة البرق وحصل على مكافأة ${student.survivalBonus} نقطة`,
+                                    date: new Date().toISOString(),
+                                    kingdom: 'lightning',
+                                    bonus: student.survivalBonus
+                                };
+                                
+                                // Add achievement if not already exists
+                                if (!player.achievements.find(a => a.id === 'lightning-survivor')) {
+                                    player.achievements.push(survivalAchievement);
+                                }
+                                
+                                // Special survivor stats
+                                player.survivedKingdoms = (player.survivedKingdoms || 0) + 1;
+                                player.totalSurvivalBonus = (player.totalSurvivalBonus || 0) + student.survivalBonus;
+                            }
+                            
+                            // Update level based on experience
+                            const newLevel = Math.floor(player.experiencePoints / 100) + 1;
+                            if (newLevel > (player.level || 1)) {
+                                player.level = newLevel;
+                                player.score += newLevel * 50; // Level up bonus
+                                
+                                // Add level up achievement
+                                player.achievements = player.achievements || [];
+                                player.achievements.push({
+                                    id: `level-up-${newLevel}`,
+                                    name: `الوصول للمستوى ${newLevel}`,
+                                    description: `تم الوصول للمستوى ${newLevel} في مملكة البرق`,
+                                    date: new Date().toISOString(),
+                                    kingdom: 'lightning'
+                                });
+                            }
+                            
+                            // Update activity
+                            player.lastActivity = new Date().toISOString();
+                        }
+                    });
+                    
+                    localStorage.setItem('squidGamePlayers', JSON.stringify(players));
+                }
+                
+                console.log('✅ تم حفظ نتائج المنافسة مع بيانات الاستبعاد');
+            } catch (e) {
+                console.error('خطأ في حفظ النتائج:', e);
+            }
+        }
+    </script>
+</body>
+</html>
+
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
