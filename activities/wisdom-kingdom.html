@@ -1729,6 +1729,23 @@
             excellentPoints: 10
         };
 
+        // ===== تحميل الإعدادات المحفوظة =====
+        function loadSavedSettings() {
+            try {
+                const savedSettings = localStorage.getItem('wisdomKingdomSettings');
+                if (savedSettings) {
+                    const parsedSettings = JSON.parse(savedSettings);
+                    wisdomData.eliminationSettings = { ...wisdomData.eliminationSettings, ...parsedSettings };
+                    wisdomData.maxRounds = parsedSettings.opportunitiesPerStudent || 2;
+                    console.log('✅ تم تحميل الإعدادات المحفوظة:', parsedSettings);
+                } else {
+                    console.log('ℹ️ لا توجد إعدادات محفوظة، استخدام الافتراضية');
+                }
+            } catch (error) {
+                console.error('❌ خطأ في تحميل الإعدادات المحفوظة:', error);
+            }
+        }
+
         // أقوال الحكمة الملهمة
         const wisdomQuotes = [
             "الحكمة هي معرفة ما يجب فعله تالياً، والمهارة هي معرفة كيف تفعله، والفضيلة هي فعله",
@@ -3257,24 +3274,48 @@
                 
                 if (!opportunitiesSlider || !eliminationPercentage || !autoCalculateThreshold || !manualThreshold) {
                     console.error('❌ بعض عناصر الإعدادات غير موجودة');
-                    showSmartNotification('خطأ', 'فشل في قراءة الإعدادات', 'danger');
+                    console.log('Elements check:', {
+                        opportunitiesSlider: !!opportunitiesSlider,
+                        eliminationPercentage: !!eliminationPercentage,
+                        autoCalculateThreshold: !!autoCalculateThreshold,
+                        manualThreshold: !!manualThreshold
+                    });
+                    if (typeof showSmartNotification === 'function') {
+                        showSmartNotification('❌ خطأ', 'فشل في قراءة الإعدادات', 'danger');
+                    }
                     return;
                 }
                 
                 // Apply settings
-                wisdomData.eliminationSettings.opportunitiesPerStudent = parseInt(opportunitiesSlider.value) || 2;
-                wisdomData.eliminationSettings.eliminationPercentage = parseInt(eliminationPercentage.value) || 50;
-                wisdomData.eliminationSettings.autoCalculateThreshold = autoCalculateThreshold.checked;
-                wisdomData.eliminationSettings.minimumPassingScore = parseInt(manualThreshold.value) || 70;
+                const newSettings = {
+                    opportunitiesPerStudent: parseInt(opportunitiesSlider.value) || 2,
+                    eliminationPercentage: parseInt(eliminationPercentage.value) || 50,
+                    autoCalculateThreshold: autoCalculateThreshold.checked,
+                    minimumPassingScore: parseInt(manualThreshold.value) || 70
+                };
                 
-                // Update max rounds
-                wisdomData.maxRounds = wisdomData.eliminationSettings.opportunitiesPerStudent;
+                console.log('🔧 الإعدادات الجديدة:', newSettings);
                 
-                console.log('✅ الإعدادات المطبقة:', wisdomData.eliminationSettings);
+                // Update wisdomData
+                wisdomData.eliminationSettings = { ...wisdomData.eliminationSettings, ...newSettings };
+                wisdomData.maxRounds = newSettings.opportunitiesPerStudent;
+                
+                console.log('✅ تم تحديث wisdomData:', wisdomData.eliminationSettings);
                 
                 // Calculate elimination phases
                 if (typeof calculateEliminationPhases === 'function') {
                     calculateEliminationPhases();
+                    console.log('✅ تم حساب مراحل الاستبعاد');
+                } else {
+                    console.warn('⚠️ دالة calculateEliminationPhases غير موجودة');
+                }
+                
+                // Save to localStorage
+                try {
+                    localStorage.setItem('wisdomKingdomSettings', JSON.stringify(wisdomData.eliminationSettings));
+                    console.log('💾 تم حفظ الإعدادات في localStorage');
+                } catch (saveError) {
+                    console.warn('⚠️ فشل في حفظ الإعدادات:', saveError);
                 }
                 
                 // Close modal
@@ -3283,19 +3324,25 @@
                 // Update display if function exists
                 if (typeof displayStudentsList === 'function') {
                     displayStudentsList();
+                    console.log('✅ تم تحديث قائمة الطلاب');
+                } else {
+                    console.warn('⚠️ دالة displayStudentsList غير موجودة');
                 }
                 
                 // Show confirmation
                 if (typeof showSmartNotification === 'function') {
-                    showSmartNotification('✅ تم تطبيق الإعدادات بنجاح!', '', 'success');
+                    showSmartNotification('✅ نجح التطبيق', 'تم تطبيق الإعدادات بنجاح!', 'success');
                 } else {
                     console.log('✅ تم تطبيق الإعدادات بنجاح!');
+                    alert('✅ تم تطبيق الإعدادات بنجاح!');
                 }
                 
             } catch (error) {
                 console.error('❌ خطأ في تطبيق الإعدادات:', error);
                 if (typeof showSmartNotification === 'function') {
-                    showSmartNotification('خطأ', 'فشل في تطبيق الإعدادات', 'danger');
+                    showSmartNotification('❌ خطأ', 'فشل في تطبيق الإعدادات: ' + error.message, 'danger');
+                } else {
+                    alert('❌ فشل في تطبيق الإعدادات: ' + error.message);
                 }
             }
         }
@@ -4120,6 +4167,9 @@
         
         // ===== فحص تحميل الدوال =====
         window.addEventListener('load', function() {
+            // تحميل الإعدادات المحفوظة أولاً
+            loadSavedSettings();
+            
             console.log('🔍 فحص دوال مملكة الحكمة:');
             console.log('showWisdomSettings:', typeof showWisdomSettings);
             console.log('applySettings:', typeof applySettings);
