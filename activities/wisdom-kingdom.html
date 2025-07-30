@@ -1427,7 +1427,7 @@
                 </button>
                 <button class="cosmic-control-btn" onclick="goBackToKingdoms()">
                     <div class="btn-icon">🏠</div>
-                    <div class="btn-tooltip">العودة</div>
+                    <div class="btn-tooltip">العودة للممالك</div>
                 </button>
             </div>
         </div>
@@ -3256,8 +3256,13 @@
                 console.log('بدء تطبيق إعدادات الحكمة...');
                 
                 // التحقق من وجود العناصر
+                console.log('البحث عن العناصر...');
                 const timeSlider = document.getElementById('timePerStudentSlider');
+                console.log('timeSlider:', timeSlider);
+                
                 const excellentPoints = document.getElementById('excellentPoints');
+                console.log('excellentPoints:', excellentPoints);
+                
                 const veryGoodPoints = document.getElementById('veryGoodPoints');
                 const goodPoints = document.getElementById('goodPoints');
                 const weakPoints = document.getElementById('weakPoints');
@@ -3272,9 +3277,15 @@
                 const questionsPerPhase = document.getElementById('questionsPerPhase');
                 const dynamicThreshold = document.getElementById('dynamicThreshold');
 
-                if (!timeSlider || !excellentPoints) {
-                    console.error('بعض العناصر المطلوبة غير موجودة');
-                    showSmartNotification('خطأ', 'فشل في تطبيق الإعدادات - عناصر مفقودة', 'danger');
+                if (!timeSlider) {
+                    console.error('عنصر الوقت غير موجود');
+                    showSmartNotification('خطأ', 'فشل في تطبيق الإعدادات - عنصر الوقت مفقود', 'danger');
+                    return;
+                }
+
+                if (!excellentPoints) {
+                    console.error('عنصر النقاط الممتازة غير موجود');
+                    showSmartNotification('خطأ', 'فشل في تطبيق الإعدادات - عنصر النقاط مفقود', 'danger');
                     return;
                 }
 
@@ -3389,9 +3400,6 @@
             if (previewElement) {
                 previewElement.innerHTML = previewHTML;
             }
-        }
-        function showWisdomSettings() {
-            showModal('wisdomSettingsModal');
         }
 
         function updateTotalTime(value) {
@@ -3939,6 +3947,38 @@
             
             console.log('🧠 تم تحميل مملكة الحكمة بنجاح');
         });
+
+        // ===== العودة للممالك =====
+        function goBackToKingdoms() {
+            if (wisdomData.isRunning) {
+                if (confirm('رحلة الحكمة جارية! هل تريد العودة وحفظ النتائج؟')) {
+                    saveResultsToKingdomsCenter();
+                    window.location.href = 'kingdoms-center.html';
+                }
+            } else {
+                window.location.href = 'kingdoms-center.html';
+            }
+        }
+
+        // ===== حفظ النتائج لمركز الممالك =====
+        function saveResultsToKingdomsCenter() {
+            try {
+                const results = {
+                    kingdom: 'wisdom',
+                    timestamp: new Date().toISOString(),
+                    totalStudents: wisdomData.students.length,
+                    completedStudents: wisdomData.students.filter(s => s.completed).length,
+                    averageScore: wisdomData.students.reduce((sum, s) => sum + s.totalScore, 0) / wisdomData.students.length,
+                    topScorer: wisdomData.students.sort((a, b) => b.totalScore - a.totalScore)[0],
+                    duration: Date.now() - wisdomData.startTime
+                };
+                
+                localStorage.setItem('lastWisdomResults', JSON.stringify(results));
+                console.log('✅ تم حفظ نتائج مملكة الحكمة');
+            } catch (error) {
+                console.error('❌ خطأ في حفظ النتائج:', error);
+            }
+        }
     </script>
 </body>
 </html>
