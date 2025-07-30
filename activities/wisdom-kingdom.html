@@ -3253,92 +3253,116 @@
 
         function applyWisdomSettings() {
             try {
-                console.log('بدء تطبيق إعدادات الحكمة...');
+                console.log('🔧 بدء تطبيق إعدادات الحكمة...');
                 
-                // التحقق من وجود العناصر
-                console.log('البحث عن العناصر...');
-                const timeSlider = document.getElementById('timePerStudentSlider');
-                console.log('timeSlider:', timeSlider);
-                
-                const excellentPoints = document.getElementById('excellentPoints');
-                console.log('excellentPoints:', excellentPoints);
-                
-                const veryGoodPoints = document.getElementById('veryGoodPoints');
-                const goodPoints = document.getElementById('goodPoints');
-                const weakPoints = document.getElementById('weakPoints');
-                const enableElimination = document.getElementById('enableElimination');
-                const minimumScore = document.getElementById('minimumScore');
-                const enableSounds = document.getElementById('enableSounds');
-                const enableAnimations = document.getElementById('enableAnimations');
-                const autoAdvance = document.getElementById('autoAdvance');
-                const autoAdvanceDelay = document.getElementById('autoAdvanceDelay');
-                const enablePhaseElimination = document.getElementById('enablePhaseElimination');
-                const eliminationPercentage = document.getElementById('eliminationPercentage');
-                const questionsPerPhase = document.getElementById('questionsPerPhase');
-                const dynamicThreshold = document.getElementById('dynamicThreshold');
-
-                if (!timeSlider) {
-                    console.error('عنصر الوقت غير موجود');
-                    showSmartNotification('خطأ', 'فشل في تطبيق الإعدادات - عنصر الوقت مفقود', 'danger');
+                // التأكد من فتح النافذة
+                const modal = document.getElementById('wisdomSettingsModal');
+                if (!modal || !modal.classList.contains('show')) {
+                    console.error('❌ النافذة غير مفتوحة');
+                    showSmartNotification('خطأ', 'يجب فتح نافذة الإعدادات أولاً', 'danger');
                     return;
                 }
+                
+                // انتظار قصير للتأكد من تحميل العناصر
+                setTimeout(() => {
+                    try {
+                        console.log('🔍 البحث عن العناصر...');
+                        
+                        // العناصر الأساسية
+                        const timeSlider = document.getElementById('timePerStudentSlider');
+                        const excellentPoints = document.getElementById('excellentPoints');
+                        const veryGoodPoints = document.getElementById('veryGoodPoints');
+                        const goodPoints = document.getElementById('goodPoints');
+                        const weakPoints = document.getElementById('weakPoints');
+                        const enableElimination = document.getElementById('enableElimination');
+                        const minimumScore = document.getElementById('minimumScore');
+                        
+                        // العناصر الاختيارية
+                        const enableSounds = document.getElementById('enableSounds');
+                        const enableAnimations = document.getElementById('enableAnimations');
+                        const autoAdvance = document.getElementById('autoAdvance');
+                        const autoAdvanceDelay = document.getElementById('autoAdvanceDelay');
+                        const enablePhaseElimination = document.getElementById('enablePhaseElimination');
+                        const eliminationPercentage = document.getElementById('eliminationPercentage');
+                        const questionsPerPhase = document.getElementById('questionsPerPhase');
+                        const dynamicThreshold = document.getElementById('dynamicThreshold');
 
-                if (!excellentPoints) {
-                    console.error('عنصر النقاط الممتازة غير موجود');
-                    showSmartNotification('خطأ', 'فشل في تطبيق الإعدادات - عنصر النقاط مفقود', 'danger');
-                    return;
-                }
+                        console.log('✅ العناصر الموجودة:', {
+                            timeSlider: !!timeSlider,
+                            excellentPoints: !!excellentPoints,
+                            veryGoodPoints: !!veryGoodPoints,
+                            goodPoints: !!goodPoints,
+                            weakPoints: !!weakPoints,
+                            enableElimination: !!enableElimination
+                        });
 
-                // تطبيق الإعدادات
-                wisdomData.timePerStudent = parseInt(timeSlider.value) || 120;
-                wisdomData.pointSystem = {
-                    excellent: parseInt(excellentPoints.value) || 10,
-                    veryGood: parseInt(veryGoodPoints.value) || 8,
-                    good: parseInt(goodPoints.value) || 5,
-                    weak: parseInt(weakPoints.value) || 1
-                };
-                wisdomData.eliminationEnabled = enableElimination ? enableElimination.checked : true;
-                wisdomData.minimumScore = parseInt(minimumScore?.value) || 3;
-                wisdomData.soundsEnabled = enableSounds ? enableSounds.checked : true;
-                wisdomData.animationsEnabled = enableAnimations ? enableAnimations.checked : true;
-                wisdomData.autoAdvance = autoAdvance ? autoAdvance.checked : false;
-                wisdomData.autoAdvanceDelay = parseInt(autoAdvanceDelay?.value) || 3;
-                
-                // إعدادات التصفيات المرحلية
-                wisdomData.settings.enablePhaseElimination = enablePhaseElimination ? enablePhaseElimination.checked : true;
-                wisdomData.settings.eliminationPercentage = parseInt(eliminationPercentage?.value) || 30;
-                wisdomData.settings.questionsPerPhase = parseInt(questionsPerPhase?.value) || 3;
-                wisdomData.settings.dynamicThreshold = dynamicThreshold ? dynamicThreshold.checked : true;
-                
-                console.log('إعدادات الحكمة المطبقة:', wisdomData);
-                
-                // حفظ الإعدادات في localStorage
-                try {
-                    localStorage.setItem('wisdomSettings', JSON.stringify(wisdomData));
-                    console.log('تم حفظ الإعدادات في localStorage');
-                } catch (e) {
-                    console.error('خطأ في حفظ الإعدادات:', e);
-                }
-                
-                // إغلاق المودال
-                closeWisdomSettingsModal();
-                
-                // تحديث العرض
-                if (typeof displayStudentsList === 'function') {
-                    displayStudentsList();
-                }
-                
-                // إظهار رسالة النجاح
-                showSmartNotification(
-                    '✅ تم تطبيق الإعدادات',
-                    'إعدادات مملكة الحكمة جاهزة للاستخدام',
-                    'success'
-                );
-                
-                console.log('تم تطبيق إعدادات الحكمة بنجاح');
+                        // التحقق من العناصر الأساسية فقط
+                        if (!timeSlider || !excellentPoints || !veryGoodPoints || !goodPoints || !weakPoints) {
+                            console.error('❌ بعض العناصر الأساسية مفقودة');
+                            showSmartNotification('خطأ', 'بعض عناصر الإعدادات غير موجودة. تحقق من فتح النافذة بشكل صحيح.', 'danger');
+                            return;
+                        }
+
+                        // تطبيق الإعدادات
+                        wisdomData.timePerStudent = parseInt(timeSlider.value) || 120;
+                        wisdomData.pointSystem = {
+                            excellent: parseInt(excellentPoints.value) || 10,
+                            veryGood: parseInt(veryGoodPoints.value) || 8,
+                            good: parseInt(goodPoints.value) || 5,
+                            weak: parseInt(weakPoints.value) || 1
+                        };
+                        wisdomData.eliminationEnabled = enableElimination ? enableElimination.checked : true;
+                        wisdomData.minimumScore = parseInt(minimumScore?.value) || 3;
+                        wisdomData.soundsEnabled = enableSounds ? enableSounds.checked : true;
+                        wisdomData.animationsEnabled = enableAnimations ? enableAnimations.checked : true;
+                        wisdomData.autoAdvance = autoAdvance ? autoAdvance.checked : false;
+                        wisdomData.autoAdvanceDelay = parseInt(autoAdvanceDelay?.value) || 3;
+                        
+                        // إعدادات التصفيات المرحلية
+                        wisdomData.settings.enablePhaseElimination = enablePhaseElimination ? enablePhaseElimination.checked : true;
+                        wisdomData.settings.eliminationPercentage = parseInt(eliminationPercentage?.value) || 30;
+                        wisdomData.settings.questionsPerPhase = parseInt(questionsPerPhase?.value) || 3;
+                        wisdomData.settings.dynamicThreshold = dynamicThreshold ? dynamicThreshold.checked : true;
+                        
+                        console.log('✅ إعدادات الحكمة المطبقة:', wisdomData);
+                        
+                        // حفظ الإعدادات في localStorage
+                        try {
+                            localStorage.setItem('wisdomSettings', JSON.stringify(wisdomData));
+                            console.log('💾 تم حفظ الإعدادات في localStorage');
+                        } catch (e) {
+                            console.error('❌ خطأ في حفظ الإعدادات:', e);
+                        }
+                        
+                        // إغلاق المودال
+                        closeWisdomSettingsModal();
+                        
+                        // تحديث العرض
+                        if (typeof displayStudentsList === 'function') {
+                            displayStudentsList();
+                        }
+                        
+                        // إظهار رسالة النجاح
+                        showSmartNotification(
+                            '✅ تم تطبيق الإعدادات',
+                            'إعدادات مملكة الحكمة جاهزة للاستخدام',
+                            'success'
+                        );
+                        
+                        console.log('🎉 تم تطبيق إعدادات الحكمة بنجاح');
+                        
+                    } catch (innerError) {
+                        console.error('❌ خطأ في تطبيق الإعدادات:', innerError);
+                        showSmartNotification(
+                            'خطأ في التطبيق',
+                            'حدث خطأ أثناء تطبيق الإعدادات. تحقق من المتصفح console للتفاصيل.',
+                            'danger'
+                        );
+                    }
+                }, 100); // انتظار 100ms للتأكد من تحميل العناصر
                 
             } catch (error) {
-                console.error('خطأ في تطبيق إعدادات الحكمة:', error);
+                console.error('❌ خطأ عام في تطبيق إعدادات الحكمة:', error);
                 showSmartNotification(
                     'خطأ',
                     'فشل في تطبيق الإعدادات. يرجى المحاولة مرة أخرى.',
