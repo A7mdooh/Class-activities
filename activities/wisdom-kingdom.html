@@ -1557,7 +1557,7 @@
                 <i class="fas fa-cogs"></i>
                 <span class="button-text">إعدادات الحكمة</span>
             </button>
-            <button class="control-btn start-btn start-wisdom" onclick="startWisdomJourney()">
+            <button class="control-btn start-btn start-wisdom" onclick="console.log('🔘 تم النقر على زر بدء رحلة الحكمة'); startWisdomJourney();">
                 <i class="fas fa-brain"></i>
                 <span class="button-text">بدء رحلة الحكمة</span>
             </button>
@@ -1772,33 +1772,48 @@
         // ===== تحميل بيانات الطلاب =====
         function loadStudentsData() {
             try {
+                console.log('📚 بدء تحميل بيانات الطلاب...');
                 const playersData = localStorage.getItem('squidGamePlayers');
+                console.log('Raw playersData:', playersData ? 'موجود' : 'غير موجود');
+                
                 if (playersData) {
                     const players = JSON.parse(playersData);
+                    console.log('عدد الطلاب في localStorage:', players.length);
+                    
                     wisdomData.students = players.map(player => ({
                         name: player.name,
                         className: player.className,
                         status: 'waiting',
                         score: 0,
+                        totalScore: 0,
                         wisdomLevel: 0,
                         questionsAnswered: 0,
                         deepThoughts: 0,
                         evaluation: null,
                         timestamp: null,
-                        insights: []
+                        insights: [],
+                        completed: false
                     }));
                     
                     // خلط الطلاب بشكل عشوائي
                     wisdomData.students = shuffleArray(wisdomData.students);
-                    console.log(`تم تحميل ${wisdomData.students.length} طالب لرحلة الحكمة`);
+                    console.log(`✅ تم تحميل ${wisdomData.students.length} طالب لرحلة الحكمة`);
                 } else {
-                    console.log('لا توجد بيانات طلاب');
+                    console.warn('⚠️ لا توجد بيانات طلاب في localStorage');
+                    wisdomData.students = [];
                 }
             } catch (e) {
-                console.error('خطأ في تحميل بيانات الطلاب:', e);
+                console.error('❌ خطأ في تحميل بيانات الطلاب:', e);
+                wisdomData.students = [];
             }
-            updateDisplay();
-            displayStudentsList();
+            
+            // تحديث العرض
+            if (typeof updateDisplay === 'function') {
+                updateDisplay();
+            }
+            if (typeof displayStudentsList === 'function') {
+                displayStudentsList();
+            }
         }
 
         // ===== خلط المصفوفة =====
@@ -2125,41 +2140,104 @@
 
         // ===== بدء رحلة الحكمة =====
         function startWisdomJourney() {
-            if (wisdomData.students.length === 0) {
-                showSmartNotification(
-                    'لا توجد بيانات طلاب!',
-                    'يرجى العودة لمركز الممالك وتحديد الطلاب أولاً',
-                    'warning'
-                );
-                return;
+            try {
+                console.log('🧠 بدء رحلة الحكمة...');
+                
+                if (wisdomData.students.length === 0) {
+                    console.warn('⚠️ لا توجد بيانات طلاب');
+                    if (typeof showSmartNotification === 'function') {
+                        showSmartNotification(
+                            'لا توجد بيانات طلاب!',
+                            'يرجى العودة لمركز الممالك وتحديد الطلاب أولاً',
+                            'warning'
+                        );
+                    } else {
+                        alert('لا توجد بيانات طلاب! يرجى العودة لمركز الممالك وتحديد الطلاب أولاً');
+                    }
+                    return;
+                }
+
+                console.log('✅ عدد الطلاب:', wisdomData.students.length);
+
+                wisdomData.isRunning = true;
+                wisdomData.isPaused = false;
+                wisdomData.currentStudentIndex = 0;
+                wisdomData.currentQuestionIndex = 0;
+                wisdomData.remainingTime = wisdomData.totalTime;
+                wisdomData.completedStudents = 0;
+                wisdomData.startTime = Date.now();
+                
+                // إعادة تعيين حالة الطلاب
+                wisdomData.students.forEach(student => {
+                    student.status = 'waiting';
+                    student.score = 0;
+                    student.totalScore = 0;
+                    student.questionsAnswered = 0;
+                    student.evaluation = null;
+                    student.timestamp = null;
+                    student.insights = [];
+                    student.completed = false;
+                });
+
+                console.log('✅ تم إعادة تعيين حالة الطلاب');
+
+                // حساب مراحل التصفيات
+                if (typeof calculateWisdomPhases === 'function') {
+                    calculateWisdomPhases();
+                    console.log('✅ تم حساب مراحل الحكمة');
+                } else if (typeof calculateEliminationPhases === 'function') {
+                    calculateEliminationPhases();
+                    console.log('✅ تم حساب مراحل الاستبعاد');
+                } else {
+                    console.warn('⚠️ لم يتم العثور على دالة حساب المراحل');
+                }
+
+                // بدء العداد
+                if (typeof startWisdomTimer === 'function') {
+                    startWisdomTimer();
+                    console.log('✅ تم بدء العداد');
+                } else {
+                    console.warn('⚠️ دالة العداد غير موجودة');
+                }
+                
+                // عرض التعليمات
+                if (typeof showWisdomTutorial === 'function') {
+                    showWisdomTutorial();
+                    console.log('✅ تم عرض التعليمات');
+                } else {
+                    console.warn('⚠️ دالة التعليمات غير موجودة');
+                }
+                
+                // تحديث زر البداية
+                const startBtn = document.querySelector('.start-wisdom');
+                if (startBtn) {
+                    startBtn.innerHTML = '<i class="fas fa-refresh"></i><span class="button-text">إعادة البدء</span>';
+                    console.log('✅ تم تحديث زر البداية');
+                }
+                
+                // تحديث قائمة الطلاب
+                if (typeof displayStudentsList === 'function') {
+                    displayStudentsList();
+                    console.log('✅ تم تحديث قائمة الطلاب');
+                }
+                
+                // إظهار رسالة نجاح
+                if (typeof showSmartNotification === 'function') {
+                    showSmartNotification('🚀 بدأت الرحلة!', 'تم بدء رحلة الحكمة بنجاح', 'success');
+                } else {
+                    console.log('🚀 تم بدء رحلة الحكمة بنجاح!');
+                }
+                
+                console.log('🎉 تم بدء رحلة الحكمة بنجاح!');
+                
+            } catch (error) {
+                console.error('❌ خطأ في بدء رحلة الحكمة:', error);
+                if (typeof showSmartNotification === 'function') {
+                    showSmartNotification('❌ خطأ', 'فشل في بدء رحلة الحكمة: ' + error.message, 'danger');
+                } else {
+                    alert('❌ فشل في بدء رحلة الحكمة: ' + error.message);
+                }
             }
-
-            wisdomData.isRunning = true;
-            wisdomData.isPaused = false;
-            wisdomData.currentStudentIndex = 0;
-            wisdomData.currentQuestionIndex = 0;
-            wisdomData.remainingTime = wisdomData.totalTime;
-            wisdomData.completedStudents = 0;
-            
-            // إعادة تعيين حالة الطلاب
-            wisdomData.students.forEach(student => {
-                student.status = 'waiting';
-                student.score = 0;
-                student.questionsAnswered = 0;
-                student.evaluation = null;
-                student.timestamp = null;
-                student.insights = [];
-            });
-
-            // حساب مراحل التصفيات
-            calculateWisdomPhases();
-
-            startWisdomTimer();
-            showWisdomTutorial();
-            
-            // تحديث زر البداية
-            document.querySelector('.start-wisdom').innerHTML = 
-                '<i class="fas fa-refresh"></i><span class="button-text">إعادة البدء</span>';
         }
 
         // ===== عرض تعليمات الحكمة =====
@@ -4170,10 +4248,18 @@
             // تحميل الإعدادات المحفوظة أولاً
             loadSavedSettings();
             
+            // تحميل بيانات الطلاب
+            if (typeof loadStudentsData === 'function') {
+                loadStudentsData();
+            } else {
+                console.warn('⚠️ دالة تحميل الطلاب غير موجودة');
+            }
+            
             console.log('🔍 فحص دوال مملكة الحكمة:');
             console.log('showWisdomSettings:', typeof showWisdomSettings);
             console.log('applySettings:', typeof applySettings);
             console.log('closeSettingsModal:', typeof closeSettingsModal);
+            console.log('startWisdomJourney:', typeof startWisdomJourney);
             
             // فحص العناصر
             const modal = document.getElementById('wisdomSettingsModal');
@@ -4184,6 +4270,11 @@
             
             const cancelBtn = document.querySelector('button[onclick*="closeSettingsModal"]');
             console.log('زر الإلغاء:', cancelBtn ? '✅ موجود' : '❌ غير موجود');
+            
+            const startBtn = document.querySelector('button[onclick*="startWisdomJourney"]');
+            console.log('زر بدء رحلة الحكمة:', startBtn ? '✅ موجود' : '❌ غير موجود');
+            
+            console.log('عدد الطلاب المحملين:', wisdomData.students.length);
         });
     </script>
 </body>
