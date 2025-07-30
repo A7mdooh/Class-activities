@@ -1709,19 +1709,14 @@
                 opportunitiesPerStudent: 2, // 1-3 فرص لكل طالب
                 eliminationPercentage: 50, // نسبة الاستبعاد في كل مرحلة
                 minimumPassingScore: 70, // الحد الأدنى للنقاط للنجاح
-                autoCalculateThreshold: true // حساب تلقائي لعتبة النجاح
+                autoCalculateThreshold: true, // حساب تلقائي لعتبة النجاح
+                enablePhaseElimination: true, // تفعيل التصفيات المرحلية
+                totalTime: 600, // 10 دقائق إجمالية
+                studentsCount: 20 // عدد متوقع
             },
             phases: [], // مراحل الاستبعاد
             currentPhase: 1,
             totalPhases: 1,
-            settings: {
-                totalTime: 600, // 10 دقائق إجمالية
-                studentsCount: 20, // عدد متوقع
-                enablePhaseElimination: true, // تفعيل التصفيات المرحلية
-                eliminationPercentage: 30, // نسبة الاستبعاد في كل مرحلة
-                questionsPerPhase: 3, // عدد الأسئلة لكل مرحلة
-                dynamicThreshold: true // حساب تلقائي لحد التأهل
-            },
             autoAdvance: false,
             autoAdvanceDelay: 3,
             enableElimination: false,
@@ -1925,7 +1920,7 @@
             updateProgressBar();
             
             // عرض معلومات المرحلة الحالية
-            if (wisdomData.settings.enablePhaseElimination && wisdomData.phases.length > 0) {
+            if (wisdomData.eliminationSettings?.enablePhaseElimination !== false && wisdomData.phases.length > 0) {
                 const currentPhaseData = wisdomData.phases[wisdomData.currentPhase - 1];
                 const activeStudents = wisdomData.students.filter(s => s.status !== 'eliminated').length;
                 
@@ -1954,7 +1949,7 @@
         // ===== نظام التصفيات المرحلي =====
         function calculateWisdomPhases() {
             const totalStudents = wisdomData.students.filter(s => s.status !== 'eliminated').length;
-            const eliminationRate = wisdomData.settings.eliminationPercentage;
+            const eliminationRate = wisdomData.eliminationSettings?.eliminationPercentage || 50;
             
             wisdomData.phases = [];
             wisdomData.totalPhases = 1;
@@ -1968,7 +1963,7 @@
                     eliminationThreshold: 0,
                     isRanking: true,
                     questionsCompleted: 0,
-                    questionsRequired: wisdomData.settings.questionsPerPhase
+                    questionsRequired: wisdomData.eliminationSettings?.opportunitiesPerStudent || 2
                 }];
                 return;
             }
@@ -1988,7 +1983,7 @@
                     eliminationThreshold: 0,
                     isRanking: phaseNumber === 1 && studentsRemaining === currentStudents,
                     questionsCompleted: 0,
-                    questionsRequired: wisdomData.settings.questionsPerPhase
+                    questionsRequired: wisdomData.eliminationSettings?.opportunitiesPerStudent || 2
                 });
                 
                 currentStudents = studentsRemaining;
@@ -2023,7 +2018,7 @@
         }
 
         function checkWisdomPhaseProgress() {
-            if (!wisdomData.settings.enablePhaseElimination) return;
+            if (wisdomData.eliminationSettings?.enablePhaseElimination === false) return;
             
             const currentPhaseData = wisdomData.phases[wisdomData.currentPhase - 1];
             if (!currentPhaseData || currentPhaseData.isRanking) return;
@@ -2047,8 +2042,8 @@
             if (!currentPhaseData || currentPhaseData.isRanking) return;
             
             const activeStudents = wisdomData.students.filter(s => s.status !== 'eliminated');
-            const threshold = wisdomData.settings.dynamicThreshold ? 
-                calculateDynamicWisdomThreshold() : wisdomData.settings.minimumPassingScore || 20;
+            const threshold = wisdomData.eliminationSettings?.autoCalculateThreshold ? 
+                calculateDynamicWisdomThreshold() : wisdomData.eliminationSettings?.minimumPassingScore || 20;
             
             // ترتيب الطلاب حسب النقاط
             const sortedStudents = activeStudents.sort((a, b) => (b.score || 0) - (a.score || 0));
@@ -3072,7 +3067,7 @@
                     completedStudents: wisdomData.completedStudents,
                     duration: wisdomData.totalTime - wisdomData.remainingTime,
                     results: results,
-                    settings: wisdomData.settings
+                    settings: wisdomData.eliminationSettings
                 };
                 
                 localStorage.setItem('wisdom-kingdom-results', JSON.stringify(wisdomResults));
@@ -3673,7 +3668,9 @@
             const totalTime = parseInt(document.getElementById('totalTimeSlider').value);
             const studentsCount = parseInt(document.getElementById('studentsCount').value);
             
-            wisdomData.settings = {
+            // تحديث الإعدادات في eliminationSettings
+            wisdomData.eliminationSettings = {
+                ...wisdomData.eliminationSettings,
                 totalTime: totalTime,
                 studentsCount: studentsCount
             };
