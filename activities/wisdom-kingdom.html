@@ -252,10 +252,14 @@
         .student-spotlight {
             font-size: 2.2rem;
             font-weight: 900;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            color: #FFD700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 215, 0, 0.6);
             margin-bottom: 1rem;
             animation: pulse 2s ease-in-out infinite;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .wisdom-question-display {
@@ -267,6 +271,16 @@
             font-size: 1.2rem;
             line-height: 1.6;
             text-align: right;
+        }
+
+        .oral-question-prompt {
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.3), rgba(52, 152, 219, 0.3));
+            padding: 2rem;
+            border-radius: 20px;
+            margin: 1.5rem 0;
+            text-align: center;
+            border: 2px solid var(--wisdom-primary);
+            backdrop-filter: blur(10px);
         }
 
         .teacher-instructions {
@@ -308,12 +322,12 @@
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
         }
 
-        .eval-btn.brilliant {
+        .eval-btn.excellent {
             background: linear-gradient(45deg, #FFD700, #FFA500);
             color: #2C3E50;
         }
 
-        .eval-btn.excellent {
+        .eval-btn.very-good {
             background: linear-gradient(45deg, #00C851, #007E33);
             color: white;
         }
@@ -323,7 +337,7 @@
             color: white;
         }
 
-        .eval-btn.needs-improvement {
+        .eval-btn.weak {
             background: linear-gradient(45deg, #FF8800, #FF4444);
             color: white;
         }
@@ -983,38 +997,47 @@
         <div class="current-student-section" id="studentSection" style="display: none;">
             <div class="student-spotlight" id="currentStudentName">اسم الطالب</div>
             
-            <div class="wisdom-question-display" id="wisdomQuestion">
-                سيتم عرض السؤال الحكيم هنا...
+            <div class="oral-question-prompt">
+                <div style="font-size: 1.8rem; color: #9B59B6; margin-bottom: 1rem;">
+                    <i class="fas fa-microphone"></i> سؤال شفوي للطالب
+                </div>
+                <div style="font-size: 1.2rem; color: #fff; line-height: 1.6;">
+                    اطرح سؤالاً مناسباً لمستوى الطالب واستمع لإجابته بعناية
+                </div>
             </div>
             
             <div class="teacher-instructions">
-                <i class="fas fa-brain"></i> 
-                اطرح السؤال على الطالب واستمع لتفكيره العميق وحكمته في الإجابة
+                <i class="fas fa-microphone"></i> 
+                اطرح سؤالاً شفوياً على الطالب واستمع لإجابته، ثم قيم مستوى إجابته
             </div>
             
             <div class="evaluation-buttons">
-                <button class="eval-btn brilliant" onclick="evaluateWisdom('brilliant')">
-                    <i class="fas fa-star"></i>
-                    حكيم وملهم (120 نقطة)
-                </button>
                 <button class="eval-btn excellent" onclick="evaluateWisdom('excellent')">
-                    <i class="fas fa-lightbulb"></i>
-                    متميز الفكر (100 نقطة)
+                    <i class="fas fa-star"></i>
+                    ممتاز (30 نقطة)
+                </button>
+                <button class="eval-btn very-good" onclick="evaluateWisdom('very-good')">
+                    <i class="fas fa-medal"></i>
+                    جيد جداً (25 نقطة)
                 </button>
                 <button class="eval-btn good" onclick="evaluateWisdom('good')">
-                    <i class="fas fa-check-circle"></i>
-                    جيد التفكير (80 نقطة)
+                    <i class="fas fa-thumbs-up"></i>
+                    جيد (20 نقطة)
                 </button>
-                <button class="eval-btn needs-improvement" onclick="evaluateWisdom('needs-improvement')">
+                <button class="eval-btn weak" onclick="evaluateWisdom('weak')">
                     <i class="fas fa-hand-paper"></i>
-                    يحتاج تطوير (50 نقطة)
+                    ضعيف (10 نقاط)
                 </button>
             </div>
             
             <div class="elimination-section" style="margin-top: 1.5rem; text-align: center;">
-                <button class="eval-btn" onclick="pauseForReflection()" style="background: linear-gradient(45deg, #3498DB, #2ECC71); color: white; padding: 1rem 2rem;">
-                    <i class="fas fa-pause"></i>
-                    إعطاء وقت إضافي للتفكير
+                <button class="eval-btn next-student" onclick="nextStudent()" style="background: linear-gradient(45deg, #3498DB, #2ECC71); color: white; padding: 1rem 2rem;">
+                    <i class="fas fa-arrow-left"></i>
+                    الطالب التالي
+                </button>
+                <button class="eval-btn skip-student" onclick="skipStudent()" style="background: linear-gradient(45deg, #95A5A6, #7F8C8D); color: white; padding: 1rem 2rem; margin-right: 1rem;">
+                    <i class="fas fa-forward"></i>
+                    تخطي الطالب
                 </button>
             </div>
         </div>
@@ -1059,36 +1082,24 @@
     <!-- Wisdom Settings Modal -->
     <div class="modal" id="wisdomSettingsModal">
         <div class="modal-content">
-            <div class="modal-title">⚙️ إعدادات رحلة الحكمة</div>
+            <div class="modal-title">⚙️ إعدادات مملكة الحكمة</div>
             <div class="modal-message">
                 <div class="settings-section">
-                    <h4>🕒 مدة التفكير لكل سؤال</h4>
+                    <h4>🕒 مدة التقييم الإجمالية</h4>
                     <div class="setting-group">
-                        <label>اختر الوقت المناسب للتفكير العميق:</label>
-                        <input type="range" id="thinkingTimeSlider" min="60" max="300" value="120" oninput="updateThinkingTime(this.value)">
+                        <label>اختر الوقت المناسب للتقييم:</label>
+                        <input type="range" id="totalTimeSlider" min="300" max="1800" value="600" oninput="updateTotalTime(this.value)">
                         <div class="slider-value">
-                            <span id="thinkingTimeValue">2</span> دقيقة للتفكير
+                            <span id="totalTimeValue">10</span> دقائق للتقييم
                         </div>
                     </div>
                 </div>
                 
                 <div class="settings-section">
-                    <h4>🧠 مستوى صعوبة الأسئلة</h4>
+                    <h4>📊 عدد الطلاب المتوقع</h4>
                     <div class="setting-group">
-                        <select id="difficultyLevel">
-                            <option value="mixed">متنوع (مبتدئ إلى متقدم)</option>
-                            <option value="beginner">مبتدئ - أسئلة بسيطة</option>
-                            <option value="intermediate">متوسط - تحديات معقولة</option>
-                            <option value="advanced">متقدم - تحديات عميقة</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="settings-section">
-                    <h4>📊 عدد الأسئلة في الرحلة</h4>
-                    <div class="setting-group">
-                        <input type="number" id="questionsCount" min="3" max="10" value="5">
-                        <label>عدد أسئلة الحكمة (3-10)</label>
+                        <input type="number" id="studentsCount" min="5" max="50" value="20">
+                        <label>عدد الطلاب في الفصل (تقريبي)</label>
                     </div>
                 </div>
             </div>
@@ -1129,136 +1140,15 @@
         let wisdomData = {
             students: [],
             currentStudentIndex: 0,
-            currentQuestionIndex: 0,
             totalTime: 600, // 10 دقائق افتراضي
             remainingTime: 600,
             isRunning: false,
             isPaused: false,
             completedStudents: 0,
-            currentRound: 1,
             settings: {
-                thinkingTime: 120, // 2 دقيقة للتفكير
-                difficulty: 'mixed',
-                questionsCount: 5
+                totalTime: 600, // 10 دقائق إجمالية
+                studentsCount: 20 // عدد متوقع
             }
-        };
-
-        // أسئلة الحكمة المتدرجة الصعوبة والتفاعلية
-        const wisdomQuestions = {
-            beginner: [
-                {
-                    question: "ما هو الشيء الذي كلما أخذت منه كبر؟",
-                    category: "تفكير منطقي",
-                    hint: "فكر في شيء يزداد بالحفر",
-                    difficulty: 1
-                },
-                {
-                    question: "لماذا نتعلم من أخطائنا أكثر من نجاحاتنا؟",
-                    category: "حكمة حياتية",
-                    hint: "الألم يترك أثراً أعمق من المتعة",
-                    difficulty: 1
-                },
-                {
-                    question: "ما هو أهم شيء في الصداقة؟",
-                    category: "علاقات اجتماعية",
-                    hint: "أساس كل علاقة قوية",
-                    difficulty: 1
-                },
-                {
-                    question: "لماذا نقول 'الصبر مفتاح الفرج'؟",
-                    category: "حكمة تراثية",
-                    hint: "فكر في قيمة الانتظار والثبات",
-                    difficulty: 1
-                },
-                {
-                    question: "ما الفرق بين الذكاء والحكمة؟",
-                    category: "فلسفة بسيطة",
-                    hint: "أحدهما في الرأس والآخر في القلب",
-                    difficulty: 1
-                }
-            ],
-            intermediate: [
-                {
-                    question: "كيف يمكن أن تكون قوياً وضعيفاً في نفس الوقت؟",
-                    category: "فلسفة الحياة",
-                    hint: "فكر في القوة الداخلية والظاهرية",
-                    difficulty: 2
-                },
-                {
-                    question: "إذا كان بإمكانك تغيير شيء واحد في العالم، ماذا ستختار ولماذا؟",
-                    category: "تفكير إبداعي",
-                    hint: "فكر في الأثر الأوسع",
-                    difficulty: 2
-                },
-                {
-                    question: "لماذا نحتاج للفشل كي ننجح؟",
-                    category: "دروس الحياة",
-                    hint: "التجربة خير معلم",
-                    difficulty: 2
-                },
-                {
-                    question: "ما معنى أن تكون صادقاً مع نفسك؟",
-                    category: "تطوير الذات",
-                    hint: "النظر في المرآة الداخلية",
-                    difficulty: 2
-                },
-                {
-                    question: "كيف نفرق بين الرغبة والحاجة؟",
-                    category: "حكمة عملية",
-                    hint: "ما نريده وما نحتاجه حقاً",
-                    difficulty: 2
-                },
-                {
-                    question: "لماذا أحياناً نخاف من أحلامنا؟",
-                    category: "علم نفس بسيط",
-                    hint: "الخوف من المسؤولية والتغيير",
-                    difficulty: 2
-                }
-            ],
-            advanced: [
-                {
-                    question: "ما الفرق بين المعرفة والحكمة؟ اعط مثالاً من واقع الحياة",
-                    category: "فلسفة المعرفة",
-                    hint: "المعرفة ما تعرفه، الحكمة كيف تستخدمه",
-                    difficulty: 3
-                },
-                {
-                    question: "كيف يمكن للصمت أن يكون أقوى من الكلام؟",
-                    category: "فن التواصل",
-                    hint: "أحياناً ما لا نقوله أهم مما نقوله",
-                    difficulty: 3
-                },
-                {
-                    question: "إذا كان الوقت نسبي، فكيف نقيس قيمة اللحظة؟",
-                    category: "فلسفة الزمن",
-                    hint: "القيمة ليست في الكمية بل في الجودة",
-                    difficulty: 3
-                },
-                {
-                    question: "هل يمكن أن نكون محقين ومخطئين في نفس الوقت؟ كيف؟",
-                    category: "المنطق والنسبية",
-                    hint: "فكر في وجهات النظر المختلفة",
-                    difficulty: 3
-                },
-                {
-                    question: "ما معنى أن 'العبرة بالخواتيم'؟ وكيف يؤثر ذلك على قراراتنا؟",
-                    category: "حكمة إسلامية",
-                    hint: "النهايات تحدد معنى البدايات",
-                    difficulty: 3
-                },
-                {
-                    question: "كيف يمكن للإنسان أن يكون حراً وهو مقيد بالقوانين والقيم؟",
-                    category: "فلسفة الحرية",
-                    hint: "الحرية الحقيقية في الاختيار الواعي",
-                    difficulty: 3
-                },
-                {
-                    question: "لماذا نحتاج للآخرين رغم أننا كائنات مستقلة؟",
-                    category: "علم الاجتماع",
-                    hint: "الإنسان مدني بطبعه",
-                    difficulty: 3
-                }
-            ]
         };
 
         // أقوال الحكمة الملهمة
@@ -1442,40 +1332,40 @@
         function showWisdomTutorial() {
             const tutorialSteps = [
                 {
-                    title: '🧠 مرحباً برحلة الحكمة',
+                    title: '🧠 مرحباً بمملكة الحكمة',
                     message: `
                         <div style="font-size: 1.3rem; margin-bottom: 1rem;">
-                            رحلة تفاعلية لاستكشاف عمق تفكير الطلاب
+                            أسئلة شفوية لاختبار فهم وذكاء الطلاب
                         </div>
                         <div style="text-align: right; line-height: 1.6;">
-                            • أسئلة تحفز التفكير العميق والإبداع<br>
-                            • تقييم شامل لمستوى الحكمة والنضج<br>
-                            • وقت كافٍ للتأمل والتفكير<br>
-                            • تفاعل مباشر بين المعلم والطالب
+                            • اطرح أسئلة شفوية مناسبة لمستوى الطلاب<br>
+                            • استمع للإجابات بعناية<br>
+                            • قيم مستوى الإجابة حسب الفهم والوضوح<br>
+                            • نظام تقييم بسيط وواضح
                         </div>
                     `,
                     duration: 4000,
                     sound: 'brain-activate'
                 },
                 {
-                    title: '🎯 كيفية التقييم',
+                    title: '🎯 نظام التقييم',
                     message: `
                         <div style="display: grid; grid-template-columns: 1fr; gap: 1rem; text-align: right;">
                             <div style="background: rgba(255,215,0,0.2); padding: 1rem; border-radius: 10px;">
-                                <strong style="color: #FFD700;">🌟 حكيم وملهم (120 نقطة)</strong><br>
-                                إجابة عميقة ومبدعة تظهر حكمة استثنائية
+                                <strong style="color: #FFD700;">🌟 ممتاز (30 نقطة)</strong><br>
+                                إجابة صحيحة ومتميزة مع فهم عميق
                             </div>
                             <div style="background: rgba(39,174,96,0.2); padding: 1rem; border-radius: 10px;">
-                                <strong style="color: #27AE60;">💡 متميز الفكر (100 نقطة)</strong><br>
-                                تفكير ممتاز وإجابة مدروسة
+                                <strong style="color: #27AE60;">� جيد جداً (25 نقطة)</strong><br>
+                                إجابة صحيحة مع فهم جيد
                             </div>
                             <div style="background: rgba(52,152,219,0.2); padding: 1rem; border-radius: 10px;">
-                                <strong style="color: #3498DB;">✅ جيد التفكير (80 نقطة)</strong><br>
-                                إجابة صحيحة وتفكير منطقي
+                                <strong style="color: #3498DB;">✅ جيد (20 نقطة)</strong><br>
+                                إجابة مقبولة مع فهم أساسي
                             </div>
                             <div style="background: rgba(231,76,60,0.2); padding: 1rem; border-radius: 10px;">
-                                <strong style="color: #E74C3C;">🤔 يحتاج تطوير (50 نقطة)</strong><br>
-                                محاولة جيدة تحتاج المزيد من التطوير
+                                <strong style="color: #E74C3C;">🤔 ضعيف (10 نقاط)</strong><br>
+                                إجابة غير صحيحة أو غير مفهومة
                             </div>
                         </div>
                     `,
@@ -1483,17 +1373,18 @@
                     sound: 'knowledge-unlock'
                 },
                 {
-                    title: '⏰ نظام التوقيت',
+                    title: '⏰ آلية العمل',
                     message: `
                         <div style="text-align: center; margin-bottom: 1.5rem;">
                             <div style="font-size: 2rem; color: #9B59B6; margin-bottom: 1rem;">
                                 ${formatTime(wisdomData.remainingTime)}
                             </div>
                             <div style="text-align: right; line-height: 1.6;">
-                                • ${Math.floor(wisdomData.settings.thinkingTime/60)} دقيقة لكل سؤال للتفكير العميق<br>
-                                • إمكانية إعطاء وقت إضافي للطلاب المحتاجين<br>
-                                • مؤقت مرئي لمتابعة الوقت المتبقي<br>
-                                • إيقاف مؤقت متاح عند الحاجة
+                                • سيتم عرض اسم الطالب المطلوب<br>
+                                • اطرح عليه سؤالاً شفوياً مناسباً<br>
+                                • استمع للإجابة وقيمها<br>
+                                • اضغط "الطالب التالي" للانتقال<br>
+                                • يمكن تخطي الطالب إذا لزم الأمر
                             </div>
                         </div>
                     `,
@@ -1555,9 +1446,6 @@
             document.getElementById('currentStudentName').textContent = 
                 `${currentStudent.name} - ${currentStudent.className}`;
             
-            // عرض السؤال
-            showWisdomQuestion();
-            
             // إظهار قسم الطالب
             document.getElementById('studentSection').style.display = 'block';
             
@@ -1591,24 +1479,6 @@
             }
         }
 
-        // ===== الحصول على الأسئلة حسب الصعوبة =====
-        function getQuestionsForDifficulty() {
-            const difficulty = wisdomData.settings.difficulty;
-            
-            if (difficulty === 'mixed') {
-                // خلط الأسئلة من جميع المستويات
-                const allQuestions = [
-                    ...wisdomQuestions.beginner,
-                    ...wisdomQuestions.intermediate,
-                    ...wisdomQuestions.advanced
-                ];
-                return shuffleArray(allQuestions).slice(0, wisdomData.settings.questionsCount);
-            } else {
-                return shuffleArray(wisdomQuestions[difficulty] || wisdomQuestions.intermediate)
-                    .slice(0, wisdomData.settings.questionsCount);
-            }
-        }
-
         // ===== تقييم الحكمة =====
         function evaluateWisdom(evaluation) {
             if (!wisdomData.isRunning || wisdomData.isPaused) return;
@@ -1616,12 +1486,12 @@
             const currentStudent = wisdomData.students[wisdomData.currentStudentIndex];
             if (!currentStudent) return;
 
-            // تحديد النقاط
+            // تحديد النقاط - نفس نظام مملكة البرق
             const scoreMap = {
-                'brilliant': 120,
-                'excellent': 100,
-                'good': 80,
-                'needs-improvement': 50
+                'excellent': 30,    // ممتاز
+                'very-good': 25,    // جيد جداً
+                'good': 20,         // جيد
+                'weak': 10          // ضعيف
             };
             
             const points = scoreMap[evaluation];
@@ -1642,34 +1512,58 @@
             // تشغيل صوت مناسب
             playEvaluationSound(evaluation);
             
-            // الانتقال للطالب التالي
-            wisdomData.currentStudentIndex++;
+            displayStudentsList();
+            updateDisplay();
+            updateProgressBar();
+            
+            // إخفاء أزرار التقييم مؤقتاً
+            const evalButtons = document.querySelectorAll('.evaluation-buttons .eval-btn');
+            evalButtons.forEach(btn => btn.disabled = true);
             
             setTimeout(() => {
                 closeModal();
-                if (wisdomData.currentStudentIndex < wisdomData.students.length && 
-                    wisdomData.remainingTime > 0) {
-                    // الانتقال للسؤال التالي
-                    wisdomData.currentQuestionIndex = 
-                        (wisdomData.currentQuestionIndex + 1) % wisdomData.settings.questionsCount;
-                    updateProgressBar();
-                    showCurrentStudent();
-                } else {
-                    completeWisdomJourney();
-                }
+                evalButtons.forEach(btn => btn.disabled = false);
             }, 2500);
+        }
+
+        // ===== الانتقال للطالب التالي =====
+        function nextStudent() {
+            // الانتقال للطالب التالي
+            wisdomData.currentStudentIndex++;
             
-            displayStudentsList();
-            updateDisplay();
+            if (wisdomData.currentStudentIndex < wisdomData.students.length && 
+                wisdomData.remainingTime > 0) {
+                showCurrentStudent();
+            } else {
+                completeWisdomJourney();
+            }
+            
+            playSound('transition');
+        }
+
+        // ===== تخطي الطالب =====
+        function skipStudent() {
+            const currentStudent = wisdomData.students[wisdomData.currentStudentIndex];
+            if (currentStudent) {
+                currentStudent.status = 'skipped';
+                
+                showSmartNotification(
+                    'تم تخطي الطالب',
+                    `${currentStudent.name} تم تخطيه`,
+                    'info'
+                );
+            }
+            
+            nextStudent();
         }
 
         // ===== إضافة بصيرة للطالب =====
         function addStudentInsight(student, evaluation) {
             const insights = {
-                'brilliant': 'أظهر حكمة استثنائية وتفكيراً عميقاً',
-                'excellent': 'تميز في التحليل والتفكير المنطقي',
-                'good': 'أظهر فهماً جيداً وتفكيراً سليماً',
-                'needs-improvement': 'محاولة جيدة مع إمكانية التطوير'
+                'excellent': 'أجاب إجابة ممتازة وأظهر فهماً عميقاً',
+                'very-good': 'أظهر فهماً جيداً جداً وتفكيراً سليماً',
+                'good': 'أجاب بشكل جيد وأظهر فهماً مقبولاً',
+                'weak': 'إجابة ضعيفة تحتاج إلى تحسين'
             };
             
             student.insights.push({
@@ -1678,7 +1572,7 @@
                 timestamp: new Date().toISOString()
             });
             
-            if (evaluation === 'brilliant' || evaluation === 'excellent') {
+            if (evaluation === 'excellent' || evaluation === 'very-good') {
                 student.deepThoughts++;
             }
         }
@@ -1686,10 +1580,10 @@
         // ===== عرض نتيجة التقييم =====
         function showEvaluationResult(student, evaluation, points) {
             const evaluationMap = {
-                'brilliant': { text: 'حكيم وملهم!', icon: '🌟', color: '#FFD700' },
-                'excellent': { text: 'متميز الفكر!', icon: '💡', color: '#27AE60' },
-                'good': { text: 'جيد التفكير!', icon: '✅', color: '#3498DB' },
-                'needs-improvement': { text: 'يحتاج تطوير', icon: '🤔', color: '#E74C3C' }
+                'excellent': { text: 'ممتاز!', icon: '🌟', color: '#FFD700' },
+                'very-good': { text: 'جيد جداً!', icon: '�', color: '#27AE60' },
+                'good': { text: 'جيد!', icon: '✅', color: '#3498DB' },
+                'weak': { text: 'ضعيف', icon: '🤔', color: '#E74C3C' }
             };
             
             const evalData = evaluationMap[evaluation];
@@ -1697,10 +1591,10 @@
             const title = `${evalData.icon} ${evalData.text}`;
             const message = `
                 <div style="font-size: 1.3rem; margin-bottom: 1rem;">
-                    الطالب: <strong>${student.name}</strong>
+                    الطالب: <strong style="color: #FFD700;">${student.name}</strong>
                 </div>
                 <div style="font-size: 1.5rem; color: ${evalData.color}; font-weight: 700; margin: 1rem 0;">
-                    +${points} نقطة حكمة
+                    +${points} نقطة
                 </div>
                 <div style="font-size: 1.2rem; color: ${evalData.color};">
                     إجمالي النقاط: ${student.score}
@@ -1717,10 +1611,10 @@
         // ===== تشغيل صوت التقييم =====
         function playEvaluationSound(evaluation) {
             const soundMap = {
-                'brilliant': 'brain-activate',
-                'excellent': 'knowledge-unlock',
+                'excellent': 'brain-activate',
+                'very-good': 'knowledge-unlock',
                 'good': 'cosmic-click',
-                'needs-improvement': 'notification-pop'
+                'weak': 'notification-pop'
             };
             
             playSound(soundMap[evaluation]);
@@ -1821,49 +1715,49 @@
 
         // ===== عرض النتائج النهائية =====
         function showFinalWisdomResults(results) {
-            const wiseSages = results.filter(s => s.score >= 100);
+            const topPerformers = results.filter(s => s.score >= 25); // الذين حصلوا على جيد جداً أو أكثر
             
             let resultsHTML = `
                 <div style="margin-bottom: 2rem; text-align: center;">
                     <div style="font-size: 1.5rem; margin-bottom: 1rem; color: #9B59B6;">
-                        🧠 تقرير رحلة الحكمة النهائي 🧠
+                        🧠 تقرير مملكة الحكمة النهائي 🧠
                     </div>
                     <div style="color: var(--wisdom-primary); font-size: 1.1rem;">
-                        تم تقييم ${wisdomData.completedStudents} طالب في تحديات الحكمة
+                        تم تقييم ${wisdomData.completedStudents} طالب في الأسئلة الشفوية
                     </div>
-                    ${wiseSages.length > 0 ? `
+                    ${topPerformers.length > 0 ? `
                         <div style="color: #FFD700; margin-top: 0.5rem; font-size: 1.1rem;">
-                            ${wiseSages.length} طالب حصل على لقب "الحكيم الصغير"
+                            ${topPerformers.length} طالب حصل على تقييم متميز
                         </div>
                     ` : ''}
                 </div>
             `;
             
             if (results.length > 0) {
-                resultsHTML += '<div style="margin: 2rem 0;"><div style="text-align: center; margin-bottom: 1rem; font-size: 1.2rem; color: #9B59B6;"><strong>🏆 حكماء المستقبل</strong></div>';
+                resultsHTML += '<div style="margin: 2rem 0;"><div style="text-align: center; margin-bottom: 1rem; font-size: 1.2rem; color: #9B59B6;"><strong>🏆 ترتيب الطلاب</strong></div>';
                 
                 results.forEach((student, index) => {
                     const medals = ['🥇', '🥈', '🥉'];
-                    const medal = medals[index] || '🧠';
+                    const medal = medals[index] || '🏅';
                     const rankColors = ['#FFD700', '#C0C0C0', '#CD7F32', '#9B59B6'];
                     const rankColor = rankColors[index] || '#9B59B6';
                     
-                    const wisdomTitle = student.score >= 120 ? 'الحكيم الملهم' :
-                                      student.score >= 100 ? 'المفكر العميق' :
-                                      student.score >= 80 ? 'الباحث عن الحكمة' : 'المتأمل الصغير';
+                    const wisdomTitle = student.score >= 30 ? 'ممتاز' :
+                                      student.score >= 25 ? 'جيد جداً' :
+                                      student.score >= 20 ? 'جيد' : 'ضعيف';
                     
                     resultsHTML += `
                         <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; margin: 0.8rem 0; background: linear-gradient(135deg, rgba(155,89,182,0.1), rgba(52,152,219,0.1)); border-radius: 12px; border-left: 4px solid ${rankColor};">
                             <div>
-                                <span style="font-size: 1.1rem; font-weight: bold;">
+                                <span style="font-size: 1.1rem; font-weight: bold; color: #FFD700;">
                                     ${medal} ${student.name}
                                 </span>
                                 <div style="font-size: 0.9rem; color: ${rankColor}; margin-top: 0.3rem;">
-                                    ${wisdomTitle} • ${student.questionsAnswered} أسئلة
+                                    التقييم: ${wisdomTitle} • ${student.questionsAnswered} أسئلة
                                 </div>
                                 ${student.deepThoughts > 0 ? `
                                     <div style="font-size: 0.8rem; color: #FFD700; margin-top: 0.2rem;">
-                                        ⭐ ${student.deepThoughts} إجابة عميقة
+                                        ⭐ ${student.deepThoughts} إجابة متميزة
                                     </div>
                                 ` : ''}
                             </div>
@@ -1874,7 +1768,7 @@
                 resultsHTML += '</div>';
             }
             
-            setModalContent('🏆 انتهاء رحلة الحكمة', resultsHTML, '#9B59B6');
+            setModalContent('🏆 انتهاء مملكة الحكمة', resultsHTML, '#9B59B6');
             showModal('wisdomEndModal');
         }
 
@@ -1967,30 +1861,28 @@
             showModal('wisdomSettingsModal');
         }
 
-        function updateThinkingTime(value) {
-            document.getElementById('thinkingTimeValue').textContent = Math.floor(value / 60);
+        function updateTotalTime(value) {
+            document.getElementById('totalTimeValue').textContent = Math.floor(value / 60);
         }
 
         function saveWisdomSettings() {
-            const thinkingTime = parseInt(document.getElementById('thinkingTimeSlider').value);
-            const difficulty = document.getElementById('difficultyLevel').value;
-            const questionsCount = parseInt(document.getElementById('questionsCount').value);
+            const totalTime = parseInt(document.getElementById('totalTimeSlider').value);
+            const studentsCount = parseInt(document.getElementById('studentsCount').value);
             
             wisdomData.settings = {
-                thinkingTime: thinkingTime,
-                difficulty: difficulty,
-                questionsCount: questionsCount
+                totalTime: totalTime,
+                studentsCount: studentsCount
             };
             
-            wisdomData.totalTime = Math.max(thinkingTime * questionsCount, 300); // حد أدنى 5 دقائق
-            wisdomData.remainingTime = wisdomData.totalTime;
+            wisdomData.totalTime = totalTime;
+            wisdomData.remainingTime = totalTime;
             
             updateDisplay();
             closeModal('wisdomSettingsModal');
             
             showSmartNotification(
                 'تم حفظ إعدادات الحكمة',
-                `${Math.floor(thinkingTime/60)} دقيقة لكل سؤال، ${questionsCount} أسئلة، صعوبة: ${difficulty}`,
+                `${Math.floor(totalTime/60)} دقيقة للتقييم، ${studentsCount} طالب متوقع`,
                 'success'
             );
         }
@@ -2137,7 +2029,6 @@
         function startNewWisdomJourney() {
             // إعادة تعيين البيانات
             wisdomData.currentStudentIndex = 0;
-            wisdomData.currentQuestionIndex = 0;
             wisdomData.remainingTime = wisdomData.totalTime;
             wisdomData.completedStudents = 0;
             wisdomData.isRunning = false;
@@ -2164,7 +2055,7 @@
             
             document.getElementById('studentSection').style.display = 'none';
             document.querySelector('.start-wisdom').innerHTML = 
-                '<i class="fas fa-brain"></i><span class="button-text">بدء رحلة الحكمة</span>';
+                '<i class="fas fa-brain"></i><span class="button-text">بدء مملكة الحكمة</span>';
                 
             showRandomWisdomQuote();
         }
@@ -2183,13 +2074,13 @@
 
         // ===== تحديث شريط التقدم =====
         function updateProgressBar() {
-            const totalQuestions = wisdomData.settings.questionsCount;
-            const currentProgress = Math.min(wisdomData.currentQuestionIndex, totalQuestions);
-            const progress = (currentProgress / totalQuestions) * 100;
+            const totalStudents = wisdomData.students.length;
+            const currentProgress = wisdomData.completedStudents;
+            const progress = totalStudents > 0 ? (currentProgress / totalStudents) * 100 : 0;
             
             document.getElementById('progressFill').style.width = progress + '%';
             document.getElementById('progressText').textContent = 
-                `${currentProgress}/${totalQuestions}`;
+                `${currentProgress}/${totalStudents}`;
         }
 
         // ===== عرض اقتباس حكمة عشوائي =====
