@@ -385,6 +385,36 @@
             from { transform: scale(0.8); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
         }
+        
+        @keyframes eliminationFloat {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translateY(-50px) scale(1.2);
+                opacity: 0.4;
+            }
+            100% {
+                transform: translateY(-100px) scale(0.5);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg);
+                opacity: 1;
+            }
+            50% { 
+                transform: translateY(-20px) rotate(180deg);
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-40px) rotate(360deg);
+                opacity: 0;
+            }
+        }
 
         /* Modal animations */
         .modal {
@@ -782,9 +812,41 @@
         }
 
         .student-card.current {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 165, 0, 0.3));
-            border: 2px solid #FFD700;
-            animation: glow 2s ease-in-out infinite;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.9), rgba(255, 165, 0, 0.8));
+            border: 3px solid #FFD700;
+            animation: currentStudentPulse 2s ease-in-out infinite;
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.6), 0 8px 32px rgba(255, 107, 53, 0.3);
+        }
+        
+        .student-card.current .student-name {
+            color: #1A252F !important;
+            font-weight: 900 !important;
+            font-size: 1.1rem !important;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+            animation: nameGlow 1.5s ease-in-out infinite alternate;
+        }
+        
+        @keyframes currentStudentPulse {
+            0%, 100% { 
+                transform: scale(1.05); 
+                box-shadow: 0 0 30px rgba(255, 215, 0, 0.6), 0 8px 32px rgba(255, 107, 53, 0.3);
+            }
+            50% { 
+                transform: scale(1.08); 
+                box-shadow: 0 0 40px rgba(255, 215, 0, 0.8), 0 8px 32px rgba(255, 107, 53, 0.5);
+            }
+        }
+        
+        @keyframes nameGlow {
+            from { 
+                text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+                color: #1A252F;
+            }
+            to { 
+                text-shadow: 0 0 20px rgba(255, 215, 0, 1), 0 0 30px rgba(255, 107, 53, 0.5);
+                color: #000;
+            }
         }
 
         .student-card.completed {
@@ -1881,7 +1943,7 @@
                 studentCard.style.background = cardColor;
                 
                 studentCard.innerHTML = `
-                    <div style="font-weight: bold; margin-bottom: 0.5rem; color: #FFD700;">
+                    <div class="student-name" style="font-weight: bold; margin-bottom: 0.5rem; color: #FFD700;">
                         ${statusIcon} ${student.name}
                     </div>
                     <div style="font-size: 0.8rem; color: #ccc; margin-bottom: 0.3rem;">
@@ -2344,26 +2406,44 @@
                 return;
             }
             
-            // تحديث حالة الطلاب
+            // تحديث حالة الطلاب - إزالة حالة "current" من جميع الطلاب
             wisdomData.students.forEach(s => {
                 if (s.status === 'current') s.status = 'waiting';
             });
+            
+            // تعيين الطالب الحالي
             currentStudent.status = 'current';
 
-            // عرض اسم الطالب الحالي
-            document.getElementById('currentStudentName').textContent = 
-                `${currentStudent.name} - ${currentStudent.className || 'غير محدد'}`;
+            // عرض اسم الطالب الحالي مع تنسيق محسن
+            const studentNameElement = document.getElementById('currentStudentName');
+            if (studentNameElement) {
+                studentNameElement.innerHTML = `
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1rem;">
+                        <span style="font-size: 1.5rem;">🧠</span>
+                        <div>
+                            <div style="font-size: 1.4rem; font-weight: 900; color: #FFD700; text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);">
+                                ${currentStudent.name}
+                            </div>
+                            <div style="font-size: 1rem; color: #4ECDC4; margin-top: 0.3rem;">
+                                ${currentStudent.className || 'غير محدد'}
+                            </div>
+                        </div>
+                        <span style="font-size: 1.5rem; animation: pulse 2s infinite;">⚡</span>
+                    </div>
+                `;
+            }
             
             // إظهار قسم الطالب
             document.getElementById('studentSection').style.display = 'block';
             
+            // تحديث قائمة الطلاب فوراً
             displayStudentsList();
             updateProgressBar();
             
             // تشغيل صوت انتقال للطالب التالي
             playSound('transition');
             
-            // إظهار نافذة الطالب الحالي
+            // إظهار نافذة الطالب الحالي مع تأثيرات
             showStudentModal(currentStudent);
         }
 
@@ -2617,16 +2697,37 @@
             setTimeout(() => {
                 // تحديث حالة الطالب الحالي
                 if (wisdomData.students[wisdomData.currentStudentIndex]) {
-                    wisdomData.students[wisdomData.currentStudentIndex].status = 'completed';
+                    const currentStudent = wisdomData.students[wisdomData.currentStudentIndex];
+                    if (currentStudent.status !== 'eliminated') {
+                        currentStudent.status = 'completed';
+                    }
                 }
                 
-                wisdomData.currentStudentIndex++;
+                // البحث عن الطالب التالي غير المكتمل
+                let nextIndex = wisdomData.currentStudentIndex + 1;
+                let foundNext = false;
                 
                 // البحث عن أول طالب غير مستبعد وغير مكتمل
-                while (wisdomData.currentStudentIndex < wisdomData.students.length && 
-                       (wisdomData.students[wisdomData.currentStudentIndex].status === 'eliminated' || 
-                        wisdomData.students[wisdomData.currentStudentIndex].status === 'completed')) {
-                    wisdomData.currentStudentIndex++;
+                while (nextIndex < wisdomData.students.length) {
+                    const nextStudent = wisdomData.students[nextIndex];
+                    if (nextStudent.status !== 'eliminated' && nextStudent.status !== 'completed') {
+                        wisdomData.currentStudentIndex = nextIndex;
+                        foundNext = true;
+                        break;
+                    }
+                    nextIndex++;
+                }
+                
+                // إذا لم نجد طالب تالي، ابحث من البداية
+                if (!foundNext) {
+                    for (let i = 0; i < wisdomData.students.length; i++) {
+                        const student = wisdomData.students[i];
+                        if (student.status !== 'eliminated' && student.status !== 'completed') {
+                            wisdomData.currentStudentIndex = i;
+                            foundNext = true;
+                            break;
+                        }
+                    }
                 }
                 
                 // التحقق من وجود طلاب لم يكملوا التقييم بعد
@@ -2634,11 +2735,13 @@
                     s.status !== 'eliminated' && s.status !== 'completed'
                 );
                 
-                if (remainingStudents.length > 0 && wisdomData.remainingTime > 0) {
+                if (foundNext && remainingStudents.length > 0 && wisdomData.remainingTime > 0) {
                     // هناك طلاب لم يكملوا التقييم بعد
-                    wisdomData.students[wisdomData.currentStudentIndex].status = 'current';
+                    const newCurrentStudent = wisdomData.students[wisdomData.currentStudentIndex];
+                    newCurrentStudent.status = 'current';
+                    
+                    // عرض الطالب الجديد
                     showCurrentStudent();
-                    displayStudentsList();
                     
                     // تأثير الانتقال للطالب الجديد
                     setTimeout(() => {
@@ -2651,6 +2754,9 @@
                             }, 500);
                         }
                     }, 100);
+                    
+                    // تشغيل صوت الانتقال
+                    playSound('cosmic-click');
                 } else {
                     // انتهاء جميع الطلاب أو انتهاء الوقت
                     completeWisdomJourney();
@@ -2828,6 +2934,159 @@
             );
         }
 
+        // ===== احتفالية الناجين (مثل مملكة البرق) =====
+        function showSurvivorsModal(survivors, onComplete) {
+            const totalStudents = wisdomData.students.length;
+            const survivorCount = survivors.length;
+            const eliminatedCount = totalStudents - survivorCount;
+            
+            let survivorsHTML = `
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <div style="font-size: 2.5rem; margin-bottom: 1rem; animation: celebration 2s ease-in-out infinite;">
+                        🎉 احتفالية الناجين! 🧠
+                    </div>
+                    <div style="font-size: 1.5rem; color: #FFD700; margin-bottom: 1rem;">
+                        نجح ${survivorCount} من أصل ${totalStudents} طالب!
+                    </div>
+                    <div style="font-size: 1rem; color: #4ECDC4; margin-bottom: 2rem;">
+                        تم استبعاد ${eliminatedCount} طالب خلال رحلة الحكمة
+                    </div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(78, 205, 196, 0.1)); padding: 1.5rem; border-radius: 15px; margin-bottom: 2rem; border: 2px solid #FFD700;">
+                    <h3 style="color: #FFD700; text-align: center; margin-bottom: 1.5rem; font-size: 1.4rem;">
+                        🏆 الناجون من مملكة الحكمة 🏆
+                    </h3>
+                    <div style="display: grid; gap: 0.8rem; max-height: 300px; overflow-y: auto;">
+            `;
+            
+            // ترتيب الناجين حسب النقاط
+            const sortedSurvivors = survivors.sort((a, b) => (b.score || 0) - (a.score || 0));
+            
+            sortedSurvivors.forEach((survivor, index) => {
+                let rankIcon = '';
+                let rankColor = '#FFD700';
+                
+                if (index === 0) {
+                    rankIcon = '👑';
+                    rankColor = '#FFD700';
+                } else if (index === 1) {
+                    rankIcon = '🥈';
+                    rankColor = '#C0C0C0';
+                } else if (index === 2) {
+                    rankIcon = '🥉';
+                    rankColor = '#CD7F32';
+                } else {
+                    rankIcon = '🧠';
+                    rankColor = '#4ECDC4';
+                }
+                
+                survivorsHTML += `
+                    <div style="
+                        background: rgba(255, 255, 255, 0.1);
+                        padding: 1rem;
+                        border-radius: 10px;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        border-left: 4px solid ${rankColor};
+                        animation: fadeInUp 0.5s ease-out ${index * 0.1}s backwards;
+                    ">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <span style="font-size: 1.5rem;">${rankIcon}</span>
+                            <div>
+                                <div style="font-weight: bold; color: ${rankColor}; font-size: 1.1rem;">
+                                    ${survivor.name}
+                                </div>
+                                <div style="font-size: 0.9rem; color: #ccc;">
+                                    ${survivor.className || 'غير محدد'}
+                                </div>
+                            </div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: ${rankColor};">
+                                ${survivor.score || 0}
+                            </div>
+                            <div style="font-size: 0.8rem; color: #ccc;">نقطة</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            survivorsHTML += `
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 2rem;">
+                    <div style="background: linear-gradient(135deg, rgba(39, 174, 96, 0.2), rgba(46, 204, 113, 0.2)); padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem;">
+                        <i class="fas fa-trophy" style="color: #FFD700; font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+                        <div style="color: #FFD700; font-weight: bold;">مبروك لجميع الناجين!</div>
+                        <div style="color: #4ECDC4; font-size: 0.9rem; margin-top: 0.3rem;">أظهرتم حكمة وتفكيراً عميقاً</div>
+                    </div>
+                    
+                    <button onclick="closeSurvivorsModal()" class="cosmic-btn" style="
+                        background: linear-gradient(135deg, #FFD700, #FF6B35);
+                        border: none;
+                        padding: 1rem 2rem;
+                        border-radius: 25px;
+                        color: #000;
+                        font-weight: bold;
+                        font-size: 1.1rem;
+                        cursor: pointer;
+                        box-shadow: 0 8px 32px rgba(255, 215, 0, 0.3);
+                        transition: all 0.3s ease;
+                    ">
+                        <i class="fas fa-arrow-left"></i> متابعة للنتائج النهائية
+                    </button>
+                </div>
+            `;
+            
+            // إضافة أنماط الرسوم المتحركة
+            if (!document.getElementById('survivors-animations')) {
+                const animationStyles = document.createElement('style');
+                animationStyles.id = 'survivors-animations';
+                animationStyles.textContent = `
+                    @keyframes celebration {
+                        0%, 100% { transform: scale(1) rotate(0deg); }
+                        25% { transform: scale(1.05) rotate(-2deg); }
+                        75% { transform: scale(1.05) rotate(2deg); }
+                    }
+                    
+                    @keyframes fadeInUp {
+                        from {
+                            opacity: 0;
+                            transform: translateY(20px);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: translateY(0);
+                        }
+                    }
+                `;
+                document.head.appendChild(animationStyles);
+            }
+            
+            // عرض المودال
+            setModalContent('🎉 احتفالية الناجين! 🧠', survivorsHTML, '#FFD700');
+            showModal('resultModal');
+            
+            // تشغيل أصوات الاحتفال
+            playSequentialSounds(['achievement-unlock', 'crown-ceremony', 'fireworks-burst'], 800);
+            
+            // حفظ دالة الإكمال للاستخدام لاحقاً
+            window.survivorsModalComplete = onComplete;
+        }
+        
+        function closeSurvivorsModal() {
+            closeModal('resultModal');
+            if (window.survivorsModalComplete) {
+                setTimeout(() => {
+                    window.survivorsModalComplete();
+                    window.survivorsModalComplete = null;
+                }, 500);
+            }
+        }
+
         // ===== عرض النتائج النهائية للحكمة =====
         function showFinalWisdomResults(results) {
             let resultsHTML = `
@@ -2930,13 +3189,24 @@
             // إخفاء قسم الطالب الحالي
             document.getElementById('studentSection').style.display = 'none';
             
-            // حساب النتائج النهائية
+            // حساب النتائج النهائية والناجين
             const results = wisdomData.students
                 .filter(s => s.score > 0)
                 .sort((a, b) => b.score - a.score);
             
-            // عرض النتائج النهائية
-            showFinalWisdomResults(results);
+            // تحديد الناجين (الطلاب غير المستبعدين)
+            const survivors = wisdomData.students.filter(s => s.status !== 'eliminated');
+            
+            // عرض احتفالية الناجين أولاً إذا كان هناك ناجون
+            if (survivors.length > 0 && survivors.length < wisdomData.students.length) {
+                showSurvivorsModal(survivors, () => {
+                    // بعد الاحتفالية، عرض النتائج النهائية
+                    showFinalWisdomResults(results);
+                });
+            } else {
+                // عرض النتائج النهائية مباشرة
+                showFinalWisdomResults(results);
+            }
             
             // حفظ النتائج لمركز الممالك
             saveWisdomResults(results);
@@ -3838,7 +4108,7 @@
             );
             
             setTimeout(() => {
-                window.location.href = '../kingdoms-center.html'; // تصحيح المسار لمركز الممالك
+                window.location.href = './kingdoms-center.html'; // تصحيح المسار
             }, 2000);
         }
 
@@ -3886,7 +4156,7 @@
             
             // العودة للصفحة الرئيسية
             setTimeout(() => {
-                window.location.href = '../kingdoms-center.html';
+                window.location.href = './kingdoms-center.html';
             }, 1000);
         }
 
@@ -3945,10 +4215,10 @@
                 if (confirm('رحلة الحكمة جارية! هل تريد العودة وحفظ النتائج؟')) {
                     const results = wisdomData.students.filter(s => s.score > 0);
                     saveWisdomResults(results);
-                    window.location.href = '../kingdoms-center.html'; // العودة لمركز الممالك
+                    window.location.href = './kingdoms-center.html'; // تصحيح المسار
                 }
             } else {
-                window.location.href = '../kingdoms-center.html'; // العودة لمركز الممالك
+                window.location.href = './kingdoms-center.html'; // تصحيح المسار
             }
         }
 
@@ -4174,10 +4444,10 @@
             if (wisdomData.isRunning) {
                 if (confirm('رحلة الحكمة جارية! هل تريد العودة وحفظ النتائج؟')) {
                     saveResultsToKingdomsCenter();
-                    window.location.href = 'kingdoms-center.html';
+                    window.location.href = './kingdoms-center.html';
                 }
             } else {
-                window.location.href = 'kingdoms-center.html';
+                window.location.href = './kingdoms-center.html';
             }
         }
 
