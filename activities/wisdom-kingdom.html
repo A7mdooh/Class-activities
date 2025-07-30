@@ -1644,8 +1644,8 @@
     </div>
 
     <!-- Result Modal -->
-    <div class="modal" id="resultModal">
-        <div class="modal-content">
+    <div class="modal" id="resultModal" onclick="closeModalOnBackdrop(event, 'resultModal')">
+        <div class="modal-content" onclick="event.stopPropagation();">
             <div class="modal-title" id="modalTitle">نتيجة التقييم</div>
             <div class="modal-message" id="modalMessage">
                 محتوى النتيجة
@@ -2431,7 +2431,7 @@
             
             // انتقال تلقائي للطالب التالي مثل مملكة البرق
             setTimeout(() => {
-                closeModal();
+                closeModal('resultModal'); // إغلاق مودال النتيجة تحديداً
                 evalButtons.forEach(btn => btn.disabled = false);
                 moveToNextStudent(); // الانتقال التلقائي للطالب التالي
             }, 2500);
@@ -2680,6 +2680,14 @@
                 </div>
                 <div style="margin-top: 1rem; font-size: 1rem; color: #ccc;">
                     ${student.insights[student.insights.length - 1]?.insight || ''}
+                </div>
+                <div style="margin-top: 1.5rem; padding: 0.8rem; background: rgba(255, 215, 0, 0.1); border-radius: 8px; border-left: 4px solid #FFD700;">
+                    <div style="color: #FFD700; font-size: 0.9rem;">
+                        <i class="fas fa-forward"></i> انتقال تلقائي
+                    </div>
+                    <div style="color: #fff; font-size: 0.8rem; margin-top: 0.3rem;">
+                        سيتم الانتقال للطالب التالي خلال 2.5 ثانية، أو انقر في أي مكان للمتابعة فوراً
+                    </div>
                 </div>
             `;
             
@@ -3802,6 +3810,18 @@
             
             if (messageEl && message) {
                 messageEl.innerHTML = message;
+            }
+        }
+
+        function closeModalOnBackdrop(event, modalId) {
+            if (event.target === event.currentTarget) {
+                closeModal(modalId);
+                // إذا كان المودال هو resultModal، انتقل للطالب التالي
+                if (modalId === 'resultModal') {
+                    const evalButtons = document.querySelectorAll('.evaluation-buttons .eval-btn');
+                    evalButtons.forEach(btn => btn.disabled = false);
+                    moveToNextStudent();
+                }
             }
         }
 
