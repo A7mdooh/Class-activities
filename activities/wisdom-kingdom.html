@@ -1433,7 +1433,7 @@
                 <div class="version-badge">v2.0</div>
             </div>
             <div class="control-group-cosmic">
-                <button class="cosmic-control-btn" onclick="showWisdomSettings()">
+                <button class="cosmic-control-btn" onclick="console.log('🔘 تم النقر على زر إعدادات'); showWisdomSettings();">
                     <div class="btn-icon">⚙️</div>
                     <div class="btn-tooltip">إعدادات</div>
                 </button>
@@ -1637,10 +1637,10 @@
                 </div>
             </div>
             <div class="modal-buttons">
-                <button class="modal-btn primary" onclick="applySettings()">
+                <button class="modal-btn primary" onclick="console.log('🔘 تم النقر على زر تطبيق الإعدادات'); applySettings();">
                     <i class="fas fa-check"></i> تطبيق الإعدادات وبدء المنافسة
                 </button>
-                <button class="modal-btn secondary" onclick="closeSettingsModal()">
+                <button class="modal-btn secondary" onclick="console.log('🔘 تم النقر على زر الإلغاء'); closeSettingsModal();">
                     <i class="fas fa-times"></i> إلغاء
                 </button>
             </div>
@@ -3124,150 +3124,289 @@
 
         // ===== إعدادات المنافسة =====
         function showWisdomSettings() {
-            // Show modal first
-            showModal('wisdomSettingsModal');
-            
-            // Set current values
-            document.getElementById('opportunitiesSlider').value = wisdomData.eliminationSettings.opportunitiesPerStudent;
-            document.getElementById('opportunitiesValue').textContent = wisdomData.eliminationSettings.opportunitiesPerStudent;
-            document.getElementById('eliminationPercentage').value = wisdomData.eliminationSettings.eliminationPercentage;
-            document.getElementById('autoCalculateThreshold').checked = wisdomData.eliminationSettings.autoCalculateThreshold;
-            document.getElementById('manualThreshold').value = wisdomData.eliminationSettings.minimumPassingScore;
-            
-            // Update display
-            toggleManualThreshold();
-            
-            // Update preview after a short delay to ensure DOM is ready
-            setTimeout(() => {
-                updateSettingsPreview();
-            }, 100);
-            
-            // Play settings sound
-            playSound('modal-open');
-            setTimeout(() => {
-                playSound('cosmic-click');
-            }, 200);
+            try {
+                console.log('🔧 فتح نافذة إعدادات المنافسة...');
+                
+                // Show modal first
+                showModal('wisdomSettingsModal');
+                
+                // Wait for DOM to be ready
+                setTimeout(() => {
+                    try {
+                        // Set current values with error checking
+                        const opportunitiesSlider = document.getElementById('opportunitiesSlider');
+                        const opportunitiesValue = document.getElementById('opportunitiesValue');
+                        const eliminationPercentage = document.getElementById('eliminationPercentage');
+                        const autoCalculateThreshold = document.getElementById('autoCalculateThreshold');
+                        const manualThreshold = document.getElementById('manualThreshold');
+                        
+                        if (opportunitiesSlider) {
+                            opportunitiesSlider.value = wisdomData.eliminationSettings.opportunitiesPerStudent;
+                        }
+                        if (opportunitiesValue) {
+                            opportunitiesValue.textContent = wisdomData.eliminationSettings.opportunitiesPerStudent;
+                        }
+                        if (eliminationPercentage) {
+                            eliminationPercentage.value = wisdomData.eliminationSettings.eliminationPercentage;
+                        }
+                        if (autoCalculateThreshold) {
+                            autoCalculateThreshold.checked = wisdomData.eliminationSettings.autoCalculateThreshold;
+                        }
+                        if (manualThreshold) {
+                            manualThreshold.value = wisdomData.eliminationSettings.minimumPassingScore;
+                        }
+                        
+                        // Update display
+                        if (typeof toggleManualThreshold === 'function') {
+                            toggleManualThreshold();
+                        }
+                        
+                        // Update preview
+                        if (typeof updateSettingsPreview === 'function') {
+                            updateSettingsPreview();
+                        }
+                        
+                        console.log('✅ تم تحميل الإعدادات بنجاح');
+                        
+                    } catch (innerError) {
+                        console.error('❌ خطأ في تحميل قيم الإعدادات:', innerError);
+                    }
+                }, 150);
+                
+                // Play settings sound
+                if (typeof playSound === 'function') {
+                    playSound('modal-open');
+                    setTimeout(() => {
+                        playSound('cosmic-click');
+                    }, 200);
+                }
+                
+            } catch (error) {
+                console.error('❌ خطأ في فتح نافذة الإعدادات:', error);
+                if (typeof showSmartNotification === 'function') {
+                    showSmartNotification('خطأ', 'فشل في فتح نافذة الإعدادات', 'danger');
+                }
+            }
         }
 
         function closeSettingsModal() {
-            hideModal('wisdomSettingsModal');
-            playSound('modal-close');
+            try {
+                console.log('🔒 إغلاق نافذة الإعدادات...');
+                hideModal('wisdomSettingsModal');
+                if (typeof playSound === 'function') {
+                    playSound('modal-close');
+                }
+                console.log('✅ تم إغلاق نافذة الإعدادات');
+            } catch (error) {
+                console.error('❌ خطأ في إغلاق نافذة الإعدادات:', error);
+                // في حالة الخطأ، حاول الإغلاق بالطريقة التقليدية
+                const modal = document.getElementById('wisdomSettingsModal');
+                if (modal) {
+                    modal.classList.remove('show');
+                }
+            }
         }
 
         function updateOpportunities(value) {
-            document.getElementById('opportunitiesValue').textContent = value;
-            // Update preview after a short delay for smooth UI
-            setTimeout(() => {
-                updateSettingsPreview();
-            }, 50);
+            try {
+                const opportunitiesValue = document.getElementById('opportunitiesValue');
+                if (opportunitiesValue) {
+                    opportunitiesValue.textContent = value;
+                }
+                
+                // Update preview after a short delay for smooth UI
+                setTimeout(() => {
+                    if (typeof updateSettingsPreview === 'function') {
+                        updateSettingsPreview();
+                    }
+                }, 50);
+            } catch (error) {
+                console.error('❌ خطأ في تحديث الفرص:', error);
+            }
         }
 
         function toggleManualThreshold() {
-            const isAuto = document.getElementById('autoCalculateThreshold').checked;
-            document.getElementById('manualThresholdGroup').style.display = isAuto ? 'none' : 'block';
-            updateSettingsPreview();
+            try {
+                const autoCalculateCheckbox = document.getElementById('autoCalculateThreshold');
+                const manualThresholdGroup = document.getElementById('manualThresholdGroup');
+                
+                if (autoCalculateCheckbox && manualThresholdGroup) {
+                    const isAuto = autoCalculateCheckbox.checked;
+                    manualThresholdGroup.style.display = isAuto ? 'none' : 'block';
+                    
+                    if (typeof updateSettingsPreview === 'function') {
+                        updateSettingsPreview();
+                    }
+                } else {
+                    console.warn('⚠️ عناصر العتبة اليدوية غير موجودة');
+                }
+            } catch (error) {
+                console.error('❌ خطأ في تبديل العتبة اليدوية:', error);
+            }
         }
 
         function applySettings() {
-            // Apply settings
-            wisdomData.eliminationSettings.opportunitiesPerStudent = parseInt(document.getElementById('opportunitiesSlider').value);
-            wisdomData.eliminationSettings.eliminationPercentage = parseInt(document.getElementById('eliminationPercentage').value);
-            wisdomData.eliminationSettings.autoCalculateThreshold = document.getElementById('autoCalculateThreshold').checked;
-            wisdomData.eliminationSettings.minimumPassingScore = parseInt(document.getElementById('manualThreshold').value);
-            
-            // Update max rounds
-            wisdomData.maxRounds = wisdomData.eliminationSettings.opportunitiesPerStudent;
-            
-            // Calculate elimination phases
-            calculateEliminationPhases();
-            
-            closeSettingsModal();
-            displayStudentsList();
-            
-            // Show confirmation
-            showSmartNotification('✅ تم تطبيق الإعدادات بنجاح!', 'success');
+            try {
+                console.log('🔄 بدء تطبيق الإعدادات...');
+                
+                // التحقق من وجود العناصر
+                const opportunitiesSlider = document.getElementById('opportunitiesSlider');
+                const eliminationPercentage = document.getElementById('eliminationPercentage');
+                const autoCalculateThreshold = document.getElementById('autoCalculateThreshold');
+                const manualThreshold = document.getElementById('manualThreshold');
+                
+                if (!opportunitiesSlider || !eliminationPercentage || !autoCalculateThreshold || !manualThreshold) {
+                    console.error('❌ بعض عناصر الإعدادات غير موجودة');
+                    showSmartNotification('خطأ', 'فشل في قراءة الإعدادات', 'danger');
+                    return;
+                }
+                
+                // Apply settings
+                wisdomData.eliminationSettings.opportunitiesPerStudent = parseInt(opportunitiesSlider.value) || 2;
+                wisdomData.eliminationSettings.eliminationPercentage = parseInt(eliminationPercentage.value) || 50;
+                wisdomData.eliminationSettings.autoCalculateThreshold = autoCalculateThreshold.checked;
+                wisdomData.eliminationSettings.minimumPassingScore = parseInt(manualThreshold.value) || 70;
+                
+                // Update max rounds
+                wisdomData.maxRounds = wisdomData.eliminationSettings.opportunitiesPerStudent;
+                
+                console.log('✅ الإعدادات المطبقة:', wisdomData.eliminationSettings);
+                
+                // Calculate elimination phases
+                if (typeof calculateEliminationPhases === 'function') {
+                    calculateEliminationPhases();
+                }
+                
+                // Close modal
+                closeSettingsModal();
+                
+                // Update display if function exists
+                if (typeof displayStudentsList === 'function') {
+                    displayStudentsList();
+                }
+                
+                // Show confirmation
+                if (typeof showSmartNotification === 'function') {
+                    showSmartNotification('✅ تم تطبيق الإعدادات بنجاح!', '', 'success');
+                } else {
+                    console.log('✅ تم تطبيق الإعدادات بنجاح!');
+                }
+                
+            } catch (error) {
+                console.error('❌ خطأ في تطبيق الإعدادات:', error);
+                if (typeof showSmartNotification === 'function') {
+                    showSmartNotification('خطأ', 'فشل في تطبيق الإعدادات', 'danger');
+                }
+            }
         }
 
         function updateSettingsPreview() {
-            const totalStudents = wisdomData.students.length;
-            const opportunities = parseInt(document.getElementById('opportunitiesSlider')?.value || wisdomData.eliminationSettings.opportunitiesPerStudent);
-            const eliminationRate = parseInt(document.getElementById('eliminationPercentage')?.value || wisdomData.eliminationSettings.eliminationPercentage);
-            
-            if (totalStudents === 0) {
-                document.getElementById('competitionPreview').innerHTML = `
-                    <div class="preview-title">📋 معاينة المنافسة</div>
-                    <div style="text-align: center; color: #ff9800; padding: 2rem;">
-                        <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i><br>
-                        <strong>لا توجد بيانات طلاب لعرض المعاينة</strong><br>
-                        <span style="font-size: 0.9rem;">يرجى العودة لمركز الممالك وتحديد الطلاب أولاً</span>
+            try {
+                const totalStudents = wisdomData.students.length;
+                const opportunitiesSlider = document.getElementById('opportunitiesSlider');
+                const eliminationPercentageSelect = document.getElementById('eliminationPercentage');
+                const competitionPreview = document.getElementById('competitionPreview');
+                
+                if (!competitionPreview) {
+                    console.warn('⚠️ عنصر معاينة المنافسة غير موجود');
+                    return;
+                }
+                
+                const opportunities = parseInt(opportunitiesSlider?.value || wisdomData.eliminationSettings.opportunitiesPerStudent);
+                const eliminationRate = parseInt(eliminationPercentageSelect?.value || wisdomData.eliminationSettings.eliminationPercentage);
+                
+                if (totalStudents === 0) {
+                    competitionPreview.innerHTML = `
+                        <div class="preview-title">📋 معاينة المنافسة</div>
+                        <div style="text-align: center; color: #ff9800; padding: 2rem;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i><br>
+                            <strong>لا توجد بيانات طلاب لعرض المعاينة</strong><br>
+                            <span style="font-size: 0.9rem;">يرجى العودة لمركز الممالك وتحديد الطلاب أولاً</span>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Calculate phases
+                const phases = (typeof calculatePreviewPhases === 'function') ? 
+                    calculatePreviewPhases(totalStudents, eliminationRate) : 
+                    [{ phase: 1, starting: totalStudents, remaining: totalStudents, isFinal: true }];
+                
+                let previewHTML = `
+                    <div class="preview-title">📋 معاينة المنافسة التفصيلية</div>
+                    <div style="margin-bottom: 1.5rem; text-align: center; background: rgba(46,139,87,0.1); padding: 1rem; border-radius: 10px;">
+                        <div style="font-size: 1.1rem; color: var(--wisdom-primary); margin-bottom: 0.5rem;">
+                            <i class="fas fa-users"></i> <strong>${totalStudents}</strong> طالب متنافس
+                        </div>
+                        <div style="font-size: 1rem; color: #fff;">
+                            <i class="fas fa-redo"></i> <strong>${opportunities}</strong> فرصة لكل طالب
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: right; margin-bottom: 1rem;">
+                        <strong style="color: var(--wisdom-primary);">🏟️ مراحل المنافسة:</strong>
                     </div>
                 `;
-                return;
-            }
-            
-            // Calculate phases
-            const phases = calculatePreviewPhases(totalStudents, eliminationRate);
-            
-            let previewHTML = `
-                <div class="preview-title">📋 معاينة المنافسة التفصيلية</div>
-                <div style="margin-bottom: 1.5rem; text-align: center; background: rgba(46,139,87,0.1); padding: 1rem; border-radius: 10px;">
-                    <div style="font-size: 1.1rem; color: var(--wisdom-primary); margin-bottom: 0.5rem;">
-                        <i class="fas fa-users"></i> <strong>${totalStudents}</strong> طالب متنافس
-                    </div>
-                    <div style="font-size: 1rem; color: #fff;">
-                        <i class="fas fa-redo"></i> <strong>${opportunities}</strong> فرصة لكل طالب
-                    </div>
-                </div>
                 
-                <div style="text-align: right; margin-bottom: 1rem;">
-                    <strong style="color: var(--wisdom-primary);">🏟️ مراحل المنافسة:</strong>
-                </div>
-            `;
-            
-            phases.forEach((phase, index) => {
-                const isWinner = index === phases.length - 1;
-                const eliminatedCount = index < phases.length - 1 ? phase.starting - phases[index + 1].starting : 0;
-                
-                previewHTML += `
-                    <div class="phase-info">
-                        <div>
-                            <span style="font-weight: 700;">
-                                ${isWinner ? '🏆 الفائزون النهائيون' : `⚡ المرحلة ${index + 1}`}
-                            </span>
-                            ${!isWinner && eliminatedCount > 0 ? 
-                                `<div style="font-size: 0.8rem; color: #ff9800; margin-top: 0.25rem;">
-                                    سيتم استبعاد ${eliminatedCount} طالب
-                                </div>` : ''}
-                        </div>
-                        <div style="text-align: left;">
-                            <span style="color: ${isWinner ? '#4caf50' : '#2E8B57'}; font-weight: 700; font-size: 1.1rem;">
-                                ${phase.remaining} طالب
-                            </span>
-                            <div style="font-size: 0.8rem; color: #ccc;">
-                                ${isWinner ? 'مؤهلون للفوز' : 'ينتقلون للمرحلة التالية'}
+                phases.forEach((phase, index) => {
+                    const isWinner = index === phases.length - 1;
+                    const eliminatedCount = index < phases.length - 1 ? phase.starting - phases[index + 1].starting : 0;
+                    
+                    previewHTML += `
+                        <div class="phase-info">
+                            <div>
+                                <span style="font-weight: 700;">
+                                    ${isWinner ? '🏆 الفائزون النهائيون' : `⚡ المرحلة ${index + 1}`}
+                                </span>
+                                ${!isWinner && eliminatedCount > 0 ? 
+                                    `<div style="font-size: 0.8rem; color: #ff9800; margin-top: 0.25rem;">
+                                        سيتم استبعاد ${eliminatedCount} طالب
+                                    </div>` : ''}
+                            </div>
+                            <div style="text-align: left;">
+                                <span style="color: ${isWinner ? '#4caf50' : '#2E8B57'}; font-weight: 700; font-size: 1.1rem;">
+                                    ${phase.remaining} طالب
+                                </span>
+                                <div style="font-size: 0.8rem; color: #ccc;">
+                                    ${isWinner ? 'مؤهلون للفوز' : 'ينتقلون للمرحلة التالية'}
+                                </div>
                             </div>
                         </div>
+                    `;
+                });
+                
+                // Add summary
+                const totalEliminated = totalStudents - phases[phases.length - 1].remaining;
+                const winnerPercentage = Math.round((phases[phases.length - 1].remaining / totalStudents) * 100);
+                
+                previewHTML += `
+                    <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 10px; text-align: center;">
+                        <div style="color: #ff9800; margin-bottom: 0.5rem;">
+                            <i class="fas fa-chart-pie"></i> ملخص النتائج المتوقعة
+                        </div>
+                        <div style="font-size: 0.9rem; color: #ccc;">
+                            سيتم استبعاد <strong style="color: #f44336;">${totalEliminated}</strong> طالب<br>
+                            سيفوز <strong style="color: #4caf50;">${phases[phases.length - 1].remaining}</strong> طالب (${winnerPercentage}%)
+                        </div>
                     </div>
                 `;
-            });
-            
-            // Add summary
-            const totalEliminated = totalStudents - phases[phases.length - 1].remaining;
-            const winnerPercentage = Math.round((phases[phases.length - 1].remaining / totalStudents) * 100);
-            
-            previewHTML += `
-                <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 10px; text-align: center;">
-                    <div style="color: #ff9800; margin-bottom: 0.5rem;">
-                        <i class="fas fa-chart-pie"></i> ملخص النتائج المتوقعة
-                    </div>
-                    <div style="font-size: 0.9rem; color: #ccc;">
-                        سيتم استبعاد <strong style="color: #f44336;">${totalEliminated}</strong> طالب<br>
-                        سيفوز <strong style="color: #4caf50;">${phases[phases.length - 1].remaining}</strong> طالب (${winnerPercentage}%)
-                    </div>
-                </div>
-            `;
-            
-            document.getElementById('competitionPreview').innerHTML = previewHTML;
+                
+                competitionPreview.innerHTML = previewHTML;
+                
+            } catch (error) {
+                console.error('❌ خطأ في تحديث معاينة الإعدادات:', error);
+                const competitionPreview = document.getElementById('competitionPreview');
+                if (competitionPreview) {
+                    competitionPreview.innerHTML = `
+                        <div class="preview-title">📋 معاينة المنافسة</div>
+                        <div style="text-align: center; color: #f44336; padding: 2rem;">
+                            <i class="fas fa-exclamation-circle" style="font-size: 2rem; margin-bottom: 1rem;"></i><br>
+                            <strong>خطأ في تحميل المعاينة</strong><br>
+                            <span style="font-size: 0.9rem;">يرجى المحاولة مرة أخرى</span>
+                        </div>
+                    `;
+                }
+            }
         }
 
         function calculatePreviewPhases(totalStudents, eliminationRate) {
@@ -3978,6 +4117,24 @@
                 console.error('❌ خطأ في حفظ النتائج:', error);
             }
         }
+        
+        // ===== فحص تحميل الدوال =====
+        window.addEventListener('load', function() {
+            console.log('🔍 فحص دوال مملكة الحكمة:');
+            console.log('showWisdomSettings:', typeof showWisdomSettings);
+            console.log('applySettings:', typeof applySettings);
+            console.log('closeSettingsModal:', typeof closeSettingsModal);
+            
+            // فحص العناصر
+            const modal = document.getElementById('wisdomSettingsModal');
+            console.log('wisdomSettingsModal:', modal ? '✅ موجود' : '❌ غير موجود');
+            
+            const applyBtn = document.querySelector('button[onclick*="applySettings"]');
+            console.log('زر تطبيق الإعدادات:', applyBtn ? '✅ موجود' : '❌ غير موجود');
+            
+            const cancelBtn = document.querySelector('button[onclick*="closeSettingsModal"]');
+            console.log('زر الإلغاء:', cancelBtn ? '✅ موجود' : '❌ غير موجود');
+        });
     </script>
 </body>
 </html>
