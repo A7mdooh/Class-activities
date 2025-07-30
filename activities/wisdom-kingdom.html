@@ -444,6 +444,21 @@
             color: white;
         }
 
+        .end-wisdom {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .back-btn {
+            background: linear-gradient(45deg, #34495e, #2c3e50);
+            color: white;
+        }
+
+        .settings-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
         .back-btn {
             background: linear-gradient(45deg, #fa709a, #fee140);
             color: white;
@@ -521,6 +536,59 @@
             background: linear-gradient(135deg, rgba(149, 165, 166, 0.3), rgba(127, 140, 141, 0.3));
             border: 2px solid #95a5a6;
             opacity: 0.8;
+        }
+
+        /* تنسيق نقاط التقييم */
+        .evaluation-points {
+            margin: 1rem 0;
+        }
+
+        .point-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 0.8rem 0;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid #9b59b6;
+        }
+
+        .point-row span:first-child {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .point-row input {
+            width: 60px;
+            padding: 0.3rem;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            text-align: center;
+        }
+
+        .point-row span:last-child {
+            color: #9b59b6;
+            font-weight: bold;
+        }
+
+        /* معاينة الحكمة */
+        .wisdom-preview {
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.2), rgba(142, 68, 173, 0.2));
+            border: 2px solid #9b59b6;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .preview-title {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #9b59b6;
+            margin-bottom: 1rem;
         }
 
         /* Timer Section */
@@ -1154,6 +1222,10 @@
                 <i class="fas fa-pause"></i>
                 <span class="button-text">إيقاف مؤقت</span>
             </button>
+            <button class="control-btn end-wisdom" onclick="endWisdomJourney()">
+                <i class="fas fa-stop"></i>
+                <span class="button-text">إنهاء المنافسة</span>
+            </button>
             <button class="control-btn back-btn" onclick="goBackToKingdoms()">
                 <i class="fas fa-home"></i>
                 <span class="button-text">العودة للممالك</span>
@@ -1164,31 +1236,116 @@
     <!-- Wisdom Settings Modal -->
     <div class="modal" id="wisdomSettingsModal">
         <div class="modal-content">
-            <div class="modal-title">⚙️ إعدادات مملكة الحكمة</div>
+            <div class="modal-title">⚙️ إعدادات مملكة الحكمة المتقدمة</div>
             <div class="modal-message">
                 <div class="settings-section">
-                    <h4>🕒 مدة التقييم الإجمالية</h4>
+                    <h4>🕒 مدة التقييم لكل طالب</h4>
                     <div class="setting-group">
-                        <label>اختر الوقت المناسب للتقييم:</label>
-                        <input type="range" id="totalTimeSlider" min="300" max="1800" value="600" oninput="updateTotalTime(this.value)">
+                        <label>اختر الوقت المناسب لكل طالب للتفكير والإجابة:</label>
+                        <input type="range" id="timePerStudentSlider" min="60" max="300" value="120" oninput="updateTimePerStudent(this.value)">
                         <div class="slider-value">
-                            <span id="totalTimeValue">10</span> دقائق للتقييم
+                            <span id="timePerStudentValue">2</span> دقيقة لكل طالب
+                        </div>
+                        <div style="font-size: 0.9rem; color: #ccc; margin-top: 0.5rem;">
+                            كلما زاد الوقت، كان التقييم أكثر عمقاً ودقة
                         </div>
                     </div>
                 </div>
                 
                 <div class="settings-section">
-                    <h4>📊 عدد الطلاب المتوقع</h4>
+                    <h4>🎯 نظام التقييم والنقاط</h4>
                     <div class="setting-group">
-                        <input type="number" id="studentsCount" min="5" max="50" value="20">
-                        <label>عدد الطلاب في الفصل (تقريبي)</label>
+                        <label>توزيع النقاط حسب مستوى الإجابة:</label>
+                        <div class="evaluation-points">
+                            <div class="point-row">
+                                <span>🌟 ممتاز (إجابة شاملة ومبدعة):</span>
+                                <input type="number" id="excellentPoints" min="8" max="15" value="10" step="1">
+                                <span>نقاط</span>
+                            </div>
+                            <div class="point-row">
+                                <span>⭐ جيد جداً (إجابة واضحة ومفصلة):</span>
+                                <input type="number" id="veryGoodPoints" min="6" max="12" value="8" step="1">
+                                <span>نقاط</span>
+                            </div>
+                            <div class="point-row">
+                                <span>✨ جيد (إجابة مقبولة):</span>
+                                <input type="number" id="goodPoints" min="3" max="8" value="5" step="1">
+                                <span>نقاط</span>
+                            </div>
+                            <div class="point-row">
+                                <span>💭 ضعيف (إجابة غير مكتملة):</span>
+                                <input type="number" id="weakPoints" min="0" max="3" value="1" step="1">
+                                <span>نقاط</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h4>🚫 نظام الاستبعاد</h4>
+                    <div class="setting-group">
+                        <label>
+                            <input type="checkbox" id="enableElimination" checked onchange="toggleEliminationSettings()">
+                            تفعيل نظام الاستبعاد للطلاب ضعيفي الأداء
+                        </label>
+                        <div style="font-size: 0.9rem; color: #ccc; margin-top: 0.5rem;">
+                            يساعد على التركيز على الطلاب المتميزين في المراحل المتقدمة
+                        </div>
+                    </div>
+                    
+                    <div class="setting-group" id="eliminationSettings">
+                        <label>الحد الأدنى للنقاط لتجنب الاستبعاد:</label>
+                        <input type="number" id="minimumScore" min="0" max="20" value="3" step="1">
+                        <div style="font-size: 0.9rem; color: #ccc; margin-top: 0.5rem;">
+                            الطلاب الذين يحصلون على أقل من هذا العدد سيتم استبعادهم
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h4>🎨 تخصيص التجربة</h4>
+                    <div class="setting-group">
+                        <label>
+                            <input type="checkbox" id="enableSounds" checked>
+                            تشغيل الأصوات والتأثيرات الصوتية
+                        </label>
+                    </div>
+                    <div class="setting-group">
+                        <label>
+                            <input type="checkbox" id="enableAnimations" checked>
+                            تفعيل الانتقالات والحركات المرئية
+                        </label>
+                    </div>
+                    <div class="setting-group">
+                        <label>
+                            <input type="checkbox" id="autoAdvance" onchange="toggleAutoAdvanceSettings()">
+                            الانتقال التلقائي للطالب التالي بعد التقييم
+                        </label>
+                    </div>
+                    
+                    <div class="setting-group" id="autoAdvanceSettings" style="display: none;">
+                        <label>مدة التأخير قبل الانتقال التلقائي:</label>
+                        <input type="range" id="autoAdvanceDelay" min="2" max="10" value="3" oninput="updateAutoAdvanceDelay(this.value)">
+                        <div class="slider-value">
+                            <span id="autoAdvanceDelayValue">3</span> ثوانٍ
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="wisdom-preview" id="wisdomPreview">
+                    <div class="preview-title">📋 معاينة إعدادات الحكمة</div>
+                    <div style="text-align: center; color: #9b59b6;">
+                        جارٍ تحميل المعاينة...
                     </div>
                 </div>
             </div>
-            
-            <div style="text-align: center; margin-top: 2rem;">
-                <button class="modal-btn" onclick="saveWisdomSettings()">✅ حفظ الإعدادات</button>
-                <button class="modal-btn secondary" onclick="closeModal('wisdomSettingsModal')">❌ إلغاء</button>
+            <div class="modal-buttons">
+                <button class="modal-btn primary" onclick="applyWisdomSettings()">
+                    <i class="fas fa-check"></i> تطبيق الإعدادات وبدء الحكمة
+                </button>
+                <button class="modal-btn secondary" onclick="closeWisdomSettingsModal()">
+                    <i class="fas fa-times"></i> إلغاء
+                </button>
             </div>
         </div>
     </div>
@@ -1976,6 +2133,151 @@
         }
 
         // ===== إكمال رحلة الحكمة =====
+        // ===== إنهاء رحلة الحكمة =====
+        function endWisdomJourney() {
+            if (!wisdomData.isRunning) {
+                showSmartNotification(
+                    'تنبيه',
+                    'لا توجد رحلة حكمة قيد التشغيل حالياً',
+                    'warning'
+                );
+                return;
+            }
+
+            // تأكيد إنهاء الرحلة
+            if (!confirm('هل أنت متأكد من إنهاء رحلة الحكمة؟\nسيتم عرض النتائج النهائية للطلاب الذين تم تقييمهم.')) {
+                return;
+            }
+
+            // إيقاف الرحلة
+            wisdomData.isRunning = false;
+            wisdomData.isPaused = false;
+            clearInterval(wisdomTimer);
+
+            // إخفاء قسم الطالب الحالي
+            const studentSection = document.getElementById('studentSection');
+            if (studentSection) {
+                studentSection.style.display = 'none';
+            }
+
+            // حساب النتائج النهائية
+            const evaluatedStudents = wisdomData.students.filter(s => 
+                s.status === 'completed' || s.status === 'eliminated' || s.score > 0
+            );
+            
+            const results = evaluatedStudents.sort((a, b) => (b.score || 0) - (a.score || 0));
+
+            // عرض النتائج النهائية
+            showFinalWisdomResults(results);
+
+            // حفظ النتائج في مركز الممالك
+            saveWisdomResultsToCenter(results);
+
+            // تشغيل أصوات النهاية
+            playSequentialSounds(['end-timer', 'achievement-unlock', 'crown-ceremony'], 500);
+
+            showSmartNotification(
+                '🏆 انتهت رحلة الحكمة',
+                'تم حفظ النتائج وسيتم عرضها الآن',
+                'success'
+            );
+        }
+
+        // ===== عرض النتائج النهائية للحكمة =====
+        function showFinalWisdomResults(results) {
+            let resultsHTML = `
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <h2 style="color: #9b59b6; margin-bottom: 1rem;">🏆 النتائج النهائية لمملكة الحكمة</h2>
+                    <p style="color: #ccc;">تم تقييم ${results.length} طالب في هذه الرحلة</p>
+                </div>
+                <div style="max-height: 400px; overflow-y: auto;">
+            `;
+
+            if (results.length === 0) {
+                resultsHTML += `
+                    <div style="text-align: center; color: #ff9800; padding: 2rem;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <p>لم يتم تقييم أي طالب في هذه الرحلة</p>
+                    </div>
+                `;
+            } else {
+                results.forEach((student, index) => {
+                    let rankIcon = '';
+                    let rankColor = '';
+                    
+                    if (index === 0) {
+                        rankIcon = '🥇';
+                        rankColor = '#FFD700';
+                    } else if (index === 1) {
+                        rankIcon = '🥈';
+                        rankColor = '#C0C0C0';
+                    } else if (index === 2) {
+                        rankIcon = '🥉';
+                        rankColor = '#CD7F32';
+                    } else {
+                        rankIcon = `#${index + 1}`;
+                        rankColor = '#9b59b6';
+                    }
+
+                    const statusDisplay = student.status === 'eliminated' ? 
+                        '<span style="color: #e74c3c;">مستبعد</span>' : 
+                        '<span style="color: #27ae60;">مكتمل</span>';
+
+                    resultsHTML += `
+                        <div style="background: rgba(255,255,255,0.1); margin: 0.8rem 0; padding: 1rem; border-radius: 10px; border-right: 4px solid ${rankColor};">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <span style="font-size: 1.5rem; color: ${rankColor};">${rankIcon}</span>
+                                    <strong style="margin-right: 0.5rem; color: #FFD700;">${student.name}</strong>
+                                    <span style="color: #ccc; font-size: 0.9rem;">(${student.className || 'غير محدد'})</span>
+                                </div>
+                                <div style="text-align: left;">
+                                    <div style="color: ${rankColor}; font-weight: bold; font-size: 1.2rem;">${student.score || 0} نقطة</div>
+                                    <div style="font-size: 0.8rem;">${statusDisplay}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            resultsHTML += '</div>';
+
+            // عرض المودال
+            document.getElementById('finalModalTitle').innerHTML = '🧠 نتائج مملكة الحكمة النهائية';
+            document.getElementById('finalResults').innerHTML = resultsHTML;
+            showModal('wisdomEndModal');
+        }
+
+        // ===== حفظ نتائج الحكمة في المركز =====
+        function saveWisdomResultsToCenter(results) {
+            const wisdomSession = {
+                id: `wisdom_${Date.now()}`,
+                type: 'wisdom-kingdom',
+                title: 'مملكة الحكمة - الأسئلة الشفوية',
+                date: new Date().toLocaleDateString('ar-SA'),
+                time: new Date().toLocaleTimeString('ar-SA'),
+                totalStudents: results.length,
+                results: results,
+                settings: {
+                    timePerStudent: wisdomData.timePerStudent || 120,
+                    pointSystem: wisdomData.pointSystem,
+                    eliminationEnabled: wisdomData.eliminationEnabled
+                }
+            };
+
+            // حفظ في localStorage
+            let savedSessions = JSON.parse(localStorage.getItem('kingdomsSessions') || '[]');
+            savedSessions.unshift(wisdomSession);
+            
+            // الاحتفاظ بآخر 20 جلسة فقط
+            if (savedSessions.length > 20) {
+                savedSessions = savedSessions.slice(0, 20);
+            }
+            
+            localStorage.setItem('kingdomsSessions', JSON.stringify(savedSessions));
+        }
+
         function completeWisdomJourney() {
             wisdomData.isRunning = false;
             clearInterval(wisdomTimer);
@@ -2141,7 +2443,130 @@
             }
         }
 
-        // ===== إعدادات الحكمة =====
+        // ===== إعدادات الحكمة المتقدمة =====
+        function showWisdomSettings() {
+            showModal('wisdomSettingsModal');
+            
+            // تعيين القيم الحالية
+            document.getElementById('timePerStudentSlider').value = wisdomData.timePerStudent || 120;
+            document.getElementById('timePerStudentValue').textContent = Math.floor((wisdomData.timePerStudent || 120) / 60);
+            document.getElementById('excellentPoints').value = wisdomData.pointSystem?.excellent || 10;
+            document.getElementById('veryGoodPoints').value = wisdomData.pointSystem?.veryGood || 8;
+            document.getElementById('goodPoints').value = wisdomData.pointSystem?.good || 5;
+            document.getElementById('weakPoints').value = wisdomData.pointSystem?.weak || 1;
+            document.getElementById('enableElimination').checked = wisdomData.eliminationEnabled || true;
+            document.getElementById('minimumScore').value = wisdomData.minimumScore || 3;
+            document.getElementById('enableSounds').checked = wisdomData.soundsEnabled !== false;
+            document.getElementById('enableAnimations').checked = wisdomData.animationsEnabled !== false;
+            document.getElementById('autoAdvance').checked = wisdomData.autoAdvance || false;
+            document.getElementById('autoAdvanceDelay').value = wisdomData.autoAdvanceDelay || 3;
+            document.getElementById('autoAdvanceDelayValue').textContent = wisdomData.autoAdvanceDelay || 3;
+            
+            // تحديث العرض
+            toggleEliminationSettings();
+            toggleAutoAdvanceSettings();
+            updateWisdomPreview();
+            
+            playSound('modal-open');
+        }
+
+        function closeWisdomSettingsModal() {
+            hideModal('wisdomSettingsModal');
+            playSound('modal-close');
+        }
+
+        function updateTimePerStudent(value) {
+            const minutes = Math.floor(value / 60);
+            const seconds = value % 60;
+            let display = minutes + " دقيقة";
+            if (seconds > 0) {
+                display += " و " + seconds + " ثانية";
+            }
+            document.getElementById('timePerStudentValue').textContent = display;
+            updateWisdomPreview();
+        }
+
+        function toggleEliminationSettings() {
+            const isEnabled = document.getElementById('enableElimination').checked;
+            const settingsDiv = document.getElementById('eliminationSettings');
+            if (settingsDiv) {
+                settingsDiv.style.display = isEnabled ? 'block' : 'none';
+            }
+            updateWisdomPreview();
+        }
+
+        function toggleAutoAdvanceSettings() {
+            const isEnabled = document.getElementById('autoAdvance').checked;
+            const settingsDiv = document.getElementById('autoAdvanceSettings');
+            if (settingsDiv) {
+                settingsDiv.style.display = isEnabled ? 'block' : 'none';
+            }
+            updateWisdomPreview();
+        }
+
+        function updateAutoAdvanceDelay(value) {
+            document.getElementById('autoAdvanceDelayValue').textContent = value;
+            updateWisdomPreview();
+        }
+
+        function applyWisdomSettings() {
+            // تطبيق الإعدادات
+            wisdomData.timePerStudent = parseInt(document.getElementById('timePerStudentSlider').value);
+            wisdomData.pointSystem = {
+                excellent: parseInt(document.getElementById('excellentPoints').value),
+                veryGood: parseInt(document.getElementById('veryGoodPoints').value),
+                good: parseInt(document.getElementById('goodPoints').value),
+                weak: parseInt(document.getElementById('weakPoints').value)
+            };
+            wisdomData.eliminationEnabled = document.getElementById('enableElimination').checked;
+            wisdomData.minimumScore = parseInt(document.getElementById('minimumScore').value);
+            wisdomData.soundsEnabled = document.getElementById('enableSounds').checked;
+            wisdomData.animationsEnabled = document.getElementById('enableAnimations').checked;
+            wisdomData.autoAdvance = document.getElementById('autoAdvance').checked;
+            wisdomData.autoAdvanceDelay = parseInt(document.getElementById('autoAdvanceDelay').value);
+            
+            // حفظ الإعدادات في localStorage
+            localStorage.setItem('wisdomSettings', JSON.stringify(wisdomData));
+            
+            closeWisdomSettingsModal();
+            displayStudentsList();
+            
+            showSmartNotification(
+                '✅ تم تطبيق الإعدادات',
+                'إعدادات مملكة الحكمة جاهزة للاستخدام',
+                'success'
+            );
+        }
+
+        function updateWisdomPreview() {
+            const totalStudents = wisdomData.students.length;
+            const timePerStudent = parseInt(document.getElementById('timePerStudentSlider')?.value || 120);
+            const eliminationEnabled = document.getElementById('enableElimination')?.checked;
+            const minimumScore = parseInt(document.getElementById('minimumScore')?.value || 3);
+            const excellentPoints = parseInt(document.getElementById('excellentPoints')?.value || 10);
+            const autoAdvance = document.getElementById('autoAdvance')?.checked;
+            
+            const estimatedTime = Math.ceil((totalStudents * timePerStudent) / 60);
+            
+            const previewHTML = `
+                <div class="preview-title">📋 معاينة إعدادات الحكمة</div>
+                <div style="text-align: right; margin: 1rem 0;">
+                    <div style="margin-bottom: 0.5rem;">👥 <strong>عدد الطلاب:</strong> ${totalStudents || 'لم يتم تحديد الطلاب بعد'}</div>
+                    <div style="margin-bottom: 0.5rem;">⏱️ <strong>الوقت المقدر:</strong> ${estimatedTime} دقيقة تقريباً</div>
+                    <div style="margin-bottom: 0.5rem;">🎯 <strong>أعلى نقاط:</strong> ${excellentPoints} (للإجابة الممتازة)</div>
+                    <div style="margin-bottom: 0.5rem;">🚫 <strong>نظام الاستبعاد:</strong> ${eliminationEnabled ? `مُفعل (أقل من ${minimumScore} نقاط)` : 'مُعطل'}</div>
+                    <div style="margin-bottom: 0.5rem;">🔄 <strong>الانتقال التلقائي:</strong> ${autoAdvance ? 'مُفعل' : 'يدوي'}</div>
+                </div>
+                <div style="text-align: center; color: #9b59b6; font-style: italic; margin-top: 1rem;">
+                    ${totalStudents > 0 ? '🌟 جاهز لبدء رحلة الحكمة!' : '⚠️ يرجى إضافة الطلاب أولاً'}
+                </div>
+            `;
+            
+            const previewElement = document.getElementById('wisdomPreview');
+            if (previewElement) {
+                previewElement.innerHTML = previewHTML;
+            }
+        }
         function showWisdomSettings() {
             showModal('wisdomSettingsModal');
         }
@@ -2386,6 +2811,72 @@
                 '<i class="fas fa-brain"></i><span class="button-text">بدء مملكة الحكمة</span>';
                 
             showRandomWisdomQuote();
+        }
+
+        // ===== العودة لمركز الممالك مع الحكمة =====
+        function returnToKingdomsCenterWithWisdom() {
+            // تشغيل صوت العودة
+            playSound('achievement-unlock');
+            
+            // إعادة تعيين البيانات
+            resetWisdomData();
+            
+            // العودة للصفحة الرئيسية
+            setTimeout(() => {
+                window.location.href = '../index.html';
+            }, 1000);
+        }
+
+        // ===== بدء رحلة حكمة جديدة =====
+        function startNewWisdomJourney() {
+            if (confirm('هل تريد بدء رحلة حكمة جديدة؟\nسيتم مسح البيانات الحالية.')) {
+                // إعادة تعيين البيانات
+                resetWisdomData();
+                
+                // إخفاء المودال
+                hideModal('wisdomEndModal');
+                
+                // إعادة تحميل الصفحة
+                setTimeout(() => {
+                    location.reload();
+                }, 500);
+            }
+        }
+
+        // ===== إعادة تعيين بيانات الحكمة =====
+        function resetWisdomData() {
+            wisdomData = {
+                students: [],
+                currentStudentIndex: 0,
+                isRunning: false,
+                isPaused: false,
+                startTime: null,
+                remainingTime: 0,
+                timePerStudent: 120,
+                pointSystem: {
+                    excellent: 10,
+                    veryGood: 8,
+                    good: 5,
+                    weak: 1
+                },
+                eliminationEnabled: true,
+                minimumScore: 3,
+                soundsEnabled: true,
+                animationsEnabled: true,
+                autoAdvance: false,
+                autoAdvanceDelay: 3
+            };
+        }
+
+        // ===== تشغيل أصوات متتالية =====
+        function playSequentialSounds(sounds, delay = 500) {
+            if (!wisdomData.soundsEnabled) return;
+            
+            sounds.forEach((sound, index) => {
+                setTimeout(() => {
+                    playSound(sound);
+                }, index * delay);
+            });
         }
 
         function goBackToKingdoms() {
