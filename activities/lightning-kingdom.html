@@ -10,6 +10,7 @@
     <title>⚡ مملكة البرق | تحدي الطلاب المتنافسين</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
     <style>
         :root {
             --lightning-primary: #FFD700;
@@ -1255,11 +1256,11 @@
     </style>
 </head>
 <body>
-    <div class="kingdom-header">
+    <div class="kingdom-header mobile-text-center">
         <div class="kingdom-title">⚡ مملكة البرق</div>
         <p>تحدي الطلاب المتنافسين - 5 دقائق من الإثارة والتنافس</p>
         
-        <div class="kingdom-stats">
+        <div class="kingdom-stats mobile-grid-2">
             <div class="stat-card">
                 <div class="stat-number" id="activeStudents">0</div>
                 <div>الطلاب النشطون</div>
@@ -1275,9 +1276,9 @@
         </div>
     </div>
 
-    <div class="competition-container">
+    <div class="competition-container mobile-full-width">
         <!-- Timer Section -->
-        <div class="timer-section">
+        <div class="timer-section mobile-text-center">
             <div class="main-timer" id="mainTimer">5:00</div>
             <div class="timer-label">⏰ وقت التحدي</div>
         </div>
@@ -1290,20 +1291,20 @@
                 وجه سؤالاً شفوياً للطالب واستمع للإجابة
             </div>
             
-            <div class="evaluation-buttons">
-                <button class="eval-btn excellent" onclick="evaluateStudent('excellent')">
+            <div class="evaluation-buttons mobile-grid-2">
+                <button class="eval-btn excellent touch-target" onclick="evaluateStudent('excellent')">
                     <i class="fas fa-star"></i>
                     ممتاز (100 نقطة)
                 </button>
-                <button class="eval-btn very-good" onclick="evaluateStudent('very-good')">
+                <button class="eval-btn very-good touch-target" onclick="evaluateStudent('very-good')">
                     <i class="fas fa-thumbs-up"></i>
                     جيد جداً (85 نقطة)
                 </button>
-                <button class="eval-btn good" onclick="evaluateStudent('good')">
+                <button class="eval-btn good touch-target" onclick="evaluateStudent('good')">
                     <i class="fas fa-check"></i>
                     جيد (70 نقطة)
                 </button>
-                <button class="eval-btn weak" onclick="evaluateStudent('weak')">
+                <button class="eval-btn weak touch-target" onclick="evaluateStudent('weak')">
                     <i class="fas fa-hand-paper"></i>
                     ضعيف (40 نقطة)
                 </button>
@@ -1326,24 +1327,24 @@
         </div>
 
         <!-- Competition Controls -->
-        <div class="competition-controls">
-            <button class="control-btn settings-btn" onclick="showCompetitionSettings()" data-tooltip="إعدادات المنافسة">
+        <div class="competition-controls mobile-grid-3">
+            <button class="control-btn settings-btn touch-target mobile-full-width" onclick="showCompetitionSettings()" data-tooltip="إعدادات المنافسة">
                 <i class="fas fa-cog"></i>
                 <span class="button-text">إعدادات المنافسة</span>
             </button>
-            <button class="control-btn start-competition" onclick="startCompetition()" data-tooltip="بدء المنافسة">
+            <button class="control-btn start-competition touch-target mobile-full-width" onclick="startCompetition()" data-tooltip="بدء المنافسة">
                 <i class="fas fa-play"></i>
                 <span class="button-text">بدء المنافسة</span>
             </button>
-            <button class="control-btn pause-competition" onclick="pauseCompetition()" data-tooltip="إيقاف مؤقت">
+            <button class="control-btn pause-competition touch-target mobile-full-width" onclick="pauseCompetition()" data-tooltip="إيقاف مؤقت">
                 <i class="fas fa-pause"></i>
                 <span class="button-text">إيقاف مؤقت</span>
             </button>
-            <button class="control-btn end-competition" onclick="endCompetition()" data-tooltip="إنهاء المنافسة">
+            <button class="control-btn end-competition touch-target mobile-full-width" onclick="endCompetition()" data-tooltip="إنهاء المنافسة">
                 <i class="fas fa-stop"></i>
                 <span class="button-text">إنهاء المنافسة</span>
             </button>
-            <button class="control-btn back-to-kingdoms" onclick="goBackToKingdoms()" data-tooltip="العودة للممالك">
+            <button class="control-btn back-to-kingdoms touch-target mobile-full-width" onclick="goBackToKingdoms()" data-tooltip="العودة للممالك">
                 <i class="fas fa-home"></i>
                 <span class="button-text">العودة للممالك</span>
             </button>
@@ -1351,8 +1352,8 @@
     </div>
 
     <!-- Competition Settings Modal -->
-    <div class="modal" id="settingsModal">
-        <div class="modal-content">
+    <div class="modal responsive-modal" id="settingsModal">
+        <div class="modal-content mobile-full-height">
             <div class="modal-title">⚙️ إعدادات المنافسة المتقدمة</div>
             <div class="modal-message">
                 <div class="settings-section">
@@ -1421,25 +1422,25 @@
         </div>
     </div>
 
-    <div class="modal" id="resultModal">
-        <div class="modal-content">
+    <div class="modal responsive-modal" id="resultModal">
+        <div class="modal-content mobile-full-height">
             <div class="modal-title" id="modalTitle"></div>
             <div class="modal-message" id="modalMessage"></div>
             <div class="modal-buttons">
-                <button class="modal-btn primary" onclick="closeModal()">متابعة</button>
+                <button class="modal-btn primary touch-target mobile-full-width" onclick="closeModal()">متابعة</button>
             </div>
         </div>
     </div>
 
-    <div class="modal" id="competitionEndModal">
-        <div class="modal-content">
+    <div class="modal responsive-modal" id="competitionEndModal">
+        <div class="modal-content mobile-full-height">
             <div class="modal-title" id="finalModalTitle">🏆 انتهت المنافسة!</div>
             <div class="modal-message" id="finalResults">نتائج المنافسة</div>
-            <div class="modal-buttons" id="finalModalButtons">
-                <button class="modal-btn primary" onclick="returnToKingdomsCenterWithBonus()">
+            <div class="modal-buttons mobile-grid-2" id="finalModalButtons">
+                <button class="modal-btn primary touch-target mobile-full-width" onclick="returnToKingdomsCenterWithBonus()">
                     <i class="fas fa-trophy"></i> العودة لمركز الممالك مع المكافآت
                 </button>
-                <button class="modal-btn secondary" onclick="startNewCompetition()">
+                <button class="modal-btn secondary touch-target mobile-full-width" onclick="startNewCompetition()">
                     <i class="fas fa-redo"></i> منافسة جديدة
                 </button>
             </div>
@@ -4567,5 +4568,8 @@
             }
         }
     </script>
+    
+    <!-- Responsive JavaScript Helper -->
+    <script src="../assets/js/responsive-helper.js"></script>
 </body>
 </html>
