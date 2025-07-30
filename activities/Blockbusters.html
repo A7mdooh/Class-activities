@@ -2,13 +2,16 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>مسابقة الحروف - Blockbusters | أنشطة الفصل</title>
   
   <!-- الخطوط والأيقونات -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- ===== ملفات التصميم المتجاوب ===== -->
+  <link rel="stylesheet" href="../assets/css/responsive.css">
   
   <style>
     /* ==== متغيرات الألوان العُمانية ==== */
@@ -998,54 +1001,481 @@
         font-size: 1.5rem;
       }
     }
+
+    /* ===== تحسينات التصميم المتجاوب الشاملة ===== */
+    
+    /* للأجهزة اللوحية الكبيرة */
+    @media (max-width: 1024px) {
+      .main-container {
+        padding: 1.5rem;
+      }
+
+      .game-area {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .settings-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+      }
+
+      .players-container {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+    }
+
+    /* للأجهزة اللوحية المتوسطة */
+    @media (max-width: 768px) {
+      .control-header {
+        padding: 0.75rem 1rem;
+      }
+
+      .control-buttons {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: stretch;
+      }
+
+      .app-title {
+        font-size: 1.3rem;
+        justify-content: center;
+      }
+
+      .control-group {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .control-btn {
+        min-width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1rem;
+      }
+
+      .main-container {
+        margin-top: 7rem;
+        padding: 1rem;
+      }
+
+      .game-header {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .game-title {
+        font-size: 2rem;
+      }
+
+      .game-subtitle {
+        font-size: 1rem;
+      }
+
+      .settings-panel {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .settings-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .players-container {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .action-btn {
+        min-width: auto;
+        width: 100%;
+      }
+
+      .board-container {
+        padding: 1.5rem;
+      }
+
+      .hexagon-board {
+        max-width: 400px;
+        gap: 0.4rem;
+      }
+
+      .hex-cell {
+        font-size: 1.2rem;
+        border-radius: 15px;
+      }
+
+      .team-panel {
+        padding: 1rem;
+      }
+
+      .team-score {
+        font-size: 2.5rem;
+      }
+
+      .modal-content {
+        margin: 1rem;
+        padding: 1.5rem;
+      }
+    }
+
+    /* للهواتف المحمولة */
+    @media (max-width: 480px) {
+      .control-header {
+        padding: 0.5rem 0.75rem;
+      }
+
+      .app-title {
+        font-size: 1.1rem;
+      }
+
+      .control-btn {
+        min-width: 2.2rem;
+        height: 2.2rem;
+        font-size: 0.9rem;
+        padding: 0.5rem;
+      }
+
+      .main-container {
+        margin-top: 6rem;
+        padding: 0.75rem;
+      }
+
+      .game-header {
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 15px;
+      }
+
+      .game-title {
+        font-size: 1.5rem;
+      }
+
+      .game-subtitle {
+        font-size: 0.9rem;
+      }
+
+      .settings-panel {
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 15px;
+      }
+
+      .settings-title {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+      }
+
+      .setting-input, 
+      .setting-select {
+        padding: 0.75rem;
+        font-size: 16px; /* منع التكبير في iOS */
+        border-radius: 10px;
+      }
+
+      .player-input input {
+        padding: 0.75rem;
+        padding-right: 2.5rem;
+        font-size: 16px; /* منع التكبير في iOS */
+        border-radius: 10px;
+      }
+
+      .action-btn {
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        border-radius: 10px;
+      }
+
+      .board-container {
+        padding: 1rem;
+      }
+
+      .board-title {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+      }
+
+      .hexagon-board {
+        max-width: 300px;
+        gap: 0.3rem;
+        padding: 0.5rem;
+      }
+
+      .hex-cell {
+        font-size: 1rem;
+        border-radius: 12px;
+        border-width: 2px;
+      }
+
+      .team-panel {
+        padding: 0.75rem;
+        border-width: 2px;
+        border-radius: 15px;
+      }
+
+      .team-header {
+        margin-bottom: 0.75rem;
+      }
+
+      .team-name {
+        font-size: 1.1rem;
+      }
+
+      .team-score {
+        font-size: 2rem;
+        margin: 0.75rem 0;
+      }
+
+      .team-strategy {
+        font-size: 0.8rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .team-members {
+        padding: 0.75rem;
+        border-radius: 10px;
+        min-height: 50px;
+        font-size: 0.9rem;
+      }
+
+      .modal-content {
+        margin: 0.5rem;
+        padding: 1rem;
+        border-radius: 15px;
+      }
+
+      .modal-title {
+        font-size: 1.2rem;
+      }
+    }
+
+    /* للهواتف الصغيرة جداً */
+    @media (max-width: 360px) {
+      .control-header {
+        padding: 0.5rem;
+      }
+
+      .app-title {
+        font-size: 1rem;
+      }
+
+      .control-btn {
+        min-width: 2rem;
+        height: 2rem;
+        font-size: 0.8rem;
+        padding: 0.4rem;
+      }
+
+      .main-container {
+        margin-top: 5.5rem;
+        padding: 0.5rem;
+      }
+
+      .game-header {
+        padding: 0.75rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .game-title {
+        font-size: 1.3rem;
+      }
+
+      .game-subtitle {
+        font-size: 0.8rem;
+      }
+
+      .settings-panel {
+        padding: 0.75rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .settings-title {
+        font-size: 1.1rem;
+      }
+
+      .hexagon-board {
+        max-width: 250px;
+        gap: 0.2rem;
+        padding: 0.3rem;
+      }
+
+      .hex-cell {
+        font-size: 0.9rem;
+        border-radius: 10px;
+      }
+
+      .team-score {
+        font-size: 1.8rem;
+      }
+
+      .modal-content {
+        margin: 0.25rem;
+        padding: 0.75rem;
+      }
+    }
+
+    /* للوضع الأفقي على الهواتف */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .control-header {
+        padding: 0.5rem 1rem;
+      }
+
+      .main-container {
+        margin-top: 4rem;
+        padding: 0.75rem;
+      }
+
+      .game-header {
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .game-title {
+        font-size: 1.3rem;
+      }
+
+      .settings-panel {
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .game-area {
+        grid-template-columns: 1fr 1.5fr 1fr;
+        gap: 0.75rem;
+      }
+
+      .hexagon-board {
+        max-width: 350px;
+        padding: 0.5rem;
+      }
+
+      .team-panel {
+        padding: 0.75rem;
+      }
+
+      .team-score {
+        font-size: 1.8rem;
+        margin: 0.5rem 0;
+      }
+    }
+
+    /* تحسينات إضافية للمس */
+    @media (hover: none) and (pointer: coarse) {
+      .control-btn,
+      .action-btn,
+      .hex-cell {
+        min-height: 44px;
+        min-width: 44px;
+      }
+
+      .control-btn:hover,
+      .action-btn:hover,
+      .hex-cell:hover {
+        transform: none;
+      }
+
+      .control-btn:active,
+      .action-btn:active {
+        transform: scale(0.95);
+        transition: transform 0.1s ease;
+      }
+
+      .hex-cell:active {
+        transform: scale(0.95);
+        transition: transform 0.1s ease;
+      }
+
+      /* تحسين النصوص للمس */
+      .setting-input,
+      .setting-select,
+      .player-input input {
+        font-size: 16px !important; /* منع التكبير في iOS */
+      }
+    }
+
+    /* تحسينات للشاشات الكبيرة */
+    @media (min-width: 1200px) {
+      .main-container {
+        max-width: 1400px;
+        padding: 2.5rem;
+      }
+
+      .game-area {
+        grid-template-columns: 1fr 2.5fr 1fr;
+        gap: 2.5rem;
+      }
+
+      .hexagon-board {
+        max-width: 600px;
+        gap: 0.75rem;
+      }
+
+      .hex-cell {
+        font-size: 1.8rem;
+        border-radius: 25px;
+      }
+
+      .settings-grid {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      }
+
+      .players-container {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      }
+    }
   </style>
 </head>
 <body>
   <!-- أزرار التحكم العلوية -->
   <div class="control-header">
-    <div class="control-buttons">
-      <div class="app-title">
+    <div class="control-buttons container-responsive">
+      <div class="app-title title-responsive">
         🧩 مسابقة الحروف - Blockbusters
       </div>
       <div class="control-group">
-        <button class="control-btn" id="backBtn" title="العودة للصفحة الرئيسية">🏠</button>
-        <button class="control-btn" id="soundBtn" title="كتم/تشغيل الصوت">🔊</button>
-        <button class="control-btn" id="instructionsBtn" title="تعليمات اللعبة">❓</button>
-        <button class="control-btn" id="fullscreenBtn" title="ملء الشاشة">⛶</button>
+        <button class="control-btn btn-responsive" id="backBtn" title="العودة للصفحة الرئيسية">🏠</button>
+        <button class="control-btn btn-responsive" id="soundBtn" title="كتم/تشغيل الصوت">🔊</button>
+        <button class="control-btn btn-responsive" id="instructionsBtn" title="تعليمات اللعبة">❓</button>
+        <button class="control-btn btn-responsive" id="fullscreenBtn" title="ملء الشاشة">⛶</button>
       </div>
     </div>
   </div>
 
   <!-- المحتوى الرئيسي -->
-  <div class="main-container">
+  <div class="main-container container-responsive">
     <!-- عنوان اللعبة -->
-    <div class="game-header">
-      <div class="game-title">🧩 مسابقة الحروف</div>
-      <div class="game-subtitle">لعبة Blockbusters الكلاسيكية - الفريق الأخضر يكمل الصفوف والأحمر يكمل الأعمدة</div>
+    <div class="game-header card-responsive">
+      <div class="game-title heading-responsive">🧩 مسابقة الحروف</div>
+      <div class="game-subtitle text-responsive">لعبة Blockbusters الكلاسيكية - الفريق الأخضر يكمل الصفوف والأحمر يكمل الأعمدة</div>
     </div>
 
     <!-- لوحة الإعدادات -->
-    <div class="settings-panel" id="settingsPanel">
-      <div class="settings-title">
+    <div class="settings-panel card-responsive" id="settingsPanel">
+      <div class="settings-title heading-responsive">
         ⚙️ إعدادات اللعبة
       </div>
       
       <form id="gameSettingsForm">
-        <div class="settings-grid">
+        <div class="settings-grid grid-responsive">
           <div class="setting-group">
-            <label class="setting-label">
+            <label class="setting-label text-responsive">
               📚 اختر الصف الدراسي
             </label>
-            <select id="classSelect" class="setting-select" required>
+            <select id="classSelect" class="setting-select input-responsive" required>
               <option value="">-- اختر الصف --</option>
             </select>
           </div>
           
           <div class="setting-group">
-            <label class="setting-label">
+            <label class="setting-label text-responsive">
               🎮 نوع المسابقة
             </label>
-            <select id="modeSelect" class="setting-select" required>
+            <select id="modeSelect" class="setting-select input-responsive" required>
               <option value="">-- نوع المسابقة --</option>
               <option value="team2-manual">طالب واحد لكل فريق (اختيار يدوي)</option>
               <option value="team4-manual">طالبان لكل فريق (اختيار يدوي)</option>
@@ -1056,17 +1486,17 @@
         </div>
         
         <!-- مدخلات الطلاب -->
-        <div class="players-container" id="playersContainer"></div>
+        <div class="players-container grid-responsive" id="playersContainer"></div>
         
         <!-- أزرار الأكشن -->
         <div class="action-buttons">
-          <button type="submit" class="action-btn" id="startGameBtn">
+          <button type="submit" class="action-btn btn-responsive" id="startGameBtn">
             ▶️ ابدأ اللعبة
           </button>
-          <button type="button" class="action-btn secondary" id="resetGameBtn">
+          <button type="button" class="action-btn btn-responsive secondary" id="resetGameBtn">
             🔄 إعادة تعيين
           </button>
-          <button type="button" class="action-btn success" id="statisticsBtn">
+          <button type="button" class="action-btn btn-responsive success" id="statisticsBtn">
             📊 الإحصائيات
           </button>
         </div>
@@ -1074,47 +1504,47 @@
     </div>
 
     <!-- منطقة اللعبة -->
-    <div class="game-area hidden" id="gameArea">
+    <div class="game-area hidden grid-responsive" id="gameArea">
       <!-- لوحة الفريق الأخضر -->
-      <div class="team-panel green" id="greenTeamPanel">
+      <div class="team-panel card-responsive green" id="greenTeamPanel">
         <div class="team-header">
           <div class="team-icon">🟢</div>
-          <div class="team-name">الفريق الأخضر</div>
+          <div class="team-name heading-responsive">الفريق الأخضر</div>
         </div>
-        <div class="team-score" id="greenTeamScore">0</div>
-        <div class="team-strategy">🎯 أكمل صفاً أفقياً للفوز</div>
-        <div class="team-members" id="greenTeamMembers">في انتظار بدء اللعبة</div>
+        <div class="team-score heading-responsive" id="greenTeamScore">0</div>
+        <div class="team-strategy text-responsive">🎯 أكمل صفاً أفقياً للفوز</div>
+        <div class="team-members text-responsive" id="greenTeamMembers">في انتظار بدء اللعبة</div>
       </div>
 
       <!-- لوحة الحروف -->
-      <div class="board-container">
-        <div class="board-title">
+      <div class="board-container card-responsive">
+        <div class="board-title heading-responsive">
           🎲 لوحة الحروف
         </div>
-        <div class="hexagon-board" id="hexagonBoard"></div>
+        <div class="hexagon-board grid-responsive" id="hexagonBoard"></div>
       </div>
 
       <!-- لوحة الفريق الأحمر -->
-      <div class="team-panel red" id="redTeamPanel">
+      <div class="team-panel card-responsive red" id="redTeamPanel">
         <div class="team-header">
           <div class="team-icon">🔴</div>
-          <div class="team-name">الفريق الأحمر</div>
+          <div class="team-name heading-responsive">الفريق الأحمر</div>
         </div>
-        <div class="team-score" id="redTeamScore">0</div>
-        <div class="team-strategy">🎯 أكمل عموداً رأسياً للفوز</div>
-        <div class="team-members" id="redTeamMembers">في انتظار بدء اللعبة</div>
+        <div class="team-score heading-responsive" id="redTeamScore">0</div>
+        <div class="team-strategy text-responsive">🎯 أكمل عموداً رأسياً للفوز</div>
+        <div class="team-members text-responsive" id="redTeamMembers">في انتظار بدء اللعبة</div>
       </div>
     </div>
   </div>
 
   <!-- نافذة اختيار الفريق -->
   <div class="modal-overlay" id="teamSelectionModal">
-    <div class="modal-content">
+    <div class="modal-content card-responsive">
       <div class="modal-header">
-        <div class="modal-title">اختيار الفريق</div>
-        <button class="close-btn" id="closeTeamSelectionBtn">✕</button>
+        <div class="modal-title heading-responsive">اختيار الفريق</div>
+        <button class="close-btn btn-responsive" id="closeTeamSelectionBtn">✕</button>
       </div>
-      <div class="team-selection-title" id="teamSelectionTitle">
+      <div class="team-selection-title text-responsive" id="teamSelectionTitle">
         أي فريق يريد الإجابة على هذا الحرف؟
       </div>
       <div class="team-buttons">
@@ -3585,6 +4015,222 @@
     document.addEventListener('DOMContentLoaded', initializeApp);
 
     console.log('🧩 تم تحميل لعبة بلوك باسترز الاحترافية بنجاح!');
+  </script>
+
+  <!-- ===== JavaScript للتصميم المتجاوب ===== -->
+  <script src="../assets/js/responsive-helper.js"></script>
+  <script>
+    // تهيئة التصميم المتجاوب
+    document.addEventListener('DOMContentLoaded', function() {
+      if (window.responsiveHelper) {
+        console.log('🎯 تم تفعيل نظام التصميم المتجاوب في Blockbusters.html');
+        
+        // استمع لتغييرات الجهاز
+        window.addEventListener('devicechange', (e) => {
+          console.log('📱 تم تغيير نوع الجهاز إلى:', e.detail.device);
+          
+          // إضافة فئات CSS حسب نوع الجهاز
+          document.body.classList.remove('mobile-device', 'tablet-device', 'desktop-device');
+          document.body.classList.add(e.detail.device + '-device');
+          
+          // تحسين لوحة الحروف حسب الجهاز
+          const hexagonBoard = document.querySelector('.hexagon-board');
+          const gameArea = document.querySelector('.game-area');
+          
+          if (hexagonBoard) {
+            if (e.detail.device === 'mobile') {
+              hexagonBoard.style.gridTemplateColumns = 'repeat(4, 1fr)';
+              hexagonBoard.style.maxWidth = '300px';
+            } else if (e.detail.device === 'tablet') {
+              hexagonBoard.style.gridTemplateColumns = 'repeat(5, 1fr)';
+              hexagonBoard.style.maxWidth = '400px';
+            } else {
+              hexagonBoard.style.gridTemplateColumns = 'repeat(5, 1fr)';
+              hexagonBoard.style.maxWidth = '500px';
+            }
+          }
+          
+          if (gameArea) {
+            if (e.detail.device === 'mobile') {
+              gameArea.style.gridTemplateColumns = '1fr';
+              gameArea.style.gap = '1rem';
+            } else if (e.detail.device === 'tablet') {
+              gameArea.style.gridTemplateColumns = '1fr';
+              gameArea.style.gap = '1.5rem';
+            }
+          }
+        });
+
+        // استمع لتغييرات الاتجاه
+        window.addEventListener('orientationchange', (e) => {
+          console.log('🔄 تم تغيير اتجاه الشاشة إلى:', e.detail.orientation);
+          
+          // إضافة فئات CSS حسب الاتجاه
+          document.body.classList.remove('portrait-mode', 'landscape-mode');
+          document.body.classList.add(e.detail.orientation + '-mode');
+          
+          // تحسين الأدوات في الوضع الأفقي للهواتف
+          if (e.detail.orientation === 'landscape' && window.responsiveHelper.isMobile()) {
+            const controlHeader = document.querySelector('.control-header');
+            if (controlHeader) {
+              controlHeader.style.padding = '0.5rem 1rem';
+            }
+            
+            const gameArea = document.querySelector('.game-area');
+            if (gameArea && !gameArea.classList.contains('hidden')) {
+              gameArea.style.gridTemplateColumns = '1fr 1.5fr 1fr';
+              gameArea.style.gap = '0.75rem';
+            }
+          }
+        });
+
+        // تحسين تجربة اللمس للأجهزة المحمولة
+        if (window.responsiveHelper.isTouchDevice()) {
+          // تحسين بطاقات الحروف
+          const observerCallback = (mutations) => {
+            mutations.forEach((mutation) => {
+              if (mutation.type === 'childList') {
+                mutation.addedNodes.forEach((node) => {
+                  if (node.nodeType === 1 && node.classList.contains('hex-cell')) {
+                    // تحسين استجابة اللمس
+                    node.addEventListener('touchstart', function() {
+                      this.style.transform = 'scale(0.95)';
+                    }, { passive: true });
+                    
+                    node.addEventListener('touchend', function() {
+                      setTimeout(() => {
+                        if (!this.classList.contains('selected')) {
+                          this.style.transform = '';
+                        }
+                      }, 100);
+                    }, { passive: true });
+                  }
+                });
+              }
+            });
+          };
+
+          const observer = new MutationObserver(observerCallback);
+          const hexagonBoard = document.getElementById('hexagonBoard');
+          if (hexagonBoard) {
+            observer.observe(hexagonBoard, { childList: true });
+          }
+
+          // تحسين الأزرار
+          const actionButtons = document.querySelectorAll('.control-btn, .action-btn');
+          actionButtons.forEach(button => {
+            button.style.minHeight = '44px';
+            button.style.minWidth = '44px';
+          });
+        }
+
+        // تحسين الحقول للأجهزة المحمولة
+        const inputs = document.querySelectorAll('.setting-input, .setting-select');
+        if (window.responsiveHelper.isMobile()) {
+          inputs.forEach(input => {
+            // تحسين حجم الخط لمنع التكبير في iOS
+            input.style.fontSize = '16px';
+            
+            // إضافة تأثير التركيز
+            input.addEventListener('focus', function() {
+              this.style.transform = 'scale(1.02)';
+            });
+            
+            input.addEventListener('blur', function() {
+              this.style.transform = '';
+            });
+          });
+        }
+
+        // تحسين الأداء للأجهزة الضعيفة
+        const reduceAnimations = window.responsiveHelper.isMobile() && 
+                                 window.devicePixelRatio < 2;
+        
+        if (reduceAnimations) {
+          console.log('🔧 تقليل التأثيرات البصرية للأجهزة الضعيفة');
+          
+          const style = document.createElement('style');
+          style.textContent = `
+            .hex-cell { transition: transform 0.1s ease !important; }
+            .control-btn { transition: all 0.1s ease !important; }
+            .action-btn { transition: all 0.1s ease !important; }
+            .team-panel { transition: all 0.1s ease !important; }
+            * { animation-duration: 0.1s !important; }
+          `;
+          document.head.appendChild(style);
+        }
+
+        // تحسين عرض النقاط
+        function updateResponsiveScores() {
+          const scoreElements = document.querySelectorAll('.team-score');
+          if (window.responsiveHelper.isMobile()) {
+            scoreElements.forEach(score => {
+              score.style.fontSize = 'clamp(1.8rem, 6vw, 2.5rem)';
+            });
+          }
+        }
+
+        // تحسين لوحة الحروف ديناميكياً
+        function adjustHexagonBoard() {
+          const hexBoard = document.querySelector('.hexagon-board');
+          if (hexBoard && window.responsiveHelper.isMobile()) {
+            const viewportWidth = window.innerWidth;
+            if (viewportWidth <= 360) {
+              hexBoard.style.maxWidth = '250px';
+              hexBoard.style.gap = '0.2rem';
+            } else if (viewportWidth <= 480) {
+              hexBoard.style.maxWidth = '300px';
+              hexBoard.style.gap = '0.3rem';
+            }
+          }
+        }
+
+        // تطبيق التحسينات عند التحميل
+        setTimeout(() => {
+          updateResponsiveScores();
+          adjustHexagonBoard();
+        }, 500);
+
+        // استمع لتغيير حجم النافذة
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(() => {
+            adjustHexagonBoard();
+            updateResponsiveScores();
+          }, 250);
+        });
+      }
+    });
+
+    // تحسين أداء التمرير على الأجهزة المحمولة
+    let scrollTicking = false;
+    function updateOnScroll() {
+      if (!scrollTicking) {
+        requestAnimationFrame(() => {
+          // تحسينات أداء التمرير
+          scrollTicking = false;
+        });
+        scrollTicking = true;
+      }
+    }
+
+    if (window.responsiveHelper && window.responsiveHelper.isMobile()) {
+      window.addEventListener('scroll', updateOnScroll, { passive: true });
+    }
+
+    // تحسين إدارة الذاكرة على الأجهزة المحمولة
+    if (window.responsiveHelper && window.responsiveHelper.isMobile()) {
+      // تنظيف الذاكرة عند إخفاء الصفحة
+      document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+          // تنظيف المتغيرات غير الضرورية
+          if (window.gc) {
+            window.gc();
+          }
+        }
+      });
+    }
   </script>
 </body>
 </html>
