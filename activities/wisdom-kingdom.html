@@ -2,15 +2,25 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#8360c3">
     <title>🧠 مملكة الحكمة | التحديات الفكرية</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --wisdom-primary: #9B59B6;
             --wisdom-secondary: #3498DB;
+            --wisdom-tertiary: #E67E22;
             --wisdom-dark: #2C3E50;
             --wisdom-bg: linear-gradient(135deg, #8360c3 0%, #2ebf91 100%);
+            --wisdom-glow: 0 0 30px rgba(155, 89, 182, 0.3);
+            --success-color: #27AE60;
+            --warning-color: #F39C12;
+            --danger-color: #E74C3C;
+            --info-color: #3498DB;
         }
 
         * {
@@ -25,72 +35,300 @@
             min-height: 100vh;
             color: white;
             direction: rtl;
+            overflow-x: hidden;
+        }
+
+        /* Animated background particles */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: var(--wisdom-glow); }
+            50% { box-shadow: 0 0 50px rgba(155, 89, 182, 0.5); }
+        }
+
+        @keyframes slideInUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeInScale {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* Modal animations */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.show {
+            display: flex;
+            animation: fadeInScale 0.4s ease-out;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.9), rgba(52, 152, 219, 0.9));
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #FFD700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .modal-message {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .modal-btn {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #2C3E50;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin: 0.5rem;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.4);
+        }
+
+        .modal-btn.secondary {
+            background: linear-gradient(45deg, #6C7CE7, #A8E6CF);
+            color: white;
         }
 
         .kingdom-header {
             text-align: center;
-            padding: 2rem;
-            background: rgba(0,0,0,0.3);
-            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(15px);
+            border-bottom: 2px solid rgba(155, 89, 182, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kingdom-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(155, 89, 182, 0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
         }
 
         .kingdom-title {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            animation: glow 3s ease-in-out infinite;
+            position: relative;
+            z-index: 2;
+        }
+
+        .kingdom-header p {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
         }
 
         .kingdom-stats {
             display: flex;
             justify-content: center;
-            gap: 2rem;
-            margin: 2rem 0;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 2;
         }
 
         .stat-card {
-            background: rgba(255,255,255,0.1);
-            padding: 1rem 2rem;
+            background: rgba(255,255,255,0.15);
+            padding: 1rem 1.5rem;
             border-radius: 15px;
             text-align: center;
             backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            min-width: 120px;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.25);
+            box-shadow: var(--wisdom-glow);
         }
 
         .stat-number {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 900;
             color: var(--wisdom-primary);
+            text-shadow: 0 0 10px rgba(155, 89, 182, 0.5);
+            margin-bottom: 0.5rem;
         }
 
-        .game-arena {
-            max-width: 900px;
-            margin: 2rem auto;
-            padding: 2rem;
-            background: rgba(0,0,0,0.2);
-            border-radius: 20px;
-            backdrop-filter: blur(15px);
+        .stat-card div:last-child {
+            font-size: 0.9rem;
+            opacity: 0.9;
         }
 
-        .question-container {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .question-text {
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
+        /* Competition Container */
+        .competition-container {
+            max-width: 1000px;
+            margin: 1.5rem auto;
             padding: 1.5rem;
-            background: rgba(255,255,255,0.1);
+        }
+
+        /* Current Student Section */
+        .current-student-section {
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.2), rgba(52, 152, 219, 0.2));
+            border: 3px solid var(--wisdom-primary);
+            border-radius: 25px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            box-shadow: var(--wisdom-glow);
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .current-student-section::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--wisdom-primary), var(--wisdom-secondary), var(--wisdom-tertiary));
+            border-radius: 25px;
+            z-index: -1;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .student-spotlight {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            margin-bottom: 1rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .wisdom-question-display {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1.5rem;
             border-radius: 15px;
+            margin: 1.5rem 0;
+            border-left: 5px solid var(--wisdom-primary);
+            font-size: 1.2rem;
             line-height: 1.6;
+            text-align: right;
         }
 
-        .timer-display {
-            font-size: 2rem;
-            color: var(--wisdom-primary);
+        .teacher-instructions {
+            font-size: 1.1rem;
+            color: #fff;
             margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            border-left: 5px solid var(--wisdom-secondary);
         }
 
-        .controls {
+        /* Evaluation Buttons */
+        .evaluation-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .eval-btn {
+            padding: 1.2rem 2.5rem;
+            border: none;
+            border-radius: 20px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            min-width: 180px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .eval-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .eval-btn.brilliant {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #2C3E50;
+        }
+
+        .eval-btn.excellent {
+            background: linear-gradient(45deg, #00C851, #007E33);
+            color: white;
+        }
+
+        .eval-btn.good {
+            background: linear-gradient(45deg, #33B5E5, #0099CC);
+            color: white;
+        }
+
+        .eval-btn.needs-improvement {
+            background: linear-gradient(45deg, #FF8800, #FF4444);
+            color: white;
+        }
+
+        /* Competition Controls */
+        .competition-controls {
             display: flex;
             justify-content: center;
             gap: 1rem;
@@ -101,12 +339,19 @@
         .control-btn {
             padding: 1rem 2rem;
             border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
+            border-radius: 15px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             min-width: 150px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
         }
 
         .start-btn {
@@ -119,8 +364,8 @@
             color: white;
         }
 
-        .answer-btn {
-            background: linear-gradient(45deg, #4facfe, #00f2fe);
+        .settings-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
             color: white;
         }
 
@@ -129,80 +374,574 @@
             color: white;
         }
 
-        .control-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        /* Students Queue */
+        .students-queue {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1.5rem;
+            border-radius: 20px;
+            margin: 2rem 0;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(155, 89, 182, 0.3);
         }
 
-        .thinking-indicator {
-            text-align: center;
-            margin: 1rem 0;
-            font-style: italic;
-            color: var(--wisdom-primary);
-        }
-
-        .wisdom-quotes {
-            background: rgba(155, 89, 182, 0.2);
-            padding: 1rem;
-            border-radius: 10px;
-            margin: 1rem 0;
-            text-align: center;
-            font-style: italic;
-        }
-
-        .difficulty-level {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            margin: 1rem 0;
-        }
-
-        .difficulty-star {
-            color: var(--wisdom-primary);
+        .queue-title {
             font-size: 1.5rem;
+            color: var(--wisdom-primary);
+            text-align: center;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 10px rgba(155, 89, 182, 0.5);
         }
 
-        .achievements {
-            background: rgba(0,0,0,0.3);
+        .students-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .student-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+        }
+
+        .student-card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .student-card.current {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 165, 0, 0.3));
+            border: 2px solid #FFD700;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .student-card.completed {
+            background: linear-gradient(135deg, rgba(39, 174, 96, 0.3), rgba(46, 204, 113, 0.3));
+            border: 2px solid #27AE60;
+        }
+
+        .student-card.thinking {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.3), rgba(155, 89, 182, 0.3));
+            border: 2px solid #3498DB;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        /* Timer Section */
+        .wisdom-timer {
+            text-align: center;
+            margin: 1.5rem 0;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1.5rem;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            border: 2px solid var(--wisdom-secondary);
+            box-shadow: var(--wisdom-glow);
+        }
+
+        .main-timer {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--wisdom-primary);
+            text-shadow: 0 0 20px rgba(155, 89, 182, 0.5);
+            margin: 1rem 0;
+            animation: pulse 2s infinite;
+        }
+
+        .timer-label {
+            font-size: 1.1rem;
+            color: #fff;
+            opacity: 0.9;
+        }
+
+        /* Wisdom Quotes */
+        .wisdom-quotes {
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.3), rgba(52, 152, 219, 0.3));
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 1.5rem 0;
+            text-align: center;
+            font-style: italic;
+            border: 1px solid rgba(155, 89, 182, 0.5);
+            backdrop-filter: blur(10px);
+            animation: slideInUp 0.6s ease-out;
+        }
+
+        .wisdom-quotes::before {
+            content: '💫';
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Progress Indicator */
+        .progress-indicator {
+            background: rgba(0, 0, 0, 0.2);
             padding: 1rem;
             border-radius: 15px;
-            margin-top: 2rem;
-        }
-
-        .achievements h3 {
+            margin: 1.5rem 0;
             text-align: center;
-            margin-bottom: 1rem;
-            color: var(--wisdom-primary);
-        }
-
-        .achievement-badge {
-            display: inline-block;
-            background: rgba(155, 89, 182, 0.3);
-            padding: 0.5rem 1rem;
-            margin: 0.5rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-        }
-
-        .progress-indicator {
-            text-align: center;
-            margin: 1rem 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .progress-bar {
             width: 100%;
-            height: 12px;
+            height: 15px;
             background: rgba(255,255,255,0.2);
-            border-radius: 6px;
+            border-radius: 7px;
             overflow: hidden;
-            margin: 0.5rem 0;
+            margin: 1rem 0;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--wisdom-primary), var(--wisdom-secondary));
+            background: linear-gradient(90deg, var(--wisdom-primary), var(--wisdom-secondary), var(--wisdom-tertiary));
             width: 0%;
-            transition: width 0.3s ease;
+            transition: width 0.5s ease;
+            border-radius: 7px;
+            box-shadow: 0 2px 10px rgba(155, 89, 182, 0.5);
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        /* Smart Notifications */
+        .smart-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.9), rgba(52, 152, 219, 0.9));
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 10000;
+            max-width: 350px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: slideInRight 0.5s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        /* Tablets and small laptops */
+        @media (max-width: 1024px) {
+            .kingdom-header {
+                padding: 1.2rem;
+            }
+            
+            .kingdom-title {
+                font-size: 2rem;
+            }
+            
+            .competition-container {
+                padding: 1.2rem;
+            }
+            
+            .kingdom-stats {
+                gap: 1.2rem;
+            }
+        }
+        
+        /* Tablets */
+        @media (max-width: 768px) {
+            .kingdom-header {
+                padding: 0.8rem;
+            }
+            
+            .kingdom-title {
+                font-size: 1.8rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .kingdom-header p {
+                font-size: 0.9rem;
+                margin-bottom: 1rem;
+            }
+            
+            .kingdom-stats {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 0.8rem;
+                justify-content: center;
+                margin: 1rem 0;
+            }
+            
+            .stat-card {
+                padding: 0.6rem 1rem;
+                min-width: 90px;
+                flex: 1;
+                max-width: 120px;
+            }
+            
+            .stat-number {
+                font-size: 1.3rem;
+            }
+            
+            .stat-card div:last-child {
+                font-size: 0.8rem;
+            }
+            
+            .main-timer {
+                font-size: 2.5rem;
+            }
+            
+            .student-spotlight {
+                font-size: 1.8rem;
+            }
+            
+            .evaluation-buttons {
+                gap: 1rem;
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .eval-btn {
+                padding: 1rem 1.5rem;
+                font-size: 1rem;
+                min-width: 200px;
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .competition-controls {
+                gap: 0.8rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .control-btn {
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+                min-width: 120px;
+                flex: 1;
+                max-width: 200px;
+            }
+            
+            .modal-content {
+                padding: 1.5rem;
+                margin: 1rem;
+                max-width: 90%;
+            }
+            
+            .wisdom-timer {
+                padding: 1.2rem;
+            }
+            
+            .current-student-section {
+                padding: 1.5rem;
+                margin: 1rem 0;
+            }
+            
+            .teacher-instructions {
+                font-size: 1rem;
+                padding: 1rem;
+            }
+            
+            .students-list {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 0.8rem;
+            }
+        }
+        
+        /* Mobile phones */
+        @media (max-width: 480px) {
+            .kingdom-header {
+                padding: 0.5rem;
+                background: rgba(0,0,0,0.4);
+            }
+            
+            .kingdom-title {
+                font-size: 1.4rem;
+                margin-bottom: 0.3rem;
+            }
+            
+            .kingdom-header p {
+                font-size: 0.75rem;
+                margin-bottom: 0.5rem;
+                display: none; /* إخفاء الوصف على الهواتف الصغيرة */
+            }
+            
+            .kingdom-stats {
+                flex-direction: row;
+                gap: 0.4rem;
+                margin: 0.5rem 0;
+                justify-content: space-around;
+            }
+            
+            .stat-card {
+                padding: 0.4rem 0.6rem;
+                margin: 0;
+                min-width: 70px;
+                flex: 1;
+                max-width: 90px;
+                border-radius: 8px;
+            }
+            
+            .stat-number {
+                font-size: 1rem;
+                margin-bottom: 0.2rem;
+            }
+            
+            .stat-card div:last-child {
+                font-size: 0.65rem;
+                line-height: 1.2;
+            }
+            
+            .competition-container {
+                padding: 0.5rem;
+                margin: 0.5rem auto;
+            }
+            
+            .main-timer {
+                font-size: 2rem;
+                margin: 0.5rem 0;
+            }
+            
+            .wisdom-timer {
+                padding: 0.8rem;
+                margin: 0.8rem 0;
+            }
+            
+            .timer-label {
+                font-size: 0.9rem;
+                margin-top: 0.3rem;
+            }
+            
+            .student-spotlight {
+                font-size: 1.3rem;
+                line-height: 1.3;
+                margin-bottom: 0.8rem;
+            }
+            
+            .current-student-section {
+                padding: 0.8rem;
+                margin: 0.5rem 0;
+            }
+            
+            .teacher-instructions {
+                font-size: 0.85rem;
+                padding: 0.6rem;
+                margin: 0.6rem 0;
+            }
+            
+            .wisdom-question-display {
+                font-size: 1rem;
+                padding: 1rem;
+                margin: 1rem 0;
+            }
+            
+            .evaluation-buttons {
+                gap: 0.6rem;
+                margin: 1rem 0;
+            }
+            
+            .eval-btn {
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+                min-width: auto;
+                width: 100%;
+                max-width: 250px;
+            }
+            
+            .competition-controls {
+                gap: 0.4rem;
+                margin: 0.8rem 0;
+                flex-wrap: wrap;
+            }
+            
+            .control-btn {
+                padding: 0.6rem 0.8rem;
+                font-size: 0.75rem;
+                min-width: 80px;
+                flex: 1;
+                max-width: 120px;
+            }
+            
+            .control-btn i {
+                font-size: 0.8rem;
+                margin-left: 0.3rem;
+            }
+            
+            .modal-content {
+                padding: 0.8rem;
+                margin: 0.3rem;
+                max-width: 98%;
+                border-radius: 12px;
+            }
+            
+            .modal-title {
+                font-size: 1.3rem;
+                margin-bottom: 0.8rem;
+            }
+            
+            .modal-message {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .modal-btn {
+                width: 100%;
+                padding: 0.8rem;
+                margin: 0.4rem 0;
+                font-size: 0.9rem;
+            }
+            
+            .students-queue {
+                margin: 0.8rem 0;
+                padding: 1rem;
+            }
+            
+            .queue-title {
+                font-size: 1.1rem;
+                margin-bottom: 0.8rem;
+            }
+            
+            .students-list {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 0.6rem;
+            }
+            
+            .student-card {
+                padding: 0.6rem;
+                font-size: 0.8rem;
+            }
+            
+            .wisdom-quotes {
+                padding: 1rem;
+                margin: 1rem 0;
+                font-size: 0.9rem;
+            }
+            
+            .progress-indicator {
+                padding: 0.8rem;
+                margin: 1rem 0;
+            }
+            
+            .smart-notification {
+                position: fixed !important;
+                top: 10px !important;
+                right: 10px !important;
+                left: 10px !important;
+                max-width: none !important;
+                width: auto !important;
+                transform: none !important;
+                z-index: 10001 !important;
+                font-size: 0.8rem;
+                padding: 0.6rem 0.8rem;
+            }
+        }
+        
+        /* Very small phones */
+        @media (max-width: 360px) {
+            .kingdom-header {
+                padding: 0.3rem;
+            }
+            
+            .kingdom-title {
+                font-size: 1.2rem;
+                margin-bottom: 0.2rem;
+            }
+            
+            .kingdom-stats {
+                gap: 0.2rem;
+                margin: 0.3rem 0;
+            }
+            
+            .stat-card {
+                padding: 0.3rem 0.4rem;
+                min-width: 60px;
+                max-width: 75px;
+                border-radius: 6px;
+            }
+            
+            .stat-number {
+                font-size: 0.9rem;
+                margin-bottom: 0.1rem;
+            }
+            
+            .stat-card div:last-child {
+                font-size: 0.55rem;
+                line-height: 1.1;
+            }
+            
+            .main-timer {
+                font-size: 1.8rem;
+                margin: 0.3rem 0;
+            }
+            
+            .wisdom-timer {
+                padding: 0.6rem;
+                margin-bottom: 0.6rem;
+            }
+            
+            .timer-label {
+                font-size: 0.8rem;
+                margin-top: 0.2rem;
+            }
+            
+            .student-spotlight {
+                font-size: 1.1rem;
+                margin-bottom: 0.6rem;
+            }
+            
+            .current-student-section {
+                padding: 0.6rem;
+                margin: 0.4rem 0;
+            }
+            
+            .teacher-instructions {
+                font-size: 0.75rem;
+                padding: 0.5rem;
+                margin: 0.5rem 0;
+            }
+            
+            .eval-btn {
+                padding: 0.6rem 0.8rem;
+                font-size: 0.8rem;
+                max-width: 220px;
+            }
+            
+            .control-btn {
+                padding: 0.5rem 0.6rem;
+                font-size: 0.7rem;
+                min-width: 60px;
+                max-width: 100px;
+            }
+            
+            .control-btn i {
+                font-size: 0.9rem;
+            }
+            
+            .competition-controls {
+                gap: 0.3rem;
+                margin: 0.6rem 0;
+            }
+        }
+        
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            .eval-btn, .control-btn, .modal-btn {
+                min-height: 44px;
+                padding: 1rem;
+            }
+            
+            .eval-btn:active, .control-btn:active {
+                transform: scale(0.95);
+                transition: transform 0.1s ease;
+            }
+            
+            .eval-btn:hover, .control-btn:hover {
+                transform: none;
+                box-shadow: none;
+            }
         }
     </style>
 </head>
@@ -213,373 +952,866 @@
         
         <div class="kingdom-stats">
             <div class="stat-card">
-                <div class="stat-number" id="totalChallenges">0</div>
-                <div>التحديات المكتملة</div>
+                <div class="stat-number" id="activeStudents">0</div>
+                <div>الطلاب النشطون</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number" id="currentScore">0</div>
-                <div>نقاط الحكمة</div>
+                <div class="stat-number" id="completedStudents">0</div>
+                <div>تم تقييمهم</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number" id="wisdomLevel">1</div>
-                <div>مستوى الحكمة</div>
+                <div class="stat-number" id="timeRemaining">10:00</div>
+                <div>الوقت المتبقي</div>
             </div>
         </div>
     </div>
 
-    <div class="game-arena">
-        <div class="wisdom-quotes" id="wisdomQuote">
-            "الحكمة هي معرفة ما يجب فعله تالياً"
+    <div class="competition-container">
+        <!-- Wisdom Timer Section -->
+        <div class="wisdom-timer">
+            <div class="main-timer" id="mainTimer">10:00</div>
+            <div class="timer-label">⏰ وقت التأمل والحكمة</div>
         </div>
 
-        <div class="question-container">
-            <div class="difficulty-level" id="difficultyStars">
-                ⭐⭐⭐
-            </div>
-            <div class="question-text" id="questionText">اضغط على "بدء التأمل" لبدء رحلة الحكمة</div>
-            <div class="timer-display" id="timerDisplay">60</div>
+        <!-- Wisdom Quote Section -->
+        <div class="wisdom-quotes" id="wisdomQuote">
+            "الحكمة هي معرفة ما يجب فعله تالياً، والمهارة هي معرفة كيف تفعله، والفضيلة هي فعله"
+        </div>
+
+        <!-- Current Student Section -->
+        <div class="current-student-section" id="studentSection" style="display: none;">
+            <div class="student-spotlight" id="currentStudentName">اسم الطالب</div>
             
-            <div class="thinking-indicator" id="thinkingTime">
-                وقت التفكير المتاح: <span id="thinkingTimer">60</span> ثانية
+            <div class="wisdom-question-display" id="wisdomQuestion">
+                سيتم عرض السؤال الحكيم هنا...
             </div>
             
-            <div class="progress-indicator">
-                <div>التقدم في الرحلة: <span id="progressText">0/8</span></div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill"></div>
+            <div class="teacher-instructions">
+                <i class="fas fa-brain"></i> 
+                اطرح السؤال على الطالب واستمع لتفكيره العميق وحكمته في الإجابة
+            </div>
+            
+            <div class="evaluation-buttons">
+                <button class="eval-btn brilliant" onclick="evaluateWisdom('brilliant')">
+                    <i class="fas fa-star"></i>
+                    حكيم وملهم (120 نقطة)
+                </button>
+                <button class="eval-btn excellent" onclick="evaluateWisdom('excellent')">
+                    <i class="fas fa-lightbulb"></i>
+                    متميز الفكر (100 نقطة)
+                </button>
+                <button class="eval-btn good" onclick="evaluateWisdom('good')">
+                    <i class="fas fa-check-circle"></i>
+                    جيد التفكير (80 نقطة)
+                </button>
+                <button class="eval-btn needs-improvement" onclick="evaluateWisdom('needs-improvement')">
+                    <i class="fas fa-hand-paper"></i>
+                    يحتاج تطوير (50 نقطة)
+                </button>
+            </div>
+            
+            <div class="elimination-section" style="margin-top: 1.5rem; text-align: center;">
+                <button class="eval-btn" onclick="pauseForReflection()" style="background: linear-gradient(45deg, #3498DB, #2ECC71); color: white; padding: 1rem 2rem;">
+                    <i class="fas fa-pause"></i>
+                    إعطاء وقت إضافي للتفكير
+                </button>
+            </div>
+        </div>
+
+        <!-- Students Queue -->
+        <div class="students-queue">
+            <div class="queue-title">🧠 حكماء المستقبل</div>
+            <div class="students-list" id="studentsList">
+                <!-- سيتم ملؤها بـ JavaScript -->
+            </div>
+        </div>
+
+        <!-- Progress Indicator -->
+        <div class="progress-indicator">
+            <div>التقدم في رحلة الحكمة: <span id="progressText">0/5</span></div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <!-- Competition Controls -->
+        <div class="competition-controls">
+            <button class="control-btn settings-btn" onclick="showWisdomSettings()">
+                <i class="fas fa-cogs"></i>
+                <span class="button-text">إعدادات الحكمة</span>
+            </button>
+            <button class="control-btn start-btn start-wisdom" onclick="startWisdomJourney()">
+                <i class="fas fa-brain"></i>
+                <span class="button-text">بدء رحلة الحكمة</span>
+            </button>
+            <button class="control-btn pause-btn pause-wisdom" onclick="pauseWisdomJourney()">
+                <i class="fas fa-pause"></i>
+                <span class="button-text">إيقاف مؤقت</span>
+            </button>
+            <button class="control-btn back-btn" onclick="goBackToKingdoms()">
+                <i class="fas fa-home"></i>
+                <span class="button-text">العودة للممالك</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Wisdom Settings Modal -->
+    <div class="modal" id="wisdomSettingsModal">
+        <div class="modal-content">
+            <div class="modal-title">⚙️ إعدادات رحلة الحكمة</div>
+            <div class="modal-message">
+                <div class="settings-section">
+                    <h4>🕒 مدة التفكير لكل سؤال</h4>
+                    <div class="setting-group">
+                        <label>اختر الوقت المناسب للتفكير العميق:</label>
+                        <input type="range" id="thinkingTimeSlider" min="60" max="300" value="120" oninput="updateThinkingTime(this.value)">
+                        <div class="slider-value">
+                            <span id="thinkingTimeValue">2</span> دقيقة للتفكير
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h4>🧠 مستوى صعوبة الأسئلة</h4>
+                    <div class="setting-group">
+                        <select id="difficultyLevel">
+                            <option value="mixed">متنوع (مبتدئ إلى متقدم)</option>
+                            <option value="beginner">مبتدئ - أسئلة بسيطة</option>
+                            <option value="intermediate">متوسط - تحديات معقولة</option>
+                            <option value="advanced">متقدم - تحديات عميقة</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h4>📊 عدد الأسئلة في الرحلة</h4>
+                    <div class="setting-group">
+                        <input type="number" id="questionsCount" min="3" max="10" value="5">
+                        <label>عدد أسئلة الحكمة (3-10)</label>
+                    </div>
                 </div>
             </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="modal-btn" onclick="saveWisdomSettings()">✅ حفظ الإعدادات</button>
+                <button class="modal-btn secondary" onclick="closeModal('wisdomSettingsModal')">❌ إلغاء</button>
+            </div>
         </div>
+    </div>
 
-        <div class="controls">
-            <button class="control-btn start-btn" onclick="startWisdomJourney()">🧘 بدء التأمل</button>
-            <button class="control-btn pause-btn" onclick="pauseThinking()">⏸️ توقف للتفكير</button>
-            <button class="control-btn answer-btn" onclick="shareWisdom()">💡 مشاركة الحكمة</button>
-            <button class="control-btn back-btn" onclick="goBack()">🔙 العودة للممالك</button>
+    <!-- Result Modal -->
+    <div class="modal" id="resultModal">
+        <div class="modal-content">
+            <div class="modal-title" id="modalTitle">نتيجة التقييم</div>
+            <div class="modal-message" id="modalMessage">
+                محتوى النتيجة
+            </div>
         </div>
+    </div>
 
-        <div class="achievements">
-            <h3>🏆 إنجازات الحكمة</h3>
-            <div id="achievementsList">
-                <!-- سيتم ملؤها بـ JavaScript -->
+    <!-- Final Results Modal -->
+    <div class="modal" id="wisdomEndModal">
+        <div class="modal-content">
+            <div class="modal-title" id="finalModalTitle">🏆 انتهاء رحلة الحكمة</div>
+            <div class="modal-message" id="finalResults">
+                النتائج النهائية
+            </div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="modal-btn" onclick="returnToKingdomsCenterWithWisdom()">🏠 العودة مع الحكمة</button>
+                <button class="modal-btn secondary" onclick="startNewWisdomJourney()">🔄 رحلة حكمة جديدة</button>
             </div>
         </div>
     </div>
 
     <script>
-        // متغيرات مملكة الحكمة
+        // ===== متغيرات مملكة الحكمة المتقدمة =====
         let wisdomData = {
-            currentQuestion: 0,
-            totalQuestions: 8,
-            score: 0,
-            timer: 60,
+            students: [],
+            currentStudentIndex: 0,
+            currentQuestionIndex: 0,
+            totalTime: 600, // 10 دقائق افتراضي
+            remainingTime: 600,
             isRunning: false,
             isPaused: false,
-            completedChallenges: 0,
-            wisdomLevel: 1,
-            achievements: []
+            completedStudents: 0,
+            currentRound: 1,
+            settings: {
+                thinkingTime: 120, // 2 دقيقة للتفكير
+                difficulty: 'mixed',
+                questionsCount: 5
+            }
         };
 
-        // أسئلة الحكمة المتدرجة الصعوبة
-        const wisdomQuestions = [
-            {
-                question: "ما هو الشيء الذي كلما زاد نقص؟",
-                difficulty: 1,
-                hint: "فكر في شيء يتناقص بالاستخدام"
-            },
-            {
-                question: "إذا كان لديك صندوق بدون مفتاح، كيف يمكنك فتحه؟",
-                difficulty: 2,
-                hint: "ليس كل قفل يحتاج مفتاح معدني"
-            },
-            {
-                question: "ما هو الشيء الذي يمكن كسره بدون لمسه؟",
-                difficulty: 2,
-                hint: "شيء معنوي وليس مادي"
-            },
-            {
-                question: "رجل يعيش في الطابق العشرين، في الصباح ينزل بالمصعد، وفي المساء يصعد للطابق السابع ثم يمشي. لماذا؟",
-                difficulty: 3,
-                hint: "فكر في قيود جسدية معينة"
-            },
-            {
-                question: "ما هو الشيء الذي يزداد عندما تقسمه؟",
-                difficulty: 3,
-                hint: "شيء رياضي"
-            },
-            {
-                question: "لديك 12 كرة، إحداها مختلفة الوزن. كيف تجدها بثلاث محاولات فقط باستخدام ميزان؟",
-                difficulty: 4,
-                hint: "قسم الكرات إلى مجموعات متساوية"
-            },
-            {
-                question: "ما هو الشيء الذي يمكن أن يسافر حول العالم وهو في مكانه؟",
-                difficulty: 3,
-                hint: "شيء تجده في البريد"
-            },
-            {
-                question: "إذا كان غداً هو أمس، فماذا سيكون اليوم؟",
-                difficulty: 4,
-                hint: "فكر في الزمن والأيام"
-            }
-        ];
+        // أسئلة الحكمة المتدرجة الصعوبة والتفاعلية
+        const wisdomQuestions = {
+            beginner: [
+                {
+                    question: "ما هو الشيء الذي كلما أخذت منه كبر؟",
+                    category: "تفكير منطقي",
+                    hint: "فكر في شيء يزداد بالحفر",
+                    difficulty: 1
+                },
+                {
+                    question: "لماذا نتعلم من أخطائنا أكثر من نجاحاتنا؟",
+                    category: "حكمة حياتية",
+                    hint: "الألم يترك أثراً أعمق من المتعة",
+                    difficulty: 1
+                },
+                {
+                    question: "ما هو أهم شيء في الصداقة؟",
+                    category: "علاقات اجتماعية",
+                    hint: "أساس كل علاقة قوية",
+                    difficulty: 1
+                }
+            ],
+            intermediate: [
+                {
+                    question: "كيف يمكن أن تكون قوياً وضعيفاً في نفس الوقت؟",
+                    category: "فلسفة الحياة",
+                    hint: "فكر في القوة الداخلية والظاهرية",
+                    difficulty: 2
+                },
+                {
+                    question: "إذا كان بإمكانك تغيير شيء واحد في العالم، ماذا ستختار ولماذا؟",
+                    category: "تفكير إبداعي",
+                    hint: "فكر في الأثر الأوسع",
+                    difficulty: 2
+                },
+                {
+                    question: "لماذا نحتاج للفشل كي ننجح؟",
+                    category: "دروس الحياة",
+                    hint: "التجربة خير معلم",
+                    difficulty: 2
+                }
+            ],
+            advanced: [
+                {
+                    question: "ما الفرق بين المعرفة والحكمة؟ اعط مثالاً من واقع الحياة",
+                    category: "فلسفة المعرفة",
+                    hint: "المعرفة ما تعرفه، الحكمة كيف تستخدمه",
+                    difficulty: 3
+                },
+                {
+                    question: "كيف يمكن للصمت أن يكون أقوى من الكلام؟",
+                    category: "فن التواصل",
+                    hint: "أحياناً ما لا نقوله أهم مما نقوله",
+                    difficulty: 3
+                },
+                {
+                    question: "إذا كان الوقت نسبي، فكيف نقيس قيمة اللحظة؟",
+                    category: "فلسفة الزمن",
+                    hint: "القيمة ليست في الكمية بل في الجودة",
+                    difficulty: 3
+                }
+            ]
+        };
 
-        // أقوال الحكمة
+        // أقوال الحكمة الملهمة
         const wisdomQuotes = [
-            "الحكمة هي معرفة ما يجب فعله تالياً",
-            "العقل الذي ينفتح لفكرة جديدة لن يعود أبداً إلى حجمه الأصلي",
-            "التعلم لا ينتهي إلا بانتهاء الحياة",
-            "الحكيم يتعلم من أخطاء الآخرين، والغبي لا يتعلم حتى من أخطائه",
-            "المعرفة قوة، والحكمة هي استخدام هذه القوة بشكل صحيح"
+            "الحكمة هي معرفة ما يجب فعله تالياً، والمهارة هي معرفة كيف تفعله، والفضيلة هي فعله",
+            "العقل الذي ينفتح لفكرة جديدة لن يعود أبداً إلى حجمه الأصلي - ألبرت أينشتاين",
+            "التعلم لا ينتهي إلا بانتهاء الحياة - جلال الدين الرومي",
+            "الحكيم يتعلم من أخطاء الآخرين، والذكي يتعلم من أخطائه، والأحمق لا يتعلم",
+            "المعرفة قوة، والحكمة هي استخدام هذه القوة بشكل صحيح",
+            "من لا يفهم نظرة العين لن يفهم طول الشرح - مثل عربي",
+            "الصبر مفتاح الفرج، والعجلة من الشيطان - حكمة إسلامية",
+            "خير الناس أنفعهم للناس - حديث شريف"
         ];
 
-        let gameInterval;
+        let wisdomTimer;
+        let audioEnabled = true;
 
-        // تحميل البيانات المحفوظة
-        function loadWisdomData() {
-            const saved = localStorage.getItem('wisdom-kingdom-data');
-            if (saved) {
-                const data = JSON.parse(saved);
-                wisdomData.completedChallenges = data.completedChallenges || 0;
-                wisdomData.score = data.totalScore || 0;
-                wisdomData.wisdomLevel = data.wisdomLevel || 1;
-                wisdomData.achievements = data.achievements || [];
+        // ===== تحميل بيانات الطلاب =====
+        function loadStudentsData() {
+            try {
+                const playersData = localStorage.getItem('squidGamePlayers');
+                if (playersData) {
+                    const players = JSON.parse(playersData);
+                    wisdomData.students = players.map(player => ({
+                        name: player.name,
+                        className: player.className,
+                        status: 'waiting',
+                        score: 0,
+                        wisdomLevel: 0,
+                        questionsAnswered: 0,
+                        deepThoughts: 0,
+                        evaluation: null,
+                        timestamp: null,
+                        insights: []
+                    }));
+                    
+                    // خلط الطلاب بشكل عشوائي
+                    wisdomData.students = shuffleArray(wisdomData.students);
+                    console.log(`تم تحميل ${wisdomData.students.length} طالب لرحلة الحكمة`);
+                } else {
+                    console.log('لا توجد بيانات طلاب');
+                }
+            } catch (e) {
+                console.error('خطأ في تحميل بيانات الطلاب:', e);
             }
             updateDisplay();
-            showRandomQuote();
+            displayStudentsList();
         }
 
-        // حفظ البيانات
-        function saveWisdomData() {
-            const dataToSave = {
-                completedChallenges: wisdomData.completedChallenges,
-                totalScore: wisdomData.score,
-                wisdomLevel: wisdomData.wisdomLevel,
-                achievements: wisdomData.achievements,
-                lastPlayed: new Date().toISOString()
-            };
-            localStorage.setItem('wisdom-kingdom-data', JSON.stringify(dataToSave));
+        // ===== خلط المصفوفة =====
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
         }
 
-        // بدء رحلة الحكمة
-        function startWisdomJourney() {
-            if (wisdomData.isRunning) return;
+        // ===== تحديث العرض =====
+        function updateDisplay() {
+            document.getElementById('activeStudents').textContent = 
+                wisdomData.students.filter(s => s.status === 'waiting').length;
+            document.getElementById('completedStudents').textContent = wisdomData.completedStudents;
+            document.getElementById('timeRemaining').textContent = formatTime(wisdomData.remainingTime);
+            document.getElementById('mainTimer').textContent = formatTime(wisdomData.remainingTime);
             
+            // تحديث لون المؤقت حسب الوقت المتبقي
+            const timerElement = document.getElementById('mainTimer');
+            if (wisdomData.remainingTime <= 120) { // دقيقتان
+                timerElement.style.color = '#E74C3C';
+            } else if (wisdomData.remainingTime <= 300) { // 5 دقائق
+                timerElement.style.color = '#F39C12';
+            } else {
+                timerElement.style.color = '#9B59B6';
+            }
+        }
+
+        // ===== تنسيق الوقت =====
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+
+        // ===== عرض قائمة الطلاب =====
+        function displayStudentsList() {
+            const container = document.getElementById('studentsList');
+            container.innerHTML = '';
+            
+            wisdomData.students.forEach((student, index) => {
+                const studentCard = document.createElement('div');
+                studentCard.className = `student-card ${student.status}`;
+                
+                let statusIcon = '';
+                let statusText = '';
+                
+                switch(student.status) {
+                    case 'waiting':
+                        statusIcon = '⏳';
+                        statusText = 'في الانتظار';
+                        break;
+                    case 'current':
+                        statusIcon = '🧠';
+                        statusText = 'يفكر الآن';
+                        break;
+                    case 'thinking':
+                        statusIcon = '💭';
+                        statusText = 'في تأمل عميق';
+                        break;
+                    case 'completed':
+                        statusIcon = '✨';
+                        statusText = 'مكتمل';
+                        break;
+                }
+                
+                studentCard.innerHTML = `
+                    <div style="font-weight: bold; margin-bottom: 0.5rem;">
+                        ${statusIcon} ${student.name}
+                    </div>
+                    <div style="font-size: 0.8rem; color: #ccc; margin-bottom: 0.3rem;">
+                        ${student.className}
+                    </div>
+                    <div style="font-size: 0.8rem;">
+                        ${statusText}
+                    </div>
+                    ${student.score > 0 ? `<div style="color: #FFD700; font-weight: bold; margin-top: 0.3rem;">
+                        ${student.score} نقطة حكمة
+                    </div>` : ''}
+                `;
+                
+                container.appendChild(studentCard);
+            });
+        }
+
+        // ===== بدء رحلة الحكمة =====
+        function startWisdomJourney() {
+            if (wisdomData.students.length === 0) {
+                showSmartNotification(
+                    'لا توجد بيانات طلاب!',
+                    'يرجى العودة لمركز الممالك وتحديد الطلاب أولاً',
+                    'warning'
+                );
+                return;
+            }
+
             wisdomData.isRunning = true;
             wisdomData.isPaused = false;
-            wisdomData.currentQuestion = 0;
-            wisdomData.timer = 60;
+            wisdomData.currentStudentIndex = 0;
+            wisdomData.currentQuestionIndex = 0;
+            wisdomData.remainingTime = wisdomData.totalTime;
+            wisdomData.completedStudents = 0;
             
-            playSound('start');
-            showWisdomQuestion();
-            startThinkingTimer();
+            // إعادة تعيين حالة الطلاب
+            wisdomData.students.forEach(student => {
+                student.status = 'waiting';
+                student.score = 0;
+                student.questionsAnswered = 0;
+                student.evaluation = null;
+                student.timestamp = null;
+                student.insights = [];
+            });
+
+            startWisdomTimer();
+            showWisdomTutorial();
             
-            document.querySelector('.start-btn').textContent = '🔄 بدء رحلة جديدة';
+            // تحديث زر البداية
+            document.querySelector('.start-wisdom').innerHTML = 
+                '<i class="fas fa-refresh"></i><span class="button-text">إعادة البدء</span>';
         }
 
-        // إيقاف للتفكير
-        function pauseThinking() {
-            if (!wisdomData.isRunning) return;
+        // ===== عرض تعليمات الحكمة =====
+        function showWisdomTutorial() {
+            const tutorialSteps = [
+                {
+                    title: '🧠 مرحباً برحلة الحكمة',
+                    message: `
+                        <div style="font-size: 1.3rem; margin-bottom: 1rem;">
+                            رحلة تفاعلية لاستكشاف عمق تفكير الطلاب
+                        </div>
+                        <div style="text-align: right; line-height: 1.6;">
+                            • أسئلة تحفز التفكير العميق والإبداع<br>
+                            • تقييم شامل لمستوى الحكمة والنضج<br>
+                            • وقت كافٍ للتأمل والتفكير<br>
+                            • تفاعل مباشر بين المعلم والطالب
+                        </div>
+                    `,
+                    duration: 4000,
+                    sound: 'brain-activate'
+                },
+                {
+                    title: '🎯 كيفية التقييم',
+                    message: `
+                        <div style="display: grid; grid-template-columns: 1fr; gap: 1rem; text-align: right;">
+                            <div style="background: rgba(255,215,0,0.2); padding: 1rem; border-radius: 10px;">
+                                <strong style="color: #FFD700;">🌟 حكيم وملهم (120 نقطة)</strong><br>
+                                إجابة عميقة ومبدعة تظهر حكمة استثنائية
+                            </div>
+                            <div style="background: rgba(39,174,96,0.2); padding: 1rem; border-radius: 10px;">
+                                <strong style="color: #27AE60;">💡 متميز الفكر (100 نقطة)</strong><br>
+                                تفكير ممتاز وإجابة مدروسة
+                            </div>
+                            <div style="background: rgba(52,152,219,0.2); padding: 1rem; border-radius: 10px;">
+                                <strong style="color: #3498DB;">✅ جيد التفكير (80 نقطة)</strong><br>
+                                إجابة صحيحة وتفكير منطقي
+                            </div>
+                            <div style="background: rgba(231,76,60,0.2); padding: 1rem; border-radius: 10px;">
+                                <strong style="color: #E74C3C;">🤔 يحتاج تطوير (50 نقطة)</strong><br>
+                                محاولة جيدة تحتاج المزيد من التطوير
+                            </div>
+                        </div>
+                    `,
+                    duration: 5000,
+                    sound: 'knowledge-unlock'
+                },
+                {
+                    title: '⏰ نظام التوقيت',
+                    message: `
+                        <div style="text-align: center; margin-bottom: 1.5rem;">
+                            <div style="font-size: 2rem; color: #9B59B6; margin-bottom: 1rem;">
+                                ${formatTime(wisdomData.remainingTime)}
+                            </div>
+                            <div style="text-align: right; line-height: 1.6;">
+                                • ${Math.floor(wisdomData.settings.thinkingTime/60)} دقيقة لكل سؤال للتفكير العميق<br>
+                                • إمكانية إعطاء وقت إضافي للطلاب المحتاجين<br>
+                                • مؤقت مرئي لمتابعة الوقت المتبقي<br>
+                                • إيقاف مؤقت متاح عند الحاجة
+                            </div>
+                        </div>
+                    `,
+                    duration: 4000,
+                    sound: 'mystic-wind'
+                }
+            ];
             
-            wisdomData.isPaused = !wisdomData.isPaused;
+            showTutorialSequence(tutorialSteps, () => {
+                setTimeout(() => {
+                    showCurrentStudent();
+                }, 1000);
+            });
+        }
+
+        // ===== عرض التسلسل التعليمي =====
+        function showTutorialSequence(steps, onComplete) {
+            let currentStep = 0;
             
-            if (wisdomData.isPaused) {
-                clearInterval(gameInterval);
-                document.querySelector('.pause-btn').textContent = '▶️ متابعة التفكير';
-                document.getElementById('thinkingTime').textContent = 'متوقف للتأمل العميق...';
-                playSound('pause');
-            } else {
-                startThinkingTimer();
-                document.querySelector('.pause-btn').textContent = '⏸️ توقف للتفكير';
+            function showStep() {
+                if (currentStep >= steps.length) {
+                    onComplete();
+                    return;
+                }
+                
+                const step = steps[currentStep];
+                setModalContent(step.title, step.message, '#9B59B6');
+                showModal('resultModal');
+                
+                playSound(step.sound);
+                
+                setTimeout(() => {
+                    currentStep++;
+                    closeModal();
+                    setTimeout(showStep, 500);
+                }, step.duration);
+            }
+            
+            showStep();
+        }
+
+        // ===== عرض الطالب الحالي =====
+        function showCurrentStudent() {
+            if (wisdomData.currentStudentIndex >= wisdomData.students.length) {
+                // انتهاء الجولة
+                completeWisdomJourney();
+                return;
+            }
+
+            const currentStudent = wisdomData.students[wisdomData.currentStudentIndex];
+            
+            // تحديث حالة الطلاب
+            wisdomData.students.forEach(s => {
+                if (s.status === 'current') s.status = 'waiting';
+            });
+            currentStudent.status = 'current';
+
+            // عرض اسم الطالب الحالي
+            document.getElementById('currentStudentName').textContent = 
+                `${currentStudent.name} - ${currentStudent.className}`;
+            
+            // عرض السؤال
+            showWisdomQuestion();
+            
+            // إظهار قسم الطالب
+            document.getElementById('studentSection').style.display = 'block';
+            
+            displayStudentsList();
+            
+            // تشغيل صوت انتقال للطالب التالي
+            playSound('transition');
+            
+            // إظهار نافذة الطالب الحالي
+            showStudentModal(currentStudent);
+        }
+
+        // ===== عرض سؤال الحكمة =====
+        function showWisdomQuestion() {
+            const questions = getQuestionsForDifficulty();
+            if (wisdomData.currentQuestionIndex < questions.length) {
+                const question = questions[wisdomData.currentQuestionIndex];
+                
+                document.getElementById('wisdomQuestion').innerHTML = `
+                    <div style="font-size: 1.1rem; color: #FFD700; margin-bottom: 1rem;">
+                        <i class="fas fa-brain"></i> ${question.category}
+                    </div>
+                    <div style="font-size: 1.3rem; line-height: 1.6;">
+                        ${question.question}
+                    </div>
+                    <div style="margin-top: 1rem; font-size: 0.9rem; color: #ccc;">
+                        💡 تلميح: ${question.hint}
+                    </div>
+                `;
             }
         }
 
-        // مشاركة الحكمة (إجابة صحيحة)
-        function shareWisdom() {
+        // ===== الحصول على الأسئلة حسب الصعوبة =====
+        function getQuestionsForDifficulty() {
+            const difficulty = wisdomData.settings.difficulty;
+            
+            if (difficulty === 'mixed') {
+                // خلط الأسئلة من جميع المستويات
+                const allQuestions = [
+                    ...wisdomQuestions.beginner,
+                    ...wisdomQuestions.intermediate,
+                    ...wisdomQuestions.advanced
+                ];
+                return shuffleArray(allQuestions).slice(0, wisdomData.settings.questionsCount);
+            } else {
+                return shuffleArray(wisdomQuestions[difficulty] || wisdomQuestions.intermediate)
+                    .slice(0, wisdomData.settings.questionsCount);
+            }
+        }
+
+        // ===== تقييم الحكمة =====
+        function evaluateWisdom(evaluation) {
             if (!wisdomData.isRunning || wisdomData.isPaused) return;
             
-            const currentQ = wisdomQuestions[wisdomData.currentQuestion];
-            const points = currentQ.difficulty * 15; // نقاط حسب الصعوبة
+            const currentStudent = wisdomData.students[wisdomData.currentStudentIndex];
+            if (!currentStudent) return;
+
+            // تحديد النقاط
+            const scoreMap = {
+                'brilliant': 120,
+                'excellent': 100,
+                'good': 80,
+                'needs-improvement': 50
+            };
             
-            wisdomData.score += points;
-            wisdomData.currentQuestion++;
+            const points = scoreMap[evaluation];
+            currentStudent.score += points;
+            currentStudent.questionsAnswered++;
+            currentStudent.evaluation = evaluation;
+            currentStudent.status = 'completed';
+            currentStudent.timestamp = new Date().toISOString();
             
-            playSound('success');
+            // إضافة بصيرة للطالب
+            addStudentInsight(currentStudent, evaluation);
             
-            // تحديث التقدم
-            updateProgress();
+            wisdomData.completedStudents++;
+
+            // عرض نتيجة التقييم
+            showEvaluationResult(currentStudent, evaluation, points);
             
-            // إضافة إنجاز
-            addAchievement(`حل لغز الحكمة رقم ${wisdomData.currentQuestion}`);
+            // تشغيل صوت مناسب
+            playEvaluationSound(evaluation);
             
-            if (wisdomData.currentQuestion >= wisdomData.totalQuestions) {
-                completeWisdomJourney();
-            } else {
-                showWisdomQuestion();
-                wisdomData.timer = 60;
-            }
+            // الانتقال للطالب التالي
+            wisdomData.currentStudentIndex++;
             
+            setTimeout(() => {
+                closeModal();
+                if (wisdomData.currentStudentIndex < wisdomData.students.length && 
+                    wisdomData.remainingTime > 0) {
+                    // الانتقال للسؤال التالي
+                    wisdomData.currentQuestionIndex = 
+                        (wisdomData.currentQuestionIndex + 1) % wisdomData.settings.questionsCount;
+                    showCurrentStudent();
+                } else {
+                    completeWisdomJourney();
+                }
+            }, 2500);
+            
+            displayStudentsList();
             updateDisplay();
         }
 
-        // عرض سؤال الحكمة
-        function showWisdomQuestion() {
-            if (wisdomData.currentQuestion < wisdomQuestions.length) {
-                const currentQ = wisdomQuestions[wisdomData.currentQuestion];
-                document.getElementById('questionText').textContent = currentQ.question;
-                
-                // عرض نجوم الصعوبة
-                const stars = '⭐'.repeat(currentQ.difficulty);
-                document.getElementById('difficultyStars').textContent = stars;
-                
-                // عرض تلميح بعد 30 ثانية
-                setTimeout(() => {
-                    if (wisdomData.isRunning && wisdomData.timer < 30) {
-                        document.getElementById('questionText').innerHTML = 
-                            currentQ.question + '<br><small style="color: #f39c12;">💡 تلميح: ' + currentQ.hint + '</small>';
-                    }
-                }, 30000);
+        // ===== إضافة بصيرة للطالب =====
+        function addStudentInsight(student, evaluation) {
+            const insights = {
+                'brilliant': 'أظهر حكمة استثنائية وتفكيراً عميقاً',
+                'excellent': 'تميز في التحليل والتفكير المنطقي',
+                'good': 'أظهر فهماً جيداً وتفكيراً سليماً',
+                'needs-improvement': 'محاولة جيدة مع إمكانية التطوير'
+            };
+            
+            student.insights.push({
+                evaluation: evaluation,
+                insight: insights[evaluation],
+                timestamp: new Date().toISOString()
+            });
+            
+            if (evaluation === 'brilliant' || evaluation === 'excellent') {
+                student.deepThoughts++;
             }
         }
 
-        // بدء مؤقت التفكير
-        function startThinkingTimer() {
-            gameInterval = setInterval(() => {
+        // ===== عرض نتيجة التقييم =====
+        function showEvaluationResult(student, evaluation, points) {
+            const evaluationMap = {
+                'brilliant': { text: 'حكيم وملهم!', icon: '🌟', color: '#FFD700' },
+                'excellent': { text: 'متميز الفكر!', icon: '💡', color: '#27AE60' },
+                'good': { text: 'جيد التفكير!', icon: '✅', color: '#3498DB' },
+                'needs-improvement': { text: 'يحتاج تطوير', icon: '🤔', color: '#E74C3C' }
+            };
+            
+            const evalData = evaluationMap[evaluation];
+            
+            const title = `${evalData.icon} ${evalData.text}`;
+            const message = `
+                <div style="font-size: 1.3rem; margin-bottom: 1rem;">
+                    الطالب: <strong>${student.name}</strong>
+                </div>
+                <div style="font-size: 1.5rem; color: ${evalData.color}; font-weight: 700; margin: 1rem 0;">
+                    +${points} نقطة حكمة
+                </div>
+                <div style="font-size: 1.2rem; color: ${evalData.color};">
+                    إجمالي النقاط: ${student.score}
+                </div>
+                <div style="margin-top: 1rem; font-size: 1rem; color: #ccc;">
+                    ${student.insights[student.insights.length - 1]?.insight || ''}
+                </div>
+            `;
+            
+            setModalContent(title, message, evalData.color);
+            showModal('resultModal');
+        }
+
+        // ===== تشغيل صوت التقييم =====
+        function playEvaluationSound(evaluation) {
+            const soundMap = {
+                'brilliant': 'brain-activate',
+                'excellent': 'knowledge-unlock',
+                'good': 'cosmic-click',
+                'needs-improvement': 'notification-pop'
+            };
+            
+            playSound(soundMap[evaluation]);
+        }
+
+        // ===== إعطاء وقت إضافي للتفكير =====
+        function pauseForReflection() {
+            if (!wisdomData.isRunning) return;
+            
+            wisdomData.remainingTime += 60; // إضافة دقيقة
+            
+            showSmartNotification(
+                'وقت إضافي للتأمل',
+                'تم إعطاء دقيقة إضافية للطالب للتفكير العميق',
+                'info',
+                3000
+            );
+            
+            playSound('mystic-wind');
+            updateDisplay();
+        }
+
+        // ===== بدء مؤقت الحكمة =====
+        function startWisdomTimer() {
+            wisdomTimer = setInterval(() => {
                 if (!wisdomData.isPaused) {
-                    wisdomData.timer--;
-                    document.getElementById('timerDisplay').textContent = wisdomData.timer;
-                    document.getElementById('thinkingTimer').textContent = wisdomData.timer;
+                    wisdomData.remainingTime--;
+                    updateDisplay();
                     
-                    if (wisdomData.timer <= 0) {
-                        // انتهى وقت التفكير
-                        wisdomData.currentQuestion++;
-                        if (wisdomData.currentQuestion >= wisdomData.totalQuestions) {
-                            completeWisdomJourney();
-                        } else {
-                            wisdomData.timer = 60;
-                            showWisdomQuestion();
-                        }
+                    // تحذيرات الوقت
+                    if (wisdomData.remainingTime === 300) { // 5 دقائق
+                        showSmartNotification(
+                            '⏰ تنبيه الوقت',
+                            '5 دقائق متبقية في رحلة الحكمة',
+                            'warning'
+                        );
+                    } else if (wisdomData.remainingTime === 60) { // دقيقة واحدة
+                        showSmartNotification(
+                            '⚠️ تحذير الوقت',
+                            'دقيقة واحدة فقط متبقية!',
+                            'danger'
+                        );
+                    }
+                    
+                    if (wisdomData.remainingTime <= 0) {
+                        completeWisdomJourney();
                     }
                 }
             }, 1000);
         }
 
-        // إكمال رحلة الحكمة
+        // ===== إيقاف مؤقت رحلة الحكمة =====
+        function pauseWisdomJourney() {
+            if (!wisdomData.isRunning) return;
+            
+            wisdomData.isPaused = !wisdomData.isPaused;
+            const pauseBtn = document.querySelector('.pause-wisdom');
+            
+            if (wisdomData.isPaused) {
+                clearInterval(wisdomTimer);
+                pauseBtn.innerHTML = '<i class="fas fa-play"></i><span class="button-text">متابعة التأمل</span>';
+                playSound('pause');
+                
+                showSmartNotification(
+                    'تم إيقاف الرحلة مؤقتاً',
+                    'وقت للتأمل والتفكير العميق',
+                    'info'
+                );
+            } else {
+                startWisdomTimer();
+                pauseBtn.innerHTML = '<i class="fas fa-pause"></i><span class="button-text">إيقاف مؤقت</span>';
+                playSound('cosmic-click');
+            }
+        }
+
+        // ===== إكمال رحلة الحكمة =====
         function completeWisdomJourney() {
             wisdomData.isRunning = false;
-            clearInterval(gameInterval);
+            clearInterval(wisdomTimer);
             
-            // حساب مستوى الحكمة الجديد
-            const newLevel = Math.floor(wisdomData.score / 100) + 1;
-            if (newLevel > wisdomData.wisdomLevel) {
-                wisdomData.wisdomLevel = newLevel;
-                addAchievement(`وصول لمستوى الحكمة ${newLevel}`);
+            // إخفاء قسم الطالب الحالي
+            document.getElementById('studentSection').style.display = 'none';
+            
+            // حساب النتائج النهائية
+            const results = wisdomData.students
+                .filter(s => s.score > 0)
+                .sort((a, b) => b.score - a.score);
+            
+            // عرض النتائج النهائية
+            showFinalWisdomResults(results);
+            
+            // حفظ النتائج لمركز الممالك
+            saveWisdomResults(results);
+            
+            // تشغيل أصوات الإنجاز
+            playSound('brain-activate');
+        }
+
+        // ===== عرض النتائج النهائية =====
+        function showFinalWisdomResults(results) {
+            const wiseSages = results.filter(s => s.score >= 100);
+            
+            let resultsHTML = `
+                <div style="margin-bottom: 2rem; text-align: center;">
+                    <div style="font-size: 1.5rem; margin-bottom: 1rem; color: #9B59B6;">
+                        🧠 تقرير رحلة الحكمة النهائي 🧠
+                    </div>
+                    <div style="color: var(--wisdom-primary); font-size: 1.1rem;">
+                        تم تقييم ${wisdomData.completedStudents} طالب في تحديات الحكمة
+                    </div>
+                    ${wiseSages.length > 0 ? `
+                        <div style="color: #FFD700; margin-top: 0.5rem; font-size: 1.1rem;">
+                            ${wiseSages.length} طالب حصل على لقب "الحكيم الصغير"
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            
+            if (results.length > 0) {
+                resultsHTML += '<div style="margin: 2rem 0;"><div style="text-align: center; margin-bottom: 1rem; font-size: 1.2rem; color: #9B59B6;"><strong>🏆 حكماء المستقبل</strong></div>';
+                
+                results.forEach((student, index) => {
+                    const medals = ['🥇', '🥈', '🥉'];
+                    const medal = medals[index] || '🧠';
+                    const rankColors = ['#FFD700', '#C0C0C0', '#CD7F32', '#9B59B6'];
+                    const rankColor = rankColors[index] || '#9B59B6';
+                    
+                    const wisdomTitle = student.score >= 120 ? 'الحكيم الملهم' :
+                                      student.score >= 100 ? 'المفكر العميق' :
+                                      student.score >= 80 ? 'الباحث عن الحكمة' : 'المتأمل الصغير';
+                    
+                    resultsHTML += `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; margin: 0.8rem 0; background: linear-gradient(135deg, rgba(155,89,182,0.1), rgba(52,152,219,0.1)); border-radius: 12px; border-left: 4px solid ${rankColor};">
+                            <div>
+                                <span style="font-size: 1.1rem; font-weight: bold;">
+                                    ${medal} ${student.name}
+                                </span>
+                                <div style="font-size: 0.9rem; color: ${rankColor}; margin-top: 0.3rem;">
+                                    ${wisdomTitle} • ${student.questionsAnswered} أسئلة
+                                </div>
+                                ${student.deepThoughts > 0 ? `
+                                    <div style="font-size: 0.8rem; color: #FFD700; margin-top: 0.2rem;">
+                                        ⭐ ${student.deepThoughts} إجابة عميقة
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <span style="color: ${rankColor}; font-weight: 700; font-size: 1.2rem;">${student.score} نقطة</span>
+                        </div>
+                    `;
+                });
+                resultsHTML += '</div>';
             }
             
-            wisdomData.completedChallenges++;
-            saveWisdomData();
-            
-            document.getElementById('questionText').innerHTML = 
-                `🎉 تهانينا! لقد أكملت رحلة الحكمة!<br>
-                النقاط المكتسبة: ${wisdomData.score}<br>
-                مستوى الحكمة: ${wisdomData.wisdomLevel}`;
-            
-            playSound('complete');
-            showRandomQuote();
-            updateDisplay();
-            
-            setTimeout(() => {
-                wisdomData.currentQuestion = 0;
-                wisdomData.timer = 60;
-                document.getElementById('questionText').textContent = 'اضغط على "بدء التأمل" لبدء رحلة الحكمة';
-                document.querySelector('.start-btn').textContent = '🧘 بدء التأمل';
-                showRandomQuote();
-            }, 5000);
+            setModalContent('🏆 انتهاء رحلة الحكمة', resultsHTML, '#9B59B6');
+            showModal('wisdomEndModal');
         }
-
-        // عرض قول حكيم عشوائي
-        function showRandomQuote() {
-            const randomQuote = wisdomQuotes[Math.floor(Math.random() * wisdomQuotes.length)];
-            document.getElementById('wisdomQuote').textContent = randomQuote;
-        }
-
-        // إضافة إنجاز
-        function addAchievement(achievement) {
-            if (!wisdomData.achievements.includes(achievement)) {
-                wisdomData.achievements.push(achievement);
-                displayAchievements();
-            }
-        }
-
-        // عرض الإنجازات
-        function displayAchievements() {
-            const container = document.getElementById('achievementsList');
-            container.innerHTML = '';
-            
-            wisdomData.achievements.forEach(achievement => {
-                const badge = document.createElement('div');
-                badge.className = 'achievement-badge';
-                badge.textContent = '🏆 ' + achievement;
-                container.appendChild(badge);
-            });
-        }
-
-        // تحديث العرض
-        function updateDisplay() {
-            document.getElementById('totalChallenges').textContent = wisdomData.completedChallenges;
-            document.getElementById('currentScore').textContent = wisdomData.score;
-            document.getElementById('wisdomLevel').textContent = wisdomData.wisdomLevel;
-        }
-
-        // تحديث التقدم
-        function updateProgress() {
-            const progress = (wisdomData.currentQuestion / wisdomData.totalQuestions) * 100;
-            document.getElementById('progressFill').style.width = progress + '%';
-            document.getElementById('progressText').textContent = 
-                `${wisdomData.currentQuestion}/${wisdomData.totalQuestions}`;
-        }
-
-        // تشغيل الأصوات
-        function playSound(type) {
-            try {
-                const audio = new Audio();
-                switch(type) {
-                    case 'start':
-                        audio.src = '../assets/media/sounds/kingdom-sounds/mystic-wind.mp3';
-                        break;
-                    case 'success':
-                        audio.src = '../assets/media/sounds/kingdom-sounds/knowledge-unlock.mp3';
-                        break;
-                    case 'complete':
-                        audio.src = '../assets/media/sounds/kingdom-sounds/brain-activate.mp3';
-                        break;
-                    case 'pause':
-                        audio.src = '../assets/media/sounds/Click.mp3';
-                        break;
-                }
-                audio.play().catch(e => console.log('لا يمكن تشغيل الصوت'));
-            } catch (e) {
-                console.log('خطأ في تشغيل الصوت');
-            }
-        }
-
-        // العودة للممالك
-        function goBack() {
-            if (confirm('هل تريد العودة إلى الممالك؟ سيتم حفظ رحلتك في الحكمة.')) {
-                saveWisdomData();
-                window.location.href = 'kingdoms-center.html';
-            }
-        }
-
-        // تهيئة الصفحة
-        document.addEventListener('DOMContentLoaded', function() {
-            loadWisdomData();
-            displayAchievements();
-            updateProgress();
-            
-            // تغيير الأقوال كل 10 ثوان
-            setInterval(showRandomQuote, 10000);
-        });
     </script>
 </body>
 </html>
