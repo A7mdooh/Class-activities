@@ -9,6 +9,7 @@
     <meta name="theme-color" content="#8360c3">
     <title>🧠 مملكة الحكمة | التحديات الفكرية</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --wisdom-primary: #9B59B6;
@@ -1162,6 +1163,18 @@
                     category: "علاقات اجتماعية",
                     hint: "أساس كل علاقة قوية",
                     difficulty: 1
+                },
+                {
+                    question: "لماذا نقول 'الصبر مفتاح الفرج'؟",
+                    category: "حكمة تراثية",
+                    hint: "فكر في قيمة الانتظار والثبات",
+                    difficulty: 1
+                },
+                {
+                    question: "ما الفرق بين الذكاء والحكمة؟",
+                    category: "فلسفة بسيطة",
+                    hint: "أحدهما في الرأس والآخر في القلب",
+                    difficulty: 1
                 }
             ],
             intermediate: [
@@ -1181,6 +1194,24 @@
                     question: "لماذا نحتاج للفشل كي ننجح؟",
                     category: "دروس الحياة",
                     hint: "التجربة خير معلم",
+                    difficulty: 2
+                },
+                {
+                    question: "ما معنى أن تكون صادقاً مع نفسك؟",
+                    category: "تطوير الذات",
+                    hint: "النظر في المرآة الداخلية",
+                    difficulty: 2
+                },
+                {
+                    question: "كيف نفرق بين الرغبة والحاجة؟",
+                    category: "حكمة عملية",
+                    hint: "ما نريده وما نحتاجه حقاً",
+                    difficulty: 2
+                },
+                {
+                    question: "لماذا أحياناً نخاف من أحلامنا؟",
+                    category: "علم نفس بسيط",
+                    hint: "الخوف من المسؤولية والتغيير",
                     difficulty: 2
                 }
             ],
@@ -1202,6 +1233,30 @@
                     category: "فلسفة الزمن",
                     hint: "القيمة ليست في الكمية بل في الجودة",
                     difficulty: 3
+                },
+                {
+                    question: "هل يمكن أن نكون محقين ومخطئين في نفس الوقت؟ كيف؟",
+                    category: "المنطق والنسبية",
+                    hint: "فكر في وجهات النظر المختلفة",
+                    difficulty: 3
+                },
+                {
+                    question: "ما معنى أن 'العبرة بالخواتيم'؟ وكيف يؤثر ذلك على قراراتنا؟",
+                    category: "حكمة إسلامية",
+                    hint: "النهايات تحدد معنى البدايات",
+                    difficulty: 3
+                },
+                {
+                    question: "كيف يمكن للإنسان أن يكون حراً وهو مقيد بالقوانين والقيم؟",
+                    category: "فلسفة الحرية",
+                    hint: "الحرية الحقيقية في الاختيار الواعي",
+                    difficulty: 3
+                },
+                {
+                    question: "لماذا نحتاج للآخرين رغم أننا كائنات مستقلة؟",
+                    category: "علم الاجتماع",
+                    hint: "الإنسان مدني بطبعه",
+                    difficulty: 3
                 }
             ]
         };
@@ -1215,7 +1270,15 @@
             "المعرفة قوة، والحكمة هي استخدام هذه القوة بشكل صحيح",
             "من لا يفهم نظرة العين لن يفهم طول الشرح - مثل عربي",
             "الصبر مفتاح الفرج، والعجلة من الشيطان - حكمة إسلامية",
-            "خير الناس أنفعهم للناس - حديث شريف"
+            "خير الناس أنفعهم للناس - حديث شريف",
+            "العلم نور والجهل ظلام - مقولة عربية",
+            "من علمني حرفاً كنت له عبداً - علي بن أبي طالب",
+            "اطلبوا العلم من المهد إلى اللحد - حديث شريف",
+            "العاقل من اتعظ بغيره، والجاهل من لم يتعظ بنفسه",
+            "الحكمة ضالة المؤمن أنى وجدها فهو أحق بها",
+            "ليس الغنى عن كثرة العرض، ولكن الغنى غنى النفس - حديث شريف",
+            "وما أوتيتم من العلم إلا قليلاً - القرآن الكريم",
+            "الحلم سيد الأخلاق - مثل عربي"
         ];
 
         let wisdomTimer;
@@ -1499,6 +1562,7 @@
             document.getElementById('studentSection').style.display = 'block';
             
             displayStudentsList();
+            updateProgressBar();
             
             // تشغيل صوت انتقال للطالب التالي
             playSound('transition');
@@ -1588,6 +1652,7 @@
                     // الانتقال للسؤال التالي
                     wisdomData.currentQuestionIndex = 
                         (wisdomData.currentQuestionIndex + 1) % wisdomData.settings.questionsCount;
+                    updateProgressBar();
                     showCurrentStudent();
                 } else {
                     completeWisdomJourney();
@@ -1812,6 +1877,376 @@
             setModalContent('🏆 انتهاء رحلة الحكمة', resultsHTML, '#9B59B6');
             showModal('wisdomEndModal');
         }
+
+        // ===== حفظ نتائج الحكمة =====
+        function saveWisdomResults(results) {
+            try {
+                const wisdomResults = {
+                    kingdom: 'wisdom',
+                    timestamp: new Date().toISOString(),
+                    totalStudents: wisdomData.students.length,
+                    completedStudents: wisdomData.completedStudents,
+                    duration: wisdomData.totalTime - wisdomData.remainingTime,
+                    results: results,
+                    settings: wisdomData.settings
+                };
+                
+                localStorage.setItem('wisdom-kingdom-results', JSON.stringify(wisdomResults));
+                
+                // تحديث سجلات الطلاب الفردية
+                const playersData = localStorage.getItem('squidGamePlayers');
+                if (playersData) {
+                    const players = JSON.parse(playersData);
+                    
+                    results.forEach(student => {
+                        const player = players.find(p => p.name === student.name);
+                        if (player) {
+                            // إضافة النقاط والخبرة
+                            player.score = (player.score || 0) + student.score;
+                            player.experiencePoints = (player.experiencePoints || 0) + Math.floor(student.score * 0.8);
+                            
+                            // تحديث إحصائيات الحكمة
+                            player.wisdomPoints = (player.wisdomPoints || 0) + student.score;
+                            player.deepThoughts = (player.deepThoughts || 0) + student.deepThoughts;
+                            player.questionsAnswered = (player.questionsAnswered || 0) + student.questionsAnswered;
+                            
+                            // إضافة إنجازات الحكمة
+                            player.achievements = player.achievements || [];
+                            
+                            if (student.score >= 120) {
+                                player.achievements.push({
+                                    id: 'wisdom-sage',
+                                    name: 'الحكيم الملهم',
+                                    description: 'حصل على أعلى درجات الحكمة والتفكير العميق',
+                                    date: new Date().toISOString(),
+                                    kingdom: 'wisdom',
+                                    icon: '🌟'
+                                });
+                            } else if (student.score >= 100) {
+                                player.achievements.push({
+                                    id: 'deep-thinker',
+                                    name: 'المفكر العميق',
+                                    description: 'أظهر قدرة استثنائية على التفكير والتحليل',
+                                    date: new Date().toISOString(),
+                                    kingdom: 'wisdom',
+                                    icon: '💡'
+                                });
+                            }
+                            
+                            // تحديث المستوى
+                            const newLevel = Math.floor(player.experiencePoints / 100) + 1;
+                            if (newLevel > (player.level || 1)) {
+                                player.level = newLevel;
+                                player.score += newLevel * 50;
+                                
+                                player.achievements.push({
+                                    id: `level-up-wisdom-${newLevel}`,
+                                    name: `الوصول للمستوى ${newLevel}`,
+                                    description: `تم الوصول للمستوى ${newLevel} في مملكة الحكمة`,
+                                    date: new Date().toISOString(),
+                                    kingdom: 'wisdom'
+                                });
+                            }
+                            
+                            // تحديث آخر نشاط
+                            player.lastActivity = new Date().toISOString();
+                        }
+                    });
+                    
+                    localStorage.setItem('squidGamePlayers', JSON.stringify(players));
+                }
+                
+                console.log('✅ تم حفظ نتائج رحلة الحكمة');
+            } catch (e) {
+                console.error('خطأ في حفظ نتائج الحكمة:', e);
+            }
+        }
+
+        // ===== إعدادات الحكمة =====
+        function showWisdomSettings() {
+            showModal('wisdomSettingsModal');
+        }
+
+        function updateThinkingTime(value) {
+            document.getElementById('thinkingTimeValue').textContent = Math.floor(value / 60);
+        }
+
+        function saveWisdomSettings() {
+            const thinkingTime = parseInt(document.getElementById('thinkingTimeSlider').value);
+            const difficulty = document.getElementById('difficultyLevel').value;
+            const questionsCount = parseInt(document.getElementById('questionsCount').value);
+            
+            wisdomData.settings = {
+                thinkingTime: thinkingTime,
+                difficulty: difficulty,
+                questionsCount: questionsCount
+            };
+            
+            wisdomData.totalTime = Math.max(thinkingTime * questionsCount, 300); // حد أدنى 5 دقائق
+            wisdomData.remainingTime = wisdomData.totalTime;
+            
+            updateDisplay();
+            closeModal('wisdomSettingsModal');
+            
+            showSmartNotification(
+                'تم حفظ إعدادات الحكمة',
+                `${Math.floor(thinkingTime/60)} دقيقة لكل سؤال، ${questionsCount} أسئلة، صعوبة: ${difficulty}`,
+                'success'
+            );
+        }
+
+        // ===== نظام الإشعارات الذكية =====
+        function showSmartNotification(title, message, type = 'info', duration = 4000) {
+            const notification = document.createElement('div');
+            notification.className = `smart-notification ${type}`;
+            
+            const typeConfig = {
+                'info': { icon: 'fas fa-info-circle', color: '#3498DB' },
+                'success': { icon: 'fas fa-check-circle', color: '#27AE60' },
+                'warning': { icon: 'fas fa-exclamation-triangle', color: '#F39C12' },
+                'danger': { icon: 'fas fa-times-circle', color: '#E74C3C' },
+                'wisdom': { icon: 'fas fa-brain', color: '#9B59B6' }
+            };
+            
+            const config = typeConfig[type] || typeConfig['info'];
+            
+            notification.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: linear-gradient(135deg, ${config.color}, ${config.color}dd);
+                    color: white;
+                    padding: 1rem 1.5rem;
+                    border-radius: 12px;
+                    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                    z-index: 10000;
+                    max-width: 350px;
+                    backdrop-filter: blur(10px);
+                    border: 1px solid rgba(255,255,255,0.2);
+                    animation: slideInRight 0.5s ease-out;
+                ">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;">
+                        <i class="${config.icon}" style="font-size: 1.2rem;"></i>
+                        <span style="font-weight: 600; font-size: 1rem;">${title}</span>
+                    </div>
+                    <div style="font-size: 0.9rem; line-height: 1.4; opacity: 0.95;">
+                        ${message}
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // تشغيل صوت الإشعار
+            playSound('notification-pop');
+            
+            // إزالة تلقائية
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.style.animation = 'slideOutRight 0.5s ease-in';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 500);
+                }
+            }, duration);
+        }
+
+        // ===== عرض نافذة الطالب =====
+        function showStudentModal(student) {
+            const title = '🧠 المفكر الحالي';
+            const message = `
+                <div style="font-size: 1.5rem; color: var(--wisdom-primary); margin-bottom: 1rem;">
+                    <i class="fas fa-user-graduate"></i> ${student.name}
+                </div>
+                <div style="color: #fff; font-size: 1.1rem; margin-bottom: 1rem;">
+                    من ${student.className}
+                </div>
+                <div style="color: #ccc; font-size: 1rem;">
+                    استعد لسؤال يتطلب التفكير العميق والحكمة
+                </div>
+            `;
+            
+            setModalContent(title, message, '#9B59B6');
+            showModal('resultModal');
+            
+            playSound('brain-activate');
+            
+            setTimeout(() => {
+                closeModal();
+            }, 3000);
+        }
+
+        // ===== وظائف النوافذ المنبثقة =====
+        function showModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('show');
+                playSound('modal-open');
+            }
+        }
+
+        function closeModal(modalId = null) {
+            if (modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.classList.remove('show');
+                }
+            } else {
+                // إغلاق جميع النوافذ
+                const modals = document.querySelectorAll('.modal.show');
+                modals.forEach(modal => {
+                    modal.classList.remove('show');
+                });
+            }
+        }
+
+        function setModalContent(title, message, titleColor = '#9B59B6') {
+            const titleEl = document.getElementById('modalTitle');
+            const messageEl = document.getElementById('modalMessage');
+            
+            if (titleEl && title) {
+                titleEl.innerHTML = title;
+                titleEl.style.color = titleColor;
+            }
+            
+            if (messageEl && message) {
+                messageEl.innerHTML = message;
+            }
+        }
+
+        // ===== وظائف التنقل =====
+        function returnToKingdomsCenterWithWisdom() {
+            const results = wisdomData.students.filter(s => s.score > 0);
+            saveWisdomResults(results);
+            
+            showSmartNotification(
+                'تم حفظ رحلة الحكمة',
+                'سيتم الانتقال لمركز الممالك',
+                'success',
+                2000
+            );
+            
+            setTimeout(() => {
+                window.location.href = '../main.html';
+            }, 2000);
+        }
+
+        function startNewWisdomJourney() {
+            // إعادة تعيين البيانات
+            wisdomData.currentStudentIndex = 0;
+            wisdomData.currentQuestionIndex = 0;
+            wisdomData.remainingTime = wisdomData.totalTime;
+            wisdomData.completedStudents = 0;
+            wisdomData.isRunning = false;
+            wisdomData.isPaused = false;
+            
+            // إعادة تعيين الطلاب
+            wisdomData.students.forEach(student => {
+                student.status = 'waiting';
+                student.score = 0;
+                student.questionsAnswered = 0;
+                student.evaluation = null;
+                student.timestamp = null;
+                student.insights = [];
+                student.deepThoughts = 0;
+            });
+            
+            // خلط الطلاب مرة أخرى
+            wisdomData.students = shuffleArray(wisdomData.students);
+            
+            closeModal();
+            displayStudentsList();
+            updateDisplay();
+            updateProgressBar();
+            
+            document.getElementById('studentSection').style.display = 'none';
+            document.querySelector('.start-wisdom').innerHTML = 
+                '<i class="fas fa-brain"></i><span class="button-text">بدء رحلة الحكمة</span>';
+                
+            showRandomWisdomQuote();
+        }
+
+        function goBackToKingdoms() {
+            if (wisdomData.isRunning) {
+                if (confirm('رحلة الحكمة جارية! هل تريد العودة وحفظ النتائج؟')) {
+                    const results = wisdomData.students.filter(s => s.score > 0);
+                    saveWisdomResults(results);
+                    window.location.href = '../main.html';
+                }
+            } else {
+                window.location.href = '../main.html';
+            }
+        }
+
+        // ===== تحديث شريط التقدم =====
+        function updateProgressBar() {
+            const totalQuestions = wisdomData.settings.questionsCount;
+            const currentProgress = Math.min(wisdomData.currentQuestionIndex, totalQuestions);
+            const progress = (currentProgress / totalQuestions) * 100;
+            
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = 
+                `${currentProgress}/${totalQuestions}`;
+        }
+
+        // ===== عرض اقتباس حكمة عشوائي =====
+        function showRandomWisdomQuote() {
+            const randomQuote = wisdomQuotes[Math.floor(Math.random() * wisdomQuotes.length)];
+            document.getElementById('wisdomQuote').innerHTML = `
+                <div style="font-style: italic; font-size: 1.1rem; line-height: 1.6;">
+                    "${randomQuote}"
+                </div>
+            `;
+        }
+
+        // ===== نظام الصوت =====
+        function playSound(soundType) {
+            if (!audioEnabled) return;
+            
+            try {
+                const soundMap = {
+                    'brain-activate': '../assets/media/sounds/kingdom-sounds/brain-activate.mp3',
+                    'knowledge-unlock': '../assets/media/sounds/kingdom-sounds/knowledge-unlock.mp3',
+                    'mystic-wind': '../assets/media/sounds/kingdom-sounds/mystic-wind.mp3',
+                    'notification-pop': '../assets/media/sounds/kingdom-sounds/notification-pop.mp3',
+                    'cosmic-click': '../assets/media/sounds/kingdom-sounds/cosmic-click.mp3',
+                    'modal-open': '../assets/media/sounds/kingdom-sounds/menu-open.mp3',
+                    'transition': '../assets/media/sounds/kingdom-sounds/panel-slide.mp3',
+                    'pause': '../assets/media/sounds/Click.mp3'
+                };
+                
+                const soundPath = soundMap[soundType];
+                if (soundPath) {
+                    const audio = new Audio(soundPath);
+                    audio.volume = 0.7;
+                    audio.play().catch(e => console.log('تعذر تشغيل الصوت'));
+                }
+            } catch (e) {
+                console.log('خطأ في تشغيل الصوت');
+            }
+        }
+
+        // ===== تهيئة الصفحة =====
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStudentsData();
+            showRandomWisdomQuote();
+            updateProgressBar();
+            
+            // تغيير الاقتباسات كل 15 ثانية
+            setInterval(showRandomWisdomQuote, 15000);
+            
+            // إغلاق النوافذ عند النقر خارجها
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('modal')) {
+                    closeModal();
+                }
+            });
+            
+            console.log('🧠 تم تحميل مملكة الحكمة بنجاح');
+        });
     </script>
 </body>
 </html>
