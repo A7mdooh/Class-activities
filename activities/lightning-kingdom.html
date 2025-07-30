@@ -768,27 +768,40 @@
         /* Tablets */
         @media (max-width: 768px) {
             .kingdom-header {
-                padding: 1rem;
+                padding: 0.8rem;
             }
             
             .kingdom-title {
-                font-size: 2rem;
+                font-size: 1.8rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .kingdom-header p {
+                font-size: 0.9rem;
+                margin-bottom: 1rem;
             }
             
             .kingdom-stats {
                 flex-direction: row;
                 flex-wrap: wrap;
-                gap: 1rem;
+                gap: 0.8rem;
                 justify-content: center;
+                margin: 1rem 0;
             }
             
             .stat-card {
-                padding: 0.8rem 1.5rem;
-                min-width: 120px;
+                padding: 0.6rem 1rem;
+                min-width: 90px;
+                flex: 1;
+                max-width: 120px;
             }
             
             .stat-number {
-                font-size: 1.5rem;
+                font-size: 1.3rem;
+            }
+            
+            .stat-card div:last-child {
+                font-size: 0.8rem;
             }
             
             .main-timer {
@@ -814,15 +827,17 @@
             }
             
             .competition-controls {
-                gap: 1rem;
+                gap: 0.8rem;
                 flex-wrap: wrap;
                 justify-content: center;
             }
             
             .control-btn {
-                padding: 1rem 1.5rem;
-                font-size: 1rem;
-                min-width: 140px;
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+                min-width: 120px;
+                flex: 1;
+                max-width: 200px;
             }
             
             .modal-content {
@@ -854,171 +869,320 @@
         /* Mobile phones */
         @media (max-width: 480px) {
             .kingdom-header {
-                padding: 0.8rem;
+                padding: 0.5rem;
+                background: rgba(0,0,0,0.4);
             }
             
             .kingdom-title {
-                font-size: 1.8rem;
+                font-size: 1.4rem;
+                margin-bottom: 0.3rem;
+            }
+            
+            .kingdom-header p {
+                font-size: 0.75rem;
                 margin-bottom: 0.5rem;
+                display: none; /* إخفاء الوصف على الهواتف الصغيرة */
             }
             
             .kingdom-stats {
-                flex-direction: column;
-                gap: 0.8rem;
-                margin: 1rem 0;
+                flex-direction: row;
+                gap: 0.4rem;
+                margin: 0.5rem 0;
+                justify-content: space-around;
             }
             
             .stat-card {
-                padding: 0.6rem 1rem;
-                margin: 0 auto;
-                max-width: 200px;
+                padding: 0.4rem 0.6rem;
+                margin: 0;
+                min-width: 70px;
+                flex: 1;
+                max-width: 90px;
+                border-radius: 8px;
             }
             
             .stat-number {
-                font-size: 1.3rem;
+                font-size: 1rem;
+                margin-bottom: 0.2rem;
+            }
+            
+            .stat-card div:last-child {
+                font-size: 0.65rem;
+                line-height: 1.2;
             }
             
             .competition-container {
-                padding: 0.8rem;
-                margin: 0.8rem auto;
+                padding: 0.5rem;
+                margin: 0.5rem auto;
             }
             
             .main-timer {
-                font-size: 2.5rem;
+                font-size: 2rem;
+                margin: 0.5rem 0;
             }
             
             .timer-section {
-                padding: 1rem;
-                margin-bottom: 1rem;
+                padding: 0.8rem;
+                margin-bottom: 0.8rem;
+            }
+            
+            .timer-label {
+                font-size: 0.9rem;
+                margin-top: 0.3rem;
             }
             
             .student-spotlight {
-                font-size: 1.5rem;
-                line-height: 1.4;
+                font-size: 1.3rem;
+                line-height: 1.3;
+                margin-bottom: 0.8rem;
             }
             
             .current-student-section {
-                padding: 1rem;
-                margin: 0.8rem 0;
+                padding: 0.8rem;
+                margin: 0.5rem 0;
             }
             
             .teacher-instructions {
+                font-size: 0.85rem;
+                padding: 0.6rem;
+                margin: 0.6rem 0;
+            }
+            
+            .evaluation-buttons {
+                gap: 0.6rem;
+                margin: 1rem 0;
+            }
+            
+            .eval-btn {
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+                min-width: auto;
+                width: 100%;
+                max-width: 250px;
+            }
+            
+            .competition-controls {
+                gap: 0.4rem;
+                margin: 0.8rem 0;
+                flex-wrap: wrap;
+            }
+            
+            .control-btn {
+                padding: 0.6rem 0.8rem;
+                font-size: 0.75rem;
+                min-width: 80px;
+                flex: 1;
+                max-width: 120px;
+            }
+            
+            .control-btn i {
+                font-size: 0.8rem;
+                margin-left: 0.3rem;
+            }
+            
+            /* تحسين النصوص في الأزرار للهواتف */
+            .control-btn {
+                position: relative;
+                overflow: hidden;
+                white-space: nowrap;
+            }
+            
+            .control-btn .button-text {
+                display: none; /* إخفاء النص على الهواتف الصغيرة */
+            }
+            
+            .control-btn i {
                 font-size: 1rem;
+                margin: 0;
+            }
+            
+            /* إضافة tooltips للأزرار */
+            .control-btn:hover::after {
+                content: attr(data-tooltip);
+                position: absolute;
+                bottom: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(0,0,0,0.8);
+                color: white;
+                padding: 0.3rem 0.6rem;
+                border-radius: 4px;
+                font-size: 0.7rem;
+                white-space: nowrap;
+                z-index: 1000;
+                opacity: 0;
+                animation: fadeIn 0.3s ease forwards;
+            }
+            
+            .modal-content {
+                padding: 0.8rem;
+                margin: 0.3rem;
+                max-width: 98%;
+                border-radius: 12px;
+            }
+            
+            .game-arena {
+                padding: 0.8rem;
+                margin: 0.3rem;
+                border-radius: 12px;
+            }
+            
+            .settings-section {
                 padding: 0.8rem;
                 margin: 0.8rem 0;
             }
             
-            .evaluation-buttons {
-                gap: 0.8rem;
-                margin: 1.5rem 0;
-            }
-            
-            .eval-btn {
-                padding: 1rem 1.5rem;
-                font-size: 1rem;
-                min-width: auto;
-                width: 100%;
-                max-width: 280px;
-            }
-            
-            .competition-controls {
-                gap: 0.8rem;
-                margin: 1rem 0;
-            }
-            
-            .control-btn {
-                padding: 0.8rem 1rem;
-                font-size: 0.9rem;
-                min-width: 120px;
-                flex: 1;
-            }
-            
-            .modal-content {
-                padding: 1rem;
-                margin: 0.5rem;
-                max-width: 95%;
-                border-radius: 15px;
-            }
-            
-            .game-arena {
-                padding: 1rem;
-                margin: 0.5rem;
-                border-radius: 15px;
-            }
-            
-            .settings-section {
-                padding: 1rem;
-                margin: 1rem 0;
-            }
-            
             .setting-group {
-                margin: 1rem 0;
+                margin: 0.8rem 0;
             }
             
             .setting-group label {
-                font-size: 0.9rem;
-                margin-bottom: 0.6rem;
+                font-size: 0.8rem;
+                margin-bottom: 0.5rem;
             }
             
             .setting-group input[type="range"] {
-                height: 8px;
+                height: 6px;
             }
             
             .setting-group input[type="range"]::-webkit-slider-thumb {
-                width: 20px;
-                height: 20px;
+                width: 18px;
+                height: 18px;
             }
             
             .slider-value {
-                font-size: 1.2rem;
-                margin-top: 0.8rem;
+                font-size: 1rem;
+                margin-top: 0.6rem;
             }
             
             .phase-info {
                 flex-direction: column;
                 text-align: center;
-                gap: 0.5rem;
+                gap: 0.4rem;
+                padding: 0.6rem;
+                margin: 0.4rem 0;
             }
             
             .modal-btn {
                 width: 100%;
-                padding: 1rem;
-                margin: 0.5rem 0;
+                padding: 0.8rem;
+                margin: 0.4rem 0;
+                font-size: 0.9rem;
+            }
+            
+            .students-queue {
+                margin: 0.8rem 0;
+            }
+            
+            .queue-title {
                 font-size: 1rem;
+                margin-bottom: 0.8rem;
             }
         }
         
         /* Very small phones */
         @media (max-width: 360px) {
+            .kingdom-header {
+                padding: 0.3rem;
+            }
+            
             .kingdom-title {
-                font-size: 1.5rem;
+                font-size: 1.2rem;
+                margin-bottom: 0.2rem;
             }
             
-            .main-timer {
-                font-size: 2rem;
+            .kingdom-header p {
+                display: none; /* إخفاء كامل للوصف */
             }
             
-            .student-spotlight {
-                font-size: 1.3rem;
+            .kingdom-stats {
+                gap: 0.2rem;
+                margin: 0.3rem 0;
             }
             
-            .eval-btn {
-                padding: 0.8rem 1rem;
-                font-size: 0.9rem;
-            }
-            
-            .control-btn {
-                padding: 0.6rem 0.8rem;
-                font-size: 0.8rem;
-                min-width: 100px;
+            .stat-card {
+                padding: 0.3rem 0.4rem;
+                min-width: 60px;
+                max-width: 75px;
+                border-radius: 6px;
             }
             
             .stat-number {
+                font-size: 0.9rem;
+                margin-bottom: 0.1rem;
+            }
+            
+            .stat-card div:last-child {
+                font-size: 0.55rem;
+                line-height: 1.1;
+            }
+            
+            .main-timer {
+                font-size: 1.8rem;
+                margin: 0.3rem 0;
+            }
+            
+            .timer-section {
+                padding: 0.6rem;
+                margin-bottom: 0.6rem;
+            }
+            
+            .timer-label {
+                font-size: 0.8rem;
+                margin-top: 0.2rem;
+            }
+            
+            .student-spotlight {
                 font-size: 1.1rem;
+                margin-bottom: 0.6rem;
+            }
+            
+            .current-student-section {
+                padding: 0.6rem;
+                margin: 0.4rem 0;
             }
             
             .teacher-instructions {
+                font-size: 0.75rem;
+                padding: 0.5rem;
+                margin: 0.5rem 0;
+            }
+            
+            .eval-btn {
+                padding: 0.6rem 0.8rem;
+                font-size: 0.8rem;
+                max-width: 220px;
+            }
+            
+            .control-btn {
+                padding: 0.5rem 0.6rem;
+                font-size: 0.7rem;
+                min-width: 60px;
+                max-width: 100px;
+            }
+            
+            .control-btn i {
                 font-size: 0.9rem;
+            }
+            
+            .competition-controls {
+                gap: 0.3rem;
+                margin: 0.6rem 0;
+            }
+            
+            /* تقليل حجم البطاقات الإحصائية أكثر */
+            .stat-card {
+                flex: 1;
+                text-align: center;
+            }
+            
+            /* إخفاء بعض العناصر غير الضرورية */
+            .elimination-section {
+                margin-top: 1rem;
+            }
+            
+            .elimination-section .eval-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.75rem;
             }
         }
         
@@ -1038,6 +1202,54 @@
             .eval-btn:hover, .control-btn:hover {
                 transform: none;
                 box-shadow: none;
+            }
+            
+            /* Disable tooltips on touch devices */
+            .control-btn:hover::after {
+                display: none;
+            }
+        }
+        
+        /* Show/hide button text based on screen size */
+        @media (min-width: 769px) {
+            .button-text {
+                display: inline !important;
+                margin-right: 0.5rem;
+            }
+        }
+        
+        @media (max-width: 768px) and (min-width: 481px) {
+            .button-text {
+                display: inline !important;
+                font-size: 0.8rem;
+                margin-right: 0.3rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .button-text {
+                display: none !important;
+            }
+            
+            .control-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            /* Compact header for mobile */
+            .kingdom-header {
+                position: relative;
+                background: rgba(0,0,0,0.5);
+                backdrop-filter: blur(15px);
+            }
+            
+            /* Make stats more compact */
+            .kingdom-stats {
+                background: rgba(0,0,0,0.2);
+                padding: 0.4rem;
+                border-radius: 10px;
+                backdrop-filter: blur(10px);
             }
         }
     </style>
@@ -1115,25 +1327,25 @@
 
         <!-- Competition Controls -->
         <div class="competition-controls">
-            <button class="control-btn settings-btn" onclick="showCompetitionSettings()">
+            <button class="control-btn settings-btn" onclick="showCompetitionSettings()" data-tooltip="إعدادات المنافسة">
                 <i class="fas fa-cog"></i>
-                إعدادات المنافسة
+                <span class="button-text">إعدادات المنافسة</span>
             </button>
-            <button class="control-btn start-competition" onclick="startCompetition()">
+            <button class="control-btn start-competition" onclick="startCompetition()" data-tooltip="بدء المنافسة">
                 <i class="fas fa-play"></i>
-                بدء المنافسة
+                <span class="button-text">بدء المنافسة</span>
             </button>
-            <button class="control-btn pause-competition" onclick="pauseCompetition()">
+            <button class="control-btn pause-competition" onclick="pauseCompetition()" data-tooltip="إيقاف مؤقت">
                 <i class="fas fa-pause"></i>
-                إيقاف مؤقت
+                <span class="button-text">إيقاف مؤقت</span>
             </button>
-            <button class="control-btn end-competition" onclick="endCompetition()">
+            <button class="control-btn end-competition" onclick="endCompetition()" data-tooltip="إنهاء المنافسة">
                 <i class="fas fa-stop"></i>
-                إنهاء المنافسة
+                <span class="button-text">إنهاء المنافسة</span>
             </button>
-            <button class="control-btn back-to-kingdoms" onclick="goBackToKingdoms()">
+            <button class="control-btn back-to-kingdoms" onclick="goBackToKingdoms()" data-tooltip="العودة للممالك">
                 <i class="fas fa-home"></i>
-                العودة للممالك
+                <span class="button-text">العودة للممالك</span>
             </button>
         </div>
     </div>
@@ -3262,8 +3474,141 @@
             });
         }
         
-        // Initialize mobile optimizations when page loads
+        function optimizeMobileHeader() {
+            const isMobile = window.innerWidth <= 480;
+            const isTablet = window.innerWidth <= 768 && window.innerWidth > 480;
+            
+            if (isMobile) {
+                // إضافة فئة للتحكم في التخطيط
+                document.body.classList.add('mobile-compact');
+                
+                // إخفاء الوصف على الهواتف الصغيرة
+                const description = document.querySelector('.kingdom-header p');
+                if (description) {
+                    description.style.display = 'none';
+                }
+                
+                // تقليل ارتفاع الشريط العلوي
+                const header = document.querySelector('.kingdom-header');
+                if (header) {
+                    header.style.minHeight = 'auto';
+                    header.style.padding = '0.4rem';
+                }
+                
+                // تحسين عرض الإحصائيات
+                optimizeStatsForMobile();
+                
+            } else if (isTablet) {
+                document.body.classList.add('tablet-layout');
+                optimizeStatsForTablet();
+            }
+        }
+        
+        function optimizeStatsForMobile() {
+            const statsContainer = document.querySelector('.kingdom-stats');
+            if (statsContainer) {
+                // تطبيق تخطيط أفضل للإحصائيات
+                statsContainer.style.display = 'grid';
+                statsContainer.style.gridTemplateColumns = 'repeat(3, 1fr)';
+                statsContainer.style.gap = '0.3rem';
+                statsContainer.style.margin = '0.4rem 0';
+                
+                // تحسين البطاقات الفردية
+                const statCards = statsContainer.querySelectorAll('.stat-card');
+                statCards.forEach(card => {
+                    card.style.padding = '0.3rem 0.5rem';
+                    card.style.fontSize = '0.7rem';
+                    
+                    const number = card.querySelector('.stat-number');
+                    if (number) {
+                        number.style.fontSize = '0.9rem';
+                        number.style.marginBottom = '0.1rem';
+                    }
+                });
+            }
+        }
+        
+        function optimizeStatsForTablet() {
+            const statsContainer = document.querySelector('.kingdom-stats');
+            if (statsContainer) {
+                statsContainer.style.display = 'flex';
+                statsContainer.style.flexWrap = 'wrap';
+                statsContainer.style.justifyContent = 'center';
+                statsContainer.style.gap = '0.8rem';
+            }
+        }
+        
+        function createCollapsibleHeader() {
+            // إضافة إمكانية طي الشريط العلوي على الهواتف
+            const isMobile = window.innerWidth <= 480;
+            
+            if (isMobile) {
+                const header = document.querySelector('.kingdom-header');
+                const stats = document.querySelector('.kingdom-stats');
+                
+                if (header && stats) {
+                    // إضافة زر الطي
+                    const toggleButton = document.createElement('button');
+                    toggleButton.innerHTML = '<i class="fas fa-chevron-up"></i>';
+                    toggleButton.style.cssText = `
+                        position: absolute;
+                        top: 0.5rem;
+                        left: 1rem;
+                        background: rgba(255,215,0,0.2);
+                        border: 1px solid rgba(255,215,0,0.3);
+                        color: #FFD700;
+                        padding: 0.3rem 0.5rem;
+                        border-radius: 6px;
+                        font-size: 0.8rem;
+                        cursor: pointer;
+                        z-index: 10;
+                        transition: all 0.3s ease;
+                    `;
+                    
+                    let isCollapsed = false;
+                    
+                    toggleButton.onclick = function() {
+                        isCollapsed = !isCollapsed;
+                        
+                        if (isCollapsed) {
+                            stats.style.display = 'none';
+                            toggleButton.innerHTML = '<i class="fas fa-chevron-down"></i>';
+                            header.style.padding = '0.5rem';
+                        } else {
+                            stats.style.display = 'grid';
+                            toggleButton.innerHTML = '<i class="fas fa-chevron-up"></i>';
+                            header.style.padding = '0.4rem';
+                        }
+                    };
+                    
+                    header.style.position = 'relative';
+                    header.appendChild(toggleButton);
+                }
+            }
+        }
+        
+        // تطبيق التحسينات عند تحميل الصفحة وتغيير حجم الشاشة
+        function initializeResponsiveOptimizations() {
+            optimizeMobileHeader();
+            createCollapsibleHeader();
+            
+            // إعادة تطبيق التحسينات عند تغيير حجم الشاشة
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    // إزالة الفئات القديمة
+                    document.body.classList.remove('mobile-compact', 'tablet-layout');
+                    
+                    // إعادة تطبيق التحسينات
+                    optimizeMobileHeader();
+                }, 250);
+            });
+        }
+        
+        // تطبيق التحسينات عند تحميل الصفحة
         document.addEventListener('DOMContentLoaded', function() {
+            initializeResponsiveOptimizations();
             initializeMobileOptimizations();
             adjustForScreenOrientation();
             
@@ -3292,6 +3637,11 @@
                     }
                 }
                 
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                
                 .mobile-device {
                     -webkit-tap-highlight-color: transparent;
                     -webkit-touch-callout: none;
@@ -3303,6 +3653,35 @@
                 .mobile-device .control-btn,
                 .mobile-device .modal-btn {
                     -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
+                }
+                
+                /* Compact header styles */
+                .mobile-compact .kingdom-header {
+                    background: rgba(0,0,0,0.6) !important;
+                    backdrop-filter: blur(20px) !important;
+                    border-bottom: 1px solid rgba(255,215,0,0.2);
+                }
+                
+                .mobile-compact .kingdom-stats {
+                    background: rgba(0,0,0,0.3) !important;
+                    backdrop-filter: blur(10px) !important;
+                    border-radius: 8px !important;
+                    border: 1px solid rgba(255,255,255,0.1);
+                }
+                
+                .mobile-compact .stat-card {
+                    background: rgba(255,255,255,0.05) !important;
+                    border: 1px solid rgba(255,255,255,0.1) !important;
+                }
+                
+                /* Tablet layout styles */
+                .tablet-layout .kingdom-header {
+                    background: rgba(0,0,0,0.4) !important;
+                }
+                
+                .tablet-layout .kingdom-stats {
+                    background: rgba(255,255,255,0.05) !important;
+                    backdrop-filter: blur(15px) !important;
                 }
             `;
             document.head.appendChild(mobileStyles);
