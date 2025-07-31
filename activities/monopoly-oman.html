@@ -2,7 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="مونوبولي سلطنة عُمان - لعبة العقارات التعليمية">
     <title>مونوبولي سلطنة عُمان - لعبة العقارات العُمانية</title>
     
     <!-- الخطوط والأيقونات -->
@@ -15,8 +16,9 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     
     <!-- الأنماط والسكريبت الموحد -->
+    <link rel="stylesheet" href="../assets/css/responsive.css">
     <link rel="stylesheet" href="../assets/css/style.css">
-    <script src="../assets/css/style.css" type="text/javascript"></script>
+    <script src="../assets/js/activityUtils.js"></script>
     <style>
         /* نظام الألوان العُماني المتقدم - مونوبولي عُمان */
         :root {
@@ -331,7 +333,7 @@
             box-shadow: var(--shadow-glow-gold);
         }
 
-        /* حاوي اللعبة الرئيسي */
+        /* حاوي اللعبة الرئيسي - محسن للموبايل */
         .game-container {
             display: grid;
             grid-template-columns: 1fr auto;
@@ -341,7 +343,7 @@
             padding: 0 var(--spacing-xl);
         }
 
-        /* لوحة اللعبة المحسنة */
+        /* لوحة اللعبة المحسنة للموبايل */
         .game-board {
             width: 700px;
             height: 700px;
@@ -482,7 +484,7 @@
             border-top: 4px solid #1C1C1C;
         }
 
-        /* عناصر التحكم بالاعبين المحسنة */
+        /* عناصر التحكم بالاعبين المحسنة للموبايل */
         .player-controls {
             display: flex;
             flex-direction: column;
@@ -1117,31 +1119,915 @@
             color: var(--dark-blue);
         }
         
-        @media (max-width: 768px) {
+        /* تحسينات إضافية للبحث والتصفية */
+        .search-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .search-input {
+            padding: 12px 15px;
+            border: 2px solid var(--oman-green);
+            border-radius: 25px;
+            width: 300px;
+            text-align: center;
+            font-family: 'Cairo', sans-serif;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--oman-red);
+            box-shadow: 0 0 10px rgba(219, 31, 31, 0.3);
+            transform: scale(1.02);
+        }
+
+        .student-counter {
+            text-align: center;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--oman-green) 0%, var(--light-green) 100%);
+            color: white;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: var(--shadow);
+        }
+
+        .selection-status {
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 15px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .selection-complete {
+            background: linear-gradient(135deg, var(--oman-green) 0%, var(--light-green) 100%);
+            color: white;
+        }
+
+        .selection-incomplete {
+            background: linear-gradient(135deg, var(--gold) 0%, #FFB347 100%);
+            color: var(--dark-blue);
+        }
+
+        /* تحسين بطاقات الطلاب */
+        .student-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid var(--oman-green);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .student-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.6s;
+        }
+
+        .student-card:hover::before {
+            left: 100%;
+        }
+
+        .student-card:hover {
+            background: linear-gradient(135deg, var(--oman-green) 0%, var(--light-green) 100%);
+            color: white;
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .student-card.selected {
+            background: linear-gradient(135deg, var(--oman-red) 0%, #a01717 100%);
+            color: white;
+            border-color: var(--oman-red);
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(219, 31, 31, 0.4);
+        }
+
+        .student-card.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background: white;
+            color: var(--oman-red);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* تحسين محدد الصف ونوع الاختيار */
+        #class-selector, #selection-mode {
+            background: linear-gradient(135deg, white 0%, #f8f9fa 100%);
+            border: 2px solid var(--oman-green);
+            border-radius: 20px;
+            padding: 10px 15px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            color: var(--dark-blue);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        #class-selector:focus, #selection-mode:focus {
+            outline: none;
+            border-color: var(--oman-red);
+            box-shadow: 0 0 10px rgba(219, 31, 31, 0.3);
+            transform: scale(1.02);
+        }
+
+        #class-selector option, #selection-mode option {
+            padding: 10px;
+            background: white;
+        }
+
+        /* تحسين حالة الاختيار */
+        #selection-status {
+            border: 2px solid #ddd;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            transition: all 0.3s ease;
+        }
+
+        #selection-status.selection-complete {
+            background: linear-gradient(135deg, var(--oman-green) 0%, var(--light-green) 100%);
+            color: white;
+            border-color: var(--oman-green);
+        }
+
+        #selection-status.selection-incomplete {
+            background: linear-gradient(135deg, var(--gold) 0%, #FFB347 100%);
+            color: var(--dark-blue);
+            border-color: var(--gold);
+        }
+
+        /* تحسين قائمة الطلاب المختارين */
+        #selected-students-list {
+            min-height: 60px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            padding: 15px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            transition: all 0.3s ease;
+        }
+
+        #selected-students-list.has-students {
+            border-color: var(--oman-green);
+            background: linear-gradient(135deg, #e8f5e8 0%, #ffffff 100%);
+        }
+
+        .selected-student-item {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--oman-green) 0%, var(--light-green) 100%);
+            color: white;
+            padding: 8px 15px;
+            margin: 4px;
+            border-radius: 20px;
+            font-weight: 600;
+            position: relative;
+            animation: studentAppear 0.3s ease;
+        }
+
+        @keyframes studentAppear {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .selected-student-item .remove-btn {
+            background: rgba(255,255,255,0.3);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .selected-student-item .remove-btn:hover {
+            background: var(--oman-red);
+            transform: scale(1.1);
+        }
+
+        /* تحسين شريط البحث وعداد الطلاب */
+        .search-input {
+            background: linear-gradient(135deg, white 0%, #f8f9fa 100%);
+            border: 2px solid var(--oman-green);
+            border-radius: 20px;
+            padding: 10px 15px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            color: var(--dark-blue);
+            width: 250px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--oman-red);
+            box-shadow: 0 0 10px rgba(219, 31, 31, 0.3);
+            transform: scale(1.02);
+        }
+
+        .student-counter {
+            background: linear-gradient(135deg, var(--gold) 0%, #FFB347 100%);
+            color: var(--dark-blue);
+            padding: 10px 15px;
+            border-radius: 15px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .student-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+            padding: 15px;
+        }
+
+        /* تحسين خطوات الاختيار */
+        #selection-mode-container {
+            background: linear-gradient(135deg, #e8f5e8 0%, #ffffff 100%);
+            border: 2px solid var(--oman-green);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        #manual-selection-container {
+            background: linear-gradient(135deg, #f0f4f8 0%, #ffffff 100%);
+            border: 2px solid var(--oman-green);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        #class-info {
+            background: linear-gradient(135deg, var(--gold) 0%, #FFB347 100%);
+            color: var(--dark-blue);
+            padding: 12px 20px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: bold;
+            margin: 15px 0;
+            border: 2px solid #DAA520;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .player-dropdown {
+            background: linear-gradient(135deg, white 0%, #f8f9fa 100%);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .player-dropdown:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .oman-btn.secondary {
+            background: linear-gradient(135deg, var(--gold) 0%, #FFB347 100%);
+            color: var(--dark-blue);
+        }
+        
+        /* RESPONSIVE DESIGN SYSTEM - مونوبولي عُمان */
+        
+        /* Desktop Large (1200px+) */
+        @media (min-width: 1200px) {
             .game-container {
-                flex-direction: column;
+                max-width: 1600px;
+                gap: var(--spacing-2xl);
+            }
+            
+            .game-board {
+                width: 800px;
+                height: 800px;
+            }
+            
+            .player-controls, .player-info {
+                width: 320px;
+            }
+        }
+        
+        /* Tablet Landscape (1024px - 1199px) */
+        @media (max-width: 1199px) and (min-width: 1024px) {
+            .game-container {
+                grid-template-columns: 1fr 280px;
+                gap: var(--spacing-lg);
+                padding: 0 var(--spacing-lg);
+            }
+            
+            .game-board {
+                width: 650px;
+                height: 650px;
+            }
+            
+            header h1 {
+                font-size: var(--font-size-3xl);
+            }
+        }
+        
+        /* Tablet Portrait (768px - 1023px) */
+        @media (max-width: 1023px) and (min-width: 768px) {
+            .game-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto auto;
+                gap: var(--spacing-lg);
                 align-items: center;
-                padding: 10px;
+                justify-items: center;
+                padding: 0 var(--spacing-md);
             }
             
             .game-board {
                 width: 90vw;
                 height: 90vw;
+                max-width: 600px;
+                max-height: 600px;
+                order: 2;
+            }
+            
+            .player-controls {
+                order: 1;
+                width: 100%;
                 max-width: 500px;
-                max-height: 500px;
+                flex-direction: row;
+                justify-content: space-around;
+                padding: var(--spacing-lg);
             }
             
-            .player-controls, .player-info {
-                width: 90%;
-                max-width: 400px;
+            .player-info {
+                order: 3;
+                width: 100%;
+                max-width: 500px;
             }
             
-            .control-btn {
-                font-size: 20px;
+            .dice-container {
+                flex-direction: column;
+                gap: var(--spacing-md);
+                margin: 0 var(--spacing-lg);
+            }
+            
+            .dice {
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+            }
+            
+            header {
+                padding: var(--spacing-lg);
             }
             
             header h1 {
-                font-size: 2rem;
+                font-size: var(--font-size-2xl);
+            }
+            
+            header p {
+                font-size: var(--font-size-base);
+            }
+        }
+        
+        /* Mobile Large (480px - 767px) */
+        @media (max-width: 767px) and (min-width: 480px) {
+            .game-container {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-md);
+                padding: 0 var(--spacing-sm);
+                margin: var(--spacing-lg) auto;
+            }
+            
+            .game-board {
+                width: 95vw;
+                height: 95vw;
+                max-width: 450px;
+                max-height: 450px;
+                border-width: 4px;
+                font-size: var(--font-size-xs);
+            }
+            
+            .board-cell {
+                padding: var(--spacing-xs);
+                font-size: 0.6rem;
+            }
+            
+            .corner-cell {
+                font-size: 0.65rem;
+            }
+            
+            .player-controls {
+                width: 100%;
+                padding: var(--spacing-md);
+                flex-direction: column;
+            }
+            
+            .player-controls h3 {
+                font-size: var(--font-size-lg);
+                margin-bottom: var(--spacing-md);
+            }
+            
+            .dice-container {
+                flex-direction: row;
+                justify-content: center;
+                gap: var(--spacing-lg);
+                margin: var(--spacing-md) 0;
+            }
+            
+            .dice {
+                width: 45px;
+                height: 45px;
+                font-size: 20px;
+            }
+            
+            .player-info {
+                width: 100%;
+                padding: var(--spacing-md);
+            }
+            
+            .current-player h3 {
+                font-size: var(--font-size-lg);
+            }
+            
+            .current-player p {
+                font-size: var(--font-size-base);
+            }
+            
+            header {
+                padding: var(--spacing-md);
+            }
+            
+            header h1 {
+                font-size: var(--font-size-xl);
+            }
+            
+            header p {
+                font-size: var(--font-size-sm);
+            }
+            
+            .control-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 18px;
+                top: 10px;
+            }
+            
+            #homeBtn {
+                right: 10px;
+            }
+            
+            #fullscreenBtn {
+                left: 10px;
+            }
+            
+            .oman-btn {
+                padding: var(--spacing-sm) var(--spacing-md);
+                margin: var(--spacing-xs);
+                font-size: var(--font-size-sm);
+                min-width: 120px;
+            }
+        }
+        
+        /* Mobile Small (320px - 479px) */
+        @media (max-width: 479px) {
+            .game-container {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-sm);
+                padding: 0 var(--spacing-xs);
+                margin: var(--spacing-md) auto;
+            }
+            
+            .game-board {
+                width: 98vw;
+                height: 98vw;
+                max-width: 320px;
+                max-height: 320px;
+                border-width: 3px;
+                border-radius: var(--border-radius-medium);
+            }
+            
+            .board-cell {
+                padding: 2px;
+                font-size: 0.5rem;
+                line-height: 1.2;
+            }
+            
+            .corner-cell {
+                font-size: 0.55rem;
+                border-radius: var(--border-radius-small);
+            }
+            
+            .property-cell:hover {
+                transform: scale(1.05);
+            }
+            
+            .player-controls {
+                width: 100%;
+                padding: var(--spacing-sm);
+                border-width: 2px;
+            }
+            
+            .player-controls h3 {
+                font-size: var(--font-size-base);
+                margin-bottom: var(--spacing-sm);
+            }
+            
+            .dice-container {
+                gap: var(--spacing-md);
+                margin: var(--spacing-sm) 0;
+            }
+            
+            .dice {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+                border-width: 2px;
+            }
+            
+            .player-info {
+                width: 100%;
+                padding: var(--spacing-sm);
+                border-width: 2px;
+            }
+            
+            .current-player h3 {
+                font-size: var(--font-size-base);
+            }
+            
+            .current-player p {
+                font-size: var(--font-size-sm);
+            }
+            
+            #properties-list {
+                max-height: 150px;
+                font-size: var(--font-size-sm);
+            }
+            
+            #properties-list li {
+                padding: 6px 8px;
+                margin: 3px 0;
+            }
+            
+            header {
+                padding: var(--spacing-sm);
+                margin-bottom: var(--spacing-md);
+            }
+            
+            header h1 {
+                font-size: var(--font-size-lg);
+                margin-bottom: var(--spacing-sm);
+            }
+            
+            header p {
+                font-size: var(--font-size-xs);
+            }
+            
+            .control-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+                top: 8px;
+                padding: 8px;
+            }
+            
+            #homeBtn {
+                right: 8px;
+            }
+            
+            #fullscreenBtn {
+                left: 8px;
+            }
+            
+            .oman-btn {
+                padding: var(--spacing-xs) var(--spacing-sm);
+                margin: 2px;
+                font-size: var(--font-size-xs);
+                min-width: 100px;
+                border-radius: var(--border-radius-medium);
+            }
+            
+            .property-management {
+                margin-top: 10px;
+                padding: 8px;
+            }
+            
+            .property-management h5 {
+                font-size: var(--font-size-sm);
+                margin-bottom: 8px;
+            }
+            
+            .btn-small {
+                padding: 4px 8px;
+                font-size: 0.65rem;
+                margin: 2px;
+                border-radius: var(--border-radius-small);
+            }
+        }
+        
+        /* Touch Device Optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .control-btn {
+                min-height: 44px;
+                min-width: 44px;
+            }
+            
+            .oman-btn {
+                min-height: 44px;
+                padding: var(--spacing-md) var(--spacing-lg);
+            }
+            
+            .dice {
+                min-height: 44px;
+                min-width: 44px;
+            }
+            
+            .property-cell:hover {
+                transform: none;
+            }
+            
+            .property-cell:active {
+                transform: scale(0.95);
+                background-color: rgba(220, 20, 60, 0.1);
+            }
+            
+            .student-card {
+                min-height: 44px;
+                padding: var(--spacing-md);
+            }
+            
+            .student-card:hover {
+                transform: none;
+            }
+            
+            .student-card:active {
+                transform: scale(0.95);
+            }
+        }
+        
+        /* Landscape Orientation Specific */
+        @media screen and (orientation: landscape) and (max-height: 600px) {
+            .game-container {
+                grid-template-columns: auto 1fr auto;
+                grid-template-rows: 1fr;
+                align-items: center;
+                gap: var(--spacing-md);
+            }
+            
+            .game-board {
+                width: 70vh;
+                height: 70vh;
+                max-width: 500px;
+                max-height: 500px;
+                order: 2;
+            }
+            
+            .player-controls {
+                order: 1;
+                width: auto;
+                min-width: 200px;
+                height: fit-content;
+            }
+            
+            .player-info {
+                order: 3;
+                width: auto;
+                min-width: 200px;
+                height: fit-content;
+            }
+            
+            header {
+                padding: var(--spacing-md);
+                margin-bottom: var(--spacing-md);
+            }
+            
+            header h1 {
+                font-size: var(--font-size-xl);
+            }
+        }
+        
+        /* High DPI Displays */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .board-cell {
+                border-width: 0.5px;
+            }
+            
+            .game-board {
+                border-width: 4px;
+            }
+        }
+        
+        /* Dark Mode Support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --surface-board: rgba(255, 255, 255, 0.9);
+                --text-board: #1F2937;
+            }
+        }
+        
+        /* Animation Performance Optimization */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            
+            .dice {
+                animation: none;
+            }
+            
+            .game-board {
+                animation: none;
+            }
+            
+            body::before {
+                animation: none;
+            }
+        }
+        
+        /* MOBILE-SPECIFIC MONOPOLY ENHANCEMENTS */
+        
+        /* Enhanced Mobile Board Interactions */
+        @media (max-width: 767px) {
+            .property-cell {
+                position: relative;
+                transition: all 0.2s ease;
+            }
+            
+            .property-cell:active {
+                background-color: rgba(220, 20, 60, 0.2) !important;
+                transform: scale(0.95);
+                z-index: 10;
+            }
+            
+            .corner-cell:active {
+                background: linear-gradient(135deg, #FF1744 0%, #D32F2F 100%);
+                transform: scale(0.98);
+            }
+            
+            /* Mobile Player Token Visibility */
+            .player-token {
+                width: 20px;
+                height: 20px;
+                border-width: 2px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+                z-index: 15;
+            }
+            
+            /* Mobile Dice Animation */
+            .dice.rolling {
+                animation: mobileDiceRoll 0.8s ease-in-out;
+            }
+            
+            @keyframes mobileDiceRoll {
+                0% { transform: rotate(0deg) scale(1); }
+                25% { transform: rotate(90deg) scale(1.1); }
+                50% { transform: rotate(180deg) scale(0.9); }
+                75% { transform: rotate(270deg) scale(1.1); }
+                100% { transform: rotate(360deg) scale(1); }
+            }
+        }
+        
+        /* RTL Layout Optimizations */
+        .rtl-layout {
+            direction: rtl;
+        }
+        
+        .rtl-layout .game-board {
+            direction: ltr; /* Keep board LTR for proper layout */
+        }
+        
+        .rtl-layout .modal-content {
+            text-align: right;
+        }
+        
+        .rtl-layout .control-buttons {
+            direction: ltr; /* Keep controls in original position */
+        }
+        
+        /* Mobile Game Board Cell Text */
+        @media (max-width: 479px) {
+            .board-cell {
+                font-size: 0.45rem;
+                line-height: 1.1;
+                padding: 1px;
+            }
+            
+            .corner-cell {
+                font-size: 0.5rem;
+                font-weight: 800;
+            }
+            
+            /* Simplified property colors for mobile */
+            .property-cell {
+                border-top-width: 2px;
+            }
+        }
+        
+        /* Mobile Modal Improvements */
+        @media (max-width: 767px) {
+            .modal-content {
+                margin: 2% auto;
+                width: 95%;
+                max-height: 90vh;
+                border-radius: var(--border-radius-large);
+                border-width: 3px;
+            }
+            
+            .modal-header h2 {
+                font-size: var(--font-size-lg);
+                margin-bottom: var(--spacing-sm);
+            }
+            
+            .modal-body {
+                padding: var(--spacing-md) 0;
+                max-height: 60vh;
+            }
+            
+            .modal-footer {
+                padding: var(--spacing-sm) 0;
+                flex-wrap: wrap;
+                gap: var(--spacing-sm);
+            }
+            
+            .modal-footer button {
+                flex: 1;
+                min-width: calc(50% - var(--spacing-xs));
+            }
+        }
+        
+        /* Enhanced Touch Feedback */
+        @media (hover: none) and (pointer: coarse) {
+            .touch-target:active {
+                background-color: rgba(220, 20, 60, 0.1);
+                transform: scale(0.95);
+            }
+            
+            .oman-btn:active {
+                transform: translateY(0) scale(0.95);
+                box-shadow: var(--shadow-small);
+            }
+            
+            .dice:active {
+                transform: scale(0.9);
+                box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+            }
+        }
+        
+        /* Mobile Property Management */
+        @media (max-width: 767px) {
+            .mobile-property-management {
+                padding: var(--spacing-sm);
+                border-radius: var(--border-radius-small);
+            }
+            
+            .mobile-property-management h5 {
+                font-size: var(--font-size-sm);
+                margin-bottom: var(--spacing-sm);
+            }
+            
+            .mobile-property-management .btn-small {
+                padding: var(--spacing-xs) var(--spacing-sm);
+                margin: 2px;
+                font-size: 0.7rem;
+                border-radius: var(--border-radius-small);
+                min-width: auto;
+                flex: 1;
+            }
+            
+            .mobile-property-management {
+                display: flex;
+                flex-direction: column;
+                gap: var(--spacing-xs);
+            }
+            
+            .mobile-property-management .btn-small {
+                width: 100%;
             }
         }
 
@@ -1207,37 +2093,37 @@
         }
     </style>
 </head>
-<body>
+<body class="responsive-body rtl-layout">
     <!-- أزرار التحكم الموحدة -->
-    <div class="control-buttons">
-        <button class="control-btn" id="homeBtn" title="العودة للصفحة الرئيسية">
+    <div class="control-buttons responsive-controls">
+        <button class="control-btn touch-target" id="homeBtn" title="العودة للصفحة الرئيسية">
             <i class="fas fa-home"></i>
         </button>
-        <button class="control-btn" id="refreshBtn" title="إعادة تشغيل اللعبة">
+        <button class="control-btn touch-target" id="refreshBtn" title="إعادة تشغيل اللعبة">
             <i class="fas fa-redo"></i>
         </button>
-        <button class="control-btn" id="instructionsBtn" title="التعليمات">
+        <button class="control-btn touch-target" id="instructionsBtn" title="التعليمات">
             <i class="fas fa-question-circle"></i>
         </button>
-        <button class="control-btn" id="fullscreenBtn" title="ملء الشاشة">
+        <button class="control-btn touch-target" id="fullscreenBtn" title="ملء الشاشة">
             <i class="fas fa-expand"></i>
         </button>
-        <button class="control-btn" id="soundBtn" title="الصوت">
+        <button class="control-btn touch-target" id="soundBtn" title="الصوت">
             <i class="fas fa-volume-up"></i>
         </button>
     </div>
 
     <!-- نافذة التعليمات -->
-    <div id="instructionsModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="close">&times;</span>
-                <h2><i class="fas fa-gamepad"></i> تعليمات لعبة مونوبولي عُمان</h2>
+    <div id="instructionsModal" class="modal responsive-modal">
+        <div class="modal-content mobile-modal">
+            <div class="modal-header mobile-header">
+                <span class="close touch-target">&times;</span>
+                <h2 class="mobile-heading"><i class="fas fa-gamepad"></i> تعليمات لعبة مونوبولي عُمان</h2>
             </div>
-            <div class="modal-body">
-                <div class="instructions-content">
+            <div class="modal-body mobile-content">
+                <div class="instructions-content responsive-content">
                     <h3><i class="fas fa-play-circle"></i> كيفية اللعب:</h3>
-                    <ul>
+                    <ul class="mobile-list">
                         <li><i class="fas fa-dice"></i> اطر النردين للانتقال عبر لوحة اللعب</li>
                         <li><i class="fas fa-building"></i> اشتر المعالم والعقارات عند الوقوف عليها</li>
                         <li><i class="fas fa-coins"></i> اجمع الإيجارات من اللاعبين الآخرين</li>
@@ -1246,7 +2132,7 @@
                     </ul>
                     
                     <h3><i class="fas fa-map-marked-alt"></i> معالم عُمان في اللعبة:</h3>
-                    <ul>
+                    <ul class="mobile-list">
                         <li><i class="fas fa-mosque"></i> جامع السلطان قابوس الأكبر</li>
                         <li><i class="fas fa-mountain"></i> جبل شمس</li>
                         <li><i class="fas fa-fort"></i> قلعة نزوى</li>
@@ -1255,8 +2141,8 @@
                     </ul>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn-primary" onclick="activityUtils.closeModal('instructionsModal')">
+            <div class="modal-footer mobile-footer">
+                <button class="btn-primary touch-target" onclick="activityUtils.closeModal('instructionsModal')">
                     <i class="fas fa-check"></i> فهمت، لنبدأ!
                 </button>
             </div>
@@ -1264,18 +2150,18 @@
     </div>
 
     <!-- نافذة الانتصار -->
-    <div id="victoryModal" class="modal">
-        <div class="modal-content victory-content">
-            <div class="modal-header">
-                <h2><i class="fas fa-trophy"></i> مبروك! 🎉</h2>
+    <div id="victoryModal" class="modal responsive-modal">
+        <div class="modal-content victory-content mobile-modal">
+            <div class="modal-header mobile-header">
+                <h2 class="mobile-heading"><i class="fas fa-trophy"></i> مبروك! 🎉</h2>
             </div>
-            <div class="modal-body">
+            <div class="modal-body mobile-content">
                 <div class="victory-animation">
                     <i class="fas fa-crown"></i>
                 </div>
                 <h3>أحسنت! لقد فزت في لعبة مونوبولي عُمان!</h3>
                 <p>لقد أصبحت أقوى مستثمر في سلطنة عُمان!</p>
-                <div class="victory-stats">
+                <div class="victory-stats mobile-stats">
                     <div class="stat-item">
                         <i class="fas fa-coins"></i>
                         <span>الرصيد النهائي: <span id="final-balance">0</span> ريال عُماني</span>
@@ -1286,55 +2172,55 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn-primary" onclick="location.reload()">
+            <div class="modal-footer mobile-footer">
+                <button class="btn-primary touch-target" onclick="location.reload()">
                     <i class="fas fa-redo"></i> لعب مرة أخرى
                 </button>
-                <button class="btn-secondary" onclick="activityUtils.goHome()">
+                <button class="btn-secondary touch-target" onclick="activityUtils.goHome()">
                     <i class="fas fa-home"></i> العودة للرئيسية
                 </button>
             </div>
         </div>
     </div>
 
-    <header>
-        <h1><i class="fas fa-chess-rook"></i> مونوبولي سلطنة عُمان <i class="fas fa-dice"></i></h1>
-        <p>اكتشف معالم عُمان الجميلة واستثمر في أشهر المواقع السياحية</p>
+    <header class="responsive-header mobile-header">
+        <h1 class="mobile-heading"><i class="fas fa-chess-rook"></i> مونوبولي سلطنة عُمان <i class="fas fa-dice"></i></h1>
+        <p class="mobile-text">اكتشف معالم عُمان الجميلة واستثمر في أشهر المواقع السياحية</p>
     </header>
 
-    <main>
-        <div class="game-container">
-            <div class="game-board" id="game-board">
+    <main class="responsive-main">
+        <div class="game-container mobile-container">
+            <div class="game-board mobile-board touch-optimized" id="game-board">
                 <!-- سيتم توليد لوحة اللعب ديناميكيًا -->
             </div>
 
-            <div class="player-controls">
-                <h3><i class="fas fa-gamepad"></i> تحكم اللاعب</h3>
-                <div class="dice-container">
-                    <div class="dice" id="dice1"><i class="fas fa-dice"></i></div>
-                    <div class="dice" id="dice2"><i class="fas fa-dice"></i></div>
+            <div class="player-controls mobile-card">
+                <h3 class="mobile-heading"><i class="fas fa-gamepad"></i> تحكم اللاعب</h3>
+                <div class="dice-container mobile-dice-container">
+                    <div class="dice touch-target" id="dice1"><i class="fas fa-dice"></i></div>
+                    <div class="dice touch-target" id="dice2"><i class="fas fa-dice"></i></div>
                 </div>
-                <button id="roll-btn" class="btn-primary"><i class="fas fa-dice"></i> اطر النرد</button>
-                <button id="end-turn-btn" class="btn-secondary"><i class="fas fa-forward"></i> انهي دورك</button>
+                <button id="roll-btn" class="btn-primary touch-target"><i class="fas fa-dice"></i> اطر النرد</button>
+                <button id="end-turn-btn" class="btn-secondary touch-target"><i class="fas fa-forward"></i> انهي دورك</button>
             </div>
 
-            <div class="player-info">
+            <div class="player-info mobile-card">
                 <div class="current-player">
-                    <h3><i class="fas fa-user"></i> اللاعب الحالي: <span id="current-player-name">...</span></h3>
-                    <p><i class="fas fa-coins"></i> الرصيد: <span id="current-player-balance">0</span> ريال عُماني</p>
+                    <h3 class="mobile-heading"><i class="fas fa-user"></i> اللاعب الحالي: <span id="current-player-name">...</span></h3>
+                    <p class="mobile-text"><i class="fas fa-coins"></i> الرصيد: <span id="current-player-balance">0</span> ريال عُماني</p>
                 </div>
                 <div class="properties-owned">
-                    <h4><i class="fas fa-building"></i> العقارات المملوكة:</h4>
-                    <ul id="properties-list"></ul>
+                    <h4 class="mobile-heading"><i class="fas fa-building"></i> العقارات المملوكة:</h4>
+                    <ul id="properties-list" class="mobile-list"></ul>
                     
                     <!-- أزرار إدارة العقارات الجديدة -->
-                    <div class="property-management" style="margin-top: 15px; padding: 10px; background: rgba(34,139,34,0.1); border-radius: 8px;">
+                    <div class="property-management mobile-property-management" style="margin-top: 15px; padding: 10px; background: rgba(34,139,34,0.1); border-radius: 8px;">
                         <h5 style="color: var(--oman-green); margin-bottom: 10px;"><i class="fas fa-tools"></i> إدارة العقارات</h5>
-                        <button id="build-houses-btn" class="btn-small"><i class="fas fa-home"></i> بناء بيت</button>
-                        <button id="build-hotel-btn" class="btn-small"><i class="fas fa-hotel"></i> بناء فندق</button>
-                        <button id="sell-buildings-btn" class="btn-small"><i class="fas fa-dollar-sign"></i> بيع مباني</button>
-                        <button id="mortgage-property-btn" class="btn-small"><i class="fas fa-lock"></i> رهن عقار</button>
-                        <button id="game-stats-btn" class="btn-small"><i class="fas fa-chart-bar"></i> إحصائيات</button>
+                        <button id="build-houses-btn" class="btn-small touch-target"><i class="fas fa-home"></i> بناء بيت</button>
+                        <button id="build-hotel-btn" class="btn-small touch-target"><i class="fas fa-hotel"></i> بناء فندق</button>
+                        <button id="sell-buildings-btn" class="btn-small touch-target"><i class="fas fa-dollar-sign"></i> بيع مباني</button>
+                        <button id="mortgage-property-btn" class="btn-small touch-target"><i class="fas fa-lock"></i> رهن عقار</button>
+                        <button id="game-stats-btn" class="btn-small touch-target"><i class="fas fa-chart-bar"></i> إحصائيات</button>
                     </div>
                 </div>
             </div>
@@ -1342,13 +2228,13 @@
     </main>
 
     <!-- نافذة التعليمات المنبثقة -->
-    <div id="help-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="close">&times;</span>
-                <h2><i class="fas fa-gamepad"></i> تعليمات لعبة مونوبولي عُمان</h2>
+    <div id="help-modal" class="modal responsive-modal">
+        <div class="modal-content mobile-modal">
+            <div class="modal-header mobile-header">
+                <span class="close touch-target">&times;</span>
+                <h2 class="mobile-heading"><i class="fas fa-gamepad"></i> تعليمات لعبة مونوبولي عُمان</h2>
             </div>
-            <div class="modal-body">
+            <div class="modal-body mobile-content">
                 <h3><i class="fas fa-dice"></i> كيفية اللعب:</h3>
                 <p>1. تبدأ اللعبة باختيار عدد اللاعبين وأسمائهم.</p>
                 <p>2. يرمي اللاعب النرد ويتحرك حسب العدد الظاهر.</p>
@@ -1357,7 +2243,7 @@
                 
                 <h3><i class="fas fa-mosque"></i> المعالم العُمانية:</h3>
                 <p>تحتوي اللعبة على أشهر المعالم في عُمان مثل:</p>
-                <ul>
+                <ul class="mobile-list">
                     <li><i class="fas fa-flag"></i> قصر العلم</li>
                     <li><i class="fas fa-store"></i> سوق مطرح</li>
                     <li><i class="fas fa-mountain"></i> جبال الحجر</li>
@@ -1372,8 +2258,8 @@
                 <h3><i class="fas fa-trophy"></i> الفوز:</h3>
                 <p>يفوز آخر لاعب قادر على دفع ديونه وتبقى لديه أموال وعقارات.</p>
             </div>
-            <div class="modal-footer">
-                <button class="btn-primary close-btn">حسناً</button>
+            <div class="modal-footer mobile-footer">
+                <button class="btn-primary close-btn touch-target">حسناً</button>
             </div>
         </div>
     </div>
@@ -1525,6 +2411,14 @@
     <script>
         // تهيئة النشاط باستخدام ActivityUtils
         const activityUtils = new ActivityUtils('monopoly-oman');
+
+        // تحميل المساعد الاستجابي
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof ResponsiveHelper !== 'undefined') {
+                const responsiveHelper = new ResponsiveHelper('monopoly-oman');
+                responsiveHelper.init();
+            }
+        });
 
         // متغيرات اللعبة
         let currentPlayerIndex = 0;
@@ -4017,5 +4911,8 @@
             console.log('🎮 تم تحميل اللعبة بنجاح!');
         });
     </script>
+    
+    <!-- المساعد الاستجابي للأجهزة المحمولة -->
+    <script src="../assets/js/responsive-helper.js"></script>
 </body>
 </html>
