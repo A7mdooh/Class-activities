@@ -2,12 +2,13 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0"/>
   <title>من هو؟ ❓</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
   <link rel="stylesheet" href="../config/unified-styles-template.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
   <style>
     /* تخصيص النشاط */
     .activity-container {
@@ -301,18 +302,388 @@
         grid-template-columns: 1fr 1fr;
       }
     }
+
+    /* Comprehensive Responsive Design */
+    
+    /* Large Desktop (1200px+) */
+    @media (min-width: 1200px) {
+      .activity-container {
+        max-width: 1400px;
+        padding: 30px;
+      }
+      
+      .game-header h1 {
+        font-size: 3rem;
+      }
+      
+      .options {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+      }
+      
+      .hint-box {
+        font-size: 1.6rem;
+        padding: 2.5rem;
+      }
+    }
+
+    /* Medium Desktop (1024px - 1199px) */
+    @media (min-width: 1024px) and (max-width: 1199px) {
+      .activity-container {
+        max-width: 1100px;
+        padding: 25px;
+      }
+      
+      .game-header h1 {
+        font-size: 2.8rem;
+      }
+      
+      .options {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 18px;
+      }
+    }
+
+    /* Tablet (768px - 1023px) */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .activity-container {
+        padding: 20px;
+        max-width: 100%;
+      }
+      
+      .game-header {
+        padding: 1.8rem;
+      }
+      
+      .game-header h1 {
+        font-size: 2.4rem;
+      }
+      
+      .game-controls {
+        flex-direction: row;
+        justify-content: center;
+        gap: 0.8rem;
+      }
+      
+      .game-controls select,
+      .game-controls button {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.95rem;
+      }
+      
+      .options {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 15px;
+      }
+      
+      .option {
+        padding: 1rem;
+        font-size: 0.95rem;
+      }
+      
+      .hint-box {
+        padding: 1.8rem;
+        font-size: 1.3rem;
+      }
+      
+      .modal-content {
+        margin: 15% auto;
+        max-width: 450px;
+        padding: 2rem;
+      }
+      
+      .secret-popup {
+        max-width: 350px;
+        padding: 1.8rem;
+        font-size: 1.3rem;
+      }
+    }
+
+    /* Mobile Large (480px - 767px) */
+    @media (min-width: 480px) and (max-width: 767px) {
+      .activity-container {
+        padding: 15px;
+      }
+      
+      .game-header {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+      
+      .game-header h1 {
+        font-size: 2rem;
+        margin-bottom: 0.8rem;
+      }
+      
+      .game-header p {
+        font-size: 0.9rem;
+      }
+      
+      .game-controls {
+        flex-direction: column;
+        gap: 0.8rem;
+        align-items: stretch;
+      }
+      
+      .game-controls select,
+      .game-controls button {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+        padding: 0.8rem;
+        font-size: 1rem;
+      }
+      
+      .options {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+      
+      .option {
+        padding: 0.8rem 0.5rem;
+        font-size: 0.9rem;
+      }
+      
+      .hint-box {
+        padding: 1.5rem;
+        font-size: 1.2rem;
+        margin-bottom: 1.5rem;
+      }
+      
+      .feedback {
+        font-size: 1.5rem;
+        padding: 0.8rem;
+      }
+      
+      .revealed-name {
+        font-size: 1.4rem;
+        padding: 1.2rem;
+      }
+      
+      .manual-select select {
+        max-width: 100%;
+        font-size: 1rem;
+      }
+      
+      .modal-content {
+        margin: 20% auto;
+        max-width: 90%;
+        padding: 1.8rem;
+      }
+      
+      .modal-content h2 {
+        font-size: 1.8rem;
+      }
+      
+      .modal-content p {
+        font-size: 1.1rem;
+      }
+      
+      .secret-popup {
+        max-width: 90%;
+        padding: 1.5rem;
+        font-size: 1.2rem;
+      }
+      
+      .start-challenge-btn {
+        padding: 0.8rem 1.5rem;
+        font-size: 1.1rem;
+      }
+    }
+
+    /* Mobile Small (320px - 479px) */
+    @media (max-width: 479px) {
+      .activity-container {
+        padding: 10px;
+      }
+      
+      .game-header {
+        padding: 1.2rem;
+        margin-bottom: 1rem;
+      }
+      
+      .game-header h1 {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .game-header p {
+        font-size: 0.85rem;
+        line-height: 1.4;
+      }
+      
+      .game-controls {
+        flex-direction: column;
+        gap: 0.6rem;
+      }
+      
+      .game-controls select,
+      .game-controls button {
+        width: 100%;
+        padding: 0.7rem;
+        font-size: 0.95rem;
+      }
+      
+      .options {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      
+      .option {
+        padding: 0.7rem 0.3rem;
+        font-size: 0.85rem;
+        border-radius: 8px;
+      }
+      
+      .hint-box {
+        padding: 1.2rem;
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+      }
+      
+      .feedback {
+        font-size: 1.3rem;
+        padding: 0.7rem;
+        min-height: 50px;
+      }
+      
+      .revealed-name {
+        font-size: 1.2rem;
+        padding: 1rem;
+      }
+      
+      .manual-select {
+        padding: 1.2rem;
+      }
+      
+      .manual-select h3 {
+        font-size: 1.1rem;
+        margin-bottom: 0.8rem;
+      }
+      
+      .modal-content {
+        margin: 25% auto;
+        max-width: 95%;
+        padding: 1.5rem;
+      }
+      
+      .modal-content h2 {
+        font-size: 1.6rem;
+        margin-bottom: 1rem;
+      }
+      
+      .modal-content p {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      
+      .secret-popup {
+        max-width: 95%;
+        padding: 1.2rem;
+        font-size: 1.1rem;
+      }
+      
+      .start-challenge-btn {
+        padding: 0.7rem 1.2rem;
+        font-size: 1rem;
+        margin: 1.5rem auto;
+      }
+    }
+
+    /* Landscape Orientation Adjustments */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .game-header {
+        padding: 1rem;
+        margin-bottom: 1rem;
+      }
+      
+      .game-header h1 {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .hint-box {
+        padding: 1rem;
+        font-size: 1.1rem;
+      }
+      
+      .modal-content {
+        margin: 5% auto;
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+      
+      .secret-popup {
+        top: 40%;
+        font-size: 1rem;
+        padding: 1rem;
+      }
+    }
+
+    /* Touch Device Optimizations */
+    @media (hover: none) and (pointer: coarse) {
+      .option {
+        padding: 1rem 0.8rem;
+        min-height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .game-controls button,
+      .game-controls select {
+        min-height: 44px;
+        touch-action: manipulation;
+      }
+      
+      .start-challenge-btn {
+        min-height: 48px;
+        touch-action: manipulation;
+      }
+      
+      .control-btn {
+        min-width: 48px;
+        min-height: 48px;
+      }
+    }
+
+    /* High DPI Displays */
+    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+      .option {
+        border-width: 1px;
+      }
+      
+      .hint-box::before {
+        height: 3px;
+      }
+    }
+
+    /* RTL Layout Optimizations */
+    @media (max-width: 768px) {
+      [dir="rtl"] .game-controls {
+        text-align: center;
+      }
+      
+      [dir="rtl"] .options {
+        direction: rtl;
+      }
+      
+      [dir="rtl"] .modal-content {
+        text-align: center;
+      }
+    }
   </style>
 </head>
-<body>
+<body class="responsive-body touch-device">
   <!-- أزرار التحكم الموحدة -->
   <div class="control-buttons">
-    <button class="control-btn" id="backBtn" title="العودة للقائمة الرئيسية">
+    <button class="control-btn touch-target" id="backBtn" title="العودة للقائمة الرئيسية">
       <i class="fas fa-home"></i>
     </button>
-    <button class="control-btn" id="fullscreenBtn" title="ملء الشاشة">
+    <button class="control-btn touch-target" id="fullscreenBtn" title="ملء الشاشة">
       <i class="fas fa-expand"></i>
     </button>
-    <button class="control-btn" id="muteBtn" title="كتم/تشغيل الصوت">
+    <button class="control-btn touch-target" id="muteBtn" title="كتم/تشغيل الصوت">
       <i class="fas fa-volume-up"></i>
     </button>
   </div>
@@ -320,64 +691,65 @@
   <!-- منطقة الإشعارات -->
   <div id="notification-container"></div>
 
-  <div class="activity-container">
+  <div class="activity-container mobile-container">
     <!-- رأس اللعبة -->
-    <div class="game-header">
-      <h1><i class="fas fa-question-circle"></i> من هو؟</h1>
+    <div class="game-header mobile-header">
+      <h1 class="mobile-heading"><i class="fas fa-question-circle"></i> من هو؟</h1>
       <p>اختر الصف ونوع النمط لبدء التحدي واكتشف هوية الطالب الغامض!</p>
       
-      <div class="game-controls">
-        <select id="classSelect">
+      <div class="game-controls mobile-controls">
+        <select id="classSelect" class="touch-target">
           <option value="">اختر الصف</option>
         </select>
-        <select id="modeSelect">
+        <select id="modeSelect" class="touch-target">
           <option value="random">فردي عشوائي</option>
           <option value="manual">فردي انتقائي</option>
         </select>
-        <button id="startGameBtn" class="btn btn-accent">
+        <button id="startGameBtn" class="btn btn-accent touch-target">
           <i class="fas fa-play"></i> ابدأ اللعبة
         </button>
       </div>
     </div>
 
     <!-- منطقة الاختيار اليدوي -->
-    <div id="manualSelectContainer" class="manual-select"></div>
+    <div id="manualSelectContainer" class="manual-select mobile-card"></div>
 
     <!-- النافذة السرية -->
-    <div id="secretNamePopup" class="secret-popup"></div>
+    <div id="secretNamePopup" class="secret-popup mobile-modal"></div>
 
     <!-- زر بدء التحدي -->
-    <button id="startHintBtn" class="start-challenge-btn" onclick="showHint()">
+    <button id="startHintBtn" class="start-challenge-btn touch-target" onclick="showHint()">
       <i class="fas fa-bullseye"></i> ابدأ التحدي
     </button>
 
     <!-- الاسم المكشوف -->
-    <div id="revealedName" class="revealed-name"></div>
+    <div id="revealedName" class="revealed-name mobile-notification"></div>
 
     <!-- صندوق التلميح -->
-    <div class="hint-box" id="hint">
+    <div class="hint-box mobile-card" id="hint">
       <i class="fas fa-lightbulb"></i> انتظر التلميح...
     </div>
 
     <!-- خيارات الطلاب -->
-    <div class="options" id="options"></div>
+    <div class="options mobile-grid" id="options"></div>
 
     <!-- منطقة التغذية الراجعة -->
-    <div id="feedback" class="feedback"></div>
+    <div id="feedback" class="feedback mobile-notification"></div>
   </div>
 
   <!-- نافذة التعليمات -->
-  <div id="instructionModal" class="instruction-modal">
-    <div class="modal-content">
+  <div id="instructionModal" class="instruction-modal mobile-overlay">
+    <div class="modal-content mobile-modal">
       <h2><i class="fas fa-info-circle"></i> طريقة اللعب</h2>
       <p id="modalText"></p>
-      <button onclick="closeInstructionModal()" class="btn btn-primary">
+      <button onclick="closeInstructionModal()" class="btn btn-primary touch-target">
         <i class="fas fa-check"></i> فهمت
       </button>
     </div>
   </div>
 
     <script src="../config/unified-scripts-template.js"></script>
+  <script src="../assets/js/responsive-helper.js"></script>
   <script>
     // إعداد النشاط باستخدام ActivityUtils
     const activity = new ActivityUtils('نشاط من هو؟', '../assets/media/sounds/');
@@ -472,6 +844,7 @@
       
       const select = document.createElement("select");
       select.id = "blurredName";
+      select.className = "touch-target";
       select.innerHTML = '<option value="">-- اختر الطالب --</option>' +
         allStudents.map(n => `<option value="${n}">${n}</option>`).join('');
       
@@ -571,7 +944,7 @@
       
       options.forEach(opt => {
         const div = document.createElement("div");
-        div.className = "option";
+        div.className = "option mobile-card touch-target";
         div.innerHTML = `<i class="fas fa-user"></i> ${opt}`;
         div.onclick = () => showAnswer(opt);
         container.appendChild(div);
