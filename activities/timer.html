@@ -649,6 +649,70 @@
       color: white;
     }
 
+    .sound-settings-btn {
+      background: linear-gradient(45deg, #8E24AA, #BA68C8);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sound-settings-btn:hover:not(:disabled) {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(142, 36, 170, 0.4);
+    }
+
+    .sound-settings-btn.active {
+      background: linear-gradient(45deg, #5E35B1, #7E57C2);
+      transform: scale(0.95);
+      box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .settings-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-lg);
+      padding-bottom: var(--spacing-md);
+      border-bottom: 2px solid var(--primary-color);
+    }
+
+    .close-sound-settings-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-light);
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: var(--spacing-sm);
+      border-radius: 50%;
+      transition: all var(--transition-normal);
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .close-sound-settings-btn:hover {
+      background: rgba(231, 76, 60, 0.1);
+      color: var(--danger-color);
+      transform: scale(1.1);
+    }
+
+    /* تحسينات الرسوم المتحركة للوحة الإعدادات */
+    #soundSettingsPanel {
+      transform-origin: top center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(142, 36, 170, 0.2);
+    }
+
+    .sound-settings-btn span:first-child {
+      transition: transform var(--transition-normal);
+    }
+
+    .sound-settings-btn.active span:first-child {
+      transform: scale(1.2);
+    }
+
     .resume-btn:hover:not(:disabled) {
       transform: translateY(-3px) scale(1.05);
       box-shadow: 0 8px 20px rgba(33, 150, 243, 0.4);
@@ -1842,19 +1906,9 @@
         <span>🔄</span>
         <span>إعادة تعيين</span>
       </button>
-    <!-- أزرار التحكم في المؤقت -->
-    <div class="timer-controls mobile-buttons">
-      <button class="timer-btn start-btn touch-target mobile-btn" id="startBtn">
-        <span>▶️</span>
-        <span>ابدأ المؤقت</span>
-      </button>
-      <button class="timer-btn pause-btn touch-target mobile-btn" id="pauseBtn" disabled>
-        <span>⏸️</span>
-        <span>إيقاف مؤقت</span>
-      </button>
-      <button class="timer-btn reset-btn touch-target mobile-btn" id="resetBtn">
-        <span>🔄</span>
-        <span>إعادة تعيين</span>
+      <button class="timer-btn sound-settings-btn touch-target mobile-btn" id="soundSettingsBtn">
+        <span>🔊</span>
+        <span>إعدادات الصوت</span>
       </button>
       <button class="timer-btn stop-btn touch-target mobile-btn" id="stopBtn" disabled>
         <span>⏹️</span>
@@ -1863,11 +1917,16 @@
     </div>
 
     <!-- الإعدادات المتقدمة -->
-    <div class="advanced-settings mobile-card">
-      <h3 class="mobile-heading">
-        <span>🎵</span>
-        <span>إعدادات الصوت</span>
-      </h3>
+    <div class="advanced-settings mobile-card" id="soundSettingsPanel" style="display: none;">
+      <div class="settings-header">
+        <h3 class="mobile-heading">
+          <span>🎵</span>
+          <span>إعدادات الصوت</span>
+        </h3>
+        <button class="close-sound-settings-btn touch-target" id="closeSoundSettingsBtn">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
       
       <div class="sound-controls mobile-toggles">
         <div class="sound-control mobile-toggle">
@@ -2096,6 +2155,68 @@
       setTimeout(() => {
         element.style.transform = '';
       }, 150);
+    }
+
+    // دوال إدارة إعدادات الصوت
+    function toggleSoundSettings() {
+      const panel = elements.soundSettingsPanel;
+      const btn = elements.soundSettingsBtn;
+      
+      if (panel.style.display === 'none' || !panel.style.display) {
+        showSoundSettings();
+      } else {
+        hideSoundSettings();
+      }
+    }
+
+    function showSoundSettings() {
+      const panel = elements.soundSettingsPanel;
+      const btn = elements.soundSettingsBtn;
+      
+      // إظهار اللوحة
+      panel.style.display = 'block';
+      panel.style.opacity = '0';
+      panel.style.transform = 'translateY(-20px)';
+      
+      // تفعيل حالة الزر
+      btn.classList.add('active');
+      
+      // رسوم متحركة للظهور
+      setTimeout(() => {
+        panel.style.transition = 'all 0.3s ease-out';
+        panel.style.opacity = '1';
+        panel.style.transform = 'translateY(0)';
+      }, 10);
+    }
+
+    function hideSoundSettings() {
+      const panel = elements.soundSettingsPanel;
+      const btn = elements.soundSettingsBtn;
+      
+      // رسوم متحركة للاختفاء
+      panel.style.transition = 'all 0.3s ease-in';
+      panel.style.opacity = '0';
+      panel.style.transform = 'translateY(-20px)';
+      
+      // إلغاء تفعيل حالة الزر
+      btn.classList.remove('active');
+      
+      // إخفاء اللوحة
+      setTimeout(() => {
+        panel.style.display = 'none';
+      }, 300);
+    }
+
+    // إخفاء الإعدادات عند النقر خارجها
+    function handleOutsideClick(e) {
+      const panel = document.getElementById('soundSettingsPanel');
+      const btn = document.getElementById('soundSettingsBtn');
+      
+      if (panel && panel.style.display !== 'none' && 
+          !panel.contains(e.target) && 
+          !btn.contains(e.target)) {
+        hideSoundSettings();
+      }
     }
 
     // تنسيق الوقت
@@ -2677,6 +2798,26 @@
         addClickEffect(e.target);
         stopTimer();
       });
+
+      // زر إعدادات الصوت
+      elements.soundSettingsBtn = document.getElementById('soundSettingsBtn');
+      elements.soundSettingsPanel = document.getElementById('soundSettingsPanel');
+      elements.closeSoundSettingsBtn = document.getElementById('closeSoundSettingsBtn');
+
+      elements.soundSettingsBtn.addEventListener('click', (e) => {
+        addClickEffect(e.target);
+        playSound(elements.clickSound, 'click');
+        toggleSoundSettings();
+      });
+
+      elements.closeSoundSettingsBtn.addEventListener('click', (e) => {
+        addClickEffect(e.target);
+        playSound(elements.clickSound, 'click');
+        hideSoundSettings();
+      });
+
+      // إضافة معالج النقر خارج الإعدادات
+      document.addEventListener('click', handleOutsideClick);
 
       // الإعدادات
       elements.timerMode.addEventListener('change', changeMode);
