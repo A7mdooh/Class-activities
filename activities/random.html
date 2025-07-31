@@ -662,17 +662,73 @@
       box-shadow: 0 4px 20px var(--shadow-light);
       backdrop-filter: blur(10px);
       animation: slideUp 0.8s ease-out 0.8s both;
+      position: relative;
+      border: 2px solid var(--primary-color);
+    }
+
+    .settings-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-md);
     }
 
     .settings-panel h3 {
       font-size: 1.2rem;
       color: var(--primary-color);
-      margin-bottom: var(--spacing-md);
-      text-align: center;
+      margin: 0;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: var(--spacing-sm);
+    }
+
+    .close-settings-btn {
+      background: var(--error-color);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 35px;
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      font-size: 1rem;
+    }
+
+    .close-settings-btn:hover {
+      background: var(--error-dark);
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+    }
+
+    .settings-btn {
+      background: linear-gradient(45deg, var(--primary-color), var(--primary-light));
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .settings-btn:hover:not(:disabled) {
+      background: linear-gradient(45deg, var(--primary-light), var(--primary-color));
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(0, 121, 107, 0.4);
+    }
+
+    .settings-btn.active {
+      background: linear-gradient(45deg, #ff6b35, #ffa500) !important;
+      animation: pulse 1.5s infinite;
+    }
+
+    .settings-btn.active span:first-child {
+      animation: rotate 2s infinite linear;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
 
     .settings-grid {
@@ -1193,6 +1249,17 @@
       to {
         opacity: 1;
         transform: translateY(0);
+      }
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateY(-30px);
       }
     }
 
@@ -1942,6 +2009,10 @@
         <span>🏆</span>
         <span>إضافة للوحة الشرف</span>
       </button>
+      <button class="main-btn settings-btn touch-target mobile-btn" id="settingsBtn">
+        <span>⚙️</span>
+        <span>الإعدادات</span>
+      </button>
       <button class="main-btn reset-btn touch-target mobile-btn" id="resetBtn" disabled>
         <span>🔄</span>
         <span>إعادة تعيين</span>
@@ -1949,11 +2020,16 @@
     </div>
 
     <!-- إعدادات الاختيار -->
-    <div class="settings-panel mobile-card">
-      <h3 class="mobile-heading">
-        <span>⚙️</span>
-        <span>إعدادات الاختيار</span>
-      </h3>
+    <div class="settings-panel mobile-card" id="settingsPanel" style="display: none;">
+      <div class="settings-header">
+        <h3 class="mobile-heading">
+          <span>⚙️</span>
+          <span>إعدادات الاختيار</span>
+        </h3>
+        <button class="close-settings-btn touch-target" id="closeSettingsBtn">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
       <div class="settings-grid mobile-grid">
         <div class="setting-item mobile-input">
           <label class="setting-label mobile-label" for="speedSlider">سرعة التدوير</label>
@@ -2106,6 +2182,9 @@
       removeBtn: document.getElementById('removeBtn'),
       honorBtn: document.getElementById('honorBtn'),
       resetBtn: document.getElementById('resetBtn'),
+      settingsBtn: document.getElementById('settingsBtn'),
+      settingsPanel: document.getElementById('settingsPanel'),
+      closeSettingsBtn: document.getElementById('closeSettingsBtn'),
       speedSlider: document.getElementById('speedSlider'),
       durationSlider: document.getElementById('durationSlider'),
       speedValue: document.getElementById('speedValue'),
@@ -2763,6 +2842,50 @@
       console.log('🔊 تم تحديث إعدادات الصوت:', audioSettings);
     }
 
+    // إظهار لوحة الإعدادات
+    function showSettings() {
+      console.log('⚙️ إظهار لوحة الإعدادات...');
+      playSound('click');
+      
+      elements.settingsPanel.style.display = 'block';
+      elements.settingsPanel.style.animation = 'slideUp 0.4s ease-out';
+      
+      // تحديث حالة زر الإعدادات
+      elements.settingsBtn.classList.add('active');
+      elements.settingsBtn.querySelector('span:last-child').textContent = 'إخفاء الإعدادات';
+      
+      console.log('✅ تم إظهار لوحة الإعدادات');
+    }
+
+    // إخفاء لوحة الإعدادات
+    function hideSettings() {
+      console.log('❌ إخفاء لوحة الإعدادات...');
+      playSound('click');
+      
+      elements.settingsPanel.style.animation = 'slideDown 0.4s ease-out';
+      
+      setTimeout(() => {
+        elements.settingsPanel.style.display = 'none';
+      }, 400);
+      
+      // إعادة تعيين حالة زر الإعدادات
+      elements.settingsBtn.classList.remove('active');
+      elements.settingsBtn.querySelector('span:last-child').textContent = 'الإعدادات';
+      
+      console.log('✅ تم إخفاء لوحة الإعدادات');
+    }
+
+    // تبديل عرض الإعدادات
+    function toggleSettings() {
+      const isVisible = elements.settingsPanel.style.display !== 'none';
+      
+      if (isVisible) {
+        hideSettings();
+      } else {
+        showSettings();
+      }
+    }
+
     // تهيئة النشاط
     async function initializeActivity() {
       console.log('⚡ جاري تهيئة نشاط الاختيار العشوائي...');
@@ -2839,6 +2962,31 @@
         
         if (confirm('هل تريد إعادة تعيين النشاط وإرجاع جميع الطلاب؟')) {
           resetActivity();
+        }
+      });
+
+      // زر الإعدادات
+      elements.settingsBtn.addEventListener('click', (e) => {
+        console.log('⚙️ تم النقر على زر الإعدادات');
+        addClickEffect(e.target);
+        toggleSettings();
+      });
+
+      // زر إغلاق الإعدادات
+      elements.closeSettingsBtn.addEventListener('click', (e) => {
+        console.log('❌ تم النقر على زر إغلاق الإعدادات');
+        addClickEffect(e.target);
+        hideSettings();
+      });
+
+      // إغلاق الإعدادات عند النقر خارج اللوحة
+      document.addEventListener('click', (e) => {
+        const isSettingsPanel = elements.settingsPanel.contains(e.target);
+        const isSettingsBtn = elements.settingsBtn.contains(e.target);
+        const isSettingsVisible = elements.settingsPanel.style.display !== 'none';
+        
+        if (!isSettingsPanel && !isSettingsBtn && isSettingsVisible) {
+          hideSettings();
         }
       });
 
