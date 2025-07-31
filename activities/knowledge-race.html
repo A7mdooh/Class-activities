@@ -2,7 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="سباق المعرفة - لعبة تفاعلية تعليمية">
     <title>🏆 سباق المعرفة - لعبة تعليمية تفاعلية</title>
     
     <!-- الخطوط والأيقونات -->
@@ -15,6 +16,7 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     
     <!-- الأنماط والسكريبت الموحد -->
+    <link rel="stylesheet" href="../assets/css/responsive.css">
     <link rel="stylesheet" href="../assets/css/style.css">
     <script src="../assets/js/activityUtils.js"></script>
     <style>
@@ -670,37 +672,112 @@
             animation: celebration 0.6s ease-in-out;
             box-shadow: 0 0 30px rgba(255, 215, 0, 0.8) !important;
         }
+
+        /* Knowledge Race Responsive Enhancements */
+        @media (max-width: 1024px) {
+            .main-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .control-panel {
+                width: 100%;
+                order: -1;
+            }
+            
+            .race-area {
+                width: 100%;
+            }
+            
+            .score-board {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .progress-indicators {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            
+            .indicator-item {
+                display: flex !important;
+                align-items: center !important;
+                gap: 5px !important;
+                background: rgba(255,255,255,0.1) !important;
+                padding: 8px 12px !important;
+                border-radius: 20px !important;
+                font-size: 0.85rem !important;
+                text-align: center;
+            }
+            
+            .race-track {
+                padding: 10px;
+            }
+            
+            .team-setup-grid {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .settings-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .control-section {
+                padding: 15px;
+            }
+            
+            .control-title {
+                font-size: 1rem;
+                margin-bottom: 10px;
+            }
+            
+            .progress-indicators {
+                grid-template-columns: 1fr;
+            }
+            
+            .race-header h2 {
+                font-size: 1.5rem;
+            }
+            
+            .victory-stats {
+                grid-template-columns: 1fr !important;
+            }
+        }
     </style>
 </head>
-<body>
+<body class="responsive-body">
     <!-- أزرار التحكم الموحدة -->
-    <div class="control-buttons">
-        <button class="control-btn" id="homeBtn" title="العودة للصفحة الرئيسية">
+    <div class="control-buttons responsive-controls">
+        <button class="control-btn touch-target" id="homeBtn" title="العودة للصفحة الرئيسية">
             <i class="fas fa-home"></i>
         </button>
-        <button class="control-btn" id="refreshBtn" title="إعادة تشغيل النشاط">
+        <button class="control-btn touch-target" id="refreshBtn" title="إعادة تشغيل النشاط">
             <i class="fas fa-redo"></i>
         </button>
-        <button class="control-btn" id="instructionsBtn" title="التعليمات">
+        <button class="control-btn touch-target" id="instructionsBtn" title="التعليمات">
             <i class="fas fa-question-circle"></i>
         </button>
-        <button class="control-btn" id="fullscreenBtn" title="ملء الشاشة">
+        <button class="control-btn touch-target" id="fullscreenBtn" title="ملء الشاشة">
             <i class="fas fa-expand"></i>
         </button>
-        <button class="control-btn" id="soundBtn" title="الصوت">
+        <button class="control-btn touch-target" id="soundBtn" title="الصوت">
             <i class="fas fa-volume-up"></i>
         </button>
     </div>
 
     <!-- نافذة التعليمات -->
-    <div id="instructionsModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="close">&times;</span>
-                <h2><i class="fas fa-racing-flag"></i> تعليمات سباق المعرفة</h2>
+    <div id="instructionsModal" class="modal responsive-modal">
+        <div class="modal-content responsive-modal-content">
+            <div class="modal-header mobile-text-center">
+                <span class="close touch-target">&times;</span>
+                <h2 class="mobile-heading"><i class="fas fa-racing-flag"></i> تعليمات سباق المعرفة</h2>
             </div>
-            <div class="modal-body">
-                <div class="instructions-content">
+            <div class="modal-body scrollable-content">
+                <div class="instructions-content mobile-padding">
                     <h3><i class="fas fa-play-circle"></i> كيفية اللعب:</h3>
                     <ul>
                         <li><i class="fas fa-users"></i> يقسم المعلم الطلاب إلى فرق (2-6 فرق)</li>
@@ -729,23 +806,23 @@
     </div>
 
     <!-- نافذة الانتصار -->
-    <div id="victoryModal" class="modal">
-        <div class="modal-content victory-content">
-            <div class="modal-header">
-                <h2><i class="fas fa-trophy"></i> تهانينا! 🎉</h2>
+    <div id="victoryModal" class="modal responsive-modal">
+        <div class="modal-content victory-content responsive-modal-content">
+            <div class="modal-header mobile-text-center">
+                <h2 class="mobile-heading"><i class="fas fa-trophy"></i> تهانينا! 🎉</h2>
             </div>
-            <div class="modal-body">
-                <div class="victory-animation">
+            <div class="modal-body scrollable-content">
+                <div class="victory-animation mobile-flex-center">
                     <i class="fas fa-crown"></i>
                 </div>
-                <h3 id="winner-team-name">فريق الأبطال</h3>
-                <p>لقد فاز في سباق المعرفة!</p>
-                <div class="victory-stats">
-                    <div class="stat-item">
+                <h3 id="winner-team-name" class="mobile-text-center">فريق الأبطال</h3>
+                <p class="mobile-text-center">لقد فاز في سباق المعرفة!</p>
+                <div class="victory-stats mobile-grid">
+                    <div class="stat-item mobile-card">
                         <i class="fas fa-flag-checkered"></i>
                         <span>النتيجة النهائية: <span id="final-score">0/10</span></span>
                     </div>
-                    <div class="stat-item">
+                    <div class="stat-item mobile-card">
                         <i class="fas fa-users"></i>
                         <span>أعضاء الفريق: <span id="team-members">-</span></span>
                     </div>
@@ -769,52 +846,52 @@
     </header>
 
     <!-- Main Container -->
-    <div class="main-container">
+    <div class="main-container responsive-container">
         <!-- Control Panel -->
-        <div class="control-panel">
+        <div class="control-panel mobile-full-width">
             <!-- Game Setup -->
-            <div class="control-section">
-                <div class="control-title"><i class="fas fa-cogs"></i> إعداد اللعبة</div>
-                <button class="btn btn-primary" onclick="showGameSetup()"><i class="fas fa-users"></i> إعداد الفرق</button>
-                <button class="btn btn-info" onclick="showSettings()"><i class="fas fa-sliders-h"></i> الإعدادات</button>
-                <button class="btn btn-warning" onclick="showInstructions()"><i class="fas fa-book-open"></i> التعليمات</button>
+            <div class="control-section mobile-card">
+                <div class="control-title mobile-text-center"><i class="fas fa-cogs"></i> إعداد اللعبة</div>
+                <button class="btn btn-primary touch-target mobile-btn" onclick="showGameSetup()"><i class="fas fa-users"></i> إعداد الفرق</button>
+                <button class="btn btn-info touch-target mobile-btn" onclick="showSettings()"><i class="fas fa-sliders-h"></i> الإعدادات</button>
+                <button class="btn btn-warning touch-target mobile-btn" onclick="showInstructions()"><i class="fas fa-book-open"></i> التعليمات</button>
             </div>
 
             <!-- Game Control -->
-            <div class="control-section">
-                <div class="control-title"><i class="fas fa-gamepad"></i> التحكم في اللعبة</div>
-                <button class="btn btn-success" onclick="startRace()" id="startBtn" title="ابدأ سباق المعرفة بين الفرق"><i class="fas fa-play"></i> بدء السباق</button>
-                <button class="btn btn-warning" onclick="pauseRace()" id="pauseBtn" disabled title="إيقاف مؤقت للسباق"><i class="fas fa-pause"></i> إيقاف</button>
-                <button class="btn btn-danger" onclick="resetRace()" id="resetBtn" title="إعادة تعيين السباق من البداية"><i class="fas fa-redo"></i> إعادة تعيين</button>
+            <div class="control-section mobile-card">
+                <div class="control-title mobile-text-center"><i class="fas fa-gamepad"></i> التحكم في اللعبة</div>
+                <button class="btn btn-success touch-target mobile-btn" onclick="startRace()" id="startBtn" title="ابدأ سباق المعرفة بين الفرق"><i class="fas fa-play"></i> بدء السباق</button>
+                <button class="btn btn-warning touch-target mobile-btn" onclick="pauseRace()" id="pauseBtn" disabled title="إيقاف مؤقت للسباق"><i class="fas fa-pause"></i> إيقاف</button>
+                <button class="btn btn-danger touch-target mobile-btn" onclick="resetRace()" id="resetBtn" title="إعادة تعيين السباق من البداية"><i class="fas fa-redo"></i> إعادة تعيين</button>
             </div>
 
             <!-- Question Control -->
-            <div class="control-section">
-                <div class="control-title"><i class="fas fa-question-circle"></i> التحكم في الأسئلة</div>
-                <button class="btn btn-success" onclick="correctAnswer()" id="correctBtn" disabled title="اضغط عند الإجابة الصحيحة لتحريك الفريق للأمام"><i class="fas fa-check"></i> إجابة صحيحة</button>
-                <button class="btn btn-danger" onclick="wrongAnswer()" id="wrongBtn" disabled title="اضغط عند الإجابة الخاطئة لتطبيق العقوبة المحددة"><i class="fas fa-times"></i> إجابة خاطئة</button>
-                <button class="btn btn-info" onclick="skipQuestion()" id="skipBtn" disabled title="تخطي السؤال والانتقال للفريق التالي"><i class="fas fa-forward"></i> تخطي السؤال</button>
+            <div class="control-section mobile-card">
+                <div class="control-title mobile-text-center"><i class="fas fa-question-circle"></i> التحكم في الأسئلة</div>
+                <button class="btn btn-success touch-target mobile-btn" onclick="correctAnswer()" id="correctBtn" disabled title="اضغط عند الإجابة الصحيحة لتحريك الفريق للأمام"><i class="fas fa-check"></i> إجابة صحيحة</button>
+                <button class="btn btn-danger touch-target mobile-btn" onclick="wrongAnswer()" id="wrongBtn" disabled title="اضغط عند الإجابة الخاطئة لتطبيق العقوبة المحددة"><i class="fas fa-times"></i> إجابة خاطئة</button>
+                <button class="btn btn-info touch-target mobile-btn" onclick="skipQuestion()" id="skipBtn" disabled title="تخطي السؤال والانتقال للفريق التالي"><i class="fas fa-forward"></i> تخطي السؤال</button>
             </div>
 
             <!-- Quick Actions -->
-            <div class="control-section">
-                <div class="control-title"><i class="fas fa-bolt"></i> إجراءات سريعة</div>
-                <button class="btn btn-info" onclick="showStats()"><i class="fas fa-chart-bar"></i> الإحصائيات</button>
-                <button class="btn btn-warning" onclick="changeCurrentTeam()"><i class="fas fa-exchange-alt"></i> تغيير الفريق</button>
-                <button class="btn btn-primary" onclick="showQuickHelp()"><i class="fas fa-life-ring"></i> مساعدة سريعة</button>
+            <div class="control-section mobile-card">
+                <div class="control-title mobile-text-center"><i class="fas fa-bolt"></i> إجراءات سريعة</div>
+                <button class="btn btn-info touch-target mobile-btn" onclick="showStats()"><i class="fas fa-chart-bar"></i> الإحصائيات</button>
+                <button class="btn btn-warning touch-target mobile-btn" onclick="changeCurrentTeam()"><i class="fas fa-exchange-alt"></i> تغيير الفريق</button>
+                <button class="btn btn-primary touch-target mobile-btn" onclick="showQuickHelp()"><i class="fas fa-life-ring"></i> مساعدة سريعة</button>
             </div>
         </div>
 
         <!-- Race Area -->
-        <div class="race-area">
-            <div class="race-header">
-                <h2 class="race-title"><i class="fas fa-flag-checkered"></i> حلبة السباق</h2>
-                <p class="race-info" id="raceInfo">استعد للسباق! أعد الفرق أولاً</p>
+        <div class="race-area responsive-race-area">
+            <div class="race-header mobile-text-center">
+                <h2 class="race-title mobile-heading"><i class="fas fa-flag-checkered"></i> حلبة السباق</h2>
+                <p class="race-info mobile-text" id="raceInfo">استعد للسباق! أعد الفرق أولاً</p>
             </div>
 
             <!-- Current Player Display -->
-            <div class="current-player" id="currentPlayerDisplay" style="display: none;">
-                <div style="display: flex; align-items: center; justify-content: center; gap: 15px; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 15px; margin: 20px 0;">
+            <div class="current-player responsive-player-display" id="currentPlayerDisplay" style="display: none;">
+                <div class="player-display-content mobile-flex-center">
                     <div style="font-size: 2rem;"><i class="fas fa-bullseye"></i></div>
                     <div>
                         <div class="current-player-label" style="font-size: 0.9rem; opacity: 0.8;">الفريق الحالي:</div>
@@ -825,28 +902,28 @@
             </div>
 
             <!-- Game Status -->
-            <div class="game-status">
-                <div class="status-message" id="statusMessage"><i class="fas fa-play-circle"></i> جاهز للبدء!</div>
-                <div class="game-progress" id="gameProgress">استخدم إعداد الفرق لإنشاء الفرق</div>
+            <div class="game-status responsive-status">
+                <div class="status-message mobile-text-center" id="statusMessage"><i class="fas fa-play-circle"></i> جاهز للبدء!</div>
+                <div class="game-progress mobile-text-center" id="gameProgress">استخدم إعداد الفرق لإنشاء الفرق</div>
                 
                 <!-- Progress Indicators -->
-                <div style="display: flex; gap: 10px; margin-top: 15px; justify-content: center; flex-wrap: wrap;">
-                    <div style="display: flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.1); padding: 8px 12px; border-radius: 20px; font-size: 0.9rem;">
+                <div class="progress-indicators mobile-grid">
+                    <div class="indicator-item mobile-card">
                         <span><i class="fas fa-bullseye"></i></span>
                         <span>المسافة: </span>
                         <span id="distanceIndicator" style="font-weight: bold; color: var(--oman-gold);">10</span>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.1); padding: 8px 12px; border-radius: 20px; font-size: 0.9rem;">
+                    <div class="indicator-item mobile-card">
                         <span><i class="fas fa-users"></i></span>
                         <span>الفرق: </span>
                         <span id="teamsIndicator" style="font-weight: bold; color: var(--oman-green);">0</span>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.1); padding: 8px 12px; border-radius: 20px; font-size: 0.9rem;">
+                    <div class="indicator-item mobile-card">
                         <span><i class="fas fa-question-circle"></i></span>
                         <span>الأسئلة: </span>
                         <span id="questionsIndicator" style="font-weight: bold; color: var(--accent-color);">0</span>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.1); padding: 8px 12px; border-radius: 20px; font-size: 0.9rem;">
+                    <div class="indicator-item mobile-card">
                         <span><i class="fas fa-clock"></i></span>
                         <span>الوقت: </span>
                         <span id="timeIndicator" style="font-weight: bold; color: var(--warning-color);">00:00</span>
@@ -855,64 +932,64 @@
             </div>
 
             <!-- Race Track -->
-            <div class="race-track" id="raceTrack">
+            <div class="race-track responsive-track" id="raceTrack">
                 <!-- Teams will be dynamically added here -->
             </div>
         </div>
 
         <!-- Score Board -->
-        <div class="score-board">
-            <h3 class="score-title"><i class="fas fa-trophy"></i> لوحة النتائج</h3>
-            <div id="teamRankings">
-                <p style="text-align: center; opacity: 0.7;">لا توجد فرق بعد</p>
+        <div class="score-board mobile-full-width">
+            <h3 class="score-title mobile-text-center"><i class="fas fa-trophy"></i> لوحة النتائج</h3>
+            <div id="teamRankings" class="responsive-rankings">
+                <p class="mobile-text-center" style="opacity: 0.7;">لا توجد فرق بعد</p>
             </div>
 
             <!-- Race Statistics -->
-            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
-                <h4 style="margin-bottom: 10px; color: var(--gold);"><i class="fas fa-chart-line"></i> إحصائيات السباق</h4>
-                <div style="font-size: 0.9rem;">
-                    <div><i class="fas fa-flag-checkered"></i> المسافة المطلوبة: <span id="totalDistance">10</span> نقطة</div>
-                    <div><i class="fas fa-question-circle"></i> الأسئلة المطروحة: <span id="questionsAsked">0</span></div>
-                    <div><i class="fas fa-check-circle"></i> الإجابات الصحيحة: <span id="correctAnswers">0</span></div>
-                    <div><i class="fas fa-clock"></i> وقت اللعبة: <span id="gameTime">00:00</span></div>
+            <div class="race-statistics mobile-card">
+                <h4 class="statistics-title mobile-text-center"><i class="fas fa-chart-line"></i> إحصائيات السباق</h4>
+                <div class="statistics-content mobile-grid">
+                    <div class="stat-item"><i class="fas fa-flag-checkered"></i> المسافة المطلوبة: <span id="totalDistance">10</span> نقطة</div>
+                    <div class="stat-item"><i class="fas fa-question-circle"></i> الأسئلة المطروحة: <span id="questionsAsked">0</span></div>
+                    <div class="stat-item"><i class="fas fa-check-circle"></i> الإجابات الصحيحة: <span id="correctAnswers">0</span></div>
+                    <div class="stat-item"><i class="fas fa-clock"></i> وقت اللعبة: <span id="gameTime">00:00</span></div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Game Setup Modal -->
-    <div id="gameSetupModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="close" onclick="activityUtils.closeModal('gameSetupModal')">&times;</span>
-                <h2><i class="fas fa-users-cog"></i> إعداد فرق السباق</h2>
+    <div id="gameSetupModal" class="modal responsive-modal">
+        <div class="modal-content responsive-modal-content">
+            <div class="modal-header mobile-text-center">
+                <span class="close touch-target" onclick="activityUtils.closeModal('gameSetupModal')">&times;</span>
+                <h2 class="mobile-heading"><i class="fas fa-users-cog"></i> إعداد فرق السباق</h2>
             </div>
-            <div class="modal-body">
+            <div class="modal-body scrollable-content">
                 <!-- Class Selection -->
-                <div style="margin-bottom: 30px;">
-                    <h3 style="color: var(--oman-green); margin-bottom: 15px;"><i class="fas fa-graduation-cap"></i> اختيار الصف</h3>
-                    <div id="classSelection" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <div class="setup-section mobile-card">
+                    <h3 class="section-title mobile-text-center"><i class="fas fa-graduation-cap"></i> اختيار الصف</h3>
+                    <div id="classSelection" class="class-selection mobile-grid">
                         <!-- Classes will be loaded here -->
                     </div>
                 </div>
 
                 <!-- Team Configuration -->
-                <div style="margin-bottom: 30px;">
-                    <h3 style="color: var(--oman-green); margin-bottom: 15px;">👥 تكوين الفرق</h3>
-                    <div style="display: flex; gap: 15px; margin-bottom: 15px;">
-                        <label style="display: flex; align-items: center; gap: 10px;">
+                <div class="setup-section mobile-card">
+                    <h3 class="section-title mobile-text-center">👥 تكوين الفرق</h3>
+                    <div class="team-mode-selection mobile-flex-center">
+                        <label class="radio-label touch-target">
                             <input type="radio" name="teamMode" value="auto" checked onchange="updateTeamMode()">
                             <span>تقسيم تلقائي</span>
                         </label>
-                        <label style="display: flex; align-items: center; gap: 10px;">
+                        <label class="radio-label touch-target">
                             <input type="radio" name="teamMode" value="manual" onchange="updateTeamMode()">
                             <span>تقسيم يدوي</span>
                         </label>
                     </div>
                     
-                    <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 20px;">
-                        <label>عدد الفرق:</label>
-                        <select id="teamCount" onchange="updateTeamCount()" style="padding: 5px; border-radius: 5px; background: #333; color: white; border: 1px solid #555;">
+                    <div class="team-count-selection mobile-flex-center">
+                        <label class="mobile-text">عدد الفرق:</label>
+                        <select id="teamCount" onchange="updateTeamCount()" class="responsive-select touch-target">
                             <option value="2">فريقان</option>
                             <option value="3">ثلاثة فرق</option>
                             <option value="4">أربعة فرق</option>
@@ -921,43 +998,41 @@
                 </div>
 
                 <!-- Teams Grid -->
-                <div class="team-setup-grid" id="teamsGrid">
+                <div class="team-setup-grid responsive-teams-grid" id="teamsGrid">
                     <!-- Teams will be dynamically generated -->
                 </div>
 
                 <!-- Save Button -->
-                <div style="text-align: center; margin-top: 30px;">
-                    <button class="btn btn-success" onclick="saveTeamSetup()" style="width: 200px; font-size: 1.1rem;"><i class="fas fa-save"></i> حفظ وبدء السباق</button>
+                <div class="modal-actions mobile-text-center">
+                    <button class="btn btn-success touch-target mobile-btn-large" onclick="saveTeamSetup()"><i class="fas fa-save"></i> حفظ وبدء السباق</button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Settings Modal -->
-    <div id="settingsModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="close" onclick="activityUtils.closeModal('settingsModal')">&times;</span>
-                <h2><i class="fas fa-sliders-h"></i> إعدادات اللعبة</h2>
+    <div id="settingsModal" class="modal responsive-modal">
+        <div class="modal-content responsive-modal-content">
+            <div class="modal-header mobile-text-center">
+                <span class="close touch-target" onclick="activityUtils.closeModal('settingsModal')">&times;</span>
+                <h2 class="mobile-heading"><i class="fas fa-sliders-h"></i> إعدادات اللعبة</h2>
             </div>
-            <div class="modal-body">
+            <div class="modal-body scrollable-content">
                 <!-- Race Settings -->
-                <div style="margin-bottom: 30px;">
-                    <h3 style="color: var(--oman-green); margin-bottom: 15px;"><i class="fas fa-flag-checkered"></i> إعدادات السباق</h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                        <div>
-                            <label><i class="fas fa-bullseye"></i> المسافة المطلوبة للفوز:</label>
-                            <input type="number" id="raceDistance" min="5" max="20" value="10" 
-                                   style="width: 100%; padding: 8px; margin-top: 5px; border-radius: 5px; background: #333; color: white; border: 1px solid #555;">
+                <div class="settings-section mobile-card">
+                    <h3 class="section-title mobile-text-center"><i class="fas fa-flag-checkered"></i> إعدادات السباق</h3>
+                    <div class="settings-grid mobile-grid">
+                        <div class="setting-item">
+                            <label class="mobile-text"><i class="fas fa-bullseye"></i> المسافة المطلوبة للفوز:</label>
+                            <input type="number" id="raceDistance" min="5" max="20" value="10" class="responsive-input touch-target">
                         </div>
-                        <div>
-                            <label>نقاط الإجابة الصحيحة:</label>
-                            <input type="number" id="correctPoints" min="1" max="5" value="1" 
-                                   style="width: 100%; padding: 8px; margin-top: 5px; border-radius: 5px; background: #333; color: white; border: 1px solid #555;">
+                        <div class="setting-item">
+                            <label class="mobile-text">نقاط الإجابة الصحيحة:</label>
+                            <input type="number" id="correctPoints" min="1" max="5" value="1" class="responsive-input touch-target">
                         </div>
-                        <div>
-                            <label>خصم الإجابة الخاطئة:</label>
-                            <select id="wrongPenalty" style="width: 100%; padding: 8px; margin-top: 5px; border-radius: 5px; background: #333; color: white; border: 1px solid #555;">
+                        <div class="setting-item">
+                            <label class="mobile-text">خصم الإجابة الخاطئة:</label>
+                            <select id="wrongPenalty" class="responsive-select touch-target">
                                 <option value="0">بدون خصم</option>
                                 <option value="1">تجميد جولة واحدة</option>
                                 <option value="2">خطوة للخلف</option>
@@ -967,14 +1042,14 @@
                 </div>
 
                 <!-- Sound Settings -->
-                <div style="margin-bottom: 30px;">
-                    <h3 style="color: var(--oman-green); margin-bottom: 15px;">🔊 إعدادات الصوت</h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                        <label style="display: flex; align-items: center; gap: 10px;">
+                <div class="settings-section mobile-card">
+                    <h3 class="section-title mobile-text-center">🔊 إعدادات الصوت</h3>
+                    <div class="sound-settings mobile-grid">
+                        <label class="checkbox-label touch-target">
                             <input type="checkbox" id="soundEnabled" checked>
                             <span>تفعيل الأصوات</span>
                         </label>
-                        <label style="display: flex; align-items: center; gap: 10px;">
+                        <label class="checkbox-label touch-target">
                             <input type="checkbox" id="musicEnabled" checked>
                             <span>موسيقى الخلفية</span>
                         </label>
@@ -982,21 +1057,21 @@
                 </div>
 
                 <!-- Save Settings -->
-                <div style="text-align: center;">
-                    <button class="btn btn-success" onclick="saveSettings()">💾 حفظ الإعدادات</button>
+                <div class="modal-actions mobile-text-center">
+                    <button class="btn btn-success touch-target mobile-btn-large" onclick="saveSettings()">💾 حفظ الإعدادات</button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Statistics Modal -->
-    <div id="statsModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="close" onclick="activityUtils.closeModal('statsModal')">&times;</span>
-                <h2><i class="fas fa-chart-bar"></i> إحصائيات السباق</h2>
+    <div id="statsModal" class="modal responsive-modal">
+        <div class="modal-content responsive-modal-content">
+            <div class="modal-header mobile-text-center">
+                <span class="close touch-target" onclick="activityUtils.closeModal('statsModal')">&times;</span>
+                <h2 class="mobile-heading"><i class="fas fa-chart-bar"></i> إحصائيات السباق</h2>
             </div>
-            <div class="modal-body" id="statsContent">
+            <div class="modal-body scrollable-content" id="statsContent">
                 <!-- Statistics will be dynamically loaded -->
             </div>
         </div>
@@ -2291,5 +2366,8 @@
             document.body.appendChild(modal);
         }
     </script>
+    
+    <!-- Responsive Helper Script -->
+    <script src="../assets/js/responsive-helper.js"></script>
 </body>
 </html>
