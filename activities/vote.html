@@ -2,13 +2,16 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>صوّت وقرر ✋🗳️</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
   
   <!-- Unified Styles -->
   <link rel="stylesheet" href="../config/unified-styles-template.css">
+  
+  <!-- Responsive CSS Framework -->
+  <link rel="stylesheet" href="../assets/css/responsive.css">
   
   <!-- Activity-specific styles -->
   <style>
@@ -194,9 +197,326 @@
         text-align: center;
       }
     }
+
+    /* تحسينات الاستجابة المتقدمة لنشاط التصويت */
+    
+    /* شاشات كبيرة جداً (1200px+) */
+    @media (min-width: 1200px) {
+      .voting-setup {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-xl);
+      }
+
+      .candidates-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: var(--space-lg);
+      }
+
+      .candidate-card {
+        padding: var(--space-lg);
+        font-size: var(--font-size-lg);
+      }
+
+      .voters-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: var(--space-md);
+      }
+
+      .voter-card {
+        padding: var(--space-md);
+        font-size: var(--font-size-base);
+      }
+    }
+
+    /* شاشات كبيرة (1024px - 1199px) */
+    @media (max-width: 1199px) and (min-width: 1024px) {
+      .voting-setup {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-lg);
+      }
+
+      .candidates-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: var(--space-md);
+      }
+
+      .voters-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: var(--space-md);
+      }
+    }
+
+    /* تابلت (768px - 1023px) */
+    @media (max-width: 1023px) and (min-width: 768px) {
+      .voting-setup {
+        grid-template-columns: 1fr;
+        gap: var(--space-md);
+      }
+
+      .candidates-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: var(--space-md);
+      }
+
+      .candidate-card {
+        padding: var(--space-md);
+        font-size: var(--font-size-base);
+      }
+
+      .voters-grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: var(--space-sm);
+      }
+
+      .voter-card {
+        padding: var(--space-sm);
+        font-size: var(--font-size-sm);
+      }
+
+      .result-item {
+        padding: var(--space-md);
+      }
+
+      .candidate-area {
+        padding: var(--space-lg);
+        min-height: 120px;
+      }
+    }
+
+    /* موبايل كبير (480px - 767px) */
+    @media (max-width: 767px) and (min-width: 480px) {
+      .voting-setup {
+        grid-template-columns: 1fr;
+        gap: var(--space-sm);
+      }
+
+      .candidates-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: var(--space-sm);
+      }
+
+      .candidate-card {
+        padding: var(--space-sm);
+        font-size: var(--font-size-sm);
+      }
+
+      .voters-grid {
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+        gap: var(--space-sm);
+      }
+
+      .voter-card {
+        padding: var(--space-xs);
+        font-size: var(--font-size-xs);
+      }
+
+      .result-item {
+        flex-direction: column;
+        gap: var(--space-sm);
+        text-align: center;
+        padding: var(--space-sm);
+      }
+
+      .candidate-area {
+        padding: var(--space-md);
+        min-height: 100px;
+      }
+
+      .results-section {
+        padding: var(--space-lg);
+      }
+
+      .voting-status {
+        padding: var(--space-md);
+        font-size: var(--font-size-sm);
+      }
+
+      .btn-large {
+        width: 100%;
+        padding: var(--space-md);
+        font-size: var(--font-size-base);
+      }
+    }
+
+    /* موبايل صغير (320px - 479px) */
+    @media (max-width: 479px) {
+      .voting-setup {
+        gap: var(--space-xs);
+      }
+
+      .candidates-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: var(--space-xs);
+      }
+
+      .candidate-card {
+        padding: var(--space-xs);
+        font-size: var(--font-size-xs);
+      }
+
+      .voters-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: var(--space-xs);
+      }
+
+      .voter-card {
+        padding: var(--space-xs);
+        font-size: var(--font-size-xs);
+      }
+
+      .result-item {
+        padding: var(--space-xs);
+        font-size: var(--font-size-xs);
+      }
+
+      .candidate-area {
+        padding: var(--space-sm);
+        min-height: 80px;
+      }
+
+      .results-section {
+        padding: var(--space-md);
+      }
+
+      .voting-status {
+        padding: var(--space-sm);
+        font-size: var(--font-size-xs);
+      }
+
+      .btn-large {
+        width: 100%;
+        padding: var(--space-sm);
+        font-size: var(--font-size-sm);
+      }
+
+      .vote-count {
+        font-size: var(--font-size-xs);
+        padding: var(--space-xs);
+        min-width: 30px;
+      }
+
+      .progress-bar-custom {
+        height: 6px;
+      }
+    }
+
+    /* تحسينات خاصة للأجهزة اللمسية */
+    @media (hover: none) and (pointer: coarse) {
+      .candidate-card {
+        min-height: 60px;
+        border-width: 3px;
+      }
+
+      .candidate-card:hover {
+        transform: none;
+      }
+
+      .candidate-card:active {
+        transform: scale(0.98);
+      }
+
+      .voter-card {
+        min-height: 48px;
+        border-width: 2px;
+      }
+
+      .voter-card:hover {
+        transform: none;
+      }
+
+      .voter-card:active {
+        transform: scale(0.98);
+      }
+
+      .btn {
+        min-height: 48px;
+        border-width: 2px;
+      }
+
+      .form-select {
+        min-height: 48px;
+        border-width: 2px;
+      }
+    }
+
+    /* تحسينات للوضع الأفقي في الموبايل */
+    @media screen and (max-height: 500px) and (orientation: landscape) {
+      .candidate-area {
+        min-height: 60px;
+        padding: var(--space-sm);
+      }
+
+      .voting-status {
+        padding: var(--space-sm);
+      }
+
+      .results-section {
+        padding: var(--space-md);
+      }
+
+      .candidates-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: var(--space-xs);
+      }
+
+      .voters-grid {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: var(--space-xs);
+      }
+
+      .candidate-card,
+      .voter-card {
+        padding: var(--space-xs);
+        font-size: var(--font-size-xs);
+      }
+
+      .btn-large {
+        padding: var(--space-xs) var(--space-sm);
+        font-size: var(--font-size-sm);
+      }
+    }
+
+    /* تحسينات الشاشات عالية الكثافة */
+    @media (-webkit-min-device-pixel-ratio: 2),
+           (min-resolution: 192dpi) {
+      .candidate-card {
+        border-width: 1.5px;
+      }
+
+      .voter-card {
+        border-width: 1.5px;
+      }
+
+      .candidate-card::before {
+        height: 3px;
+      }
+
+      .result-item {
+        border-left-width: 3px;
+      }
+    }
+
+    /* RTL layout optimizations for responsive design */
+    [dir="rtl"] .voting-setup {
+      direction: rtl;
+    }
+
+    [dir="rtl"] .candidates-grid {
+      direction: rtl;
+    }
+
+    [dir="rtl"] .voters-grid {
+      direction: rtl;
+    }
+
+    @media (max-width: 767px) {
+      [dir="rtl"] .result-item {
+        direction: ltr;
+      }
+    }
   </style>
 </head>
-<body>
+<body class="responsive-body touch-device">
   <!-- Skip link for accessibility -->
   <a href="#main-content" class="sr-only">تخطي إلى المحتوى الرئيسي</a>
   
@@ -204,28 +524,28 @@
   <audio id="clickSound" src="../assets/media/sounds/Click.mp3"></audio>
 
   <!-- Main container -->
-  <div class="container">
+  <div class="container responsive-container">
     <!-- Header -->
-    <header class="header">
-      <h1>✋🗳️ صوّت وقرر</h1>
-      <p>اختر الصف ونوع التصويت، ثم رشّح الطلاب وابدأ التصويت التفاعلي</p>
+    <header class="header mobile-header">
+      <h1 class="mobile-heading">✋🗳️ صوّت وقرر</h1>
+      <p class="mobile-subtitle">اختر الصف ونوع التصويت، ثم رشّح الطلاب وابدأ التصويت التفاعلي</p>
     </header>
 
     <!-- Main content -->
     <main id="main-content">
       <!-- Voting setup -->
-      <div class="card">
-        <h3>إعداد التصويت</h3>
-        <div class="voting-setup">
-          <div class="form-group">
-            <label class="form-label">اختر الصف:</label>
-            <select id="classSelect" class="form-select">
+      <div class="card mobile-card">
+        <h3 class="mobile-heading">إعداد التصويت</h3>
+        <div class="voting-setup mobile-grid">
+          <div class="form-group mobile-input">
+            <label class="form-label mobile-label">اختر الصف:</label>
+            <select id="classSelect" class="form-select touch-target">
               <option value="">-- اختر الصف --</option>
             </select>
           </div>
-          <div class="form-group">
-            <label class="form-label">نوع التصويت:</label>
-            <select id="voteMode" class="form-select">
+          <div class="form-group mobile-input">
+            <label class="form-label mobile-label">نوع التصويت:</label>
+            <select id="voteMode" class="form-select touch-target">
               <option value="">-- نوع التصويت --</option>
               <option value="single">فردي عشوائي ⚡</option>
               <option value="group">جماعي عشوائي 👥</option>
@@ -235,42 +555,42 @@
           </div>
         </div>
         <div class="text-center">
-          <button id="startNominateBtn" class="btn btn-primary btn-large" disabled>🚀 ابدأ الترشيح</button>
+          <button id="startNominateBtn" class="btn btn-primary btn-large touch-target mobile-btn" disabled>🚀 ابدأ الترشيح</button>
         </div>
       </div>
 
       <!-- Candidates area -->
-      <div id="candidateArea" class="card" style="display:none">
-        <h3>🔷 المرشحون</h3>
-        <div class="candidate-area">
-          <div id="candidatesDisplay">
+      <div id="candidateArea" class="card mobile-card" style="display:none">
+        <h3 class="mobile-heading">🔷 المرشحون</h3>
+        <div class="candidate-area mobile-card">
+          <div id="candidatesDisplay" class="mobile-text">
             <p>اختر المرشحين من القائمة أدناه</p>
           </div>
         </div>
-        <div class="candidates-grid" id="candidatesGrid"></div>
+        <div class="candidates-grid mobile-grid" id="candidatesGrid"></div>
         <div class="text-center">
-          <button id="confirmCandidatesBtn" class="btn btn-secondary btn-large" disabled>✅ تأكيد المرشحين</button>
+          <button id="confirmCandidatesBtn" class="btn btn-secondary btn-large touch-target mobile-btn" disabled>✅ تأكيد المرشحين</button>
         </div>
       </div>
 
       <!-- Voters area -->
-      <div id="votersArea" class="card" style="display:none">
-        <h3>🧑‍🎓 المصوّتون</h3>
-        <div class="voting-status" id="votingStatus">
-          <p>انقر على اسم الطالب ثم اختر من يريد التصويت له</p>
+      <div id="votersArea" class="card mobile-card" style="display:none">
+        <h3 class="mobile-heading">🧑‍🎓 المصوّتون</h3>
+        <div class="voting-status mobile-notification" id="votingStatus">
+          <p class="mobile-text">انقر على اسم الطالب ثم اختر من يريد التصويت له</p>
         </div>
-        <div class="voters-grid" id="votersContainer"></div>
+        <div class="voters-grid mobile-grid" id="votersContainer"></div>
         <div class="text-center">
-          <button id="showResultsBtn" class="btn btn-accent btn-large" disabled>📊 فرز النتائج</button>
+          <button id="showResultsBtn" class="btn btn-accent btn-large touch-target mobile-btn" disabled>📊 فرز النتائج</button>
         </div>
       </div>
 
       <!-- Results area -->
-      <div id="resultsArea" class="results-section" style="display:none">
-    <h2>📊 نتائج التصويت</h2>
-    <canvas id="resultsChart"></canvas>
+      <div id="resultsArea" class="results-section mobile-card" style="display:none">
+    <h2 class="mobile-heading">📊 نتائج التصويت</h2>
+    <canvas id="resultsChart" class="mobile-chart"></canvas>
     <br>
-    <button onclick="location.reload()">🔁 عودة</button>
+    <button onclick="location.reload()" class="btn btn-primary touch-target mobile-btn">🔁 عودة</button>
   </div>
   <audio id="clapSound" src="https://raw.githubusercontent.com/A7mdooh/entertainment-app/main/assets/media/sounds/clap.mp3"></audio>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -344,7 +664,7 @@
 
       fullList.forEach(name => {
         const card = document.createElement("div");
-        card.className = 'student-card';
+        card.className = 'student-card touch-target mobile-card';
         card.textContent = name;
         card.onclick = () => {
           activity.playSound('Click.mp3');
@@ -368,7 +688,7 @@
 
       const confirmBtn = document.createElement("button");
       confirmBtn.textContent = "بدء التصويت";
-      confirmBtn.className = "btn btn-primary";
+      confirmBtn.className = "btn btn-primary touch-target mobile-btn";
       confirmBtn.onclick = () => {
         if (selectedManual.length === 0) {
           activity.showModal('تنبيه', 'يرجى اختيار مرشح أو أكثر.', false);
@@ -397,19 +717,19 @@
       candidateList.forEach(name => {
         voteCounts[name] = 0;
         const box = document.createElement("div");
-        box.className = 'vote-target';
-        box.innerHTML = `<h3>${name}</h3><div class="vote-count">0 أصوات</div><div id="votes-${name}" class="votes-display"></div>`;
+        box.className = 'vote-target mobile-card';
+        box.innerHTML = `<h3 class="mobile-heading">${name}</h3><div class="vote-count mobile-number">0 أصوات</div><div id="votes-${name}" class="votes-display mobile-list"></div>`;
         candidatesBox.appendChild(box);
       });
 
       // إنشاء بطاقات الناخبين
       voterList.forEach(name => {
         const card = document.createElement("div");
-        card.className = 'student-card';
+        card.className = 'student-card mobile-card';
         card.textContent = name;
         
         const select = document.createElement('select');
-        select.className = 'vote-select';
+        select.className = 'vote-select touch-target';
         select.innerHTML = `<option value="">اختر مرشح</option>`;
         
         candidateList.forEach(candidate => {
@@ -433,7 +753,7 @@
             // تحديث عرض الأصوات
             const votesDisplay = document.getElementById(`votes-${select.value}`);
             const voterCard = document.createElement('div');
-            voterCard.className = 'voter-card';
+            voterCard.className = 'voter-card mobile-stat';
             voterCard.textContent = name;
             votesDisplay.appendChild(voterCard);
             
@@ -568,12 +888,15 @@
       // إضافة زر إعادة التعيين
       const resetBtn = document.createElement('button');
       resetBtn.id = 'resetBtn';
-      resetBtn.className = 'btn btn-secondary';
+      resetBtn.className = 'btn btn-secondary touch-target mobile-btn';
       resetBtn.innerHTML = '<i class="fas fa-redo"></i> إعادة تعيين';
       resetBtn.onclick = resetVoting;
       resetBtn.style.margin = '10px';
       document.querySelector('.controls').appendChild(resetBtn);
     };
   </script>
+  
+  <!-- Responsive Helper Script -->
+  <script src="../assets/js/responsive-helper.js"></script>
 </body>
 </html>
