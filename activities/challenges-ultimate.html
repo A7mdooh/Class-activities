@@ -204,6 +204,26 @@
       margin-top: 6rem !important;
     }
 
+    /* تحسين التباعد العام للصفحة */
+    .container {
+      padding: 2rem 1rem 3rem 1rem;
+      margin: 0 auto;
+      max-width: 1200px;
+      box-sizing: border-box;
+    }
+
+    /* تحسين تباعد الأقسام */
+    .section {
+      margin-bottom: 3rem;
+      padding: 0 0.5rem;
+    }
+
+    /* تحسين footer spacing */
+    .main-content {
+      padding-bottom: 4rem;
+      min-height: calc(100vh - 8rem);
+    }
+
     /* ==== نوافذ الإعدادات والإحصائيات المحسنة ==== */
     .settings-modal, .stats-modal {
       position: fixed;
@@ -1254,6 +1274,7 @@
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 2rem;
       margin-bottom: 3rem;
+      padding: 0 1rem;
     }
 
     .realm-card {
@@ -1271,6 +1292,10 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      width: 100%;
+      box-sizing: border-box;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .realm-card::before {
@@ -1292,6 +1317,18 @@
       transform: translateY(-10px) scale(1.05);
       border-color: rgba(255,255,255,0.5);
       box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+    }
+
+    /* تحسين تجربة اللمس على الهاتف المحمول */
+    @media (hover: none) and (pointer: coarse) {
+      .realm-card:hover {
+        transform: none;
+      }
+      
+      .realm-card:active {
+        transform: scale(0.98);
+        opacity: 0.8;
+      }
     }
 
     .realm-card:nth-child(1):hover { border-color: #ffd700; box-shadow: 0 25px 50px rgba(255,215,0,0.3); }
@@ -1324,6 +1361,9 @@
       font-weight: 700;
       color: white;
       margin-bottom: 0.5rem;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      hyphens: auto;
     }
 
     .realm-description {
@@ -1331,6 +1371,9 @@
       font-size: 0.9rem;
       line-height: 1.6;
       flex-grow: 1;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      hyphens: auto;
     }
 
     .realm-stats {
@@ -1342,6 +1385,7 @@
       font-weight: 600;
       font-size: 0.85rem;
       border: 1px solid rgba(255,215,0,0.3);
+      word-wrap: break-word;
     }
 
     /* ===== BATTLE ARENA ===== */
@@ -3133,6 +3177,38 @@
         margin: 0 5px;
       }
       
+      /* تحسين البطاقات للتابلت */
+      .kingdom-dashboard {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        padding: 0 0.75rem;
+      }
+      
+      .realm-card {
+        padding: 1.75rem 1.5rem;
+        min-height: 220px;
+      }
+      
+      .realm-icon {
+        font-size: 3rem;
+        margin-bottom: 0.875rem;
+      }
+      
+      .realm-title {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .realm-description {
+        font-size: 0.85rem;
+        line-height: 1.5;
+      }
+      
+      .realm-stats {
+        font-size: 0.8rem;
+        padding: 0.45rem 0.9rem;
+      }
+      
       .grid-container {
         grid-template-columns: 1fr;
         gap: 12px;
@@ -3185,6 +3261,43 @@
       .container {
         padding: 8px;
         margin: 0;
+      }
+      
+      /* تحسين البطاقات للهاتف المحمول */
+      .kingdom-dashboard {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 0 0.5rem;
+        margin-bottom: 2rem;
+      }
+      
+      .realm-card {
+        padding: 1.5rem 1rem;
+        min-height: 200px;
+        margin-bottom: 1rem;
+      }
+      
+      .realm-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.75rem;
+      }
+      
+      .realm-title {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+        line-height: 1.4;
+      }
+      
+      .realm-description {
+        font-size: 0.8rem;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+      }
+      
+      .realm-stats {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.8rem;
+        margin-top: 0.75rem;
       }
       
       .challenge-card {
@@ -3270,6 +3383,44 @@
       
       .container {
         padding: 5px;
+      }
+      
+      /* تحسين البطاقات للشاشات الصغيرة جداً */
+      .kingdom-dashboard {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+        padding: 0 0.25rem;
+        margin-bottom: 1.5rem;
+      }
+      
+      .realm-card {
+        padding: 1rem 0.75rem;
+        min-height: 180px;
+        margin-bottom: 0.75rem;
+        border-radius: 12px;
+      }
+      
+      .realm-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .realm-title {
+        font-size: 1rem;
+        margin-bottom: 0.4rem;
+        line-height: 1.3;
+      }
+      
+      .realm-description {
+        font-size: 0.75rem;
+        line-height: 1.4;
+        margin-bottom: 0.75rem;
+      }
+      
+      .realm-stats {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.6rem;
+        margin-top: 0.5rem;
       }
       
       .challenge-card {
