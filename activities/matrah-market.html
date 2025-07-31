@@ -2,7 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="سوق مطرح الحسابي - لعبة تعليمية تفاعلية">
     <title>🧮 سوق مطرح الحسابي</title>
     
     <!-- الخطوط والأيقونات -->
@@ -15,6 +16,7 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     
     <!-- الأنماط والسكريبت الموحد -->
+    <link rel="stylesheet" href="../assets/css/responsive.css">
     <link rel="stylesheet" href="../assets/css/style.css">
     <script src="../assets/js/activityUtils.js"></script>
     <style>
@@ -808,37 +810,127 @@
                 grid-template-rows: repeat(6, 100px);
             }
         }
+
+        /* Matrah Market Responsive Enhancements */
+        @media (max-width: 1024px) {
+            .setup-content {
+                padding: 20px;
+                margin: 2% auto;
+            }
+            
+            .level-selector {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .time-selection-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .control-btn {
+                font-size: 20px;
+                padding: 10px;
+            }
+            
+            .info-bar {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+                padding: 10px;
+            }
+            
+            .shop-modal-content {
+                width: 95%;
+                margin: 2% auto;
+                max-height: 85vh;
+            }
+            
+            .level-card {
+                padding: 15px;
+                text-align: center;
+            }
+            
+            .time-selection-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .student-setup-section {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .info-bar {
+                grid-template-columns: 1fr;
+                margin: 0 5px 15px 5px;
+            }
+            
+            .shop {
+                padding: 8px;
+            }
+            
+            .shop-icon {
+                font-size: 1.8rem;
+                margin-bottom: 5px;
+            }
+            
+            .shop-name {
+                font-size: 0.9rem;
+            }
+            
+            .time-selection-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .toggle-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .setup-toggle-btn {
+                width: 100%;
+                padding: 12px;
+            }
+            
+            .responsive-input {
+                width: 100%;
+                padding: 12px;
+                font-size: 16px;
+            }
+        }
     </style>
 </head>
-<body>
+<body class="responsive-body">
     <!-- أزرار التحكم الموحدة -->
-    <div class="control-buttons">
-        <button class="control-btn" id="homeBtn" title="العودة للصفحة الرئيسية">
+    <div class="control-buttons responsive-controls">
+        <button class="control-btn touch-target" id="homeBtn" title="العودة للصفحة الرئيسية">
             <i class="fas fa-home"></i>
         </button>
-        <button class="control-btn" id="refreshBtn" title="إعادة تشغيل النشاط">
+        <button class="control-btn touch-target" id="refreshBtn" title="إعادة تشغيل النشاط">
             <i class="fas fa-redo"></i>
         </button>
-        <button class="control-btn" id="instructionsBtn" title="التعليمات">
+        <button class="control-btn touch-target" id="instructionsBtn" title="التعليمات">
             <i class="fas fa-question-circle"></i>
         </button>
-        <button class="control-btn" id="fullscreenBtn" title="ملء الشاشة">
+        <button class="control-btn touch-target" id="fullscreenBtn" title="ملء الشاشة">
             <i class="fas fa-expand"></i>
         </button>
-        <button class="control-btn" id="soundBtn" title="الصوت">
+        <button class="control-btn touch-target" id="soundBtn" title="الصوت">
             <i class="fas fa-volume-up"></i>
         </button>
     </div>
 
     <!-- نافذة التعليمات -->
-    <div id="instructionsModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="close">&times;</span>
-                <h2><i class="fas fa-store"></i> تعليمات سوق مطرح الحسابي</h2>
+    <div id="instructionsModal" class="modal responsive-modal">
+        <div class="modal-content responsive-modal-content">
+            <div class="modal-header mobile-text-center">
+                <span class="close touch-target">&times;</span>
+                <h2 class="mobile-heading"><i class="fas fa-store"></i> تعليمات سوق مطرح الحسابي</h2>
             </div>
-            <div class="modal-body">
-                <div class="instructions-content">
+            <div class="modal-body scrollable-content">
+                <div class="instructions-content mobile-padding">
                     <h3><i class="fas fa-play-circle"></i> كيفية اللعب:</h3>
                     <ul>
                         <li><i class="fas fa-mouse-pointer"></i> انقر على المتاجر المختلفة لدخولها</li>
@@ -860,7 +952,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn-primary" onclick="activityUtils.closeModal('instructionsModal')">
+                <button class="btn-primary touch-target mobile-btn" onclick="activityUtils.closeModal('instructionsModal')">
                     <i class="fas fa-check"></i> فهمت، لنبدأ!
                 </button>
             </div>
@@ -868,18 +960,18 @@
     </div>
 
     <!-- نافذة الانتصار -->
-    <div id="victoryModal" class="modal">
-        <div class="modal-content victory-content">
-            <div class="modal-header">
-                <h2><i class="fas fa-trophy"></i> مبروك! 🎉</h2>
+    <div id="victoryModal" class="modal responsive-modal">
+        <div class="modal-content victory-content responsive-modal-content">
+            <div class="modal-header mobile-text-center">
+                <h2 class="mobile-heading"><i class="fas fa-trophy"></i> مبروك! 🎉</h2>
             </div>
-            <div class="modal-body">
-                <div class="victory-animation">
+            <div class="modal-body scrollable-content">
+                <div class="victory-animation mobile-flex-center">
                     <i class="fas fa-crown"></i>
                 </div>
-                <h3>أحسنت! لقد أصبحت تاجراً ماهراً في سوق مطرح!</h3>
-                <p>تعلمت الرياضيات من خلال التجارة العُمانية الأصيلة!</p>
-                <div class="victory-stats">
+                <h3 class="mobile-text-center">أحسنت! لقد أصبحت تاجراً ماهراً في سوق مطرح!</h3>
+                <p class="mobile-text-center">تعلمت الرياضيات من خلال التجارة العُمانية الأصيلة!</p>
+                <div class="victory-stats mobile-grid">
                     <div class="stat-item">
                         <i class="fas fa-coins"></i>
                         <span>الرصيد النهائي: <span id="final-balance">0</span> ريال</span>
@@ -906,26 +998,26 @@
     </div>
 
     <!-- رأس الصفحة -->
-    <header>
-        <h1><i class="fas fa-calculator"></i> سوق مطرح الحسابي <i class="fas fa-store"></i></h1>
-        <p class="subtitle">تعلم الرياضيات في أجواء السوق التقليدي العُماني</p>
+    <header class="responsive-header">
+        <h1 class="mobile-heading"><i class="fas fa-calculator"></i> سوق مطرح الحسابي <i class="fas fa-store"></i></h1>
+        <p class="subtitle mobile-text">تعلم الرياضيات في أجواء السوق التقليدي العُماني</p>
     </header>
 
     <!-- شريط المعلومات -->
-    <div class="info-bar" id="infoBar">
-        <div class="info-item">
+    <div class="info-bar responsive-info-bar" id="infoBar">
+        <div class="info-item mobile-card">
             <div><i class="fas fa-coins"></i> الرصيد</div>
             <div class="info-value" id="balance">500 ريال</div>
         </div>
-        <div class="info-item">
+        <div class="info-item mobile-card">
             <div><i class="fas fa-chart-line"></i> الربح</div>
             <div class="info-value" id="profit">0 ريال</div>
         </div>
-        <div class="info-item">
+        <div class="info-item mobile-card">
             <div><i class="fas fa-clock"></i> الوقت</div>
             <div class="info-value" id="timer">30:00</div>
         </div>
-        <div class="info-item">
+        <div class="info-item mobile-card">
             <div><i class="fas fa-star"></i> النقاط</div>
             <div class="info-value" id="points">0</div>
         </div>
@@ -936,59 +1028,59 @@
     </div>
 
     <!-- خريطة السوق -->
-    <div class="market-map">
+    <div class="market-map responsive-market">
         <!-- الصف الأول -->
-        <div class="shop mosque" onclick="openLocation('mosque')">
+        <div class="shop mosque touch-target" onclick="openLocation('mosque')">
             <span class="shop-icon"><i class="fas fa-mosque"></i></span>
             <div class="shop-name">مسجد مطرح</div>
             <div class="shop-description">مكان للراحة والتأمل</div>
         </div>
 
-        <div class="shop" onclick="openShop('gold')">
+        <div class="shop touch-target" onclick="openShop('gold')">
             <span class="shop-icon"><i class="fas fa-gem"></i></span>
             <div class="shop-name">دكان الذهب</div>
             <div class="shop-description">مجوهرات وذهب عُماني أصيل</div>
         </div>
 
-        <div class="shop museum" onclick="openLocation('museum')">
+        <div class="shop museum touch-target" onclick="openLocation('museum')">
             <span class="shop-icon"><i class="fas fa-university"></i></span>
             <div class="shop-name">متحف مطرح</div>
             <div class="shop-description">تاريخ التجارة العُمانية</div>
         </div>
 
         <!-- الصف الثاني -->
-        <div class="shop" onclick="openShop('perfumes')">
+        <div class="shop touch-target" onclick="openShop('perfumes')">
             <span class="shop-icon"><i class="fas fa-spray-can"></i></span>
             <div class="shop-name">دكان العطور</div>
             <div class="shop-description">عطور وبخور فاخر</div>
         </div>
 
-        <div class="shop" onclick="openShop('textiles')">
+        <div class="shop touch-target" onclick="openShop('textiles')">
             <span class="shop-icon"><i class="fas fa-cut"></i></span>
             <div class="shop-name">دكان الأقمشة</div>
             <div class="shop-description">أقمشة حريرية ومطرزة</div>
         </div>
 
-        <div class="shop" onclick="openShop('spices')">
+        <div class="shop touch-target" onclick="openShop('spices')">
             <span class="shop-icon"><i class="fas fa-pepper-hot"></i></span>
             <div class="shop-name">دكان التوابل</div>
             <div class="shop-description">توابل وهيل وزعفران</div>
         </div>
 
         <!-- الصف الثالث -->
-        <div class="shop bank" onclick="openLocation('bank')">
+        <div class="shop bank touch-target" onclick="openLocation('bank')">
             <span class="shop-icon"><i class="fas fa-university"></i></span>
             <div class="shop-name">البنك</div>
             <div class="shop-description">تحويل العملات وقروض</div>
         </div>
 
-        <div class="shop" onclick="openShop('livestock')">
+        <div class="shop touch-target" onclick="openShop('livestock')">
             <span class="shop-icon"><i class="fas fa-horse"></i></span>
             <div class="shop-name">سوق الماشية</div>
             <div class="shop-description">جمال وماعز وأغنام</div>
         </div>
 
-        <div class="shop stock-exchange" onclick="openLocation('stock')">
+        <div class="shop stock-exchange touch-target" onclick="openLocation('stock')">
             <span class="shop-icon"><i class="fas fa-chart-bar"></i></span>
             <div class="shop-name">بورصة الأسعار</div>
             <div class="shop-description">أسعار البضائع اليومية</div>
@@ -996,42 +1088,42 @@
     </div>
 
     <!-- نافذة المتجر -->
-    <div id="shopModal" class="shop-modal">
-        <div class="shop-modal-content">
-            <div class="shop-modal-header">
-                <span class="close">&times;</span>
-                <h2 id="shopTitle">دكان الذهب</h2>
+    <div id="shopModal" class="shop-modal responsive-modal">
+        <div class="shop-modal-content responsive-modal-content">
+            <div class="shop-modal-header mobile-text-center">
+                <span class="close touch-target">&times;</span>
+                <h2 id="shopTitle" class="mobile-heading">دكان الذهب</h2>
             </div>
-            <div class="shop-modal-body" id="shopBody">
+            <div class="shop-modal-body scrollable-content" id="shopBody">
                 <!-- محتوى المتجر يتم إنشاؤه ديناميكياً -->
             </div>
         </div>
     </div>
 
     <!-- نافذة الإعدادات الأولية -->
-    <div id="setupModal" class="setup-modal">
-        <div class="setup-content">
-            <h2 style="color: var(--oman-red); margin-bottom: 20px;">🧮 إعداد لعبة سوق مطرح الحسابي</h2>
+    <div id="setupModal" class="setup-modal responsive-modal">
+        <div class="setup-content responsive-modal-content">
+            <h2 class="mobile-heading" style="color: var(--oman-red); margin-bottom: 20px;">🧮 إعداد لعبة سوق مطرح الحسابي</h2>
             
             <!-- اختيار مستوى الصعوبة -->
-            <div style="margin-bottom: 30px;">
-                <h3 style="color: var(--oman-green); margin-bottom: 15px;">🎯 اختر مستوى اللعب</h3>
-                <div class="level-selector">
-                    <div class="level-card" data-level="beginner">
+            <div class="setup-section mobile-card">
+                <h3 class="mobile-text-center" style="color: var(--oman-green); margin-bottom: 15px;">🎯 اختر مستوى اللعب</h3>
+                <div class="level-selector mobile-grid">
+                    <div class="level-card touch-target" data-level="beginner">
                         <div style="font-size: 2rem; margin-bottom: 10px;">🟢</div>
                         <h3>مبتدئ</h3>
                         <p>الصفوف 1-3</p>
                         <small>جمع وطرح بسيط</small>
                     </div>
                     
-                    <div class="level-card" data-level="intermediate">
+                    <div class="level-card touch-target" data-level="intermediate">
                         <div style="font-size: 2rem; margin-bottom: 10px;">🟡</div>
                         <h3>متوسط</h3>
                         <p>الصفوف 4-6</p>
                         <small>ضرب وقسمة وكسور</small>
                     </div>
                     
-                    <div class="level-card" data-level="advanced">
+                    <div class="level-card touch-target" data-level="advanced">
                         <div style="font-size: 2rem; margin-bottom: 10px;">🔴</div>
                         <h3>متقدم</h3>
                         <p>الصفوف 7-9</p>
@@ -1041,30 +1133,30 @@
             </div>
 
             <!-- اختيار مدة اللعب -->
-            <div style="margin-bottom: 30px;">
-                <h3 style="color: var(--oman-red); margin-bottom: 15px;">⏰ اختر مدة اللعب (للمعلم)</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 10px; max-width: 600px; margin: 0 auto;">
-                    <div class="time-card" data-time="5">
+            <div class="setup-section mobile-card">
+                <h3 class="mobile-text-center" style="color: var(--oman-red); margin-bottom: 15px;">⏰ اختر مدة اللعب (للمعلم)</h3>
+                <div class="time-selection-grid mobile-grid">
+                    <div class="time-card touch-target" data-time="5">
                         <div style="font-size: 1.5rem;">⏱️</div>
                         <div>5 دقائق</div>
                     </div>
-                    <div class="time-card" data-time="10">
+                    <div class="time-card touch-target" data-time="10">
                         <div style="font-size: 1.5rem;">⏰</div>
                         <div>10 دقائق</div>
                     </div>
-                    <div class="time-card" data-time="15">
+                    <div class="time-card touch-target" data-time="15">
                         <div style="font-size: 1.5rem;">🕒</div>
                         <div>15 دقيقة</div>
                     </div>
-                    <div class="time-card" data-time="20">
+                    <div class="time-card touch-target" data-time="20">
                         <div style="font-size: 1.5rem;">🕓</div>
                         <div>20 دقيقة</div>
                     </div>
-                    <div class="time-card" data-time="25">
+                    <div class="time-card touch-target" data-time="25">
                         <div style="font-size: 1.5rem;">🕔</div>
                         <div>25 دقيقة</div>
                     </div>
-                    <div class="time-card" data-time="30">
+                    <div class="time-card touch-target" data-time="30">
                         <div style="font-size: 1.5rem;">🕕</div>
                         <div>30 دقيقة</div>
                     </div>
@@ -1081,31 +1173,31 @@
                         <div>45 دقيقة</div>
                     </div>
                 </div>
-                <div style="text-align: center; margin-top: 10px; font-size: 0.9rem; color: #666;">
+                <div class="mobile-text-center" style="margin-top: 10px; font-size: 0.9rem; color: #666;">
                     💡 المعلم يمكنه اختيار المدة المناسبة لكل طالب
                 </div>
             </div>
 
             <!-- إعداد الأسماء والطلاب -->
-            <div class="student-setup-section">
-                <h3>👥 إعداد التجار</h3>
+            <div class="student-setup-section mobile-card">
+                <h3 class="mobile-text-center">👥 إعداد التجار</h3>
                 
                 <!-- أزرار التبديل -->
-                <div style="margin: 15px 0;">
-                    <button type="button" class="setup-toggle-btn active" id="manualNameBtn" onclick="toggleNameMode('manual')">
+                <div class="toggle-buttons mobile-flex-center">
+                    <button type="button" class="setup-toggle-btn active touch-target" id="manualNameBtn" onclick="toggleNameMode('manual')">
                         ✏️ كتابة الاسم يدوياً
                     </button>
-                    <button type="button" class="setup-toggle-btn" id="studentListBtn" onclick="toggleNameMode('student')" disabled>
+                    <button type="button" class="setup-toggle-btn touch-target" id="studentListBtn" onclick="toggleNameMode('student')" disabled>
                         📚 اختيار من قائمة الصف
                     </button>
                 </div>
 
                 <!-- إدخال اسم يدوي -->
                 <div class="name-input-section active" id="manualNameSection">
-                    <label for="playerName" style="display: block; margin-bottom: 10px; font-weight: bold; color: var(--dark-blue);">
+                    <label for="playerName" class="mobile-text" style="display: block; margin-bottom: 10px; font-weight: bold; color: var(--dark-blue);">
                         🎮 اسم التاجر:
                     </label>
-                    <input type="text" id="playerName" placeholder="أدخل اسمك" 
+                    <input type="text" id="playerName" placeholder="أدخل اسمك" class="responsive-input touch-target"> 
                            style="width: 250px; padding: 10px; border: 2px solid var(--oman-green); border-radius: 5px; text-align: center; font-size: 16px; font-family: 'Cairo', sans-serif;">
                 </div>
 
@@ -1130,9 +1222,11 @@
             </div>
 
             <!-- زر البدء -->
-            <button class="btn" onclick="startGame()" style="font-size: 18px; padding: 15px 30px; margin-top: 20px;">
-                🚀 ابدأ رحلة التجارة
-            </button>
+            <div class="start-button-section mobile-text-center">
+                <button class="btn touch-target mobile-btn-large" onclick="startGame()">
+                    🚀 ابدأ رحلة التجارة
+                </button>
+            </div>
         </div>
     </div>
 
@@ -2851,5 +2945,8 @@
             console.log('✅ تم تحميل اللعبة بنجاح!');
         });
     </script>
+    
+    <!-- Responsive Helper Script -->
+    <script src="../assets/js/responsive-helper.js"></script>
 </body>
 </html>
