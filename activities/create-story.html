@@ -15,30 +15,31 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
   
   <!-- الأنماط والسكريبت الموحد -->
+  <link rel="stylesheet" href="../assets/css/responsive.css">
   <link rel="stylesheet" href="../assets/css/style.css">
   <script src="../assets/css/style.css" type="text/javascript"></script>
 </head>
 <body>
   <!-- أزرار التحكم الموحدة -->
-  <div class="control-buttons-container">
-    <button class="control-btn" id="backBtn" title="العودة للصفحة الرئيسية">
+  <div class="control-buttons-container mobile-grid-4">
+    <button class="control-btn touch-target" id="backBtn" title="العودة للصفحة الرئيسية">
       <i class="fas fa-home"></i>
     </button>
-    <button class="control-btn" id="muteBtn" title="كتم الصوت">
+    <button class="control-btn touch-target" id="muteBtn" title="كتم الصوت">
       <i class="fas fa-volume-up"></i>
     </button>
-    <button class="control-btn" id="instructionsBtn" title="تعليمات النشاط">
+    <button class="control-btn touch-target" id="instructionsBtn" title="تعليمات النشاط">
       <i class="fas fa-question-circle"></i>
     </button>
-    <button class="control-btn" id="fullscreenBtn" title="ملء الشاشة">
+    <button class="control-btn touch-target" id="fullscreenBtn" title="ملء الشاشة">
       <i class="fas fa-expand"></i>
     </button>
   </div>
 
   <!-- نافذة تعليمات النشاط -->
-  <div class="instructions-overlay" id="instructionsModal">
-    <div class="instructions-content">
-      <button class="close-btn" onclick="closeInstructions()" title="إغلاق">
+  <div class="instructions-overlay responsive-modal" id="instructionsModal">
+    <div class="instructions-content mobile-full-height">
+      <button class="close-btn touch-target" onclick="closeInstructions()" title="إغلاق">
         <i class="fas fa-times"></i>
       </button>
       <div class="instructions-title">
@@ -54,16 +55,16 @@
         <li>اضغط "إنهاء" عند اكتمال القصة لإظهار النتائج.</li>
         <li>ستظهر نافذة شكر تحتوي على أسماء جميع المشاركين.</li>
       </ul>
-      <button class="btn btn-primary" onclick="closeInstructions()">
+      <button class="btn btn-primary touch-target mobile-full-width" onclick="closeInstructions()">
         <i class="fas fa-check"></i> فهمت
       </button>
     </div>
   </div>
 
   <!-- نافذة النتائج النهائية -->
-  <div class="victory-modal" id="thankYouModal">
-    <div class="victory-content">
-      <button class="close-btn" id="closeModalBtn" title="إغلاق">
+  <div class="victory-modal responsive-modal" id="thankYouModal">
+    <div class="victory-content mobile-full-height">
+      <button class="close-btn touch-target" id="closeModalBtn" title="إغلاق">
         <i class="fas fa-times"></i>
       </button>
       <div class="victory-fireworks">
@@ -77,15 +78,15 @@
       <div class="honor-board-section">
         <ul class="honor-list" id="participantList"></ul>
       </div>
-      <button class="btn btn-primary" id="modalBackBtn">
+      <button class="btn btn-primary touch-target mobile-full-width" id="modalBackBtn">
         <i class="fas fa-redo"></i> نشاط جديد
       </button>
     </div>
   </div>
 
   <!-- المحتوى الرئيسي -->
-  <div class="main-container">
-    <div class="page-header">
+  <div class="main-container mobile-full-width">
+    <div class="page-header mobile-text-center">
       <div class="header-content">
         <div class="header-icon">
           <i class="fas fa-book-open"></i>
@@ -98,26 +99,26 @@
     </div>
 
     <!-- نموذج الإعدادات -->
-    <div class="game-settings-card" id="settingsCard">
+    <div class="game-settings-card mobile-full-width" id="settingsCard">
       <div class="settings-header">
         <i class="fas fa-cog"></i>
         <h3>إعدادات النشاط</h3>
       </div>
       <form class="story-settings-form" id="storySettingsForm">
-        <div class="form-group">
+        <div class="form-group mobile-full-width">
           <label for="classSelect">
             <i class="fas fa-graduation-cap"></i> الصف الدراسي
           </label>
-          <select id="classSelect" class="form-input" required>
+          <select id="classSelect" class="form-input mobile-full-width" required>
             <option value="">-- اختر الصف --</option>
           </select>
         </div>
         
-        <div class="form-group">
+        <div class="form-group mobile-full-width">
           <label for="modeSelect">
             <i class="fas fa-users"></i> نوع القصة
           </label>
-          <select id="modeSelect" class="form-input" required>
+          <select id="modeSelect" class="form-input mobile-full-width" required>
             <option value="">-- اختر نوع القصة --</option>
             <option value="single">فردية عشوائية</option>
             <option value="group">جماعية عشوائية</option>
@@ -127,7 +128,7 @@
         </div>
         
         <div class="button-group">
-          <button type="submit" class="btn btn-primary" id="startBtn">
+          <button type="submit" class="btn btn-primary touch-target mobile-full-width" id="startBtn">
             <i class="fas fa-play"></i> ابدأ النشاط
           </button>
         </div>
@@ -135,21 +136,21 @@
     </div>
 
     <!-- منطقة اختيار الطلاب -->
-    <div class="students-selection-area" id="studentSelection"></div>
+    <div class="students-selection-area mobile-full-width" id="studentSelection"></div>
 
     <!-- منطقة النشاط -->
-    <div class="story-activity-area" id="storyContainer">
-      <div class="current-student-card">
+    <div class="story-activity-area mobile-full-width" id="storyContainer">
+      <div class="current-student-card mobile-text-center">
         <div class="student-name-display" id="studentName"></div>
-        <div class="timer-container">
+        <div class="timer-container mobile-text-center">
           <canvas id="timerCanvas" width="150" height="150"></canvas>
           <div class="timer-label">مؤقت السرد</div>
         </div>
-        <div class="story-controls">
-          <button class="btn btn-success" id="nextBtn" style="display:none">
+        <div class="story-controls mobile-grid-2">
+          <button class="btn btn-success touch-target mobile-full-width" id="nextBtn" style="display:none">
             <i class="fas fa-arrow-left"></i> التالي
           </button>
-          <button class="btn btn-danger" id="finishBtn">
+          <button class="btn btn-danger touch-target mobile-full-width" id="finishBtn">
             <i class="fas fa-stop"></i> إنهاء القصة
           </button>
         </div>
@@ -242,7 +243,7 @@
       
       // إنشاء عنوان المنطقة
       const header = document.createElement('div');
-      header.className = 'students-selection-header';
+      header.className = 'students-selection-header mobile-text-center';
       header.innerHTML = `
         <h3><i class="fas fa-users"></i> اختر الطلاب المشاركين</h3>
         <p>انقر على الطلاب لاختيارهم ${mode === 'select-single' ? '(طالب واحد فقط)' : '(عدة طلاب)'}</p>
@@ -251,11 +252,11 @@
       
       // إنشاء بطاقات الطلاب
       const cardsContainer = document.createElement('div');
-      cardsContainer.className = 'student-cards-grid';
+      cardsContainer.className = 'student-cards-grid mobile-grid-2';
       
       classStudents.forEach(student => {
         const card = document.createElement('div');
-        card.className = 'student-selection-card';
+        card.className = 'student-selection-card touch-target';
         card.innerHTML = `
           <div class="student-avatar">
             <i class="fas fa-user"></i>
@@ -291,7 +292,7 @@
       
       // زر بدء السرد
       const startButton = document.createElement('button');
-      startButton.className = 'btn btn-primary start-story-btn';
+      startButton.className = 'btn btn-primary start-story-btn touch-target mobile-full-width';
       startButton.innerHTML = '<i class="fas fa-play"></i> بدء السرد';
       startButton.addEventListener('click', () => {
         if (selectedManualStudents.length === 0) {
@@ -548,5 +549,8 @@
       }
     });
   </script>
+  
+  <!-- Responsive JavaScript Helper -->
+  <script src="../assets/js/responsive-helper.js"></script>
 </body>
 </html>
