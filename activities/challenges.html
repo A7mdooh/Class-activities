@@ -5,6 +5,7 @@
 <title>التحديات 🔥</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/responsive.css">
 <link rel="stylesheet" href="../config/unified-styles-template.css">
 <style>
     /* تخصيص نشاط التحديات */
@@ -838,14 +839,14 @@
 </head>
 <body>
 <!-- أزرار التحكم الموحدة -->
-<div class="control-buttons">
-  <button class="control-btn" id="backBtn" title="العودة للقائمة الرئيسية">
+<div class="control-buttons mobile-grid-3">
+  <button class="control-btn touch-target" id="backBtn" title="العودة للقائمة الرئيسية">
     <i class="fas fa-home"></i>
   </button>
-  <button class="control-btn" id="fullscreenBtn" title="ملء الشاشة">
+  <button class="control-btn touch-target" id="fullscreenBtn" title="ملء الشاشة">
     <i class="fas fa-expand"></i>
   </button>
-  <button class="control-btn" id="muteBtn" title="كتم/تشغيل الصوت">
+  <button class="control-btn touch-target" id="muteBtn" title="كتم/تشغيل الصوت">
     <i class="fas fa-volume-up"></i>
   </button>
 </div>
@@ -862,25 +863,25 @@
   </div>
 </div>
 
-<div class="activity-container">
+<div class="activity-container mobile-full-width">
   <!-- رأس التحدي -->
-  <div class="challenge-header">
+  <div class="challenge-header mobile-text-center">
     <h1><i class="fas fa-fire"></i> نشاط التحديات <i class="fas fa-fire"></i></h1>
     <p>اختبر مهاراتك وتنافس مع زملائك في تحديات مثيرة!</p>
   </div>
 
   <!-- أدوات التحكم -->
-  <div class="challenge-controls">
-    <div class="control-group">
+  <div class="challenge-controls mobile-full-width">
+    <div class="control-group mobile-full-width">
       <label><i class="fas fa-users"></i> اختر الصف:</label>
-      <select id="classSelect">
+      <select id="classSelect" class="mobile-full-width">
         <option value="">اختر الصف</option>
       </select>
     </div>
 
-    <div class="control-group">
+    <div class="control-group mobile-full-width">
       <label><i class="fas fa-gamepad"></i> نوع التحدي:</label>
-      <select id="mode" onchange="handleModeChange()">
+      <select id="mode" onchange="handleModeChange()" class="mobile-full-width">
         <option value="random">طالب ضد طالب (عشوائي)</option>
         <option value="manual">طالب ضد طالب (اختياري)</option>
         <option value="teams">فريق ضد فريق</option>
@@ -888,23 +889,23 @@
       </select>
     </div>
 
-    <div id="manualSelection" class="manual-selection">
+    <div id="manualSelection" class="manual-selection mobile-full-width">
       <h4><i class="fas fa-hand-pointer"></i> اختر المتنافسين</h4>
-      <div class="control-group">
+      <div class="control-group mobile-full-width">
         <label>الطالب الأول:</label>
-        <select id="student1Select"></select>
+        <select id="student1Select" class="mobile-full-width"></select>
       </div>
-      <div class="control-group">
+      <div class="control-group mobile-full-width">
         <label>الطالب الثاني:</label>
-        <select id="student2Select"></select>
+        <select id="student2Select" class="mobile-full-width"></select>
       </div>
     </div>
 
-    <div id="multiTeamOptions" class="multi-team-options">
+    <div id="multiTeamOptions" class="multi-team-options mobile-full-width">
       <h4><i class="fas fa-users-cog"></i> إعداد الفرق المتعددة</h4>
-      <div class="control-group">
+      <div class="control-group mobile-full-width">
         <label>عدد الفرق:</label>
-        <select id="teamCountSelect">
+        <select id="teamCountSelect" class="mobile-full-width">
           <option value="3">3 فرق</option>
           <option value="4">4 فرق</option>
           <option value="5">5 فرق</option>
@@ -915,9 +916,9 @@
       </div>
     </div>
 
-    <div class="control-group">
+    <div class="control-group mobile-full-width">
       <label><i class="fas fa-clock"></i> المدة:</label>
-      <select id="duration">
+      <select id="duration" class="mobile-full-width">
         <option value="30">30 ثانية</option>
         <option value="60">1 دقيقة</option>
         <option value="120">2 دقائق</option>
@@ -928,23 +929,23 @@
       </select>
     </div>
 
-    <div class="control-group">
-      <button onclick="prepareChallenge()" class="btn btn-accent">
+    <div class="control-group mobile-grid-2">
+      <button onclick="prepareChallenge()" class="btn btn-accent touch-target mobile-full-width">
         <i class="fas fa-rocket"></i> بدء التحدي
       </button>
-      <button onclick="showTeacherGuide()" class="btn btn-info">
+      <button onclick="showTeacherGuide()" class="btn btn-info touch-target mobile-full-width">
         <i class="fas fa-chalkboard-teacher"></i> دليل المعلم
       </button>
     </div>
   </div>
 
   <!-- منطقة التحدي -->
-  <div id="challengeArea" class="challenge-area">
-    <div id="turnLabel" class="turn-display">
+  <div id="challengeArea" class="challenge-area mobile-full-width">
+    <div id="turnLabel" class="turn-display mobile-text-center">
       <i class="fas fa-user-clock"></i> جاري التحضير...
     </div>
 
-    <div id="timerWrapper" class="timer-container">
+    <div id="timerWrapper" class="timer-container mobile-text-center">
       <svg class="timer-circle" viewBox="0 0 120 120">
         <circle cx="60" cy="60" r="50" fill="none" stroke="#eee" stroke-width="8"></circle>
         <circle cx="60" cy="60" r="50" fill="none" id="progress" stroke="var(--accent-color)" 
@@ -954,16 +955,16 @@
       <div id="timerTextSec" class="timer-text">0s</div>
     </div>
 
-    <div class="teams-grid" id="teamsContainer"></div>
+    <div class="teams-grid mobile-grid-2" id="teamsContainer"></div>
 
-    <div class="challenge-actions">
-      <button onclick="nextTurn()" class="btn btn-primary">
+    <div class="challenge-actions mobile-grid-3">
+      <button onclick="nextTurn()" class="btn btn-primary touch-target mobile-full-width">
         <i class="fas fa-arrow-right"></i> التالي
       </button>
-      <button onclick="endChallenge()" class="btn btn-success">
+      <button onclick="endChallenge()" class="btn btn-success touch-target mobile-full-width">
         <i class="fas fa-trophy"></i> إنهاء التحدي
       </button>
-      <button onclick="resetChallenge()" class="btn btn-secondary">
+      <button onclick="resetChallenge()" class="btn btn-secondary touch-target mobile-full-width">
         <i class="fas fa-redo"></i> إعادة تعيين
       </button>
     </div>
@@ -972,25 +973,25 @@
   </div>
 </div>
 <!-- نافذة التعليمات المنبثقة -->
-<div id="instructionModal" class="instruction-modal">
-  <div class="modal-content">
+<div id="instructionModal" class="instruction-modal responsive-modal">
+  <div class="modal-content mobile-full-height">
     <h2><i class="fas fa-info-circle"></i> تعليمات التحدي</h2>
     <p id="instructionText"></p>
-    <button onclick="closeInstructionModal()" class="btn btn-primary">
+    <button onclick="closeInstructionModal()" class="btn btn-primary touch-target mobile-full-width">
       <i class="fas fa-check"></i> فهمت
     </button>
   </div>
 </div>
 
 <!-- دليل المعلم التفاعلي -->
-<div id="teacherGuideModal" class="instruction-modal">
-  <div class="modal-content" style="max-width: 800px;">
+<div id="teacherGuideModal" class="instruction-modal responsive-modal">
+  <div class="modal-content mobile-full-height" style="max-width: 800px;">
     <h2><i class="fas fa-chalkboard-teacher"></i> دليل المعلم - نشاط التحديات</h2>
     
-    <div class="teacher-tabs">
-      <button class="tab-btn active" data-tab="rules">قواعد النشاط</button>
-      <button class="tab-btn" data-tab="management">إدارة الصف</button>
-      <button class="tab-btn" data-tab="strategies">استراتيجيات التقييم</button>
+    <div class="teacher-tabs mobile-grid-3">
+      <button class="tab-btn active touch-target" data-tab="rules">قواعد النشاط</button>
+      <button class="tab-btn touch-target" data-tab="management">إدارة الصف</button>
+      <button class="tab-btn touch-target" data-tab="strategies">استراتيجيات التقييم</button>
     </div>
     
     <div id="rules-content" class="tab-content active">
@@ -2600,5 +2601,8 @@ async function loadStudents() {
   console.log('🎯 تم تحميل نشاط التحديات - جاهز للتشغيل!');
   console.log('📊 المميزات المتاحة: نظام إشعارات متقدم، إحصائيات شاملة، تأثيرات بصرية وصوتية');
 </script>
+
+<!-- Responsive JavaScript Helper -->
+<script src="../assets/js/responsive-helper.js"></script>
 </body>
 </html>
