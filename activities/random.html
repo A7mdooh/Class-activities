@@ -17,6 +17,9 @@
 
   <!-- فافيكون -->
   <link rel="icon" type="image/png" href="../assets/media/images/school-logo.png">
+  
+  <!-- Responsive CSS Framework -->
+  <link rel="stylesheet" href="../assets/css/responsive.css">
 
   <style>
     :root {
@@ -1423,47 +1426,480 @@
       75% { transform: scale(1.1) rotate(-2deg); }
       100% { transform: scale(1) rotate(0deg); }
     }
+
+    /* تحسينات الاستجابة المتقدمة للاختيار العشوائي */
+    
+    /* شاشات كبيرة جداً (1200px+) */
+    @media (min-width: 1200px) {
+      .main-container {
+        max-width: 1100px;
+        padding: var(--spacing-3xl);
+      }
+
+      .main-controls {
+        grid-template-columns: repeat(5, 1fr);
+        gap: var(--spacing-xl);
+      }
+
+      .main-btn {
+        padding: var(--spacing-lg) var(--spacing-xl);
+        font-size: var(--font-size-lg);
+      }
+
+      .settings-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-xl);
+      }
+
+      .result-display {
+        min-height: 200px;
+        font-size: var(--font-size-2xl);
+      }
+    }
+
+    /* شاشات كبيرة (1024px - 1199px) */
+    @media (max-width: 1199px) and (min-width: 1024px) {
+      .main-container {
+        max-width: 900px;
+        padding: var(--spacing-2xl);
+      }
+
+      .main-controls {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--spacing-lg);
+      }
+
+      .main-btn {
+        padding: var(--spacing-md) var(--spacing-lg);
+        font-size: var(--font-size-base);
+      }
+
+      .settings-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-lg);
+      }
+
+      .result-display {
+        min-height: 180px;
+      }
+    }
+
+    /* تابلت (768px - 1023px) */
+    @media (max-width: 1023px) and (min-width: 768px) {
+      .main-container {
+        max-width: 700px;
+        padding: var(--spacing-xl);
+        margin: 0 auto;
+      }
+
+      .main-controls {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-lg);
+      }
+
+      .main-btn {
+        padding: var(--spacing-md);
+        font-size: var(--font-size-sm);
+      }
+
+      .main-btn span:last-child {
+        font-size: var(--font-size-xs);
+      }
+
+      .settings-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+      }
+
+      .result-display {
+        min-height: 160px;
+        padding: var(--spacing-lg);
+      }
+
+      .header-title {
+        font-size: var(--font-size-xl);
+      }
+
+      .header-subtitle {
+        font-size: var(--font-size-base);
+      }
+
+      .control-buttons {
+        top: var(--spacing-sm);
+      }
+    }
+
+    /* موبايل كبير (480px - 767px) */
+    @media (max-width: 767px) and (min-width: 480px) {
+      .main-container {
+        max-width: 100%;
+        margin: 0 var(--spacing-md);
+        padding: var(--spacing-lg);
+      }
+
+      .main-controls {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+      }
+
+      .main-btn {
+        width: 100%;
+        padding: var(--spacing-md) var(--spacing-lg);
+        font-size: var(--font-size-base);
+        justify-content: center;
+      }
+
+      .main-btn span:first-child {
+        font-size: var(--font-size-xl);
+      }
+
+      .settings-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+      }
+
+      .setting-item {
+        padding: var(--spacing-md);
+      }
+
+      .sound-toggles {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+      }
+
+      .result-display {
+        min-height: 140px;
+        padding: var(--spacing-md);
+      }
+
+      .rolling-animation {
+        font-size: var(--font-size-lg);
+      }
+
+      .header-title {
+        font-size: var(--font-size-lg);
+      }
+
+      .header-title span:first-child {
+        font-size: var(--font-size-2xl);
+      }
+
+      .header-subtitle {
+        font-size: var(--font-size-sm);
+        line-height: 1.4;
+      }
+
+      .class-selector h3 {
+        font-size: var(--font-size-base);
+      }
+
+      .class-select {
+        font-size: var(--font-size-sm);
+        padding: var(--spacing-sm) var(--spacing-md);
+      }
+
+      .honor-board h3 {
+        font-size: var(--font-size-base);
+      }
+
+      .honor-actions {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+      }
+
+      .honor-action-btn {
+        width: 100%;
+        padding: var(--spacing-md);
+        font-size: var(--font-size-sm);
+      }
+    }
+
+    /* موبايل صغير (320px - 479px) */
+    @media (max-width: 479px) {
+      .main-container {
+        margin: 0 var(--spacing-sm);
+        padding: var(--spacing-md);
+      }
+
+      .main-controls {
+        gap: var(--spacing-sm);
+      }
+
+      .main-btn {
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: var(--font-size-sm);
+        min-height: 50px;
+      }
+
+      .main-btn span:first-child {
+        font-size: var(--font-size-lg);
+      }
+
+      .main-btn span:last-child {
+        font-size: var(--font-size-xs);
+      }
+
+      .settings-panel,
+      .class-selector,
+      .result-display,
+      .honor-board {
+        padding: var(--spacing-sm);
+      }
+
+      .result-display {
+        min-height: 120px;
+      }
+
+      .rolling-animation {
+        font-size: var(--font-size-base);
+      }
+
+      .header-card {
+        padding: var(--spacing-md);
+      }
+
+      .header-title {
+        font-size: var(--font-size-base);
+      }
+
+      .header-title span:first-child {
+        font-size: var(--font-size-xl);
+      }
+
+      .header-subtitle {
+        font-size: var(--font-size-xs);
+        line-height: 1.3;
+      }
+
+      .class-selector h3 {
+        font-size: var(--font-size-sm);
+      }
+
+      .class-select {
+        font-size: var(--font-size-xs);
+        padding: var(--spacing-xs) var(--spacing-sm);
+      }
+
+      .setting-item {
+        padding: var(--spacing-sm);
+      }
+
+      .setting-label {
+        font-size: var(--font-size-xs);
+      }
+
+      .speed-value {
+        font-size: var(--font-size-xs);
+      }
+
+      .toggle-label {
+        font-size: var(--font-size-xs);
+      }
+
+      .control-buttons {
+        top: var(--spacing-xs);
+      }
+
+      .control-btn {
+        width: 35px;
+        height: 35px;
+        font-size: var(--font-size-sm);
+      }
+
+      .honor-action-btn {
+        font-size: var(--font-size-xs);
+        padding: var(--spacing-sm);
+      }
+    }
+
+    /* تحسينات خاصة للأجهزة اللمسية */
+    @media (hover: none) and (pointer: coarse) {
+      .main-btn {
+        min-height: 60px;
+        border-width: 3px;
+      }
+
+      .main-btn:hover {
+        transform: none;
+      }
+
+      .main-btn:active {
+        transform: scale(0.98);
+      }
+
+      .control-btn {
+        min-width: 44px;
+        min-height: 44px;
+      }
+
+      .class-select {
+        min-height: 48px;
+        border-width: 2px;
+      }
+
+      .speed-slider {
+        height: 8px;
+      }
+
+      .speed-slider::-webkit-slider-thumb {
+        width: 24px;
+        height: 24px;
+      }
+
+      .speed-slider::-moz-range-thumb {
+        width: 24px;
+        height: 24px;
+      }
+
+      .toggle-switch {
+        min-width: 50px;
+        min-height: 28px;
+      }
+    }
+
+    /* تحسينات للوضع الأفقي في الموبايل */
+    @media screen and (max-height: 500px) and (orientation: landscape) {
+      .header-card {
+        padding: var(--spacing-sm);
+      }
+
+      .header-title {
+        font-size: var(--font-size-base);
+        margin-bottom: var(--spacing-xs);
+      }
+
+      .header-subtitle {
+        font-size: var(--font-size-sm);
+      }
+
+      .main-container {
+        padding: var(--spacing-md);
+      }
+
+      .result-display {
+        min-height: 80px;
+        padding: var(--spacing-sm);
+      }
+
+      .rolling-animation {
+        font-size: var(--font-size-sm);
+      }
+
+      .main-controls {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--spacing-xs);
+      }
+
+      .main-btn {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: var(--font-size-xs);
+        min-height: 40px;
+      }
+
+      .main-btn span:first-child {
+        font-size: var(--font-size-lg);
+      }
+
+      .settings-panel,
+      .honor-board {
+        padding: var(--spacing-sm);
+      }
+
+      .settings-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-xs);
+      }
+
+      .setting-item {
+        padding: var(--spacing-xs);
+      }
+    }
+
+    /* تحسينات الشاشات عالية الكثافة */
+    @media (-webkit-min-device-pixel-ratio: 2),
+           (min-resolution: 192dpi) {
+      .main-btn {
+        border-width: 1.5px;
+      }
+
+      .control-btn {
+        border-width: 1.5px;
+      }
+
+      .class-select {
+        border-width: 1.5px;
+      }
+
+      .header-card::before,
+      .class-selector::before,
+      .result-display::before {
+        height: 3px;
+      }
+    }
+
+    /* RTL layout optimizations for responsive design */
+    [dir="rtl"] .main-controls {
+      direction: rtl;
+    }
+
+    [dir="rtl"] .settings-grid {
+      direction: rtl;
+    }
+
+    [dir="rtl"] .honor-actions {
+      direction: rtl;
+    }
+
+    @media (max-width: 767px) {
+      [dir="rtl"] .main-controls {
+        direction: ltr;
+      }
+
+      [dir="rtl"] .honor-actions {
+        direction: ltr;
+      }
+    }
   </style>
 </head>
 
-<body>
+<body class="responsive-body touch-device">
   <!-- أزرار التحكم -->
-  <div class="control-buttons right">
-    <button class="control-btn" id="backBtn" title="العودة للقائمة الرئيسية" aria-label="العودة للقائمة الرئيسية">
+  <div class="control-buttons right mobile-optimized">
+    <button class="control-btn touch-target" id="backBtn" title="العودة للقائمة الرئيسية" aria-label="العودة للقائمة الرئيسية">
       🏠
     </button>
   </div>
 
-  <div class="control-buttons left">
-    <button class="control-btn" id="fullscreenBtn" title="ملء الشاشة" aria-label="ملء الشاشة">
+  <div class="control-buttons left mobile-optimized">
+    <button class="control-btn touch-target" id="fullscreenBtn" title="ملء الشاشة" aria-label="ملء الشاشة">
       ⛶
     </button>
   </div>
 
   <!-- المحتوى الرئيسي -->
-  <div class="main-container">
+  <div class="main-container responsive-container">
     <!-- رأس الصفحة -->
-    <header class="header">
-      <div class="header-card">
-        <h1 class="header-title">
+    <header class="header mobile-header">
+      <div class="header-card mobile-card">
+        <h1 class="header-title mobile-heading">
           <span>🎯</span>
           <span>الاختيار العشوائي للطلاب</span>
         </h1>
-        <p class="header-subtitle">
+        <p class="header-subtitle mobile-subtitle">
           اختر طالباً بشكل عشوائي وعادل لبدء المشاركة أو تنفيذ النشاط الصفي
         </p>
       </div>
     </header>
 
     <!-- اختيار الصف -->
-    <div class="class-selector" id="classSelector">
-      <h3>
+    <div class="class-selector mobile-card" id="classSelector">
+      <h3 class="mobile-heading">
         <span>🎓</span>
         <span>اختر الصف الدراسي</span>
       </h3>
-      <div class="select-wrapper">
+      <div class="select-wrapper mobile-select">
         <div class="select-icon">📚</div>
-        <select class="class-select" id="classSelect">
+        <select class="class-select touch-target" id="classSelect">
           <option value="">-- اختر الصف الدراسي --</option>
         </select>
         <div class="select-arrow">
@@ -1472,16 +1908,16 @@
           </svg>
         </div>
       </div>
-      <div class="selection-confirmation" id="selectionConfirmation">
+      <div class="selection-confirmation mobile-notification" id="selectionConfirmation">
         <span class="icon">✅</span>
         <span id="confirmationText">تم اختيار الصف بنجاح!</span>
       </div>
     </div>
 
     <!-- منطقة عرض النتيجة -->
-    <div class="result-display" id="resultDisplay">
-      <div class="rolling-animation" id="rollingAnimation">
-        <div class="welcome-message" id="welcomeMessage">
+    <div class="result-display mobile-card" id="resultDisplay">
+      <div class="rolling-animation mobile-animation" id="rollingAnimation">
+        <div class="welcome-message mobile-text" id="welcomeMessage">
           👋 مرحباً بك في نشاط الاختيار العشوائي<br>
           اختر الصف الدراسي أولاً لبدء المتعة!
         </div>
@@ -1489,81 +1925,81 @@
     </div>
 
     <!-- أزرار التحكم الرئيسية -->
-    <div class="main-controls">
-      <button class="main-btn start-btn" id="startBtn" disabled>
+    <div class="main-controls mobile-buttons">
+      <button class="main-btn start-btn touch-target mobile-btn" id="startBtn" disabled>
         <span>🚀</span>
         <span>ابدأ الاختيار</span>
       </button>
-      <button class="main-btn stop-btn" id="stopBtn" disabled>
+      <button class="main-btn stop-btn touch-target mobile-btn" id="stopBtn" disabled>
         <span>⏹️</span>
         <span>توقف</span>
       </button>
-      <button class="main-btn remove-btn" id="removeBtn" disabled>
+      <button class="main-btn remove-btn touch-target mobile-btn" id="removeBtn" disabled>
         <span>❌</span>
         <span>استبعاد الطالب</span>
       </button>
-      <button class="main-btn honor-btn" id="honorBtn" disabled>
+      <button class="main-btn honor-btn touch-target mobile-btn" id="honorBtn" disabled>
         <span>🏆</span>
         <span>إضافة للوحة الشرف</span>
       </button>
-      <button class="main-btn reset-btn" id="resetBtn" disabled>
+      <button class="main-btn reset-btn touch-target mobile-btn" id="resetBtn" disabled>
         <span>🔄</span>
         <span>إعادة تعيين</span>
       </button>
     </div>
 
     <!-- إعدادات الاختيار -->
-    <div class="settings-panel">
-      <h3>
+    <div class="settings-panel mobile-card">
+      <h3 class="mobile-heading">
         <span>⚙️</span>
         <span>إعدادات الاختيار</span>
       </h3>
-      <div class="settings-grid">
-        <div class="setting-item">
-          <label class="setting-label" for="speedSlider">سرعة التدوير</label>
-          <input type="range" id="speedSlider" class="speed-slider" min="50" max="300" value="150">
-          <div class="speed-value" id="speedValue">متوسط</div>
+      <div class="settings-grid mobile-grid">
+        <div class="setting-item mobile-input">
+          <label class="setting-label mobile-label" for="speedSlider">سرعة التدوير</label>
+          <input type="range" id="speedSlider" class="speed-slider touch-target" min="50" max="300" value="150">
+          <div class="speed-value mobile-text" id="speedValue">متوسط</div>
         </div>
-        <div class="setting-item">
-          <label class="setting-label" for="durationSlider">مدة التدوير</label>
-          <input type="range" id="durationSlider" class="speed-slider" min="1" max="10" value="3">
-          <div class="speed-value" id="durationValue">3 ثوان</div>
+        <div class="setting-item mobile-input">
+          <label class="setting-label mobile-label" for="durationSlider">مدة التدوير</label>
+          <input type="range" id="durationSlider" class="speed-slider touch-target" min="1" max="10" value="3">
+          <div class="speed-value mobile-text" id="durationValue">3 ثوان</div>
         </div>
-        <div class="setting-item">
-          <label class="setting-label" for="volumeSlider">مستوى الصوت</label>
-          <input type="range" id="volumeSlider" class="speed-slider" min="0" max="100" value="70">
-          <div class="speed-value" id="volumeValue">70%</div>
+        <div class="setting-item mobile-input">
+          <label class="setting-label mobile-label" for="volumeSlider">مستوى الصوت</label>
+          <input type="range" id="volumeSlider" class="speed-slider touch-target" min="0" max="100" value="70">
+          <div class="speed-value mobile-text" id="volumeValue">70%</div>
         </div>
-        <div class="setting-item">
-          <label class="setting-label">تشغيل الأصوات</label>
-          <div class="sound-toggles">
-            <div class="toggle-item">
-              <label class="toggle-switch">
+        <div class="setting-item mobile-input">
+          <label class="setting-label mobile-label">تشغيل الأصوات</label>
+          <div class="sound-toggles mobile-toggles">
+            <div class="toggle-item mobile-toggle">
+              <label class="toggle-switch touch-target">
                 <input type="checkbox" id="rollingAudioToggle" checked>
                 <span class="toggle-slider"></span>
               </label>
-              <span class="toggle-label">🎵 صوت التدوير</span>
+              <span class="toggle-label mobile-text">🎵 صوت التدوير</span>
             </div>
-            <div class="toggle-item">
-              <label class="toggle-switch">
+            <div class="toggle-item mobile-toggle">
+              <label class="toggle-switch touch-target">
                 <input type="checkbox" id="selectionAudioToggle" checked>
                 <span class="toggle-slider"></span>
               </label>
-              <span class="toggle-label">🎯 صوت الاختيار</span>
+              <span class="toggle-label mobile-text">🎯 صوت الاختيار</span>
             </div>
-            <div class="toggle-item">
-              <label class="toggle-switch">
+            <div class="toggle-item mobile-toggle">
+              <label class="toggle-switch touch-target">
                 <input type="checkbox" id="celebrationAudioToggle" checked>
                 <span class="toggle-slider"></span>
               </label>
-              <span class="toggle-label">🎉 صوت الاحتفال</span>
+              <span class="toggle-label mobile-text">🎉 صوت الاحتفال</span>
             </div>
-            <div class="toggle-item">
-              <label class="toggle-switch">
+            <div class="toggle-item mobile-toggle">
+              <label class="toggle-switch touch-target">
                 <input type="checkbox" id="clickAudioToggle" checked>
                 <span class="toggle-slider"></span>
               </label>
-              <span class="toggle-label">🖱️ صوت النقر</span>
+              <span class="toggle-label mobile-text">🖱️ صوت النقر</span>
             </div>
           </div>
         </div>
@@ -1571,24 +2007,24 @@
     </div>
 
     <!-- لوحة الشرف -->
-    <div class="honor-board" id="honorBoard" style="display: none;">
-      <h3>
+    <div class="honor-board mobile-card" id="honorBoard" style="display: none;">
+      <h3 class="mobile-heading">
         <span>🏆</span>
         <span>لوحة الشرف - الطلاب المكرمون</span>
       </h3>
-      <div class="honor-list" id="honorList">
-        <div class="no-honors">
+      <div class="honor-list mobile-list" id="honorList">
+        <div class="no-honors mobile-empty">
           <div class="honor-icon">⭐</div>
-          <p>لم يتم تكريم أي طالب بعد</p>
-          <small>اختر طالباً واضغط على زر التكريم لإضافته للوحة الشرف</small>
+          <p class="mobile-text">لم يتم تكريم أي طالب بعد</p>
+          <small class="mobile-text">اختر طالباً واضغط على زر التكريم لإضافته للوحة الشرف</small>
         </div>
       </div>
-      <div class="honor-actions">
-        <button class="honor-action-btn clear-honors-btn" id="clearHonorsBtn">
+      <div class="honor-actions mobile-buttons">
+        <button class="honor-action-btn clear-honors-btn touch-target mobile-btn" id="clearHonorsBtn">
           <span>🗑️</span>
           <span>مسح لوحة الشرف</span>
         </button>
-        <button class="honor-action-btn export-honors-btn" id="exportHonorsBtn">
+        <button class="honor-action-btn export-honors-btn touch-target mobile-btn" id="exportHonorsBtn">
           <span>📋</span>
           <span>نسخ قائمة المكرمين</span>
         </button>
@@ -2514,5 +2950,8 @@
 
     console.log('📝 تم تحميل جميع النصوص البرمجية للنشاط!');
   </script>
+  
+  <!-- Responsive Helper Script -->
+  <script src="../assets/js/responsive-helper.js"></script>
 </body>
 </html>
