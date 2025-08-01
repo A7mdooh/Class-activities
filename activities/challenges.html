@@ -746,9 +746,7 @@ let gameState = {
 };
 
 // بيانات الطلاب
-let studentsData = {
-  classes: {}
-};
+let studentsData = {};
 
 // ===== تحميل بيانات الطلاب من studentData.json فقط =====
 async function loadStudentsData() {
@@ -791,7 +789,7 @@ function populateClassSelect() {
   const classSelect = document.getElementById('classSelect');
   classSelect.innerHTML = '<option value="">اختر الصف</option>';
   
-  Object.keys(studentsData.classes).forEach(className => {
+  Object.keys(studentsData).forEach(className => {
     const option = document.createElement('option');
     option.value = className;
     option.textContent = className;
@@ -838,7 +836,7 @@ function populateStudentSelects() {
     return;
   }
   
-  const students = studentsData.classes[selectedClass] || [];
+  const students = studentsData[selectedClass] || [];
   const student1Select = document.getElementById('student1Select');
   const student2Select = document.getElementById('student2Select');
   
@@ -1069,7 +1067,7 @@ function setupTeamsBasedOnMode(mode, selectedClass) {
 
 // ===== إعداد طلاب عشوائيين =====
 function setupRandomStudents(selectedClass) {
-  const students = studentsData.classes[selectedClass] || [];
+  const students = studentsData[selectedClass] || [];
   
   if (students.length < 2) {
     showError('لا يوجد طلاب كافيين في هذا الصف');
