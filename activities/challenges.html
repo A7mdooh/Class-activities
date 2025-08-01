@@ -323,6 +323,7 @@
     }
 
     .score-btn {
+      position: relative;
       width: 50px;
       height: 50px;
       border: none;
@@ -334,21 +335,36 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
     }
 
     .score-btn.plus {
       background: var(--success-gradient);
       color: var(--text-light);
+      box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
     }
 
     .score-btn.minus {
       background: var(--secondary-gradient);
       color: var(--text-light);
+      box-shadow: 0 4px 15px rgba(75, 181, 172, 0.3);
     }
 
     .score-btn:hover {
-      transform: scale(1.1);
+      transform: scale(1.1) translateY(-2px);
       box-shadow: var(--shadow-medium);
+    }
+
+    .score-btn:active {
+      transform: scale(0.95);
+    }
+
+    .score-btn.plus:hover {
+      box-shadow: 0 8px 25px rgba(76, 175, 80, 0.5);
+    }
+
+    .score-btn.minus:hover {
+      box-shadow: 0 8px 25px rgba(244, 67, 54, 0.5);
     }
 
     /* ===== النافذة المنبثقة ===== */
@@ -530,6 +546,120 @@
       to {
         opacity: 1;
         transform: translateY(0);
+      }
+    }
+
+    /* ===== مؤثرات النقاط الاحترافية ===== */
+    .score-effect {
+      position: absolute;
+      font-size: 2rem;
+      font-weight: 800;
+      pointer-events: none;
+      z-index: 999;
+      animation: scoreEffect 1.5s ease-out forwards;
+    }
+
+    .score-effect.plus {
+      color: #4caf50;
+    }
+
+    .score-effect.minus {
+      color: #f44336;
+    }
+
+    @keyframes scoreEffect {
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      50% {
+        opacity: 0.8;
+        transform: translateY(-30px) scale(1.2);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-60px) scale(0.8);
+      }
+    }
+
+    .team-card-pulse {
+      animation: teamPulse 0.6s ease-out;
+    }
+
+    @keyframes teamPulse {
+      0% {
+        transform: scale(1);
+        box-shadow: var(--shadow-soft);
+      }
+      50% {
+        transform: scale(1.05);
+        box-shadow: 0 8px 30px rgba(76, 175, 80, 0.4);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: var(--shadow-soft);
+      }
+    }
+
+    .team-card-shake {
+      animation: teamShake 0.6s ease-out;
+    }
+
+    @keyframes teamShake {
+      0%, 100% {
+        transform: translateX(0);
+      }
+      10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-5px);
+      }
+      20%, 40%, 60%, 80% {
+        transform: translateX(5px);
+      }
+    }
+
+    .score-glow-plus {
+      box-shadow: 0 0 20px rgba(76, 175, 80, 0.6);
+      transition: box-shadow 0.3s ease-out;
+    }
+
+    .score-glow-minus {
+      box-shadow: 0 0 20px rgba(244, 67, 54, 0.6);
+      transition: box-shadow 0.3s ease-out;
+    }
+
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #4caf50;
+      animation: confetti 2s ease-out forwards;
+      pointer-events: none;
+    }
+
+    @keyframes confetti {
+      0% {
+        opacity: 1;
+        transform: translateY(0) rotate(0deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-200px) rotate(720deg);
+      }
+    }
+
+    .ripple-effect {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.6);
+      transform: scale(0);
+      animation: ripple 0.6s linear;
+      pointer-events: none;
+    }
+
+    @keyframes ripple {
+      to {
+        transform: scale(4);
+        opacity: 0;
       }
     }
     </style>
@@ -931,7 +1061,7 @@ function toggleFullscreen() {
 // ===== العودة للصفحة الرئيسية =====
 function goHome() {
   playSound('Click');
-  window.location.href = '../index.html';
+  window.location.href = '../main.html';
 }
 
 // ===== عرض دليل المعلم =====
@@ -1131,10 +1261,12 @@ function createTeamsDisplay() {
       <div class="team-name">${team.name}</div>
       <div class="team-score" id="score-${team.id}">${team.score}</div>
       <div class="score-controls">
-        <button class="score-btn minus" onclick="updateScore(${team.id}, -1)">
+        <button class="score-btn minus" onclick="updateScore(${team.id}, -1)" 
+                onmousedown="createRippleEffect(this, event)">
           <i class="fas fa-minus"></i>
         </button>
-        <button class="score-btn plus" onclick="updateScore(${team.id}, 1)">
+        <button class="score-btn plus" onclick="updateScore(${team.id}, 1)" 
+                onmousedown="createRippleEffect(this, event)">
           <i class="fas fa-plus"></i>
         </button>
       </div>
@@ -1143,19 +1275,119 @@ function createTeamsDisplay() {
   });
 }
 
-// ===== تحديث النقاط =====
+// ===== تحديث النقاط مع المؤثرات الاحترافية =====
 function updateScore(teamId, change) {
   const team = gameState.teams.find(t => t.id === teamId);
   if (team) {
     team.score = Math.max(0, team.score + change);
-    document.getElementById(`score-${teamId}`).textContent = team.score;
+    const scoreElement = document.getElementById(`score-${teamId}`);
+    const teamCard = scoreElement.closest('.team-card');
+    
+    // تحديث النقاط
+    scoreElement.textContent = team.score;
+    
+    // إضافة مؤثر النص المتحرك
+    createScoreEffect(scoreElement, change);
     
     if (change > 0) {
-      playSound('win');
-    } else {
+      // مؤثرات الإضافة
+      if (team.score >= 10) {
+        playSound('epic-victory'); // صوت خاص للنقاط العالية
+      } else if (team.score >= 5) {
+        playSound('level-up');
+      } else {
+        playSound('win');
+      }
+      
+      teamCard.classList.add('team-card-pulse');
+      scoreElement.classList.add('score-glow-plus');
+      
+      // إنشاء كونفيتي للنقاط العالية
+      if (team.score >= 5) {
+        createConfetti(teamCard);
+      }
+      
+      setTimeout(() => {
+        teamCard.classList.remove('team-card-pulse');
+        scoreElement.classList.remove('score-glow-plus');
+      }, 600);
+      
+    } else if (change < 0) {
+      // مؤثرات الخصم
       playSound('wrong_answer');
+      teamCard.classList.add('team-card-shake');
+      scoreElement.classList.add('score-glow-minus');
+      
+      setTimeout(() => {
+        teamCard.classList.remove('team-card-shake');
+        scoreElement.classList.remove('score-glow-minus');
+      }, 600);
     }
   }
+}
+
+// ===== إنشاء مؤثر النص المتحرك =====
+function createScoreEffect(scoreElement, change) {
+  const effect = document.createElement('div');
+  effect.className = `score-effect ${change > 0 ? 'plus' : 'minus'}`;
+  effect.textContent = change > 0 ? `+${change}` : change;
+  
+  const rect = scoreElement.getBoundingClientRect();
+  effect.style.left = rect.left + rect.width / 2 - 20 + 'px';
+  effect.style.top = rect.top + 'px';
+  
+  document.body.appendChild(effect);
+  
+  setTimeout(() => {
+    if (effect.parentElement) {
+      effect.remove();
+    }
+  }, 1500);
+}
+
+// ===== إنشاء كونفيتي =====
+function createConfetti(teamCard) {
+  const colors = ['#4caf50', '#2196f3', '#ff9800', '#e91e63', '#9c27b0'];
+  const rect = teamCard.getBoundingClientRect();
+  
+  for (let i = 0; i < 15; i++) {
+    const confetti = document.createElement('div');
+    confetti.className = 'confetti';
+    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    confetti.style.left = rect.left + Math.random() * rect.width + 'px';
+    confetti.style.top = rect.top + rect.height / 2 + 'px';
+    confetti.style.animationDelay = Math.random() * 0.3 + 's';
+    
+    document.body.appendChild(confetti);
+    
+    setTimeout(() => {
+      if (confetti.parentElement) {
+        confetti.remove();
+      }
+    }, 2000);
+  }
+}
+
+// ===== إضافة مؤثر الريبل للأزرار =====
+function createRippleEffect(button, event) {
+  const ripple = document.createElement('span');
+  const rect = button.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  const x = event.clientX - rect.left - size / 2;
+  const y = event.clientY - rect.top - size / 2;
+  
+  ripple.className = 'ripple-effect';
+  ripple.style.width = ripple.style.height = size + 'px';
+  ripple.style.left = x + 'px';
+  ripple.style.top = y + 'px';
+  
+  button.appendChild(ripple);
+  
+  setTimeout(() => {
+    if (ripple.parentElement) {
+      ripple.remove();
+    }
+  }, 600);
 }
 
 // ===== إدارة المؤقت =====
