@@ -557,6 +557,7 @@
       pointer-events: none;
       z-index: 999;
       animation: scoreEffect 1.5s ease-out forwards;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
 
     .score-effect.plus {
@@ -634,6 +635,7 @@
       background: #4caf50;
       animation: confetti 2s ease-out forwards;
       pointer-events: none;
+      border-radius: 50%;
     }
 
     @keyframes confetti {
@@ -661,6 +663,504 @@
         transform: scale(4);
         opacity: 0;
       }
+    }
+
+    /* ===== مؤثرات احترافية جديدة ===== */
+    .fireworks {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9998;
+    }
+
+    .firework {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      animation: fireworkExplode 2s ease-out forwards;
+    }
+
+    @keyframes fireworkExplode {
+      0% {
+        transform: scale(0);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(2);
+        opacity: 0;
+      }
+    }
+
+    .star-burst {
+      position: absolute;
+      font-size: 2rem;
+      color: #ffd700;
+      animation: starBurst 1.5s ease-out forwards;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    @keyframes starBurst {
+      0% {
+        transform: scale(0) rotate(0deg);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.2) rotate(180deg);
+        opacity: 0.8;
+      }
+      100% {
+        transform: scale(0.8) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .trophy-animation {
+      position: absolute;
+      font-size: 3rem;
+      color: #ffd700;
+      animation: trophyFloat 2s ease-in-out forwards;
+      pointer-events: none;
+      z-index: 999;
+      text-shadow: 2px 2px 8px rgba(255, 215, 0, 0.5);
+    }
+
+    @keyframes trophyFloat {
+      0% {
+        transform: translateY(0) scale(0) rotate(0deg);
+        opacity: 0;
+      }
+      30% {
+        transform: translateY(-20px) scale(1.2) rotate(10deg);
+        opacity: 1;
+      }
+      70% {
+        transform: translateY(-40px) scale(1.1) rotate(-5deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-80px) scale(0.8) rotate(0deg);
+        opacity: 0;
+      }
+    }
+
+    .crown-effect {
+      position: absolute;
+      font-size: 2.5rem;
+      color: #ffd700;
+      animation: crownRise 2s ease-out forwards;
+      pointer-events: none;
+      z-index: 999;
+      filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8));
+    }
+
+    @keyframes crownRise {
+      0% {
+        transform: translateY(50px) scale(0);
+        opacity: 0;
+      }
+      50% {
+        transform: translateY(-10px) scale(1.2);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100px) scale(0.8);
+        opacity: 0;
+      }
+    }
+
+    .lightning-effect {
+      position: absolute;
+      font-size: 2rem;
+      color: #ffeb3b;
+      animation: lightningStrike 1s ease-out forwards;
+      pointer-events: none;
+      z-index: 999;
+      filter: drop-shadow(0 0 15px #ffeb3b);
+    }
+
+    @keyframes lightningStrike {
+      0% {
+        transform: scale(0) rotate(-45deg);
+        opacity: 0;
+      }
+      30% {
+        transform: scale(1.5) rotate(-45deg);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1) rotate(-45deg);
+        opacity: 0;
+      }
+    }
+
+    .champion-glow {
+      animation: championGlow 2s ease-in-out infinite;
+      border: 3px solid #ffd700;
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.8), inset 0 0 20px rgba(255, 215, 0, 0.3);
+    }
+
+    @keyframes championGlow {
+      0%, 100% {
+        box-shadow: 0 0 30px rgba(255, 215, 0, 0.8), inset 0 0 20px rgba(255, 215, 0, 0.3);
+      }
+      50% {
+        box-shadow: 0 0 50px rgba(255, 215, 0, 1), inset 0 0 30px rgba(255, 215, 0, 0.5);
+      }
+    }
+
+    .score-milestone {
+      position: absolute;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #ff9800;
+      animation: milestoneAchieved 2s ease-out forwards;
+      pointer-events: none;
+      z-index: 999;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    @keyframes milestoneAchieved {
+      0% {
+        transform: scale(0) translateY(0);
+        opacity: 0;
+      }
+      30% {
+        transform: scale(1.3) translateY(-20px);
+        opacity: 1;
+      }
+      70% {
+        transform: scale(1.1) translateY(-40px);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(0.8) translateY(-80px);
+        opacity: 0;
+      }
+    }
+
+    .rainbow-text {
+      background: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
+      background-size: 400% 400%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: rainbowShift 2s ease-in-out infinite;
+    }
+
+    @keyframes rainbowShift {
+      0%, 100% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+    }
+
+    .sparkle-trail {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: #ffd700;
+      border-radius: 50%;
+      animation: sparkleTrail 1.5s ease-out forwards;
+      pointer-events: none;
+      z-index: 998;
+    }
+
+    @keyframes sparkleTrail {
+      0% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(0) translateY(-100px);
+      }
+    }
+
+    .team-card-victory {
+      animation: victoryDance 1.5s ease-in-out;
+      border: 3px solid #4caf50;
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(139, 195, 74, 0.1));
+    }
+
+    @keyframes victoryDance {
+      0%, 100% {
+        transform: rotate(0deg) scale(1);
+      }
+      25% {
+        transform: rotate(2deg) scale(1.02);
+      }
+      75% {
+        transform: rotate(-2deg) scale(1.02);
+      }
+    }
+
+    .floating-emoji {
+      position: absolute;
+      font-size: 2rem;
+      animation: floatingEmoji 3s ease-out forwards;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    @keyframes floatingEmoji {
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotate(0deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-150px) scale(0.5) rotate(360deg);
+      }
+    }
+
+    /* طبقة الانتصار الملحمي */
+    .ultimate-victory-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, rgba(255,215,0,0.9), rgba(255,20,147,0.8), rgba(138,43,226,0.9));
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      animation: victoryEntry 1s ease-out;
+    }
+
+    .victory-content {
+      text-align: center;
+      color: white;
+      animation: victoryPulse 2s infinite;
+    }
+
+    .ultimate-crown {
+      font-size: 120px;
+      animation: crownSpin 3s infinite;
+      margin-bottom: 20px;
+    }
+
+    .victory-text {
+      font-size: 48px;
+      font-weight: bold;
+      text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+      margin-bottom: 10px;
+      animation: textGlow 2s infinite alternate;
+    }
+
+    .victory-subtitle {
+      font-size: 24px;
+      margin-bottom: 30px;
+      opacity: 0.9;
+    }
+
+    .victory-fireworks .firework {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: radial-gradient(circle, #fff, #ff0);
+      border-radius: 50%;
+      animation: fireworkExplode 2s infinite;
+    }
+
+    /* طبقة النقاط الكاملة */
+    .perfect-score-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, rgba(0,191,255,0.9), rgba(255,20,147,0.8));
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1900;
+      animation: perfectEntry 1s ease-out;
+    }
+
+    .perfect-content {
+      text-align: center;
+      color: white;
+    }
+
+    .perfect-title {
+      font-size: 56px;
+      font-weight: bold;
+      text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+      margin-bottom: 20px;
+      animation: perfectGlow 1.5s infinite alternate;
+    }
+
+    .perfect-stars {
+      margin: 20px 0;
+    }
+
+    .perfect-stars .star {
+      font-size: 40px;
+      margin: 0 10px;
+      display: inline-block;
+      animation: starPulse 1s infinite alternate;
+    }
+
+    .perfect-stars .star:nth-child(1) { animation-delay: 0s; }
+    .perfect-stars .star:nth-child(2) { animation-delay: 0.2s; }
+    .perfect-stars .star:nth-child(3) { animation-delay: 0.4s; }
+    .perfect-stars .star:nth-child(4) { animation-delay: 0.6s; }
+    .perfect-stars .star:nth-child(5) { animation-delay: 0.8s; }
+
+    .perfect-message {
+      font-size: 24px;
+      margin-top: 20px;
+      opacity: 0.9;
+    }
+
+    /* مؤثر الكومبو */
+    .combo-display {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1800;
+      text-align: center;
+      animation: comboEntry 2s ease-out forwards;
+    }
+
+    .combo-text {
+      font-size: 48px;
+      font-weight: bold;
+      color: #ff4500;
+      text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+      margin-bottom: 10px;
+      animation: comboShake 0.5s infinite;
+    }
+
+    .combo-effect {
+      font-size: 60px;
+      animation: comboSpin 1s infinite;
+    }
+
+    /* انيميشن الدخول الملحمي */
+    @keyframes victoryEntry {
+      0% {
+        opacity: 0;
+        transform: scale(0.3);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes victoryPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    @keyframes crownSpin {
+      0% { transform: rotate(0deg) scale(1); }
+      25% { transform: rotate(90deg) scale(1.1); }
+      50% { transform: rotate(180deg) scale(1); }
+      75% { transform: rotate(270deg) scale(1.1); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+
+    @keyframes textGlow {
+      0% { 
+        text-shadow: 3px 3px 6px rgba(0,0,0,0.5), 0 0 20px rgba(255,255,255,0.5);
+      }
+      100% { 
+        text-shadow: 3px 3px 6px rgba(0,0,0,0.5), 0 0 40px rgba(255,255,255,0.8);
+      }
+    }
+
+    @keyframes fireworkExplode {
+      0% {
+        transform: scale(0);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1);
+        opacity: 0.8;
+      }
+      100% {
+        transform: scale(2);
+        opacity: 0;
+      }
+    }
+
+    /* انيميشن النقاط الكاملة */
+    @keyframes perfectEntry {
+      0% {
+        opacity: 0;
+        transform: rotateY(-90deg);
+      }
+      100% {
+        opacity: 1;
+        transform: rotateY(0deg);
+      }
+    }
+
+    @keyframes perfectGlow {
+      0% { 
+        color: white;
+        text-shadow: 3px 3px 6px rgba(0,0,0,0.5), 0 0 30px rgba(255,255,255,0.5);
+      }
+      100% { 
+        color: #ffff00;
+        text-shadow: 3px 3px 6px rgba(0,0,0,0.5), 0 0 50px rgba(255,255,0,0.8);
+      }
+    }
+
+    @keyframes starPulse {
+      0% { 
+        transform: scale(1) rotate(0deg);
+        filter: brightness(1);
+      }
+      100% { 
+        transform: scale(1.3) rotate(180deg);
+        filter: brightness(1.5);
+      }
+    }
+
+    /* انيميشن الكومبو */
+    @keyframes comboEntry {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.3) rotate(-180deg);
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.2) rotate(0deg);
+      }
+      100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+      }
+    }
+
+    @keyframes comboShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    @keyframes comboSpin {
+      0% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(180deg) scale(1.2); }
+      100% { transform: rotate(360deg) scale(1); }
     }
     </style>
 </head>
@@ -1032,16 +1532,40 @@ function toggleSound() {
   }
 }
 
-// ===== تشغيل الأصوات =====
+// ===== تشغيل الأصوات المحسنة =====
 function playSound(soundName) {
   if (!gameState.soundEnabled) return;
   
+  // خريطة الأصوات المحسنة
+  const soundMap = {
+    'Click': 'cosmic-click',
+    'startapp': 'startapp',
+    'win': 'win',
+    'wrong_answer': 'wrong_answer',
+    'countdown-beep': 'countdown-beep',
+    'end-timer': 'end-timer',
+    'level-up': 'kingdom-sounds/level-up',
+    'epic-victory': 'kingdom-sounds/epic-victory',
+    'achievement-unlock': 'kingdom-sounds/achievement-unlock',
+    'perfect-score': 'kingdom-sounds/perfect-score',
+    'bonus-collect': 'kingdom-sounds/bonus-collect',
+    'brain-activate': 'kingdom-sounds/brain-activate',
+    'cosmic-explosion': 'kingdom-sounds/cosmic-explosion',
+    'crown-ceremony': 'kingdom-sounds/crown-ceremony',
+    'fireworks-burst': 'kingdom-sounds/fireworks-burst',
+    'golden-confetti': 'kingdom-sounds/golden-confetti',
+    'lightning-strike': 'kingdom-sounds/lightning-strike',
+    'magic-sparkle': 'kingdom-sounds/magic-sparkle'
+  };
+  
+  const actualSoundName = soundMap[soundName] || soundName;
+  
   try {
-    const audio = new Audio(`../assets/media/sounds/${soundName}.mp3`);
+    const audio = new Audio(`../assets/media/sounds/${actualSoundName}.mp3`);
     audio.volume = 0.5;
-    audio.play().catch(e => console.log('صوت غير متاح:', soundName));
+    audio.play().catch(e => console.log('صوت غير متاح:', actualSoundName));
   } catch (e) {
-    console.log('خطأ في تشغيل الصوت:', soundName);
+    console.log('خطأ في تشغيل الصوت:', actualSoundName);
   }
 }
 
@@ -1249,7 +1773,7 @@ function setupTeams(teamCount) {
   }
 }
 
-// ===== إنشاء عرض الفرق =====
+// ===== إنشاء عرض الفرق المحسن =====
 function createTeamsDisplay() {
   const container = document.getElementById('teamsGrid');
   container.innerHTML = '';
@@ -1260,25 +1784,54 @@ function createTeamsDisplay() {
     teamCard.innerHTML = `
       <div class="team-name">${team.name}</div>
       <div class="team-score" id="score-${team.id}">${team.score}</div>
+      
+      <!-- شريط التقدم -->
+      <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.3); border-radius: 3px; margin: 10px 0; overflow: hidden;">
+        <div id="progress-${team.id}" style="height: 100%; width: 0%; background: linear-gradient(90deg, #2196f3, #64b5f6); border-radius: 3px; transition: width 0.5s ease-out;"></div>
+      </div>
+      
+      <!-- مؤشر المستوى -->
+      <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 10px;">
+        <span id="level-${team.id}">المبتدئ</span>
+      </div>
+      
       <div class="score-controls">
         <button class="score-btn minus" onclick="updateScore(${team.id}, -1)" 
-                onmousedown="createRippleEffect(this, event)">
+                onmousedown="createRippleEffect(this, event)" title="خصم نقطة">
           <i class="fas fa-minus"></i>
         </button>
         <button class="score-btn plus" onclick="updateScore(${team.id}, 1)" 
-                onmousedown="createRippleEffect(this, event)">
+                onmousedown="createRippleEffect(this, event)" title="إضافة نقطة">
           <i class="fas fa-plus"></i>
+        </button>
+      </div>
+      
+      <!-- أزرار إضافية للمعلم -->
+      <div style="margin-top: 10px; display: flex; gap: 5px; justify-content: center;">
+        <button onclick="addBonusPoints(${team.id}, 5)" 
+                style="background: linear-gradient(135deg, #ff9800, #ffb74d); border: none; border-radius: 15px; padding: 5px 10px; color: white; font-size: 0.8rem; cursor: pointer;"
+                title="مكافأة +5">
+          +5 🎁
+        </button>
+        <button onclick="resetTeamScore(${team.id})" 
+                style="background: linear-gradient(135deg, #607d8b, #90a4ae); border: none; border-radius: 15px; padding: 5px 10px; color: white; font-size: 0.8rem; cursor: pointer;"
+                title="إعادة تعيين">
+          🔄
         </button>
       </div>
     `;
     container.appendChild(teamCard);
+    
+    // تحديث المستوى الأولي
+    updateTeamLevel(team.id, team.score);
   });
 }
 
-// ===== تحديث النقاط مع المؤثرات الاحترافية =====
+// ===== تحديث النقاط مع المؤثرات الاحترافية المطورة =====
 function updateScore(teamId, change) {
   const team = gameState.teams.find(t => t.id === teamId);
   if (team) {
+    const oldScore = team.score;
     team.score = Math.max(0, team.score + change);
     const scoreElement = document.getElementById(`score-${teamId}`);
     const teamCard = scoreElement.closest('.team-card');
@@ -1290,39 +1843,102 @@ function updateScore(teamId, change) {
     createScoreEffect(scoreElement, change);
     
     if (change > 0) {
-      // مؤثرات الإضافة
-      if (team.score >= 10) {
-        playSound('epic-victory'); // صوت خاص للنقاط العالية
+      // مؤثرات الإضافة المطورة
+      if (team.score >= 20) {
+        playSound('perfect-score');
+        createUltimateVictory(teamCard);
+        createPerfectScoreAnimation();
+        createFireworks();
+        createTrophyAnimation(teamCard);
+        teamCard.classList.add('champion-glow');
+        createFloatingEmojis(teamCard, ['🏆', '👑', '🌟', '🎉', '💎']);
+        showMilestone(scoreElement, 'أسطورة الفصل! 🏆👑');
+        setTimeout(() => playSound('crown-ceremony'), 1000);
+      } else if (team.score >= 15) {
+        playSound('epic-victory');
+        createFireworks();
+        createTrophyAnimation(teamCard);
+        teamCard.classList.add('champion-glow');
+        createFloatingEmojis(teamCard, ['🏆', '👑', '🌟', '🎉']);
+        showMilestone(scoreElement, 'بطل الفصل! 🏆');
+        setTimeout(() => playSound('fireworks-burst'), 500);
+      } else if (team.score >= 10) {
+        playSound('achievement-unlock');
+        createLightningEffect(teamCard);
+        createStarBurst(teamCard);
+        teamCard.classList.add('team-card-victory');
+        createFloatingEmojis(teamCard, ['⭐', '🌟', '✨', '⚡']);
+        showMilestone(scoreElement, 'نجم ساطع! ⭐');
+        setTimeout(() => playSound('lightning-strike'), 300);
       } else if (team.score >= 5) {
         playSound('level-up');
+        createCrownEffect(teamCard);
+        createSparkleTrail(teamCard);
+        createFloatingEmojis(teamCard, ['🎊', '🎉', '🏅', '✨']);
+        showMilestone(scoreElement, 'أداء ممتاز! 🏅');
+        setTimeout(() => playSound('magic-sparkle'), 200);
+      } else if (team.score >= 3) {
+        playSound('win');
+        createFloatingEmojis(teamCard, ['👍', '✅', '🌟']);
+        setTimeout(() => playSound('brain-activate'), 100);
       } else {
         playSound('win');
       }
       
+      // فحص الكومبو
+      if (!window.comboCount) window.comboCount = {};
+      if (!window.comboCount[teamId]) window.comboCount[teamId] = 0;
+      window.comboCount[teamId]++;
+      createComboEffect(window.comboCount[teamId]);
+      
       teamCard.classList.add('team-card-pulse');
       scoreElement.classList.add('score-glow-plus');
       
-      // إنشاء كونفيتي للنقاط العالية
-      if (team.score >= 5) {
-        createConfetti(teamCard);
+      // إنشاء كونفيتي محسن
+      if (team.score >= 3) {
+        createEnhancedConfetti(teamCard, team.score);
       }
       
+      // تحقق من التقدم في النقاط
+      checkScoreMilestones(oldScore, team.score, teamCard);
+      
       setTimeout(() => {
-        teamCard.classList.remove('team-card-pulse');
+        teamCard.classList.remove('team-card-pulse', 'team-card-victory');
         scoreElement.classList.remove('score-glow-plus');
-      }, 600);
+      }, 1500);
       
     } else if (change < 0) {
-      // مؤثرات الخصم
+      // مؤثرات الخصم المطورة
       playSound('wrong_answer');
       teamCard.classList.add('team-card-shake');
       scoreElement.classList.add('score-glow-minus');
+      
+      // إعادة تعيين الكومبو
+      if (window.comboCount && window.comboCount[teamId]) {
+        window.comboCount[teamId] = 0;
+      }
+      
+      // مؤثرات سلبية تدريجية
+      if (team.score <= 0) {
+        createFloatingEmojis(teamCard, ['😔', '💔', '😞']);
+        showMilestone(scoreElement, 'حاول مرة أخرى! 💪');
+      } else {
+        createFloatingEmojis(teamCard, ['😐', '⚠️']);
+      }
+      
+      // إزالة التأثيرات الخاصة إذا انخفضت النقاط
+      if (team.score < 15) {
+        teamCard.classList.remove('champion-glow');
+      }
       
       setTimeout(() => {
         teamCard.classList.remove('team-card-shake');
         scoreElement.classList.remove('score-glow-minus');
       }, 600);
     }
+    
+    // تحديث شريط التقدم للفريق
+    updateTeamProgressBar(teamId, team.score);
   }
 }
 
@@ -1345,18 +1961,30 @@ function createScoreEffect(scoreElement, change) {
   }, 1500);
 }
 
-// ===== إنشاء كونفيتي =====
-function createConfetti(teamCard) {
-  const colors = ['#4caf50', '#2196f3', '#ff9800', '#e91e63', '#9c27b0'];
+// ===== إنشاء كونفيتي محسن =====
+function createEnhancedConfetti(teamCard, score) {
+  const colors = ['#4caf50', '#2196f3', '#ff9800', '#e91e63', '#9c27b0', '#ffd700', '#ff5722'];
+  const shapes = ['circle', 'square', 'triangle'];
   const rect = teamCard.getBoundingClientRect();
+  const confettiCount = Math.min(score * 3, 30); // المزيد من الكونفيتي للنقاط العالية
   
-  for (let i = 0; i < 15; i++) {
+  for (let i = 0; i < confettiCount; i++) {
     const confetti = document.createElement('div');
     confetti.className = 'confetti';
     confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
     confetti.style.left = rect.left + Math.random() * rect.width + 'px';
     confetti.style.top = rect.top + rect.height / 2 + 'px';
-    confetti.style.animationDelay = Math.random() * 0.3 + 's';
+    confetti.style.animationDelay = Math.random() * 0.5 + 's';
+    confetti.style.animationDuration = (1.5 + Math.random()) + 's';
+    
+    // أشكال مختلفة
+    const shape = shapes[Math.floor(Math.random() * shapes.length)];
+    if (shape === 'square') {
+      confetti.style.borderRadius = '0';
+    } else if (shape === 'triangle') {
+      confetti.style.borderRadius = '0';
+      confetti.style.clipPath = 'polygon(50% 0%, 0% 100%, 100% 100%)';
+    }
     
     document.body.appendChild(confetti);
     
@@ -1364,11 +1992,329 @@ function createConfetti(teamCard) {
       if (confetti.parentElement) {
         confetti.remove();
       }
+    }, 3000);
+  }
+}
+
+// ===== إنشاء ألعاب نارية =====
+function createFireworks() {
+  const fireworksContainer = document.createElement('div');
+  fireworksContainer.className = 'fireworks';
+  document.body.appendChild(fireworksContainer);
+  
+  const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffd700'];
+  
+  for (let i = 0; i < 5; i++) {
+    setTimeout(() => {
+      const centerX = Math.random() * window.innerWidth;
+      const centerY = Math.random() * (window.innerHeight / 2);
+      
+      for (let j = 0; j < 20; j++) {
+        const firework = document.createElement('div');
+        firework.className = 'firework';
+        firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        firework.style.left = centerX + 'px';
+        firework.style.top = centerY + 'px';
+        
+        const angle = (j / 20) * 2 * Math.PI;
+        const distance = 50 + Math.random() * 100;
+        const endX = centerX + Math.cos(angle) * distance;
+        const endY = centerY + Math.sin(angle) * distance;
+        
+        firework.style.setProperty('--end-x', endX + 'px');
+        firework.style.setProperty('--end-y', endY + 'px');
+        
+        fireworksContainer.appendChild(firework);
+      }
+    }, i * 300);
+  }
+  
+  setTimeout(() => {
+    if (fireworksContainer.parentElement) {
+      fireworksContainer.remove();
+    }
+  }, 4000);
+}
+
+// ===== إنشاء مؤثر النجوم المتفجرة =====
+function createStarBurst(teamCard) {
+  const rect = teamCard.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+  
+  for (let i = 0; i < 8; i++) {
+    const star = document.createElement('div');
+    star.className = 'star-burst';
+    star.innerHTML = '⭐';
+    star.style.left = centerX + 'px';
+    star.style.top = centerY + 'px';
+    star.style.animationDelay = (i * 0.1) + 's';
+    
+    document.body.appendChild(star);
+    
+    setTimeout(() => {
+      if (star.parentElement) {
+        star.remove();
+      }
     }, 2000);
   }
 }
 
-// ===== إضافة مؤثر الريبل للأزرار =====
+// ===== إنشاء مؤثر التاج =====
+function createCrownEffect(teamCard) {
+  const rect = teamCard.getBoundingClientRect();
+  const crown = document.createElement('div');
+  crown.className = 'crown-effect';
+  crown.innerHTML = '👑';
+  crown.style.left = rect.left + rect.width / 2 - 20 + 'px';
+  crown.style.top = rect.top + 'px';
+  
+  document.body.appendChild(crown);
+  
+  setTimeout(() => {
+    if (crown.parentElement) {
+      crown.remove();
+    }
+  }, 2500);
+}
+
+// ===== إنشاء مؤثر الكأس =====
+function createTrophyAnimation(teamCard) {
+  const rect = teamCard.getBoundingClientRect();
+  const trophy = document.createElement('div');
+  trophy.className = 'trophy-animation';
+  trophy.innerHTML = '🏆';
+  trophy.style.left = rect.left + rect.width / 2 - 25 + 'px';
+  trophy.style.top = rect.top + rect.height / 2 + 'px';
+  
+  document.body.appendChild(trophy);
+  
+  setTimeout(() => {
+    if (trophy.parentElement) {
+      trophy.remove();
+    }
+  }, 2500);
+}
+
+// ===== إنشاء مؤثر البرق =====
+function createLightningEffect(teamCard) {
+  const rect = teamCard.getBoundingClientRect();
+  
+  for (let i = 0; i < 3; i++) {
+    const lightning = document.createElement('div');
+    lightning.className = 'lightning-effect';
+    lightning.innerHTML = '⚡';
+    lightning.style.left = rect.left + Math.random() * rect.width + 'px';
+    lightning.style.top = rect.top + Math.random() * rect.height + 'px';
+    lightning.style.animationDelay = (i * 0.2) + 's';
+    
+    document.body.appendChild(lightning);
+    
+    setTimeout(() => {
+      if (lightning.parentElement) {
+        lightning.remove();
+      }
+    }, 1500);
+  }
+}
+
+// ===== إنشاء أثر البريق =====
+function createSparkleTrail(teamCard) {
+  const rect = teamCard.getBoundingClientRect();
+  
+  for (let i = 0; i < 15; i++) {
+    const sparkle = document.createElement('div');
+    sparkle.className = 'sparkle-trail';
+    sparkle.style.left = rect.left + Math.random() * rect.width + 'px';
+    sparkle.style.top = rect.top + Math.random() * rect.height + 'px';
+    sparkle.style.animationDelay = (i * 0.1) + 's';
+    
+    document.body.appendChild(sparkle);
+    
+    setTimeout(() => {
+      if (sparkle.parentElement) {
+        sparkle.remove();
+      }
+    }, 2000);
+  }
+}
+
+// ===== إنشاء الرموز التعبيرية الطائرة =====
+function createFloatingEmojis(teamCard, emojis) {
+  const rect = teamCard.getBoundingClientRect();
+  
+  emojis.forEach((emoji, index) => {
+    const floatingEmoji = document.createElement('div');
+    floatingEmoji.className = 'floating-emoji';
+    floatingEmoji.innerHTML = emoji;
+    floatingEmoji.style.left = rect.left + (index * 20) + Math.random() * rect.width + 'px';
+    floatingEmoji.style.top = rect.top + rect.height + 'px';
+    floatingEmoji.style.animationDelay = (index * 0.3) + 's';
+    
+    document.body.appendChild(floatingEmoji);
+    
+    setTimeout(() => {
+      if (floatingEmoji.parentElement) {
+        floatingEmoji.remove();
+      }
+    }, 3500);
+  });
+}
+
+// ===== عرض رسالة الإنجاز =====
+function showMilestone(scoreElement, message) {
+  const rect = scoreElement.getBoundingClientRect();
+  const milestone = document.createElement('div');
+  milestone.className = 'score-milestone rainbow-text';
+  milestone.textContent = message;
+  milestone.style.left = rect.left + rect.width / 2 - 100 + 'px';
+  milestone.style.top = rect.top - 50 + 'px';
+  
+  document.body.appendChild(milestone);
+  
+  setTimeout(() => {
+    if (milestone.parentElement) {
+      milestone.remove();
+    }
+  }, 2500);
+}
+
+// ===== فحص معالم النقاط =====
+function checkScoreMilestones(oldScore, newScore, teamCard) {
+  const milestones = [3, 5, 8, 10, 15, 20];
+  
+  milestones.forEach(milestone => {
+    if (oldScore < milestone && newScore >= milestone) {
+      // تم الوصول لمعلم جديد
+      setTimeout(() => {
+        if (milestone === 20) {
+          createFireworks();
+          playSound('perfect-score');
+        } else if (milestone === 15) {
+          createTrophyAnimation(teamCard);
+          playSound('achievement-unlock');
+        } else if (milestone === 10) {
+          createLightningEffect(teamCard);
+          playSound('level-up');
+        }
+      }, 500);
+    }
+  });
+}
+
+// ===== تحديث شريط التقدم للفريق =====
+function updateTeamProgressBar(teamId, score) {
+  const progressBar = document.getElementById(`progress-${teamId}`);
+  if (progressBar) {
+    const maxScore = 20;
+    const percentage = Math.min((score / maxScore) * 100, 100);
+    progressBar.style.width = percentage + '%';
+    
+    // تغيير لون الشريط حسب التقدم
+    if (percentage >= 75) {
+      progressBar.style.background = 'linear-gradient(90deg, #4caf50, #8bc34a)';
+    } else if (percentage >= 50) {
+      progressBar.style.background = 'linear-gradient(90deg, #ff9800, #ffb74d)';
+    } else {
+      progressBar.style.background = 'linear-gradient(90deg, #2196f3, #64b5f6)';
+    }
+  }
+}
+
+// ===== إضافة نقاط مكافأة =====
+function addBonusPoints(teamId, points) {
+  const team = gameState.teams.find(t => t.id === teamId);
+  if (team) {
+    const oldScore = team.score;
+    team.score += points;
+    
+    const scoreElement = document.getElementById(`score-${teamId}`);
+    const teamCard = scoreElement.closest('.team-card');
+    
+    // تحديث النقاط مع مؤثرات خاصة للمكافأة
+    scoreElement.textContent = team.score;
+    
+    // مؤثرات المكافأة الخاصة
+    playSound('bonus-collect');
+    createFloatingEmojis(teamCard, ['🎁', '✨', '🌟', '🎊', '💰']);
+    createEnhancedConfetti(teamCard, points);
+    
+    // رسالة المكافأة
+    showMilestone(scoreElement, `مكافأة رائعة! +${points} 🎁`);
+    
+    teamCard.classList.add('team-card-victory');
+    scoreElement.classList.add('score-glow-plus');
+    
+    setTimeout(() => {
+      teamCard.classList.remove('team-card-victory');
+      scoreElement.classList.remove('score-glow-plus');
+    }, 2000);
+    
+    // تحديث شريط التقدم والمستوى
+    updateTeamProgressBar(teamId, team.score);
+    updateTeamLevel(teamId, team.score);
+    checkScoreMilestones(oldScore, team.score, teamCard);
+  }
+}
+
+// ===== إعادة تعيين نقاط الفريق =====
+function resetTeamScore(teamId) {
+  const team = gameState.teams.find(t => t.id === teamId);
+  if (team && confirm(`هل تريد إعادة تعيين نقاط ${team.name}؟`)) {
+    team.score = 0;
+    
+    const scoreElement = document.getElementById(`score-${teamId}`);
+    const teamCard = scoreElement.closest('.team-card');
+    
+    scoreElement.textContent = team.score;
+    
+    // إزالة جميع التأثيرات الخاصة
+    teamCard.classList.remove('champion-glow', 'team-card-victory');
+    
+    // تحديث شريط التقدم والمستوى
+    updateTeamProgressBar(teamId, team.score);
+    updateTeamLevel(teamId, team.score);
+    
+    playSound('Click');
+  }
+}
+
+// ===== تحديث مستوى الفريق =====
+function updateTeamLevel(teamId, score) {
+  const levelElement = document.getElementById(`level-${teamId}`);
+  if (levelElement) {
+    let level = '';
+    let emoji = '';
+    
+    if (score >= 20) {
+      level = 'أسطورة الفصل';
+      emoji = '🏆';
+    } else if (score >= 15) {
+      level = 'بطل الفصل';
+      emoji = '👑';
+    } else if (score >= 10) {
+      level = 'نجم ساطع';
+      emoji = '⭐';
+    } else if (score >= 8) {
+      level = 'متفوق';
+      emoji = '🌟';
+    } else if (score >= 5) {
+      level = 'ممتاز';
+      emoji = '🏅';
+    } else if (score >= 3) {
+      level = 'جيد جداً';
+      emoji = '✅';
+    } else if (score >= 1) {
+      level = 'جيد';
+      emoji = '👍';
+    } else {
+      level = 'مبتدئ';
+      emoji = '🚀';
+    }
+    
+    levelElement.innerHTML = `${emoji} ${level}`;
+  }
+}
 function createRippleEffect(button, event) {
   const ripple = document.createElement('span');
   const rect = button.getBoundingClientRect();
@@ -1472,16 +2418,24 @@ function updateTimerProgress() {
   document.getElementById('timerProgress').style.strokeDashoffset = offset;
 }
 
-// ===== عرض النتائج =====
+// ===== عرض النتائج مع احتفالات مطورة =====
 function showResults() {
   // ترتيب الفرق حسب النقاط
   const sortedTeams = [...gameState.teams].sort((a, b) => b.score - a.score);
   
+  // احتفالات خاصة للفائز
+  if (sortedTeams[0].score > 0) {
+    createFireworks();
+    setTimeout(() => createFireworks(), 1000);
+    setTimeout(() => createFireworks(), 2000);
+    playSound('epic-victory');
+  }
+  
   let resultsHTML = `
     <div class="modal-overlay" style="display: flex;">
-      <div class="modal">
+      <div class="modal" style="max-width: 700px;">
         <div class="modal-header">
-          <h3 class="modal-title">🏆 نتائج التحدي</h3>
+          <h3 class="modal-title rainbow-text">🏆 نتائج التحدي النهائية 🏆</h3>
           <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">
             <i class="fas fa-times"></i>
           </button>
@@ -1491,24 +2445,94 @@ function showResults() {
   `;
   
   sortedTeams.forEach((team, index) => {
-    const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '🏅';
+    let medal = '';
+    let celebration = '';
+    let bgColor = '';
+    let textColor = '';
+    
+    switch(index) {
+      case 0:
+        medal = '🥇';
+        celebration = '🎉🎊✨';
+        bgColor = 'linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 193, 7, 0.2))';
+        textColor = '#ff6f00';
+        break;
+      case 1:
+        medal = '🥈';
+        celebration = '🎊⭐';
+        bgColor = 'linear-gradient(135deg, rgba(192, 192, 192, 0.2), rgba(158, 158, 158, 0.2))';
+        textColor = '#424242';
+        break;
+      case 2:
+        medal = '🥉';
+        celebration = '🌟';
+        bgColor = 'linear-gradient(135deg, rgba(205, 127, 50, 0.2), rgba(160, 82, 45, 0.2))';
+        textColor = '#5d4037';
+        break;
+      default:
+        medal = '🏅';
+        celebration = '👍';
+        bgColor = 'rgba(255,255,255,0.1)';
+        textColor = 'var(--text-primary)';
+    }
+    
     resultsHTML += `
-      <div style="margin: 10px 0; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px;">
-        <span style="font-size: 1.5rem;">${medal}</span>
-        <strong>${team.name}</strong>
-        <span style="font-size: 1.2rem; color: var(--primary-color);">${team.score} نقطة</span>
+      <div style="margin: 15px 0; padding: 20px; background: ${bgColor}; border-radius: 15px; border: 2px solid ${index === 0 ? '#ffd700' : 'transparent'}; position: relative; overflow: hidden;">
+        ${index === 0 ? '<div style="position: absolute; top: -5px; right: -5px; font-size: 2rem;">👑</div>' : ''}
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: 15px;">
+            <span style="font-size: 2.5rem;">${medal}</span>
+            <div>
+              <div style="font-size: 1.3rem; font-weight: bold; color: ${textColor};">${team.name}</div>
+              <div style="font-size: 0.9rem; color: #666;">المركز ${index + 1}</div>
+            </div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 2rem; font-weight: bold; color: var(--primary-color);">${team.score}</div>
+            <div style="font-size: 0.8rem; color: #666;">نقطة</div>
+          </div>
+          <div style="font-size: 1.5rem;">${celebration}</div>
+        </div>
       </div>
     `;
   });
   
+  // إحصائيات إضافية
+  const totalScore = sortedTeams.reduce((sum, team) => sum + team.score, 0);
+  const averageScore = (totalScore / sortedTeams.length).toFixed(1);
+  const highestScore = sortedTeams[0].score;
+  
   resultsHTML += `
           </div>
+          
+          <!-- إحصائيات التحدي -->
+          <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; margin: 20px 0;">
+            <h4 style="color: var(--primary-color); margin-bottom: 10px; text-align: center;">📊 إحصائيات التحدي</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; text-align: center;">
+              <div>
+                <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary-color);">${totalScore}</div>
+                <div style="font-size: 0.8rem; color: #666;">إجمالي النقاط</div>
+              </div>
+              <div>
+                <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary-color);">${averageScore}</div>
+                <div style="font-size: 0.8rem; color: #666;">متوسط النقاط</div>
+              </div>
+              <div>
+                <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary-color);">${highestScore}</div>
+                <div style="font-size: 0.8rem; color: #666;">أعلى نقاط</div>
+              </div>
+            </div>
+          </div>
+          
           <div style="text-align: center;">
-            <button class="start-btn" onclick="location.reload()" style="margin-right: 10px;">
+            <button class="start-btn" onclick="location.reload()" style="margin: 5px;">
               <i class="fas fa-redo"></i> تحدي جديد
             </button>
-            <button class="start-btn" onclick="goHome()" style="background: var(--secondary-gradient);">
+            <button class="start-btn" onclick="goHome()" style="background: var(--secondary-gradient); margin: 5px;">
               <i class="fas fa-home"></i> العودة للرئيسية
+            </button>
+            <button class="start-btn" onclick="shareResults()" style="background: linear-gradient(135deg, #2196f3, #64b5f6); margin: 5px;">
+              <i class="fas fa-share"></i> مشاركة النتائج
             </button>
           </div>
         </div>
@@ -1518,9 +2542,44 @@ function showResults() {
   
   document.body.insertAdjacentHTML('beforeend', resultsHTML);
   
-  // تشغيل صوت الفوز
-  if (sortedTeams[0].score > 0) {
-    playSound('win');
+  // تشغيل صوت الفوز مع تأخير للتأثير
+  setTimeout(() => {
+    if (sortedTeams[0].score >= 15) {
+      playSound('perfect-score');
+    } else if (sortedTeams[0].score >= 10) {
+      playSound('achievement-unlock');
+    } else {
+      playSound('win');
+    }
+  }, 500);
+}
+
+// ===== مشاركة النتائج =====
+function shareResults() {
+  const sortedTeams = [...gameState.teams].sort((a, b) => b.score - a.score);
+  let resultsText = '🏆 نتائج تحدي المعرفة 🏆\n\n';
+  
+  sortedTeams.forEach((team, index) => {
+    const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '🏅';
+    resultsText += `${medal} ${team.name}: ${team.score} نقطة\n`;
+  });
+  
+  resultsText += '\n📚 تم إنشاؤه بواسطة نظام تحديات المعرفة';
+  
+  if (navigator.share) {
+    navigator.share({
+      title: 'نتائج تحدي المعرفة',
+      text: resultsText
+    }).catch(err => console.log('خطأ في المشاركة:', err));
+  } else {
+    // نسخ إلى الحافظة
+    navigator.clipboard.writeText(resultsText).then(() => {
+      alert('تم نسخ النتائج إلى الحافظة! 📋');
+    }).catch(() => {
+      // عرض النتائج في نافذة جديدة
+      const newWindow = window.open('', '_blank');
+      newWindow.document.write(`<pre style="font-family: Arial; direction: rtl; text-align: right; padding: 20px;">${resultsText}</pre>`);
+    });
   }
 }
 
@@ -1576,6 +2635,86 @@ document.addEventListener('DOMContentLoaded', function() {
   
   console.log('🎮 تم تحميل نظام تحديات المعرفة النظيف');
 });
+
+// ===== دوال الاحتفالات المطورة =====
+function createUltimateVictory(teamCard) {
+  // احتفال ملحمي للانتصار المطلق
+  const victoryOverlay = document.createElement('div');
+  victoryOverlay.className = 'ultimate-victory-overlay';
+  victoryOverlay.innerHTML = `
+    <div class="victory-content">
+      <div class="ultimate-crown">👑</div>
+      <div class="victory-text">انتصار ملحمي!</div>
+      <div class="victory-subtitle">فريق الأساطير</div>
+      <div class="victory-fireworks">
+        <div class="firework" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="firework" style="left: 30%; animation-delay: 0.5s;"></div>
+        <div class="firework" style="left: 70%; animation-delay: 1s;"></div>
+        <div class="firework" style="left: 90%; animation-delay: 1.5s;"></div>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(victoryOverlay);
+  
+  // إزالة الطبقة بعد 4 ثوان
+  setTimeout(() => {
+    victoryOverlay.style.opacity = '0';
+    setTimeout(() => victoryOverlay.remove(), 1000);
+  }, 4000);
+  
+  // تشغيل أصوات متتالية
+  playSound('epic-victory');
+  setTimeout(() => playSound('crown-ceremony'), 1000);
+  setTimeout(() => playSound('fireworks-burst'), 2000);
+  setTimeout(() => playSound('perfect-score'), 3000);
+}
+
+function createPerfectScoreAnimation() {
+  // انيميشن نقاط كاملة
+  const perfectOverlay = document.createElement('div');
+  perfectOverlay.className = 'perfect-score-overlay';
+  perfectOverlay.innerHTML = `
+    <div class="perfect-content">
+      <div class="perfect-title">✨ نقاط كاملة! ✨</div>
+      <div class="perfect-stars">
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+      </div>
+      <div class="perfect-message">أداء استثنائي!</div>
+    </div>
+  `;
+  
+  document.body.appendChild(perfectOverlay);
+  
+  setTimeout(() => {
+    perfectOverlay.style.opacity = '0';
+    setTimeout(() => perfectOverlay.remove(), 1000);
+  }, 3000);
+}
+
+function createComboEffect(comboCount) {
+  // مؤثر الكومبو للنقاط المتتالية
+  if (comboCount >= 3) {
+    const comboElement = document.createElement('div');
+    comboElement.className = 'combo-display';
+    comboElement.innerHTML = `
+      <div class="combo-text">كومبو ${comboCount}x!</div>
+      <div class="combo-effect">🔥</div>
+    `;
+    
+    document.body.appendChild(comboElement);
+    playSound('combo-hit');
+    
+    setTimeout(() => {
+      comboElement.style.opacity = '0';
+      setTimeout(() => comboElement.remove(), 500);
+    }, 2000);
+  }
+}
 </script>
 </body>
 </html>
