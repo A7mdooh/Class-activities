@@ -991,12 +991,16 @@
     }
 
     @media (max-width: 480px) {
+      /* الحفاظ على الشبكة 5×5 مع تقليل الحجم للهواتف */
       .hexagon-board {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(5, 1fr);
+        max-width: 280px;
+        gap: 0.25rem;
       }
 
       .hex-cell {
-        font-size: 1rem;
+        font-size: 0.9rem;
+        min-height: 45px;
       }
 
       .game-title {
@@ -1289,6 +1293,17 @@
 
       .game-subtitle {
         font-size: 0.8rem;
+      }
+
+      /* الحفاظ على الشبكة 5×5 مع تحسين العرض للأجهزة الصغيرة جداً */
+      .hexagon-board {
+        max-width: 240px;
+        gap: 0.15rem;
+      }
+
+      .hex-cell {
+        font-size: 0.8rem;
+        min-height: 40px;
       }
 
       .settings-panel {
@@ -4041,8 +4056,9 @@
           
           if (hexagonBoard) {
             if (e.detail.device === 'mobile') {
-              hexagonBoard.style.gridTemplateColumns = 'repeat(4, 1fr)';
-              hexagonBoard.style.maxWidth = '300px';
+              hexagonBoard.style.gridTemplateColumns = 'repeat(5, 1fr)';
+              hexagonBoard.style.maxWidth = '280px';
+              hexagonBoard.style.gap = '0.25rem';
             } else if (e.detail.device === 'tablet') {
               hexagonBoard.style.gridTemplateColumns = 'repeat(5, 1fr)';
               hexagonBoard.style.maxWidth = '400px';
@@ -4172,15 +4188,21 @@
           }
         }
 
-        // تحسين لوحة الحروف ديناميكياً
+        // تحسين لوحة الحروف ديناميكياً (الحفاظ على الشبكة 5×5)
         function adjustHexagonBoard() {
           const hexBoard = document.querySelector('.hexagon-board');
           if (hexBoard && window.responsiveHelper.isMobile()) {
             const viewportWidth = window.innerWidth;
+            // الحفاظ على الشبكة 5×5 في جميع الأحوال
+            hexBoard.style.gridTemplateColumns = 'repeat(5, 1fr)';
+            
             if (viewportWidth <= 360) {
-              hexBoard.style.maxWidth = '250px';
-              hexBoard.style.gap = '0.2rem';
+              hexBoard.style.maxWidth = '240px';
+              hexBoard.style.gap = '0.15rem';
             } else if (viewportWidth <= 480) {
+              hexBoard.style.maxWidth = '280px';
+              hexBoard.style.gap = '0.25rem';
+            } else {
               hexBoard.style.maxWidth = '300px';
               hexBoard.style.gap = '0.3rem';
             }
