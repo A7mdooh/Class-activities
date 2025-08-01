@@ -1911,29 +1911,7 @@
   function createFallingStars() {
     createFallingStarsEnhanced();
   }
-    for (let i = 0; i < 10; i++) {
-      setTimeout(() => {
-        const star = document.createElement('div');
-        star.innerHTML = '⭐';
-        star.style.cssText = `
-          position: fixed;
-          font-size: 2rem;
-          color: #FFD700;
-          z-index: 9999;
-          pointer-events: none;
-          animation: fallingStar 3s ease-in forwards;
-          left: ${Math.random() * 100}vw;
-          top: -50px;
-        `;
-        document.body.appendChild(star);
-        
-        setTimeout(() => {
-          if (star.parentNode) star.parentNode.removeChild(star);
-        }, 3000);
-      }, i * 200);
-    }
-  }
-  
+
   // تحكم صوتي ذكي محسن
   function playSmartSound(soundKey, options = {}) {
     const { volume = 0.7, delay = 0, loop = false } = options;
@@ -3421,35 +3399,16 @@ async function loadStudents() {
 
   // تحديث أزرار التحكم عند تحميل الصفحة
   document.addEventListener('DOMContentLoaded', function() {
-    console.log('📱 DOM جاهز - بدء تهيئة محسنة...');
+    console.log('📱 DOM جاهز - تحديث أزرار التحكم...');
     
     // إلغاء مؤقت الطوارئ عند بدء التحميل الطبيعي
     clearTimeout(emergencyTimeout);
     
-    // إخفاء مؤشر التحميل تدريجياً
-    setTimeout(() => {
-      try {
-        hideLoadingIndicator();
-        console.log('✅ تم إخفاء مؤشر التحميل بنجاح');
-      } catch (error) {
-        console.warn('⚠️ خطأ في إخفاء مؤشر التحميل:', error);
-        emergencyLoadingFix();
-      }
-    }, 1000); // تقليل الوقت إلى ثانية واحدة
-    
     try {
-      // تهيئة النشاط
-      if (typeof activity !== 'undefined' && activity.init) {
-        activity.init();
-        console.log('✅ تم تهيئة النشاط بنجاح');
-      } else {
-        console.warn('⚠️ لم يتم العثور على كائن النشاط');
-      }
-      
-      // تحديث أزرار التحكم
+      // تحديث أزرار التحكم فقط (بدون تهيئة النشاط مرة أخرى)
       setTimeout(() => {
         updateToggleButtons();
-      }, 1000);
+      }, 2000); // بعد أن يكون النشاط قد تم تهيئته في window.onload
       
       // إضافة مستمعات الأحداث للأزرار الجديدة
       const soundToggleBtn = document.getElementById('soundToggleBtn');
