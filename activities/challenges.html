@@ -156,28 +156,91 @@
     }
 
     .score-btn {
-      width: 50px;
-      height: 50px;
+      width: 55px;
+      height: 55px;
       border-radius: 50%;
-      border: none;
-      font-size: 1.5rem;
-      font-weight: 700;
+      border: 3px solid transparent;
+      font-size: 1.6rem;
+      font-weight: 800;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      position: relative;
+      overflow: hidden;
     }
 
     .score-btn.plus {
-      background: var(--gradient-success);
+      background: linear-gradient(135deg, #28a745, #20c997, #17a2b8);
       color: white;
+      border-color: #20c997;
+    }
+
+    .score-btn.plus::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s;
+    }
+
+    .score-btn.plus:hover::before {
+      left: 100%;
     }
 
     .score-btn.minus {
-      background: var(--gradient-danger);
+      background: linear-gradient(135deg, #dc3545, #fd7e14, #ffc107);
       color: white;
+      border-color: #fd7e14;
+    }
+
+    .score-btn.minus::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s;
+    }
+
+    .score-btn.minus:hover::before {
+      left: 100%;
     }
 
     .score-btn:hover {
-      transform: scale(1.1);
+      transform: scale(1.15) rotate(5deg);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .score-btn:active {
+      transform: scale(0.95);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    .score-btn.plus:hover {
+      background: linear-gradient(135deg, #20c997, #17a2b8, #007bff);
+      border-color: #17a2b8;
+      animation: plusGlow 0.6s ease-in-out infinite alternate;
+    }
+
+    .score-btn.minus:hover {
+      background: linear-gradient(135deg, #fd7e14, #ffc107, #e83e8c);
+      border-color: #ffc107;
+      animation: minusGlow 0.6s ease-in-out infinite alternate;
+    }
+
+    @keyframes plusGlow {
+      0% { box-shadow: 0 8px 25px rgba(32, 201, 151, 0.4); }
+      100% { box-shadow: 0 8px 35px rgba(32, 201, 151, 0.7); }
+    }
+
+    @keyframes minusGlow {
+      0% { box-shadow: 0 8px 25px rgba(253, 126, 20, 0.4); }
+      100% { box-shadow: 0 8px 35px rgba(253, 126, 20, 0.7); }
     }
 
     .challenge-actions {
@@ -1345,6 +1408,11 @@
       }
     }
 
+    // وظيفة مساعدة لتشغيل أصوات Kingdom بسهولة
+    playKingdomSound(filename, volume = 0.7) {
+      this.playSound(filename, volume, true);
+    }
+
     // قراءة صوتية عشوائية مع دعم العربية
     speakRandomHint() {
       if (!this.voiceHintsEnabled || !window.speechSynthesis) return;
@@ -2348,26 +2416,48 @@ async function loadStudents() {
     
     secText.innerHTML = `<i class="fas fa-clock"></i><br>${timeDisplay}`;
 
-    // تأثيرات التحذير المحسنة
+    // تأثيرات التحذير المحسنة مع أصوات Kingdom
     if (timeLeft <= 10 && timeLeft > 0) {
       wrapper.classList.add('shake');
       circle.style.stroke = '#ff4444'; // أحمر للتحذير
       secText.style.color = '#ff4444';
       
-      if (timeLeft <= 5) {
-        activity.playSound('countdown-beep.mp3');
+      // أصوات تحذيرية مخصصة
+      if (timeLeft <= 3) {
+        // العد التنازلي النهائي
+        activity.enhancer.playKingdomSound('final-countdown.mp3', 0.8);
+        secText.style.animation = 'pulse 0.3s infinite';
+        secText.style.fontSize = '1.4rem';
+        secText.style.fontWeight = 'bold';
+      } else if (timeLeft <= 5) {
+        // تحذير شديد
+        activity.enhancer.playKingdomSound('time-warning.mp3', 0.7);
         secText.style.animation = 'pulse 0.5s infinite';
+        secText.style.fontSize = '1.3rem';
+      } else {
+        // تحذير عادي
+        activity.enhancer.playKingdomSound('countdown-tick.mp3', 0.6);
+        secText.style.animation = 'pulse 0.8s infinite';
       }
     } else if (timeLeft <= 30) {
       circle.style.stroke = '#ff8800'; // برتقالي للتنبيه
       secText.style.color = '#ff8800';
       wrapper.classList.remove('shake');
       secText.style.animation = 'none';
+      secText.style.fontSize = '1.2rem';
+      secText.style.fontWeight = 'normal';
+      
+      // صوت تنبيه خفيف كل 10 ثواني
+      if (timeLeft % 10 === 0) {
+        activity.enhancer.playKingdomSound('time-warp.mp3', 0.4);
+      }
     } else {
       circle.style.stroke = 'var(--accent-color)';
       secText.style.color = 'var(--accent-color)';
       wrapper.classList.remove('shake');
       secText.style.animation = 'none';
+      secText.style.fontSize = '1.2rem';
+      secText.style.fontWeight = 'normal';
     }
   }
   function populateStudentSelectors(cls) {
@@ -2477,17 +2567,22 @@ async function loadStudents() {
       return;
     }
 
-    // تشغيل أصوات وتأثيرات البداية
-    activity.playSound('start-timer.mp3');
+    // تشغيل أصوات وتأثيرات البداية مع Kingdom Sounds
+    activity.enhancer.playKingdomSound('epic-charge.mp3', 0.8);
     activity.enhancer.showToast(
       '🚀 جاري التحضير!', 
-      'استعدوا للتحدي المثير...', 
+      'استعدوا للتحدي المثير... القوة في الاستعداد!', 
       'info',
       3000
     );
     
     // إضافة تأثير النبض للأزرار النشطة
     activity.enhancer.addMotivationalPulse('#challengeControls');
+    
+    // صوت إضافي للترقب
+    setTimeout(() => {
+      activity.enhancer.playKingdomSound('war-drum.mp3', 0.4);
+    }, 1000);
     
     showInstructionModal(mode);
   }
@@ -2712,27 +2807,40 @@ async function loadStudents() {
     }
   }
 
-  // بدء المؤقت
+  // بدء المؤقت مع أصوات Kingdom محسنة
   function startTimer() {
+    // صوت بداية قوي ومحفز
+    activity.enhancer.playKingdomSound('timer-start.mp3', 0.8);
+    
     updateTimer();
     timer = setInterval(() => {
       timeLeft--;
       updateTimer();
       if (timeLeft <= 0) {
         clearInterval(timer);
-        activity.playSound('long-beep.mp3');
+        // صوت نهاية مختلف بناءً على السياق
+        activity.enhancer.playKingdomSound('time-up.mp3', 0.9);
         showTimeUpPopup();
       }
     }, 1000);
   }
 
-  // عرض نافذة انتهاء الوقت
+  // عرض نافذة انتهاء الوقت مع تأثيرات محسنة
   function showTimeUpPopup() {
     const popup = document.getElementById('timeUpPopup');
     popup.style.display = 'block';
     
+    // تأثير اهتزاز للشاشة
+    document.body.style.animation = 'shake 0.5s ease-in-out 2';
+    
+    // صوت إضافي للتأكيد
+    setTimeout(() => {
+      activity.enhancer.playKingdomSound('thunder-rumble.mp3', 0.6);
+    }, 500);
+    
     setTimeout(() => {
       popup.style.display = 'none';
+      document.body.style.animation = 'none';
       nextTurn();
     }, 2000);
   }
@@ -2861,10 +2969,8 @@ async function loadStudents() {
     }
   }
 
-  // ==== تعديل النقاط المحسن مع ChallengeEnhancer ====
+  // ==== تعديل النقاط المحسن مع ChallengeEnhancer وأصوات Kingdom ====
   function adjustScore(team, val) {
-    activity.playSound('Click.mp3');
-    
     const scoreElement = document.getElementById(`score${team}`);
     const statusElement = document.getElementById(`status${team}`);
     const teamCard = document.querySelector(`[data-team="${team}"]`);
@@ -2877,7 +2983,7 @@ async function loadStudents() {
     scoreElement.textContent = score;
     teamScores[team.toString()] = score;
 
-    // تأثيرات وأصوات محسنة باستخدام ChallengeEnhancer
+    // تأثيرات وأصوات محسنة باستخدام Kingdom Sounds
     if (val > 0) {
       scoreElement.style.color = '#28a745';
       scoreElement.style.transform = 'scale(1.3)';
@@ -2886,13 +2992,16 @@ async function loadStudents() {
       // تحفيز اللاعب بناءً على النقاط الجديدة
       activity.motivatePlayer(playerName, score);
       
-      // أصوات إيجابية متنوعة
-      const positiveSounds = ['crystal-ping.mp3', 'bonus-collect.mp3', 'level-up.mp3'];
-      activity.enhancer.playSound(
-        positiveSounds[Math.floor(Math.random() * positiveSounds.length)], 
-        0.6, 
-        true
-      );
+      // أصوات إيجابية من Kingdom مع منطق ذكي
+      if (score >= 10) {
+        activity.enhancer.playKingdomSound('perfect-score.mp3', 0.8);
+      } else if (score >= 5) {
+        activity.enhancer.playKingdomSound('crystal-bonus.mp3', 0.7);
+      } else if (val >= 2) {
+        activity.enhancer.playKingdomSound('bonus-collect.mp3', 0.6);
+      } else {
+        activity.enhancer.playKingdomSound('point-earn.mp3', 0.5);
+      }
       
       // تأثير الجسيمات للنقاط الإيجابية
       createScoreParticles(scoreElement, '+' + val, '#28a745');
@@ -2910,7 +3019,8 @@ async function loadStudents() {
         2500
       );
       
-      activity.enhancer.playSound('ancient-bell.mp3', 0.4, true);
+      // صوت تشجيعي بدلاً من محبط
+      activity.enhancer.playKingdomSound('wisdom-chime.mp3', 0.4);
       
       // تأثير الاهتزاز للنقاط السالبة
       if (teamCard) {
@@ -3050,10 +3160,12 @@ async function loadStudents() {
     }
   }
 
-  // ==== إنهاء التحدي المحسن ====
+  // ==== إنهاء التحدي المحسن مع Kingdom Sounds ====
   function endChallenge() {
     clearInterval(timer);
-    activity.playSound('end-timer.mp3');
+    
+    // صوت نهاية احتفالي
+    activity.enhancer.playKingdomSound('battle-victory.mp3', 0.9);
     
     const mode = document.getElementById('mode').value;
     const winnerDisplay = document.getElementById('winnerDisplay');
@@ -3061,6 +3173,12 @@ async function loadStudents() {
     // تحديث الإحصائيات
     challengeStats.totalChallenges++;
     challengeStats.completedChallenges++;
+
+    // إضافة تأثيرات احتفالية
+    setTimeout(() => {
+      activity.enhancer.playKingdomSound('royal-fanfare.mp3', 0.7);
+      activity.enhancer.createCelebrationBurst();
+    }, 500);
 
     if (mode === 'multiTeams') {
       const count = parseInt(document.getElementById('teamCountSelect').value);
