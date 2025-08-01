@@ -8,24 +8,98 @@
 <link rel="stylesheet" href="../assets/css/responsive.css">
 <link rel="stylesheet" href="../config/unified-styles-template.css">
   <style>
-    /* ثيم محدث وحديث للصفحة */
+    /* ثيم صفحة التحميل العُماني */
     :root {
-      --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-      --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-      --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-      --accent-color: #667eea;
-      --text-dark: #2c3e50;
-      --text-light: #7f8c8d;
-      --bg-light: #f8f9fc;
-      --shadow-soft: 0 10px 30px rgba(0,0,0,0.1);
-      --shadow-medium: 0 15px 35px rgba(0,0,0,0.15);
-      --shadow-large: 0 20px 40px rgba(0,0,0,0.2);
+      /* ألوان صفحة التحميل */
+      --primary-color: #00796B;
+      --primary-light: #4DB6AC;
+      --primary-dark: #004D40;
+      --secondary-color: #FF5722;
+      --accent-color: #26a69a;
+      --success-color: #4CAF50;
+      --warning-color: #FF9800;
+      --error-color: #F44336;
+      
+      /* تدرجات متطابقة مع صفحة التحميل */
+      --primary-gradient: linear-gradient(135deg, #26a69a 0%, #00796B 100%);
+      --primary-gradient-start: #26a69a;
+      --primary-gradient-end: #00796B;
+      --secondary-gradient: linear-gradient(135deg, #FF5722 0%, #FF7043 100%);
+      --success-gradient: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
+      --warning-gradient: linear-gradient(135deg, #FF9800 0%, #FFB74D 100%);
+      
+      /* ألوان النص والخلفية */
+      --text-dark: #212121;
+      --text-light: #757575;
+      --bg-light: #FAFAFA;
+      
+      /* ظلال */
+      --shadow-soft: 0 10px 30px rgba(0,121,107,0.1);
+      --shadow-medium: 0 15px 35px rgba(0,121,107,0.15);
+      --shadow-large: 0 20px 40px rgba(0,121,107,0.2);
       --border-radius: 20px;
     }
 
+    /* تصميم أزرار التحكم العلوية */
+    .control-buttons {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .control-btn {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1));
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(0, 121, 107, 0.2);
+    }
+
+    .control-btn:hover {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(0, 121, 107, 0.3);
+    }
+
+    .control-btn:active {
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 768px) {
+      .control-buttons {
+        top: 10px;
+        right: 10px;
+        gap: 8px;
+      }
+      
+      .control-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 1.1rem;
+      }
+    }
+
     body {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg,
+        #e0f7fa 0%,
+        #b2dfdb 25%,
+        #80cbc4 50%,
+        #4db6ac 75%,
+        #26a69a 100%);
+      background-attachment: fixed;
       min-height: 100vh;
       font-family: 'Cairo', sans-serif;
     }
@@ -1484,16 +1558,16 @@
 </style>
 </head>
 <body>
-<!-- أزرار التحكم الموحدة -->
+<!-- أزرار التحكم المحدثة -->
 <div class="control-buttons mobile-grid-3">
-  <button class="control-btn touch-target" id="backBtn" title="العودة للقائمة الرئيسية">
-    <i class="fas fa-home"></i>
+  <button class="control-btn touch-target" id="activitiesBtn" title="العودة للأنشطة" onclick="goToActivities()">
+    <i class="fas fa-th-large"></i>
   </button>
   <button class="control-btn touch-target" id="fullscreenBtn" title="ملء الشاشة">
-    <i class="fas fa-expand"></i>
+    <i class="fas fa-expand-arrows-alt"></i>
   </button>
-  <button class="control-btn touch-target" id="muteBtn" title="كتم/تشغيل الصوت">
-    <i class="fas fa-volume-up"></i>
+  <button class="control-btn touch-target" id="settingsBtn" title="الإعدادات" onclick="showSettings()">
+    <i class="fas fa-cog"></i>
   </button>
 </div>
 
@@ -4280,6 +4354,34 @@ async function loadStudents() {
   window.addEventListener('beforeunload', function() {
     if (activity && activity.cleanup) {
       activity.cleanup();
+    }
+  });
+
+  // وظائف الأزرار المحدثة
+  function goToActivities() {
+    activity.playSound('cosmic-click.mp3');
+    window.location.href = '../index.html';
+  }
+
+  function showSettings() {
+    activity.playSound('cosmic-click.mp3');
+    // يمكن إضافة نافذة إعدادات هنا لاحقاً
+    alert('قريباً: نافذة الإعدادات المتقدمة');
+  }
+
+  // تحسين وظيفة ملء الشاشة
+  document.getElementById('fullscreenBtn').addEventListener('click', function() {
+    activity.playSound('cosmic-click.mp3');
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(err => {
+        console.log('خطأ في ملء الشاشة:', err);
+      });
+      this.innerHTML = '<i class="fas fa-compress-arrows-alt"></i>';
+      this.title = 'الخروج من ملء الشاشة';
+    } else {
+      document.exitFullscreen();
+      this.innerHTML = '<i class="fas fa-expand-arrows-alt"></i>';
+      this.title = 'ملء الشاشة';
     }
   });
 
