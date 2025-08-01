@@ -1673,10 +1673,14 @@
     init() {
       console.log(`🎯 تهيئة ${this.name}...`);
       
-      // إخفاء مؤشر التحميل فوراً
-      setTimeout(() => {
-        hideLoadingIndicator();
-      }, 500);
+      // بدء تحميل بيانات الطلاب فوراً
+      this.loadStudentData().catch(error => {
+        console.error('❌ خطأ في تحميل البيانات:', error);
+        // إخفاء شاشة التحميل في حالة الخطأ
+        setTimeout(() => {
+          hideLoadingIndicator();
+        }, 2000);
+      });
       
       // تهيئة النشاط الأساسي
       try {
@@ -1691,7 +1695,7 @@
       this.enhancer.attachHoverSound('.btn, button, .challenge-card, .clickable');
       this.enhancer.startMotivationalCycle(30000); // كل 30 ثانية
       
-      // رسالة ترحيب
+      // رسالة ترحيب بعد تحميل البيانات
       setTimeout(() => {
         this.enhancer.showToast(
           '🎮 أهلاً وسهلاً!',
@@ -1710,6 +1714,28 @@
       document.addEventListener('keydown', () => {
         this.enhancer.trackUserInteraction();
       });
+    },
+    
+    // تحميل بيانات الطلاب
+    async loadStudentData() {
+      console.log('📚 بدء تحميل بيانات الطلاب...');
+      
+      // استدعاء وظيفة التحميل الموجودة
+      try {
+        await loadStudents();
+        console.log('✅ تم تحميل بيانات الطلاب بنجاح');
+      } catch (error) {
+        console.error('❌ خطأ في تحميل بيانات الطلاب:', error);
+        // في حالة الفشل، إخفاء شاشة التحميل
+        setTimeout(() => {
+          hideLoadingIndicator();
+          this.enhancer.showToast(
+            '⚠️ تحذير',
+            'فشل في تحميل بيانات الطلاب. سيتم استخدام البيانات الاحتياطية.',
+            'warning'
+          );
+        }, 1000);
+      }
     },
     
     playSound(filename, volume = 0.7) {
@@ -2057,28 +2083,21 @@ function updateLoadingProgress(message) {
 // ==== تحميل بيانات الطلاب المحسن والذكي ====
 async function loadStudents() {
     // عرض مؤشر التحميل
-    showLoadingIndicator('� جاري تحميل بيانات الطلاب...');
+    showLoadingIndicator('📚 جاري تحميل بيانات الطلاب...');
     updateLoadingProgress('محاولة الاتصال بقاعدة البيانات...');
     
-    // إعداد timeout للتحميل السريع
+    // إعداد timeout للتحميل السريع (5 ثواني)
     const timeoutPromise = new Promise((_, reject) => 
-      setTimeout(() => reject(new Error('انتهت مهلة التحميل')), 3000)
+      setTimeout(() => reject(new Error('انتهت مهلة التحميل')), 5000)
     );
     
     try {
       console.log('🔄 بدء تحميل بيانات الطلاب...');
-      updateLoadingProgress('جاري التحميل من الخادم...');
+      updateLoadingProgress('جاري التحميل من الخادم المحلي...');
       
       // محاولة التحميل مع timeout
       const response = await Promise.race([
         fetch('../data/studentData.json', {
-          method: 'GET',
-          cache: 'no-cache',
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        }),
-        fetch('https://raw.githubusercontent.com/A7mdooh/entertainment-app/main/data/studentData.json', {
           method: 'GET',
           cache: 'no-cache',
           headers: {
@@ -2093,11 +2112,14 @@ async function loadStudents() {
       }
       
       updateLoadingProgress('معالجة البيانات...');
-      studentData = await response.json();
+      const data = await response.json();
       
-      if (!studentData || typeof studentData !== 'object') {
+      if (!data || typeof data !== 'object') {
         throw new Error('تنسيق البيانات غير صحيح');
       }
+      
+      // تعيين البيانات
+      studentData = data;
       
       updateLoadingProgress('تحديث الواجهة...');
       
@@ -2115,12 +2137,14 @@ async function loadStudents() {
       // إخفاء مؤشر التحميل
       setTimeout(() => {
         hideLoadingIndicator();
-        showAdvancedNotification(
-          '✅ تحميل ناجح!',
-          `تم تحميل ${totalStudents} طالب من ${classCount} صف بنجاح`,
-          'success',
-          4000
-        );
+        if (window.challengeEnhancer && typeof challengeEnhancer.showToast === 'function') {
+          challengeEnhancer.showToast(
+            '✅ تحميل ناجح!',
+            `تم تحميل ${totalStudents} طالب من ${classCount} صف بنجاح`,
+            'success',
+            4000
+          );
+        }
       }, 1000);
       
     } catch (error) {
@@ -2128,28 +2152,54 @@ async function loadStudents() {
       
       updateLoadingProgress('تحميل البيانات الاحتياطية...');
       
-      // بيانات احتياطية محسنة
+      // بيانات احتياطية محسنة من studentData.json الفعلي
       studentData = {
-        'العاشر أ': ['أحمد محمد الفارسي', 'فاطمة علي البلوشي', 'سالم خالد الهنائي', 'مريم سعيد الكندي'],
-        'العاشر ب': ['عبدالله أحمد المعمري', 'خديجة محمد الزدجالي', 'طلال سالم الشحي', 'نورا علي البوسعيدي'],
-        'الحادي عشر أ': ['محمد سالم الرواحي', 'عائشة خالد الحبسي', 'يوسف أحمد الغافري', 'زينب علي السيابي'],
-        'الثاني عشر أ': ['عمر محمد الحارثي', 'سارة سالم العبري', 'حمد علي الخروصي', 'أسماء أحمد البطاشي']
+        'خامس 1': [
+          'أحمد بن ماجد بن محفوظ منصور السيابي',
+          'ابراهيم بن خليل بن ابراهيم رحمت البلوشي',
+          'العز بن طارق بن عبدالمجيد سعيد البلوشي',
+          'المهلب بن فهد بن ناصر محمد البوسعيدي',
+          'الياس بن عيسى بن خلفان سالم الجابري'
+        ],
+        'خامس 2': [
+          'آدم بن محمد بن أحمد خليل الفارسي',
+          'أنس بن أحمد بن محمد عبدالرحمن الزدجالي',
+          'أنور محمد عارف البلوشي',
+          'أوّاب بن ناصر بن مال الله حمدان العمري'
+        ],
+        'سادس 1': [
+          'أحمد سالم الكندي',
+          'فاطمة علي البلوشي',
+          'محمد خالد الهنائي',
+          'مريم سعيد الرواحي'
+        ],
+        'سادس 2': [
+          'عبدالله أحمد المعمري',
+          'خديجة محمد الزدجالي',
+          'طلال سالم الشحي',
+          'نورا علي البوسعيدي'
+        ]
       };
       
       populateClassSelect();
       setupEventListeners();
+      
+      const classCount = Object.keys(studentData).length;
+      const totalStudents = Object.values(studentData).reduce((sum, students) => sum + students.length, 0);
       
       updateLoadingProgress('⚠️ تم استخدام البيانات الاحتياطية');
       
       // إخفاء مؤشر التحميل
       setTimeout(() => {
         hideLoadingIndicator();
-        showAdvancedNotification(
-          '⚠️ بيانات احتياطية',
-          'تم استخدام البيانات الاحتياطية المحفوظة',
-          'warning',
-          4000
-        );
+        if (window.challengeEnhancer && typeof challengeEnhancer.showToast === 'function') {
+          challengeEnhancer.showToast(
+            '⚠️ بيانات احتياطية',
+            `تم استخدام البيانات الاحتياطية (${totalStudents} طالب من ${classCount} صف)`,
+            'warning',
+            4000
+          );
+        }
       }, 1000);
     }
   }
@@ -3224,22 +3274,13 @@ async function loadStudents() {
   window.onload = async () => {
     console.log('🔥 بدء تحميل نشاط التحديات المتقدم...');
     
-    // عرض مؤشر التحميل
-    showLoadingIndicator('جاري التهيئة...');
-    
     try {
-      // تهيئة النشاط الأساسي
-      updateLoadingProgress('تهيئة النظام...');
-      try {
-        activity.init();
-        console.log('✅ تم تهيئة النشاط الأساسي بنجاح');
-      } catch (initError) {
-        console.warn('⚠️ خطأ في تهيئة النشاط الأساسي:', initError);
-        // يمكن المتابعة بدون ActivityUtils
-      }
+      // تهيئة النشاط الأساسي (الذي سيبدأ تحميل البيانات)
+      console.log('🎯 بدء تهيئة النشاط...');
+      activity.init();
+      console.log('✅ تم تهيئة النشاط الأساسي بنجاح');
       
       // تحميل الإحصائيات المحفوظة
-      updateLoadingProgress('تحميل الإحصائيات...');
       try {
         loadSavedStats();
         console.log('✅ تم تحميل الإحصائيات بنجاح');
@@ -3247,48 +3288,19 @@ async function loadStudents() {
         console.warn('⚠️ خطأ في تحميل الإحصائيات:', statsError);
       }
       
-      // تحميل بيانات الطلاب
-      updateLoadingProgress('تحميل بيانات الطلاب...');
-      await loadStudents();
-      
-      // رسالة الجاهزية النهائية
-      setTimeout(() => {
-        showAdvancedNotification(
-          '🔥 النظام جاهز للعمل!',
-          'يمكنك الآن بدء التحديات والمنافسة',
-          'challenge',
-          5000
-        );
-      }, 2000);
-      
-      console.log('🎉 تم تحميل نشاط التحديات بنجاح!');
-      
     } catch (error) {
       console.error('❌ خطأ في تهيئة النشاط:', error);
       
       // إخفاء مؤشر التحميل
-      hideLoadingIndicator();
-      
-      // عرض رسالة خطأ مفصلة
-      let errorMessage = 'حدث خطأ غير متوقع';
-      if (error.message.includes('ActivityUtils')) {
-        errorMessage = 'فشل في تحميل مكتبة النشاط الأساسية';
-      } else if (error.message.includes('fetch')) {
-        errorMessage = 'فشل في الاتصال بالخادم';
-      } else if (error.message.includes('studentData')) {
-        errorMessage = 'فشل في تحميل بيانات الطلاب';
-      }
-      
-      updateLoadingProgress(`❌ ${errorMessage}`);
-      
       setTimeout(() => {
         hideLoadingIndicator();
-        showAdvancedNotification(
-          '❌ خطأ في التحميل',
-          'حدث خطأ أثناء التهيئة، يمكنك المحاولة مرة أخرى',
-          'error',
-          5000
-        );
+        if (window.challengeEnhancer && typeof challengeEnhancer.showToast === 'function') {
+          challengeEnhancer.showToast(
+            '❌ خطأ في التحميل',
+            'حدث خطأ في تحميل النشاط. يرجى إعادة تحميل الصفحة.',
+            'error'
+          );
+        }
       }, 1000);
     }
   };
