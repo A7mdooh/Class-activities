@@ -155,6 +155,188 @@
       --omani-purple: #9C27B0;
     }
 
+    /* ===== أزرار التحكم العلوية المطورة ===== */
+    .control-buttons-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 12px;
+      z-index: 1500;
+      flex-wrap: wrap;
+    }
+
+    .control-btn {
+      width: 55px;
+      height: 55px;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      color: white;
+      background: linear-gradient(135deg, var(--omani-red) 0%, #ff4569 100%);
+      box-shadow: 0 6px 20px rgba(220, 20, 60, 0.3);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .control-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .control-btn:hover::before {
+      left: 100%;
+    }
+
+    .control-btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 25px rgba(220, 20, 60, 0.4);
+    }
+
+    .control-btn:active {
+      transform: translateY(-1px) scale(0.98);
+    }
+
+    /* ألوان مخصصة للأزرار */
+    #backBtn {
+      background: linear-gradient(135deg, var(--omani-blue) 0%, #42a5f5 100%);
+      box-shadow: 0 6px 20px rgba(33, 150, 243, 0.3);
+    }
+
+    #backBtn:hover {
+      box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
+    }
+
+    #muteBtn {
+      background: linear-gradient(135deg, var(--omani-purple) 0%, #ba68c8 100%);
+      box-shadow: 0 6px 20px rgba(156, 39, 176, 0.3);
+    }
+
+    #muteBtn:hover {
+      box-shadow: 0 8px 25px rgba(156, 39, 176, 0.4);
+    }
+
+    #muteBtn.muted {
+      background: linear-gradient(135deg, #757575 0%, #9e9e9e 100%);
+      box-shadow: 0 6px 20px rgba(117, 117, 117, 0.3);
+    }
+
+    #instructionsBtn {
+      background: linear-gradient(135deg, var(--omani-green) 0%, #66bb6a 100%);
+      box-shadow: 0 6px 20px rgba(34, 139, 34, 0.3);
+    }
+
+    #instructionsBtn:hover {
+      box-shadow: 0 8px 25px rgba(34, 139, 34, 0.4);
+    }
+
+    #fullscreenBtn {
+      background: linear-gradient(135deg, var(--omani-gold) 0%, #ffeb3b 100%);
+      box-shadow: 0 6px 20px rgba(255, 215, 0, 0.3);
+      color: #333;
+    }
+
+    #fullscreenBtn:hover {
+      box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+    }
+
+    /* تأثيرات متحركة للأيقونات */
+    .control-btn i {
+      transition: all 0.3s ease;
+    }
+
+    .control-btn:hover i {
+      transform: scale(1.1);
+    }
+
+    #backBtn:hover i {
+      animation: bounceLeft 0.6s ease-in-out;
+    }
+
+    #muteBtn:hover i {
+      animation: pulse 0.6s ease-in-out;
+    }
+
+    #instructionsBtn:hover i {
+      animation: spin 0.6s ease-in-out;
+    }
+
+    #fullscreenBtn:hover i {
+      animation: expand 0.6s ease-in-out;
+    }
+
+    /* أنيميشن للأيقونات */
+    @keyframes bounceLeft {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(-3px); }
+    }
+
+    @keyframes expand {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* نصائح الأدوات المطورة */
+    .control-btn[title] {
+      position: relative;
+    }
+
+    .control-btn[title]:hover::after {
+      content: attr(title);
+      position: absolute;
+      bottom: -45px;
+      right: 50%;
+      transform: translateX(50%);
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      white-space: nowrap;
+      z-index: 1000;
+      animation: tooltipFadeIn 0.3s ease-out;
+    }
+
+    @keyframes tooltipFadeIn {
+      from { opacity: 0; transform: translateX(50%) translateY(5px); }
+      to { opacity: 1; transform: translateX(50%) translateY(0); }
+    }
+
+    /* تحسينات للأجهزة المحمولة */
+    @media (max-width: 768px) {
+      .control-buttons-container {
+        top: 10px;
+        right: 10px;
+        gap: 8px;
+      }
+
+      .control-btn {
+        width: 48px;
+        height: 48px;
+        font-size: 1.1rem;
+      }
+
+      .control-btn[title]:hover::after {
+        display: none; /* إخفاء النصائح على الأجهزة المحمولة */
+      }
+    }
+
     /* ===== أنماط عامة ===== */
     .main-container {
       max-width: 1200px;
@@ -2346,13 +2528,22 @@
 
         <div class="form-group mobile-full-width">
           <label for="timePerStudent">
-            <i class="fas fa-clock"></i> وقت كل طالب (بالثواني)
+            <i class="fas fa-clock"></i> وقت كل طالب
           </label>
           <select id="timePerStudent" class="form-input mobile-full-width">
             <option value="30">30 ثانية</option>
             <option value="45" selected>45 ثانية</option>
-            <option value="60">دقيقة واحدة</option>
-            <option value="90">دقيقة ونصف</option>
+            <option value="60">1 دقيقة</option>
+            <option value="90">1.5 دقيقة</option>
+            <option value="120">2 دقيقة</option>
+            <option value="180">3 دقائق</option>
+            <option value="300">5 دقائق</option>
+            <option value="600">10 دقائق</option>
+            <option value="900">15 دقيقة</option>
+            <option value="1200">20 دقيقة</option>
+            <option value="1800">30 دقيقة</option>
+            <option value="2400">40 دقيقة</option>
+            <option value="2700">45 دقيقة</option>
           </select>
         </div>
 
@@ -2504,6 +2695,12 @@
         // بديل بسيط لـ ActivityManager (مستقل تماماً)
         ActivityManager = {
           playSound: (sound) => {
+            // التحقق من حالة الكتم العامة
+            if (window.globalMuted) {
+              console.log('🔇 الصوت مكتوم:', sound);
+              return;
+            }
+            
             console.log('🎵 تشغيل صوت:', sound);
             
             // تشغيل الصوت من مجلد kingdom-sounds
@@ -2611,6 +2808,9 @@
     let currentSpeakerIndex = 0;
     let gameStartTime = 0; // متغير لتسجيل وقت بداية النشاط
     let participants = []; // قائمة المشاركين في القصة
+    
+    // متغير التحكم في الصوت العام
+    window.globalMuted = false;
 
     // دوال إدارة النافذة المطورة
     function showResults() {
@@ -2780,8 +2980,8 @@
         const randomSound = categoryData.sounds[Math.floor(Math.random() * categoryData.sounds.length)];
         const randomMessage = categoryData.messages[Math.floor(Math.random() * categoryData.messages.length)];
         
-        // تشغيل الصوت
-        if (typeof ActivityManager !== 'undefined' && ActivityManager.playSound) {
+        // تشغيل الصوت فقط إذا لم يكن مكتوماً
+        if (!window.globalMuted && typeof ActivityManager !== 'undefined' && ActivityManager.playSound) {
           ActivityManager.playSound(randomSound.replace('.mp3', ''));
         }
         
@@ -4071,27 +4271,86 @@
     function initializeStoryActivity() {
       loadStudentData();
       
-      // معالج أزرار التحكم
+      // معالج أزرار التحكم العلوية المطورة
       document.getElementById('backBtn').addEventListener('click', () => {
-        // إعادة تشغيل مباشرة دون تأكيد
-        ActivityManager.showNotification('🔄 جاري إعادة تشغيل النشاط...', 'info');
+        ActivityManager.showNotification('🏠 العودة للصفحة الرئيسية...', 'info');
         setTimeout(() => {
-          window.location.reload();
-        }, 1000);
+          window.location.href = '../main.html';
+        }, 800);
       });
       
+      // متغير لحالة الصوت
+      
       document.getElementById('muteBtn').addEventListener('click', () => {
-        ActivityManager.toggleMute();
-        const icon = document.querySelector('#muteBtn i');
-        icon.className = ActivityManager.isMuted() ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+        window.globalMuted = !window.globalMuted;
+        const btn = document.getElementById('muteBtn');
+        const icon = btn.querySelector('i');
+        
+        if (window.globalMuted) {
+          icon.className = 'fas fa-volume-mute';
+          btn.classList.add('muted');
+          btn.title = 'تشغيل الصوت';
+          ActivityManager.showNotification('🔇 تم كتم الصوت', 'info');
+          
+          // كتم جميع الأصوات
+          const audioElements = document.querySelectorAll('audio');
+          audioElements.forEach(audio => {
+            audio.muted = true;
+          });
+        } else {
+          icon.className = 'fas fa-volume-up';
+          btn.classList.remove('muted');
+          btn.title = 'كتم الصوت';
+          ActivityManager.showNotification('🔊 تم تشغيل الصوت', 'success');
+          
+          // إلغاء كتم الأصوات
+          const audioElements = document.querySelectorAll('audio');
+          audioElements.forEach(audio => {
+            audio.muted = false;
+          });
+        }
       });
       
       document.getElementById('instructionsBtn').addEventListener('click', () => {
-        document.getElementById('instructionsModal').style.display = 'flex';
+        ActivityManager.showNotification('📖 فتح دليل التعليمات...', 'info');
+        setTimeout(() => {
+          document.getElementById('instructionsModal').style.display = 'flex';
+        }, 300);
       });
       
       document.getElementById('fullscreenBtn').addEventListener('click', () => {
-        ActivityManager.toggleFullscreen();
+        const btn = document.getElementById('fullscreenBtn');
+        const icon = btn.querySelector('i');
+        
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().then(() => {
+            icon.className = 'fas fa-compress';
+            btn.title = 'خروج من ملء الشاشة';
+            ActivityManager.showNotification('🖥️ تم تفعيل ملء الشاشة', 'success');
+          }).catch(() => {
+            ActivityManager.showNotification('⚠️ لا يمكن تفعيل ملء الشاشة', 'warning');
+          });
+        } else {
+          document.exitFullscreen().then(() => {
+            icon.className = 'fas fa-expand';
+            btn.title = 'ملء الشاشة';
+            ActivityManager.showNotification('📱 تم الخروج من ملء الشاشة', 'info');
+          });
+        }
+      });
+      
+      // مراقبة تغييرات ملء الشاشة
+      document.addEventListener('fullscreenchange', () => {
+        const btn = document.getElementById('fullscreenBtn');
+        const icon = btn.querySelector('i');
+        
+        if (document.fullscreenElement) {
+          icon.className = 'fas fa-compress';
+          btn.title = 'خروج من ملء الشاشة';
+        } else {
+          icon.className = 'fas fa-expand';
+          btn.title = 'ملء الشاشة';
+        }
       });
       
       // معالج نموذج الإعدادات
@@ -4142,10 +4401,10 @@
         if (e.target.classList.contains('close-btn-enhanced')) {
           hideResults();
         }
-        if (e.target.closest('#newStoryBtn')) {
+        if (e.target.closest('#modalBackBtn')) {
           startNewStory();
         }
-        if (e.target.closest('#shareBtn')) {
+        if (e.target.closest('#shareStoryBtn')) {
           shareSuccess();
         }
       });
