@@ -351,6 +351,15 @@
       .back-text {
         font-size: 12px;
       }
+
+      /* أدوات التحكم في الصوت للشاشات الصغيرة */
+      .audio-controls {
+        top: 80px !important;
+        left: 15px !important;
+        flex-direction: column !important;
+        gap: 5px !important;
+        padding: 8px !important;
+      }
     }
 
     /* للشاشات الصغيرة جداً - إظهار الأيقونة فقط */
@@ -368,6 +377,15 @@
 
       .back-icon {
         font-size: 20px;
+      }
+
+      /* أدوات التحكم في الصوت للشاشات الصغيرة جداً */
+      .audio-controls {
+        top: 75px !important;
+        left: 15px !important;
+        flex-direction: row !important;
+        gap: 5px !important;
+        padding: 6px !important;
       }
     }
 
@@ -3165,7 +3183,7 @@ ${labels.map((name, i) => `• ${name}: ${data[i]} ${data[i] === 1 ? 'صوت' : 
       controlsContainer.style.cssText = `
         position: fixed;
         top: 20px;
-        left: 20px;
+        left: 200px;
         background: rgba(255, 255, 255, 0.9);
         border-radius: 50px;
         padding: 10px;
@@ -3224,6 +3242,52 @@ ${labels.map((name, i) => `• ${name}: ${data[i]} ${data[i] === 1 ? 'صوت' : 
       controlsContainer.appendChild(muteButton);
       controlsContainer.appendChild(volumeSlider);
       document.body.appendChild(controlsContainer);
+      
+      // تحديث موقع أدوات التحكم للشاشات الصغيرة
+      const updateControlsPosition = () => {
+        if (window.innerWidth <= 768) {
+          controlsContainer.style.left = '15px';
+          controlsContainer.style.top = '80px';
+          controlsContainer.style.flexDirection = 'column';
+          controlsContainer.style.gap = '5px';
+          controlsContainer.style.padding = '8px';
+          volumeSlider.style.width = '60px';
+          volumeSlider.style.height = '35px';
+          muteButton.style.width = '35px';
+          muteButton.style.height = '35px';
+          muteButton.style.fontSize = '1em';
+        } else if (window.innerWidth <= 480) {
+          controlsContainer.style.left = '15px';
+          controlsContainer.style.top = '75px';
+          controlsContainer.style.flexDirection = 'row';
+          controlsContainer.style.gap = '5px';
+          controlsContainer.style.padding = '6px';
+          volumeSlider.style.width = '50px';
+          volumeSlider.style.height = '30px';
+          muteButton.style.width = '30px';
+          muteButton.style.height = '30px';
+          muteButton.style.fontSize = '0.9em';
+        } else {
+          controlsContainer.style.left = '200px';
+          controlsContainer.style.top = '20px';
+          controlsContainer.style.flexDirection = 'row';
+          controlsContainer.style.gap = '10px';
+          controlsContainer.style.padding = '10px';
+          volumeSlider.style.width = '80px';
+          volumeSlider.style.height = '40px';
+          muteButton.style.width = '40px';
+          muteButton.style.height = '40px';
+          muteButton.style.fontSize = '1.2em';
+        }
+      };
+
+      // تطبيق الموقع المناسب عند التحميل
+      updateControlsPosition();
+      
+      // تحديث الموقع عند تغيير حجم الشاشة
+      window.addEventListener('resize', updateControlsPosition);
+      
+      return controlsContainer;
     }
 
     // تحديث وظائف الأزرار
