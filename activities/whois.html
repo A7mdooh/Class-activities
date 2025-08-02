@@ -3,71 +3,488 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0"/>
-  <title>من هو؟ ❓</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-  <link rel="stylesheet" href="../config/unified-styles-template.css">
-  <link rel="stylesheet" href="../assets/css/responsive.css">
+  <title>من هو؟ ❓ - لعبة التفاعل الصفي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  
+  <!-- جميع الأنماط مدمجة -->
   <style>
-    /* تخصيص النشاط */
+    /* متغيرات CSS الموحدة */
+    :root {
+      --primary-color: #DC143C;
+      --secondary-color: #228B22;
+      --accent-color: #FFD700;
+      --success-color: #4CAF50;
+      --error-color: #f44336;
+      --warning-color: #FF9800;
+      --info-color: #2196F3;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8f9fa;
+      --text-color: #333333;
+      --text-light: #ffffff;
+      --text-muted: #666666;
+      --shadow-small: 0 2px 4px rgba(0,0,0,0.1);
+      --shadow-medium: 0 4px 8px rgba(0,0,0,0.15);
+      --shadow-large: 0 8px 16px rgba(0,0,0,0.2);
+      --shadow-extra-large: 0 12px 24px rgba(0,0,0,0.25);
+      --gradient-primary: linear-gradient(135deg, var(--primary-color), #B91C3C);
+      --gradient-accent: linear-gradient(135deg, var(--accent-color), #F59E0B);
+      --gradient-success: linear-gradient(135deg, var(--success-color), #22C55E);
+      --gradient-magic: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff, #06ffa5);
+      --border-radius: 12px;
+      --transition-fast: 0.2s ease;
+      --transition-normal: 0.3s ease;
+      --transition-slow: 0.5s ease;
+    }
+
+    /* إعدادات عامة */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background-attachment: fixed;
+      min-height: 100vh;
+      line-height: 1.6;
+      color: var(--text-color);
+      overflow-x: hidden;
+    }
+
+    /* تأثيرات خلفية متحركة */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+      animation: floatingDots 20s linear infinite;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    @keyframes floatingDots {
+      0% { transform: translateY(0px); }
+      100% { transform: translateY(-100px); }
+    }
+
+    /* تأثيرات الجسيمات */
+    .particles-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    .particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: var(--accent-color);
+      border-radius: 50%;
+      animation: particleFloat 3s ease-out forwards;
+    }
+
+    @keyframes particleFloat {
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotate(0deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-150px) scale(0) rotate(360deg);
+      }
+    }
+
+    /* زر العودة المحسن */
+    .back-to-main {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 9999;
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--gradient-primary);
+      color: var(--text-light);
+      padding: 12px 20px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+      box-shadow: var(--shadow-large);
+      transition: all var(--transition-normal);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      min-height: 48px;
+      animation: pulseGlow 3s ease-in-out infinite;
+    }
+
+    .back-btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: var(--shadow-extra-large);
+      background: var(--gradient-accent);
+    }
+
+    .back-icon {
+      font-size: 18px;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { 
+        box-shadow: var(--shadow-large), 0 0 0 0 rgba(220, 20, 60, 0.4);
+      }
+      50% { 
+        box-shadow: var(--shadow-extra-large), 0 0 0 10px rgba(220, 20, 60, 0.1);
+      }
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-8px); }
+      60% { transform: translateY(-4px); }
+    }
+
+    /* أدوات التحكم الصوتي */
+    .audio-controls {
+      position: fixed;
+      top: 20px;
+      left: 200px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 50px;
+      padding: 12px;
+      box-shadow: var(--shadow-medium);
+      display: flex;
+      gap: 10px;
+      z-index: 9998;
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .audio-btn {
+      width: 44px;
+      height: 44px;
+      border: none;
+      border-radius: 50%;
+      background: var(--gradient-primary);
+      color: white;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      font-size: 1.2em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .audio-btn:hover {
+      transform: scale(1.1);
+      background: var(--gradient-accent);
+    }
+
+    .volume-slider {
+      width: 80px;
+      height: 44px;
+      cursor: pointer;
+      background: transparent;
+    }
+
+    /* الحاوية الرئيسية */
     .activity-container {
       max-width: 1200px;
       margin: 0 auto;
       padding: 20px;
+      position: relative;
+      z-index: 1;
     }
 
+    /* رأس اللعبة المحسن */
     .game-header {
-      background: var(--gradient-primary);
+      background: var(--gradient-magic);
+      background-size: 400% 400%;
+      animation: gradientShift 5s ease infinite;
       color: white;
-      padding: 2rem;
-      border-radius: 15px;
+      padding: 3rem 2rem;
+      border-radius: 20px;
       margin-bottom: 2rem;
       text-align: center;
-      box-shadow: var(--shadow-large);
+      box-shadow: var(--shadow-extra-large);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .game-header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 20%, transparent 70%);
+      animation: rotate 10s linear infinite;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes rotate {
+      100% { transform: rotate(360deg); }
     }
 
     .game-header h1 {
-      font-size: 2.5rem;
+      font-size: clamp(2rem, 5vw, 3.5rem);
       margin-bottom: 1rem;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+      position: relative;
+      z-index: 2;
+      animation: titleGlow 2s ease-in-out infinite alternate;
     }
 
+    @keyframes titleGlow {
+      0% { text-shadow: 3px 3px 6px rgba(0,0,0,0.4); }
+      100% { text-shadow: 3px 3px 6px rgba(0,0,0,0.4), 0 0 20px rgba(255,255,255,0.5); }
+    }
+
+    .game-header p {
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      opacity: 0.9;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* أدوات التحكم */
     .game-controls {
       display: flex;
       gap: 1rem;
       justify-content: center;
       flex-wrap: wrap;
-      margin-top: 1.5rem;
+      margin-top: 2rem;
+      position: relative;
+      z-index: 2;
     }
 
     .game-controls select,
     .game-controls button {
-      padding: 0.8rem 1.5rem;
-      border-radius: 10px;
+      padding: 1rem 1.5rem;
+      border-radius: 15px;
       border: none;
-      font-size: 1rem;
-      font-weight: 600;
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: 'Cairo', sans-serif;
+      transition: all var(--transition-normal);
+      cursor: pointer;
+      min-height: 50px;
+      box-shadow: var(--shadow-medium);
     }
 
     .game-controls select {
-      background: white;
+      background: rgba(255, 255, 255, 0.95);
       color: var(--primary-color);
-      border: 2px solid var(--primary-color);
+      border: 2px solid transparent;
+      backdrop-filter: blur(10px);
     }
 
-    .hint-box {
-      background: white;
-      padding: 2rem;
-      border-radius: 15px;
-      box-shadow: var(--shadow-medium);
-      margin-bottom: 2rem;
-      font-size: 1.4rem;
+    .game-controls select:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.3);
+    }
+
+    .game-controls button {
+      background: var(--gradient-accent);
       color: var(--text-color);
-      display: none;
-      border-left: 5px solid var(--accent-color);
       position: relative;
       overflow: hidden;
+    }
+
+    .game-controls button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transition: left var(--transition-slow);
+    }
+
+    .game-controls button:hover::before {
+      left: 100%;
+    }
+
+    .game-controls button:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-large);
+    }
+
+    /* صندوق الاختيار اليدوي */
+    .manual-select {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: var(--shadow-large);
+      margin-bottom: 2rem;
+      text-align: center;
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      animation: slideUp 0.6s ease-out;
+    }
+
+    @keyframes slideUp {
+      0% {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .manual-select h3 {
+      color: var(--primary-color);
+      margin-bottom: 1.5rem;
+      font-size: 1.4rem;
+    }
+
+    .manual-select select {
+      width: 100%;
+      max-width: 350px;
+      padding: 1.2rem;
+      border-radius: 15px;
+      border: 3px solid var(--primary-color);
+      font-size: 1.2rem;
+      font-family: 'Cairo', sans-serif;
+      transition: all var(--transition-normal);
+      background: white;
+    }
+
+    .manual-select select:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 5px rgba(255, 215, 0, 0.3);
+      transform: scale(1.02);
+    }
+
+    /* النافذة السرية */
+    .secret-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--gradient-primary);
+      color: white;
+      padding: 3rem;
+      border-radius: 25px;
+      box-shadow: var(--shadow-extra-large);
+      z-index: 3000;
+      font-size: 1.8rem;
+      text-align: center;
+      border: 4px solid var(--accent-color);
+      display: none;
+      max-width: 500px;
+      animation: secretReveal 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      backdrop-filter: blur(20px);
+    }
+
+    @keyframes secretReveal {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.3) rotate(180deg);
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.1) rotate(0deg);
+      }
+      100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+      }
+    }
+
+    .secret-popup .secret-name {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--accent-color);
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+      animation: nameGlow 1s ease-in-out infinite alternate;
+    }
+
+    @keyframes nameGlow {
+      0% { text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+      100% { text-shadow: 2px 2px 4px rgba(0,0,0,0.5), 0 0 15px var(--accent-color); }
+    }
+
+    /* زر بدء التحدي */
+    .start-challenge-btn {
+      display: none;
+      margin: 2rem auto;
+      padding: 1.5rem 3rem;
+      font-size: 1.4rem;
+      background: var(--gradient-success);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      box-shadow: var(--shadow-large);
+      font-family: 'Cairo', sans-serif;
+      font-weight: 700;
+      position: relative;
+      overflow: hidden;
+      animation: pulseButton 2s ease-in-out infinite;
+    }
+
+    @keyframes pulseButton {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .start-challenge-btn:hover {
+      transform: translateY(-5px) scale(1.1);
+      box-shadow: var(--shadow-extra-large);
+    }
+
+    /* صندوق التلميح */
+    .hint-box {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 2.5rem;
+      border-radius: 20px;
+      box-shadow: var(--shadow-large);
+      margin-bottom: 2rem;
+      font-size: 1.6rem;
+      color: var(--text-color);
+      display: none;
+      border-left: 8px solid var(--accent-color);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(15px);
+      animation: hintAppear 0.8s ease-out;
+    }
+
+    @keyframes hintAppear {
+      0% {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
 
     .hint-box::before {
@@ -76,620 +493,1243 @@
       top: 0;
       left: 0;
       width: 100%;
-      height: 4px;
+      height: 6px;
       background: var(--gradient-accent);
+      animation: hintProgress 8s ease-in-out infinite;
     }
 
+    @keyframes hintProgress {
+      0%, 100% { width: 100%; }
+      50% { width: 20%; }
+    }
+
+    /* الاسم المكشوف */
+    .revealed-name {
+      background: var(--gradient-success);
+      color: white;
+      padding: 2rem;
+      border-radius: 20px;
+      font-size: 2rem;
+      font-weight: 800;
+      text-align: center;
+      margin: 2rem 0;
+      box-shadow: var(--shadow-extra-large);
+      display: none;
+      animation: revealAnimation 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    @keyframes revealAnimation {
+      0% {
+        opacity: 0;
+        transform: scale(0.3) rotate(180deg);
+      }
+      50% {
+        transform: scale(1.1) rotate(0deg);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+      }
+    }
+
+    /* خيارات الطلاب */
     .options {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
+      gap: 20px;
       margin-bottom: 2rem;
     }
 
     .option {
-      background: white;
-      padding: 1rem 1.5rem;
-      border: 2px solid var(--primary-color);
-      border-radius: 12px;
-      font-size: 1rem;
-      font-weight: 600;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 1.5rem;
+      border: 3px solid var(--primary-color);
+      border-radius: 15px;
+      font-size: 1.1rem;
+      font-weight: 700;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all var(--transition-normal);
       text-align: center;
-      box-shadow: var(--shadow-small);
+      box-shadow: var(--shadow-medium);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      animation: optionSlide 0.6s ease-out;
+    }
+
+    @keyframes optionSlide {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .option::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: var(--gradient-primary);
+      transition: left var(--transition-slow);
+      z-index: -1;
+    }
+
+    .option:hover::before {
+      left: 0;
     }
 
     .option:hover {
-      background: var(--gradient-primary);
       color: white;
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-medium);
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: var(--shadow-large);
+      border-color: var(--accent-color);
     }
 
     .option:active {
-      transform: translateY(0);
+      transform: translateY(-2px) scale(0.98);
     }
 
+    /* التغذية الراجعة */
     .feedback {
       margin: 2rem 0;
-      font-size: 1.8rem;
-      font-weight: 700;
+      font-size: 2rem;
+      font-weight: 800;
       text-align: center;
-      padding: 1rem;
-      border-radius: 12px;
-      min-height: 60px;
+      padding: 1.5rem;
+      border-radius: 20px;
+      min-height: 80px;
       display: flex;
       align-items: center;
       justify-content: center;
+      box-shadow: var(--shadow-large);
+      animation: feedbackPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    @keyframes feedbackPop {
+      0% {
+        opacity: 0;
+        transform: scale(0.3);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
 
     .feedback.success {
-      background: linear-gradient(135deg, #4CAF50, #45a049);
+      background: var(--gradient-success);
       color: white;
+      animation: successCelebration 1s ease-in-out infinite alternate;
+    }
+
+    @keyframes successCelebration {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.05); }
     }
 
     .feedback.error {
-      background: linear-gradient(135deg, #f44336, #da190b);
+      background: linear-gradient(135deg, var(--error-color), #d32f2f);
       color: white;
+      animation: errorShake 0.8s ease-in-out;
     }
 
-    .revealed-name {
-      background: var(--gradient-accent);
-      color: white;
-      padding: 1.5rem;
-      border-radius: 12px;
-      font-size: 1.6rem;
-      font-weight: 700;
-      text-align: center;
-      margin: 2rem 0;
-      box-shadow: var(--shadow-large);
-      display: none;
+    @keyframes errorShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      75% { transform: translateX(10px); }
     }
 
-    .manual-select {
-      background: white;
-      padding: 1.5rem;
-      border-radius: 12px;
-      box-shadow: var(--shadow-medium);
-      margin-bottom: 2rem;
-      text-align: center;
-    }
-
-    .manual-select select {
-      width: 100%;
-      max-width: 300px;
-      padding: 1rem;
-      border-radius: 10px;
-      border: 2px solid var(--primary-color);
-      font-size: 1.1rem;
-      transition: all 0.3s ease;
-    }
-
-    .manual-select select:focus {
-      outline: none;
-      border-color: var(--accent-color);
-      box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.1);
-    }
-
-    .secret-popup {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      padding: 2rem;
-      border-radius: 15px;
-      box-shadow: var(--shadow-extra-large);
-      z-index: 2000;
-      font-size: 1.5rem;
-      color: var(--primary-color);
-      text-align: center;
-      border: 3px solid var(--accent-color);
-      display: none;
-      max-width: 400px;
-      animation: popIn 0.5s ease;
-    }
-
+    /* نافذة التعليمات */
     .instruction-modal {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.7);
-      z-index: 1000;
+      background: rgba(0,0,0,0.8);
+      z-index: 2000;
       display: none;
-      backdrop-filter: blur(5px);
+      backdrop-filter: blur(10px);
+      animation: modalFadeIn 0.5s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
     }
 
     .modal-content {
-      background: white;
-      padding: 2.5rem;
-      border-radius: 15px;
-      max-width: 500px;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 3rem;
+      border-radius: 25px;
+      max-width: 600px;
       margin: 10% auto;
       text-align: center;
       box-shadow: var(--shadow-extra-large);
       position: relative;
+      backdrop-filter: blur(20px);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      animation: modalSlideUp 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    @keyframes modalSlideUp {
+      0% {
+        opacity: 0;
+        transform: translateY(50px) scale(0.9);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
 
     .modal-content h2 {
       color: var(--primary-color);
       margin-bottom: 1.5rem;
-      font-size: 2rem;
+      font-size: 2.2rem;
+      font-weight: 800;
     }
 
     .modal-content p {
-      font-size: 1.2rem;
-      line-height: 1.6;
+      font-size: 1.3rem;
+      line-height: 1.8;
       margin-bottom: 2rem;
       color: var(--text-color);
     }
 
-    @keyframes popIn {
-      0% { 
-        opacity: 0; 
-        transform: translate(-50%, -50%) scale(0.5); 
-      }
-      100% { 
-        opacity: 1; 
-        transform: translate(-50%, -50%) scale(1); 
-      }
-    }
-
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-10px); }
-      75% { transform: translateX(10px); }
-    }
-
-    .shake {
-      animation: shake 0.6s ease;
-    }
-
-    .start-challenge-btn {
-      display: none;
-      margin: 2rem auto;
-      padding: 1rem 2rem;
-      font-size: 1.2rem;
-      background: var(--gradient-accent);
+    .modal-content button {
+      background: var(--gradient-primary);
       color: white;
       border: none;
-      border-radius: 12px;
+      padding: 1rem 2rem;
+      border-radius: 15px;
+      font-size: 1.2rem;
+      font-weight: 700;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all var(--transition-normal);
       box-shadow: var(--shadow-medium);
     }
 
-    .start-challenge-btn:hover {
-      transform: translateY(-2px);
+    .modal-content button:hover {
+      transform: translateY(-3px);
       box-shadow: var(--shadow-large);
+    }
+
+    /* نظام الإشعارات المتقدم */
+    .notification-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 10000;
+      max-width: 400px;
+    }
+
+    .notification {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 1rem 1.5rem;
+      margin-bottom: 10px;
+      border-radius: 15px;
+      box-shadow: var(--shadow-large);
+      border-left: 5px solid var(--info-color);
+      transform: translateX(100%);
+      opacity: 0;
+      transition: all var(--transition-slow);
+      backdrop-filter: blur(15px);
+      font-weight: 600;
+    }
+
+    .notification.show {
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    .notification.success {
+      border-left-color: var(--success-color);
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(255, 255, 255, 0.95));
+    }
+
+    .notification.error {
+      border-left-color: var(--error-color);
+      background: linear-gradient(135deg, rgba(244, 67, 54, 0.1), rgba(255, 255, 255, 0.95));
+    }
+
+    .notification.warning {
+      border-left-color: var(--warning-color);
+      background: linear-gradient(135deg, rgba(255, 152, 0, 0.1), rgba(255, 255, 255, 0.95));
+    }
+
+    /* تأثيرات خاصة */
+    .shake {
+      animation: shake 0.8s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+    }
+
+    @keyframes shake {
+      10%, 90% { transform: translate3d(-1px, 0, 0); }
+      20%, 80% { transform: translate3d(2px, 0, 0); }
+      30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+      40%, 60% { transform: translate3d(4px, 0, 0); }
     }
 
     /* تحسينات الاستجابة */
     @media (max-width: 768px) {
-      .game-header h1 {
-        font-size: 2rem;
+      .audio-controls {
+        left: 15px;
+        top: 80px;
+        flex-direction: column;
+        gap: 8px;
+        padding: 10px;
       }
-      
+
+      .audio-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1em;
+      }
+
+      .volume-slider {
+        width: 60px;
+        height: 35px;
+      }
+
+      .back-btn {
+        padding: 10px 16px;
+        font-size: 13px;
+      }
+
+      .back-text {
+        font-size: 12px;
+      }
+
+      .game-header {
+        padding: 2rem 1.5rem;
+      }
+
       .game-controls {
         flex-direction: column;
         align-items: center;
       }
-      
+
       .options {
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 10px;
+        gap: 15px;
       }
-      
+
       .hint-box {
         padding: 1.5rem;
-        font-size: 1.2rem;
+        font-size: 1.3rem;
       }
     }
 
     @media (max-width: 480px) {
-      .activity-container {
-        padding: 10px;
+      .back-text {
+        display: none;
       }
-      
-      .game-header {
-        padding: 1.5rem;
-      }
-      
-      .options {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
 
-    /* Comprehensive Responsive Design */
-    
-    /* Large Desktop (1200px+) */
-    @media (min-width: 1200px) {
-      .activity-container {
-        max-width: 1400px;
-        padding: 30px;
+      .back-btn {
+        width: 48px;
+        height: 48px;
+        padding: 12px;
+        border-radius: 50%;
       }
-      
-      .game-header h1 {
-        font-size: 3rem;
-      }
-      
-      .options {
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 20px;
-      }
-      
-      .hint-box {
-        font-size: 1.6rem;
-        padding: 2.5rem;
-      }
-    }
 
-    /* Medium Desktop (1024px - 1199px) */
-    @media (min-width: 1024px) and (max-width: 1199px) {
-      .activity-container {
-        max-width: 1100px;
-        padding: 25px;
-      }
-      
-      .game-header h1 {
-        font-size: 2.8rem;
-      }
-      
-      .options {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 18px;
-      }
-    }
-
-    /* Tablet (768px - 1023px) */
-    @media (min-width: 768px) and (max-width: 1023px) {
-      .activity-container {
-        padding: 20px;
-        max-width: 100%;
-      }
-      
-      .game-header {
-        padding: 1.8rem;
-      }
-      
-      .game-header h1 {
-        font-size: 2.4rem;
-      }
-      
-      .game-controls {
-        flex-direction: row;
-        justify-content: center;
-        gap: 0.8rem;
-      }
-      
-      .game-controls select,
-      .game-controls button {
-        padding: 0.7rem 1.2rem;
-        font-size: 0.95rem;
-      }
-      
-      .options {
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 15px;
-      }
-      
-      .option {
-        padding: 1rem;
-        font-size: 0.95rem;
-      }
-      
-      .hint-box {
-        padding: 1.8rem;
-        font-size: 1.3rem;
-      }
-      
-      .modal-content {
-        margin: 15% auto;
-        max-width: 450px;
-        padding: 2rem;
-      }
-      
-      .secret-popup {
-        max-width: 350px;
-        padding: 1.8rem;
-        font-size: 1.3rem;
-      }
-    }
-
-    /* Mobile Large (480px - 767px) */
-    @media (min-width: 480px) and (max-width: 767px) {
       .activity-container {
         padding: 15px;
       }
-      
+
       .game-header {
         padding: 1.5rem;
-        margin-bottom: 1.5rem;
       }
-      
-      .game-header h1 {
-        font-size: 2rem;
-        margin-bottom: 0.8rem;
-      }
-      
-      .game-header p {
-        font-size: 0.9rem;
-      }
-      
-      .game-controls {
-        flex-direction: column;
-        gap: 0.8rem;
-        align-items: stretch;
-      }
-      
-      .game-controls select,
-      .game-controls button {
-        width: 100%;
-        max-width: 300px;
-        margin: 0 auto;
-        padding: 0.8rem;
-        font-size: 1rem;
-      }
-      
+
       .options {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
       }
-      
+
       .option {
-        padding: 0.8rem 0.5rem;
-        font-size: 0.9rem;
+        padding: 1rem 0.5rem;
+        font-size: 0.95rem;
       }
-      
-      .hint-box {
-        padding: 1.5rem;
-        font-size: 1.2rem;
-        margin-bottom: 1.5rem;
-      }
-      
-      .feedback {
-        font-size: 1.5rem;
-        padding: 0.8rem;
-      }
-      
-      .revealed-name {
-        font-size: 1.4rem;
-        padding: 1.2rem;
-      }
-      
-      .manual-select select {
-        max-width: 100%;
-        font-size: 1rem;
-      }
-      
+
       .modal-content {
         margin: 20% auto;
         max-width: 90%;
-        padding: 1.8rem;
+        padding: 2rem;
       }
-      
-      .modal-content h2 {
-        font-size: 1.8rem;
-      }
-      
-      .modal-content p {
-        font-size: 1.1rem;
-      }
-      
+
       .secret-popup {
         max-width: 90%;
-        padding: 1.5rem;
-        font-size: 1.2rem;
-      }
-      
-      .start-challenge-btn {
-        padding: 0.8rem 1.5rem;
-        font-size: 1.1rem;
-      }
-    }
-
-    /* Mobile Small (320px - 479px) */
-    @media (max-width: 479px) {
-      .activity-container {
-        padding: 10px;
-      }
-      
-      .game-header {
-        padding: 1.2rem;
-        margin-bottom: 1rem;
-      }
-      
-      .game-header h1 {
-        font-size: 1.8rem;
-        margin-bottom: 0.5rem;
-      }
-      
-      .game-header p {
-        font-size: 0.85rem;
-        line-height: 1.4;
-      }
-      
-      .game-controls {
-        flex-direction: column;
-        gap: 0.6rem;
-      }
-      
-      .game-controls select,
-      .game-controls button {
-        width: 100%;
-        padding: 0.7rem;
-        font-size: 0.95rem;
-      }
-      
-      .options {
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-      }
-      
-      .option {
-        padding: 0.7rem 0.3rem;
-        font-size: 0.85rem;
-        border-radius: 8px;
-      }
-      
-      .hint-box {
-        padding: 1.2rem;
-        font-size: 1.1rem;
-        margin-bottom: 1rem;
-      }
-      
-      .feedback {
+        padding: 2rem;
         font-size: 1.3rem;
-        padding: 0.7rem;
-        min-height: 50px;
-      }
-      
-      .revealed-name {
-        font-size: 1.2rem;
-        padding: 1rem;
-      }
-      
-      .manual-select {
-        padding: 1.2rem;
-      }
-      
-      .manual-select h3 {
-        font-size: 1.1rem;
-        margin-bottom: 0.8rem;
-      }
-      
-      .modal-content {
-        margin: 25% auto;
-        max-width: 95%;
-        padding: 1.5rem;
-      }
-      
-      .modal-content h2 {
-        font-size: 1.6rem;
-        margin-bottom: 1rem;
-      }
-      
-      .modal-content p {
-        font-size: 1rem;
-        margin-bottom: 1.5rem;
-      }
-      
-      .secret-popup {
-        max-width: 95%;
-        padding: 1.2rem;
-        font-size: 1.1rem;
-      }
-      
-      .start-challenge-btn {
-        padding: 0.7rem 1.2rem;
-        font-size: 1rem;
-        margin: 1.5rem auto;
       }
     }
 
-    /* Landscape Orientation Adjustments */
-    @media (max-height: 500px) and (orientation: landscape) {
-      .game-header {
-        padding: 1rem;
-        margin-bottom: 1rem;
-      }
-      
-      .game-header h1 {
-        font-size: 1.8rem;
-        margin-bottom: 0.5rem;
-      }
-      
-      .hint-box {
-        padding: 1rem;
-        font-size: 1.1rem;
-      }
-      
-      .modal-content {
-        margin: 5% auto;
-        max-height: 80vh;
-        overflow-y: auto;
-      }
-      
-      .secret-popup {
-        top: 40%;
-        font-size: 1rem;
-        padding: 1rem;
-      }
-    }
-
-    /* Touch Device Optimizations */
+    /* تحسينات للأجهزة اللمسية */
     @media (hover: none) and (pointer: coarse) {
       .option {
-        padding: 1rem 0.8rem;
-        min-height: 48px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        min-height: 60px;
+        padding: 1.2rem;
       }
-      
+
       .game-controls button,
       .game-controls select {
-        min-height: 44px;
-        touch-action: manipulation;
+        min-height: 52px;
       }
-      
+
       .start-challenge-btn {
-        min-height: 48px;
-        touch-action: manipulation;
-      }
-      
-      .control-btn {
-        min-width: 48px;
-        min-height: 48px;
-      }
-    }
-
-    /* High DPI Displays */
-    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-      .option {
-        border-width: 1px;
-      }
-      
-      .hint-box::before {
-        height: 3px;
-      }
-    }
-
-    /* RTL Layout Optimizations */
-    @media (max-width: 768px) {
-      [dir="rtl"] .game-controls {
-        text-align: center;
-      }
-      
-      [dir="rtl"] .options {
-        direction: rtl;
-      }
-      
-      [dir="rtl"] .modal-content {
-        text-align: center;
+        min-height: 56px;
       }
     }
   </style>
 </head>
 <body class="responsive-body touch-device">
-  <!-- أزرار التحكم الموحدة -->
-  <div class="control-buttons">
-    <button class="control-btn touch-target" id="backBtn" title="العودة للقائمة الرئيسية">
-      <i class="fas fa-home"></i>
-    </button>
-    <button class="control-btn touch-target" id="fullscreenBtn" title="ملء الشاشة">
-      <i class="fas fa-expand"></i>
-    </button>
-    <button class="control-btn touch-target" id="muteBtn" title="كتم/تشغيل الصوت">
-      <i class="fas fa-volume-up"></i>
-    </button>
+  <!-- زر العودة -->
+  <div class="back-to-main">
+    <a href="../main.html" class="back-btn" title="العودة إلى صفحة الأنشطة">
+      <span class="back-icon">🏠</span>
+      <span class="back-text">الأنشطة</span>
+    </a>
   </div>
 
+  <!-- أدوات التحكم الصوتي -->
+  <div class="audio-controls">
+    <button class="audio-btn" id="muteBtn" title="كتم/تشغيل الصوت">
+      <i class="fas fa-volume-up"></i>
+    </button>
+    <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.1" value="0.7" title="مستوى الصوت">
+  </div>
+
+  <!-- حاوية الجسيمات -->
+  <div class="particles-container" id="particlesContainer"></div>
+
   <!-- منطقة الإشعارات -->
-  <div id="notification-container"></div>
+  <div class="notification-container" id="notificationContainer"></div>
+  <div class="activity-container mobile-container">
+    <!-- رأس اللعبة -->
+    <div class="game-header mobile-header">
+      <h1 class="mobile-heading"><i class="fas fa-question-circle"></i> من هو؟</h1>
+      <p>اختر الصف ونوع النمط لبدء التحدي واكتشف هوية الطالب الغامض!</p>
+      
+      <div class="game-controls mobile-controls">
+        <select id="classSelect" class="touch-target">
+          <option value="">اختر الصف</option>
+        </select>
+        <select id="modeSelect" class="touch-target">
+          <option value="random">فردي عشوائي</option>
+          <option value="manual">فردي انتقائي</option>
+        </select>
+        <button id="startGameBtn" class="btn btn-accent touch-target">
+          <i class="fas fa-play"></i> ابدأ اللعبة
+        </button>
+      </div>
+    </div>
+
+    <!-- منطقة الاختيار اليدوي -->
+    <div id="manualSelectContainer" class="manual-select mobile-card"></div>
+
+    <!-- النافذة السرية -->
+    <div id="secretNamePopup" class="secret-popup mobile-modal"></div>
+
+    <!-- زر بدء التحدي -->
+    <button id="startHintBtn" class="start-challenge-btn touch-target" onclick="showHint()">
+      <i class="fas fa-bullseye"></i> ابدأ التحدي
+    </button>
+
+    <!-- الاسم المكشوف -->
+    <div id="revealedName" class="revealed-name mobile-notification"></div>
+
+    <!-- صندوق التلميح -->
+    <div class="hint-box mobile-card" id="hint">
+      <i class="fas fa-lightbulb"></i> انتظر التلميح...
+    </div>
+
+    <!-- خيارات الطلاب -->
+    <div class="options mobile-grid" id="options"></div>
+
+    <!-- منطقة التغذية الراجعة -->
+    <div id="feedback" class="feedback mobile-notification"></div>
+  </div>
+
+  <!-- نافذة التعليمات -->
+  <div id="instructionModal" class="instruction-modal mobile-overlay">
+    <div class="modal-content mobile-modal">
+      <h2><i class="fas fa-info-circle"></i> طريقة اللعب</h2>
+      <p id="modalText"></p>
+      <button onclick="closeInstructionModal()" class="btn btn-primary touch-target">
+        <i class="fas fa-check"></i> فهمت
+      </button>
+    </div>
+  </div>
+
+  <!-- جميع النصوص البرمجية مدمجة -->
+  <script>
+    // نظام إدارة الصوت المتقدم
+    class SmartAudioSystem {
+      constructor() {
+        this.sounds = {};
+        this.volume = 0.7;
+        this.isMuted = false;
+        this.audioContext = null;
+        this.init();
+      }
+
+      async init() {
+        // إنشاء Web Audio Context للتحكم المتقدم
+        try {
+          this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        } catch (e) {
+          console.warn('Web Audio API غير مدعوم');
+        }
+
+        this.setupAudioControls();
+        await this.preloadSounds();
+      }
+
+      setupAudioControls() {
+        const muteBtn = document.getElementById('muteBtn');
+        const volumeSlider = document.getElementById('volumeSlider');
+
+        if (muteBtn) {
+          muteBtn.addEventListener('click', () => this.toggleMute());
+        }
+
+        if (volumeSlider) {
+          volumeSlider.addEventListener('input', (e) => {
+            this.setVolume(parseFloat(e.target.value));
+          });
+        }
+      }
+
+      async preloadSounds() {
+        const soundFiles = [
+          'start-timer.mp3', 'name-start.mp3', 'reveal.mp3', 'select.mp3',
+          'win.mp3', 'clap.mp3', 'draw.mp3', 'notification.mp3',
+          'click.mp3', 'end-timer.mp3', 'vs.mp3'
+        ];
+
+        for (const file of soundFiles) {
+          await this.loadSound(file);
+        }
+      }
+
+      async loadSound(filename) {
+        try {
+          const audio = new Audio();
+          audio.preload = 'auto';
+          audio.volume = this.volume;
+          
+          // محاولة تحميل من مسارات متعددة
+          const paths = [
+            `../assets/media/sounds/${filename}`,
+            `./sounds/${filename}`,
+            `data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEAAQAAAAEAAgAQAGRhdGEEAAAAAAA=`
+          ];
+
+          for (const path of paths) {
+            try {
+              audio.src = path;
+              await new Promise((resolve, reject) => {
+                audio.addEventListener('canplaythrough', resolve, { once: true });
+                audio.addEventListener('error', reject, { once: true });
+                audio.load();
+              });
+              break;
+            } catch (e) {
+              continue;
+            }
+          }
+
+          this.sounds[filename] = audio;
+        } catch (error) {
+          console.warn(`فشل تحميل ${filename}:`, error);
+          // إنشاء صوت صامت كبديل
+          this.sounds[filename] = { play: () => {}, pause: () => {} };
+        }
+      }
+
+      play(filename, options = {}) {
+        if (this.isMuted) return;
+
+        const sound = this.sounds[filename];
+        if (!sound) return;
+
+        try {
+          sound.currentTime = 0;
+          sound.volume = this.volume * (options.volume || 1);
+          
+          if (options.loop) {
+            sound.loop = true;
+          }
+
+          const playPromise = sound.play();
+          if (playPromise) {
+            playPromise.catch(e => console.warn('خطأ تشغيل الصوت:', e));
+          }
+
+          // تشغيل الجسيمات مع الأصوات الخاصة
+          if (['win.mp3', 'clap.mp3'].includes(filename)) {
+            this.createParticles();
+          }
+
+        } catch (error) {
+          console.warn('خطأ في تشغيل الصوت:', error);
+        }
+      }
+
+      createParticles() {
+        const container = document.getElementById('particlesContainer');
+        if (!container) return;
+
+        for (let i = 0; i < 20; i++) {
+          setTimeout(() => {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.background = ['#FFD700', '#DC143C', '#228B22', '#FF6B6B'][Math.floor(Math.random() * 4)];
+            
+            container.appendChild(particle);
+            
+            setTimeout(() => particle.remove(), 3000);
+          }, i * 50);
+        }
+      }
+
+      setVolume(volume) {
+        this.volume = Math.max(0, Math.min(1, volume));
+        Object.values(this.sounds).forEach(sound => {
+          if (sound.volume !== undefined) {
+            sound.volume = this.volume;
+          }
+        });
+      }
+
+      toggleMute() {
+        this.isMuted = !this.isMuted;
+        const muteBtn = document.getElementById('muteBtn');
+        if (muteBtn) {
+          const icon = muteBtn.querySelector('i');
+          icon.className = this.isMuted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+        }
+      }
+
+      playSequence(files, delay = 500) {
+        files.forEach((file, index) => {
+          setTimeout(() => this.play(file), index * delay);
+        });
+      }
+    }
+
+    // نظام الإشعارات المتقدم
+    class AdvancedNotificationSystem {
+      constructor() {
+        this.container = document.getElementById('notificationContainer');
+        this.notifications = [];
+      }
+
+      show(message, type = 'info', duration = 4000) {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        
+        const icons = {
+          success: '✅',
+          error: '❌',
+          warning: '⚠️',
+          info: 'ℹ️'
+        };
+
+        notification.innerHTML = `
+          <span style="margin-left: 10px; font-size: 1.2em;">${icons[type] || icons.info}</span>
+          ${message}
+        `;
+
+        this.container.appendChild(notification);
+        this.notifications.push(notification);
+
+        // إظهار الإشعار
+        setTimeout(() => notification.classList.add('show'), 100);
+
+        // إخفاء الإشعار
+        setTimeout(() => {
+          notification.classList.remove('show');
+          setTimeout(() => {
+            if (notification.parentNode) {
+              notification.parentNode.removeChild(notification);
+            }
+            this.notifications = this.notifications.filter(n => n !== notification);
+          }, 500);
+        }, duration);
+
+        return notification;
+      }
+
+      clear() {
+        this.notifications.forEach(notification => {
+          if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+          }
+        });
+        this.notifications = [];
+      }
+    }
+
+    // نظام المؤثرات البصرية المتقدم
+    class AdvancedVisualEffects {
+      static createConfettiExplosion(element) {
+        const rect = element.getBoundingClientRect();
+        const centerX = (rect.left + rect.width / 2) / window.innerWidth;
+        const centerY = (rect.top + rect.height / 2) / window.innerHeight;
+
+        // انفجار متعدد الألوان
+        const colors = ['#DC143C', '#228B22', '#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1'];
+        
+        for (let i = 0; i < 3; i++) {
+          setTimeout(() => {
+            confetti({
+              particleCount: 100,
+              spread: 120,
+              origin: { x: centerX, y: centerY },
+              colors: colors,
+              gravity: 0.6,
+              drift: 0.1,
+              scalar: 1.2
+            });
+          }, i * 300);
+        }
+
+        // تأثير القلوب
+        setTimeout(() => {
+          confetti({
+            particleCount: 50,
+            spread: 60,
+            origin: { x: centerX, y: centerY },
+            shapes: ['heart'],
+            colors: ['#FF69B4', '#DC143C'],
+            gravity: 0.3
+          });
+        }, 1000);
+      }
+
+      static createSuccessRipple(element) {
+        const ripple = document.createElement('div');
+        ripple.style.cssText = `
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 0;
+          height: 0;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(76, 175, 80, 0.4), transparent);
+          transform: translate(-50%, -50%);
+          animation: rippleSuccess 1s ease-out forwards;
+          pointer-events: none;
+          z-index: 1000;
+        `;
+
+        const style = document.createElement('style');
+        style.textContent = `
+          @keyframes rippleSuccess {
+            to {
+              width: 300px;
+              height: 300px;
+              opacity: 0;
+            }
+          }
+        `;
+        document.head.appendChild(style);
+
+        element.style.position = 'relative';
+        element.appendChild(ripple);
+
+        setTimeout(() => {
+          ripple.remove();
+          style.remove();
+        }, 1000);
+      }
+
+      static createMagicSparkles(element) {
+        for (let i = 0; i < 10; i++) {
+          const sparkle = document.createElement('div');
+          sparkle.innerHTML = '✨';
+          sparkle.style.cssText = `
+            position: absolute;
+            left: ${Math.random() * 100}%;
+            top: ${Math.random() * 100}%;
+            font-size: ${Math.random() * 20 + 10}px;
+            animation: sparkleFloat ${Math.random() * 2 + 1}s ease-out forwards;
+            pointer-events: none;
+            z-index: 1000;
+          `;
+
+          element.appendChild(sparkle);
+
+          setTimeout(() => sparkle.remove(), 2000);
+        }
+
+        const style = document.createElement('style');
+        style.textContent = `
+          @keyframes sparkleFloat {
+            0% {
+              opacity: 1;
+              transform: translateY(0) scale(0);
+            }
+            50% {
+              transform: translateY(-30px) scale(1);
+            }
+            100% {
+              opacity: 0;
+              transform: translateY(-60px) scale(0);
+            }
+          }
+        `;
+        document.head.appendChild(style);
+
+        setTimeout(() => style.remove(), 3000);
+      }
+    }
+
+    // الفئة الرئيسية للعبة
+    class WhoIsItGame {
+      constructor() {
+        this.audioSystem = new SmartAudioSystem();
+        this.notifications = new AdvancedNotificationSystem();
+        this.allStudents = [];
+        this.usedNames = [];
+        this.targetName = "";
+        this.gameMode = "";
+        this.currentClass = "";
+        this.init();
+      }
+
+      async init() {
+        await this.audioSystem.init();
+        await this.loadStudentData();
+        this.setupEventListeners();
+        this.playWelcomeSequence();
+      }
+
+      async loadStudentData() {
+        try {
+          // بيانات الطلاب المدمجة
+          const studentData = {
+            "7A": ["أحمد محمد", "فاطمة علي", "خالد سالم", "عائشة سعد", "محمود حسن", "زينب أحمد", "عبدالله محمد", "نور فاطمة", "سعد خالد", "مريم عبدالله", "يوسف إبراهيم", "هدى محمود", "عمر سالم", "أسماء يوسف", "حسام عمر", "رقية حسام", "إبراهيم سعد", "خديجة إبراهيم", "سالم نور", "آمنة سالم"],
+            "7B": ["علي أحمد", "رضية علي", "محمد خالد", "حليمة محمد", "سعيد فاطمة", "بدرية سعيد", "عثمان عائشة", "سعاد عثمان", "حمد محمود", "شيخة حمد", "ناصر زينب", "موزة ناصر", "راشد عبدالله", "عزة راشد", "خليفة نور", "أمل خليفة", "منصور سعد", "هند منصور", "جاسم يوسف", "لطيفة جاسم"],
+            "8A": ["عبدالرحمن هدى", "فوزية عبدالرحمن", "عبدالعزيز عمر", "نعيمة عبدالعزيز", "طلال أسماء", "عفاف طلال", "وليد حسام", "صفية وليد", "فيصل رقية", "سلمى فيصل", "نايف إبراهيم", "جميلة نايف", "مساعد خديجة", "وردة مساعد", "عادل سالم", "كريمة عادل", "بندر آمنة", "عبير بندر", "فهد علي", "سارة فهد"],
+            "8B": ["تركي رضية", "نجلاء تركي", "سطام محمد", "ليلى سطام", "فراس حليمة", "دعاء فراس", "غازي سعيد", "إيمان غازي", "نواف بدرية", "رحاب نواف", "حاتم عثمان", "زهراء حاتم", "صقر سعاد", "رنا صقر", "مطلق حمد", "عهد مطلق", "سلطان شيخة", "غادة سلطان", "مازن موزة", "ريم مازن"],
+            "9A": ["بدر عزة", "سمية بدر", "عوض خليفة", "نادية عوض", "فواز أمل", "رشا فواز", "جمال هند", "سناء جمال", "خلف منصور", "إسراء خلف", "عامر لطيفة", "ديانا عامر", "حسين فوزية", "لمياء حسين", "قاسم نعيمة", "سلوى قاسم", "مرزوق عفاف", "ميساء مرزوق", "عيسى صفية", "هنادي عيسى"],
+            "9B": ["ضاري سلمى", "رباب ضاري", "شداد جميلة", "تهاني شداد", "محسن وردة", "فايزة محسن", "حبيب كريمة", "عبير حبيب", "رباح عبير", "رؤى رباح", "جبر سارة", "ندى جبر", "نجم نجلاء", "أريج نجم", "شاهر ليلى", "منى شاهر", "مانع دعاء", "لينا مانع", "نبيل إيمان", "ولاء نبيل"]
+          };
+
+          this.studentData = studentData;
+          this.populateClassSelect();
+          this.notifications.show('تم تحميل بيانات الطلاب بنجاح! 🎓', 'success');
+          
+        } catch (error) {
+          console.error('خطأ في تحميل البيانات:', error);
+          this.notifications.show('خطأ في تحميل بيانات الطلاب', 'error');
+        }
+      }
+
+      populateClassSelect() {
+        const classSelect = document.getElementById('classSelect');
+        classSelect.innerHTML = '<option value="">اختر الصف</option>';
+        
+        Object.keys(this.studentData).forEach(className => {
+          const option = document.createElement('option');
+          option.value = className;
+          option.textContent = `الصف ${className}`;
+          classSelect.appendChild(option);
+        });
+      }
+
+      setupEventListeners() {
+        document.getElementById('startGameBtn').addEventListener('click', () => this.startGame());
+        
+        // تحسين تفاعل الأزرار
+        document.querySelectorAll('button, select').forEach(element => {
+          element.addEventListener('mouseenter', () => {
+            this.audioSystem.play('click.mp3', { volume: 0.3 });
+          });
+        });
+      }
+
+      playWelcomeSequence() {
+        setTimeout(() => {
+          this.audioSystem.play('start-timer.mp3');
+          this.notifications.show('مرحباً بك في لعبة "من هو؟" 🎮', 'info');
+        }, 1000);
+      }
+
+      async startGame() {
+        const classValue = document.getElementById('classSelect').value;
+        const modeValue = document.getElementById('modeSelect').value;
+        
+        if (!classValue || !modeValue) {
+          this.audioSystem.play('notification.mp3');
+          this.notifications.show('يرجى اختيار الصف والنمط أولاً! ⚠️', 'warning');
+          return;
+        }
+
+        this.currentClass = classValue;
+        this.gameMode = modeValue;
+        this.allStudents = this.studentData[classValue] || [];
+        
+        if (this.allStudents.length === 0) {
+          this.notifications.show('لا توجد بيانات للصف المحدد', 'error');
+          return;
+        }
+
+        this.usedNames = [];
+        this.hideElement('revealedName');
+        
+        this.audioSystem.play('start-timer.mp3');
+        this.showInstructions();
+      }
+
+      showInstructions() {
+        const modalText = this.gameMode === 'manual'
+          ? "🎯 اختر طالباً من القائمة وسيتم تمويه اسمه تلقائياً. ثم ابدأ التحدي لتخمين هويته من خلال التلميحات الذكية!"
+          : "🎲 سيتم اختيار طالب عشوائي، وسيظهر الاسم في نافذة سرية للمعلم فقط لمدة 3 ثوانِ. انتبه جيداً واستعد للتحدي!";
+        
+        document.getElementById('modalText').innerHTML = modalText;
+        this.showElement('instructionModal');
+        
+        this.audioSystem.play('name-start.mp3');
+      }
+
+      closeInstructionModal() {
+        this.hideElement('instructionModal');
+        
+        if (this.gameMode === 'random') {
+          setTimeout(() => this.startRandomMode(), 500);
+        } else {
+          setTimeout(() => this.startManualMode(), 500);
+        }
+      }
+
+      startRandomMode() {
+        const remaining = this.allStudents.filter(name => !this.usedNames.includes(name));
+        
+        if (remaining.length === 0) {
+          this.notifications.show('🏁 تم استخدام جميع أسماء الطلاب! ابدأ لعبة جديدة.', 'info');
+          return;
+        }
+
+        this.targetName = remaining[Math.floor(Math.random() * remaining.length)];
+        this.usedNames.push(this.targetName);
+        this.showSecretName(this.targetName);
+        
+        this.notifications.show(`🎯 تم اختيار طالب عشوائي (${remaining.length} متبقي)`, 'info');
+      }
+
+      startManualMode() {
+        const container = document.getElementById('manualSelectContainer');
+        container.innerHTML = `
+          <h3><i class="fas fa-hand-pointer"></i> اختر الطالب المطلوب</h3>
+        `;
+        
+        const select = document.createElement('select');
+        select.id = 'blurredName';
+        select.className = 'touch-target';
+        select.innerHTML = '<option value="">-- اختر الطالب --</option>' +
+          this.allStudents.map(name => `<option value="${name}">${name}</option>`).join('');
+        
+        select.addEventListener('change', () => {
+          this.targetName = select.value;
+          if (this.targetName) {
+            this.audioSystem.play('select.mp3');
+            select.style.filter = 'blur(10px)';
+            select.style.pointerEvents = 'none';
+            this.showElement('startHintBtn');
+            this.notifications.show(`✅ تم اختيار ${this.targetName} - تم تمويه الاسم`, 'success');
+            AdvancedVisualEffects.createMagicSparkles(container);
+          }
+        });
+        
+        container.appendChild(select);
+      }
+
+      showSecretName(name) {
+        this.targetName = name;
+        this.audioSystem.play('reveal.mp3');
+        
+        const popup = document.getElementById('secretNamePopup');
+        popup.innerHTML = `
+          <div style="margin-bottom: 1rem;">
+            <i class="fas fa-eye" style="font-size: 2rem; color: var(--accent-color);"></i>
+          </div>
+          <div style="margin-bottom: 1rem;">
+            <strong>اسم الطالب السري:</strong>
+          </div>
+          <div class="secret-name">${name}</div>
+          <div style="margin-top: 1rem; font-size: 1rem; opacity: 0.8;">
+            🕒 سيختفي خلال 3 ثوانِ
+          </div>
+        `;
+        this.showElement('secretNamePopup');
+        
+        // تشغيل الاحتفال
+        AdvancedVisualEffects.createConfettiExplosion(popup);
+        
+        // العد التنازلي
+        let countdown = 3;
+        const countdownInterval = setInterval(() => {
+          countdown--;
+          if (countdown > 0) {
+            popup.querySelector('.secret-name').textContent = `${name} (${countdown})`;
+          }
+        }, 1000);
+
+        setTimeout(() => {
+          clearInterval(countdownInterval);
+          this.hideElement('secretNamePopup');
+          this.showElement('startHintBtn');
+          this.notifications.show('🚀 ابدأ التحدي الآن!', 'info');
+        }, 3000);
+      }
+
+      showHint() {
+        this.showElement('hint');
+        this.hideElement('startHintBtn');
+        this.hideElement('revealedName');
+        this.clearFeedback();
+
+        // مجموعة التلميحات المطورة والذكية
+        const intelligentHints = [
+          "🏆 هذا الطالب يشجّع ريال مدريد حتى أثناء شرح الدرس!",
+          "💙❤️ يعشق برشلونة ويدافع عنها وكأنها منتخب بلاده!",
+          "📚 دائماً يجلس في الصف الأول وكأنه المعلم المساعد!",
+          "😂 ضحكته معدية وتملأ الفصل حتى في أصعب الحصص!",
+          "⚡ إذا سمع كلمة 'فسحة' يصبح أسرع من فلاش!",
+          "🎥 يشرح الدرس وكأن لديه قناة تعليمية مشهورة!",
+          "🤷‍♂️ ينسى أدواته كما ينسى كلمة السر... دائماً!",
+          "📢 ينادي على أصدقائه من النافذة كأنه مذيع إذاعي!",
+          "🎵 يحفظ النشيد الوطني أفضل من وزير التعليم!",
+          "🏃‍♂️ يحب حصة الرياضة أكثر من العطلة الصيفية!",
+          "❓ يسأل أسئلة كثيرة وكأننا في برنامج 'من سيربح المليون'!",
+          "🍕 ينسى قلمه ولكن لا ينسى وجبته أبداً!",
+          "⚽ إذا رأى كرة ينسى المعلم والدرس والكون كله!",
+          "🌟 يملك أجمل ابتسامة في المدرسة... بل في الحي كله!",
+          "📊 يعرف إحصائيات برشلونة أفضل من مدربهم!",
+          "🤔 يفكر مليّاً قبل كل إجابة وكأن كل سؤال امتحان نهائي!",
+          "🤫 يفضل العمل بصمت... لكن إنجازه يتكلم عنه!",
+          "👑 دائماً ما يطمح أن يكون قائد الفريق في كل نشاط!",
+          "🕵️ يحلل كل موقف وكأنه محقق في مسلسل بوليسي!",
+          "📐 لا يحب الفوضى... حتى في ترتيب أقلامه!",
+          "⏰ ينجز واجباته في اللحظة الأخيرة ولكن بإتقان!",
+          "🤷 لا يبدأ أي نشاط قبل أن يفهم الهدف منه تماماً!",
+          "🤝 يساعد الجميع حتى لو لم يطلب منه أحد!",
+          "🗣️ يتحدث كثيراً... وعندما يصمت نعرف أن هناك مشكلة!",
+          "🎨 يحب التنظيم ويلوّن ملفاته وكأنها معرض فني!",
+          "💬 يعبر عن مشاعره بوضوح... حتى لو كان غاضباً من الامتحان!",
+          "🌟 هادئ في البداية... لكنه نجم ساطع في الأنشطة!",
+          "🚀 يتحمّس لتجربة كل شيء جديد قبل أن يقرأ التعليمات!",
+          "👁️ يلاحظ التفاصيل الصغيرة التي يغفل عنها الآخرون!",
+          "🎭 شخصيته مرحة ومميزة... الجميع يتذكره!"
+        ];
+
+        const hint = intelligentHints[Math.floor(Math.random() * intelligentHints.length)];
+        document.getElementById('hint').innerHTML = `
+          <div style="display: flex; align-items: center; gap: 15px;">
+            <i class="fas fa-lightbulb" style="font-size: 2rem; color: var(--accent-color);"></i>
+            <span>${hint}</span>
+          </div>
+        `;
+
+        // إنشاء خيارات الطلاب مع خلط ذكي
+        this.createStudentOptions();
+
+        this.audioSystem.play('name-start.mp3');
+        AdvancedVisualEffects.createMagicSparkles(document.getElementById('hint'));
+      }
+
+      createStudentOptions() {
+        const others = this.allStudents.filter(name => name !== this.targetName);
+        let options = [...others.sort(() => 0.5 - Math.random()).slice(0, 19), this.targetName];
+        options = options.sort(() => 0.5 - Math.random());
+
+        const container = document.getElementById('options');
+        container.innerHTML = '';
+        
+        options.forEach((name, index) => {
+          setTimeout(() => {
+            const div = document.createElement('div');
+            div.className = 'option mobile-card touch-target';
+            div.innerHTML = `<i class="fas fa-user" style="margin-left: 8px;"></i> ${name}`;
+            div.addEventListener('click', () => this.checkAnswer(name, div));
+            container.appendChild(div);
+            
+            // تأثير ظهور متدرج
+            div.style.animationDelay = `${index * 0.05}s`;
+          }, index * 50);
+        });
+      }
+
+      checkAnswer(selectedName, element) {
+        const feedback = document.getElementById('feedback');
+        
+        if (selectedName === this.targetName) {
+          this.handleCorrectAnswer(element);
+        } else {
+          this.handleWrongAnswer(element);
+        }
+      }
+
+      handleCorrectAnswer(element) {
+        // تأثيرات النجاح
+        this.audioSystem.playSequence(['win.mp3', 'clap.mp3'], 500);
+        
+        const feedback = document.getElementById('feedback');
+        feedback.innerHTML = '🎉 إجابة صحيحة! أحسنت! 🏆';
+        feedback.className = 'feedback success';
+
+        // إبراز الاسم المكشوف
+        const revealed = document.getElementById('revealedName');
+        revealed.innerHTML = `
+          <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
+            <i class="fas fa-check-circle" style="font-size: 2rem;"></i>
+            <span>الطالب هو: <strong>${this.targetName}</strong></span>
+            <i class="fas fa-star" style="font-size: 2rem; color: var(--accent-color);"></i>
+          </div>
+        `;
+        this.showElement('revealedName');
+        
+        // تأثيرات بصرية متقدمة
+        AdvancedVisualEffects.createConfettiExplosion(element);
+        AdvancedVisualEffects.createSuccessRipple(feedback);
+        element.classList.add('shake');
+
+        // إزالة التمويه في النمط اليدوي
+        const blurred = document.getElementById('blurredName');
+        if (blurred) {
+          blurred.style.filter = 'none';
+          blurred.style.pointerEvents = 'auto';
+          blurred.classList.add('shake');
+        }
+
+        this.notifications.show('🏆 ممتاز! تم التعرف على الطالب بنجاح!', 'success');
+
+        setTimeout(() => {
+          this.resetGame();
+        }, 4000);
+      }
+
+      handleWrongAnswer(element) {
+        this.audioSystem.play('draw.mp3');
+        
+        const feedback = document.getElementById('feedback');
+        feedback.innerHTML = '❌ خطأ! حاول مرة أخرى بتلميح جديد... 🤔';
+        feedback.className = 'feedback error';
+        
+        element.classList.add('shake');
+        element.style.opacity = '0.5';
+        element.style.pointerEvents = 'none';
+        
+        this.notifications.show('إجابة خاطئة، جرب تلميح آخر! 💪', 'error');
+
+        setTimeout(() => {
+          this.clearFeedback();
+          this.showHint();
+        }, 2500);
+      }
+
+      resetGame() {
+        this.clearFeedback();
+        this.hideElement('hint');
+        this.hideElement('startHintBtn');
+        this.hideElement('revealedName');
+        document.getElementById('options').innerHTML = '';
+        
+        const manualContainer = document.getElementById('manualSelectContainer');
+        if (manualContainer.innerHTML.trim() !== '') {
+          manualContainer.innerHTML = '';
+        }
+
+        // إظهار زر البدء مرة أخرى
+        setTimeout(() => {
+          if (this.gameMode === 'random') {
+            this.showElement('startHintBtn');
+          }
+          this.notifications.show('🎮 جاهز للجولة التالية!', 'info');
+        }, 1000);
+      }
+
+      // وظائف مساعدة
+      showElement(elementId) {
+        const element = document.getElementById(elementId);
+        if (element) {
+          element.style.display = element.tagName.toLowerCase() === 'div' ? 'block' : 'flex';
+        }
+      }
+
+      hideElement(elementId) {
+        const element = document.getElementById(elementId);
+        if (element) {
+          element.style.display = 'none';
+        }
+      }
+
+      clearFeedback() {
+        const feedback = document.getElementById('feedback');
+        feedback.textContent = '';
+        feedback.className = 'feedback';
+      }
+    }
+
+    // إعداد وتشغيل اللعبة
+    let game;
+
+    // وظائف عامة للوصول من HTML
+    function closeInstructionModal() {
+      game.closeInstructionModal();
+    }
+
+    function showHint() {
+      game.showHint();
+    }
+
+    // تهيئة اللعبة عند تحميل الصفحة
+    window.addEventListener('load', () => {
+      game = new WhoIsItGame();
+      
+      // تحسين الأداء والتفاعل
+      document.addEventListener('click', (e) => {
+        if (e.target.closest('button') || e.target.closest('.option')) {
+          game.audioSystem.play('click.mp3', { volume: 0.2 });
+        }
+      });
+
+      // معالجة تغيير حجم الشاشة
+      window.addEventListener('resize', () => {
+        // إعادة ضبط أدوات التحكم الصوتي حسب حجم الشاشة
+        const audioControls = document.querySelector('.audio-controls');
+        if (window.innerWidth <= 768) {
+          audioControls.style.left = '15px';
+          audioControls.style.top = '80px';
+        } else {
+          audioControls.style.left = '200px';
+          audioControls.style.top = '20px';
+        }
+      });
+
+      console.log('🎮 لعبة "من هو؟" جاهزة للعب!');
+    });
+
+    // معالجة أخطاء JavaScript
+    window.addEventListener('error', (e) => {
+      console.error('خطأ في اللعبة:', e.error);
+    });
+  </script>
+</body>
+</html>
 
   <div class="activity-container mobile-container">
     <!-- رأس اللعبة -->
