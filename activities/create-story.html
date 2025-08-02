@@ -2103,81 +2103,31 @@
       "وهكذا..."
     ];
 
-    // تحميل بيانات الطلاب مع النظام الذكي (بيانات مدمجة)
+    // تحميل بيانات الطلاب من ملف studentData.json
     async function loadStudentData() {
       try {
         // إشعار بداية التحميل
         ActivityManager.showNotification && ActivityManager.showNotification('🔄 جاري تحميل بيانات الطلاب...', 'info');
         
-        // بيانات مدمجة للطلاب (يمكن تعديلها حسب الحاجة)
-        const embeddedStudentData = {
-          "خامس 1": [
-            "أحمد محمد الشامسي",
-            "فاطمة علي البلوشي", 
-            "عمر سالم الحراصي",
-            "عائشة خالد المعمري",
-            "محمد أحمد الغافري",
-            "نور فهد الرحبي",
-            "سارة حمد الهنائي",
-            "يوسف طالب الحبسي"
-          ],
-          "خامس 2": [
-            "مريم سعيد الراشدي",
-            "عبدالله ناصر العبري",
-            "آمنة خلفان الصالحي",
-            "حمزة راشد الكندي",
-            "رقية سلطان الفارسي",
-            "زياد محمد المقبالي",
-            "خديجة عامر السعدي",
-            "إبراهيم علي الحارثي"
-          ],
-          "سادس 1": [
-            "لطيفة حمدان العامري",
-            "سلطان سعود الحكماني",
-            "وفاء قاسم الجابري",
-            "ماجد عبدالله النوفلي",
-            "شيخة سليمان البريكي",
-            "منصور خميس الذهلي",
-            "أسماء محمود الكيومي",
-            "راشد سالم الشحي"
-          ],
-          "سادس 2": [
-            "حليمة يوسف البوسعيدي",
-            "عدنان ماجد الرواحي",
-            "زينب طارق العريمي",
-            "خالد سعيد الحراري",
-            "بدرية حمود الرقيشي",
-            "طلال أحمد المنذري",
-            "نادية فيصل الجهوري",
-            "سيف محمد القاسمي"
-          ],
-          "سابع 1": [
-            "هند عبدالرحمن الغيثي",
-            "معاذ ياسر الكلباني",
-            "ريم صالح الشبيبي",
-            "تميم ناجي الحضرمي",
-            "دانة كمال الإسماعيلي",
-            "عثمان رضا الدرمكي",
-            "ليلى حارب المحروقي",
-            "صقر مبارك الوهيبي"
-          ],
-          "سابع 2": [
-            "جوهرة فخر الحمادي",
-            "بلال نزار الجنيبي",
-            "شهد موسى العلوي",
-            "فارس وليد البطاشي",
-            "غالية حميد الحجري",
-            "أسامة شكري اليحيائي",
-            "رحمة باسل النعماني",
-            "حيدر جمال الفليتي"
-          ]
-        };
+        // جلب البيانات من ملف studentData.json
+        const response = await fetch('../data/studentData.json');
         
-        // تحويل البيانات المدمجة إلى التنسيق المطلوب
+        if (!response.ok) {
+          throw new Error(`خطأ في تحميل الملف: ${response.status} ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        
+        // التحقق من صحة البيانات
+        if (!data || typeof data !== 'object') {
+          throw new Error('ملف البيانات غير صحيح أو فارغ');
+        }
+        
+        // تحويل البيانات إلى التنسيق المطلوب
         students = [];
-        Object.keys(embeddedStudentData).forEach(className => {
-          if (Array.isArray(embeddedStudentData[className])) {
-            embeddedStudentData[className].forEach(studentName => {
+        Object.keys(data).forEach(className => {
+          if (Array.isArray(data[className])) {
+            data[className].forEach(studentName => {
               students.push({
                 name: studentName,
                 class: className
@@ -2186,39 +2136,58 @@
           }
         });
         
+        // التحقق من وجود طلاب
+        if (students.length === 0) {
+          throw new Error('لا توجد بيانات طلاب في الملف');
+        }
+        
         populateClassSelect();
         
         // إشعار نجاح التحميل مع تأثيرات صوتية
         smartSoundSystem.play('achievement', false);
-        const successMessage = `✅ تم تحميل ${students.length} طالب من ${Object.keys(embeddedStudentData).length} صف بنجاح!`;
+        const successMessage = `✅ تم تحميل ${students.length} طالب من ${Object.keys(data).length} صف بنجاح!`;
         ActivityManager.showNotification && ActivityManager.showNotification(successMessage, 'success');
         
-        console.log('تم تحميل', students.length, 'طالب من', Object.keys(embeddedStudentData).length, 'صف');
+        console.log('تم تحميل', students.length, 'طالب من', Object.keys(data).length, 'صف');
+        
       } catch (error) {
         console.error('خطأ في تحميل بيانات الطلاب:', error);
         
         // إشعار الخطأ مع صوت لطيف
         smartSoundSystem.play('softError', false);
         
-        // بيانات احتياطية للاختبار
-        students = [
-          { name: "أحمد محمد", class: "خامس 1" },
-          { name: "فاطمة علي", class: "خامس 1" },
-          { name: "عمر سالم", class: "خامس 1" },
-          { name: "عائشة حسن", class: "خامس 2" },
-          { name: "محمد خالد", class: "خامس 2" },
-          { name: "نور الدين", class: "خامس 2" }
-        ];
-        populateClassSelect();
+        // رسالة خطأ مفصلة
+        let errorMessage = '❌ فشل تحميل بيانات الطلاب: ';
         
-        const fallbackMessage = '⚠️ تم استخدام بيانات تجريبية للاختبار. تحقق من ملف البيانات.';
-        ActivityManager.showNotification && ActivityManager.showNotification(fallbackMessage, 'warning');
+        if (error.message.includes('404')) {
+          errorMessage += 'ملف studentData.json غير موجود في مجلد data';
+        } else if (error.message.includes('JSON')) {
+          errorMessage += 'ملف studentData.json غير صحيح (خطأ في التنسيق)';
+        } else {
+          errorMessage += error.message;
+        }
         
-        // اقتراح حل المشكلة
+        ActivityManager.showNotification && ActivityManager.showNotification(errorMessage, 'error');
+        
+        // اقتراحات لحل المشكلة
         setTimeout(() => {
-          const helpMessage = '💡 تأكد من وجود ملف studentData.json في مجلد data';
-          ActivityManager.showNotification && ActivityManager.showNotification(helpMessage, 'info');
-        }, 3000);
+          const helpMessages = [
+            '💡 تأكد من وجود ملف studentData.json في مجلد data',
+            '🔧 تحقق من صحة تنسيق JSON في الملف',
+            '📁 تأكد من المسار الصحيح للملف',
+            '🔄 جرب إعادة تحميل الصفحة'
+          ];
+          
+          helpMessages.forEach((message, index) => {
+            setTimeout(() => {
+              ActivityManager.showNotification && ActivityManager.showNotification(message, 'info');
+            }, (index + 1) * 2000);
+          });
+        }, 1000);
+        
+        // عدم استخدام أي بيانات احتياطية - الاعتماد على الملف فقط
+        students = [];
+        populateClassSelect();
       }
     }
 
