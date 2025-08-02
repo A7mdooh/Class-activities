@@ -2983,6 +2983,9 @@
               display.style.fontWeight = 'normal';
               
               showNotification(`🔄 تم إزالة ${studentName} من ${team === 'green' ? 'الفريق الأخضر' : 'الفريق الأحمر'}`, 'info');
+              
+              // التحقق من حالة الفرق وإظهار البطاقات إذا لزم الأمر
+              checkTeamsStatusAndShowCards();
             });
             
             display.title = 'انقر مرتين لإزالة الطالب';
@@ -3023,9 +3026,128 @@
       });
       
       if (greenComplete && redComplete) {
+        // إخفاء بطاقات الطلاب تدريجياً
+        hideStudentCardsGracefully();
+        
         setTimeout(() => {
           showNotification('🎉 تم اختيار جميع الطلاب! يمكنك الآن بدء اللعبة', 'success');
-        }, 500);
+        }, 800);
+      }
+    }
+
+    // دالة إخفاء بطاقات الطلاب بشكل احترافي
+    function hideStudentCardsGracefully() {
+      const studentsSection = document.querySelector('[style*="grid-column: 1 / -1"][style*="margin-bottom: 2rem"]');
+      
+      if (studentsSection) {
+        console.log('🎯 بدء إخفاء بطاقات الطلاب...');
+        
+        // تأثير تلاشي تدريجي
+        studentsSection.style.transition = 'all 0.8s ease-out';
+        studentsSection.style.transform = 'translateY(-20px)';
+        studentsSection.style.opacity = '0';
+        studentsSection.style.maxHeight = studentsSection.offsetHeight + 'px';
+        
+        // إخفاء البطاقات واحدة تلو الأخرى
+        const studentCards = studentsSection.querySelectorAll('.student-card');
+        studentCards.forEach((card, index) => {
+          setTimeout(() => {
+            card.style.transition = 'all 0.4s ease-out';
+            card.style.transform = 'scale(0.8) rotateY(90deg)';
+            card.style.opacity = '0';
+          }, index * 50);
+        });
+        
+        // تقليل حجم القسم تدريجياً
+        setTimeout(() => {
+          studentsSection.style.maxHeight = '0';
+          studentsSection.style.padding = '0';
+          studentsSection.style.margin = '0';
+          studentsSection.style.border = 'none';
+        }, 400);
+        
+        // إخفاء كامل بعد انتهاء الأنيميشن
+        setTimeout(() => {
+          studentsSection.style.display = 'none';
+          console.log('✅ تم إخفاء بطاقات الطلاب بنجاح');
+        }, 1200);
+        
+        // عرض رسالة تأكيدية
+        setTimeout(() => {
+          showNotification('👥 تم إخفاء قائمة الطلاب - الفرق جاهزة!', 'info');
+        }, 600);
+      }
+    }
+
+    // دالة لإظهار بطاقات الطلاب مرة أخرى (للاستخدام عند إعادة التعيين)
+    function showStudentCardsGracefully() {
+      const studentsSection = document.querySelector('[style*="display: none"][style*="grid-column: 1 / -1"]');
+      
+      if (studentsSection) {
+        console.log('🎯 بدء إظهار بطاقات الطلاب...');
+        
+        // إعادة تعيين الخصائص
+        studentsSection.style.display = 'block';
+        studentsSection.style.maxHeight = 'none';
+        studentsSection.style.padding = '1.5rem';
+        studentsSection.style.margin = '0 0 2rem 0';
+        studentsSection.style.border = `2px solid ${OMAN_COLORS.gold}30`;
+        studentsSection.style.opacity = '0';
+        studentsSection.style.transform = 'translateY(20px)';
+        
+        // أنيميشن الظهور
+        setTimeout(() => {
+          studentsSection.style.transition = 'all 0.8s ease-out';
+          studentsSection.style.opacity = '1';
+          studentsSection.style.transform = 'translateY(0)';
+        }, 100);
+        
+        // إظهار البطاقات واحدة تلو الأخرى
+        const studentCards = studentsSection.querySelectorAll('.student-card');
+        studentCards.forEach((card, index) => {
+          // إعادة تعيين حالة البطاقة
+          card.style.opacity = '1';
+          card.style.pointerEvents = 'auto';
+          card.style.transform = 'scale(0.8)';
+          card.querySelector('div[style*="position: absolute"]')?.remove();
+          
+          setTimeout(() => {
+            card.style.transition = 'all 0.4s ease-out';
+            card.style.transform = 'scale(1)';
+          }, index * 50 + 300);
+        });
+        
+        console.log('✅ تم إظهار بطاقات الطلاب بنجاح');
+      }
+    }
+
+    // دالة للتحقق من حالة الفرق وإظهار البطاقات عند الحاجة
+    function checkTeamsStatusAndShowCards() {
+      const greenDisplays = document.querySelectorAll('.team-display.green');
+      const redDisplays = document.querySelectorAll('.team-display.red');
+      
+      let hasEmptySlots = false;
+      
+      // التحقق من وجود مكان فارغ في الفرق
+      greenDisplays.forEach(display => {
+        if (display.textContent === 'انقر على طالب لإضافته هنا') {
+          hasEmptySlots = true;
+        }
+      });
+      
+      redDisplays.forEach(display => {
+        if (display.textContent === 'انقر على طالب لإضافته هنا') {
+          hasEmptySlots = true;
+        }
+      });
+      
+      // إذا كان هناك مكان فارغ، أظهر البطاقات
+      if (hasEmptySlots) {
+        const studentsSection = document.querySelector('[style*="display: none"][style*="grid-column: 1 / -1"]');
+        if (studentsSection) {
+          showStudentCardsGracefully();
+          showNotification('📋 تم إظهار قائمة الطلاب - يمكنك اختيار المزيد', 'info');
+        }
       }
     }
 
