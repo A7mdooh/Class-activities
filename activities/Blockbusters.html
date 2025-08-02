@@ -1989,7 +1989,31 @@
       redPointSound: document.getElementById('redPointSound')
     };
 
-    // ==== وظائف الصوت المحسنة ====
+    // ==== التحقق من وجود العناصر الأساسية ====
+    function verifyEssentialElements() {
+      const essentialElements = [
+        'teamSelectionModal',
+        'teamSelectionTitle', 
+        'selectGreenTeamBtn',
+        'selectRedTeamBtn',
+        'closeTeamSelectionBtn'
+      ];
+      
+      const missingElements = [];
+      essentialElements.forEach(elementName => {
+        if (!elements[elementName]) {
+          missingElements.push(elementName);
+        }
+      });
+      
+      if (missingElements.length > 0) {
+        console.error('❌ عناصر مفقودة:', missingElements);
+        return false;
+      }
+      
+      console.log('✅ جميع العناصر الأساسية موجودة');
+      return true;
+    }
     function playSound(soundElement, autoMuteAfter = null) {
       if (!gameData.soundEnabled || !soundElement) return;
       
@@ -2362,6 +2386,7 @@
         modalElement.style.display = 'flex';
         modalElement.style.opacity = '0';
         modalElement.style.animation = 'modalFadeIn 0.3s ease-out forwards';
+        modalElement.classList.add('show'); // إضافة class للتوافق مع الكود الموجود
         playSound(elements.clickSound);
         console.log('✅ تم عرض المودال:', modalElement.id);
       } else {
@@ -2372,6 +2397,7 @@
     function hideModal(modalElement) {
       if (modalElement) {
         modalElement.style.animation = 'modalFadeOut 0.3s ease-out forwards';
+        modalElement.classList.remove('show'); // إزالة class للتوافق مع الكود الموجود
         setTimeout(() => {
           modalElement.style.display = 'none';
         }, 300);
@@ -3215,17 +3241,23 @@
 
     // ==== معالجة النقر على الخلايا المتقدمة ====
     function handleCellClick(row, col, element) {
+      console.log('🖱️ تم النقر على خلية:', row, col);
+      
       if (!gameData.gameStarted || element.classList.contains('selected')) {
         if (!gameData.gameStarted) {
+          console.log('⚠️ اللعبة لم تبدأ بعد');
           showAdvancedNotification(
             '⚠️ اللعبة لم تبدأ بعد',
             'يرجى إعداد الفرق وبدء اللعبة أولاً',
             'warning'
           );
+        } else {
+          console.log('⚠️ الخلية مختارة مسبقاً');
         }
         return;
       }
       
+      console.log('✅ اللعبة بدأت، سيتم عرض نافذة اختيار الفريق');
       playSound(elements.clickSound);
       
       // رسالة تفاعلية عند اختيار الخلية
@@ -3253,22 +3285,36 @@
       }, 200);
       
       gameData.selectedCell = { row, col, element };
+      console.log('📝 تم حفظ الخلية المختارة:', gameData.selectedCell);
       
       const letter = BOARD_LETTERS[row][col];
-      elements.teamSelectionTitle.innerHTML = `
-        <div style="font-size: 1.5rem; margin-bottom: 1rem;">
-          أي فريق يريد الإجابة على حرف "<span style="color: ${OMAN_COLORS.gold}; 
-          font-weight: 800; font-size: 2rem;">${letter}</span>"؟
-        </div>
-        <div style="font-size: 1rem; opacity: 0.8; color: ${OMAN_COLORS.navy};">
-          الموقع: الصف ${row + 1} - العمود ${col + 1}
-        </div>
-      `;
+      console.log('🔤 الحرف المختار:', letter);
+      
+      if (elements.teamSelectionTitle) {
+        elements.teamSelectionTitle.innerHTML = `
+          <div style="font-size: 1.5rem; margin-bottom: 1rem;">
+            أي فريق يريد الإجابة على حرف "<span style="color: ${OMAN_COLORS.gold}; 
+            font-weight: 800; font-size: 2rem;">${letter}</span>"؟
+          </div>
+          <div style="font-size: 1rem; opacity: 0.8; color: ${OMAN_COLORS.navy};">
+            الموقع: الصف ${row + 1} - العمود ${col + 1}
+          </div>
+        `;
+        console.log('✅ تم تحديث عنوان نافذة اختيار الفريق');
+      } else {
+        console.error('❌ عنصر teamSelectionTitle غير موجود');
+      }
       
       // إضافة معلومات الاستراتيجية
       addStrategicInfo(row, col);
       
-      showModal(elements.teamSelectionModal);
+      console.log('🔄 محاولة عرض نافذة اختيار الفريق...');
+      if (elements.teamSelectionModal) {
+        showModal(elements.teamSelectionModal);
+        console.log('✅ تم استدعاء showModal لنافذة اختيار الفريق');
+      } else {
+        console.error('❌ عنصر teamSelectionModal غير موجود!');
+      }
     }
 
     function addStrategicInfo(row, col) {
@@ -4461,6 +4507,12 @@
     // ==== تهيئة التطبيق السريع ====
     function initializeApp() {
       console.log('🚀 تهيئة سريعة للعبة بلوك باسترز...');
+      
+      // التحقق من وجود العناصر الأساسية
+      if (!verifyEssentialElements()) {
+        console.error('❌ فشل في التحقق من العناصر الأساسية');
+        return;
+      }
       
       // إظهار شاشة تحميل خفيفة
       showLoadingIndicator('⚡ تهيئة سريعة...');
