@@ -14,13 +14,535 @@
   <!-- المكتبات الخارجية -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
   
-  <!-- الأنماط والسكريبت الموحد -->
-  <link rel="stylesheet" href="../assets/css/responsive.css">
-  <link rel="stylesheet" href="../assets/css/style.css">
-  <script src="../assets/css/style.css" type="text/javascript"></script>
-  
   <style>
+    /* ===== CSS أساسي مدمج ===== */
+    * {
+        box-sizing: border-box;
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+    }
+
+    html, body {
+        overflow-x: hidden;
+        max-width: 100vw;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        direction: rtl;
+        font-family: 'Cairo', sans-serif;
+        background: linear-gradient(135deg, #f0f4ff, #dfe9f3);
+    }
+
+    /* نظام الشبكة المتجاوب */
+    .container-responsive {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+
+    .grid-responsive {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .grid-responsive.cols-1 { grid-template-columns: 1fr; }
+    .grid-responsive.cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-responsive.cols-3 { grid-template-columns: repeat(3, 1fr); }
+
+    /* التايبوغرافي المتجاوب */
+    .text-responsive {
+        font-size: clamp(0.875rem, 2.5vw, 1.125rem);
+        line-height: 1.6;
+    }
+
+    .heading-responsive {
+        font-size: clamp(1.25rem, 4vw, 2rem);
+        line-height: 1.3;
+    }
+
+    .title-responsive {
+        font-size: clamp(1.5rem, 5vw, 2.5rem);
+        line-height: 1.2;
+    }
+
+    /* أنماط أساسية */
+    .container {
+        max-width: 800px;
+        margin: auto;
+        padding: 2rem;
+        background: white;
+        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        border-radius: 16px;
+        margin-top: 50px;
+        text-align: center;
+    }
+
+    select, button {
+        font-family: 'Cairo', sans-serif;
+        font-size: 1.2rem;
+        padding: 0.6rem 1.2rem;
+        border: 2px solid #ccc;
+        border-radius: 12px;
+        background-color: #f9f9f9;
+        transition: all 0.3s ease;
+    }
+
+    select:focus, button:hover {
+        border-color: #4285f4;
+        background-color: #e3efff;
+    }
+
+    button {
+        cursor: pointer;
+        background-color: #4285f4;
+        color: white;
+        font-weight: bold;
+        margin-top: 1rem;
+    }
+
+    #activityContainer {
+        margin-top: 2rem;
+        padding: 1rem;
+        background: #f1f1f1;
+        border-radius: 12px;
+        min-height: 150px;
+    }
+
+    @keyframes popName {
+        0% {
+            transform: scale(0.2);
+            opacity: 0;
+            filter: brightness(200%);
+        }
+        80% {
+            transform: scale(1.2);
+            opacity: 1;
+            filter: brightness(120%);
+        }
+        100% {
+            transform: scale(1);
+            filter: brightness(100%);
+        }
+    }
+
+    #randomNameDisplay {
+        font-size: 3rem;
+        font-weight: bold;
+        color: white;
+        background-color: #00796B;
+        padding: 30px 40px;
+        border-radius: 16px;
+        box-shadow: 0 0 40px rgba(0, 121, 107, 0.6);
+        display: inline-block;
+        transition: all 0.3s ease-in-out;
+        opacity: 0;
+    }
+
+    #randomNameDisplay.show {
+        animation: popName 0.6s ease-out;
+        opacity: 1;
+    }
+
     /* تحسينات خاصة بنشاط إنشاء القصة */
+    
+    /* ===== متغيرات الألوان العُمانية ===== */
+    :root {
+      --omani-red: #DC143C;
+      --omani-green: #228B22;
+      --omani-gold: #FFD700;
+      --omani-blue: #2196F3;
+      --omani-purple: #9C27B0;
+    }
+
+    /* ===== أنماط عامة ===== */
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background: var(--bg-primary, linear-gradient(135deg, #FFEBEE 0%, #E8F5E8 50%, #FFF8E1 100%));
+      min-height: 100vh;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 20px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(248,249,250,0.9));
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .header-icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      color: var(--omani-red);
+    }
+
+    /* ===== أنماط النموذج ===== */
+    .game-settings-card {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+
+    .settings-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 25px;
+      color: var(--omani-red);
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: #fafafa;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--omani-red);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.1);
+    }
+
+    /* ===== أنماط الأزرار ===== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      min-height: 48px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(45deg, var(--omani-red), #ff4569);
+      color: white;
+      box-shadow: 0 4px 15px rgba(220, 20, 60, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(220, 20, 60, 0.4);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(45deg, #6c757d, #78909c);
+      color: white;
+      box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+    }
+
+    .btn-success {
+      background: linear-gradient(45deg, var(--omani-green), #4caf50);
+      color: white;
+      box-shadow: 0 4px 15px rgba(34, 139, 34, 0.3);
+    }
+
+    .btn-warning {
+      background: linear-gradient(45deg, #ff9800, #ffb74d);
+      color: white;
+      box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+    }
+
+    .btn-info {
+      background: linear-gradient(45deg, var(--omani-blue), #64b5f6);
+      color: white;
+      box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+    }
+
+    .btn-danger {
+      background: linear-gradient(45deg, #f44336, #ef5350);
+      color: white;
+      box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+    }
+
+    /* ===== أنماط النشاط ===== */
+    .story-container {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      display: none;
+    }
+
+    .story-header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 20px;
+      background: linear-gradient(135deg, rgba(220, 20, 60, 0.1), rgba(34, 139, 34, 0.1));
+      border-radius: 15px;
+    }
+
+    .current-speaker-section {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 25px;
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+      border-radius: 15px;
+      border: 2px solid rgba(255, 215, 0, 0.3);
+    }
+
+    .speaker-name {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--omani-red);
+      margin-bottom: 10px;
+    }
+
+    .speaker-role {
+      font-size: 1.2rem;
+      color: var(--omani-green);
+      margin-bottom: 15px;
+    }
+
+    /* ===== المؤقت ===== */
+    .timer-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 30px;
+      padding: 20px;
+      background: linear-gradient(135deg, rgba(33, 150, 243, 0.1), rgba(33, 150, 243, 0.05));
+      border-radius: 15px;
+    }
+
+    .timer-canvas {
+      border-radius: 50%;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .time-remaining {
+      font-size: 3rem;
+      font-weight: bold;
+      color: var(--omani-blue);
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .time-warning {
+      color: var(--omani-red) !important;
+      animation: pulse 1s infinite;
+    }
+
+    /* ===== أنماط التحكم ===== */
+    .story-controls {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+
+    /* ===== المشاركون ===== */
+    .participants-container {
+      background: white;
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      display: none;
+    }
+
+    .participants-header {
+      text-align: center;
+      margin-bottom: 20px;
+      color: var(--omani-green);
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .participants-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    .participant-card {
+      padding: 15px;
+      background: linear-gradient(135deg, rgba(248, 249, 250, 0.8), rgba(233, 236, 239, 0.8));
+      border-radius: 12px;
+      text-align: center;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+
+    .participant-card.active {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+      border-color: var(--omani-gold);
+      transform: scale(1.05);
+    }
+
+    .participant-card.completed {
+      background: linear-gradient(135deg, rgba(34, 139, 34, 0.1), rgba(76, 175, 80, 0.05));
+      border-color: var(--omani-green);
+    }
+
+    /* ===== النوافذ المنبثقة ===== */
+    .responsive-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 600px;
+      max-height: 80vh;
+      overflow-y: auto;
+      margin: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #666;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .close-btn:hover {
+      background: rgba(244, 67, 54, 0.1);
+      color: var(--omani-red);
+    }
+
+    /* ===== التصميم المتجاوب ===== */
+    .mobile-full-width {
+      width: 100%;
+    }
+
+    .mobile-text-center {
+      text-align: center;
+    }
+
+    .touch-target {
+      min-height: 48px;
+      min-width: 48px;
+    }
+
+    /* ===== أنماط الأجهزة المحمولة ===== */
+    @media (max-width: 768px) {
+      .main-container {
+        padding: 10px;
+      }
+      
+      .page-header {
+        padding: 15px;
+      }
+      
+      .game-settings-card,
+      .story-container,
+      .participants-container {
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+      
+      .story-controls {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .btn {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+      
+      .current-speaker-section {
+        padding: 15px;
+      }
+      
+      .speaker-name {
+        font-size: 1.5rem;
+      }
+      
+      .time-remaining {
+        font-size: 2rem;
+      }
+      
+      .participants-list {
+        grid-template-columns: 1fr;
+      }
+      
+      .modal-content {
+        margin: 10px;
+        padding: 20px;
+        max-height: 90vh;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header-icon {
+        font-size: 2rem;
+      }
+      
+      .timer-section {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .story-controls {
+        gap: 10px;
+      }
+      
+      .speaker-name {
+        font-size: 1.2rem;
+      }
+      
+      .time-remaining {
+        font-size: 1.5rem;
+      }
+    }
     
     /* تأثيرات النصوص الجديدة */
     .main-title {
@@ -1248,9 +1770,64 @@
         });
       } catch (error) {
         console.warn('ActivityUtils غير متوفر، سيتم استخدام بدائل بسيطة');
-        // بديل بسيط لـ ActivityManager
+        // بديل بسيط لـ ActivityManager (مستقل تماماً)
         ActivityManager = {
-          playSound: (sound) => console.log('تشغيل صوت:', sound),
+          playSound: (sound) => {
+            console.log('🎵 تشغيل صوت:', sound);
+            // يمكن إضافة تشغيل أصوات عامة هنا إذا أردت
+          },
+          showNotification: (message, type = 'info') => {
+            console.log(`📢 ${type.toUpperCase()}: ${message}`);
+            
+            // إنشاء إشعار بصري بسيط
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.style.cssText = `
+              position: fixed;
+              top: 20px;
+              right: 20px;
+              padding: 15px 20px;
+              background: ${type === 'success' ? '#4caf50' : type === 'warning' ? '#ff9800' : type === 'error' ? '#f44336' : '#2196f3'};
+              color: white;
+              border-radius: 8px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+              z-index: 10000;
+              font-family: 'Cairo', sans-serif;
+              font-weight: 600;
+              max-width: 300px;
+              animation: slideIn 0.3s ease-out;
+            `;
+            notification.textContent = message;
+            
+            // إضافة CSS للحركة إذا لم يكن موجود
+            if (!document.querySelector('#notification-styles')) {
+              const style = document.createElement('style');
+              style.id = 'notification-styles';
+              style.textContent = `
+                @keyframes slideIn {
+                  from { transform: translateX(100%); opacity: 0; }
+                  to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                  from { transform: translateX(0); opacity: 1; }
+                  to { transform: translateX(100%); opacity: 0; }
+                }
+              `;
+              document.head.appendChild(style);
+            }
+            
+            document.body.appendChild(notification);
+            
+            // إزالة الإشعار بعد 4 ثوان
+            setTimeout(() => {
+              notification.style.animation = 'slideOut 0.3s ease-out';
+              setTimeout(() => {
+                if (notification.parentNode) {
+                  notification.parentNode.removeChild(notification);
+                }
+              }, 300);
+            }, 4000);
+          },
           showNotification: (message, type) => {
             console.log(`${type}: ${message}`);
             alert(message);
@@ -1526,20 +2103,81 @@
       "وهكذا..."
     ];
 
-    // تحميل بيانات الطلاب مع النظام الذكي
+    // تحميل بيانات الطلاب مع النظام الذكي (بيانات مدمجة)
     async function loadStudentData() {
       try {
         // إشعار بداية التحميل
         ActivityManager.showNotification && ActivityManager.showNotification('🔄 جاري تحميل بيانات الطلاب...', 'info');
         
-        const response = await fetch('../data/studentData.json');
-        const data = await response.json();
+        // بيانات مدمجة للطلاب (يمكن تعديلها حسب الحاجة)
+        const embeddedStudentData = {
+          "خامس 1": [
+            "أحمد محمد الشامسي",
+            "فاطمة علي البلوشي", 
+            "عمر سالم الحراصي",
+            "عائشة خالد المعمري",
+            "محمد أحمد الغافري",
+            "نور فهد الرحبي",
+            "سارة حمد الهنائي",
+            "يوسف طالب الحبسي"
+          ],
+          "خامس 2": [
+            "مريم سعيد الراشدي",
+            "عبدالله ناصر العبري",
+            "آمنة خلفان الصالحي",
+            "حمزة راشد الكندي",
+            "رقية سلطان الفارسي",
+            "زياد محمد المقبالي",
+            "خديجة عامر السعدي",
+            "إبراهيم علي الحارثي"
+          ],
+          "سادس 1": [
+            "لطيفة حمدان العامري",
+            "سلطان سعود الحكماني",
+            "وفاء قاسم الجابري",
+            "ماجد عبدالله النوفلي",
+            "شيخة سليمان البريكي",
+            "منصور خميس الذهلي",
+            "أسماء محمود الكيومي",
+            "راشد سالم الشحي"
+          ],
+          "سادس 2": [
+            "حليمة يوسف البوسعيدي",
+            "عدنان ماجد الرواحي",
+            "زينب طارق العريمي",
+            "خالد سعيد الحراري",
+            "بدرية حمود الرقيشي",
+            "طلال أحمد المنذري",
+            "نادية فيصل الجهوري",
+            "سيف محمد القاسمي"
+          ],
+          "سابع 1": [
+            "هند عبدالرحمن الغيثي",
+            "معاذ ياسر الكلباني",
+            "ريم صالح الشبيبي",
+            "تميم ناجي الحضرمي",
+            "دانة كمال الإسماعيلي",
+            "عثمان رضا الدرمكي",
+            "ليلى حارب المحروقي",
+            "صقر مبارك الوهيبي"
+          ],
+          "سابع 2": [
+            "جوهرة فخر الحمادي",
+            "بلال نزار الجنيبي",
+            "شهد موسى العلوي",
+            "فارس وليد البطاشي",
+            "غالية حميد الحجري",
+            "أسامة شكري اليحيائي",
+            "رحمة باسل النعماني",
+            "حيدر جمال الفليتي"
+          ]
+        };
         
-        // تحويل البيانات من البنية الحالية إلى البنية المطلوبة
+        // تحويل البيانات المدمجة إلى التنسيق المطلوب
         students = [];
-        Object.keys(data).forEach(className => {
-          if (Array.isArray(data[className])) {
-            data[className].forEach(studentName => {
+        Object.keys(embeddedStudentData).forEach(className => {
+          if (Array.isArray(embeddedStudentData[className])) {
+            embeddedStudentData[className].forEach(studentName => {
               students.push({
                 name: studentName,
                 class: className
@@ -1552,10 +2190,10 @@
         
         // إشعار نجاح التحميل مع تأثيرات صوتية
         smartSoundSystem.play('achievement', false);
-        const successMessage = `✅ تم تحميل ${students.length} طالب من ${Object.keys(data).length} صف بنجاح!`;
+        const successMessage = `✅ تم تحميل ${students.length} طالب من ${Object.keys(embeddedStudentData).length} صف بنجاح!`;
         ActivityManager.showNotification && ActivityManager.showNotification(successMessage, 'success');
         
-        console.log('تم تحميل', students.length, 'طالب من', Object.keys(data).length, 'صف');
+        console.log('تم تحميل', students.length, 'طالب من', Object.keys(embeddedStudentData).length, 'صف');
       } catch (error) {
         console.error('خطأ في تحميل بيانات الطلاب:', error);
         
@@ -2438,7 +3076,9 @@
       
       // معالج أزرار التحكم
       document.getElementById('backBtn').addEventListener('click', () => {
-        window.location.href = '../main.html';
+        if (confirm('هل تريد إعادة تشغيل النشاط؟')) {
+          window.location.reload();
+        }
       });
       
       document.getElementById('muteBtn').addEventListener('click', () => {
@@ -2555,8 +3195,5 @@
       }
     });
   </script>
-  
-  <!-- Responsive JavaScript Helper -->
-  <script src="../assets/js/responsive-helper.js"></script>
 </body>
 </html>
