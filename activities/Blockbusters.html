@@ -4185,7 +4185,13 @@
       elements.soundBtn.addEventListener('click', toggleSound);
       elements.interactiveMessagesBtn.addEventListener('click', toggleInteractiveMessages);
       elements.instructionsBtn.addEventListener('click', () => showModal(elements.instructionsModal));
-      document.getElementById('clearMemoryBtn').addEventListener('click', showClearMemoryConfirmation);
+      const clearMemoryBtn = document.getElementById('clearMemoryBtn');
+      if (clearMemoryBtn) {
+        clearMemoryBtn.addEventListener('click', showClearMemoryConfirmation);
+        console.log('✅ تم تفعيل زر إفراغ الذاكرة بنجاح');
+      } else {
+        console.error('❌ لم يتم العثور على زر إفراغ الذاكرة');
+      }
       elements.fullscreenBtn.addEventListener('click', toggleFullscreen);
       
       // الإعدادات
@@ -4766,8 +4772,15 @@
 
     // ==== دوال إفراغ الذاكرة ====
     function showClearMemoryConfirmation() {
-      showModal(document.getElementById('clearMemoryModal'));
-      showNotification('⚠️ تأكد من قرارك قبل المتابعة', 'warning');
+      console.log('🧹 تم النقر على زر إفراغ الذاكرة');
+      const modal = document.getElementById('clearMemoryModal');
+      if (modal) {
+        showModal(modal);
+        showNotification('⚠️ تأكد من قرارك قبل المتابعة', 'warning');
+        console.log('✅ تم عرض نافذة التأكيد');
+      } else {
+        console.error('❌ لم يتم العثور على نافذة التأكيد');
+      }
     }
 
     function confirmClearMemory() {
