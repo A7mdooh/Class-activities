@@ -1682,6 +1682,437 @@
         transform: translateY(-120%);
       }
     }
+
+    /* نافذة النتائج الاحترافية المطورة */
+    .victory-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      animation: modalFadeIn 0.5s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .victory-content {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.95) 0%, 
+        rgba(248, 250, 255, 0.95) 50%, 
+        rgba(240, 248, 255, 0.95) 100%);
+      border-radius: 25px;
+      padding: 40px;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+      border: 3px solid rgba(255, 215, 0, 0.3);
+      animation: victorySlideIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes victorySlideIn {
+      from {
+        transform: scale(0.7) translateY(50px);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+      }
+    }
+
+    /* خلفية متحركة */
+    .victory-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      border-radius: 25px;
+    }
+
+    .floating-particles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(circle at 20% 80%, rgba(255, 215, 0, 0.1) 2px, transparent 2px),
+        radial-gradient(circle at 80% 20%, rgba(255, 20, 147, 0.1) 2px, transparent 2px),
+        radial-gradient(circle at 40% 40%, rgba(0, 191, 255, 0.1) 2px, transparent 2px);
+      background-size: 50px 50px, 60px 60px, 40px 40px;
+      animation: particleFloat 15s linear infinite;
+    }
+
+    @keyframes particleFloat {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-100px); }
+    }
+
+    .sparkle-effect {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, 
+        transparent 40%, 
+        rgba(255, 255, 255, 0.1) 50%, 
+        transparent 60%);
+      animation: sparkleMove 3s ease-in-out infinite;
+    }
+
+    @keyframes sparkleMove {
+      0%, 100% { transform: translateX(-100%) rotate(45deg); }
+      50% { transform: translateX(100%) rotate(45deg); }
+    }
+
+    /* زر الإغلاق المحسن */
+    .close-btn-enhanced {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      width: 45px;
+      height: 45px;
+      border: none;
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+      color: white;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+      z-index: 10;
+    }
+
+    .close-btn-enhanced:hover {
+      transform: scale(1.1) rotate(90deg);
+      box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+    }
+
+    /* رأس النافذة */
+    .victory-header {
+      text-align: center;
+      margin-bottom: 30px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .victory-icon-container {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+
+    .victory-main-icon {
+      font-size: 4rem;
+      color: #FFD700;
+      text-shadow: 0 4px 8px rgba(255, 215, 0, 0.5);
+      animation: trophyBounce 2s ease-in-out infinite;
+    }
+
+    @keyframes trophyBounce {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-10px) scale(1.05); }
+    }
+
+    .victory-sub-icons {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 120px;
+      height: 120px;
+    }
+
+    .victory-sub-icons i {
+      position: absolute;
+      font-size: 1.5rem;
+      color: #ff6b6b;
+      animation: orbitalSpin 4s linear infinite;
+    }
+
+    .victory-sub-icons i:nth-child(1) {
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      animation-delay: 0s;
+    }
+
+    .victory-sub-icons i:nth-child(2) {
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      animation-delay: 1.3s;
+    }
+
+    .victory-sub-icons i:nth-child(3) {
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      animation-delay: 2.6s;
+    }
+
+    @keyframes orbitalSpin {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.2); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .victory-title .main-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .victory-title .sub-title {
+      font-size: 1.1rem;
+      color: #666;
+      font-weight: 500;
+      margin: 0;
+    }
+
+    /* قسم الإحصائيات */
+    .story-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin: 30px 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .stat-item {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 255, 0.9) 100%);
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      border: 2px solid rgba(255, 215, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .stat-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    .stat-icon {
+      font-size: 2rem;
+      color: #667eea;
+      margin-bottom: 10px;
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 5px;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #666;
+      font-weight: 500;
+    }
+
+    /* قائمة المشاركين المحسنة */
+    .participants-showcase {
+      margin: 30px 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .participants-title {
+      text-align: center;
+      font-size: 1.5rem;
+      color: #333;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .participants-title i {
+      color: #FFD700;
+      font-size: 1.3rem;
+    }
+
+    .honor-board-enhanced {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(240, 248, 255, 0.8) 100%);
+      border-radius: 15px;
+      padding: 20px;
+      border: 2px solid rgba(102, 126, 234, 0.2);
+    }
+
+    .honor-list-enhanced {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .honor-list-enhanced li {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 12px 20px;
+      margin-bottom: 10px;
+      border-radius: 25px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+      animation: participantSlideIn 0.5s ease-out;
+      transition: all 0.3s ease;
+    }
+
+    .honor-list-enhanced li:hover {
+      transform: translateX(5px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    @keyframes participantSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* رسالة تحفيزية */
+    .motivation-footer {
+      text-align: center;
+      margin: 25px 0;
+      padding: 20px;
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 140, 0, 0.1) 100%);
+      border-radius: 15px;
+      border: 2px dashed rgba(255, 215, 0, 0.3);
+      position: relative;
+      z-index: 2;
+    }
+
+    .motivation-icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      animation: motivationTwinkle 1.5s ease-in-out infinite;
+    }
+
+    @keyframes motivationTwinkle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.1); }
+    }
+
+    .motivation-message {
+      font-size: 1.1rem;
+      color: #555;
+      font-weight: 500;
+      font-style: italic;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    /* أزرار الإجراءات */
+    .victory-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 30px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .btn-enhanced {
+      padding: 15px 25px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .btn-primary-enhanced {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-primary-enhanced:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+    }
+
+    .btn-secondary-enhanced {
+      background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+      color: #333;
+      box-shadow: 0 6px 20px rgba(132, 250, 176, 0.4);
+    }
+
+    .btn-secondary-enhanced:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(132, 250, 176, 0.5);
+    }
+
+    /* تحسينات للأجهزة المحمولة */
+    @media (max-width: 768px) {
+      .victory-content {
+        margin: 20px;
+        padding: 30px 20px;
+        max-height: 95vh;
+      }
+
+      .victory-title .main-title {
+        font-size: 1.8rem;
+      }
+
+      .story-stats {
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+
+      .stat-item {
+        padding: 15px;
+      }
+
+      .victory-actions {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .victory-main-icon {
+        font-size: 3rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1759,26 +2190,88 @@
     </div>
   </div>
 
-  <!-- نافذة النتائج النهائية -->
+  <!-- نافذة النتائج النهائية المطورة -->
   <div class="victory-modal responsive-modal" id="thankYouModal">
     <div class="victory-content mobile-full-height">
-      <button class="close-btn touch-target" id="closeModalBtn" title="إغلاق">
+      <!-- خلفية متحركة -->
+      <div class="victory-background">
+        <div class="floating-particles"></div>
+        <div class="sparkle-effect"></div>
+      </div>
+      
+      <!-- زر الإغلاق المحسن -->
+      <button class="close-btn-enhanced touch-target" id="closeModalBtn" title="إغلاق">
         <i class="fas fa-times"></i>
       </button>
-      <div class="victory-fireworks">
-        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
+      
+      <!-- رأس النافذة الاحترافي -->
+      <div class="victory-header">
+        <div class="victory-icon-container">
+          <div class="victory-main-icon">
+            <i class="fas fa-trophy"></i>
+          </div>
+          <div class="victory-sub-icons">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-medal"></i>
+            <i class="fas fa-crown"></i>
+          </div>
+        </div>
+        
+        <div class="victory-title">
+          <h2 class="main-title">🎭 شكراً لسردكم الرائع!</h2>
+          <p class="sub-title">لقد أبدعتم في نسج حكاية مذهلة</p>
+        </div>
       </div>
-      <div class="victory-trophy">
-        <i class="fas fa-trophy"></i>
+      
+      <!-- قسم الإحصائيات -->
+      <div class="story-stats">
+        <div class="stat-item">
+          <div class="stat-icon"><i class="fas fa-users"></i></div>
+          <div class="stat-number" id="totalParticipants">0</div>
+          <div class="stat-label">مشارك</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon"><i class="fas fa-clock"></i></div>
+          <div class="stat-number" id="totalTime">0</div>
+          <div class="stat-label">دقيقة</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon"><i class="fas fa-book"></i></div>
+          <div class="stat-number" id="storyParts">0</div>
+          <div class="stat-label">جزء</div>
+        </div>
       </div>
-      <div class="victory-team">شكراً لمشاركتكم الرائعة!</div>
-      <div class="victory-names">المشاركون في القصة:</div>
-      <div class="honor-board-section">
-        <ul class="honor-list" id="participantList"></ul>
+      
+      <!-- قائمة المشاركين المحسنة -->
+      <div class="participants-showcase">
+        <h3 class="participants-title">
+          <i class="fas fa-star-half-alt"></i>
+          نجوم القصة
+        </h3>
+        <div class="honor-board-enhanced">
+          <ul class="honor-list-enhanced" id="participantList"></ul>
+        </div>
       </div>
-      <button class="btn btn-primary touch-target mobile-full-width" id="modalBackBtn">
-        <i class="fas fa-redo"></i> نشاط جديد
-      </button>
+      
+      <!-- رسالة تحفيزية -->
+      <div class="motivation-footer">
+        <div class="motivation-icon">✨</div>
+        <p class="motivation-message">
+          "كل كلمة قلتموها أضافت سحراً للحكاية. أنتم رواة المستقبل!"
+        </p>
+      </div>
+      
+      <!-- أزرار الإجراءات -->
+      <div class="victory-actions">
+        <button class="btn-enhanced btn-primary-enhanced touch-target" id="modalBackBtn">
+          <i class="fas fa-redo"></i>
+          <span>قصة جديدة</span>
+        </button>
+        <button class="btn-enhanced btn-secondary-enhanced touch-target" id="shareStoryBtn">
+          <i class="fas fa-share-alt"></i>
+          <span>مشاركة النجاح</span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -2116,6 +2609,102 @@
     let isPaused = false;
     let storyParts = []; // لحفظ أجزاء القصة
     let currentSpeakerIndex = 0;
+    let gameStartTime = 0; // متغير لتسجيل وقت بداية النشاط
+    let participants = []; // قائمة المشاركين في القصة
+
+    // دوال إدارة النافذة المطورة
+    function showResults() {
+      smartSoundSystem.play('achievement');
+      
+      // حساب الإحصائيات
+      const totalParticipants = participants.length;
+      const storyParts = participants.length;
+      const totalTime = Math.floor((Date.now() - gameStartTime) / 1000);
+      const minutes = Math.floor(totalTime / 60);
+      const seconds = totalTime % 60;
+      const timeFormatted = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+      
+      // إنشاء قائمة المشاركين
+      const participantsList = participants.map((p, index) => 
+        `<li style="animation-delay: ${index * 0.1}s">
+          <i class="fas fa-star"></i>
+          <span>${p}</span>
+        </li>`
+      ).join('');
+
+      document.getElementById('story-participants').innerHTML = participantsList;
+      document.getElementById('stat-participants').textContent = totalParticipants;
+      document.getElementById('stat-parts').textContent = storyParts;
+      document.getElementById('stat-time').textContent = timeFormatted;
+      
+      document.getElementById('thankYouModal').style.display = 'flex';
+      
+      // تأثير ظهور متدرج للإحصائيات
+      setTimeout(() => {
+        const statItems = document.querySelectorAll('.stat-item');
+        statItems.forEach((item, index) => {
+          setTimeout(() => {
+            item.style.animation = 'victorySlideIn 0.6s ease-out';
+          }, index * 200);
+        });
+      }, 300);
+    }
+
+    function hideResults() {
+      document.getElementById('thankYouModal').style.display = 'none';
+    }
+
+    function startNewStory() {
+      hideResults();
+      resetGame();
+      smartSoundSystem.play('gameStart');
+    }
+
+    function shareSuccess() {
+      const totalParticipants = participants.length;
+      const message = `🎭 لقد أكملنا قصة رائعة بمشاركة ${totalParticipants} طالب! شكراً لجميع المشاركين على إبداعهم المميز! 🌟`;
+      
+      if (navigator.share) {
+        navigator.share({
+          title: 'نشاط سرد القصص',
+          text: message,
+          url: window.location.href
+        }).catch(console.log);
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(message).then(() => {
+          ActivityManager.showNotification('تم نسخ الرسالة إلى الحافظة!', 'success');
+        });
+      } else {
+        ActivityManager.showNotification('شكراً لكم على المشاركة الرائعة!', 'success');
+      }
+    }
+
+    function resetGame() {
+      // إعادة تعيين جميع المتغيرات
+      participants = [];
+      storyParts = [];
+      currentSpeakerIndex = 0;
+      currentRound = 1;
+      gameStartTime = 0;
+      
+      // إخفاء جميع المناطق النشطة
+      document.getElementById('gameArea').style.display = 'none';
+      document.getElementById('participantsContainer').style.display = 'none';
+      
+      // إظهار منطقة الإعداد
+      document.getElementById('setupArea').style.display = 'block';
+      
+      // إعادة تعيين النماذج
+      document.getElementById('classSelect').value = '';
+      document.getElementById('modeSelect').value = '';
+      document.getElementById('storyTypeSelect').value = '';
+      document.getElementById('storyStarter').value = '';
+      
+      // مسح العداد
+      clearInterval(timerInterval);
+      
+      ActivityManager.showNotification('تم إعادة تعيين النشاط بنجاح', 'info');
+    }
 
     // نظام الأصوات الذكي والإشعارات التفاعلية
     const smartSoundSystem = {
@@ -2724,6 +3313,9 @@
 
     // بدء جلسة السرد الشفوي
     function startOralStorySession() {
+      // تسجيل وقت بداية النشاط
+      gameStartTime = Date.now();
+      
       // إخفاء الإعدادات وإظهار منطقة النشاط
       document.getElementById('settingsCard').style.display = 'none';
       document.getElementById('studentSelection').style.display = 'none';
@@ -2829,6 +3421,11 @@
           selectedStudent = currentStudentList[currentSpeakerIndex];
           currentSpeakerIndex++;
           break;
+      }
+      
+      // إضافة المشارك لقائمة المشاركين
+      if (selectedStudent && !participants.includes(selectedStudent)) {
+        participants.push(selectedStudent);
       }
       
       // تحديث الواجهة
@@ -3094,7 +3691,7 @@
       interactiveNotifications.celebrate();
       
       setTimeout(() => {
-        showOralStoryResults();
+        showResults();
       }, 2000);
     }
 
@@ -3539,6 +4136,19 @@
       });
       
       document.getElementById('modalBackBtn').addEventListener('click', resetStoryActivity);
+      
+      // معالج أزرار النافذة المطورة
+      document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('close-btn-enhanced')) {
+          hideResults();
+        }
+        if (e.target.closest('#newStoryBtn')) {
+          startNewStory();
+        }
+        if (e.target.closest('#shareBtn')) {
+          shareSuccess();
+        }
+      });
       
       // تفعيل إشعار الترحيب
       interactiveNotifications.welcome();
