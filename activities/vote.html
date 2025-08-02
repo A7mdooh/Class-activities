@@ -7,11 +7,253 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
   
-  <!-- Unified Styles -->
-  <link rel="stylesheet" href="../config/unified-styles-template.css">
-  
-  <!-- Responsive CSS Framework -->
-  <link rel="stylesheet" href="../assets/css/responsive.css">
+  <!-- جميع الأنماط مدمجة في الصفحة -->
+  <style>
+    /* Unified Styles Template - مدمج */
+    :root {
+      --primary-color: #DC143C;
+      --secondary-color: #228B22;
+      --accent-color: #FFD700;
+      --omani-red: #DC143C;
+      --omani-green: #228B22;
+      --omani-gold: #FFD700;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8f9fa;
+      --bg-card: #ffffff;
+      --text-primary: #333333;
+      --text-secondary: #666666;
+      --text-light: #ffffff;
+      --text-muted: #999999;
+      --success-color: #28a745;
+      --warning-color: #ffc107;
+      --error-color: #dc3545;
+      --info-color: #17a2b8;
+      --light-gray: #f8f9fa;
+      --medium-gray: #dee2e6;
+      --dark-gray: #6c757d;
+      --white: #ffffff;
+      --black: #000000;
+      --shadow-light: 0 2px 4px rgba(0,0,0,0.1);
+      --shadow-medium: 0 4px 8px rgba(0,0,0,0.15);
+      --shadow-heavy: 0 8px 16px rgba(0,0,0,0.2);
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+      --radius-full: 50px;
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --font-size-xs: 0.75rem;
+      --font-size-sm: 0.875rem;
+      --font-size-base: 1rem;
+      --font-size-lg: 1.125rem;
+      --font-size-xl: 1.25rem;
+      --transition-fast: 0.15s;
+      --transition-normal: 0.3s;
+      --transition-slow: 0.5s;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--space-lg);
+    }
+
+    .header {
+      text-align: center;
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+      color: var(--text-light);
+      padding: var(--space-xl);
+      border-radius: var(--radius-xl);
+      margin-bottom: var(--space-xl);
+      box-shadow: var(--shadow-heavy);
+    }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      margin-bottom: var(--space-lg);
+      box-shadow: var(--shadow-medium);
+      border: 1px solid var(--light-gray);
+    }
+
+    .btn {
+      display: inline-block;
+      padding: var(--space-sm) var(--space-md);
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all var(--transition-normal);
+      text-align: center;
+      font-size: var(--font-size-base);
+    }
+
+    .btn-primary {
+      background: var(--primary-color);
+      color: var(--text-light);
+    }
+
+    .btn-secondary {
+      background: var(--secondary-color);
+      color: var(--text-light);
+    }
+
+    .btn-accent {
+      background: var(--accent-color);
+      color: var(--text-primary);
+    }
+
+    .btn-large {
+      padding: var(--space-md) var(--space-lg);
+      font-size: var(--font-size-lg);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-medium);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .form-group {
+      margin-bottom: var(--space-md);
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: var(--space-sm);
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .form-select {
+      width: 100%;
+      padding: var(--space-sm);
+      border: 2px solid var(--light-gray);
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-base);
+      background: var(--bg-primary);
+      transition: border-color var(--transition-normal);
+    }
+
+    .form-select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    /* Responsive Framework */
+    .responsive-container {
+      width: 100%;
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 0 var(--space-md);
+    }
+
+    .mobile-card {
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-light);
+      transition: all var(--transition-normal);
+    }
+
+    .mobile-heading {
+      font-size: clamp(1.2rem, 4vw, 2rem);
+      margin-bottom: var(--space-md);
+    }
+
+    .mobile-subtitle {
+      font-size: clamp(0.9rem, 3vw, 1.1rem);
+      opacity: 0.8;
+    }
+
+    .mobile-grid {
+      display: grid;
+      gap: var(--space-md);
+    }
+
+    .mobile-input {
+      width: 100%;
+    }
+
+    .mobile-label {
+      font-size: clamp(0.9rem, 3vw, 1rem);
+    }
+
+    .mobile-btn {
+      min-height: 48px;
+      font-size: clamp(0.9rem, 3vw, 1.1rem);
+      padding: var(--space-sm) var(--space-md);
+    }
+
+    .mobile-text {
+      font-size: clamp(0.8rem, 2.5vw, 1rem);
+      line-height: 1.5;
+    }
+
+    .mobile-notification {
+      padding: var(--space-md);
+      border-radius: var(--radius-md);
+      font-size: clamp(0.8rem, 2.5vw, 0.95rem);
+    }
+
+    .mobile-chart {
+      width: 100%;
+      height: auto;
+      max-height: 400px;
+    }
+
+    .touch-target {
+      min-height: 44px;
+      min-width: 44px;
+    }
+
+    .touch-device .btn {
+      padding: var(--space-md);
+      font-size: var(--font-size-lg);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: var(--space-md);
+      }
+
+      .mobile-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .mobile-btn {
+        width: 100%;
+        margin: var(--space-xs) 0;
+      }
+    }
+  </style>
   
   <!-- Activity-specific styles -->
   <style>
@@ -1040,7 +1282,7 @@
   <!-- Skip link for accessibility -->
   <a href="#main-content" class="sr-only">تخطي إلى المحتوى الرئيسي</a>
   
-  <!-- Audio elements -->
+  <!-- Audio elements - محلية -->
   <audio id="clickSound" src="../assets/media/sounds/Click.mp3"></audio>
   <audio id="successSound" src="../assets/media/sounds/win.mp3"></audio>
   <audio id="errorSound" src="../assets/media/sounds/wrong_answer.mp3"></audio>
@@ -1139,7 +1381,7 @@
   <!-- مؤثرات إضافية -->
   <div id="fireworks-container" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999;"></div>
   
-  <audio id="clapSound" src="https://raw.githubusercontent.com/A7mdooh/entertainment-app/main/assets/media/sounds/clap.mp3"></audio>
+  <audio id="clapSound" src="../assets/media/sounds/clap.mp3"></audio>
   
   <script>
     // وظائف إضافية محسنة
@@ -1488,7 +1730,64 @@ ${labels.map((name, i) => `• ${name}: ${data[i]} ${data[i] === 1 ? 'صوت' : 
   </script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti"></script>
-  <script src="../config/unified-scripts-template.js"></script>
+  
+  <!-- النظام الموحد مدمج -->
+  <script>
+    // ActivityUtils مدمج
+    class ActivityUtils {
+      constructor(activityName, soundPath) {
+        this.activityName = activityName;
+        this.soundPath = soundPath || '../assets/media/sounds/';
+        this.sounds = new Map();
+        this.notifications = [];
+      }
+
+      init() {
+        console.log(`تم تهيئة نشاط: ${this.activityName}`);
+        this.preloadCommonSounds();
+      }
+
+      preloadCommonSounds() {
+        const commonSounds = [
+          'Click.mp3', 'win.mp3', 'wrong_answer.mp3', 'Notification.mp3',
+          'clap.mp3', 'select.mp3', 'start-timer.mp3', 'end-timer.mp3'
+        ];
+        
+        commonSounds.forEach(sound => {
+          const audio = new Audio(this.soundPath + sound);
+          audio.preload = 'auto';
+          this.sounds.set(sound, audio);
+        });
+      }
+
+      playSound(soundName, options = {}) {
+        const sound = this.sounds.get(soundName);
+        if (sound) {
+          sound.currentTime = 0;
+          sound.volume = options.volume || 0.7;
+          sound.play().catch(e => console.log('Audio play failed:', e));
+        }
+      }
+
+      showNotification(message, type = 'info', duration = 4000) {
+        // سيتم استخدام النظام المحسن
+        if (window.notifications) {
+          window.notifications.show(message, type, duration);
+        } else {
+          console.log(`${type}: ${message}`);
+        }
+      }
+
+      showModal(title, message, isConfirm = false) {
+        if (isConfirm) {
+          return confirm(`${title}\n\n${message}`);
+        } else {
+          alert(`${title}\n\n${message}`);
+          return false;
+        }
+      }
+    }
+  </script>
   
   <!-- نظام الجسيمات -->
   <div class="particles-container" id="particlesContainer"></div>
@@ -1526,9 +1825,7 @@ ${labels.map((name, i) => `• ${name}: ${data[i]} ${data[i] === 1 ? 'صوت' : 
       async preloadSounds() {
         const soundFiles = [
           'Click.mp3', 'win.mp3', 'wrong_answer.mp3', 'Notification.mp3',
-          'countdown-beep.mp3', 'kingdom-sounds/crystal-ping.mp3',
-          'kingdom-sounds/cosmic-explosion.mp3', 'kingdom-sounds/adventure-theme.mp3',
-          'kingdom-sounds/crown-ceremony.mp3', 'kingdom-sounds/battle-victory.mp3'
+          'countdown-beep.mp3', 'clap.mp3', 'select.mp3', 'start-timer.mp3', 'end-timer.mp3'
         ];
 
         for (const sound of soundFiles) {
@@ -1609,15 +1906,9 @@ ${labels.map((name, i) => `• ${name}: ${data[i]} ${data[i] === 1 ? 'صوت' : 
       }
 
       playBackgroundMusic() {
+        // موسيقى خلفية بسيطة
         if (this.isMuted) return;
-        
-        const music = this.sounds.get('kingdom-sounds/adventure-theme.mp3');
-        if (music) {
-          music.loop = true;
-          music.volume = 0.3 * this.volume;
-          music.play();
-          this.backgroundMusic = music;
-        }
+        console.log('Background music would play here');
       }
 
       stopBackgroundMusic() {
@@ -1896,13 +2187,17 @@ ${labels.map((name, i) => `• ${name}: ${data[i]} ${data[i] === 1 ? 'صوت' : 
     let studentData = {}, currentClass = '', candidateList = [], voterList = [], selectedManual = [], voteCounts = {}, voted = new Set();
     let votingTimer = null, votingTimeLeft = 0;
 
-    // تحميل بيانات الطلاب مع تحسينات
+    // تحميل بيانات الطلاب مع تحسينات - من الملف المحلي
     async function loadStudents() {
       try {
         // تأثير التحميل
         const loadingMsg = notifications.show('جاري تحميل بيانات الطلاب...', 'info', 10000);
         
-        const res = await fetch('https://raw.githubusercontent.com/A7mdooh/entertainment-app/main/data/studentData.json');
+        // جلب البيانات من الملف المحلي
+        const res = await fetch('../data/studentData.json');
+        if (!res.ok) {
+          throw new Error('فشل في تحميل ملف البيانات');
+        }
         studentData = await res.json();
         
         const classSelect = document.getElementById("classSelect");
@@ -1930,8 +2225,28 @@ ${labels.map((name, i) => `• ${name}: ${data[i]} ${data[i] === 1 ? 'صوت' : 
         }, 1000);
         
       } catch (error) {
-        notifications.show('خطأ في تحميل بيانات الطلاب', 'error');
+        notifications.show('خطأ في تحميل بيانات الطلاب: ' + error.message, 'error');
         smartAudio.play('wrong_answer.mp3');
+        
+        // إضافة بيانات تجريبية في حالة فشل التحميل
+        studentData = {
+          "7A": ["أحمد محمد", "فاطمة علي", "سالم خالد", "مريم سعيد", "يوسف حمد"],
+          "7B": ["نورا أحمد", "محمد سالم", "آمنة يوسف", "خالد محمد", "هناء علي"],
+          "8A": ["عبدالله سعيد", "زينب محمد", "طارق أحمد", "رقية سالم", "حمد علي"],
+          "8B": ["سعاد خالد", "عمر محمد", "ليلى أحمد", "ناصر سعيد", "عائشة حمد"]
+        };
+        
+        const classSelect = document.getElementById("classSelect");
+        classSelect.innerHTML = '<option value="">-- اختر الصف --</option>';
+        
+        Object.keys(studentData).forEach((cls) => {
+          const option = document.createElement("option");
+          option.value = cls;
+          option.textContent = `الصف ${cls}`;
+          classSelect.appendChild(option);
+        });
+        
+        notifications.show('تم تحميل بيانات تجريبية بدلاً من الملف الأصلي', 'warning');
       }
     }
 
