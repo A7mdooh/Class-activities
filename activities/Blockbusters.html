@@ -138,6 +138,44 @@
       border-color: var(--oman-red);
     }
 
+    /* زر إفراغ الذاكرة المخصص */
+    #clearMemoryBtn {
+      background: linear-gradient(135deg, #ff7043 0%, #ff8a65 100%);
+      border-color: #ff7043;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #clearMemoryBtn:hover {
+      background: linear-gradient(135deg, #f4511e 0%, #ff7043 100%);
+      border-color: #f4511e;
+      color: white;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(255, 112, 67, 0.4);
+    }
+
+    #clearMemoryBtn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    #clearMemoryBtn:hover::before {
+      left: 100%;
+    }
+
+    /* أنيميشن تحذير إفراغ الذاكرة */
+    @keyframes warningPulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
     /* ==== المحتوى الرئيسي ==== */
     .main-container {
       margin-top: 5rem;
@@ -1514,6 +1552,7 @@
         <button class="control-btn btn-responsive" id="soundBtn" title="كتم/تشغيل الصوت">🔊</button>
         <button class="control-btn btn-responsive" id="interactiveMessagesBtn" title="تفعيل/إيقاف الرسائل التفاعلية">🔔</button>
         <button class="control-btn btn-responsive" id="instructionsBtn" title="تعليمات اللعبة">❓</button>
+        <button class="control-btn btn-responsive" id="clearMemoryBtn" title="إفراغ الذاكرة للمعلم التالي">🧹</button>
         <button class="control-btn btn-responsive" id="fullscreenBtn" title="ملء الشاشة">⛶</button>
       </div>
     </div>
@@ -1863,6 +1902,62 @@
         </button>
         <button class="action-btn" id="closeStatisticsModalBtn">
           ✅ إغلاق
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة تأكيد إفراغ الذاكرة -->
+  <div class="modal-overlay" id="clearMemoryModal" style="display: none;">
+    <div class="modal-content card-responsive">
+      <div class="modal-header">
+        <div class="modal-title">🧹 تأكيد إفراغ الذاكرة</div>
+        <button class="close-btn btn-responsive" onclick="cancelClearMemory()">✕</button>
+      </div>
+      
+      <div style="text-align: center; padding: 1.5rem 0;">
+        <div style="font-size: 4rem; color: #ff7043; margin-bottom: 1rem; animation: warningPulse 2s ease-in-out infinite;">
+          ⚠️
+        </div>
+        
+        <div style="font-size: 1.2rem; font-weight: 600; color: #333; margin-bottom: 1.5rem;">
+          هل تريد إفراغ الذاكرة وإعادة تعيين اللعبة للمعلم التالي؟
+        </div>
+        
+        <div style="background: linear-gradient(135deg, rgba(255, 112, 67, 0.1) 0%, rgba(255, 138, 101, 0.1) 100%);
+                    border: 2px solid rgba(255, 112, 67, 0.2); border-radius: 15px; padding: 1.5rem; margin: 1.5rem 0; text-align: right;">
+          <h4 style="color: #ff5722; margin-bottom: 1rem; text-align: center;">⚠️ سيتم مسح:</h4>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li style="display: flex; align-items: center; gap: 10px; padding: 8px 0; color: #555; font-weight: 500;">
+              <span style="color: #ff5722; width: 20px;">👥</span> جميع بيانات الطلاب والفرق
+            </li>
+            <li style="display: flex; align-items: center; gap: 10px; padding: 8px 0; color: #555; font-weight: 500;">
+              <span style="color: #ff5722; width: 20px;">🎯</span> حالة اللعبة والنقاط الحالية
+            </li>
+            <li style="display: flex; align-items: center; gap: 10px; padding: 8px 0; color: #555; font-weight: 500;">
+              <span style="color: #ff5722; width: 20px;">📊</span> الإحصائيات والسجلات المحفوظة
+            </li>
+            <li style="display: flex; align-items: center; gap: 10px; padding: 8px 0; color: #555; font-weight: 500;">
+              <span style="color: #ff5722; width: 20px;">⚙️</span> الإعدادات والتفضيلات الحالية
+            </li>
+          </ul>
+        </div>
+        
+        <div style="background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(129, 199, 132, 0.1) 100%);
+                    border: 2px solid rgba(76, 175, 80, 0.2); border-radius: 10px; padding: 15px; color: #2e7d32; 
+                    font-weight: 500; margin-top: 20px;">
+          💡 هذا الإجراء مفيد عند انتقال اللعبة لمعلم آخر أو فصل جديد
+        </div>
+      </div>
+      
+      <div class="action-buttons">
+        <button class="action-btn" style="background: linear-gradient(135deg, #ff5722 0%, #f44336 100%); 
+                                         color: white; box-shadow: 0 6px 20px rgba(255, 87, 34, 0.3);" 
+                onclick="confirmClearMemory()">
+          🧹 نعم، إفراغ الذاكرة
+        </button>
+        <button class="action-btn secondary" onclick="cancelClearMemory()">
+          ❌ إلغاء
         </button>
       </div>
     </div>
@@ -4090,6 +4185,7 @@
       elements.soundBtn.addEventListener('click', toggleSound);
       elements.interactiveMessagesBtn.addEventListener('click', toggleInteractiveMessages);
       elements.instructionsBtn.addEventListener('click', () => showModal(elements.instructionsModal));
+      document.getElementById('clearMemoryBtn').addEventListener('click', showClearMemoryConfirmation);
       elements.fullscreenBtn.addEventListener('click', toggleFullscreen);
       
       // الإعدادات
@@ -4666,6 +4762,158 @@
           }
         }
       });
+    }
+
+    // ==== دوال إفراغ الذاكرة ====
+    function showClearMemoryConfirmation() {
+      showModal(document.getElementById('clearMemoryModal'));
+      showNotification('⚠️ تأكد من قرارك قبل المتابعة', 'warning');
+    }
+
+    function confirmClearMemory() {
+      hideModal(document.getElementById('clearMemoryModal'));
+      showNotification('🧹 جاري إفراغ الذاكرة...', 'info');
+      
+      setTimeout(() => {
+        clearMemoryForNextTeacher();
+      }, 500);
+    }
+
+    function cancelClearMemory() {
+      hideModal(document.getElementById('clearMemoryModal'));
+      showNotification('✅ تم إلغاء عملية إفراغ الذاكرة', 'info');
+    }
+
+    function clearMemoryForNextTeacher() {
+      try {
+        // 1. إعادة تعيين البيانات الأساسية
+        gameData = {
+          students: [],
+          currentMode: '',
+          gameStarted: false,
+          greenTeam: [],
+          redTeam: [],
+          greenScore: 0,
+          redScore: 0,
+          selectedCell: null,
+          soundEnabled: true,
+          gameStartTime: null,
+          classesData: {}
+        };
+
+        // 2. إعادة تعيين المتغيرات العامة
+        lastInteractiveMessageTime = 0;
+        interactiveMessagesEnabled = true;
+
+        // 3. إعادة تعيين حالة الصوت
+        if (elements.soundBtn) {
+          elements.soundBtn.textContent = '🔊';
+          elements.soundBtn.title = 'كتم الصوت';
+        }
+
+        // 4. إعادة تعيين حالة الرسائل التفاعلية
+        if (elements.interactiveMessagesBtn) {
+          elements.interactiveMessagesBtn.classList.add('active');
+          elements.interactiveMessagesBtn.textContent = '🔔';
+          elements.interactiveMessagesBtn.title = 'إيقاف الرسائل التفاعلية';
+        }
+
+        // 5. إخفاء جميع النوافذ
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+          hideModal(modal);
+        });
+
+        // 6. إعادة تعيين واجهة المستخدم
+        if (elements.gameArea) {
+          elements.gameArea.style.display = 'none';
+        }
+        if (elements.settingsPanel) {
+          elements.settingsPanel.style.display = 'block';
+        }
+
+        // 7. إعادة تعيين النماذج
+        if (elements.gameSettingsForm) {
+          elements.gameSettingsForm.reset();
+        }
+        if (elements.classSelect) {
+          elements.classSelect.innerHTML = '<option value="">-- اختر الصف --</option>';
+        }
+        if (elements.modeSelect) {
+          elements.modeSelect.value = '';
+        }
+        if (elements.playersContainer) {
+          elements.playersContainer.innerHTML = '';
+        }
+
+        // 8. إعادة تعيين لوحة النقاط
+        if (elements.greenTeamScore) elements.greenTeamScore.textContent = '0';
+        if (elements.redTeamScore) elements.redTeamScore.textContent = '0';
+        if (elements.greenTeamMembers) elements.greenTeamMembers.textContent = 'في انتظار بدء اللعبة';
+        if (elements.redTeamMembers) elements.redTeamMembers.textContent = 'في انتظار بدء اللعبة';
+
+        // 9. إعادة تعيين لوحة الحروف
+        resetHexagonBoard();
+
+        // 10. مسح التخزين المحلي
+        const keysToRemove = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key && (
+            key.includes('blockbusters') || 
+            key.includes('game') || 
+            key.includes('student') ||
+            key.includes('statistics') ||
+            key.includes('gameResults')
+          )) {
+            keysToRemove.push(key);
+          }
+        }
+        keysToRemove.forEach(key => localStorage.removeItem(key));
+
+        // 11. مسح تخزين الجلسة
+        const sessionKeysToRemove = [];
+        for (let i = 0; i < sessionStorage.length; i++) {
+          const key = sessionStorage.key(i);
+          if (key && (
+            key.includes('blockbusters') || 
+            key.includes('game') || 
+            key.includes('student')
+          )) {
+            sessionKeysToRemove.push(key);
+          }
+        }
+        sessionKeysToRemove.forEach(key => sessionStorage.removeItem(key));
+
+        // 12. إعادة تحميل بيانات الطلاب
+        loadStudentData();
+
+        // 13. رسائل التأكيد المتدرجة
+        showNotification('🧹 تم إفراغ الذاكرة بنجاح!', 'success');
+        
+        setTimeout(() => {
+          showNotification('✨ اللعبة جاهزة للمعلم التالي!', 'info');
+        }, 1500);
+        
+        setTimeout(() => {
+          showNotification('🎯 يمكن الآن اختيار صف جديد وبدء لعبة جديدة', 'success');
+        }, 3000);
+
+        // 14. تأثير بصري لإظهار التنظيف
+        document.body.style.transition = 'all 0.5s ease';
+        document.body.style.transform = 'scale(0.98)';
+        document.body.style.opacity = '0.8';
+        
+        setTimeout(() => {
+          document.body.style.transform = 'scale(1)';
+          document.body.style.opacity = '1';
+        }, 300);
+
+        console.log('✅ تم إفراغ الذاكرة وإعادة تعيين Blockbusters بنجاح');
+
+      } catch (error) {
+        console.error('❌ خطأ في إفراغ الذاكرة:', error);
+        showNotification('⚠️ حدث خطأ أثناء إفراغ الذاكرة. يُنصح بإعادة تحميل الصفحة.', 'error');
+      }
     }
   </script>
   
