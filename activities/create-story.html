@@ -909,17 +909,39 @@
     
     // تهيئة النشاط
     document.addEventListener('DOMContentLoaded', function() {
-      ActivityManager = new ActivityUtils({
-        activityName: 'create-story',
-        primaryColor: OmaniColors.red,
-        secondaryColor: OmaniColors.green,
-        sounds: {
-          click: '../assets/media/sounds/Click.mp3',
-          success: '../assets/media/sounds/name-start.mp3',
-          celebration: '../assets/media/sounds/clap.mp3',
-          win: '../assets/media/sounds/win.mp3'
-        }
-      });
+      // محاولة تهيئة ActivityManager مع fallback
+      try {
+        ActivityManager = new ActivityUtils({
+          activityName: 'create-story',
+          primaryColor: OmaniColors.red,
+          secondaryColor: OmaniColors.green,
+          sounds: {
+            click: '../assets/media/sounds/Click.mp3',
+            success: '../assets/media/sounds/name-start.mp3',
+            celebration: '../assets/media/sounds/clap.mp3',
+            win: '../assets/media/sounds/win.mp3'
+          }
+        });
+      } catch (error) {
+        console.warn('ActivityUtils غير متوفر، سيتم استخدام بدائل بسيطة');
+        // بديل بسيط لـ ActivityManager
+        ActivityManager = {
+          playSound: (sound) => console.log('تشغيل صوت:', sound),
+          showNotification: (message, type) => {
+            console.log(`${type}: ${message}`);
+            alert(message);
+          },
+          toggleMute: () => console.log('تغيير حالة الصوت'),
+          toggleFullscreen: () => {
+            if (document.fullscreenElement) {
+              document.exitFullscreen();
+            } else {
+              document.documentElement.requestFullscreen();
+            }
+          },
+          isMuted: () => false
+        };
+      }
 
       initializeStoryActivity();
     });
@@ -1022,11 +1044,36 @@
       try {
         const response = await fetch('../data/studentData.json');
         const data = await response.json();
-        students = data.students || [];
+        
+        // تحويل البيانات من البنية الحالية إلى البنية المطلوبة
+        students = [];
+        Object.keys(data).forEach(className => {
+          if (Array.isArray(data[className])) {
+            data[className].forEach(studentName => {
+              students.push({
+                name: studentName,
+                class: className
+              });
+            });
+          }
+        });
+        
         populateClassSelect();
+        console.log('تم تحميل', students.length, 'طالب من', Object.keys(data).length, 'صف');
       } catch (error) {
         console.error('خطأ في تحميل بيانات الطلاب:', error);
-        ActivityManager.showNotification('فشل في تحميل بيانات الطلاب', 'error');
+        
+        // بيانات احتياطية للاختبار
+        students = [
+          { name: "أحمد محمد", class: "خامس 1" },
+          { name: "فاطمة علي", class: "خامس 1" },
+          { name: "عمر سالم", class: "خامس 1" },
+          { name: "عائشة حسن", class: "خامس 2" },
+          { name: "محمد خالد", class: "خامس 2" },
+          { name: "نور الدين", class: "خامس 2" }
+        ];
+        populateClassSelect();
+        ActivityManager.showNotification('تم استخدام بيانات تجريبية للاختبار', 'warning');
       }
     }
 
@@ -1424,12 +1471,17 @@
       // إظهار تأثيرات الاحتفال
       ActivityManager.playSound('celebration');
       
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: ['#667eea', '#764ba2', '#ffecd2', '#fcb69f']
-      });
+      // تحقق من وجود مكتبة confetti
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#667eea', '#764ba2', '#ffecd2', '#fcb69f']
+        });
+      } else {
+        console.log('مكتبة confetti غير متوفرة');
+      }
       
       setTimeout(() => {
         showOralStoryResults();
@@ -1652,7 +1704,7 @@
       const header = document.createElement('div');
       header.className = 'students-selection-header mobile-text-center';
       header.innerHTML = `
-        <h3><i class="fas fa-users"></i> اختر الطلاب المشاركين</h3>
+        <h3><i class="fas fa-users"></i> اختر الطلاب المشاركين في السرد الشفوي</h3>
         <p>انقر على الطلاب لاختيارهم ${mode === 'select-single' ? '(طالب واحد فقط)' : '(عدة طلاب)'}</p>
       `;
       container.appendChild(header);
@@ -1700,7 +1752,7 @@
       // زر بدء السرد
       const startButton = document.createElement('button');
       startButton.className = 'btn btn-primary start-story-btn touch-target mobile-full-width';
-      startButton.innerHTML = '<i class="fas fa-play"></i> بدء السرد';
+      startButton.innerHTML = '<i class="fas fa-play"></i> بدء السرد الشفوي';
       startButton.addEventListener('click', () => {
         if (selectedManualStudents.length === 0) {
           ActivityManager.showNotification('يرجى اختيار طالب واحد على الأقل', 'warning');
@@ -1708,52 +1760,15 @@
         }
         
         currentStudentList = [...selectedManualStudents];
+        totalRounds = Math.min(currentStudentList.length, 8);
         usedStudents = [];
-        currentMode = mode;
-        startStoryActivity();
+        startOralStorySession();
       });
       
       container.appendChild(startButton);
     }
 
-    // بدء النشاط
-    function startStoryActivity() {
-      // إخفاء الإعدادات وإظهار منطقة النشاط
-      document.getElementById('settingsCard').style.display = 'none';
-      document.getElementById('studentSelection').style.display = 'none';
-      document.getElementById('storyContainer').style.display = 'block';
-      
-      // إظهار زر التالي في الوضع الجماعي
-      const nextBtn = document.getElementById('nextBtn');
-      nextBtn.style.display = currentMode.includes('group') ? 'inline-block' : 'none';
-      
-      // بدء مع الطالب الأول
-      nextStudent();
-      startTimer();
-      
-      ActivityManager.playSound('success');
-      ActivityManager.showNotification('بدأ النشاط! حان وقت السرد', 'success');
-    }
-
-    // الانتقال للطالب التالي
-    function nextStudent() {
-      if (currentStudentList.length === 0) {
-        ActivityManager.showNotification('انتهى جميع الطلاب!', 'info');
-        return;
-      }
-      
-      const randomIndex = Math.floor(Math.random() * currentStudentList.length);
-      const selectedStudent = currentStudentList.splice(randomIndex, 1)[0];
-      usedStudents.push(selectedStudent);
-      
-      document.getElementById('studentName').innerHTML = `
-        <i class="fas fa-user-edit"></i> ابدأ السرد يا ${selectedStudent}
-      `;
-      
-      ActivityManager.playSound('click');
-    }
-
-    // بدء المؤقت
+    // بدء المؤقت (للنظام المرئي الجديد)
     function startTimer() {
       const canvas = document.getElementById('timerCanvas');
       const ctx = canvas.getContext('2d');
@@ -1802,57 +1817,6 @@
         clearInterval(timerInterval);
         timerInterval = null;
       }
-    }
-
-    // إنهاء القصة
-    function finishStory() {
-      stopTimer();
-      
-      // إظهار رسالة الاحتفال
-      const celebration = document.getElementById('celebration');
-      celebration.style.display = 'block';
-      celebration.style.opacity = '1';
-      
-      // تأثيرات الاحتفال
-      ActivityManager.playSound('celebration');
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: [OmaniColors.red, OmaniColors.green, OmaniColors.gold]
-      });
-      
-      // إخفاء الاحتفال وإظهار النتائج
-      setTimeout(() => {
-        celebration.style.opacity = '0';
-        setTimeout(() => {
-          celebration.style.display = 'none';
-          showFinalResults();
-        }, 500);
-      }, 3000);
-    }
-
-    // إظهار النتائج النهائية
-    function showFinalResults() {
-      const modal = document.getElementById('thankYouModal');
-      const participantList = document.getElementById('participantList');
-      
-      // تنظيف القائمة
-      participantList.innerHTML = '';
-      
-      // إضافة المشاركين
-      usedStudents.forEach((name, index) => {
-        const li = document.createElement('li');
-        li.className = 'honor-item';
-        li.innerHTML = `
-          <span class="honor-rank">${index + 1}</span>
-          <span class="honor-team">${name}</span>
-          <span class="honor-names">مشارك في القصة</span>
-        `;
-        participantList.appendChild(li);
-      });
-      
-      modal.style.display = 'flex';
     }
 
     // إعادة تعيين النشاط
