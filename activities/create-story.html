@@ -2067,10 +2067,6 @@
               }, 500);
             }, 5000);
           },
-          showNotification: (message, type) => {
-            console.log(`${type}: ${message}`);
-            alert(message);
-          },
           toggleMute: () => console.log('تغيير حالة الصوت'),
           toggleFullscreen: () => {
             if (document.fullscreenElement) {
@@ -2235,27 +2231,42 @@
 
     // نظام الإشعارات التفاعلية المتقدم
     const interactiveNotifications = {
-      // إشعار الترحيب
+      // إشعار الترحيب المطور
       welcome: function() {
+        // ترحيب فوري دون انتظار
         setTimeout(() => {
           smartSoundSystem.play('welcome');
-        }, 500);
+          
+          // رسالة ترحيب إضافية بعد ثانيتين
+          setTimeout(() => {
+            const welcomeMessages = [
+              "🎭 مرحباً بك في عالم السرد الإبداعي!",
+              "📚 استعد لرحلة مثيرة في عالم الحكايات!",
+              "✨ دع خيالك ينطلق مع أصدقائك!"
+            ];
+            const randomMessage = welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
+            ActivityManager.showNotification(randomMessage, 'welcome');
+          }, 2000);
+        }, 300);
       },
       
-      // إشعار بداية النشاط
+      // إشعار بداية النشاط المطور
       gameStart: function() {
+        // بداية فورية مع تأثيرات متدرجة
         smartSoundSystem.play('gameStart');
         
-        // إشعار إضافي بعد 3 ثوان
-        setTimeout(() => {
-          const tips = [
-            "💡 نصيحة: استخدم التفاصيل الحسية لجعل القصة أكثر حيوية!",
-            "🎯 نصيحة: اربط كل جزء بما قاله زملاؤك السابقون!",
-            "✨ نصيحة: لا تخف من الإبداع والخيال الواسع!"
-          ];
-          const randomTip = tips[Math.floor(Math.random() * tips.length)];
-          ActivityManager.showNotification && ActivityManager.showNotification(randomTip, 'info');
-        }, 3000);
+        // سلسلة رسائل تحفيزية متدرجة
+        const motivationSequence = [
+          { message: "� انطلقت المغامرة السردية!", delay: 1000 },
+          { message: "� أضواء... كاميرا... سرد!", delay: 2500 },
+          { message: "⭐ دعوا الحكاية تبدأ!", delay: 4000 }
+        ];
+        
+        motivationSequence.forEach(item => {
+          setTimeout(() => {
+            ActivityManager.showNotification(item.message, 'success');
+          }, item.delay);
+        });
       },
       
       // تشجيع منتظم أثناء السرد
@@ -2371,8 +2382,11 @@
     // تحميل بيانات الطلاب من ملف studentData.json
     async function loadStudentData() {
       try {
-        // إشعار بداية التحميل
-        ActivityManager.showNotification && ActivityManager.showNotification('🔄 جاري تحميل بيانات الطلاب...', 'info');
+        // إشعار بداية التحميل مع تأثير تحميل
+        ActivityManager.showNotification('🔄 جاري تحميل بيانات الطلاب...', 'info');
+        
+        // إظهار مؤشر التحميل البصري
+        showLoadingIndicator(true);
         
         // جلب البيانات من ملف studentData.json
         const response = await fetch('../data/studentData.json');
@@ -2388,9 +2402,13 @@
           throw new Error('ملف البيانات غير صحيح أو فارغ');
         }
         
-        // تحويل البيانات إلى التنسيق المطلوب
+        // تحويل البيانات إلى التنسيق المطلوب مع رسائل تقدم
         students = [];
-        Object.keys(data).forEach(className => {
+        const classNames = Object.keys(data);
+        
+        ActivityManager.showNotification(`📊 جاري معالجة ${classNames.length} صف دراسي...`, 'info');
+        
+        classNames.forEach((className, index) => {
           if (Array.isArray(data[className])) {
             data[className].forEach(studentName => {
               students.push({
@@ -2399,6 +2417,10 @@
               });
             });
           }
+          
+          // إظهار تقدم المعالجة
+          const progress = Math.round(((index + 1) / classNames.length) * 100);
+          updateLoadingProgress(progress);
         });
         
         // التحقق من وجود طلاب
@@ -2408,47 +2430,58 @@
         
         populateClassSelect();
         
-        // إشعار نجاح التحميل مع تأثيرات صوتية
-        smartSoundSystem.play('achievement', false);
-        const successMessage = `✅ تم تحميل ${students.length} طالب من ${Object.keys(data).length} صف بنجاح!`;
-        ActivityManager.showNotification && ActivityManager.showNotification(successMessage, 'success');
+        // إخفاء مؤشر التحميل
+        showLoadingIndicator(false);
         
-        console.log('تم تحميل', students.length, 'طالب من', Object.keys(data).length, 'صف');
+        // إشعار نجاح التحميل مع تأثيرات صوتية
+        setTimeout(() => {
+          smartSoundSystem.play('achievement', false);
+          const successMessage = `✅ تم تحميل ${students.length} طالب من ${classNames.length} صف بنجاح!`;
+          ActivityManager.showNotification(successMessage, 'success');
+        }, 500);
+        
+        console.log('✅ تم تحميل', students.length, 'طالب من', classNames.length, 'صف');
         
       } catch (error) {
-        console.error('خطأ في تحميل بيانات الطلاب:', error);
+        console.error('❌ خطأ في تحميل بيانات الطلاب:', error);
+        
+        // إخفاء مؤشر التحميل
+        showLoadingIndicator(false);
         
         // إشعار الخطأ مع صوت لطيف
         smartSoundSystem.play('softError', false);
         
-        // رسالة خطأ مفصلة
+        // رسائل خطأ مفصلة ومفيدة
         let errorMessage = '❌ فشل تحميل بيانات الطلاب: ';
+        let helpMessage = '';
         
         if (error.message.includes('404')) {
-          errorMessage += 'ملف studentData.json غير موجود في مجلد data';
+          errorMessage += 'ملف studentData.json غير موجود';
+          helpMessage = '💡 تأكد من وجود الملف في مجلد data';
         } else if (error.message.includes('JSON')) {
-          errorMessage += 'ملف studentData.json غير صحيح (خطأ في التنسيق)';
+          errorMessage += 'ملف البيانات يحتوي على خطأ في التنسيق';
+          helpMessage = '🔧 تحقق من صحة تنسيق JSON في الملف';
+        } else if (error.message.includes('غير صحيح')) {
+          errorMessage += 'محتوى الملف غير صحيح';
+          helpMessage = '📋 تأكد من وجود بيانات الصفوف في الملف';
         } else {
           errorMessage += error.message;
+          helpMessage = '🔄 جرب إعادة تحميل الصفحة';
         }
         
-        ActivityManager.showNotification && ActivityManager.showNotification(errorMessage, 'error');
+        // عرض رسالة الخطأ
+        ActivityManager.showNotification(errorMessage, 'error');
         
-        // اقتراحات لحل المشكلة
+        // عرض رسالة المساعدة بعد ثانيتين
         setTimeout(() => {
-          const helpMessages = [
-            '💡 تأكد من وجود ملف studentData.json في مجلد data',
-            '🔧 تحقق من صحة تنسيق JSON في الملف',
-            '📁 تأكد من المسار الصحيح للملف',
-            '🔄 جرب إعادة تحميل الصفحة'
-          ];
-          
-          helpMessages.forEach((message, index) => {
-            setTimeout(() => {
-              ActivityManager.showNotification && ActivityManager.showNotification(message, 'info');
-            }, (index + 1) * 2000);
-          });
-        }, 1000);
+          ActivityManager.showNotification(helpMessage, 'info');
+        }, 2000);
+        
+        // اقتراحات إضافية للحل
+        setTimeout(() => {
+          const additionalHelp = '🔍 تحقق من: وجود الملف، صحة المسار، صحة تنسيق JSON';
+          ActivityManager.showNotification(additionalHelp, 'warning');
+        }, 4000);
         
         // عدم استخدام أي بيانات احتياطية - الاعتماد على الملف فقط
         students = [];
@@ -2468,6 +2501,122 @@
         option.textContent = className;
         classSelect.appendChild(option);
       });
+    }
+
+    // دوال مساعدة لمؤشر التحميل المطور
+    function showLoadingIndicator(show) {
+      let loadingElement = document.getElementById('loadingIndicator');
+      
+      if (show && !loadingElement) {
+        // إنشاء مؤشر التحميل المطور
+        loadingElement = document.createElement('div');
+        loadingElement.id = 'loadingIndicator';
+        loadingElement.innerHTML = `
+          <div style="
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 248, 255, 0.95) 100%);
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            z-index: 10001;
+            text-align: center;
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            min-width: 250px;
+          ">
+            <div style="
+              width: 50px;
+              height: 50px;
+              border: 5px solid #e3f2fd;
+              border-top: 5px solid #667eea;
+              border-radius: 50%;
+              animation: spin 1.2s linear infinite;
+              margin: 0 auto 20px auto;
+            "></div>
+            <div style="
+              font-size: 1.2rem;
+              font-weight: 700;
+              color: #667eea;
+              margin-bottom: 15px;
+              text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            ">🔄 جاري التحميل...</div>
+            <div id="loadingProgress" style="
+              font-size: 1rem;
+              color: #666;
+              font-weight: 500;
+            ">0%</div>
+            <div style="
+              width: 100%;
+              height: 6px;
+              background: #e3f2fd;
+              border-radius: 3px;
+              margin-top: 15px;
+              overflow: hidden;
+            ">
+              <div id="progressBar" style="
+                width: 0%;
+                height: 100%;
+                background: linear-gradient(90deg, #667eea, #764ba2);
+                border-radius: 3px;
+                transition: width 0.3s ease;
+              "></div>
+            </div>
+          </div>
+        `;
+        
+        // إضافة CSS للأنيميشن إذا لم يكن موجود
+        if (!document.querySelector('#loading-styles')) {
+          const style = document.createElement('style');
+          style.id = 'loading-styles';
+          style.textContent = `
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+          `;
+          document.head.appendChild(style);
+        }
+        
+        document.body.appendChild(loadingElement);
+        
+        // تأثير ظهور انسيابي
+        setTimeout(() => {
+          loadingElement.style.opacity = '0';
+          loadingElement.style.transform = 'translate(-50%, -50%) scale(0.8)';
+          loadingElement.style.transition = 'all 0.3s ease-out';
+          setTimeout(() => {
+            loadingElement.style.opacity = '1';
+            loadingElement.style.transform = 'translate(-50%, -50%) scale(1)';
+          }, 50);
+        }, 10);
+        
+      } else if (!show && loadingElement) {
+        // إخفاء مؤشر التحميل مع تأثير انسيابي
+        loadingElement.style.transition = 'all 0.4s ease-in';
+        loadingElement.style.opacity = '0';
+        loadingElement.style.transform = 'translate(-50%, -50%) scale(0.9)';
+        setTimeout(() => {
+          if (loadingElement.parentNode) {
+            loadingElement.parentNode.removeChild(loadingElement);
+          }
+        }, 400);
+      }
+    }
+
+    function updateLoadingProgress(percentage) {
+      const progressElement = document.getElementById('loadingProgress');
+      const progressBar = document.getElementById('progressBar');
+      
+      if (progressElement) {
+        progressElement.textContent = `${percentage}%`;
+      }
+      
+      if (progressBar) {
+        progressBar.style.width = `${percentage}%`;
+      }
     }
 
     // معالجة تغيير طريقة السرد
@@ -3310,9 +3459,11 @@
       
       // معالج أزرار التحكم
       document.getElementById('backBtn').addEventListener('click', () => {
-        if (confirm('هل تريد إعادة تشغيل النشاط؟')) {
+        // إعادة تشغيل مباشرة دون تأكيد
+        ActivityManager.showNotification('🔄 جاري إعادة تشغيل النشاط...', 'info');
+        setTimeout(() => {
           window.location.reload();
-        }
+        }, 1000);
       });
       
       document.getElementById('muteBtn').addEventListener('click', () => {
@@ -3358,9 +3509,11 @@
       document.getElementById('pauseBtn').addEventListener('click', pauseTimer);
       document.getElementById('hintBtn').addEventListener('click', showHint);
       document.getElementById('finishStoryBtn').addEventListener('click', () => {
-        if (confirm('هل أنت متأكد من إنهاء السرد؟')) {
+        // إنهاء مباشر مع رسالة تأكيد
+        ActivityManager.showNotification('🏁 جاري إنهاء السرد...', 'success');
+        setTimeout(() => {
           finishOralStory();
-        }
+        }, 1000);
       });
       
       // معالج أزرار النتائج
