@@ -2012,7 +2012,26 @@
         ActivityManager = {
           playSound: (sound) => {
             console.log('🎵 تشغيل صوت:', sound);
-            // يمكن إضافة تشغيل أصوات عامة هنا إذا أردت
+            
+            // تشغيل الصوت من مجلد kingdom-sounds
+            try {
+              const audio = new Audio();
+              const soundPath = `../assets/media/sounds/kingdom-sounds/${sound}.mp3`;
+              audio.src = soundPath;
+              audio.volume = 0.7; // مستوى صوت مناسب
+              
+              // تشغيل الصوت مع معالجة الأخطاء
+              const playPromise = audio.play();
+              if (playPromise !== undefined) {
+                playPromise.then(() => {
+                  console.log('✅ تم تشغيل الصوت:', sound);
+                }).catch(error => {
+                  console.warn('⚠️ لم يتمكن من تشغيل الصوت:', sound, error);
+                });
+              }
+            } catch (error) {
+              console.warn('❌ خطأ في تشغيل الصوت:', sound, error);
+            }
           },
           showNotification: (message, type = 'info') => {
             console.log(`📢 ${type.toUpperCase()}: ${message}`);
@@ -2621,7 +2640,7 @@
 
     // معالجة تغيير طريقة السرد
     function handleModeChange() {
-      ActivityManager.playSound('click');
+      ActivityManager.playSound('cosmic-click');
       const container = document.getElementById('studentSelection');
       container.innerHTML = '';
       container.style.display = 'none';
@@ -2842,7 +2861,7 @@
       highlightCurrentSpeaker();
       showMotivationMessage();
       
-      ActivityManager.playSound('click');
+      ActivityManager.playSound('cosmic-click');
     }
 
     // تحديث الطالب الحالي
@@ -2888,7 +2907,7 @@
             // تحذير الوقت
             document.getElementById('timeRemaining').classList.add('time-warning');
             if (currentTime <= 5) {
-              ActivityManager.playSound('click');
+              ActivityManager.playSound('countdown-tick');
             }
           }
           
@@ -2950,7 +2969,7 @@
       clearInterval(timerInterval);
       document.getElementById('timeRemaining').classList.remove('time-warning');
       
-      ActivityManager.playSound('win');
+      ActivityManager.playSound('epic-victory');
       
       // إضافة جزء القصة
       const currentSpeaker = document.getElementById('speakerName').textContent;
@@ -3184,7 +3203,7 @@
 
     // تأثيرات إنشاء القصة
     function playStoryGenerationEffects() {
-      ActivityManager.playSound('success');
+      ActivityManager.playSound('achievement-unlock');
       
       // إنشاء تأثير احتفالي
       const celebrationElement = document.createElement('div');
@@ -3205,7 +3224,7 @@
           colors: ['#667eea', '#764ba2', '#ffecd2', '#fcb69f']
         });
         
-        ActivityManager.playSound('celebration');
+        ActivityManager.playSound('fireworks-burst');
       }, 500);
       
       // رسالة تحفيزية
@@ -3315,51 +3334,49 @@
         `;
         
         card.addEventListener('click', () => {
-          ActivityManager.playSound('click');
+          ActivityManager.playSound('crystal-ping');
           
           if (mode === 'select-single') {
             // إزالة التحديد من جميع الطلاب
             document.querySelectorAll('.student-selection-card').forEach(c => 
               c.classList.remove('selected'));
-            selectedManualStudents = [student.name];
-            card.classList.add('selected');
-          } else {
-            // وضع متعدد الطلاب
-            if (selectedManualStudents.includes(student.name)) {
-              selectedManualStudents = selectedManualStudents.filter(n => n !== student.name);
-              card.classList.remove('selected');
-            } else {
-              selectedManualStudents.push(student.name);
-              card.classList.add('selected');
-            }
-          }
-        });
-        
-        cardsContainer.appendChild(card);
-      });
-      
-      container.appendChild(cardsContainer);
-      
-      // زر بدء السرد
-      const startButton = document.createElement('button');
-      startButton.className = 'btn btn-primary start-story-btn touch-target mobile-full-width';
-      startButton.innerHTML = '<i class="fas fa-play"></i> بدء السرد الشفوي';
-      startButton.addEventListener('click', () => {
-        if (selectedManualStudents.length === 0) {
-          ActivityManager.showNotification('يرجى اختيار طالب واحد على الأقل', 'warning');
-          return;
+        selectedManualStudents = [student.name];
+        card.classList.add('selected');
+      } else {
+        // وضع متعدد الطلاب
+        if (selectedManualStudents.includes(student.name)) {
+          selectedManualStudents = selectedManualStudents.filter(n => n !== student.name);
+          card.classList.remove('selected');
+        } else {
+          selectedManualStudents.push(student.name);
+          card.classList.add('selected');
         }
-        
-        currentStudentList = [...selectedManualStudents];
-        totalRounds = Math.min(currentStudentList.length, 8);
-        usedStudents = [];
-        startOralStorySession();
-      });
-      
-      container.appendChild(startButton);
+      }
+    });
+    
+    cardsContainer.appendChild(card);
+  });
+  
+  container.appendChild(cardsContainer);
+  
+  // زر بدء السرد
+  const startButton = document.createElement('button');
+  startButton.className = 'btn btn-primary start-story-btn touch-target mobile-full-width';
+  startButton.innerHTML = '<i class="fas fa-play"></i> بدء السرد الشفوي';
+  startButton.addEventListener('click', () => {
+    if (selectedManualStudents.length === 0) {
+      ActivityManager.showNotification('يرجى اختيار طالب واحد على الأقل', 'warning');
+      return;
     }
-
-    // بدء المؤقت (للنظام المرئي الجديد)
+    
+    currentStudentList = [...selectedManualStudents];
+    totalRounds = Math.min(currentStudentList.length, 8);
+    usedStudents = [];
+    startOralStorySession();
+  });
+  
+  container.appendChild(startButton);
+}    // بدء المؤقت (للنظام المرئي الجديد)
     function startTimer() {
       const canvas = document.getElementById('timerCanvas');
       const ctx = canvas.getContext('2d');
