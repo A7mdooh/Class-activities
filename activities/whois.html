@@ -555,6 +555,13 @@
       overflow: hidden;
       backdrop-filter: blur(10px);
       animation: optionSlide 0.6s ease-out;
+      word-wrap: break-word;
+      hyphens: auto;
+      line-height: 1.3;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     @keyframes optionSlide {
@@ -1318,23 +1325,68 @@
 
       async loadStudentData() {
         try {
-          // بيانات الطلاب المدمجة
-          const studentData = {
-            "7A": ["أحمد محمد", "فاطمة علي", "خالد سالم", "عائشة سعد", "محمود حسن", "زينب أحمد", "عبدالله محمد", "نور فاطمة", "سعد خالد", "مريم عبدالله", "يوسف إبراهيم", "هدى محمود", "عمر سالم", "أسماء يوسف", "حسام عمر", "رقية حسام", "إبراهيم سعد", "خديجة إبراهيم", "سالم نور", "آمنة سالم"],
-            "7B": ["علي أحمد", "رضية علي", "محمد خالد", "حليمة محمد", "سعيد فاطمة", "بدرية سعيد", "عثمان عائشة", "سعاد عثمان", "حمد محمود", "شيخة حمد", "ناصر زينب", "موزة ناصر", "راشد عبدالله", "عزة راشد", "خليفة نور", "أمل خليفة", "منصور سعد", "هند منصور", "جاسم يوسف", "لطيفة جاسم"],
-            "8A": ["عبدالرحمن هدى", "فوزية عبدالرحمن", "عبدالعزيز عمر", "نعيمة عبدالعزيز", "طلال أسماء", "عفاف طلال", "وليد حسام", "صفية وليد", "فيصل رقية", "سلمى فيصل", "نايف إبراهيم", "جميلة نايف", "مساعد خديجة", "وردة مساعد", "عادل سالم", "كريمة عادل", "بندر آمنة", "عبير بندر", "فهد علي", "سارة فهد"],
-            "8B": ["تركي رضية", "نجلاء تركي", "سطام محمد", "ليلى سطام", "فراس حليمة", "دعاء فراس", "غازي سعيد", "إيمان غازي", "نواف بدرية", "رحاب نواف", "حاتم عثمان", "زهراء حاتم", "صقر سعاد", "رنا صقر", "مطلق حمد", "عهد مطلق", "سلطان شيخة", "غادة سلطان", "مازن موزة", "ريم مازن"],
-            "9A": ["بدر عزة", "سمية بدر", "عوض خليفة", "نادية عوض", "فواز أمل", "رشا فواز", "جمال هند", "سناء جمال", "خلف منصور", "إسراء خلف", "عامر لطيفة", "ديانا عامر", "حسين فوزية", "لمياء حسين", "قاسم نعيمة", "سلوى قاسم", "مرزوق عفاف", "ميساء مرزوق", "عيسى صفية", "هنادي عيسى"],
-            "9B": ["ضاري سلمى", "رباب ضاري", "شداد جميلة", "تهاني شداد", "محسن وردة", "فايزة محسن", "حبيب كريمة", "عبير حبيب", "رباح عبير", "رؤى رباح", "جبر سارة", "ندى جبر", "نجم نجلاء", "أريج نجم", "شاهر ليلى", "منى شاهر", "مانع دعاء", "لينا مانع", "نبيل إيمان", "ولاء نبيل"]
-          };
+          // محاولة تحميل البيانات من المسارات المحتملة
+          const possiblePaths = [
+            '../data/studentData.json',
+            './data/studentData.json',
+            '../../data/studentData.json',
+            '../studentData.json',
+            './studentData.json'
+          ];
+
+          let studentData = null;
+          let loadedFrom = '';
+
+          for (const path of possiblePaths) {
+            try {
+              console.log(`محاولة تحميل البيانات من: ${path}`);
+              const response = await fetch(path);
+              
+              if (response.ok) {
+                studentData = await response.json();
+                loadedFrom = path;
+                console.log(`تم تحميل البيانات بنجاح من: ${path}`);
+                break;
+              } else {
+                console.warn(`فشل تحميل البيانات من ${path}: ${response.status}`);
+              }
+            } catch (fetchError) {
+              console.warn(`خطأ في تحميل البيانات من ${path}:`, fetchError.message);
+              continue;
+            }
+          }
+
+          if (!studentData) {
+            throw new Error('فشل في تحميل بيانات الطلاب من جميع المسارات المحتملة');
+          }
+
+          // التحقق من صحة البيانات
+          if (typeof studentData !== 'object' || studentData === null) {
+            throw new Error('تنسيق البيانات غير صحيح');
+          }
+
+          // التحقق من وجود فصول دراسية
+          const classes = Object.keys(studentData);
+          if (classes.length === 0) {
+            throw new Error('لا توجد فصول دراسية في البيانات');
+          }
 
           this.studentData = studentData;
           this.populateClassSelect();
-          this.notifications.show('تم تحميل بيانات الطلاب بنجاح! 🎓', 'success');
+          this.notifications.show(`تم تحميل بيانات ${classes.length} فصل بنجاح! 🎓`, 'success');
+          console.log(`البيانات المحملة تحتوي على الفصول: ${classes.join(', ')}`);
           
         } catch (error) {
           console.error('خطأ في تحميل البيانات:', error);
-          this.notifications.show('خطأ في تحميل بيانات الطلاب', 'error');
+          this.notifications.show(`خطأ: ${error.message}`, 'error');
+          
+          // في حالة فشل التحميل، استخدام بيانات تجريبية بسيطة
+          this.studentData = {
+            "7A": ["طالب تجريبي 1", "طالب تجريبي 2", "طالب تجريبي 3"],
+            "7B": ["طالب تجريبي 4", "طالب تجريبي 5", "طالب تجريبي 6"]
+          };
+          this.populateClassSelect();
+          this.notifications.show('تم تحميل بيانات تجريبية للاختبار', 'warning');
         }
       }
 
@@ -1342,12 +1394,34 @@
         const classSelect = document.getElementById('classSelect');
         classSelect.innerHTML = '<option value="">اختر الصف</option>';
         
-        Object.keys(this.studentData).forEach(className => {
+        // ترتيب الفصول بطريقة منطقية
+        const sortedClasses = Object.keys(this.studentData).sort((a, b) => {
+          // استخراج الرقم من اسم الصف للترتيب
+          const getClassNumber = (className) => {
+            const match = className.match(/\d+/);
+            return match ? parseInt(match[0]) : 0;
+          };
+          
+          const aNum = getClassNumber(a);
+          const bNum = getClassNumber(b);
+          
+          if (aNum !== bNum) {
+            return aNum - bNum;
+          }
+          
+          // إذا كان نفس الرقم، ترتيب أبجدي
+          return a.localeCompare(b, 'ar');
+        });
+        
+        sortedClasses.forEach(className => {
+          const studentsCount = this.studentData[className].length;
           const option = document.createElement('option');
           option.value = className;
-          option.textContent = `الصف ${className}`;
+          option.textContent = `${className} (${studentsCount} طالب)`;
           classSelect.appendChild(option);
         });
+
+        console.log(`تم تحميل ${sortedClasses.length} فصل:`, sortedClasses);
       }
 
       setupEventListeners() {
@@ -1462,6 +1536,8 @@
         this.audioSystem.play('reveal.mp3');
         
         const popup = document.getElementById('secretNamePopup');
+        const displayName = this.formatSecretName(name);
+        
         popup.innerHTML = `
           <div style="margin-bottom: 1rem;">
             <i class="fas fa-eye" style="font-size: 2rem; color: var(--accent-color);"></i>
@@ -1469,7 +1545,7 @@
           <div style="margin-bottom: 1rem;">
             <strong>اسم الطالب السري:</strong>
           </div>
-          <div class="secret-name">${name}</div>
+          <div class="secret-name" style="font-size: clamp(1.5rem, 4vw, 2.2rem); word-wrap: break-word; line-height: 1.2;">${displayName}</div>
           <div style="margin-top: 1rem; font-size: 1rem; opacity: 0.8;">
             🕒 سيختفي خلال 3 ثوانِ
           </div>
@@ -1484,7 +1560,8 @@
         const countdownInterval = setInterval(() => {
           countdown--;
           if (countdown > 0) {
-            popup.querySelector('.secret-name').textContent = `${name} (${countdown})`;
+            const secretNameElement = popup.querySelector('.secret-name');
+            secretNameElement.innerHTML = `${displayName} <span style="font-size: 0.8em; opacity: 0.7;">(${countdown})</span>`;
           }
         }, 1000);
 
@@ -1494,6 +1571,19 @@
           this.showElement('startHintBtn');
           this.notifications.show('🚀 ابدأ التحدي الآن!', 'info');
         }, 3000);
+      }
+
+      formatSecretName(fullName) {
+        // للنافذة السرية، نعرض الاسم كاملاً ولكن مع تنسيق أفضل
+        const parts = fullName.split(' ');
+        if (parts.length > 3) {
+          // تقسيم الاسم على سطرين للأسماء الطويلة
+          const midPoint = Math.ceil(parts.length / 2);
+          const firstLine = parts.slice(0, midPoint).join(' ');
+          const secondLine = parts.slice(midPoint).join(' ');
+          return `${firstLine}<br><span style="font-size: 0.8em;">${secondLine}</span>`;
+        }
+        return fullName;
       }
 
       showHint() {
@@ -1563,7 +1653,11 @@
           setTimeout(() => {
             const div = document.createElement('div');
             div.className = 'option mobile-card touch-target';
-            div.innerHTML = `<i class="fas fa-user" style="margin-left: 8px;"></i> ${name}`;
+            
+            // تقصير الاسم للعرض إذا كان طويلاً جداً
+            const displayName = this.formatStudentName(name);
+            div.innerHTML = `<i class="fas fa-user" style="margin-left: 8px;"></i> ${displayName}`;
+            div.title = name; // إظهار الاسم الكامل عند التمرير
             div.addEventListener('click', () => this.checkAnswer(name, div));
             container.appendChild(div);
             
@@ -1571,6 +1665,22 @@
             div.style.animationDelay = `${index * 0.05}s`;
           }, index * 50);
         });
+      }
+
+      formatStudentName(fullName) {
+        // إذا كان الاسم أطول من 30 حرف، اختصره
+        if (fullName.length > 30) {
+          const parts = fullName.split(' ');
+          if (parts.length >= 3) {
+            // عرض الاسم الأول والأخير فقط
+            return `${parts[0]} ... ${parts[parts.length - 1]}`;
+          } else if (parts.length === 2) {
+            return `${parts[0]} ${parts[1].substring(0, 10)}...`;
+          } else {
+            return fullName.substring(0, 25) + '...';
+          }
+        }
+        return fullName;
       }
 
       checkAnswer(selectedName, element) {
@@ -1593,10 +1703,15 @@
 
         // إبراز الاسم المكشوف
         const revealed = document.getElementById('revealedName');
+        const displayName = this.formatRevealedName(this.targetName);
+        
         revealed.innerHTML = `
-          <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
-            <i class="fas fa-check-circle" style="font-size: 2rem;"></i>
-            <span>الطالب هو: <strong>${this.targetName}</strong></span>
+          <div style="display: flex; align-items: center; justify-content: center; gap: 15px; flex-wrap: wrap;">
+            <i class="fas fa-check-circle" style="font-size: 2rem; color: #4CAF50;"></i>
+            <div style="text-align: center;">
+              <div style="margin-bottom: 0.5rem;">الطالب هو:</div>
+              <div style="font-weight: 800; color: var(--accent-color); font-size: clamp(1.2rem, 3vw, 1.8rem); word-wrap: break-word; line-height: 1.2;">${displayName}</div>
+            </div>
             <i class="fas fa-star" style="font-size: 2rem; color: var(--accent-color);"></i>
           </div>
         `;
@@ -1620,6 +1735,22 @@
         setTimeout(() => {
           this.resetGame();
         }, 4000);
+      }
+
+      formatRevealedName(fullName) {
+        // تنسيق الاسم للعرض في النتيجة النهائية
+        const parts = fullName.split(' ');
+        if (parts.length > 4) {
+          // للأسماء الطويلة جداً، نعرض الاسم الأول والأخير مع تنبيه
+          return `${parts[0]} ... ${parts[parts.length - 1]}<br><small style="font-size: 0.7em; opacity: 0.8;">(اسم مختصر)</small>`;
+        } else if (parts.length > 2) {
+          // تقسيم على سطرين
+          const midPoint = Math.ceil(parts.length / 2);
+          const firstLine = parts.slice(0, midPoint).join(' ');
+          const secondLine = parts.slice(midPoint).join(' ');
+          return `${firstLine}<br><span style="font-size: 0.9em;">${secondLine}</span>`;
+        }
+        return fullName;
       }
 
       handleWrongAnswer(element) {
