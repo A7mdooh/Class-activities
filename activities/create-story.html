@@ -18,6 +18,349 @@
   <link rel="stylesheet" href="../assets/css/responsive.css">
   <link rel="stylesheet" href="../assets/css/style.css">
   <script src="../assets/css/style.css" type="text/javascript"></script>
+  
+  <style>
+    /* تحسينات خاصة بنشاط إنشاء القصة */
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    .main-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .page-header {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 25px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .header-icon {
+      font-size: 3rem;
+      color: #667eea;
+      animation: bounceIn 1s ease-out;
+    }
+
+    @keyframes bounceIn {
+      0% { transform: scale(0.3); opacity: 0; }
+      50% { transform: scale(1.05); }
+      70% { transform: scale(0.9); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .header-text h1 {
+      margin: 0;
+      color: #2d3748;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    .header-text p {
+      margin: 5px 0 0 0;
+      color: #718096;
+      font-size: 1.1rem;
+    }
+
+    .game-settings-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 25px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      animation: slideInRight 0.8s ease-out;
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .settings-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 25px;
+      color: #2d3748;
+    }
+
+    .settings-header i {
+      font-size: 1.5rem;
+      color: #667eea;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      color: #2d3748;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-family: 'Cairo', sans-serif;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      background: white;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+      color: #8b4513;
+      box-shadow: 0 4px 15px rgba(252, 182, 159, 0.4);
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(252, 182, 159, 0.6);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+      color: #2d5016;
+    }
+
+    .btn-success:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(132, 250, 176, 0.6);
+    }
+
+    /* منطقة عرض القصة المُنشأة */
+    .generated-story-area {
+      animation: fadeInScale 0.8s ease-out;
+    }
+
+    @keyframes fadeInScale {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .story-display-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .story-header {
+      text-align: center;
+      margin-bottom: 25px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    .story-header h3 {
+      color: #2d3748;
+      font-size: 1.8rem;
+      margin: 0 0 10px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .story-author {
+      color: #667eea;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .story-content {
+      background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 15%, #ffecd2 100%);
+      padding: 25px;
+      border-radius: 15px;
+      margin-bottom: 25px;
+      line-height: 1.8;
+      font-size: 1.2rem;
+      color: #2d3748;
+      box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
+      animation: typewriter 2s ease-out;
+    }
+
+    @keyframes typewriter {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .story-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    /* تحسينات للأجهزة المحمولة */
+    @media (max-width: 768px) {
+      .main-container {
+        padding: 15px;
+      }
+
+      .header-content {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .header-text h1 {
+        font-size: 2rem;
+      }
+
+      .story-actions {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* تأثيرات احتفالية */
+    .celebration-effect {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 4rem;
+      color: #ffd700;
+      z-index: 1000;
+      animation: celebrationPulse 2s ease-out;
+    }
+
+    @keyframes celebrationPulse {
+      0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+      50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+    }
+
+    /* تحسينات اختيار الطلاب */
+    .students-selection-area {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 25px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      animation: slideInLeft 0.8s ease-out;
+    }
+
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .student-selection-card {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+      border-radius: 15px;
+      padding: 20px;
+      margin: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+    }
+
+    .student-selection-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(240, 147, 251, 0.6);
+    }
+
+    .student-selection-card.selected {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      transform: scale(1.05);
+    }
+
+    .student-avatar {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .student-name {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+  </style>
 </head>
 <body>
   <!-- أزرار التحكم الموحدة -->
@@ -47,13 +390,14 @@
       </div>
       <ul class="instructions-list">
         <li>اختر الصف الدراسي من القائمة المنسدلة.</li>
-        <li>حدد نوع القصة: فردية أو جماعية، عشوائية أو انتقائية.</li>
+        <li>حدد نوع النشاط: فردي أو جماعي، عشوائي أو انتقائي.</li>
+        <li>اختر نوع القصة: مغامرة، خيال، فضاء، أو حياة مدرسية.</li>
+        <li>في الوضع الفردي، يمكنك إدخال فكرة أولية للقصة (اختياري).</li>
+        <li>اضغط "إنشاء قصة تلقائية" لإنتاج قصة فورية مع طالب عشوائي.</li>
+        <li>أو اختر "ابدأ النشاط" للوضع التفاعلي مع المؤقت.</li>
         <li>في الوضع الانتقائي، اختر الطلاب المشاركين من البطاقات.</li>
-        <li>اضغط "ابدأ" أو "بدء السرد" لتشغيل المؤقت وبدء النشاط.</li>
-        <li>كل طالب يُكمل جزءاً من القصة خلال الوقت المحدد.</li>
         <li>استخدم زر "التالي" للانتقال للطالب التالي في الوضع الجماعي.</li>
-        <li>اضغط "إنهاء" عند اكتمال القصة لإظهار النتائج.</li>
-        <li>ستظهر نافذة شكر تحتوي على أسماء جميع المشاركين.</li>
+        <li>يمكنك مشاركة القصص المُنشأة أو إعادة إنشاء قصص جديدة.</li>
       </ul>
       <button class="btn btn-primary touch-target mobile-full-width" onclick="closeInstructions()">
         <i class="fas fa-check"></i> فهمت
@@ -126,10 +470,36 @@
             <option value="select-group">جماعية انتقائية</option>
           </select>
         </div>
+
+        <div class="form-group mobile-full-width">
+          <label for="storyTypeSelect">
+            <i class="fas fa-magic"></i> نوع القصة
+          </label>
+          <select id="storyTypeSelect" class="form-input mobile-full-width" required>
+            <option value="">-- اختر نوع القصة --</option>
+            <option value="adventure">مغامرة شيقة</option>
+            <option value="fantasy">خيال وسحر</option>
+            <option value="space">استكشاف الفضاء</option>
+            <option value="school">حياة مدرسية</option>
+            <option value="mystery">لغز ومغامرة</option>
+            <option value="friendship">صداقة وتعاون</option>
+          </select>
+        </div>
+
+        <div class="form-group mobile-full-width" id="storyIdeaGroup" style="display: none;">
+          <label for="storyIdea">
+            <i class="fas fa-lightbulb"></i> فكرة القصة (اختياري)
+          </label>
+          <textarea id="storyIdea" class="form-input mobile-full-width" rows="3" 
+                    placeholder="اكتب فكرة أولية للقصة... (مثل: رحلة إلى الغابة، اكتشاف كنز مفقود، مساعدة صديق...)"></textarea>
+        </div>
         
         <div class="button-group">
           <button type="submit" class="btn btn-primary touch-target mobile-full-width" id="startBtn">
             <i class="fas fa-play"></i> ابدأ النشاط
+          </button>
+          <button type="button" class="btn btn-secondary touch-target mobile-full-width" id="generateStoryBtn" style="display: none;">
+            <i class="fas fa-magic"></i> إنشاء قصة تلقائية
           </button>
         </div>
       </form>
@@ -156,6 +526,28 @@
         </div>
         <div class="celebration-message" id="celebration">
           <i class="fas fa-star"></i> أحسنت! <i class="fas fa-star"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- منطقة عرض القصة المُنشأة -->
+    <div class="generated-story-area mobile-full-width" id="generatedStoryContainer" style="display: none;">
+      <div class="story-display-card">
+        <div class="story-header">
+          <h3><i class="fas fa-book-open"></i> قصتك الرائعة</h3>
+          <div class="story-author" id="storyAuthor"></div>
+        </div>
+        <div class="story-content" id="storyContent"></div>
+        <div class="story-actions">
+          <button class="btn btn-primary touch-target mobile-full-width" id="regenerateStoryBtn">
+            <i class="fas fa-sync-alt"></i> إنشاء قصة جديدة
+          </button>
+          <button class="btn btn-success touch-target mobile-full-width" id="shareStoryBtn">
+            <i class="fas fa-share"></i> مشاركة القصة
+          </button>
+          <button class="btn btn-secondary touch-target mobile-full-width" id="backToSettingsBtn">
+            <i class="fas fa-arrow-right"></i> العودة للإعدادات
+          </button>
         </div>
       </div>
     </div>
@@ -197,6 +589,136 @@
     let timerInterval;
     let secondsPassed = 0;
     let currentMode = '';
+    let currentStoryType = '';
+    let generatedStories = [];
+
+    // قوالب القصص حسب النوع
+    const storyTemplates = {
+      adventure: {
+        beginnings: [
+          "في يوم مشرق، قرر {name} الذهاب في مغامرة استكشافية إلى",
+          "بينما كان {name} يتجول في الحديقة، اكتشف طريقاً غامضاً يؤدي إلى",
+          "استيقظ {name} على صوت غريب، وعندما نظر من النافذة رأى",
+          "وجد {name} خريطة قديمة في العلية تشير إلى كنز مدفون في"
+        ],
+        middles: [
+          "غابة مليئة بالأشجار العملاقة والأصوات الغريبة",
+          "كهف مضيء بأحجار كريمة ملونة",
+          "جزيرة صغيرة وسط بحيرة زرقاء صافية",
+          "قلعة قديمة محاطة بحديقة من الورود الملونة",
+          "وادي سحري تطير فيه الفراشات الذهبية"
+        ],
+        ends: [
+          "وبعد مغامرة مثيرة، عاد {name} إلى المنزل محملاً بذكريات جميلة وأصدقاء جدد.",
+          "اكتشف {name} أن أعظم كنز هو الصداقات التي كوّنها في رحلته.",
+          "تعلم {name} أن الشجاعة والذكاء يمكنهما حل أي مشكلة.",
+          "عاد {name} وهو يحمل في قلبه حب المغامرة والاستكشاف."
+        ]
+      },
+      fantasy: {
+        beginnings: [
+          "في عالم سحري بعيد، كان {name} ساحراً صغيراً يتعلم",
+          "اكتشف {name} أنه يملك قوة سحرية خاصة تمكنه من",
+          "في مملكة الجنيات، التقى {name} بجنية صغيرة طلبت منه",
+          "بينما كان {name} يقرأ كتاباً سحرياً، انفتح باب سري إلى"
+        ],
+        middles: [
+          "فنون السحر الأبيض لمساعدة الآخرين",
+          "التحدث مع الحيوانات وفهم لغتهم",
+          "أن يساعدها في العثور على نجمة مفقودة",
+          "عالم مليء بالمخلوقات السحرية الودودة",
+          "تحويل الأشياء العادية إلى أشياء مفيدة وجميلة"
+        ],
+        ends: [
+          "وهكذا أصبح {name} ساحراً محبوباً يساعد الجميع بسحره الطيب.",
+          "تعلم {name} أن السحر الحقيقي يكمن في العطاء ومساعدة الآخرين.",
+          "شكرته الجنية وأهدته قلادة سحرية تحميه من الأذى.",
+          "عاد {name} إلى عالمه وهو يحمل سر السحر في قلبه."
+        ]
+      },
+      space: {
+        beginnings: [
+          "في المستقبل البعيد، كان {name} رائد فضاء شجاعاً يستكشف",
+          "بينما كان {name} ينظر إلى النجوم، رأى سفينة فضاء تهبط في",
+          "اخترع {name} صاروخاً صغيراً وقرر السفر إلى",
+          "في محطة الفضاء الدولية، التقى {name} بكائن فضائي ودود من"
+        ],
+        middles: [
+          "كواكب جديدة بحثاً عن حياة ذكية",
+          "الحديقة الخلفية لمنزله",
+          "القمر لزراعة أول حديقة فضائية",
+          "كوكب بعيد يحب السلام والعلم",
+          "المجرات البعيدة لاكتشاف أسرار الكون"
+        ],
+        ends: [
+          "وعاد {name} إلى الأرض ليشارك اكتشافاته المذهلة مع العالم.",
+          "تعلم {name} أن الكون مليء بالأصدقاء في انتظار التعارف.",
+          "أصبح {name} أول مزارع في الفضاء وألهم الجميع.",
+          "كوّن {name} صداقات فضائية ستدوم إلى الأبد."
+        ]
+      },
+      school: {
+        beginnings: [
+          "في أول يوم دراسي، كان {name} متحمساً لأنه سيلتقي",
+          "اكتشف {name} في المكتبة المدرسية كتاباً سحرياً يحكي عن",
+          "نظم {name} مع أصدقائه مسابقة علمية ممتعة حول",
+          "في رحلة مدرسية، اكتشف {name} وزملاؤه"
+        ],
+        middles: [
+          "بأصدقاء جدد ومعلمين رائعين",
+          "مغامرات طلاب في مدارس مختلفة حول العالم",
+          "اختراعات بسيطة تساعد في الحياة اليومية",
+          "حديقة مخفية خلف المدرسة مليئة بالنباتات النادرة",
+          "مكتبة سرية تحتوي على أقدم الكتب في العالم"
+        ],
+        ends: [
+          "وهكذا أصبحت المدرسة مكان {name} المفضل للتعلم والمرح.",
+          "تعلم {name} أن المعرفة أجمل هدية يمكن الحصول عليها.",
+          "فاز {name} وفريقه بالمسابقة وتقدير جميع المعلمين.",
+          "قرر {name} أن يصبح معلماً ليشارك حبه للتعلم مع الآخرين."
+        ]
+      },
+      mystery: {
+        beginnings: [
+          "اكتشف {name} لغزاً غريباً في منزل جدته القديم",
+          "بينما كان {name} يلعب في الحديقة، وجد مفتاحاً غامضاً",
+          "سمع {name} أصواتاً غريبة تأتي من العلية كل ليلة",
+          "عثر {name} على رسالة قديمة مكتوبة بحبر اختفى تقريباً"
+        ],
+        middles: [
+          "يؤدي إلى صندوق خشبي مملوء بالأسرار",
+          "لا يفتح إلا باب غرفة مهجورة منذ سنوات",
+          "تكشف عن وجود ممر سري يؤدي إلى كنز مخفي",
+          "تحتوي على خريطة تشير إلى مكان مهم في المدينة"
+        ],
+        ends: [
+          "وحل {name} اللغز بذكائه وصبره، مكتشفاً سراً عائلياً جميلاً.",
+          "تبين أن اللغز كان لعبة ذكية تركها الجد للأحفاد.",
+          "اكتشف {name} أن أفضل الألغاز هي التي تجمع العائلة.",
+          "شارك {name} حل اللغز مع الجميع وأصبح محقق المستقبل."
+        ]
+      },
+      friendship: {
+        beginnings: [
+          "التقى {name} بطفل جديد في الحي وأراد أن يصبحا صديقين",
+          "كان {name} خجولاً ولكنه قرر أن يقترب من زملائه",
+          "ساعد {name} زميله الذي كان يواجه صعوبة في",
+          "نظم {name} حفلة صغيرة لصديقه الذي كان حزيناً"
+        ],
+        middles: [
+          "فدعاه للعب معه ومشاركة الألعاب الممتعة",
+          "في فرصة الغداء وتشاركوا الطعام والضحك",
+          "واجبه المدرسي فقضوا وقتاً ممتعاً في الدراسة",
+          "لأنه انتقل من مدينة أخرى ويفتقد أصدقاءه القدامى"
+        ],
+        ends: [
+          "وهكذا كوّن {name} صداقة قوية ستدوم طوال العمر.",
+          "تعلم {name} أن الصداقة تحتاج إلى عطاء وتضحية.",
+          "شكره صديقه وأصبحا أفضل الأصدقاء في المدرسة.",
+          "أدرك {name} أن إسعاد الآخرين يجلب السعادة له أيضاً."
+        ]
+      }
+    };
 
     // تحميل بيانات الطلاب
     async function loadStudentData() {
@@ -231,6 +753,196 @@
       const container = document.getElementById('studentSelection');
       container.innerHTML = '';
       container.style.display = 'none';
+      
+      // إظهار/إخفاء خيارات إضافية حسب النوع
+      const mode = document.getElementById('modeSelect').value;
+      const storyIdeaGroup = document.getElementById('storyIdeaGroup');
+      const generateBtn = document.getElementById('generateStoryBtn');
+      
+      if (mode.includes('single')) {
+        storyIdeaGroup.style.display = 'block';
+        generateBtn.style.display = 'inline-flex';
+      } else {
+        storyIdeaGroup.style.display = 'none';
+        generateBtn.style.display = 'none';
+      }
+    }
+
+    // إنشاء قصة تلقائية
+    function generateAutomaticStory() {
+      const className = document.getElementById('classSelect').value;
+      const storyType = document.getElementById('storyTypeSelect').value;
+      const storyIdea = document.getElementById('storyIdea').value.trim();
+      
+      if (!className || !storyType) {
+        ActivityManager.showNotification('يرجى اختيار الصف ونوع القصة أولاً', 'warning');
+        return;
+      }
+      
+      const classStudents = students.filter(s => s.class === className);
+      if (classStudents.length === 0) {
+        ActivityManager.showNotification('لا توجد طلاب في هذا الصف', 'error');
+        return;
+      }
+      
+      // اختيار طالب عشوائي
+      const randomStudent = classStudents[Math.floor(Math.random() * classStudents.length)];
+      
+      // إنشاء القصة
+      const story = createStory(randomStudent.name, storyType, storyIdea);
+      
+      // عرض القصة
+      displayGeneratedStory(story, randomStudent.name, storyType);
+      
+      // تأثيرات الاحتفال
+      playStoryGenerationEffects();
+    }
+
+    // إنشاء القصة بناءً على المعطيات
+    function createStory(studentName, storyType, customIdea = '') {
+      const template = storyTemplates[storyType];
+      if (!template) return 'نوع القصة غير متوفر.';
+      
+      // اختيار عناصر عشوائية من القالب
+      const beginning = template.beginnings[Math.floor(Math.random() * template.beginnings.length)];
+      const middle = template.middles[Math.floor(Math.random() * template.middles.length)];
+      const end = template.ends[Math.floor(Math.random() * template.ends.length)];
+      
+      let story = beginning.replace('{name}', studentName) + ' ' + middle + '. ';
+      
+      // إضافة الفكرة المخصصة إذا توفرت
+      if (customIdea) {
+        story += `وكما خطط ${studentName}، ${customIdea}. `;
+      }
+      
+      story += end.replace('{name}', studentName);
+      
+      return story;
+    }
+
+    // عرض القصة المُنشأة
+    function displayGeneratedStory(story, authorName, storyType) {
+      // إخفاء منطقة الإعدادات
+      document.getElementById('settingsCard').style.display = 'none';
+      document.getElementById('studentSelection').style.display = 'none';
+      document.getElementById('storyContainer').style.display = 'none';
+      
+      // إظهار منطقة القصة
+      const container = document.getElementById('generatedStoryContainer');
+      container.style.display = 'block';
+      
+      // تحديث محتوى القصة
+      document.getElementById('storyAuthor').textContent = `بقلم: ${authorName}`;
+      document.getElementById('storyContent').textContent = story;
+      
+      // حفظ القصة في السجل
+      generatedStories.push({
+        author: authorName,
+        type: storyType,
+        content: story,
+        timestamp: new Date()
+      });
+    }
+
+    // تأثيرات إنشاء القصة
+    function playStoryGenerationEffects() {
+      ActivityManager.playSound('success');
+      
+      // إنشاء تأثير احتفالي
+      const celebrationElement = document.createElement('div');
+      celebrationElement.className = 'celebration-effect';
+      celebrationElement.innerHTML = '✨📖✨';
+      document.body.appendChild(celebrationElement);
+      
+      setTimeout(() => {
+        celebrationElement.remove();
+      }, 2000);
+      
+      // تأثير Confetti
+      setTimeout(() => {
+        confetti({
+          particleCount: 80,
+          spread: 60,
+          origin: { y: 0.7 },
+          colors: ['#667eea', '#764ba2', '#ffecd2', '#fcb69f']
+        });
+        
+        ActivityManager.playSound('celebration');
+      }, 500);
+      
+      // رسالة تحفيزية
+      setTimeout(() => {
+        ActivityManager.showNotification('🎉 تم إنشاء قصة رائعة! أحسنت!', 'success');
+      }, 1000);
+    }
+
+    // إعادة إنشاء قصة جديدة
+    function regenerateStory() {
+      const className = document.getElementById('classSelect').value;
+      const storyType = document.getElementById('storyTypeSelect').value;
+      const storyIdea = document.getElementById('storyIdea').value.trim();
+      
+      // اختيار طالب مختلف
+      const classStudents = students.filter(s => s.class === className);
+      const availableStudents = classStudents.filter(s => 
+        !generatedStories.some(story => story.author === s.name)
+      );
+      
+      let selectedStudent;
+      if (availableStudents.length > 0) {
+        selectedStudent = availableStudents[Math.floor(Math.random() * availableStudents.length)];
+      } else {
+        selectedStudent = classStudents[Math.floor(Math.random() * classStudents.length)];
+      }
+      
+      const story = createStory(selectedStudent.name, storyType, storyIdea);
+      displayGeneratedStory(story, selectedStudent.name, storyType);
+      playStoryGenerationEffects();
+    }
+
+    // مشاركة القصة
+    function shareStory() {
+      const storyContent = document.getElementById('storyContent').textContent;
+      const storyAuthor = document.getElementById('storyAuthor').textContent;
+      
+      const shareText = `${storyAuthor}\n\n${storyContent}\n\n#قصتي_الرائعة #إبداع_الطلاب`;
+      
+      if (navigator.share) {
+        navigator.share({
+          title: 'قصتي الرائعة',
+          text: shareText
+        }).catch(() => {
+          copyToClipboard(shareText);
+        });
+      } else {
+        copyToClipboard(shareText);
+      }
+    }
+
+    // نسخ النص للحافظة
+    function copyToClipboard(text) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => {
+          ActivityManager.showNotification('تم نسخ القصة للحافظة!', 'success');
+        });
+      } else {
+        // Fallback للمتصفحات القديمة
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        ActivityManager.showNotification('تم نسخ القصة للحافظة!', 'success');
+      }
+    }
+
+    // العودة للإعدادات من منطقة القصة
+    function backToSettings() {
+      document.getElementById('settingsCard').style.display = 'block';
+      document.getElementById('generatedStoryContainer').style.display = 'none';
+      document.getElementById('storyContainer').style.display = 'none';
+      document.getElementById('studentSelection').style.display = 'none';
     }
 
     // عرض منطقة اختيار الطلاب
@@ -455,18 +1167,27 @@
       currentStudentList = [];
       usedStudents = [];
       selectedManualStudents = [];
+      generatedStories = [];
       secondsPassed = 0;
       currentMode = '';
+      currentStoryType = '';
       
       // إعادة عرض الإعدادات
       document.getElementById('settingsCard').style.display = 'block';
       document.getElementById('studentSelection').style.display = 'none';
       document.getElementById('storyContainer').style.display = 'none';
+      document.getElementById('generatedStoryContainer').style.display = 'none';
       document.getElementById('thankYouModal').style.display = 'none';
       
       // إعادة تعيين النموذج
       document.getElementById('storySettingsForm').reset();
       document.getElementById('studentSelection').innerHTML = '';
+      document.getElementById('storyContent').textContent = '';
+      document.getElementById('storyAuthor').textContent = '';
+      
+      // إخفاء العناصر الاختيارية
+      document.getElementById('storyIdeaGroup').style.display = 'none';
+      document.getElementById('generateStoryBtn').style.display = 'none';
       
       ActivityManager.showNotification('تم إعادة تعيين النشاط', 'success');
     }
@@ -477,7 +1198,7 @@
       
       // معالج أزرار التحكم
       document.getElementById('backBtn').addEventListener('click', () => {
-        ActivityManager.goBack();
+        window.location.href = '../main.html';
       });
       
       document.getElementById('muteBtn').addEventListener('click', () => {
@@ -500,14 +1221,16 @@
         
         const className = document.getElementById('classSelect').value;
         const mode = document.getElementById('modeSelect').value;
+        const storyType = document.getElementById('storyTypeSelect').value;
         
-        if (!className || !mode) {
-          ActivityManager.showNotification('يرجى اختيار الصف ونوع القصة', 'warning');
+        if (!className || !mode || !storyType) {
+          ActivityManager.showNotification('يرجى اختيار جميع الخيارات المطلوبة', 'warning');
           return;
         }
         
         const classStudents = students.filter(s => s.class === className);
         currentMode = mode;
+        currentStoryType = storyType;
         
         if (mode.includes('select')) {
           // الوضع الانتقائي
@@ -524,9 +1247,17 @@
       // معالج تغيير نوع القصة
       document.getElementById('modeSelect').addEventListener('change', handleModeChange);
       
+      // معالج زر إنشاء القصة التلقائية
+      document.getElementById('generateStoryBtn').addEventListener('click', generateAutomaticStory);
+      
       // معالج أزرار النشاط
       document.getElementById('nextBtn').addEventListener('click', nextStudent);
       document.getElementById('finishBtn').addEventListener('click', finishStory);
+      
+      // معالج أزرار منطقة القصة المُنشأة
+      document.getElementById('regenerateStoryBtn').addEventListener('click', regenerateStory);
+      document.getElementById('shareStoryBtn').addEventListener('click', shareStory);
+      document.getElementById('backToSettingsBtn').addEventListener('click', backToSettings);
       
       // معالج أزرار النتائج
       document.getElementById('closeModalBtn').addEventListener('click', () => {
