@@ -1549,6 +1549,214 @@
       }
       
       .survival-end {
+        margin: 10px;
+      }
+    }
+    .survival-instructions {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 30px;
+      padding: 40px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+      max-width: 900px;
+      margin: 20px auto;
+      color: white;
+      text-align: right;
+      direction: rtl;
+      position: relative;
+      overflow: hidden;
+      animation: floatIn 0.8s ease-out;
+    }
+
+    .survival-instructions::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+      animation: shimmer 3s infinite;
+    }
+
+    .instructions-header {
+      text-align: center;
+      margin-bottom: 40px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .instructions-title {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+      font-weight: bold;
+    }
+
+    .instructions-subtitle {
+      font-size: 1.3em;
+      opacity: 0.9;
+      margin-bottom: 20px;
+    }
+
+    .instruction-section {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+      z-index: 2;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    .section-title {
+      font-size: 1.5em;
+      margin-bottom: 15px;
+      color: #FFD700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: bold;
+    }
+
+    .section-content {
+      font-size: 1.1em;
+      line-height: 1.8;
+      margin-bottom: 15px;
+    }
+
+    .highlight-box {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 15px;
+      padding: 15px;
+      margin: 15px 0;
+      border-left: 4px solid #FFD700;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .instructions-controls {
+      text-align: center;
+      margin-top: 30px;
+      gap: 20px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 2;
+    }
+
+    .instructions-controls .btn {
+      font-size: 1.2em;
+      padding: 15px 30px;
+      margin: 5px;
+      min-width: 150px;
+    }
+
+    /* Enhanced Survival Interface */
+    .survival-header .survival-explanation {
+      font-size: 1.1em;
+      opacity: 0.9;
+      margin-top: 10px;
+    }
+
+    .stat-help {
+      font-size: 0.85em;
+      color: #666;
+      font-style: italic;
+      margin-top: 5px;
+    }
+
+    .survival-progress {
+      background: linear-gradient(145deg, #f0f0f0, #cacaca);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 
+        8px 8px 20px rgba(163, 177, 198, 0.6),
+        -8px -8px 20px rgba(255, 255, 255, 0.8);
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .progress-bar {
+      height: 15px;
+      background: linear-gradient(145deg, #e0e0e0, #c0c0c0);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: inset 4px 4px 8px rgba(163, 177, 198, 0.4);
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      border-radius: 10px;
+      transition: width 0.5s ease;
+      box-shadow: 0 2px 8px rgba(102, 126, 234, 0.5);
+    }
+
+    .survival-target {
+      background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+      border-radius: 20px;
+      padding: 25px;
+      text-align: center;
+      margin-bottom: 30px;
+      box-shadow: 0 15px 35px rgba(252, 182, 159, 0.3);
+    }
+
+    .target-question {
+      font-size: 1.8em;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #d35400;
+    }
+
+    .survival-hint {
+      font-size: 1.1em;
+      color: #e67e22;
+      font-weight: 500;
+    }
+
+    .survival-tips {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .tip {
+      background: linear-gradient(145deg, #fff9e6, #fff3d3);
+      border-radius: 15px;
+      padding: 15px;
+      border-left: 4px solid #f39c12;
+      box-shadow: 0 8px 20px rgba(243, 156, 18, 0.2);
+      font-size: 0.95em;
+      line-height: 1.5;
+    }
+
+    /* Enhanced Animations */
+    @keyframes shimmer {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+
+    @keyframes floatIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      
+      .survival-end {
         padding: 20px;
         margin: 10px;
       }
@@ -3601,10 +3809,92 @@
         this.soundSystem.play('reveal');
         this.messages.show('🔥 وضع البقاء! ابق أطول فترة ممكنة!', 'info', 3000);
         
+        // عرض نافذة التعليمات أولاً
+        this.showSurvivalInstructions();
+      }
+
+      showSurvivalInstructions() {
+        const gameArea = document.getElementById('gameArea');
+        
+        gameArea.innerHTML = `
+          <div class="survival-instructions">
+            <div class="instructions-header">
+              <div class="instructions-icon">🔥</div>
+              <div class="instructions-title">كيف تلعب وضع البقاء؟</div>
+            </div>
+
+            <div class="instructions-content">
+              <div class="instruction-section">
+                <h3>🎯 الهدف</h3>
+                <p>ابق في اللعبة أطول فترة ممكنة! أجب على الأسئلة بسرعة ودقة لتجمع النقاط وتحصل على مكافآت.</p>
+              </div>
+
+              <div class="instruction-section">
+                <h3>❤️ المحاولات</h3>
+                <p><strong>تبدأ بـ 3 محاولات فقط!</strong></p>
+                <ul>
+                  <li>✅ كل إجابة صحيحة = نقاط أكثر</li>
+                  <li>❌ كل إجابة خاطئة = تفقد محاولة</li>
+                  <li>🎁 كل 3 إجابات صحيحة متتالية = محاولة إضافية مجانية!</li>
+                  <li>⏰ انتهاء الوقت = إجابة خاطئة</li>
+                </ul>
+              </div>
+
+              <div class="instruction-section">
+                <h3>🏆 النقاط</h3>
+                <p>كلما أجبت أسرع وأكثر، حصلت على نقاط أكبر:</p>
+                <ul>
+                  <li>💰 <strong>100 نقطة أساسية</strong> لكل إجابة صحيحة</li>
+                  <li>🔥 <strong>+10 نقاط إضافية</strong> لكل إجابة متتالية صحيحة</li>
+                  <li>⚡ <strong>+5 نقاط</strong> لكل ثانية متبقية</li>
+                  <li>📈 <strong>مضاعف المستوى</strong> يزيد النقاط كلما تقدمت</li>
+                </ul>
+              </div>
+
+              <div class="instruction-section">
+                <h3>📈 المستويات</h3>
+                <p>كل 5 إجابات صحيحة ترتقي لمستوى أعلى:</p>
+                <ul>
+                  <li>🆙 مضاعف النقاط يزيد</li>
+                  <li>⏱️ الوقت المتاح يقل (أصعب)</li>
+                  <li>🎯 عدد الخيارات يزيد (أصعب)</li>
+                </ul>
+              </div>
+
+              <div class="instruction-section">
+                <h3>⏱️ الوقت</h3>
+                <p>لديك وقت محدود للإجابة:</p>
+                <ul>
+                  <li>⏰ المستوى الأول: 30 ثانية</li>
+                  <li>📉 كل مستوى جديد: وقت أقل</li>
+                  <li>🚨 آخر 5 ثوان: تحذير أحمر</li>
+                  <li>⏸️ يمكنك الإيقاف المؤقت في أي وقت</li>
+                </ul>
+              </div>
+
+              <div class="instruction-section">
+                <h3>🏅 الهدف النهائي</h3>
+                <p><strong>لا توجد نهاية للعبة!</strong> الهدف هو تحطيم رقمك القياسي والبقاء أطول فترة ممكنة.</p>
+              </div>
+            </div>
+
+            <div class="instructions-controls">
+              <button onclick="game.startSurvivalGame()" class="btn btn-primary btn-large">
+                🔥 ابدأ التحدي!
+              </button>
+              <button onclick="game.resetGame()" class="btn btn-cosmic">
+                🔙 العودة للقائمة
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      startSurvivalGame() {
         setTimeout(() => {
           this.displaySurvivalInterface();
           this.startSurvivalRound();
-        }, 1500);
+        }, 500);
       }
 
       displaySurvivalInterface() {
@@ -3615,48 +3905,76 @@
             <div class="survival-header">
               <div class="survival-title">🔥 وضع البقاء</div>
               <div class="survival-level">المستوى ${this.state.survival.level}</div>
+              <div class="survival-explanation">أجب بسرعة ودقة للحصول على مكافآت!</div>
             </div>
 
             <div class="survival-stats">
               <div class="survival-stat-card lives">
                 <div class="stat-icon">❤️</div>
                 <div class="stat-value">${this.state.stats.lives}</div>
-                <div class="stat-label">المحاولات</div>
+                <div class="stat-label">المحاولات المتبقية</div>
+                <div class="stat-help">تفقد محاولة مع كل خطأ</div>
               </div>
               <div class="survival-stat-card score">
                 <div class="stat-icon">🏆</div>
                 <div class="stat-value">${this.state.stats.score}</div>
-                <div class="stat-label">النقاط</div>
+                <div class="stat-label">النقاط الحالية</div>
+                <div class="stat-help">تزيد مع كل إجابة صحيحة</div>
               </div>
               <div class="survival-stat-card streak">
                 <div class="stat-icon">🔥</div>
                 <div class="stat-value">${this.state.stats.streak}</div>
-                <div class="stat-label">التسلسل</div>
+                <div class="stat-label">الإجابات المتتالية</div>
+                <div class="stat-help">3 متتالية = محاولة إضافية!</div>
               </div>
               <div class="survival-stat-card timer">
                 <div class="stat-icon">⏱️</div>
                 <div class="stat-value" id="survivalTimer">${this.state.survival.timeLeft}</div>
-                <div class="stat-label">الوقت</div>
+                <div class="stat-label">الوقت المتبقي</div>
+                <div class="stat-help">أجب قبل انتهاء الوقت</div>
               </div>
               <div class="survival-stat-card best">
                 <div class="stat-icon">👑</div>
                 <div class="stat-value">${this.state.survival.bestScore}</div>
-                <div class="stat-label">الأفضل</div>
+                <div class="stat-label">أفضل نتيجة</div>
+                <div class="stat-help">رقمك القياسي</div>
+              </div>
+            </div>
+
+            <div class="survival-progress">
+              <div class="progress-info">
+                <span>التقدم نحو المستوى التالي:</span>
+                <span>${this.state.stats.correctAnswers % 5}/5 إجابات صحيحة</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: ${(this.state.stats.correctAnswers % 5) * 20}%"></div>
               </div>
             </div>
             
             <div class="survival-target">
               <div class="target-question">🎯 من هو هذا الطالب؟</div>
-              <div class="survival-hint">المستوى ${this.state.survival.level} • مضاعف النقاط: x${this.state.survival.difficultyMultiplier}</div>
+              <div class="survival-hint">
+                المستوى ${this.state.survival.level} • 
+                مضاعف النقاط: x${this.state.survival.difficultyMultiplier.toFixed(1)} • 
+                نقاط الإجابة التالية: ~${Math.round(100 * this.state.survival.difficultyMultiplier + (this.state.stats.streak * 10))}
+              </div>
             </div>
             
             <div class="students-grid" id="survivalOptions">
               ${this.generateSurvivalOptions()}
             </div>
 
+            <div class="survival-tips">
+              <div class="tip">💡 <strong>نصيحة:</strong> كل 3 إجابات صحيحة متتالية تعطيك محاولة إضافية!</div>
+              <div class="tip">⚡ <strong>مكافأة السرعة:</strong> كلما أجبت أسرع، حصلت على نقاط أكثر!</div>
+            </div>
+
             <div class="survival-controls">
               <button onclick="game.pauseSurvival()" class="btn btn-secondary">
                 ⏸️ إيقاف مؤقت
+              </button>
+              <button onclick="game.showSurvivalInstructions()" class="btn btn-info">
+                ❓ كيف ألعب؟
               </button>
               <button onclick="game.resetGame()" class="btn btn-cosmic">
                 🏠 إنهاء وضع البقاء
