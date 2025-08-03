@@ -639,9 +639,262 @@
       }
     }
 
-    /* إخفاء العناصر */
-    .hidden {
-      display: none !important;
+    /* لوحة المعلومات والنقاط */
+    .game-dashboard {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 1.5rem;
+      border-radius: var(--border-radius);
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      box-shadow: var(--shadow);
+    }
+
+    .dashboard-item {
+      text-align: center;
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .dashboard-value {
+      font-size: 2rem;
+      font-weight: 800;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .dashboard-label {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .lives-display {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      margin-top: 0.5rem;
+    }
+
+    .life-icon {
+      color: #ff4444;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+    }
+
+    .life-icon.lost {
+      opacity: 0.3;
+      transform: scale(0.8);
+    }
+
+    /* شريط التقدم */
+    .progress-container {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50px;
+      padding: 3px;
+      margin: 1rem 0;
+    }
+
+    .progress-bar {
+      background: linear-gradient(90deg, #4285f4, #34a853);
+      height: 20px;
+      border-radius: 50px;
+      transition: width 1s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+
+    /* مؤقت متقدم */
+    .advanced-timer {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      margin: 0 auto;
+    }
+
+    .timer-circle {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: conic-gradient(#4285f4 0deg, #ea4335 360deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .timer-inner {
+      width: 80px;
+      height: 80px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #333;
+    }
+
+    .timer-warning {
+      animation: pulse 1s infinite;
+      background: conic-gradient(#ea4335 0deg, #fbbc04 360deg);
+    }
+
+    /* نظام المستويات */
+    .level-badge {
+      background: linear-gradient(45deg, #ffd700, #ffed4e);
+      color: #333;
+      padding: 0.5rem 1rem;
+      border-radius: 25px;
+      font-weight: 800;
+      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+      animation: levelGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes levelGlow {
+      0%, 100% { box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); }
+      50% { box-shadow: 0 6px 25px rgba(255, 215, 0, 0.6); }
+    }
+
+    /* شاشة النتائج المتقدمة */
+    .advanced-results {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      margin: 2rem 0;
+      text-align: center;
+    }
+
+    .results-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1rem;
+      border-radius: 10px;
+      backdrop-filter: blur(10px);
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    /* نظام الإنجازات */
+    .achievements {
+      position: fixed;
+      top: 100px;
+      right: 20px;
+      z-index: 1000;
+      max-width: 300px;
+    }
+
+    .achievement {
+      background: linear-gradient(135deg, #4285f4, #34a853);
+      color: white;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      transform: translateX(100%);
+      animation: slideInAchievement 0.5s ease-out forwards;
+    }
+
+    @keyframes slideInAchievement {
+      to { transform: translateX(0); }
+    }
+
+    /* نظام الفرق */
+    .team-setup {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .team-card {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .team-card.team-1 {
+      border-top: 5px solid #4285f4;
+    }
+
+    .team-card.team-2 {
+      border-top: 5px solid #ea4335;
+    }
+
+    .team-score {
+      font-size: 3rem;
+      font-weight: 800;
+      margin: 1rem 0;
+    }
+
+    /* إعدادات متقدمة */
+    .settings-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .settings-modal.active {
+      display: flex;
+    }
+
+    .settings-content {
+      background: white;
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      max-width: 500px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .setting-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .setting-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .setting-control {
+      width: 100%;
+      padding: 0.8rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-family: 'Cairo', sans-serif;
     }
 
     /* أزرار الصوت */
@@ -714,6 +967,57 @@
       0%, 100% { height: 10px; opacity: 0.5; }
       50% { height: 30px; opacity: 1; }
     }
+
+    /* إخفاء العناصر */
+    .hidden {
+      display: none !important;
+    }
+
+    /* تحسينات الاستجابة المتقدمة */
+    @media (max-width: 768px) {
+      .game-dashboard {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .dashboard-item {
+        min-width: auto;
+      }
+
+      .team-setup {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .advanced-timer {
+        width: 80px;
+        height: 80px;
+      }
+
+      .timer-inner {
+        width: 64px;
+        height: 64px;
+        font-size: 1.2rem;
+      }
+
+      .achievements {
+        right: 10px;
+        max-width: 250px;
+      }
+
+      .results-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .control-group {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .setting-control {
+        font-size: 0.9rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -765,6 +1069,32 @@
         <select id="modeSelect">
           <option value="random">فردي عشوائي</option>
           <option value="manual">فردي انتقائي</option>
+          <option value="challenge">تحدي زمني</option>
+          <option value="survival">وضع البقاء</option>
+          <option value="team">فريق ضد فريق</option>
+        </select>
+        
+        <select id="difficultySelect">
+          <option value="easy">سهل (5 خيارات)</option>
+          <option value="medium">متوسط (10 خيارات)</option>
+          <option value="hard">صعب (20 خيارات)</option>
+          <option value="expert">خبير (كامل الصف)</option>
+        </select>
+      </div>
+      
+      <div class="control-group">
+        <select id="timeSelect">
+          <option value="30">30 ثانية</option>
+          <option value="60">دقيقة واحدة</option>
+          <option value="120">دقيقتان</option>
+          <option value="unlimited">بلا حدود</option>
+        </select>
+        
+        <select id="livesSelect">
+          <option value="1">حياة واحدة</option>
+          <option value="3">3 حياة</option>
+          <option value="5">5 حياة</option>
+          <option value="unlimited">حياة لا محدودة</option>
         </select>
       </div>
       
@@ -772,11 +1102,52 @@
         <button id="startGameBtn" disabled>
           <i class="fas fa-play"></i> ابدأ اللعبة
         </button>
+        
+        <button id="settingsBtn">
+          <i class="fas fa-cog"></i> الإعدادات
+        </button>
       </div>
     </div>
 
     <!-- منطقة الرسائل -->
     <div id="messageArea"></div>
+
+    <!-- لوحة المعلومات -->
+    <div class="game-dashboard hidden" id="gameDashboard">
+      <div class="dashboard-item">
+        <span class="dashboard-value" id="scoreValue">0</span>
+        <span class="dashboard-label">النقاط</span>
+      </div>
+      <div class="dashboard-item">
+        <span class="dashboard-value" id="levelValue">1</span>
+        <span class="dashboard-label">المستوى</span>
+      </div>
+      <div class="dashboard-item">
+        <span class="dashboard-value" id="streakValue">0</span>
+        <span class="dashboard-label">التتالي</span>
+      </div>
+      <div class="dashboard-item">
+        <div class="advanced-timer" id="gameTimer">
+          <div class="timer-circle">
+            <div class="timer-inner">
+              <span id="timerValue">--</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dashboard-item">
+        <span class="dashboard-value" id="livesValue">3</span>
+        <span class="dashboard-label">الحياة</span>
+        <div class="lives-display" id="livesDisplay"></div>
+      </div>
+    </div>
+
+    <!-- شريط التقدم -->
+    <div class="progress-container hidden" id="progressContainer">
+      <div class="progress-bar" id="progressBar" style="width: 0%">
+        <span id="progressText">0%</span>
+      </div>
+    </div>
 
     <!-- حالة التحميل -->
     <div class="loading" id="loadingArea">
@@ -791,6 +1162,60 @@
     <!-- منطقة اللعبة -->
     <div class="game-area" id="gameArea">
       <p><i class="fas fa-info-circle"></i> اختر الصف ونمط اللعبة لبدء التحدي</p>
+    </div>
+
+    <!-- نظام الإنجازات -->
+    <div class="achievements" id="achievementsContainer"></div>
+
+    <!-- نافذة الإعدادات -->
+    <div class="settings-modal" id="settingsModal">
+      <div class="settings-content">
+        <h3><i class="fas fa-cog"></i> إعدادات اللعبة</h3>
+        
+        <div class="setting-group">
+          <label class="setting-label">نوع التلميحات:</label>
+          <select class="setting-control" id="hintTypeSelect">
+            <option value="random">عشوائي</option>
+            <option value="academic">أكاديمي</option>
+            <option value="social">اجتماعي</option>
+            <option value="sports">رياضي</option>
+          </select>
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label">صعوبة التلميحات:</label>
+          <select class="setting-control" id="hintDifficultySelect">
+            <option value="easy">سهل - تلميحات واضحة</option>
+            <option value="medium">متوسط - تلميحات عامة</option>
+            <option value="hard">صعب - تلميحات غامضة</option>
+          </select>
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label">نظام النقاط:</label>
+          <select class="setting-control" id="scoringSystemSelect">
+            <option value="standard">عادي (10 نقاط لكل إجابة)</option>
+            <option value="time_based">مبني على الوقت</option>
+            <option value="difficulty_based">مبني على الصعوبة</option>
+            <option value="streak_bonus">مكافأة التتالي</option>
+          </select>
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label">المؤثرات البصرية:</label>
+          <input type="range" class="setting-control" id="effectsIntensity" min="0" max="100" value="100">
+          <small>شدة المؤثرات: <span id="effectsValue">100</span>%</small>
+        </div>
+
+        <div class="game-actions">
+          <button onclick="game.saveSettings()">
+            <i class="fas fa-save"></i> حفظ الإعدادات
+          </button>
+          <button onclick="game.closeSettings()">
+            <i class="fas fa-times"></i> إغلاق
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1033,21 +1458,62 @@
       }
     }
 
-    // نظام إدارة الحالة الأساسي
+    // نظام إدارة الحالة المتقدم
     class GameState {
       constructor() {
         this.studentData = null;
         this.currentClass = '';
         this.gameMode = '';
+        this.difficulty = 'medium';
+        this.timeLimit = 60;
+        this.maxLives = 3;
         this.targetStudent = '';
         this.allStudents = [];
         this.usedStudents = [];
         this.isLoading = false;
+        
+        // إحصائيات متقدمة
         this.stats = {
           gamesPlayed: 0,
           correctAnswers: 0,
-          wrongAnswers: 0
+          wrongAnswers: 0,
+          score: 0,
+          level: 1,
+          streak: 0,
+          maxStreak: 0,
+          lives: 3,
+          timeRemaining: 0,
+          averageTime: 0,
+          totalTime: 0
         };
+
+        // إعدادات اللعبة
+        this.settings = {
+          hintType: 'random',
+          hintDifficulty: 'medium',
+          scoringSystem: 'standard',
+          effectsIntensity: 100,
+          soundEnabled: true,
+          musicEnabled: true
+        };
+
+        // نظام الإنجازات
+        this.achievements = [];
+        this.unlockedAchievements = JSON.parse(localStorage.getItem('whoisAchievements') || '[]');
+        
+        // تحديد الإنجازات المتاحة
+        this.availableAchievements = [
+          { id: 'first_win', name: 'الفوز الأول', description: 'أول إجابة صحيحة', icon: '🏆' },
+          { id: 'streak_5', name: 'خط ناري', description: '5 إجابات صحيحة متتالية', icon: '🔥' },
+          { id: 'speed_demon', name: 'شيطان السرعة', description: 'إجابة في أقل من 5 ثوان', icon: '⚡' },
+          { id: 'perfect_game', name: 'لعبة مثالية', description: 'لعبة كاملة بدون أخطاء', icon: '💎' },
+          { id: 'time_master', name: 'سيد الوقت', description: '50 لعبة مكتملة', icon: '⏰' },
+          { id: 'expert_level', name: 'مستوى خبير', description: 'الوصول للمستوى 10', icon: '🎓' },
+          { id: 'survivor', name: 'الناجي', description: 'البقاء مع حياة واحدة لـ10 جولات', icon: '🛡️' },
+          { id: 'team_player', name: 'لاعب فريق', description: 'الفوز في 5 مباريات فريق', icon: '👥' }
+        ];
+
+        this.loadSettings();
       }
 
       reset() {
@@ -1056,24 +1522,216 @@
         this.targetStudent = '';
         this.allStudents = [];
         this.usedStudents = [];
+        this.stats.timeRemaining = this.timeLimit;
+        this.stats.lives = this.maxLives;
+        this.stats.streak = 0;
       }
 
-      updateStats(isCorrect) {
+      updateStats(isCorrect, timeUsed = 0) {
         this.stats.gamesPlayed++;
+        this.stats.totalTime += timeUsed;
+        this.stats.averageTime = this.stats.totalTime / this.stats.gamesPlayed;
+
         if (isCorrect) {
           this.stats.correctAnswers++;
+          this.stats.streak++;
+          this.stats.maxStreak = Math.max(this.stats.maxStreak, this.stats.streak);
+          this.updateScore(timeUsed);
+          this.checkLevelUp();
+          this.checkAchievements();
         } else {
           this.stats.wrongAnswers++;
+          this.stats.streak = 0;
+          this.stats.lives--;
         }
+      }
+
+      updateScore(timeUsed) {
+        let points = 10; // نقاط أساسية
+        
+        switch (this.settings.scoringSystem) {
+          case 'time_based':
+            points += Math.max(0, 30 - timeUsed); // مكافأة سرعة
+            break;
+          case 'difficulty_based':
+            const difficultyMultiplier = { easy: 1, medium: 1.5, hard: 2 };
+            points *= difficultyMultiplier[this.difficulty] || 1;
+            break;
+          case 'streak_bonus':
+            points += this.stats.streak * 2; // مكافأة التتالي
+            break;
+        }
+
+        this.stats.score += Math.round(points);
+      }
+
+      checkLevelUp() {
+        const newLevel = Math.floor(this.stats.score / 100) + 1;
+        if (newLevel > this.stats.level) {
+          this.stats.level = newLevel;
+          return true;
+        }
+        return false;
+      }
+
+      checkAchievements() {
+        const newAchievements = [];
+
+        // فحص الإنجازات المختلفة
+        if (this.stats.correctAnswers === 1 && !this.hasAchievement('first_win')) {
+          newAchievements.push('first_win');
+        }
+
+        if (this.stats.streak === 5 && !this.hasAchievement('streak_5')) {
+          newAchievements.push('streak_5');
+        }
+
+        if (this.stats.level === 10 && !this.hasAchievement('expert_level')) {
+          newAchievements.push('expert_level');
+        }
+
+        // إضافة الإنجازات الجديدة
+        newAchievements.forEach(id => {
+          if (!this.unlockedAchievements.includes(id)) {
+            this.unlockedAchievements.push(id);
+            this.achievements.push(id);
+          }
+        });
+
+        this.saveAchievements();
+        return newAchievements;
+      }
+
+      hasAchievement(id) {
+        return this.unlockedAchievements.includes(id);
+      }
+
+      saveAchievements() {
+        localStorage.setItem('whoisAchievements', JSON.stringify(this.unlockedAchievements));
+      }
+
+      loadSettings() {
+        const saved = localStorage.getItem('whoisSettings');
+        if (saved) {
+          this.settings = { ...this.settings, ...JSON.parse(saved) };
+        }
+      }
+
+      saveSettings() {
+        localStorage.setItem('whoisSettings', JSON.stringify(this.settings));
       }
 
       getSuccessRate() {
         if (this.stats.gamesPlayed === 0) return 0;
         return Math.round((this.stats.correctAnswers / this.stats.gamesPlayed) * 100);
       }
+
+      getDifficultyOptions() {
+        const options = {
+          easy: 5,
+          medium: 10,
+          hard: 20,
+          expert: -1 // كامل الصف
+        };
+        return options[this.difficulty] || 10;
+      }
     }
 
-    // نظام إدارة الرسائل
+    // نظام إدارة المؤقت المتقدم
+    class TimerSystem {
+      constructor(gameInstance) {
+        this.game = gameInstance;
+        this.timer = null;
+        this.startTime = null;
+        this.timeRemaining = 0;
+        this.isPaused = false;
+        this.callbacks = {};
+      }
+
+      start(duration, onTick, onComplete) {
+        this.timeRemaining = duration;
+        this.startTime = Date.now();
+        this.callbacks.onTick = onTick;
+        this.callbacks.onComplete = onComplete;
+        
+        this.timer = setInterval(() => {
+          if (!this.isPaused) {
+            this.timeRemaining--;
+            
+            if (this.callbacks.onTick) {
+              this.callbacks.onTick(this.timeRemaining);
+            }
+            
+            if (this.timeRemaining <= 0) {
+              this.stop();
+              if (this.callbacks.onComplete) {
+                this.callbacks.onComplete();
+              }
+            }
+          }
+        }, 1000);
+      }
+
+      stop() {
+        if (this.timer) {
+          clearInterval(this.timer);
+          this.timer = null;
+        }
+      }
+
+      pause() {
+        this.isPaused = true;
+      }
+
+      resume() {
+        this.isPaused = false;
+      }
+
+      getElapsedTime() {
+        return this.startTime ? Math.floor((Date.now() - this.startTime) / 1000) : 0;
+      }
+
+      formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+      }
+    }
+
+    // نظام إدارة الإنجازات
+    class AchievementSystem {
+      constructor(gameInstance) {
+        this.game = gameInstance;
+        this.container = document.getElementById('achievementsContainer');
+      }
+
+      show(achievementId) {
+        const achievement = this.game.state.availableAchievements.find(a => a.id === achievementId);
+        if (!achievement) return;
+
+        const element = document.createElement('div');
+        element.className = 'achievement';
+        element.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 1rem;">
+            <span style="font-size: 2rem;">${achievement.icon}</span>
+            <div>
+              <strong>${achievement.name}</strong>
+              <div style="font-size: 0.9rem; opacity: 0.9;">${achievement.description}</div>
+            </div>
+          </div>
+        `;
+
+        this.container.appendChild(element);
+        this.game.soundSystem.play('correct');
+
+        // إزالة بعد 5 ثوان
+        setTimeout(() => {
+          element.remove();
+        }, 5000);
+      }
+    }
+
+    // نظام إدارة الرسائل المحدث
     class MessageSystem {
       constructor() {
         this.container = document.getElementById('messageArea');
@@ -1103,13 +1761,16 @@
       }
     }
 
-    // الفئة الرئيسية للعبة
+    // الفئة الرئيسية للعبة المحدثة
     class WhoIsItGame {
       constructor() {
         this.state = new GameState();
         this.messages = new MessageSystem();
         this.soundSystem = new SoundSystem();
         this.visualEffects = new VisualEffects();
+        this.timerSystem = new TimerSystem(this);
+        this.achievementSystem = new AchievementSystem(this);
+        this.questionStartTime = null;
         this.init();
       }
 
@@ -1118,6 +1779,7 @@
           this.showLoading(true);
           await this.loadStudentData();
           this.setupEventListeners();
+          this.loadProgress(); // تحميل التقدم المحفوظ
           this.showLoading(false);
           this.messages.show('✅ تم تحميل النظام بنجاح', 'success');
           this.soundSystem.play('click');
@@ -1195,7 +1857,62 @@
 
       setupEventListeners() {
         const startBtn = document.getElementById('startGameBtn');
+        const settingsBtn = document.getElementById('settingsBtn');
+        const classSelect = document.getElementById('classSelect');
+        const modeSelect = document.getElementById('modeSelect');
+        const difficultySelect = document.getElementById('difficultySelect');
+        const timeSelect = document.getElementById('timeSelect');
+        const livesSelect = document.getElementById('livesSelect');
+
         startBtn.addEventListener('click', () => this.startGame());
+        settingsBtn.addEventListener('click', () => this.openSettings());
+
+        // تحديث الإعدادات عند تغيير القيم
+        modeSelect.addEventListener('change', () => {
+          this.state.gameMode = modeSelect.value;
+          this.updateControlsVisibility();
+        });
+
+        difficultySelect.addEventListener('change', () => {
+          this.state.difficulty = difficultySelect.value;
+        });
+
+        timeSelect.addEventListener('change', () => {
+          this.state.timeLimit = parseInt(timeSelect.value);
+        });
+
+        livesSelect.addEventListener('change', () => {
+          this.state.maxLives = parseInt(livesSelect.value);
+        });
+
+        // تفعيل زر البدء عند اختيار الصف
+        classSelect.addEventListener('change', () => {
+          startBtn.disabled = !classSelect.value;
+          
+          if (classSelect.value) {
+            const studentCount = this.state.studentData[classSelect.value].length;
+            this.messages.show(`📚 تم اختيار "${classSelect.value}" - يحتوي على ${studentCount} طالب`, 'info', 3000);
+          }
+        });
+      }
+
+      updateControlsVisibility() {
+        const mode = this.state.gameMode;
+        
+        // إخفاء/إظهار عناصر التحكم حسب نمط اللعبة
+        const timeSelect = document.getElementById('timeSelect').parentElement;
+        const livesSelect = document.getElementById('livesSelect').parentElement;
+        
+        if (mode === 'challenge' || mode === 'survival') {
+          timeSelect.style.display = 'block';
+          livesSelect.style.display = 'block';
+        } else if (mode === 'team') {
+          timeSelect.style.display = 'block';
+          livesSelect.style.display = 'none';
+        } else {
+          timeSelect.style.display = 'none';
+          livesSelect.style.display = 'none';
+        }
       }
 
       startGame() {
@@ -1217,11 +1934,102 @@
           return;
         }
 
-        this.messages.show(`🎮 تم بدء اللعبة! الصف: ${classValue} - النمط: ${modeValue === 'random' ? 'عشوائي' : 'انتقائي'}`, 'success');
+        // إعداد اللعبة حسب النمط
+        this.setupGameMode();
+        
+        this.messages.show(`🎮 تم بدء اللعبة! الصف: ${classValue} - النمط: ${this.getModeName(modeValue)}`, 'success');
         this.soundSystem.play('correct');
+        
+        // إظهار لوحة المعلومات
+        this.showDashboard();
         
         // تحديث منطقة اللعبة
         this.updateGameArea();
+      }
+
+      setupGameMode() {
+        const mode = this.state.gameMode;
+        
+        switch (mode) {
+          case 'challenge':
+            this.state.stats.lives = this.state.maxLives;
+            this.state.stats.timeRemaining = this.state.timeLimit;
+            break;
+          case 'survival':
+            this.state.stats.lives = 1;
+            this.state.stats.timeRemaining = this.state.timeLimit;
+            break;
+          case 'team':
+            this.setupTeamMode();
+            break;
+        }
+      }
+
+      setupTeamMode() {
+        // إعداد وضع الفريق
+        this.teamScores = { team1: 0, team2: 0 };
+        this.currentTeam = 1;
+        this.teamRounds = 0;
+        this.maxTeamRounds = 10;
+      }
+
+      getModeName(mode) {
+        const names = {
+          random: 'عشوائي',
+          manual: 'انتقائي',
+          challenge: 'تحدي زمني',
+          survival: 'وضع البقاء',
+          team: 'فريق ضد فريق'
+        };
+        return names[mode] || mode;
+      }
+
+      showDashboard() {
+        const dashboard = document.getElementById('gameDashboard');
+        const progressContainer = document.getElementById('progressContainer');
+        
+        dashboard.classList.remove('hidden');
+        progressContainer.classList.remove('hidden');
+        
+        this.updateDashboard();
+      }
+
+      updateDashboard() {
+        document.getElementById('scoreValue').textContent = this.state.stats.score;
+        document.getElementById('levelValue').textContent = this.state.stats.level;
+        document.getElementById('streakValue').textContent = this.state.stats.streak;
+        document.getElementById('livesValue').textContent = this.state.stats.lives;
+        
+        // تحديث عرض الحياة
+        this.updateLivesDisplay();
+        
+        // تحديث شريط التقدم
+        this.updateProgressBar();
+        
+        // تحديث المؤقت إذا كان نشطاً
+        if (this.state.gameMode === 'challenge' || this.state.gameMode === 'survival') {
+          document.getElementById('timerValue').textContent = this.state.stats.timeRemaining;
+        }
+      }
+
+      updateLivesDisplay() {
+        const livesDisplay = document.getElementById('livesDisplay');
+        livesDisplay.innerHTML = '';
+        
+        for (let i = 0; i < this.state.maxLives; i++) {
+          const heart = document.createElement('i');
+          heart.className = `fas fa-heart life-icon ${i >= this.state.stats.lives ? 'lost' : ''}`;
+          livesDisplay.appendChild(heart);
+        }
+      }
+
+      updateProgressBar() {
+        const progress = (this.state.stats.correctAnswers / Math.max(this.state.stats.gamesPlayed, 1)) * 100;
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        
+        progressBar.style.width = progress + '%';
+        progressText.textContent = Math.round(progress) + '%';
       }
 
       updateGameArea() {
@@ -1352,6 +2160,9 @@
         const gameArea = document.getElementById('gameArea');
         const hint = this.generateHint();
         
+        // تسجيل وقت بداية السؤال
+        this.questionStartTime = Date.now();
+        
         gameArea.innerHTML = `
           <div class="game-interface animate__animated animate__fadeIn">
             <div class="hint-box" data-aos="slide-down">
@@ -1372,54 +2183,169 @@
         // تأثير الكتابة التدريجية للتلميح
         this.visualEffects.typeWriter(document.getElementById('hintText'), hint, 30);
         this.soundSystem.play('hint');
+        
+        // بدء المؤقت إذا كان مطلوباً
+        if (this.state.gameMode === 'challenge' || this.state.gameMode === 'survival') {
+          this.startQuestionTimer();
+        }
+        
         this.messages.show('🎯 اختر الطالب الذي يطابق التلميح!', 'info');
       }
 
-      generateHint() {
-        const hints = [
-          "🏆 هذا الطالب يشجّع ريال مدريد حتى أثناء شرح الدرس!",
-          "💙❤️ يعشق برشلونة ويدافع عنها وكأنها منتخب بلاده!",
-          "📚 دائماً يجلس في الصف الأول وكأنه المعلم المساعد!",
-          "😂 ضحكته معدية وتملأ الفصل حتى في أصعب الحصص!",
-          "⚡ إذا سمع كلمة 'فسحة' يصبح أسرع من فلاش!",
-          "🎥 يشرح الدرس وكأن لديه قناة تعليمية مشهورة!",
-          "🤷‍♂️ ينسى أدواته كما ينسى كلمة السر... دائماً!",
-          "📢 ينادي على أصدقائه من النافذة كأنه مذيع إذاعي!",
-          "🎵 يحفظ النشيد الوطني أفضل من وزير التعليم!",
-          "🏃‍♂️ يحب حصة الرياضة أكثر من العطلة الصيفية!",
-          "❓ يسأل أسئلة كثيرة وكأننا في برنامج 'من سيربح المليون'!",
-          "🍕 ينسى قلمه ولكن لا ينسى وجبته أبداً!",
-          "⚽ إذا رأى كرة ينسى المعلم والدرس والكون كله!",
-          "🌟 يملك أجمل ابتسامة في المدرسة... بل في الحي كله!",
-          "📊 يعرف إحصائيات برشلونة أفضل من مدربهم!",
-          "🤔 يفكر مليّاً قبل كل إجابة وكأن كل سؤال امتحان نهائي!",
-          "🤫 يفضل العمل بصمت... لكن إنجازه يتكلم عنه!",
-          "👑 دائماً ما يطمح أن يكون قائد الفريق في كل نشاط!",
-          "🕵️ يحلل كل موقف وكأنه محقق في مسلسل بوليسي!",
-          "📐 لا يحب الفوضى... حتى في ترتيب أقلامه!",
-          "⏰ ينجز واجباته في اللحظة الأخيرة ولكن بإتقان!",
-          "🤝 يساعد الجميع حتى لو لم يطلب منه أحد!",
-          "🗣️ يتحدث كثيراً... وعندما يصمت نعرف أن هناك مشكلة!",
-          "🎨 يحب التنظيم ويلوّن ملفاته وكأنها معرض فني!",
-          "💬 يعبر عن مشاعره بوضوح... حتى لو كان غاضباً من الامتحان!",
-          "🌟 هادئ في البداية... لكنه نجم ساطع في الأنشطة!",
-          "🚀 يتحمّس لتجربة كل شيء جديد قبل أن يقرأ التعليمات!",
-          "👁️ يلاحظ التفاصيل الصغيرة التي يغفل عنها الآخرون!",
-          "🎭 شخصيته مرحة ومميزة... الجميع يتذكره!"
-        ];
+      startQuestionTimer() {
+        const questionTimeLimit = this.state.gameMode === 'survival' ? 15 : 30; // وقت أقل في وضع البقاء
+        
+        this.timerSystem.start(
+          questionTimeLimit,
+          (timeRemaining) => {
+            // تحديث المؤقت في الواجهة
+            const timerEl = document.getElementById('timerValue');
+            if (timerEl) {
+              timerEl.textContent = timeRemaining;
+              
+              // تحذير عند الوقت القليل
+              if (timeRemaining <= 5) {
+                timerEl.parentElement.classList.add('timer-warning');
+                this.soundSystem.play('click');
+              }
+            }
+          },
+          () => {
+            // انتهى الوقت
+            this.handleTimeUp();
+          }
+        );
+      }
 
+      handleTimeUp() {
+        this.messages.show('⏰ انتهى الوقت!', 'error');
+        this.soundSystem.play('wrong');
+        
+        // معاملة انتهاء الوقت كإجابة خاطئة
+        this.state.updateStats(false, 30);
+        this.updateDashboard();
+        
+        if (this.state.stats.lives <= 0) {
+          this.gameOver();
+        } else {
+          setTimeout(() => {
+            this.playAgain();
+          }, 2000);
+        }
+      }
+
+      generateHint() {
+        const hints = this.getHintsByType();
         return hints[Math.floor(Math.random() * hints.length)];
       }
 
+      getHintsByType() {
+        const type = this.state.settings.hintType;
+        const difficulty = this.state.settings.hintDifficulty;
+        
+        const hintSets = {
+          academic: {
+            easy: [
+              "🏆 هذا الطالب يجيب على أسئلة المعلم بسرعة!",
+              "📚 دائماً يجلس في الصف الأول!",
+              "✏️ يكتب ملاحظاته بخط جميل!",
+              "🤓 يحب القراءة أكثر من اللعب!",
+              "💡 يساعد زملاءه في الواجبات!"
+            ],
+            medium: [
+              "🎯 يتفوق في مادة معينة بشكل لافت!",
+              "📖 يطرح أسئلة ذكية في الصف!",
+              "🧮 يحل المسائل بطريقة إبداعية!",
+              "� ينظم وقته بين الدراسة والأنشطة!",
+              "🔍 يبحث عن معلومات إضافية بنفسه!"
+            ],
+            hard: [
+              "🌟 إنجازه الأكاديمي يتحدث عنه!",
+              "🎓 مستواه يفوق أقرانه بمراحل!",
+              "💭 طريقة تفكيره مختلفة ومميزة!",
+              "🏅 المعلمون يذكرونه كمثال للتميز!",
+              "🔬 فضوله العلمي لا حدود له!"
+            ]
+          },
+          social: {
+            easy: [
+              "😂 ضحكته معدية وتملأ الفصل!",
+              "🤝 يساعد الجميع حتى لو لم يطلب منه أحد!",
+              "🗣️ يتحدث مع الجميع بود!",
+              "🎭 شخصيته مرحة ومميزة!",
+              "👥 محبوب من جميع زملائه!"
+            ],
+            medium: [
+              "🕊️ يحل المشاكل بين أصدقائه بحكمة!",
+              "🌈 يجعل الجو مريحاً أينما كان!",
+              "💬 يستمع للآخرين بإهتمام حقيقي!",
+              "🎨 يشارك في الأنشطة الاجتماعية!",
+              "🤗 يرحب بالطلاب الجدد بحرارة!"
+            ],
+            hard: [
+              "👑 قائد طبيعي رغم صغر سنه!",
+              "🌟 تأثيره الإيجابي يلمسه الجميع!",
+              "💎 نضجه الاجتماعي يفوق عمره!",
+              "🦋 يغير أجواء المكان للأفضل بوجوده!",
+              "🌺 حضوره يجعل اليوم أجمل!"
+            ]
+          },
+          sports: {
+            easy: [
+              "⚽ يحب حصة الرياضة أكثر من العطلة!",
+              "🏃‍♂️ أسرع عداء في الصف!",
+              "🏆 يشارك في فريق المدرسة!",
+              "💪 قوي البنية ونشيط!",
+              "🎯 يجيد الألعاب الحركية!"
+            ],
+            medium: [
+              "🥇 يفوز في المسابقات الرياضية!",
+              "⚡ رشاقته تلفت الأنظار!",
+              "� يتقن أكثر من رياضة!",
+              "🎳 تناسقه الحركي ممتاز!",
+              "🏅 يحفز زملاءه على النشاط!"
+            ],
+            hard: [
+              "🌟 موهبته الرياضية استثنائية!",
+              "🏆 مستقبله الرياضي واعد!",
+              "⚡ أداؤه يذكرنا بالمحترفين!",
+              "💎 يجمع بين القوة والذكاء الرياضي!",
+              "🎯 دقته وتركيزه لا يصدقان!"
+            ]
+          },
+          random: [
+            "🏆 هذا الطالب يشجّع ريال مدريد حتى أثناء شرح الدرس!",
+            "💙❤️ يعشق برشلونة ويدافع عنها وكأنها منتخب بلاده!",
+            "😂 ضحكته معدية وتملأ الفصل حتى في أصعب الحصص!",
+            "⚡ إذا سمع كلمة 'فسحة' يصبح أسرع من فلاش!",
+            "� يحفظ النشيد الوطني أفضل من وزير التعليم!",
+            "❓ يسأل أسئلة كثيرة وكأننا في برنامج 'من سيربح المليون'!",
+            "� ينسى قلمه ولكن لا ينسى وجبته أبداً!",
+            "🌟 يملك أجمل ابتسامة في المدرسة... بل في الحي كله!",
+            "� دائماً ما يطمح أن يكون قائد الفريق في كل نشاط!",
+            "🗣️ يتحدث كثيراً... وعندما يصمت نعرف أن هناك مشكلة!"
+          ]
+        };
+
+        if (type === 'random') {
+          return hintSets.random;
+        }
+
+        return hintSets[type] ? hintSets[type][difficulty] || hintSets[type].medium : hintSets.random;
+      }
+
       generateOptions() {
-        // إنشاء قائمة خيارات تحتوي على الطالب المستهدف + 19 طالب آخر
+        const numOptions = this.state.getDifficultyOptions();
+        const maxOptions = numOptions === -1 ? this.state.allStudents.length : Math.min(numOptions, this.state.allStudents.length);
+        
+        // إنشاء قائمة خيارات تحتوي على الطالب المستهدف + طلاب آخرين
         const otherStudents = this.state.allStudents.filter(
           student => student !== this.state.targetStudent
         );
         
-        // اختيار 19 طالب عشوائي
+        // اختيار طلاب عشوائيين
         const shuffledOthers = otherStudents.sort(() => 0.5 - Math.random());
-        const selectedOthers = shuffledOthers.slice(0, 19);
+        const selectedOthers = shuffledOthers.slice(0, maxOptions - 1);
         
         // إضافة الطالب المستهدف وخلط القائمة
         const allOptions = [...selectedOthers, this.state.targetStudent];
@@ -1427,6 +2353,10 @@
       }
 
       checkAnswer(selectedStudent, cardElement) {
+        // تسجيل وقت بداية الإجابة
+        const timeUsed = this.questionStartTime ? 
+          Math.floor((Date.now() - this.questionStartTime) / 1000) : 0;
+
         // تعطيل جميع البطاقات
         const allCards = document.querySelectorAll('.student-card');
         allCards.forEach(card => {
@@ -1436,18 +2366,44 @@
         this.soundSystem.play('click');
 
         if (selectedStudent === this.state.targetStudent) {
-          this.handleCorrectAnswer(selectedStudent, cardElement);
+          this.handleCorrectAnswer(selectedStudent, cardElement, timeUsed);
         } else {
-          this.handleWrongAnswer(selectedStudent, cardElement);
+          this.handleWrongAnswer(selectedStudent, cardElement, timeUsed);
         }
       }
 
-      handleCorrectAnswer(selectedStudent, cardElement) {
-        this.state.updateStats(true);
+      handleCorrectAnswer(selectedStudent, cardElement, timeUsed) {
+        // إيقاف المؤقت إذا كان نشطاً
+        this.timerSystem.stop();
+        
+        this.state.updateStats(true, timeUsed);
         
         cardElement.classList.add('correct');
         this.visualEffects.glowEffect(cardElement, '#4caf50');
         this.visualEffects.addSparkles(cardElement);
+
+        // فحص الإنجازات
+        const newAchievements = this.state.checkAchievements();
+        
+        // فحص إنجاز السرعة
+        if (timeUsed <= 5 && !this.state.hasAchievement('speed_demon')) {
+          newAchievements.push('speed_demon');
+          this.state.unlockedAchievements.push('speed_demon');
+          this.state.saveAchievements();
+        }
+
+        // عرض الإنجازات الجديدة
+        newAchievements.forEach(achievement => {
+          setTimeout(() => {
+            this.achievementSystem.show(achievement);
+          }, 1000);
+        });
+
+        // فحص رفع المستوى
+        const leveledUp = this.state.checkLevelUp();
+        if (leveledUp) {
+          this.showLevelUp();
+        }
 
         // تشغيل الاحتفال
         this.soundSystem.play('correct');
@@ -1457,25 +2413,37 @@
         const rect = cardElement.getBoundingClientRect();
         this.visualEffects.createFireworks(rect.left + rect.width/2, rect.top + rect.height/2);
 
+        // تحديث لوحة المعلومات
+        this.updateDashboard();
+
         // عرض النتيجة
         setTimeout(() => {
-          this.showResult(true, selectedStudent);
+          this.showResult(true, selectedStudent, timeUsed);
         }, 2000);
 
         const successRate = this.state.getSuccessRate();
-        this.messages.show(`🎉 إجابة صحيحة! معدل النجاح: ${successRate}%`, 'success');
+        this.messages.show(`🎉 إجابة صحيحة! النقاط: +${Math.round(10 + Math.max(0, 30 - timeUsed))} | معدل النجاح: ${successRate}%`, 'success');
       }
 
-      handleWrongAnswer(selectedStudent, cardElement) {
-        this.state.updateStats(false);
+      handleWrongAnswer(selectedStudent, cardElement, timeUsed) {
+        this.state.updateStats(false, timeUsed);
         
         cardElement.classList.add('wrong');
         this.visualEffects.shakeElement(cardElement);
 
         this.soundSystem.play('wrong');
 
+        // تحديث لوحة المعلومات
+        this.updateDashboard();
+
+        // فحص انتهاء الحياة
+        if (this.state.stats.lives <= 0) {
+          this.gameOver();
+          return;
+        }
+
         const successRate = this.state.getSuccessRate();
-        this.messages.show(`❌ إجابة خاطئة، حاول مرة أخرى! معدل النجاح: ${successRate}%`, 'error');
+        this.messages.show(`❌ إجابة خاطئة! الحياة المتبقية: ${this.state.stats.lives} | معدل النجاح: ${successRate}%`, 'error');
 
         // إعادة تفعيل البطاقات الأخرى بعد ثانيتين
         setTimeout(() => {
@@ -1487,6 +2455,178 @@
           });
           cardElement.classList.remove('wrong');
         }, 2000);
+      }
+
+      showLevelUp() {
+        const levelBadge = document.createElement('div');
+        levelBadge.className = 'achievement';
+        levelBadge.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 1rem;">
+            <span style="font-size: 2rem;">🆙</span>
+            <div>
+              <strong>ارتقاء مستوى!</strong>
+              <div style="font-size: 0.9rem; opacity: 0.9;">وصلت للمستوى ${this.state.stats.level}</div>
+            </div>
+          </div>
+        `;
+        
+        document.getElementById('achievementsContainer').appendChild(levelBadge);
+        this.soundSystem.play('correct');
+        
+        setTimeout(() => {
+          levelBadge.remove();
+        }, 5000);
+      }
+
+      gameOver() {
+        this.timerSystem.stop();
+        this.showAdvancedResults();
+      }
+
+      showAdvancedResults() {
+        const gameArea = document.getElementById('gameArea');
+        const stats = this.state.stats;
+        
+        gameArea.innerHTML = `
+          <div class="game-interface animate__animated animate__bounceIn">
+            <div class="advanced-results" data-aos="flip-up">
+              <h2>${stats.lives > 0 ? '🎉 تهانينا!' : '💀 انتهت اللعبة'}</h2>
+              
+              <div class="results-stats">
+                <div class="stat-card">
+                  <span class="stat-value">${stats.score}</span>
+                  <span>النقاط الإجمالية</span>
+                </div>
+                <div class="stat-card">
+                  <span class="stat-value">${stats.level}</span>
+                  <span>المستوى المحقق</span>
+                </div>
+                <div class="stat-card">
+                  <span class="stat-value">${stats.maxStreak}</span>
+                  <span>أطول تتالي</span>
+                </div>
+                <div class="stat-card">
+                  <span class="stat-value">${this.state.getSuccessRate()}%</span>
+                  <span>معدل النجاح</span>
+                </div>
+                <div class="stat-card">
+                  <span class="stat-value">${Math.round(stats.averageTime)}s</span>
+                  <span>متوسط الوقت</span>
+                </div>
+                <div class="stat-card">
+                  <span class="stat-value">${this.state.unlockedAchievements.length}</span>
+                  <span>الإنجازات</span>
+                </div>
+              </div>
+              
+              <div class="level-badge">
+                🏆 ${this.getTitleByLevel(stats.level)}
+              </div>
+            </div>
+            
+            <div class="game-actions" data-aos="fade-up" data-aos-delay="300">
+              <button onclick="game.playAgain()" class="animate__animated animate__pulse animate__infinite">
+                <i class="fas fa-redo"></i> لعب مرة أخرى
+              </button>
+              <button onclick="game.resetGame()">
+                <i class="fas fa-home"></i> العودة للقائمة
+              </button>
+              <button onclick="game.shareResults()">
+                <i class="fas fa-share"></i> مشاركة النتائج
+              </button>
+            </div>
+          </div>
+        `;
+
+        // حفظ الإحصائيات
+        this.saveProgress();
+      }
+
+      getTitleByLevel(level) {
+        if (level >= 20) return 'أسطورة اللعبة';
+        if (level >= 15) return 'خبير متقدم';
+        if (level >= 10) return 'محترف';
+        if (level >= 5) return 'متقدم';
+        if (level >= 3) return 'ماهر';
+        return 'مبتدئ';
+      }
+
+      shareResults() {
+        const stats = this.state.stats;
+        const text = `🎮 نتائجي في لعبة "من هو؟":\n` +
+                    `🏆 النقاط: ${stats.score}\n` +
+                    `📈 المستوى: ${stats.level}\n` +
+                    `🔥 أطول تتالي: ${stats.maxStreak}\n` +
+                    `✅ معدل النجاح: ${this.state.getSuccessRate()}%\n` +
+                    `🏅 اللقب: ${this.getTitleByLevel(stats.level)}`;
+        
+        if (navigator.share) {
+          navigator.share({
+            title: 'نتائج لعبة من هو؟',
+            text: text
+          });
+        } else if (navigator.clipboard) {
+          navigator.clipboard.writeText(text);
+          this.messages.show('✅ تم نسخ النتائج!', 'success');
+        }
+      }
+
+      saveProgress() {
+        const progress = {
+          stats: this.state.stats,
+          achievements: this.state.unlockedAchievements,
+          lastPlayed: new Date().toISOString()
+        };
+        
+        localStorage.setItem('whoisProgress', JSON.stringify(progress));
+      }
+
+      loadProgress() {
+        const saved = localStorage.getItem('whoisProgress');
+        if (saved) {
+          const progress = JSON.parse(saved);
+          // دمج الإحصائيات المحفوظة مع الحالية
+          Object.assign(this.state.stats, progress.stats);
+          this.state.unlockedAchievements = progress.achievements || [];
+        }
+      }
+
+      openSettings() {
+        const modal = document.getElementById('settingsModal');
+        modal.classList.add('active');
+        
+        // تحديث قيم الإعدادات
+        document.getElementById('hintTypeSelect').value = this.state.settings.hintType;
+        document.getElementById('hintDifficultySelect').value = this.state.settings.hintDifficulty;
+        document.getElementById('scoringSystemSelect').value = this.state.settings.scoringSystem;
+        document.getElementById('effectsIntensity').value = this.state.settings.effectsIntensity;
+        
+        // تحديث عرض شدة المؤثرات
+        document.getElementById('effectsValue').textContent = this.state.settings.effectsIntensity;
+        
+        // إضافة مستمع للمنزلق
+        document.getElementById('effectsIntensity').addEventListener('input', (e) => {
+          document.getElementById('effectsValue').textContent = e.target.value;
+        });
+
+        this.soundSystem.play('click');
+      }
+
+      closeSettings() {
+        const modal = document.getElementById('settingsModal');
+        modal.classList.remove('active');
+        this.soundSystem.play('click');
+      }
+
+      saveSettings() {
+        this.state.settings.hintType = document.getElementById('hintTypeSelect').value;
+        this.state.settings.hintDifficulty = document.getElementById('hintDifficultySelect').value;
+        this.state.settings.scoringSystem = document.getElementById('scoringSystemSelect').value;
+        this.state.settings.effectsIntensity = parseInt(document.getElementById('effectsIntensity').value);
+        
+        this.state.saveSettings();
+        this.closeSettings();
+        this.messages.show('✅ تم حفظ الإعدادات!', 'success');
       }
 
       showResult(isCorrect, selectedStudent) {
