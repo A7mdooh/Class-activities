@@ -1129,6 +1129,30 @@
       font-weight: 500;
     }
 
+    .random-progress {
+      background: var(--gradient-primary);
+      color: var(--white);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-top: 15px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+      animation: progressPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes progressPulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+      }
+      50% {
+        transform: scale(1.02);
+        box-shadow: 0 6px 20px rgba(52, 152, 219, 0.5);
+      }
+    }
+
     /* واجهة إخفاء الطالب المستهدف */
     .hidden-target {
       background: rgba(0, 0, 0, 0.1);
@@ -2758,6 +2782,7 @@
         this.state.currentClass = classValue;
         this.state.gameMode = modeValue;
         this.state.allStudents = this.state.studentData[classValue] || [];
+        this.state.usedStudents = []; // إعادة تعيين قائمة الطلاب المستخدمين
 
         this.soundSystem.play('click');
         this.messages.show('🎯 بدء اللعبة...', 'info', 2000);
@@ -2767,6 +2792,8 @@
             this.nameAssembly.start();
           } else if (modeValue === 'manual') {
             this.showStudentSelection();
+          } else if (modeValue === 'random') {
+            this.startRandomMode();
           } else {
             this.newRound();
           }
@@ -2897,13 +2924,71 @@
         }, 1500);
       }
 
+      // الوضع العشوائي الجديد - يستخدم نفس منطق الوضع الانتقائي مع اختيار عشوائي
+      startRandomMode() {
+        if (this.state.allStudents.length === 0) {
+          this.messages.show('⚠️ لا توجد بيانات طلاب متاحة', 'warning');
+          return;
+        }
+
+        // إعادة تعيين قائمة الطلاب المستخدمين إذا انتهت جميع الطلاب
+        if (this.state.usedStudents.length >= this.state.allStudents.length) {
+          this.state.usedStudents = [];
+          this.soundSystem.play('notification');
+          this.messages.show('🎉 تهانينا! تم الانتهاء من جميع طلاب الصف! بدء دورة جديدة...', 'success', 5000);
+          
+          // إضافة احتفال قصير
+          if (typeof confetti !== 'undefined') {
+            confetti({
+              particleCount: 100,
+              spread: 70,
+              origin: { y: 0.6 }
+            });
+          }
+        }
+
+        // اختيار طالب عشوائي من الطلاب غير المستخدمين
+        const availableStudents = this.state.allStudents.filter(
+          student => !this.state.usedStudents.includes(student)
+        );
+
+        if (availableStudents.length === 0) {
+          // هذا لا يجب أن يحدث، لكن كحماية إضافية
+          this.state.usedStudents = [];
+          return this.startRandomMode();
+        }
+
+        // اختيار عشوائي
+        const randomIndex = Math.floor(Math.random() * availableStudents.length);
+        const selectedStudent = availableStudents[randomIndex];
+        
+        // إضافة الطالب للمستخدمين
+        this.state.usedStudents.push(selectedStudent);
+        this.state.targetStudent = selectedStudent;
+
+        this.soundSystem.play('reveal');
+        this.messages.show(`🎲 تم اختيار طالب عشوائي! الجولة ${this.state.usedStudents.length} من ${this.state.allStudents.length}`, 'info', 3000);
+        
+        // تهيئة إعدادات الوضع العشوائي (نفس منطق الوضع الانتقائي)
+        this.state.stats.lives = this.state.maxLives;
+        this.state.stats.correctAnswers = 0;
+        this.state.stats.wrongAnswers = 0;
+        this.state.stats.gamesPlayed = 0;
+        
+        // انتظار قصير ثم بدء اللعبة
+        setTimeout(() => {
+          this.displayManualGameInterface();
+        }, 1500);
+      }
+
       displayManualGameInterface() {
         const gameArea = document.getElementById('gameArea');
+        const isRandomMode = this.state.gameMode === 'random';
         
         gameArea.innerHTML = `
           <div class="manual-game-interface">
             <div class="target-student-display">
-              <div class="target-title">🎯 الطالب المستهدف</div>
+              <div class="target-title">${isRandomMode ? '🎲 الطالب المختار عشوائياً' : '🎯 الطالب المستهدف'}</div>
               <div class="hidden-target" id="hiddenTarget">
                 <div class="secret-icon">🔒</div>
                 <div class="secret-text">مخفي عن الطلاب</div>
@@ -2913,6 +2998,7 @@
                 </button>
               </div>
               <div class="target-instruction">على الطلاب تخمين من هو هذا الطالب</div>
+              ${isRandomMode ? `<div class="random-progress">الجولة ${this.state.usedStudents.length} من ${this.state.allStudents.length} • ${this.state.allStudents.length - this.state.usedStudents.length} متبقي</div>` : ''}
             </div>
 
             <div class="game-stats">
@@ -2939,7 +3025,7 @@
 
             <div class="manual-controls">
               <button onclick="game.newManualRound()" class="btn btn-primary">
-                🔄 طالب جديد
+                ${isRandomMode ? '🎲 طالب عشوائي جديد' : '🔄 طالب جديد'}
               </button>
               <button onclick="game.resetGame()" class="btn btn-cosmic">
                 🏠 العودة للقائمة
@@ -3236,8 +3322,14 @@
         this.state.stats.correctAnswers = 0;
         this.state.stats.wrongAnswers = 0;
         
-        // عرض نافذة اختيار طالب جديد
-        this.showStudentSelection();
+        // التحقق من الوضع الحالي
+        if (this.state.gameMode === 'random') {
+          // في الوضع العشوائي، اختيار طالب جديد تلقائياً
+          this.startRandomMode();
+        } else {
+          // في الوضع الانتقائي، عرض نافذة اختيار طالب جديد
+          this.showStudentSelection();
+        }
       }
 
       updateManualStats() {
