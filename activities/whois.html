@@ -1177,6 +1177,121 @@
       }
     }
 
+    /* واجهة الإعدادات */
+    .settings-interface {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 30px;
+      background: var(--card-bg);
+      border-radius: 25px;
+      box-shadow: var(--neumorphism-shadow);
+      animation: slideIn 0.6s var(--smooth-animation);
+    }
+
+    .settings-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .settings-title {
+      font-size: 2rem;
+      font-weight: 700;
+      background: var(--gradient-primary);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+
+    .settings-subtitle {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+
+    .settings-content {
+      display: grid;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .settings-section {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .setting-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      padding: 10px 0;
+    }
+
+    .setting-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1rem;
+      color: var(--text-primary);
+      cursor: pointer;
+    }
+
+    .setting-text {
+      font-weight: 500;
+    }
+
+    .volume-slider {
+      width: 150px;
+      margin: 0 10px;
+    }
+
+    .volume-display {
+      font-weight: 600;
+      color: var(--primary-color);
+      min-width: 40px;
+    }
+
+    .settings-controls {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* تحسينات للأجهزة المحمولة */
+    @media (max-width: 768px) {
+      .settings-interface {
+        padding: 20px;
+        margin: 10px;
+      }
+      
+      .setting-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      
+      .volume-slider {
+        width: 100%;
+      }
+      
+      .settings-controls {
+        flex-direction: column;
+      }
+    }
+
     /* واجهة إخفاء الطالب المستهدف */
     .hidden-target {
       background: rgba(0, 0, 0, 0.1);
@@ -2685,6 +2800,7 @@
         try {
           this.showLoading(true);
           await this.loadStudentData();
+          this.loadSettings(); // تحميل الإعدادات المحفوظة
           this.setupEventListeners();
           this.showLoading(false);
           this.messages.show('✅ تم تحميل النظام بنجاح', 'success');
@@ -2769,12 +2885,14 @@
 
       setupEventListeners() {
         const startBtn = document.getElementById('startGameBtn');
+        const settingsBtn = document.getElementById('settingsBtn');
         const classSelect = document.getElementById('classSelect');
         const modeSelect = document.getElementById('modeSelect');
         const timeSelect = document.getElementById('timeSelect');
         const livesSelect = document.getElementById('livesSelect');
 
         startBtn.addEventListener('click', () => this.startGame());
+        settingsBtn.addEventListener('click', () => this.showSettings());
 
         timeSelect.addEventListener('change', () => {
           this.state.timeLimit = parseInt(timeSelect.value);
@@ -2822,6 +2940,181 @@
             this.newRound();
           }
         }, 1000);
+      }
+
+      showSettings() {
+        this.soundSystem.play('click');
+        
+        const gameArea = document.getElementById('gameArea');
+        gameArea.innerHTML = `
+          <div class="settings-interface">
+            <div class="settings-header">
+              <div class="settings-title">⚙️ إعدادات النظام</div>
+              <div class="settings-subtitle">تخصيص تجربة اللعبة</div>
+            </div>
+
+            <div class="settings-content">
+              <div class="settings-section">
+                <h3 class="section-title">🎵 الإعدادات الصوتية</h3>
+                <div class="setting-item">
+                  <label class="setting-label">
+                    <input type="checkbox" id="soundEnabled" ${this.soundSystem.soundEnabled ? 'checked' : ''}>
+                    <span class="setting-text">تشغيل الأصوات</span>
+                  </label>
+                </div>
+                <div class="setting-item">
+                  <label class="setting-label">مستوى الصوت:</label>
+                  <input type="range" id="volumeSlider" min="0" max="100" value="${this.soundSystem.volume * 100}" class="volume-slider">
+                  <span class="volume-display">${Math.round(this.soundSystem.volume * 100)}%</span>
+                </div>
+              </div>
+
+              <div class="settings-section">
+                <h3 class="section-title">🎮 إعدادات اللعبة</h3>
+                <div class="setting-item">
+                  <label class="setting-label">
+                    <input type="checkbox" id="animationsEnabled" checked>
+                    <span class="setting-text">تشغيل الحركات والتأثيرات</span>
+                  </label>
+                </div>
+                <div class="setting-item">
+                  <label class="setting-label">
+                    <input type="checkbox" id="confettiEnabled" checked>
+                    <span class="setting-text">عرض الألعاب النارية</span>
+                  </label>
+                </div>
+                <div class="setting-item">
+                  <label class="setting-label">
+                    <input type="checkbox" id="autoHideTarget" checked>
+                    <span class="setting-text">إخفاء الطالب المستهدف تلقائياً</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="settings-section">
+                <h3 class="section-title">📊 إعدادات البيانات</h3>
+                <div class="setting-item">
+                  <button onclick="game.exportData()" class="btn btn-primary">
+                    📤 تصدير البيانات
+                  </button>
+                  <button onclick="game.resetStats()" class="btn btn-secondary">
+                    🔄 إعادة تعيين الإحصائيات
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-controls">
+              <button onclick="game.saveSettings()" class="btn btn-success">
+                💾 حفظ الإعدادات
+              </button>
+              <button onclick="game.resetGame()" class="btn btn-cosmic">
+                🏠 العودة للقائمة الرئيسية
+              </button>
+            </div>
+          </div>
+        `;
+
+        // ربط الأحداث
+        this.setupSettingsEvents();
+        this.messages.show('⚙️ إعدادات النظام جاهزة للتخصيص', 'info', 3000);
+      }
+
+      setupSettingsEvents() {
+        const soundEnabled = document.getElementById('soundEnabled');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const volumeDisplay = document.querySelector('.volume-display');
+
+        // تغيير حالة الصوت
+        soundEnabled.addEventListener('change', () => {
+          this.soundSystem.soundEnabled = soundEnabled.checked;
+          this.soundSystem.play('click');
+        });
+
+        // تغيير مستوى الصوت
+        volumeSlider.addEventListener('input', () => {
+          const volume = volumeSlider.value / 100;
+          this.soundSystem.volume = volume;
+          volumeDisplay.textContent = `${volumeSlider.value}%`;
+        });
+
+        volumeSlider.addEventListener('change', () => {
+          this.soundSystem.play('notification');
+        });
+      }
+
+      saveSettings() {
+        const settings = {
+          soundEnabled: document.getElementById('soundEnabled').checked,
+          volume: document.getElementById('volumeSlider').value / 100,
+          animationsEnabled: document.getElementById('animationsEnabled').checked,
+          confettiEnabled: document.getElementById('confettiEnabled').checked,
+          autoHideTarget: document.getElementById('autoHideTarget').checked
+        };
+
+        // حفظ في Local Storage
+        localStorage.setItem('whoisGameSettings', JSON.stringify(settings));
+        
+        this.soundSystem.play('success');
+        this.messages.show('✅ تم حفظ الإعدادات بنجاح!', 'success', 3000);
+      }
+
+      exportData() {
+        const data = {
+          settings: JSON.parse(localStorage.getItem('whoisGameSettings') || '{}'),
+          stats: this.state.stats,
+          timestamp: new Date().toISOString()
+        };
+
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `whois-game-data-${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+        
+        URL.revokeObjectURL(url);
+        this.soundSystem.play('notification');
+        this.messages.show('📤 تم تصدير البيانات بنجاح!', 'success', 3000);
+      }
+
+      resetStats() {
+        if (confirm('هل أنت متأكد من إعادة تعيين جميع الإحصائيات؟')) {
+          this.state.stats = {
+            score: 0,
+            correctAnswers: 0,
+            wrongAnswers: 0,
+            streak: 0,
+            lives: 3,
+            gamesPlayed: 0
+          };
+          
+          this.soundSystem.play('notification');
+          this.messages.show('🔄 تم إعادة تعيين الإحصائيات!', 'info', 3000);
+        }
+      }
+
+      loadSettings() {
+        const savedSettings = localStorage.getItem('whoisGameSettings');
+        if (savedSettings) {
+          try {
+            const settings = JSON.parse(savedSettings);
+            
+            // تطبيق الإعدادات الصوتية
+            if (settings.soundEnabled !== undefined) {
+              this.soundSystem.soundEnabled = settings.soundEnabled;
+            }
+            if (settings.volume !== undefined) {
+              this.soundSystem.volume = settings.volume;
+            }
+            
+            // يمكن إضافة المزيد من الإعدادات هنا
+            
+          } catch (error) {
+            console.warn('خطأ في تحميل الإعدادات:', error);
+          }
+        }
       }
 
       newRound() {
