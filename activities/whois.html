@@ -1292,6 +1292,272 @@
       }
     }
 
+    /* واجهة وضع البقاء */
+    .survival-interface {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+      animation: slideIn 0.6s var(--smooth-animation);
+    }
+
+    .survival-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .survival-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #e74c3c, #ff6b35, #f39c12);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+      text-shadow: 0 0 30px rgba(231, 76, 60, 0.5);
+      animation: fireGlow 3s ease-in-out infinite;
+    }
+
+    .survival-level {
+      font-size: 1.2rem;
+      color: var(--primary-color);
+      font-weight: 600;
+      background: rgba(52, 152, 219, 0.1);
+      padding: 8px 20px;
+      border-radius: 20px;
+      border: 2px solid var(--primary-color);
+    }
+
+    @keyframes fireGlow {
+      0%, 100% {
+        filter: brightness(1) drop-shadow(0 0 10px rgba(231, 76, 60, 0.3));
+      }
+      50% {
+        filter: brightness(1.2) drop-shadow(0 0 20px rgba(231, 76, 60, 0.6));
+      }
+    }
+
+    .survival-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .survival-stat-card {
+      background: var(--card-bg);
+      padding: 15px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: var(--neumorphism-shadow);
+      transition: all 0.3s var(--smooth-animation);
+      border: 2px solid transparent;
+    }
+
+    .survival-stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .survival-stat-card.lives {
+      border-color: #e74c3c;
+      background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), rgba(192, 57, 43, 0.05));
+    }
+
+    .survival-stat-card.score {
+      border-color: #f39c12;
+      background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(211, 84, 0, 0.05));
+    }
+
+    .survival-stat-card.streak {
+      border-color: #e67e22;
+      background: linear-gradient(135deg, rgba(230, 126, 34, 0.1), rgba(191, 85, 18, 0.05));
+    }
+
+    .survival-stat-card.timer {
+      border-color: #9b59b6;
+      background: linear-gradient(135deg, rgba(155, 89, 182, 0.1), rgba(142, 68, 173, 0.05));
+    }
+
+    .survival-stat-card.best {
+      border-color: #f1c40f;
+      background: linear-gradient(135deg, rgba(241, 196, 15, 0.1), rgba(183, 149, 11, 0.05));
+    }
+
+    .survival-stat-card .stat-icon {
+      font-size: 1.5rem;
+      margin-bottom: 5px;
+    }
+
+    .survival-stat-card .stat-value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 5px;
+    }
+
+    .survival-stat-card .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .survival-target {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .target-question {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+    }
+
+    .survival-hint {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      background: rgba(52, 152, 219, 0.1);
+      padding: 8px 16px;
+      border-radius: 15px;
+      border: 1px solid rgba(52, 152, 219, 0.3);
+    }
+
+    .survival-card {
+      border: 3px solid transparent;
+      transition: all 0.3s var(--smooth-animation);
+    }
+
+    .survival-card:hover {
+      border-color: var(--primary-color);
+      box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+      transform: translateY(-5px) scale(1.02);
+    }
+
+    .survival-controls {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-top: 30px;
+    }
+
+    /* نهاية وضع البقاء */
+    .survival-end {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 40px;
+      background: var(--card-bg);
+      border-radius: 25px;
+      box-shadow: var(--neumorphism-shadow);
+      text-align: center;
+      animation: slideIn 0.8s var(--smooth-animation);
+    }
+
+    .survival-end-header {
+      margin-bottom: 30px;
+    }
+
+    .end-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      animation: pulse 2s infinite;
+    }
+
+    .end-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--danger-color);
+      margin-bottom: 10px;
+    }
+
+    .survival-final-stats {
+      margin-bottom: 30px;
+    }
+
+    .final-stat {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .final-stat .stat-label {
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .final-stat .stat-value {
+      color: var(--text-primary);
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .final-stat .stat-value.highlight {
+      color: var(--primary-color);
+      font-size: 1.3rem;
+    }
+
+    .new-record {
+      background: var(--gradient-success);
+      color: var(--white);
+      padding: 15px;
+      border-radius: 15px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin-top: 20px;
+      animation: pulse 2s infinite;
+    }
+
+    .best-score {
+      color: var(--text-secondary);
+      font-style: italic;
+      margin-top: 15px;
+    }
+
+    .survival-end-controls {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* استجابة للأجهزة المحمولة - وضع البقاء */
+    @media (max-width: 768px) {
+      .survival-interface {
+        padding: 15px;
+      }
+      
+      .survival-title {
+        font-size: 2rem;
+      }
+      
+      .survival-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+      
+      .survival-stat-card {
+        padding: 10px;
+      }
+      
+      .target-question {
+        font-size: 1.4rem;
+      }
+      
+      .survival-controls {
+        flex-direction: column;
+      }
+      
+      .survival-end {
+        padding: 20px;
+        margin: 10px;
+      }
+      
+      .survival-end-controls {
+        flex-direction: column;
+      }
+    }
+
     /* واجهة إخفاء الطالب المستهدف */
     .hidden-target {
       background: rgba(0, 0, 0, 0.1);
@@ -2320,6 +2586,16 @@
           lives: 3,
           gamesPlayed: 0
         };
+
+        // خصائص وضع البقاء
+        this.survival = {
+          level: 1,
+          timeLeft: 30,
+          difficultyMultiplier: 1,
+          bestScore: parseInt(localStorage.getItem('whoisSurvivalBest') || '0'),
+          startTime: null,
+          bonusLives: 0
+        };
       }
 
       reset() {
@@ -2936,6 +3212,8 @@
             this.showStudentSelection();
           } else if (modeValue === 'random') {
             this.startRandomMode();
+          } else if (modeValue === 'survival') {
+            this.startSurvivalMode();
           } else {
             this.newRound();
           }
@@ -3298,6 +3576,360 @@
         }, 1500);
       }
 
+      // وضع البقاء - التحدي المستمر
+      startSurvivalMode() {
+        if (this.state.allStudents.length === 0) {
+          this.messages.show('⚠️ لا توجد بيانات طلاب متاحة', 'warning');
+          return;
+        }
+
+        // تهيئة إعدادات وضع البقاء
+        this.state.survival.level = 1;
+        this.state.survival.timeLeft = 30;
+        this.state.survival.difficultyMultiplier = 1;
+        this.state.survival.startTime = Date.now();
+        this.state.survival.bonusLives = 0;
+
+        // إعدادات البقاء الأولية
+        this.state.stats.lives = 3; // بداية بـ 3 محاولات
+        this.state.stats.score = 0;
+        this.state.stats.correctAnswers = 0;
+        this.state.stats.wrongAnswers = 0;
+        this.state.stats.gamesPlayed = 0;
+        this.state.stats.streak = 0;
+
+        this.soundSystem.play('reveal');
+        this.messages.show('🔥 وضع البقاء! ابق أطول فترة ممكنة!', 'info', 3000);
+        
+        setTimeout(() => {
+          this.displaySurvivalInterface();
+          this.startSurvivalRound();
+        }, 1500);
+      }
+
+      displaySurvivalInterface() {
+        const gameArea = document.getElementById('gameArea');
+        
+        gameArea.innerHTML = `
+          <div class="survival-interface">
+            <div class="survival-header">
+              <div class="survival-title">🔥 وضع البقاء</div>
+              <div class="survival-level">المستوى ${this.state.survival.level}</div>
+            </div>
+
+            <div class="survival-stats">
+              <div class="survival-stat-card lives">
+                <div class="stat-icon">❤️</div>
+                <div class="stat-value">${this.state.stats.lives}</div>
+                <div class="stat-label">المحاولات</div>
+              </div>
+              <div class="survival-stat-card score">
+                <div class="stat-icon">🏆</div>
+                <div class="stat-value">${this.state.stats.score}</div>
+                <div class="stat-label">النقاط</div>
+              </div>
+              <div class="survival-stat-card streak">
+                <div class="stat-icon">🔥</div>
+                <div class="stat-value">${this.state.stats.streak}</div>
+                <div class="stat-label">التسلسل</div>
+              </div>
+              <div class="survival-stat-card timer">
+                <div class="stat-icon">⏱️</div>
+                <div class="stat-value" id="survivalTimer">${this.state.survival.timeLeft}</div>
+                <div class="stat-label">الوقت</div>
+              </div>
+              <div class="survival-stat-card best">
+                <div class="stat-icon">👑</div>
+                <div class="stat-value">${this.state.survival.bestScore}</div>
+                <div class="stat-label">الأفضل</div>
+              </div>
+            </div>
+            
+            <div class="survival-target">
+              <div class="target-question">🎯 من هو هذا الطالب؟</div>
+              <div class="survival-hint">المستوى ${this.state.survival.level} • مضاعف النقاط: x${this.state.survival.difficultyMultiplier}</div>
+            </div>
+            
+            <div class="students-grid" id="survivalOptions">
+              ${this.generateSurvivalOptions()}
+            </div>
+
+            <div class="survival-controls">
+              <button onclick="game.pauseSurvival()" class="btn btn-secondary">
+                ⏸️ إيقاف مؤقت
+              </button>
+              <button onclick="game.resetGame()" class="btn btn-cosmic">
+                🏠 إنهاء وضع البقاء
+              </button>
+            </div>
+          </div>
+        `;
+
+        this.updateSurvivalStats();
+        this.startSurvivalTimer();
+      }
+
+      generateSurvivalOptions() {
+        // زيادة عدد الخيارات حسب المستوى (المزيد من الصعوبة)
+        const baseOptions = 4;
+        const extraOptions = Math.floor(this.state.survival.level / 3);
+        const totalOptions = Math.min(baseOptions + extraOptions, this.state.allStudents.length, 8);
+        
+        const shuffled = [...this.state.allStudents].sort(() => Math.random() - 0.5);
+        const options = shuffled.slice(0, totalOptions);
+        
+        if (!options.includes(this.state.targetStudent)) {
+          options[0] = this.state.targetStudent;
+          options.sort(() => Math.random() - 0.5);
+        }
+
+        return options.map(student => `
+          <div class="student-card survival-card" onclick="game.checkSurvivalAnswer('${student}')">
+            <div class="student-name">${student}</div>
+          </div>
+        `).join('');
+      }
+
+      startSurvivalRound() {
+        // اختيار طالب عشوائي
+        const randomStudent = this.state.allStudents[Math.floor(Math.random() * this.state.allStudents.length)];
+        this.state.targetStudent = randomStudent;
+        
+        // تحديث الخيارات
+        const optionsContainer = document.getElementById('survivalOptions');
+        if (optionsContainer) {
+          optionsContainer.innerHTML = this.generateSurvivalOptions();
+        }
+      }
+
+      startSurvivalTimer() {
+        this.survivalInterval = setInterval(() => {
+          this.state.survival.timeLeft--;
+          
+          const timerElement = document.getElementById('survivalTimer');
+          if (timerElement) {
+            timerElement.textContent = this.state.survival.timeLeft;
+            
+            // تحذير عندما يبقى 5 ثوان
+            if (this.state.survival.timeLeft <= 5) {
+              timerElement.style.color = '#e74c3c';
+              timerElement.style.animation = 'pulse 0.5s infinite';
+            }
+          }
+          
+          // انتهاء الوقت = إجابة خاطئة
+          if (this.state.survival.timeLeft <= 0) {
+            this.checkSurvivalAnswer('__TIME_OUT__');
+          }
+        }, 1000);
+      }
+
+      checkSurvivalAnswer(selectedStudent) {
+        clearInterval(this.survivalInterval);
+        
+        const isCorrect = selectedStudent === this.state.targetStudent && selectedStudent !== '__TIME_OUT__';
+        const isTimeOut = selectedStudent === '__TIME_OUT__';
+        
+        this.state.stats.gamesPlayed++;
+
+        if (isCorrect) {
+          // إجابة صحيحة - مكافآت!
+          this.state.stats.correctAnswers++;
+          this.state.stats.streak++;
+          
+          // نقاط أساسية + مكافأة التسلسل + مضاعف المستوى
+          const basePoints = 100;
+          const streakBonus = this.state.stats.streak * 10;
+          const levelMultiplier = this.state.survival.difficultyMultiplier;
+          const timeBonus = this.state.survival.timeLeft * 5; // مكافأة للوقت المتبقي
+          
+          const totalPoints = Math.round((basePoints + streakBonus + timeBonus) * levelMultiplier);
+          this.state.stats.score += totalPoints;
+          
+          // مكافأة محاولة إضافية كل 3 إجابات صحيحة متتالية
+          if (this.state.stats.streak % 3 === 0) {
+            this.state.stats.lives++;
+            this.state.survival.bonusLives++;
+            this.soundSystem.play('success');
+            this.messages.show(`🎁 مكافأة! محاولة إضافية للتسلسل ${this.state.stats.streak}!`, 'success', 2000);
+          } else {
+            this.soundSystem.play('correct');
+            this.messages.show(`🎉 صحيح! +${totalPoints} نقطة`, 'success', 1500);
+          }
+          
+          // رفع المستوى كل 5 إجابات صحيحة
+          if (this.state.stats.correctAnswers % 5 === 0) {
+            this.levelUp();
+          }
+          
+        } else {
+          // إجابة خاطئة أو انتهاء الوقت
+          this.state.stats.wrongAnswers++;
+          this.state.stats.streak = 0;
+          this.state.stats.lives--;
+          
+          if (isTimeOut) {
+            this.soundSystem.play('wrong');
+            this.messages.show(`⏰ انتهى الوقت! الإجابة الصحيحة: ${this.state.targetStudent}`, 'error', 2000);
+          } else {
+            this.soundSystem.play('wrong');
+            this.messages.show(`❌ خطأ! الإجابة الصحيحة: ${this.state.targetStudent}`, 'error', 2000);
+          }
+        }
+
+        // تحديث أفضل نتيجة
+        if (this.state.stats.score > this.state.survival.bestScore) {
+          this.state.survival.bestScore = this.state.stats.score;
+          localStorage.setItem('whoisSurvivalBest', this.state.stats.score.toString());
+        }
+
+        this.updateSurvivalStats();
+
+        // التحقق من نهاية اللعبة
+        if (this.state.stats.lives <= 0) {
+          setTimeout(() => {
+            this.endSurvivalMode();
+          }, 2000);
+        } else {
+          // جولة جديدة
+          setTimeout(() => {
+            this.resetSurvivalTimer();
+            this.startSurvivalRound();
+          }, 2000);
+        }
+      }
+
+      levelUp() {
+        this.state.survival.level++;
+        this.state.survival.difficultyMultiplier += 0.2;
+        
+        // تقليل الوقت قليلاً (لا يقل عن 15 ثانية)
+        this.state.survival.timeLeft = Math.max(15, 30 - this.state.survival.level);
+        
+        this.soundSystem.play('notification');
+        this.messages.show(`🆙 ارتقيت للمستوى ${this.state.survival.level}! مضاعف النقاط: x${this.state.survival.difficultyMultiplier.toFixed(1)}`, 'info', 3000);
+      }
+
+      resetSurvivalTimer() {
+        // إعادة تعيين الوقت حسب المستوى
+        this.state.survival.timeLeft = Math.max(15, 30 - this.state.survival.level);
+        const timerElement = document.getElementById('survivalTimer');
+        if (timerElement) {
+          timerElement.style.color = '';
+          timerElement.style.animation = '';
+        }
+        this.startSurvivalTimer();
+      }
+
+      updateSurvivalStats() {
+        // تحديث جميع الإحصائيات في الواجهة
+        const elements = {
+          lives: document.querySelector('.survival-stat-card.lives .stat-value'),
+          score: document.querySelector('.survival-stat-card.score .stat-value'),
+          streak: document.querySelector('.survival-stat-card.streak .stat-value'),
+          best: document.querySelector('.survival-stat-card.best .stat-value')
+        };
+
+        if (elements.lives) elements.lives.textContent = this.state.stats.lives;
+        if (elements.score) elements.score.textContent = this.state.stats.score.toLocaleString();
+        if (elements.streak) elements.streak.textContent = this.state.stats.streak;
+        if (elements.best) elements.best.textContent = this.state.survival.bestScore.toLocaleString();
+
+        // تحديث مستوى الصعوبة
+        const hintElement = document.querySelector('.survival-hint');
+        if (hintElement) {
+          hintElement.textContent = `المستوى ${this.state.survival.level} • مضاعف النقاط: x${this.state.survival.difficultyMultiplier.toFixed(1)}`;
+        }
+      }
+
+      pauseSurvival() {
+        clearInterval(this.survivalInterval);
+        this.soundSystem.play('click');
+        this.messages.show('⏸️ تم إيقاف وضع البقاء مؤقتاً', 'info', 2000);
+        
+        const pauseBtn = document.querySelector('.survival-controls .btn-secondary');
+        if (pauseBtn) {
+          pauseBtn.innerHTML = '▶️ استئناف';
+          pauseBtn.onclick = () => this.resumeSurvival();
+        }
+      }
+
+      resumeSurvival() {
+        this.startSurvivalTimer();
+        this.soundSystem.play('click');
+        this.messages.show('▶️ تم استئناف وضع البقاء', 'info', 2000);
+        
+        const resumeBtn = document.querySelector('.survival-controls .btn-secondary');
+        if (resumeBtn) {
+          resumeBtn.innerHTML = '⏸️ إيقاف مؤقت';
+          resumeBtn.onclick = () => this.pauseSurvival();
+        }
+      }
+
+      endSurvivalMode() {
+        clearInterval(this.survivalInterval);
+        
+        const totalTime = Math.round((Date.now() - this.state.survival.startTime) / 1000);
+        const minutes = Math.floor(totalTime / 60);
+        const seconds = totalTime % 60;
+        
+        this.soundSystem.play('notification');
+        
+        const gameArea = document.getElementById('gameArea');
+        gameArea.innerHTML = `
+          <div class="survival-end">
+            <div class="survival-end-header">
+              <div class="end-icon">💀</div>
+              <div class="end-title">انتهى وضع البقاء!</div>
+            </div>
+            
+            <div class="survival-final-stats">
+              <div class="final-stat">
+                <span class="stat-label">النقاط النهائية:</span>
+                <span class="stat-value highlight">${this.state.stats.score.toLocaleString()}</span>
+              </div>
+              <div class="final-stat">
+                <span class="stat-label">المستوى المُحقق:</span>
+                <span class="stat-value">${this.state.survival.level}</span>
+              </div>
+              <div class="final-stat">
+                <span class="stat-label">أطول تسلسل:</span>
+                <span class="stat-value">${Math.max(...(this.streakHistory || [this.state.stats.streak]))}</span>
+              </div>
+              <div class="final-stat">
+                <span class="stat-label">الإجابات الصحيحة:</span>
+                <span class="stat-value">${this.state.stats.correctAnswers}</span>
+              </div>
+              <div class="final-stat">
+                <span class="stat-label">الإجابات الخاطئة:</span>
+                <span class="stat-value">${this.state.stats.wrongAnswers}</span>
+              </div>
+              <div class="final-stat">
+                <span class="stat-label">مدة البقاء:</span>
+                <span class="stat-value">${minutes}:${seconds.toString().padStart(2, '0')}</span>
+              </div>
+              <div class="final-stat">
+                <span class="stat-label">المحاولات الإضافية:</span>
+                <span class="stat-value">${this.state.survival.bonusLives}</span>
+              </div>
+              ${this.state.stats.score === this.state.survival.bestScore ? 
+                '<div class="new-record">🏆 رقم قياسي جديد!</div>' : 
+                `<div class="best-score">أفضل نتيجة: ${this.state.survival.bestScore.toLocaleString()}</div>`
+              }
+            </div>
+
+            <div class="survival-end-controls">
+              <button onclick="game.startSurvivalMode()" class="btn btn-primary">
+                🔥 إعادة المحاولة
+              </button>
+              <button onclick="game.resetGame()" class="btn btn-cosmic">
+                🏠 العودة للقائمة الرئيسية
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
       displayManualGameInterface() {
         const gameArea = document.getElementById('gameArea');
         const isRandomMode = this.state.gameMode === 'random';
@@ -3401,6 +4033,8 @@
       checkAnswer(selectedStudent) {
         if (this.state.gameMode === 'manual' || this.state.gameMode === 'random') {
           this.checkManualAnswer(selectedStudent);
+        } else if (this.state.gameMode === 'survival') {
+          this.checkSurvivalAnswer(selectedStudent);
         } else {
           this.checkRegularAnswer(selectedStudent);
         }
