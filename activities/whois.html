@@ -1856,9 +1856,12 @@
           this.soundSystem.play('click');
         } catch (error) {
           this.showLoading(false);
-          this.messages.show('❌ فشل في تحميل البيانات', 'error');
+          console.error('خطأ في تحميل البيانات:', error);
+          this.messages.show('❌ لا يمكن تشغيل النشاط بدون ملف البيانات!', 'error');
           this.soundSystem.play('wrong');
-          console.error('خطأ في التهيئة:', error);
+          
+          // تعطيل جميع الأزرار
+          document.querySelectorAll('button').forEach(btn => btn.disabled = true);
         }
       }
 
@@ -1874,29 +1877,41 @@
       }
 
       async loadStudentData() {
-        const paths = [
-          '../data/studentData.json',
-          './data/studentData.json',
-          'data/studentData.json'
-        ];
-
-        for (const path of paths) {
-          try {
-            const response = await fetch(path);
-            if (response.ok) {
-              const data = await response.json();
-              if (data && typeof data === 'object') {
-                this.state.studentData = data;
-                this.populateClassSelect();
-                return;
-              }
-            }
-          } catch (error) {
-            continue;
+        try {
+          // عرض رسالة التحميل
+          this.messages.show('🔄 جاري تحميل بيانات الطلاب...', 'info', 10000);
+          
+          // جلب البيانات من الملف المحلي
+          const response = await fetch('../data/studentData.json');
+          if (!response.ok) {
+            throw new Error('فشل في تحميل ملف البيانات');
           }
+          
+          const data = await response.json();
+          if (data && typeof data === 'object' && Object.keys(data).length > 0) {
+            this.state.studentData = data;
+            this.populateClassSelect();
+            this.messages.clear();
+            this.messages.show('✅ تم تحميل بيانات الطلاب بنجاح! 🎓', 'success');
+            this.soundSystem.play('correct');
+            return;
+          } else {
+            throw new Error('ملف البيانات فارغ أو تالف');
+          }
+          
+        } catch (error) {
+          console.error('فشل في تحميل ملف البيانات:', error);
+          this.messages.clear();
+          this.messages.show('❌ فشل في تحميل ملف البيانات! تأكد من وجود الملف: ../data/studentData.json', 'error');
+          this.soundSystem.play('wrong');
+          
+          // إظهار رسالة تفصيلية للمطور
+          if (error.message.includes('fetch')) {
+            this.messages.show('💡 تأكد من أن ملف studentData.json موجود في مجلد data', 'info', 10000);
+          }
+          
+          throw error; // إعادة رمي الخطأ لتجنب متابعة التشغيل
         }
-
-        throw new Error('لم يتم العثور على ملف البيانات');
       }
 
       populateClassSelect() {
