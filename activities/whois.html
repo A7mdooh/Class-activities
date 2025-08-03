@@ -655,6 +655,183 @@
       display: none !important;
     }
 
+    /* واجهة تجميع الأسماء */
+    .assemble-interface {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .assemble-title {
+      font-size: 2rem;
+      font-weight: 700;
+      background: var(--gradient-royal);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: rgba(255,255,255,0.7);
+      border-radius: 15px;
+      box-shadow: var(--neumorphism-inset);
+    }
+
+    .level-indicator {
+      background: var(--gradient-success);
+      color: var(--white);
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: inline-block;
+      box-shadow: var(--neumorphism-outset);
+    }
+
+    .name-parts-container {
+      background: rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 30px;
+      margin: 20px 0;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .original-name {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #5a6c7d;
+      margin-bottom: 20px;
+      opacity: 0.7;
+    }
+
+    .shuffled-parts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+      margin-bottom: 30px;
+      min-height: 100px;
+      padding: 20px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 15px;
+      border: 2px dashed rgba(255,255,255,0.3);
+    }
+
+    .ordered-parts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+      min-height: 100px;
+      padding: 20px;
+      background: rgba(79, 172, 254, 0.1);
+      border-radius: 15px;
+      border: 2px dashed var(--primary-color);
+    }
+
+    .name-part {
+      background: var(--card-gradient);
+      border: 2px solid var(--primary-color);
+      border-radius: 12px;
+      padding: 12px 20px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: grab;
+      transition: all var(--animation-speed) var(--bounce-animation);
+      box-shadow: var(--neumorphism-outset);
+      user-select: none;
+      position: relative;
+      min-width: 100px;
+      text-align: center;
+    }
+
+    .name-part:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 
+        var(--neumorphism-outset),
+        0 10px 20px rgba(0,0,0,0.15);
+      border-color: var(--success-color);
+    }
+
+    .name-part:active {
+      cursor: grabbing;
+      transform: scale(0.95);
+    }
+
+    .name-part.dragging {
+      opacity: 0.5;
+      transform: rotate(5deg);
+    }
+
+    .drop-zone {
+      min-height: 80px;
+      border: 2px dashed var(--primary-color);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px 0;
+      transition: all var(--animation-speed) var(--smooth-animation);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .drop-zone.dragover {
+      border-color: var(--success-color);
+      background: rgba(79, 172, 254, 0.1);
+      transform: scale(1.02);
+    }
+
+    .assemble-controls {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 15px 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--gradient-success);
+      border-radius: 4px;
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+
+    .stats-display {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .stat-item {
+      background: var(--card-gradient);
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: var(--neumorphism-inset);
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #5a6c7d;
+      margin-top: 5px;
+    }
+
     /* تحسينات الاستجابة */
     @media (max-width: 768px) {
       .main-container {
@@ -694,6 +871,36 @@
         left: 10px;
         padding: 12px 20px;
       }
+
+      /* تحسينات تجميع الأسماء للهواتف */
+      .assemble-title {
+        font-size: 1.5rem;
+      }
+
+      .shuffled-parts, .ordered-parts {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .name-part {
+        width: 90%;
+        max-width: 200px;
+      }
+
+      .assemble-controls {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .assemble-controls .btn {
+        width: 100%;
+        max-width: 300px;
+      }
+
+      .stats-display {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
     }
 
     @media (max-width: 480px) {
@@ -711,6 +918,20 @@
 
       .current-student {
         font-size: 2rem;
+      }
+
+      .assemble-title {
+        font-size: 1.3rem;
+      }
+
+      .name-part {
+        font-size: 1rem;
+        padding: 10px 15px;
+      }
+
+      .level-indicator {
+        font-size: 0.9rem;
+        padding: 8px 15px;
       }
     }
   </style>
@@ -759,6 +980,7 @@
             <option value="challenge">⏰ تحدي زمني</option>
             <option value="survival">🔥 وضع البقاء</option>
             <option value="team">👥 فريق ضد فريق</option>
+            <option value="assemble">🧩 تجميع أجزاء الاسم</option>
           </select>
         </div>
       </div>
@@ -958,12 +1180,393 @@
       }
     }
 
+    // نظام تجميع الأسماء
+    class NameAssemblyGame {
+      constructor(gameInstance) {
+        this.game = gameInstance;
+        this.currentLevel = 1;
+        this.maxLevel = 3;
+        this.currentName = '';
+        this.nameParts = [];
+        this.shuffledParts = [];
+        this.orderedParts = [];
+        this.correctAnswers = 0;
+        this.totalAttempts = 0;
+        this.requiredCorrectForNext = 3;
+        
+        this.draggedElement = null;
+      }
+
+      start() {
+        this.currentLevel = 1;
+        this.correctAnswers = 0;
+        this.totalAttempts = 0;
+        this.setupNewRound();
+      }
+
+      setupNewRound() {
+        // اختيار اسم عشوائي
+        const students = this.game.state.allStudents;
+        if (!students || students.length === 0) {
+          this.game.messages.show('⚠️ لا توجد بيانات طلاب متاحة', 'warning');
+          return;
+        }
+
+        this.currentName = students[Math.floor(Math.random() * students.length)];
+        this.generateNameParts();
+        this.displayInterface();
+      }
+
+      generateNameParts() {
+        const fullNameParts = this.currentName.trim().split(/\s+/);
+        
+        // تحديد أجزاء الاسم حسب المستوى
+        switch(this.currentLevel) {
+          case 1: // الاسم الأول + الثاني
+            this.nameParts = fullNameParts.slice(0, 2);
+            break;
+          case 2: // الاسم الأول + الثاني + الثالث
+            this.nameParts = fullNameParts.slice(0, 3);
+            break;
+          case 3: // الاسم الكامل
+            this.nameParts = fullNameParts;
+            break;
+        }
+
+        // خلط الأجزاء
+        this.shuffledParts = [...this.nameParts].sort(() => Math.random() - 0.5);
+        this.orderedParts = [];
+      }
+
+      displayInterface() {
+        const gameArea = document.getElementById('gameArea');
+        
+        gameArea.innerHTML = `
+          <div class="assemble-interface">
+            <div class="assemble-title">🧩 جمع أجزاء الاسم</div>
+            
+            <div class="level-indicator">
+              المرحلة ${this.currentLevel} من ${this.maxLevel}
+              ${this.getLevelDescription()}
+            </div>
+
+            <div class="stats-display">
+              <div class="stat-item">
+                <div class="stat-value">${this.correctAnswers}</div>
+                <div class="stat-label">إجابات صحيحة</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value">${this.totalAttempts}</div>
+                <div class="stat-label">إجمالي المحاولات</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value">${this.requiredCorrectForNext - this.correctAnswers}</div>
+                <div class="stat-label">متبقي للمرحلة التالية</div>
+              </div>
+            </div>
+
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: ${(this.correctAnswers / this.requiredCorrectForNext) * 100}%"></div>
+            </div>
+
+            <div class="name-parts-container">
+              <div class="original-name">رتب الأجزاء لتكوين الاسم الصحيح</div>
+              
+              <div class="shuffled-parts" id="shuffledParts">
+                ${this.shuffledParts.map((part, index) => 
+                  `<div class="name-part" draggable="true" data-part="${part}" data-index="${index}">
+                    ${part}
+                  </div>`
+                ).join('')}
+              </div>
+
+              <div class="ordered-parts" id="orderedParts"></div>
+            </div>
+
+            <div class="assemble-controls">
+              <button onclick="nameAssembly.checkOrder()" class="btn btn-success">
+                <i class="fas fa-check"></i>
+                ✅ تحقق من الترتيب
+              </button>
+              <button onclick="nameAssembly.resetOrder()" class="btn btn-warning">
+                <i class="fas fa-undo"></i>
+                🔄 إعادة ترتيب
+              </button>
+              <button onclick="nameAssembly.skipRound()" class="btn btn-cosmic">
+                <i class="fas fa-forward"></i>
+                ⏭️ تخطي
+              </button>
+              <button onclick="game.resetGame()" class="btn btn-primary">
+                <i class="fas fa-home"></i>
+                🏠 العودة للقائمة
+              </button>
+            </div>
+          </div>
+        `;
+
+        this.setupDragAndDrop();
+        this.game.soundSystem.play('reveal');
+        this.game.messages.show(`🎯 رتب أجزاء الاسم: ${this.currentName}`, 'info', 5000);
+      }
+
+      getLevelDescription() {
+        switch(this.currentLevel) {
+          case 1: return '(الاسم الأول + الثاني)';
+          case 2: return '(الاسم الأول + الثاني + الثالث)';
+          case 3: return '(الاسم الكامل)';
+          default: return '';
+        }
+      }
+
+      setupDragAndDrop() {
+        const shuffledContainer = document.getElementById('shuffledParts');
+        const orderedContainer = document.getElementById('orderedParts');
+
+        // إعداد الأجزاء القابلة للسحب
+        const parts = shuffledContainer.querySelectorAll('.name-part');
+        parts.forEach(part => {
+          part.addEventListener('dragstart', (e) => {
+            this.draggedElement = e.target;
+            e.target.classList.add('dragging');
+            this.game.soundSystem.play('click');
+          });
+
+          part.addEventListener('dragend', (e) => {
+            e.target.classList.remove('dragging');
+            this.draggedElement = null;
+          });
+
+          // إضافة دعم اللمس للأجهزة المحمولة
+          part.addEventListener('click', () => {
+            this.handlePartClick(part);
+          });
+        });
+
+        // إعداد منطقة الإسقاط
+        [shuffledContainer, orderedContainer].forEach(container => {
+          container.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            container.classList.add('dragover');
+          });
+
+          container.addEventListener('dragleave', () => {
+            container.classList.remove('dragover');
+          });
+
+          container.addEventListener('drop', (e) => {
+            e.preventDefault();
+            container.classList.remove('dragover');
+            
+            if (this.draggedElement && container === orderedContainer) {
+              this.movePartToOrdered(this.draggedElement);
+            } else if (this.draggedElement && container === shuffledContainer) {
+              this.movePartToShuffled(this.draggedElement);
+            }
+          });
+        });
+      }
+
+      handlePartClick(part) {
+        this.game.soundSystem.play('click');
+        
+        if (part.parentElement.id === 'shuffledParts') {
+          this.movePartToOrdered(part);
+        } else {
+          this.movePartToShuffled(part);
+        }
+      }
+
+      movePartToOrdered(part) {
+        const orderedContainer = document.getElementById('orderedParts');
+        const partText = part.dataset.part;
+        
+        if (!this.orderedParts.includes(partText)) {
+          this.orderedParts.push(partText);
+          orderedContainer.appendChild(part.cloneNode(true));
+          part.remove();
+          
+          // إعادة إعداد الأحداث للعنصر الجديد
+          const newPart = orderedContainer.lastElementChild;
+          newPart.addEventListener('click', () => {
+            this.handlePartClick(newPart);
+          });
+          
+          this.game.soundSystem.play('notification');
+        }
+      }
+
+      movePartToShuffled(part) {
+        const shuffledContainer = document.getElementById('shuffledParts');
+        const partText = part.dataset.part;
+        
+        // إزالة من المرتب
+        this.orderedParts = this.orderedParts.filter(p => p !== partText);
+        shuffledContainer.appendChild(part.cloneNode(true));
+        part.remove();
+        
+        // إعادة إعداد الأحداث للعنصر الجديد
+        const newPart = shuffledContainer.lastElementChild;
+        newPart.addEventListener('click', () => {
+          this.handlePartClick(newPart);
+        });
+        
+        this.game.soundSystem.play('click');
+      }
+
+      checkOrder() {
+        if (this.orderedParts.length === 0) {
+          this.game.messages.show('⚠️ يرجى ترتيب أجزاء الاسم أولاً', 'warning');
+          return;
+        }
+
+        const userOrder = this.orderedParts.join(' ');
+        const correctOrder = this.nameParts.join(' ');
+        const isCorrect = userOrder === correctOrder;
+        
+        this.totalAttempts++;
+
+        if (isCorrect) {
+          this.correctAnswers++;
+          this.game.soundSystem.play('correct');
+          this.game.messages.show('🎉 ممتاز! الترتيب صحيح', 'success', 3000);
+          
+          // تأثير بصري للنجاح
+          this.celebrateSuccess();
+          
+          if (this.correctAnswers >= this.requiredCorrectForNext) {
+            setTimeout(() => {
+              this.levelUp();
+            }, 2000);
+          } else {
+            setTimeout(() => {
+              this.setupNewRound();
+            }, 2000);
+          }
+        } else {
+          this.game.soundSystem.play('wrong');
+          this.game.messages.show(`❌ خطأ! الترتيب الصحيح: ${correctOrder}`, 'error', 5000);
+          
+          // إظهار الإجابة الصحيحة
+          setTimeout(() => {
+            this.showCorrectAnswer();
+          }, 1000);
+          
+          setTimeout(() => {
+            this.setupNewRound();
+          }, 4000);
+        }
+      }
+
+      celebrateSuccess() {
+        // إضافة تأثير الاحتفال
+        const parts = document.querySelectorAll('#orderedParts .name-part');
+        parts.forEach((part, index) => {
+          setTimeout(() => {
+            part.style.animation = 'correctPulse 0.6s ease-in-out';
+          }, index * 100);
+        });
+
+        // إطلاق الألعاب النارية إذا كانت متوفرة
+        if (typeof confetti !== 'undefined') {
+          confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 }
+          });
+        }
+      }
+
+      showCorrectAnswer() {
+        const orderedContainer = document.getElementById('orderedParts');
+        orderedContainer.innerHTML = this.nameParts.map(part => 
+          `<div class="name-part" style="background: var(--gradient-success); color: white;">
+            ${part}
+          </div>`
+        ).join('');
+      }
+
+      resetOrder() {
+        this.orderedParts = [];
+        const orderedContainer = document.getElementById('orderedParts');
+        const shuffledContainer = document.getElementById('shuffledParts');
+        
+        // إعادة جميع الأجزاء للحاوية المخلوطة
+        orderedContainer.innerHTML = '';
+        shuffledContainer.innerHTML = this.shuffledParts.map((part, index) => 
+          `<div class="name-part" draggable="true" data-part="${part}" data-index="${index}">
+            ${part}
+          </div>`
+        ).join('');
+        
+        this.setupDragAndDrop();
+        this.game.soundSystem.play('notification');
+        this.game.messages.show('🔄 تم إعادة ترتيب الأجزاء', 'info', 2000);
+      }
+
+      skipRound() {
+        this.game.soundSystem.play('click');
+        this.game.messages.show('⏭️ تم تخطي الجولة', 'info', 2000);
+        this.setupNewRound();
+      }
+
+      levelUp() {
+        if (this.currentLevel < this.maxLevel) {
+          this.currentLevel++;
+          this.correctAnswers = 0;
+          this.game.soundSystem.play('success');
+          this.game.messages.show(`🎊 تهانينا! انتقلت للمرحلة ${this.currentLevel}`, 'success', 4000);
+          
+          setTimeout(() => {
+            this.setupNewRound();
+          }, 2000);
+        } else {
+          this.completeGame();
+        }
+      }
+
+      completeGame() {
+        this.game.soundSystem.play('success');
+        const gameArea = document.getElementById('gameArea');
+        
+        gameArea.innerHTML = `
+          <div class="result-display">
+            🏆 تهانينا! أكملت جميع المراحل!
+            <br><br>
+            إجمالي الإجابات الصحيحة: ${this.correctAnswers + (this.requiredCorrectForNext * (this.maxLevel - 1))}
+            <br>
+            إجمالي المحاولات: ${this.totalAttempts}
+            <br>
+            معدل النجاح: ${Math.round(((this.correctAnswers + (this.requiredCorrectForNext * (this.maxLevel - 1))) / this.totalAttempts) * 100)}%
+          </div>
+          
+          <div class="game-buttons">
+            <button onclick="nameAssembly.start()" class="btn btn-primary">
+              🔄 لعب مرة أخرى
+            </button>
+            <button onclick="game.resetGame()" class="btn btn-cosmic">
+              🏠 العودة للقائمة
+            </button>
+          </div>
+        `;
+
+        // إطلاق احتفال كبير
+        if (typeof confetti !== 'undefined') {
+          confetti({
+            particleCount: 200,
+            spread: 100,
+            origin: { y: 0.4 }
+          });
+        }
+      }
+    }
+
     // الفئة الرئيسية للعبة
     class WhoIsItGame {
       constructor() {
         this.state = new GameState();
         this.messages = new MessageSystem();
         this.soundSystem = new SoundSystem();
+        this.nameAssembly = new NameAssemblyGame(this);
         this.init();
       }
 
@@ -1097,7 +1700,11 @@
         this.messages.show('🎯 بدء اللعبة...', 'info', 2000);
         
         setTimeout(() => {
-          this.newRound();
+          if (modeValue === 'assemble') {
+            this.nameAssembly.start();
+          } else {
+            this.newRound();
+          }
         }, 1000);
       }
 
@@ -1224,10 +1831,12 @@
 
     // إنشاء مثيل اللعبة
     let game;
+    let nameAssembly;
 
     // بدء اللعبة عند تحميل الصفحة
     document.addEventListener('DOMContentLoaded', () => {
       game = new WhoIsItGame();
+      nameAssembly = game.nameAssembly;
       
       // إضافة تأثيرات تفاعلية
       document.addEventListener('click', (e) => {
