@@ -1004,6 +1004,16 @@
 
   <!-- جميع النصوص البرمجية مدمجة -->
   <script>
+    /*
+    🎵 نظام الأصوات المتقدم - Kingdom Sounds Edition
+    =====================================================
+    تم تحسين النظام الصوتي لاستخدام أصوات مختارة بعناية من مجلد kingdom-sounds
+    - أصوات تفاعلية للأزرار والقوائم
+    - أصوات سحرية للتأثيرات البصرية
+    - أصوات احتفالية للنجاح والإنجازات
+    - أصوات خلفية لتعزيز التجربة
+    */
+    
     // نظام إدارة الصوت المتقدم
     class SmartAudioSystem {
       constructor() {
@@ -1042,43 +1052,74 @@
       }
 
       async preloadSounds() {
-        const soundFiles = [
-          'start-timer.mp3', 'name-start.mp3', 'reveal.mp3', 'select.mp3',
-          'win.mp3', 'clap.mp3', 'draw.mp3', 'notification.mp3',
-          'click.mp3', 'end-timer.mp3', 'vs.mp3'
-        ];
+        // اختيار الأصوات المناسبة من مجلد kingdom-sounds
+        const soundFiles = {
+          // أصوات التفاعل الأساسية
+          'button-click': 'button-hover.mp3',
+          'menu-open': 'menu-open.mp3',
+          'notification': 'notification-pop.mp3',
+          
+          // أصوات بداية ونهاية اللعبة
+          'game-start': 'adventure-theme.mp3',
+          'timer-start': 'timer-start.mp3',
+          'countdown': 'countdown-tick.mp3',
+          'time-warning': 'time-warning.mp3',
+          
+          // أصوات التخمين والإجابات
+          'reveal-name': 'mystery-whisper.mp3',
+          'hint-show': 'magic-sparkle.mp3',
+          'student-select': 'cosmic-click.mp3',
+          'thinking': 'thinking-time.mp3',
+          
+          // أصوات النجاح والفشل
+          'correct-answer': 'epic-victory.mp3',
+          'wrong-answer': 'point-lose.mp3',
+          'celebration': 'crowd-cheer.mp3',
+          'achievement': 'achievement-unlock.mp3',
+          'perfect-score': 'perfect-score.mp3',
+          
+          // أصوات المؤثرات الخاصة
+          'confetti': 'golden-confetti.mp3',
+          'magic-effect': 'spell-cast.mp3',
+          'wisdom-unlock': 'wisdom-chime.mp3',
+          'story-complete': 'story-complete.mp3',
+          
+          // أصوات الخلفية والمزاج
+          'royal-fanfare': 'royal-fanfare.mp3',
+          'castle-atmosphere': 'castle-atmosphere.mp3'
+        };
 
         let loadedCount = 0;
-        const totalSounds = soundFiles.length;
+        const totalSounds = Object.keys(soundFiles).length;
 
-        console.log(`🎵 بدء تحميل ${totalSounds} ملف صوتي...`);
+        console.log(`🎵 بدء تحميل ${totalSounds} ملف صوتي من kingdom-sounds...`);
 
-        for (const file of soundFiles) {
+        for (const [soundName, fileName] of Object.entries(soundFiles)) {
           try {
-            await this.loadSound(file);
+            await this.loadSound(soundName, fileName);
             loadedCount++;
-            console.log(`✅ تم تحميل: ${file} (${loadedCount}/${totalSounds})`);
+            console.log(`✅ تم تحميل: ${soundName} (${fileName}) - ${loadedCount}/${totalSounds}`);
           } catch (error) {
-            console.warn(`⚠️ فشل تحميل: ${file}`, error);
+            console.warn(`⚠️ فشل تحميل: ${soundName} (${fileName})`, error);
           }
         }
 
         console.log(`🎶 تم تحميل ${loadedCount} من أصل ${totalSounds} ملف صوتي`);
       }
 
-      async loadSound(filename) {
+      async loadSound(soundName, filename) {
         try {
           const audio = new Audio();
           audio.preload = 'auto';
           audio.volume = this.volume;
           
-          // محاولة تحميل من مسارات متعددة
+          // مسارات تحميل الأصوات من kingdom-sounds
           const paths = [
-            `../assets/media/sounds/${filename}`,
-            `./assets/media/sounds/${filename}`,
-            `../sounds/${filename}`,
-            `./sounds/${filename}`,
-            `sounds/${filename}`
+            `../assets/media/sounds/kingdom-sounds/${filename}`,
+            `./assets/media/sounds/kingdom-sounds/${filename}`,
+            `assets/media/sounds/kingdom-sounds/${filename}`,
+            `../sounds/kingdom-sounds/${filename}`,
+            `./sounds/kingdom-sounds/${filename}`
           ];
 
           let loaded = false;
@@ -1111,21 +1152,21 @@
 
           if (!loaded) {
             // إنشاء صوت صامت كبديل
-            this.sounds[filename] = { 
-              play: () => console.log(`🔇 تشغيل صامت: ${filename}`), 
+            this.sounds[soundName] = { 
+              play: () => console.log(`🔇 تشغيل صامت: ${soundName}`), 
               pause: () => {},
               currentTime: 0,
               volume: this.volume
             };
           } else {
-            this.sounds[filename] = audio;
+            this.sounds[soundName] = audio;
           }
 
         } catch (error) {
-          console.warn(`💥 خطأ في تحميل ${filename}:`, error);
+          console.warn(`💥 خطأ في تحميل ${soundName}:`, error);
           // إنشاء صوت صامت كبديل
-          this.sounds[filename] = { 
-            play: () => console.log(`🔇 تشغيل صامت: ${filename}`), 
+          this.sounds[soundName] = { 
+            play: () => console.log(`🔇 تشغيل صامت: ${soundName}`), 
             pause: () => {},
             currentTime: 0,
             volume: this.volume
@@ -1133,11 +1174,14 @@
         }
       }
 
-      play(filename, options = {}) {
+      play(soundName, options = {}) {
         if (this.isMuted) return;
 
-        const sound = this.sounds[filename];
-        if (!sound) return;
+        const sound = this.sounds[soundName];
+        if (!sound) {
+          console.warn(`🔇 الصوت غير موجود: ${soundName}`);
+          return;
+        }
 
         try {
           sound.currentTime = 0;
@@ -1152,14 +1196,87 @@
             playPromise.catch(e => console.warn('خطأ تشغيل الصوت:', e));
           }
 
-          // تشغيل الجسيمات مع الأصوات الخاصة
-          if (['win.mp3', 'clap.mp3'].includes(filename)) {
+          // تشغيل تأثيرات بصرية مع أصوات خاصة
+          if (['correct-answer', 'celebration', 'achievement', 'perfect-score'].includes(soundName)) {
             this.createParticles();
+          }
+
+          // تأثيرات خاصة للأصوات السحرية
+          if (['magic-effect', 'spell-cast', 'wisdom-unlock'].includes(soundName)) {
+            this.createMagicEffect();
           }
 
         } catch (error) {
           console.warn('خطأ في تشغيل الصوت:', error);
         }
+      }
+
+      // تأثير سحري جديد
+      createMagicEffect() {
+        const container = document.getElementById('particlesContainer');
+        if (!container) return;
+
+        for (let i = 0; i < 15; i++) {
+          setTimeout(() => {
+            const particle = document.createElement('div');
+            particle.innerHTML = '✨';
+            particle.style.cssText = `
+              position: absolute;
+              left: ${Math.random() * 100}%;
+              top: ${Math.random() * 100}%;
+              font-size: ${Math.random() * 25 + 15}px;
+              animation: magicSparkle ${Math.random() * 2 + 1}s ease-out forwards;
+              pointer-events: none;
+              z-index: 1000;
+            `;
+            
+            container.appendChild(particle);
+            
+            setTimeout(() => particle.remove(), 2000);
+          }, i * 100);
+        }
+
+        // إضافة animation للتأثير السحري
+        if (!document.getElementById('magic-style')) {
+          const style = document.createElement('style');
+          style.id = 'magic-style';
+          style.textContent = `
+            @keyframes magicSparkle {
+              0% {
+                opacity: 1;
+                transform: translateY(0) scale(0) rotate(0deg);
+              }
+              50% {
+                transform: translateY(-50px) scale(1) rotate(180deg);
+              }
+              100% {
+                opacity: 0;
+                transform: translateY(-100px) scale(0) rotate(360deg);
+              }
+            }
+          `;
+          document.head.appendChild(style);
+        }
+      }
+
+      // تحديث تسلسل الأصوات
+      playSequence(sounds, delay = 500) {
+        sounds.forEach((soundName, index) => {
+          setTimeout(() => this.play(soundName), index * delay);
+        });
+      }
+
+      // أصوات مخصصة للمناسبات
+      playWelcomeSound() {
+        this.playSequence(['royal-fanfare', 'adventure-theme'], 800);
+      }
+
+      playSuccessSequence() {
+        this.playSequence(['correct-answer', 'celebration', 'achievement'], 400);
+      }
+
+      playMagicSequence() {
+        this.playSequence(['magic-effect', 'wisdom-unlock'], 300);
       }
 
       createParticles() {
@@ -1610,14 +1727,14 @@
         // تحسين تفاعل الأزرار
         document.querySelectorAll('button, select').forEach(element => {
           element.addEventListener('mouseenter', () => {
-            this.audioSystem.play('click.mp3', { volume: 0.3 });
+            this.audioSystem.play('button-click', { volume: 0.3 });
           });
         });
       }
 
       playWelcomeSequence() {
         setTimeout(() => {
-          this.audioSystem.play('start-timer.mp3');
+          this.audioSystem.playWelcomeSound();
           this.notifications.show('مرحباً بك في لعبة "من هو؟" 🎮', 'info');
         }, 1000);
       }
@@ -1627,7 +1744,7 @@
         const modeValue = document.getElementById('modeSelect').value;
         
         if (!classValue || !modeValue) {
-          this.audioSystem.play('notification.mp3');
+          this.audioSystem.play('notification');
           this.notifications.show('يرجى اختيار الصف والنمط أولاً! ⚠️', 'warning');
           return;
         }
@@ -1644,7 +1761,7 @@
         this.usedNames = [];
         this.hideElement('revealedName');
         
-        this.audioSystem.play('start-timer.mp3');
+        this.audioSystem.play('game-start');
         this.showInstructions();
       }
 
@@ -1656,7 +1773,7 @@
         document.getElementById('modalText').innerHTML = modalText;
         this.showElement('instructionModal');
         
-        this.audioSystem.play('name-start.mp3');
+        this.audioSystem.play('menu-open');
       }
 
       closeInstructionModal() {
@@ -1705,7 +1822,7 @@
         select.addEventListener('change', () => {
           this.targetName = select.value;
           if (this.targetName) {
-            this.audioSystem.play('select.mp3');
+            this.audioSystem.play('student-select');
             select.style.filter = 'blur(10px)';
             select.style.pointerEvents = 'none';
             this.showElement('startHintBtn');
@@ -1721,7 +1838,7 @@
 
       showSecretName(name) {
         this.targetName = name;
-        this.audioSystem.play('reveal.mp3');
+        this.audioSystem.play('reveal-name');
         
         const popup = document.getElementById('secretNamePopup');
         const displayName = this.formatSecretName(name);
@@ -1742,11 +1859,13 @@
         
         // تشغيل الاحتفال
         AdvancedVisualEffects.createConfettiExplosion(popup);
+        this.audioSystem.play('magic-effect');
         
         // العد التنازلي
         let countdown = 3;
         const countdownInterval = setInterval(() => {
           countdown--;
+          this.audioSystem.play('countdown');
           if (countdown > 0) {
             const secretNameElement = popup.querySelector('.secret-name');
             secretNameElement.innerHTML = `${displayName} <span style="font-size: 0.8em; opacity: 0.7;">(${countdown})</span>`;
@@ -1758,6 +1877,7 @@
           this.hideElement('secretNamePopup');
           this.showElement('startHintBtn');
           this.notifications.show('🚀 ابدأ التحدي الآن!', 'info');
+          this.audioSystem.play('wisdom-unlock');
         }, 3000);
       }
 
@@ -1825,7 +1945,7 @@
         // إنشاء خيارات الطلاب مع خلط ذكي
         this.createStudentOptions();
 
-        this.audioSystem.play('name-start.mp3');
+        this.audioSystem.play('hint-show');
         AdvancedVisualEffects.createMagicSparkles(document.getElementById('hint'));
       }
 
@@ -1883,7 +2003,7 @@
 
       handleCorrectAnswer(element) {
         // تأثيرات النجاح
-        this.audioSystem.playSequence(['win.mp3', 'clap.mp3'], 500);
+        this.audioSystem.playSuccessSequence();
         
         const feedback = document.getElementById('feedback');
         feedback.innerHTML = '🎉 إجابة صحيحة! أحسنت! 🏆';
@@ -1942,7 +2062,7 @@
       }
 
       handleWrongAnswer(element) {
-        this.audioSystem.play('draw.mp3');
+        this.audioSystem.play('wrong-answer');
         
         const feedback = document.getElementById('feedback');
         feedback.innerHTML = '❌ خطأ! حاول مرة أخرى بتلميح جديد... 🤔';
@@ -1977,6 +2097,7 @@
           if (this.gameMode === 'random') {
             this.showElement('startHintBtn');
           }
+          this.audioSystem.play('notification');
           this.notifications.show('🎮 جاهز للجولة التالية!', 'info');
         }, 1000);
       }
@@ -2022,7 +2143,7 @@
       // تحسين الأداء والتفاعل
       document.addEventListener('click', (e) => {
         if (e.target.closest('button') || e.target.closest('.option')) {
-          game.audioSystem.play('click.mp3', { volume: 0.2 });
+          game.audioSystem.play('button-click', { volume: 0.2 });
         }
       });
 
