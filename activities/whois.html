@@ -1576,17 +1576,28 @@
       generateNameParts() {
         const fullNameParts = this.currentName.trim().split(/\s+/);
         
+        // إزالة كلمات "بن" و "بنت" من أجزاء الاسم
+        const filteredParts = fullNameParts.filter(part => 
+          part !== 'بن' && part !== 'بنت' && part.trim() !== ''
+        );
+        
         // تحديد أجزاء الاسم حسب المستوى
         switch(this.currentLevel) {
           case 1: // الاسم الأول + الثاني
-            this.nameParts = fullNameParts.slice(0, 2);
+            this.nameParts = filteredParts.slice(0, 2);
             break;
           case 2: // الاسم الأول + الثاني + الثالث
-            this.nameParts = fullNameParts.slice(0, 3);
+            this.nameParts = filteredParts.slice(0, 3);
             break;
-          case 3: // الاسم الكامل
-            this.nameParts = fullNameParts;
+          case 3: // الاسم الكامل (بدون بن/بنت)
+            this.nameParts = filteredParts;
             break;
+        }
+
+        // التأكد من وجود أجزاء كافية
+        if (this.nameParts.length === 0) {
+          // في حالة عدم وجود أجزاء صالحة، استخدم الاسم الأصلي
+          this.nameParts = [this.currentName];
         }
 
         // خلط الأجزاء
@@ -1596,6 +1607,11 @@
 
       displayInterface() {
         const gameArea = document.getElementById('gameArea');
+        
+        // إنشاء عرض الاسم الأصلي مع إزالة بن/بنت للتوضيح
+        const filteredName = this.currentName.split(/\s+/)
+          .filter(part => part !== 'بن' && part !== 'بنت' && part.trim() !== '')
+          .join(' ');
         
         gameArea.innerHTML = `
           <div class="assemble-interface">
@@ -1662,7 +1678,7 @@
 
         this.setupDragAndDrop();
         this.game.soundSystem.play('reveal');
-        this.game.messages.show(`🎯 رتب أجزاء الاسم: ${this.currentName}`, 'info', 5000);
+        this.game.messages.show(`🎯 رتب أجزاء الاسم: ${filteredName}`, 'info', 5000);
       }
 
       getLevelDescription() {
@@ -1800,6 +1816,12 @@
           }
         } else {
           this.game.soundSystem.play('wrong');
+          
+          // إنشاء عرض الاسم المفلتر للرسالة
+          const filteredName = this.currentName.split(/\s+/)
+            .filter(part => part !== 'بن' && part !== 'بنت' && part.trim() !== '')
+            .join(' ');
+          
           this.game.messages.show(`❌ خطأ! الترتيب الصحيح: ${correctOrder}`, 'error', 5000);
           
           // إظهار الإجابة الصحيحة
