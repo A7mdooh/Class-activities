@@ -2895,41 +2895,110 @@
       }
 
       async loadStudentData() {
-        try {
-          // عرض رسالة التحميل
-          this.messages.show('🔄 جاري تحميل بيانات الطلاب...', 'info', 10000);
-          
-          // جلب البيانات من الملف المحلي
-          const response = await fetch('../data/studentData.json');
-          if (!response.ok) {
-            throw new Error('فشل في تحميل ملف البيانات');
-          }
-          
-          const data = await response.json();
-          if (data && typeof data === 'object' && Object.keys(data).length > 0) {
-            this.state.studentData = data;
-            this.populateClassSelect();
-            this.messages.clear();
-            this.messages.show('✅ تم تحميل بيانات الطلاب بنجاح! 🎓', 'success');
-            this.soundSystem.play('success');
-            return;
-          } else {
-            throw new Error('ملف البيانات فارغ أو تالف');
-          }
-          
-        } catch (error) {
-          console.error('فشل في تحميل ملف البيانات:', error);
-          this.messages.clear();
-          this.messages.show('❌ فشل في تحميل ملف البيانات! تأكد من وجود الملف: ../data/studentData.json', 'error');
-          this.soundSystem.play('error');
-          
-          // إظهار رسالة تفصيلية للمطور
-          if (error.message.includes('fetch')) {
-            this.messages.show('💡 تأكد من أن ملف studentData.json موجود في مجلد data', 'info', 10000);
-          }
-          
-          throw error; // إعادة رمي الخطأ لتجنب متابعة التشغيل
+        // التحقق من نوع البروتوكول
+        const protocol = window.location.protocol;
+        console.log('🌐 البروتوكول المستخدم:', protocol);
+        
+        if (protocol === 'file:') {
+          this.messages.show('⚠️ يتم التشغيل محلياً - قد تحتاج لخادم ويب', 'warning', 5000);
         }
+
+        // مسارات متعددة للبحث عن ملف البيانات
+        const possiblePaths = [
+          '../data/studentData.json',
+          './data/studentData.json',
+          'data/studentData.json',
+          '../studentData.json',
+          './studentData.json',
+          'studentData.json',
+          '../Class-activities-main/data/studentData.json',
+          './Class-activities-main/data/studentData.json'
+        ];
+
+        this.messages.show('🔄 جاري تحميل بيانات الطلاب...', 'info', 10000);
+        console.log('🔍 بدء البحث عن ملف البيانات...');
+
+        for (let i = 0; i < possiblePaths.length; i++) {
+          const path = possiblePaths[i];
+          try {
+            console.log(`📁 محاولة ${i + 1}/${possiblePaths.length}: تحميل البيانات من ${path}`);
+            
+            const response = await fetch(path, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              cache: 'no-cache'
+            });
+            
+            console.log(`📊 استجابة من ${path}:`, response.status, response.statusText);
+            
+            if (response.ok) {
+              const text = await response.text();
+              console.log(`📝 نص الاستجابة من ${path} (أول 100 حرف):`, text.substring(0, 100));
+              
+              const data = JSON.parse(text);
+              console.log('📋 البيانات المُحمَّلة:', Object.keys(data));
+              
+              if (data && typeof data === 'object' && Object.keys(data).length > 0) {
+                this.state.studentData = data;
+                this.populateClassSelect();
+                this.messages.clear();
+                this.messages.show(`✅ تم تحميل بيانات ${Object.keys(data).length} صف بنجاح!`, 'success');
+                this.soundSystem.play('success');
+                console.log('✅ تم تحميل البيانات بنجاح من:', path);
+                console.log('📚 الصفوف المتاحة:', Object.keys(data));
+                return;
+              } else {
+                console.warn(`⚠️ ملف البيانات من ${path} فارغ أو تالف`);
+              }
+            } else {
+              console.warn(`❌ فشل HTTP من ${path}: ${response.status} - ${response.statusText}`);
+            }
+          } catch (error) {
+            console.warn(`❌ خطأ في تحميل من ${path}:`, error.message);
+            
+            // معالجة خاصة لأخطاء CORS
+            if (error.message.includes('CORS') || error.message.includes('fetch')) {
+              console.log('🔒 خطأ CORS محتمل - جاري المحاولة التالية...');
+            }
+            continue;
+          }
+        }
+
+        // إذا فشلت جميع المحاولات
+        console.error('❌ فشل في تحميل ملف البيانات من جميع المسارات المحتملة');
+        this.messages.clear();
+        this.messages.show('❌ فشل في تحميل ملف بيانات الطلاب!', 'error');
+        this.soundSystem.play('error');
+        
+        // عرض معلومات تشخيصية مفصلة
+        console.log('🔍 معلومات تشخيصية:');
+        console.log('📍 الموقع الحالي:', window.location.href);
+        console.log('📂 المجلد الحالي:', window.location.pathname);
+        console.log('🌐 البروتوكول:', window.location.protocol);
+        console.log('🏠 المضيف:', window.location.host);
+        
+        // اقتراحات للحل
+        setTimeout(() => {
+          this.messages.show('💡 حلول مقترحة: افتح Developer Tools (F12) لرؤية التفاصيل', 'info', 15000);
+        }, 1000);
+        
+        setTimeout(() => {
+          if (protocol === 'file:') {
+            this.messages.show('�️ استخدم خادم ويب محلي مثل Live Server أو http-server', 'warning', 15000);
+          } else {
+            this.messages.show('�📁 تأكد من وجود مجلد data مع ملف studentData.json', 'warning', 15000);
+          }
+        }, 2000);
+
+        setTimeout(() => {
+          this.messages.show('🔧 أو ضع ملف studentData.json في نفس مجلد whois.html', 'info', 15000);
+        }, 3000);
+
+        throw new Error('فشل في تحميل ملف البيانات من جميع المسارات');
+      }
+      }
       }
 
       populateClassSelect() {
@@ -4272,4 +4341,3 @@
   </script>
 </body>
 </html>
-
