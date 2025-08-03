@@ -1717,6 +1717,31 @@
       color: #d35400;
     }
 
+    .target-student-name {
+      font-size: 2.2em;
+      font-weight: bold;
+      color: #2c3e50;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 15px 25px;
+      border-radius: 15px;
+      margin: 15px 0;
+      border: 3px solid #e74c3c;
+      box-shadow: 0 8px 20px rgba(231, 76, 60, 0.3);
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+      animation: targetPulse 2s infinite;
+    }
+
+    @keyframes targetPulse {
+      0%, 100% { 
+        transform: scale(1);
+        border-color: #e74c3c;
+      }
+      50% { 
+        transform: scale(1.02);
+        border-color: #c0392b;
+      }
+    }
+
     .survival-hint {
       font-size: 1.1em;
       color: #e67e22;
@@ -3952,7 +3977,10 @@
             </div>
             
             <div class="survival-target">
-              <div class="target-question">🎯 من هو هذا الطالب؟</div>
+              <div class="target-question">🎯 ابحث عن الطالب:</div>
+              <div class="target-student-name" id="targetStudentName">
+                ${this.state.targetStudent || 'جاري الاختيار...'}
+              </div>
               <div class="survival-hint">
                 المستوى ${this.state.survival.level} • 
                 مضاعف النقاط: x${this.state.survival.difficultyMultiplier.toFixed(1)} • 
@@ -3965,8 +3993,9 @@
             </div>
 
             <div class="survival-tips">
-              <div class="tip">💡 <strong>نصيحة:</strong> كل 3 إجابات صحيحة متتالية تعطيك محاولة إضافية!</div>
+              <div class="tip">💡 <strong>نصيحة:</strong> ابحث عن اسم "${this.state.targetStudent || 'الطالب المطلوب'}" بين الخيارات أدناه!</div>
               <div class="tip">⚡ <strong>مكافأة السرعة:</strong> كلما أجبت أسرع، حصلت على نقاط أكثر!</div>
+              <div class="tip">🔥 <strong>التسلسل:</strong> كل 3 إجابات صحيحة متتالية تعطيك محاولة إضافية!</div>
             </div>
 
             <div class="survival-controls">
@@ -4008,16 +4037,42 @@
         `).join('');
       }
 
+      getSurvivalTimeLimit() {
+        // الوقت يقل مع زيادة المستوى
+        const baseTime = 15; // 15 ثانية أساسية
+        const timeReduction = Math.floor(this.state.survival.level / 3); // تقليل ثانية كل 3 مستويات
+        const minTime = 8; // الحد الأدنى للوقت
+        
+        return Math.max(minTime, baseTime - timeReduction);
+      }
+
       startSurvivalRound() {
         // اختيار طالب عشوائي
         const randomStudent = this.state.allStudents[Math.floor(Math.random() * this.state.allStudents.length)];
         this.state.targetStudent = randomStudent;
+        
+        // تحديث اسم الطالب المستهدف في الواجهة
+        const targetNameElement = document.getElementById('targetStudentName');
+        if (targetNameElement) {
+          targetNameElement.textContent = randomStudent;
+          targetNameElement.style.animation = 'none';
+          setTimeout(() => {
+            targetNameElement.style.animation = 'targetPulse 2s infinite';
+          }, 100);
+        }
         
         // تحديث الخيارات
         const optionsContainer = document.getElementById('survivalOptions');
         if (optionsContainer) {
           optionsContainer.innerHTML = this.generateSurvivalOptions();
         }
+        
+        // إعادة تعيين الوقت
+        this.state.survival.timeLeft = this.getSurvivalTimeLimit();
+        
+        // عرض رسالة توضيحية
+        this.messages.show(`🎯 ابحث عن: ${randomStudent}`, 'info', 3000);
+        this.soundSystem.play('notification');
       }
 
       startSurvivalTimer() {
