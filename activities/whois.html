@@ -141,6 +141,7 @@
     .back-icon {
       font-size: 18px;
       animation: bounce 2s ease-in-out infinite;
+      transition: all var(--transition-normal);
     }
 
     @keyframes pulseGlow {
@@ -752,6 +753,8 @@
       transition: all var(--transition-slow);
       backdrop-filter: blur(15px);
       font-weight: 600;
+      position: relative;
+      overflow: hidden;
     }
 
     .notification.show {
@@ -772,6 +775,29 @@
     .notification.warning {
       border-left-color: var(--warning-color);
       background: linear-gradient(135deg, rgba(255, 152, 0, 0.1), rgba(255, 255, 255, 0.95));
+    }
+
+    .notification.info {
+      border-left-color: var(--info-color);
+      background: linear-gradient(135deg, rgba(33, 150, 243, 0.1), rgba(255, 255, 255, 0.95));
+    }
+
+    /* مؤشر التحميل في الإشعارات */
+    .notification.loading::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--gradient-primary);
+      animation: loadingBar 2s ease-in-out infinite;
+    }
+
+    @keyframes loadingBar {
+      0% { width: 0%; }
+      50% { width: 70%; }
+      100% { width: 100%; }
     }
 
     /* تأثيرات خاصة */
@@ -901,7 +927,7 @@
   <!-- زر العودة -->
   <div class="back-to-main">
     <a href="../main.html" class="back-btn" title="العودة إلى صفحة الأنشطة">
-      <span class="back-icon">🏠</span>
+      <i class="fas fa-home back-icon"></i>
       <span class="back-text">الأنشطة</span>
     </a>
   </div>
@@ -1022,9 +1048,22 @@
           'click.mp3', 'end-timer.mp3', 'vs.mp3'
         ];
 
+        let loadedCount = 0;
+        const totalSounds = soundFiles.length;
+
+        console.log(`🎵 بدء تحميل ${totalSounds} ملف صوتي...`);
+
         for (const file of soundFiles) {
-          await this.loadSound(file);
+          try {
+            await this.loadSound(file);
+            loadedCount++;
+            console.log(`✅ تم تحميل: ${file} (${loadedCount}/${totalSounds})`);
+          } catch (error) {
+            console.warn(`⚠️ فشل تحميل: ${file}`, error);
+          }
         }
+
+        console.log(`🎶 تم تحميل ${loadedCount} من أصل ${totalSounds} ملف صوتي`);
       }
 
       async loadSound(filename) {
@@ -1036,29 +1075,61 @@
           // محاولة تحميل من مسارات متعددة
           const paths = [
             `../assets/media/sounds/${filename}`,
+            `./assets/media/sounds/${filename}`,
+            `../sounds/${filename}`,
             `./sounds/${filename}`,
-            `data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEAAQAAAAEAAgAQAGRhdGEEAAAAAAA=`
+            `sounds/${filename}`
           ];
 
+          let loaded = false;
           for (const path of paths) {
             try {
               audio.src = path;
               await new Promise((resolve, reject) => {
-                audio.addEventListener('canplaythrough', resolve, { once: true });
-                audio.addEventListener('error', reject, { once: true });
+                const timeout = setTimeout(() => {
+                  reject(new Error('Timeout'));
+                }, 3000);
+                
+                audio.addEventListener('canplaythrough', () => {
+                  clearTimeout(timeout);
+                  resolve();
+                }, { once: true });
+                
+                audio.addEventListener('error', () => {
+                  clearTimeout(timeout);
+                  reject(new Error('Audio load error'));
+                }, { once: true });
+                
                 audio.load();
               });
+              loaded = true;
               break;
             } catch (e) {
               continue;
             }
           }
 
-          this.sounds[filename] = audio;
+          if (!loaded) {
+            // إنشاء صوت صامت كبديل
+            this.sounds[filename] = { 
+              play: () => console.log(`🔇 تشغيل صامت: ${filename}`), 
+              pause: () => {},
+              currentTime: 0,
+              volume: this.volume
+            };
+          } else {
+            this.sounds[filename] = audio;
+          }
+
         } catch (error) {
-          console.warn(`فشل تحميل ${filename}:`, error);
+          console.warn(`💥 خطأ في تحميل ${filename}:`, error);
           // إنشاء صوت صامت كبديل
-          this.sounds[filename] = { play: () => {}, pause: () => {} };
+          this.sounds[filename] = { 
+            play: () => console.log(`🔇 تشغيل صامت: ${filename}`), 
+            pause: () => {},
+            currentTime: 0,
+            volume: this.volume
+          };
         }
       }
 
@@ -1142,9 +1213,9 @@
         this.notifications = [];
       }
 
-      show(message, type = 'info', duration = 4000) {
+      show(message, type = 'info', duration = 4000, isLoading = false) {
         const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
+        notification.className = `notification ${type}${isLoading ? ' loading' : ''}`;
         
         const icons = {
           success: '✅',
@@ -1164,18 +1235,34 @@
         // إظهار الإشعار
         setTimeout(() => notification.classList.add('show'), 100);
 
-        // إخفاء الإشعار
-        setTimeout(() => {
-          notification.classList.remove('show');
+        // إخفاء الإشعار (إلا إذا كان مؤشر تحميل)
+        if (!isLoading) {
           setTimeout(() => {
-            if (notification.parentNode) {
-              notification.parentNode.removeChild(notification);
-            }
-            this.notifications = this.notifications.filter(n => n !== notification);
-          }, 500);
-        }, duration);
+            notification.classList.remove('show');
+            setTimeout(() => {
+              if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+              }
+              this.notifications = this.notifications.filter(n => n !== notification);
+            }, 500);
+          }, duration);
+        }
 
         return notification;
+      }
+
+      hideLoading() {
+        this.notifications.forEach(notification => {
+          if (notification.classList.contains('loading')) {
+            notification.classList.remove('show');
+            setTimeout(() => {
+              if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+              }
+            }, 500);
+          }
+        });
+        this.notifications = this.notifications.filter(n => !n.classList.contains('loading'));
       }
 
       clear() {
@@ -1317,10 +1404,36 @@
       }
 
       async init() {
-        await this.audioSystem.init();
-        await this.loadStudentData();
-        this.setupEventListeners();
-        this.playWelcomeSequence();
+        // عرض مؤشر التحميل
+        const loadingNotification = this.notifications.show('🔄 جاري تحميل النظام...', 'info', 0, true);
+        
+        try {
+          // تحميل النظام الصوتي
+          await this.audioSystem.init();
+          console.log('✅ تم تحميل النظام الصوتي');
+          
+          // تحميل بيانات الطلاب
+          await this.loadStudentData();
+          console.log('✅ تم تحميل بيانات الطلاب');
+          
+          // إعداد مستمعي الأحداث
+          this.setupEventListeners();
+          console.log('✅ تم إعداد مستمعي الأحداث');
+          
+          // إخفاء مؤشر التحميل
+          this.notifications.hideLoading();
+          
+          // عرض رسالة النجاح
+          setTimeout(() => {
+            this.notifications.show('🎮 اللعبة جاهزة! اختر الفصل والنمط لبدء المتعة', 'success');
+            this.playWelcomeSequence();
+          }, 500);
+          
+        } catch (error) {
+          console.error('💥 خطأ في تهيئة اللعبة:', error);
+          this.notifications.hideLoading();
+          this.notifications.show('❌ خطأ في تهيئة اللعبة', 'error');
+        }
       }
 
       async loadStudentData() {
@@ -1331,38 +1444,50 @@
             './data/studentData.json',
             '../../data/studentData.json',
             '../studentData.json',
-            './studentData.json'
+            './studentData.json',
+            'data/studentData.json',
+            '/data/studentData.json'
           ];
 
           let studentData = null;
           let loadedFrom = '';
 
+          // محاولة تحميل البيانات من كل مسار
           for (const path of possiblePaths) {
             try {
-              console.log(`محاولة تحميل البيانات من: ${path}`);
-              const response = await fetch(path);
+              console.log(`🔄 محاولة تحميل البيانات من: ${path}`);
+              
+              // إضافة timestamp لتجنب cache
+              const timestamp = new Date().getTime();
+              const response = await fetch(`${path}?v=${timestamp}`);
               
               if (response.ok) {
-                studentData = await response.json();
-                loadedFrom = path;
-                console.log(`تم تحميل البيانات بنجاح من: ${path}`);
-                break;
+                const text = await response.text();
+                if (text.trim()) {
+                  studentData = JSON.parse(text);
+                  loadedFrom = path;
+                  console.log(`✅ تم تحميل البيانات بنجاح من: ${path}`);
+                  break;
+                }
               } else {
-                console.warn(`فشل تحميل البيانات من ${path}: ${response.status}`);
+                console.warn(`❌ فشل تحميل البيانات من ${path}: ${response.status} - ${response.statusText}`);
               }
             } catch (fetchError) {
-              console.warn(`خطأ في تحميل البيانات من ${path}:`, fetchError.message);
+              console.warn(`⚠️ خطأ في تحميل البيانات من ${path}:`, fetchError.message);
               continue;
             }
           }
 
+          // إذا لم يتم العثور على البيانات، استخدم بيانات تجريبية
           if (!studentData) {
-            throw new Error('فشل في تحميل بيانات الطلاب من جميع المسارات المحتملة');
+            console.warn('🔄 لم يتم العثور على ملف البيانات، سيتم استخدام بيانات تجريبية');
+            studentData = this.getDefaultStudentData();
+            this.notifications.show('⚠️ تم تحميل بيانات تجريبية - تأكد من وجود ملف studentData.json', 'warning');
           }
 
           // التحقق من صحة البيانات
           if (typeof studentData !== 'object' || studentData === null) {
-            throw new Error('تنسيق البيانات غير صحيح');
+            throw new Error('تنسيق البيانات غير صحيح - يجب أن تكون كائن JSON');
           }
 
           // التحقق من وجود فصول دراسية
@@ -1371,23 +1496,78 @@
             throw new Error('لا توجد فصول دراسية في البيانات');
           }
 
+          // التحقق من أن كل فصل يحتوي على طلاب
+          let totalStudents = 0;
+          for (const className of classes) {
+            if (!Array.isArray(studentData[className])) {
+              console.warn(`⚠️ الفصل ${className} لا يحتوي على مصفوفة صحيحة`);
+              studentData[className] = [];
+            }
+            totalStudents += studentData[className].length;
+          }
+
           this.studentData = studentData;
           this.populateClassSelect();
-          this.notifications.show(`تم تحميل بيانات ${classes.length} فصل بنجاح! 🎓`, 'success');
-          console.log(`البيانات المحملة تحتوي على الفصول: ${classes.join(', ')}`);
+          
+          if (loadedFrom) {
+            this.notifications.show(`✅ تم تحميل بيانات ${classes.length} فصل (${totalStudents} طالب) من: ${loadedFrom}`, 'success');
+          } else {
+            this.notifications.show(`🎓 تم تحميل بيانات تجريبية: ${classes.length} فصل (${totalStudents} طالب)`, 'info');
+          }
+          
+          console.log(`📊 البيانات المحملة تحتوي على الفصول: ${classes.join(', ')}`);
+          console.log(`👥 إجمالي عدد الطلاب: ${totalStudents}`);
           
         } catch (error) {
-          console.error('خطأ في تحميل البيانات:', error);
+          console.error('💥 خطأ حرج في تحميل البيانات:', error);
           this.notifications.show(`خطأ: ${error.message}`, 'error');
           
-          // في حالة فشل التحميل، استخدام بيانات تجريبية بسيطة
-          this.studentData = {
-            "7A": ["طالب تجريبي 1", "طالب تجريبي 2", "طالب تجريبي 3"],
-            "7B": ["طالب تجريبي 4", "طالب تجريبي 5", "طالب تجريبي 6"]
-          };
+          // في حالة فشل كامل، استخدم بيانات أساسية
+          this.studentData = this.getDefaultStudentData();
           this.populateClassSelect();
-          this.notifications.show('تم تحميل بيانات تجريبية للاختبار', 'warning');
+          this.notifications.show('⚠️ تم تحميل بيانات أساسية للاختبار', 'warning');
         }
+      }
+
+      getDefaultStudentData() {
+        return {
+          "الصف السابع أ": [
+            "أحمد محمد",
+            "فاطمة علي", 
+            "خالد سالم",
+            "عائشة سعد",
+            "محمود حسن",
+            "زينب أحمد",
+            "عبدالله محمد",
+            "نور فاطمة",
+            "سعد خالد",
+            "مريم عبدالله"
+          ],
+          "الصف السابع ب": [
+            "علي أحمد",
+            "رضية علي",
+            "محمد خالد", 
+            "حليمة محمد",
+            "سعيد فاطمة",
+            "بدرية سعيد",
+            "عثمان عائشة",
+            "سعاد عثمان",
+            "حمد محمود",
+            "شيخة حمد"
+          ],
+          "الصف الثامن أ": [
+            "عبدالرحمن علي",
+            "فوزية عبدالرحمن",
+            "عبدالعزيز عمر",
+            "نعيمة عبدالعزيز",
+            "طلال أسماء",
+            "عفاف طلال",
+            "وليد حسام",
+            "صفية وليد",
+            "فيصل محمد",
+            "سلمى فيصل"
+          ]
+        };
       }
 
       populateClassSelect() {
@@ -1513,8 +1693,14 @@
         const select = document.createElement('select');
         select.id = 'blurredName';
         select.className = 'touch-target';
-        select.innerHTML = '<option value="">-- اختر الطالب --</option>' +
-          this.allStudents.map(name => `<option value="${name}">${name}</option>`).join('');
+        
+        // إنشاء خيارات مع أسماء مختصرة للعرض
+        let optionsHTML = '<option value="">-- اختر الطالب --</option>';
+        this.allStudents.forEach(name => {
+          const displayName = this.formatStudentName(name);
+          optionsHTML += `<option value="${name}" title="${name}">${displayName}</option>`;
+        });
+        select.innerHTML = optionsHTML;
         
         select.addEventListener('change', () => {
           this.targetName = select.value;
@@ -1523,7 +1709,9 @@
             select.style.filter = 'blur(10px)';
             select.style.pointerEvents = 'none';
             this.showElement('startHintBtn');
-            this.notifications.show(`✅ تم اختيار ${this.targetName} - تم تمويه الاسم`, 'success');
+            
+            const shortName = this.formatStudentName(this.targetName);
+            this.notifications.show(`✅ تم اختيار "${shortName}" - تم تمويه الاسم`, 'success');
             AdvancedVisualEffects.createMagicSparkles(container);
           }
         });
