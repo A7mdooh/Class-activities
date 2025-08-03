@@ -1905,7 +1905,9 @@
         
         classSelect.innerHTML = '<option value="">اختر الصف</option>';
 
-        const classes = Object.keys(this.state.studentData).sort();
+        // ترتيب ذكي للصفوف
+        const classes = this.sortClassNames(Object.keys(this.state.studentData));
+
         classes.forEach(className => {
           const studentCount = this.state.studentData[className].length;
           const option = document.createElement('option');
@@ -1923,6 +1925,43 @@
             const studentCount = this.state.studentData[classSelect.value].length;
             this.messages.show(`📚 تم اختيار "${classSelect.value}" - يحتوي على ${studentCount} طالب`, 'info', 3000);
           }
+        });
+      }
+
+      // دالة مساعدة لاستخراج الرقم من اسم الصف
+      extractClassNumber(className) {
+        // البحث عن أرقام في النص
+        const numbers = className.match(/\d+/g);
+        
+        if (!numbers) return null;
+        
+        // إذا وجد عدة أرقام، خذ الأول (عادة رقم الصف)
+        const mainNumber = parseInt(numbers[0]);
+        
+        // إذا كان هناك رقم ثاني، قد يكون قسم (مثل 12-1، 12-2)
+        const subNumber = numbers.length > 1 ? parseInt(numbers[1]) : 0;
+        
+        // إرجاع رقم مركب للترتيب الصحيح
+        return mainNumber * 100 + subNumber;
+      }
+
+      // دالة محسنة لترتيب الصفوف
+      sortClassNames(classes) {
+        return classes.sort((a, b) => {
+          const numA = this.extractClassNumber(a);
+          const numB = this.extractClassNumber(b);
+          
+          // إذا كان كلاهما يحتوي على أرقام
+          if (numA !== null && numB !== null) {
+            return numA - numB;
+          }
+          
+          // إذا كان أحدهما فقط يحتوي على أرقام
+          if (numA !== null && numB === null) return -1;
+          if (numA === null && numB !== null) return 1;
+          
+          // ترتيب أبجدي للنصوص بدون أرقام
+          return a.localeCompare(b, 'ar', { numeric: true });
         });
       }
 
