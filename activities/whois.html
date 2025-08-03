@@ -1129,6 +1129,77 @@
       font-weight: 500;
     }
 
+    /* واجهة إخفاء الطالب المستهدف */
+    .hidden-target {
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 15px 0;
+      border: 2px dashed rgba(255, 255, 255, 0.3);
+    }
+
+    .secret-icon {
+      font-size: 3rem;
+      margin-bottom: 10px;
+      opacity: 0.7;
+    }
+
+    .secret-text {
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      opacity: 0.8;
+      font-weight: 500;
+    }
+
+    .reveal-btn, .hide-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: var(--white);
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--animation-speed) var(--smooth-animation);
+      font-family: 'Cairo', sans-serif;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .reveal-btn:hover, .hide-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .revealed-target {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 15px 0;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .revealed-target .target-name {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 15px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      background: rgba(255, 255, 255, 0.1);
+      padding: 10px 20px;
+      border-radius: 12px;
+    }
+
+    .hide-btn {
+      background: rgba(231, 76, 60, 0.2);
+      border-color: rgba(231, 76, 60, 0.3);
+    }
+
+    .hide-btn:hover {
+      background: rgba(231, 76, 60, 0.3);
+    }
+
     .game-stats {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -1647,6 +1718,30 @@
         width: 100%;
         max-width: 300px;
         margin: 0 auto;
+      }
+
+      /* تحسينات إخفاء الطالب للهواتف */
+      .hidden-target, .revealed-target {
+        padding: 15px;
+        margin: 10px 0;
+      }
+
+      .secret-icon {
+        font-size: 2.5rem;
+      }
+
+      .secret-text {
+        font-size: 1rem;
+      }
+
+      .reveal-btn, .hide-btn {
+        padding: 8px 15px;
+        font-size: 0.8rem;
+      }
+
+      .revealed-target .target-name {
+        font-size: 1.8rem;
+        padding: 8px 15px;
       }
     }
   </style>
@@ -2578,7 +2673,14 @@
           <div class="manual-game-interface">
             <div class="target-student-display">
               <div class="target-title">🎯 الطالب المستهدف</div>
-              <div class="target-name">${this.state.targetStudent}</div>
+              <div class="hidden-target" id="hiddenTarget">
+                <div class="secret-icon">🔒</div>
+                <div class="secret-text">مخفي عن الطلاب</div>
+                <button onclick="game.revealTarget()" class="reveal-btn">
+                  <i class="fas fa-eye"></i>
+                  كشف للمعلم
+                </button>
+              </div>
               <div class="target-instruction">على الطلاب تخمين من هو هذا الطالب</div>
             </div>
 
@@ -2616,7 +2718,7 @@
         `;
 
         this.soundSystem.play('reveal');
-        this.messages.show(`🎯 ابدأ التخمين! الطالب المستهدف: ${this.state.targetStudent}`, 'info', 5000);
+        this.messages.show(`🎯 ابدأ التخمين! الطالب مخفي للحفاظ على عدالة اللعبة`, 'info', 5000);
       }
 
       displayGameInterface() {
@@ -2672,18 +2774,9 @@
       checkManualAnswer(selectedStudent) {
         const isCorrect = selectedStudent === this.state.targetStudent;
         
-        // تأثير بصري
-        const cards = document.querySelectorAll('.student-card');
-        cards.forEach(card => {
-          const cardName = card.querySelector('.student-name').textContent;
-          if (cardName === selectedStudent) {
-            card.classList.add(isCorrect ? 'correct' : 'wrong');
-          }
-          if (cardName === this.state.targetStudent && !isCorrect) {
-            card.classList.add('correct');
-          }
-        });
-
+        // إزالة التأثيرات البصرية أثناء الاختيار للحفاظ على السرية
+        // لا نعرض الإجابة الصحيحة أو الخاطئة على البطاقات
+        
         this.state.stats.gamesPlayed++;
 
         if (isCorrect) {
@@ -2701,7 +2794,7 @@
             // نفدت المحاولات - عرض نافذة احترافية للكشف
             this.showRevealModal();
           } else {
-            this.messages.show(`❌ خطأ! المحاولات المتبقية: ${this.state.stats.lives}`, 'error', 3000);
+            this.messages.show(`❌ إجابة خاطئة! المحاولات المتبقية: ${this.state.stats.lives}`, 'error', 3000);
             // تحديث العرض
             setTimeout(() => {
               this.updateManualStats();
@@ -2886,6 +2979,37 @@
         if (livesElement) livesElement.textContent = this.state.stats.lives;
         if (attemptsElement) attemptsElement.textContent = this.state.stats.gamesPlayed;
         if (correctElement) correctElement.textContent = this.state.stats.correctAnswers;
+      }
+
+      revealTarget() {
+        const hiddenTarget = document.getElementById('hiddenTarget');
+        if (hiddenTarget) {
+          hiddenTarget.innerHTML = `
+            <div class="revealed-target">
+              <div class="target-name">${this.state.targetStudent}</div>
+              <button onclick="game.hideTarget()" class="hide-btn">
+                <i class="fas fa-eye-slash"></i>
+                إخفاء مرة أخرى
+              </button>
+            </div>
+          `;
+          this.soundSystem.play('notification');
+        }
+      }
+
+      hideTarget() {
+        const hiddenTarget = document.getElementById('hiddenTarget');
+        if (hiddenTarget) {
+          hiddenTarget.innerHTML = `
+            <div class="secret-icon">🔒</div>
+            <div class="secret-text">مخفي عن الطلاب</div>
+            <button onclick="game.revealTarget()" class="reveal-btn">
+              <i class="fas fa-eye"></i>
+              كشف للمعلم
+            </button>
+          `;
+          this.soundSystem.play('click');
+        }
       }
     }
 
