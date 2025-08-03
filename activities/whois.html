@@ -832,6 +832,266 @@
       margin-top: 5px;
     }
 
+    /* واجهة اختيار الطلاب - الوضع الانتقائي */
+    .student-selection-interface {
+      text-align: center;
+      padding: 20px;
+      width: 100%;
+    }
+
+    .selection-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      background: var(--gradient-royal);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+      padding: 15px;
+      background-color: rgba(255,255,255,0.7);
+      border-radius: 15px;
+      box-shadow: var(--neumorphism-inset);
+    }
+
+    .selection-subtitle {
+      font-size: 1.1rem;
+      color: #5a6c7d;
+      margin-bottom: 30px;
+      font-weight: 500;
+    }
+
+    .selection-methods {
+      background: rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 20px;
+      margin: 20px 0;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .method-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+
+    .method-tab {
+      background: rgba(255,255,255,0.7);
+      border: 2px solid transparent;
+      border-radius: 25px;
+      padding: 12px 25px;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: 'Cairo', sans-serif;
+      cursor: pointer;
+      transition: all var(--animation-speed) var(--bounce-animation);
+      box-shadow: var(--neumorphism-outset);
+    }
+
+    .method-tab:hover {
+      transform: translateY(-2px);
+      box-shadow: 
+        var(--neumorphism-outset),
+        0 10px 20px rgba(0,0,0,0.15);
+    }
+
+    .method-tab.active {
+      background: var(--gradient-primary);
+      color: var(--white);
+      border-color: var(--primary-color);
+      transform: scale(1.05);
+    }
+
+    .selection-content {
+      min-height: 300px;
+      padding: 20px;
+    }
+
+    /* بطاقات اختيار الطلاب */
+    .student-selection-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+      padding: 10px;
+    }
+
+    .student-selection-card {
+      background: var(--card-gradient);
+      border-radius: 18px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--animation-speed) var(--bounce-animation);
+      border: 2px solid rgba(255,255,255,0.3);
+      box-shadow: var(--neumorphism-outset);
+      position: relative;
+      overflow: hidden;
+      min-height: 160px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .student-selection-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient-success);
+      transform: scaleX(0);
+      transition: transform var(--animation-speed) var(--smooth-animation);
+    }
+
+    .student-selection-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .student-selection-card:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 
+        var(--neumorphism-outset),
+        0 25px 50px rgba(0,0,0,0.15);
+      border-color: var(--success-color);
+    }
+
+    .student-avatar {
+      width: 60px;
+      height: 60px;
+      background: var(--gradient-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 15px;
+      color: var(--white);
+      font-size: 1.8rem;
+      box-shadow: var(--neumorphism-outset);
+    }
+
+    .student-selection-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-color);
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .selection-badge {
+      background: var(--gradient-success);
+      color: var(--white);
+      padding: 6px 15px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      opacity: 0.8;
+      transition: all var(--animation-speed) var(--smooth-animation);
+    }
+
+    .student-selection-card:hover .selection-badge {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    /* قائمة اختيار الطلاب */
+    .student-selection-list {
+      background: rgba(255,255,255,0.7);
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: var(--neumorphism-inset);
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .list-header {
+      background: var(--gradient-primary);
+      color: var(--white);
+      padding: 15px 20px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      text-align: center;
+    }
+
+    .student-count {
+      background: rgba(255,255,255,0.2);
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+    }
+
+    .student-list-item {
+      display: flex;
+      align-items: center;
+      padding: 15px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.5);
+      cursor: pointer;
+      transition: all var(--animation-speed) var(--smooth-animation);
+      position: relative;
+    }
+
+    .student-list-item:hover {
+      background: rgba(79, 172, 254, 0.1);
+      transform: translateX(5px);
+    }
+
+    .student-list-item:last-child {
+      border-bottom: none;
+    }
+
+    .student-number {
+      width: 40px;
+      height: 40px;
+      background: var(--gradient-royal);
+      color: var(--white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-left: 15px;
+      box-shadow: var(--neumorphism-outset);
+    }
+
+    .student-list-name {
+      flex: 1;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-color);
+      text-align: right;
+    }
+
+    .select-button {
+      background: var(--gradient-success);
+      color: var(--white);
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all var(--animation-speed) var(--bounce-animation);
+      box-shadow: var(--neumorphism-outset);
+    }
+
+    .student-list-item:hover .select-button {
+      transform: scale(1.1);
+      box-shadow: 
+        var(--neumorphism-outset),
+        0 10px 20px rgba(0,0,0,0.15);
+    }
+
+    .selection-controls {
+      margin-top: 25px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+
     /* تحسينات الاستجابة */
     @media (max-width: 768px) {
       .main-container {
@@ -901,6 +1161,57 @@
         grid-template-columns: repeat(3, 1fr);
         gap: 10px;
       }
+
+      /* تحسينات واجهة اختيار الطلاب للهواتف */
+      .selection-title {
+        font-size: 1.6rem;
+      }
+
+      .method-tabs {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .method-tab {
+        width: 100%;
+        max-width: 250px;
+        margin: 0 auto;
+      }
+
+      .student-selection-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 15px;
+      }
+
+      .student-selection-card {
+        padding: 15px;
+        min-height: 140px;
+      }
+
+      .student-avatar {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+      }
+
+      .student-list-item {
+        padding: 12px 15px;
+      }
+
+      .student-number {
+        width: 35px;
+        height: 35px;
+        font-size: 0.8rem;
+      }
+
+      .student-list-name {
+        font-size: 1rem;
+      }
+
+      .select-button {
+        padding: 6px 15px;
+        font-size: 0.8rem;
+      }
     }
 
     @media (max-width: 480px) {
@@ -932,6 +1243,51 @@
       .level-indicator {
         font-size: 0.9rem;
         padding: 8px 15px;
+      }
+
+      /* تحسينات إضافية لواجهة اختيار الطلاب */
+      .selection-title {
+        font-size: 1.4rem;
+      }
+
+      .student-selection-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .student-selection-card {
+        min-height: 120px;
+        padding: 12px;
+      }
+
+      .student-avatar {
+        width: 45px;
+        height: 45px;
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+      }
+
+      .student-selection-name {
+        font-size: 1rem;
+      }
+
+      .selection-badge {
+        font-size: 0.8rem;
+        padding: 5px 12px;
+      }
+
+      .student-selection-list {
+        max-height: 300px;
+      }
+
+      .list-header {
+        padding: 12px 15px;
+        font-size: 1rem;
+      }
+
+      .student-count {
+        font-size: 0.8rem;
+        padding: 4px 12px;
       }
     }
   </style>
@@ -1702,6 +2058,8 @@
         setTimeout(() => {
           if (modeValue === 'assemble') {
             this.nameAssembly.start();
+          } else if (modeValue === 'manual') {
+            this.showStudentSelection();
           } else {
             this.newRound();
           }
@@ -1718,6 +2076,112 @@
         this.state.targetStudent = targetStudent;
 
         this.displayGameInterface();
+      }
+
+      showStudentSelection() {
+        if (this.state.allStudents.length === 0) {
+          this.messages.show('⚠️ لا توجد بيانات طلاب متاحة', 'warning');
+          return;
+        }
+
+        const gameArea = document.getElementById('gameArea');
+        
+        gameArea.innerHTML = `
+          <div class="student-selection-interface">
+            <div class="selection-title">🎯 الوضع الانتقائي - اختر الطالب</div>
+            <div class="selection-subtitle">اختر الطالب الذي تريد أن يخمنه باقي الطلاب</div>
+            
+            <div class="selection-methods">
+              <div class="method-tabs">
+                <button onclick="game.showSelectionMode('cards')" class="method-tab active" id="cardsTab">
+                  🃏 بطاقات الطلاب
+                </button>
+                <button onclick="game.showSelectionMode('list')" class="method-tab" id="listTab">
+                  📋 قائمة الطلاب
+                </button>
+              </div>
+              
+              <div class="selection-content" id="selectionContent">
+                ${this.generateStudentCards()}
+              </div>
+            </div>
+
+            <div class="selection-controls">
+              <button onclick="game.resetGame()" class="btn btn-cosmic">
+                <i class="fas fa-arrow-left"></i>
+                🔙 العودة للإعدادات
+              </button>
+            </div>
+          </div>
+        `;
+
+        this.soundSystem.play('reveal');
+        this.messages.show('🎯 اختر الطالب المطلوب من القائمة أو البطاقات', 'info', 5000);
+      }
+
+      showSelectionMode(mode) {
+        const cardsTab = document.getElementById('cardsTab');
+        const listTab = document.getElementById('listTab');
+        const content = document.getElementById('selectionContent');
+
+        // تحديث التبويبات
+        cardsTab.classList.toggle('active', mode === 'cards');
+        listTab.classList.toggle('active', mode === 'list');
+
+        if (mode === 'cards') {
+          content.innerHTML = this.generateStudentCards();
+        } else {
+          content.innerHTML = this.generateStudentList();
+        }
+
+        this.soundSystem.play('click');
+      }
+
+      generateStudentCards() {
+        return `
+          <div class="student-selection-grid">
+            ${this.state.allStudents.map(student => `
+              <div class="student-selection-card" onclick="game.selectTargetStudent('${student}')">
+                <div class="student-avatar">
+                  <i class="fas fa-user-graduate"></i>
+                </div>
+                <div class="student-selection-name">${student}</div>
+                <div class="selection-badge">اختر</div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      generateStudentList() {
+        return `
+          <div class="student-selection-list">
+            <div class="list-header">
+              <span class="student-count">عدد الطلاب: ${this.state.allStudents.length}</span>
+            </div>
+            ${this.state.allStudents.map((student, index) => `
+              <div class="student-list-item" onclick="game.selectTargetStudent('${student}')">
+                <div class="student-number">${index + 1}</div>
+                <div class="student-list-name">${student}</div>
+                <div class="select-button">
+                  <i class="fas fa-check-circle"></i>
+                  اختر
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      selectTargetStudent(studentName) {
+        this.state.targetStudent = studentName;
+        this.soundSystem.play('success');
+        this.messages.show(`✅ تم اختيار الطالب: ${studentName}`, 'success', 3000);
+        
+        // انتظار قصير ثم بدء اللعبة
+        setTimeout(() => {
+          this.displayGameInterface();
+        }, 1500);
       }
 
       displayGameInterface() {
