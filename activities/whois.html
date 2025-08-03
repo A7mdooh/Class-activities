@@ -1092,6 +1092,316 @@
       gap: 15px;
     }
 
+    /* واجهة الوضع الانتقائي */
+    .manual-game-interface {
+      width: 100%;
+      padding: 20px;
+    }
+
+    .target-student-display {
+      background: var(--gradient-royal);
+      color: var(--white);
+      border-radius: 20px;
+      padding: 30px;
+      text-align: center;
+      margin-bottom: 30px;
+      box-shadow: var(--neumorphism-outset);
+      animation: pulse 2s infinite;
+    }
+
+    .target-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+      opacity: 0.9;
+    }
+
+    .target-name {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 15px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .target-instruction {
+      font-size: 1.1rem;
+      opacity: 0.8;
+      font-weight: 500;
+    }
+
+    .game-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: var(--card-gradient);
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: var(--neumorphism-outset);
+      transition: all var(--animation-speed) var(--bounce-animation);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 
+        var(--neumorphism-outset),
+        0 15px 30px rgba(0,0,0,0.15);
+    }
+
+    .stat-card.lives {
+      border-left: 5px solid var(--danger-color);
+    }
+
+    .stat-card.attempts {
+      border-left: 5px solid var(--info-color);
+    }
+
+    .stat-card.correct {
+      border-left: 5px solid var(--success-color);
+    }
+
+    .stat-icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .stat-card .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 5px;
+    }
+
+    .stat-card .stat-label {
+      font-size: 0.9rem;
+      color: #5a6c7d;
+      font-weight: 500;
+    }
+
+    .manual-controls {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    /* النوافذ المنبثقة الاحترافية */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      backdrop-filter: blur(10px);
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+
+    .modal-content {
+      background: var(--card-gradient);
+      border-radius: 25px;
+      padding: 40px;
+      text-align: center;
+      box-shadow: 
+        var(--neumorphism-outset),
+        0 30px 60px rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.2);
+      max-width: 500px;
+      width: 90%;
+      animation: modalSlideIn 0.4s var(--bounce-animation);
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        transform: scale(0.7) translateY(-50px);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+      }
+    }
+
+    /* نافذة النجاح */
+    .success-content {
+      background: linear-gradient(135deg, var(--success-color) 0%, var(--primary-color) 100%);
+      color: var(--white);
+    }
+
+    .success-animation {
+      position: relative;
+      margin-bottom: 25px;
+    }
+
+    .success-icon {
+      font-size: 4rem;
+      animation: bounce 1s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-20px);
+      }
+      60% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .success-confetti {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle, rgba(255,255,255,0.3) 2px, transparent 2px);
+      background-size: 20px 20px;
+      animation: confettiRain 2s infinite;
+    }
+
+    @keyframes confettiRain {
+      0% {
+        transform: translateX(-50%) translateY(-20px) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(-50%) translateY(100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .success-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 15px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .winner-name {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 15px;
+      background: rgba(255,255,255,0.2);
+      padding: 10px 20px;
+      border-radius: 15px;
+    }
+
+    .success-message {
+      font-size: 1.2rem;
+      margin-bottom: 25px;
+      opacity: 0.9;
+    }
+
+    /* نافذة الكشف */
+    .reveal-content {
+      background: linear-gradient(135deg, var(--warning-color) 0%, var(--danger-color) 100%);
+      color: var(--white);
+    }
+
+    .reveal-animation {
+      margin-bottom: 25px;
+    }
+
+    .reveal-icon {
+      font-size: 4rem;
+      animation: reveal 2s ease-in-out;
+    }
+
+    @keyframes reveal {
+      0%, 100% {
+        transform: scale(1) rotate(0deg);
+      }
+      25% {
+        transform: scale(1.1) rotate(-10deg);
+      }
+      75% {
+        transform: scale(1.1) rotate(10deg);
+      }
+    }
+
+    .reveal-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 15px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .revealed-name {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 15px;
+      background: rgba(255,255,255,0.2);
+      padding: 15px 25px;
+      border-radius: 15px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .reveal-message {
+      font-size: 1.1rem;
+      margin-bottom: 25px;
+      opacity: 0.9;
+    }
+
+    /* إحصائيات النوافذ */
+    .success-stats, .reveal-stats {
+      background: rgba(255,255,255,0.1);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 25px;
+    }
+
+    .success-stats .stat, .reveal-stats .stat {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+    }
+
+    .success-stats .stat:last-child, .reveal-stats .stat:last-child {
+      margin-bottom: 0;
+    }
+
+    .stat-label {
+      font-weight: 500;
+    }
+
+    .stat-value {
+      font-weight: 700;
+    }
+
+    /* أزرار النوافذ */
+    .modal-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .modal-buttons .btn {
+      min-width: 150px;
+    }
+
     /* تحسينات الاستجابة */
     @media (max-width: 768px) {
       .main-container {
@@ -1288,6 +1598,55 @@
       .student-count {
         font-size: 0.8rem;
         padding: 4px 12px;
+      }
+
+      /* تحسينات النوافذ للهواتف */
+      .modal-content {
+        padding: 25px;
+        max-width: 95%;
+      }
+
+      .success-title, .reveal-title {
+        font-size: 2rem;
+      }
+
+      .winner-name, .revealed-name {
+        font-size: 1.6rem;
+        padding: 8px 15px;
+      }
+
+      .success-message, .reveal-message {
+        font-size: 1rem;
+      }
+
+      .modal-buttons {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .modal-buttons .btn {
+        width: 100%;
+        min-width: auto;
+      }
+
+      .target-name {
+        font-size: 2rem;
+      }
+
+      .game-stats {
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+
+      .manual-controls {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .manual-controls .btn {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
       }
     }
   </style>
@@ -2200,10 +2559,64 @@
         this.soundSystem.play('success');
         this.messages.show(`✅ تم اختيار الطالب: ${studentName}`, 'success', 3000);
         
+        // تهيئة إعدادات الوضع الانتقائي
+        this.state.stats.lives = this.state.maxLives;
+        this.state.stats.correctAnswers = 0;
+        this.state.stats.wrongAnswers = 0;
+        this.state.stats.gamesPlayed = 0;
+        
         // انتظار قصير ثم بدء اللعبة
         setTimeout(() => {
-          this.displayGameInterface();
+          this.displayManualGameInterface();
         }, 1500);
+      }
+
+      displayManualGameInterface() {
+        const gameArea = document.getElementById('gameArea');
+        
+        gameArea.innerHTML = `
+          <div class="manual-game-interface">
+            <div class="target-student-display">
+              <div class="target-title">🎯 الطالب المستهدف</div>
+              <div class="target-name">${this.state.targetStudent}</div>
+              <div class="target-instruction">على الطلاب تخمين من هو هذا الطالب</div>
+            </div>
+
+            <div class="game-stats">
+              <div class="stat-card lives">
+                <div class="stat-icon">❤️</div>
+                <div class="stat-value">${this.state.stats.lives}</div>
+                <div class="stat-label">المحاولات المتبقية</div>
+              </div>
+              <div class="stat-card attempts">
+                <div class="stat-icon">🎮</div>
+                <div class="stat-value">${this.state.stats.gamesPlayed}</div>
+                <div class="stat-label">إجمالي المحاولات</div>
+              </div>
+              <div class="stat-card correct">
+                <div class="stat-icon">✅</div>
+                <div class="stat-value">${this.state.stats.correctAnswers}</div>
+                <div class="stat-label">إجابات صحيحة</div>
+              </div>
+            </div>
+            
+            <div class="students-grid">
+              ${this.generateStudentOptions()}
+            </div>
+
+            <div class="manual-controls">
+              <button onclick="game.newManualRound()" class="btn btn-primary">
+                🔄 طالب جديد
+              </button>
+              <button onclick="game.resetGame()" class="btn btn-cosmic">
+                🏠 العودة للقائمة
+              </button>
+            </div>
+          </div>
+        `;
+
+        this.soundSystem.play('reveal');
+        this.messages.show(`🎯 ابدأ التخمين! الطالب المستهدف: ${this.state.targetStudent}`, 'info', 5000);
       }
 
       displayGameInterface() {
@@ -2249,6 +2662,55 @@
       }
 
       checkAnswer(selectedStudent) {
+        if (this.state.gameMode === 'manual') {
+          this.checkManualAnswer(selectedStudent);
+        } else {
+          this.checkRegularAnswer(selectedStudent);
+        }
+      }
+
+      checkManualAnswer(selectedStudent) {
+        const isCorrect = selectedStudent === this.state.targetStudent;
+        
+        // تأثير بصري
+        const cards = document.querySelectorAll('.student-card');
+        cards.forEach(card => {
+          const cardName = card.querySelector('.student-name').textContent;
+          if (cardName === selectedStudent) {
+            card.classList.add(isCorrect ? 'correct' : 'wrong');
+          }
+          if (cardName === this.state.targetStudent && !isCorrect) {
+            card.classList.add('correct');
+          }
+        });
+
+        this.state.stats.gamesPlayed++;
+
+        if (isCorrect) {
+          // إجابة صحيحة - عرض نافذة احترافية للفوز
+          this.state.stats.correctAnswers++;
+          this.soundSystem.play('correct');
+          this.showSuccessModal(selectedStudent);
+        } else {
+          // إجابة خاطئة - تقليل المحاولات
+          this.state.stats.wrongAnswers++;
+          this.state.stats.lives--;
+          this.soundSystem.play('wrong');
+          
+          if (this.state.stats.lives <= 0) {
+            // نفدت المحاولات - عرض نافذة احترافية للكشف
+            this.showRevealModal();
+          } else {
+            this.messages.show(`❌ خطأ! المحاولات المتبقية: ${this.state.stats.lives}`, 'error', 3000);
+            // تحديث العرض
+            setTimeout(() => {
+              this.updateManualStats();
+            }, 1500);
+          }
+        }
+      }
+
+      checkRegularAnswer(selectedStudent) {
         const isCorrect = selectedStudent === this.state.targetStudent;
         
         // تأثير بصري
@@ -2312,6 +2774,118 @@
         const gameArea = document.getElementById('gameArea');
         gameArea.innerHTML = '<p><i class="fas fa-info-circle"></i> اختر الصف ونمط اللعبة لبدء التحدي</p>';
         this.messages.show('🎮 جاهز للعبة جديدة!', 'info', 3000);
+      }
+
+      showSuccessModal(winnerName) {
+        const modal = document.createElement('div');
+        modal.className = 'success-modal modal-overlay';
+        modal.innerHTML = `
+          <div class="modal-content success-content">
+            <div class="success-animation">
+              <div class="success-icon">🏆</div>
+              <div class="success-confetti"></div>
+            </div>
+            <div class="success-title">مبروك!</div>
+            <div class="winner-name">${winnerName}</div>
+            <div class="success-message">تمكن من العثور على الطالب المستهدف!</div>
+            <div class="success-stats">
+              <div class="stat">
+                <span class="stat-label">المحاولات المستخدمة:</span>
+                <span class="stat-value">${this.state.stats.gamesPlayed}</span>
+              </div>
+            </div>
+            <div class="modal-buttons">
+              <button onclick="game.newManualRound(); game.closeModal()" class="btn btn-primary">
+                🔄 جولة جديدة
+              </button>
+              <button onclick="game.resetGame(); game.closeModal()" class="btn btn-cosmic">
+                🏠 إنهاء اللعبة
+              </button>
+            </div>
+          </div>
+        `;
+        
+        document.body.appendChild(modal);
+        this.soundSystem.play('success');
+        
+        // إطلاق الألعاب النارية
+        if (typeof confetti !== 'undefined') {
+          confetti({
+            particleCount: 200,
+            spread: 100,
+            origin: { y: 0.4 }
+          });
+        }
+      }
+
+      showRevealModal() {
+        const modal = document.createElement('div');
+        modal.className = 'reveal-modal modal-overlay';
+        modal.innerHTML = `
+          <div class="modal-content reveal-content">
+            <div class="reveal-animation">
+              <div class="reveal-icon">🎭</div>
+            </div>
+            <div class="reveal-title">انتهت المحاولات!</div>
+            <div class="revealed-name">${this.state.targetStudent}</div>
+            <div class="reveal-message">هذا هو الطالب المستهدف</div>
+            <div class="reveal-stats">
+              <div class="stat">
+                <span class="stat-label">إجمالي المحاولات:</span>
+                <span class="stat-value">${this.state.stats.gamesPlayed}</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">الإجابات الصحيحة:</span>
+                <span class="stat-value">${this.state.stats.correctAnswers}</span>
+              </div>
+            </div>
+            <div class="modal-buttons">
+              <button onclick="game.newManualRound(); game.closeModal()" class="btn btn-primary">
+                🔄 جولة جديدة
+              </button>
+              <button onclick="game.resetGame(); game.closeModal()" class="btn btn-cosmic">
+                🏠 إنهاء اللعبة
+              </button>
+            </div>
+          </div>
+        `;
+        
+        document.body.appendChild(modal);
+        this.soundSystem.play('reveal');
+      }
+
+      closeModal() {
+        const modals = document.querySelectorAll('.modal-overlay');
+        modals.forEach(modal => {
+          modal.style.animation = 'fadeOut 0.3s ease-out';
+          setTimeout(() => {
+            if (modal.parentNode) {
+              modal.parentNode.removeChild(modal);
+            }
+          }, 300);
+        });
+      }
+
+      newManualRound() {
+        // إعادة تعيين المحاولات للجولة الجديدة
+        this.state.stats.lives = this.state.maxLives;
+        this.state.stats.gamesPlayed = 0;
+        this.state.stats.correctAnswers = 0;
+        this.state.stats.wrongAnswers = 0;
+        
+        // عرض نافذة اختيار طالب جديد
+        this.showStudentSelection();
+      }
+
+      updateManualStats() {
+        // تحديث الإحصائيات في الواجهة
+        const livesElement = document.querySelector('.stat-card.lives .stat-value');
+        const attemptsElement = document.querySelector('.stat-card.attempts .stat-value');
+        const correctElement = document.querySelector('.stat-card.correct .stat-value');
+        
+        if (livesElement) livesElement.textContent = this.state.stats.lives;
+        if (attemptsElement) attemptsElement.textContent = this.state.stats.gamesPlayed;
+        if (correctElement) correctElement.textContent = this.state.stats.correctAnswers;
       }
     }
 
