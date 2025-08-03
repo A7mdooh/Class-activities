@@ -2179,7 +2179,10 @@
         } else {
           this.stats.wrongAnswers++;
           this.stats.streak = 0;
-          this.stats.lives--;
+          // تقليل المحاولات فقط إذا لم تكن لا نهائية
+          if (this.maxLives !== -1) {
+            this.stats.lives--;
+          }
         }
       }
 
@@ -2915,7 +2918,7 @@
             <div class="game-stats">
               <div class="stat-card lives">
                 <div class="stat-icon">❤️</div>
-                <div class="stat-value">${this.state.stats.lives}</div>
+                <div class="stat-value">${this.state.maxLives === -1 ? '∞' : this.state.stats.lives}</div>
                 <div class="stat-label">المحاولات المتبقية</div>
               </div>
               <div class="stat-card attempts">
@@ -3033,21 +3036,33 @@
             this.showSuccessModal(selectedStudent);
           }, 1500);
         } else {
-          // إجابة خاطئة - تقليل المحاولات
+          // إجابة خاطئة - تقليل المحاولات (إلا في حالة المحاولات اللانهائية)
           this.state.stats.wrongAnswers++;
-          this.state.stats.lives--;
+          
+          // تقليل المحاولات فقط إذا لم تكن لا نهائية
+          if (this.state.maxLives !== -1) {
+            this.state.stats.lives--;
+          }
+          
           this.soundSystem.play('wrong');
           
           // تأثير الاهتزاز للبطاقة الخاطئة
           this.shakeWrongAnswer(selectedStudent);
           
-          if (this.state.stats.lives <= 0) {
+          // التحقق من نهاية اللعبة فقط إذا لم تكن المحاولات لا نهائية
+          if (this.state.maxLives !== -1 && this.state.stats.lives <= 0) {
             // نفدت المحاولات - عرض نافذة احترافية للكشف
             setTimeout(() => {
               this.showRevealModal();
             }, 1500);
           } else {
-            this.messages.show(`❌ إجابة خاطئة! المحاولات المتبقية: ${this.state.stats.lives}`, 'error', 3000);
+            // عرض رسالة الخطأ
+            if (this.state.maxLives === -1) {
+              this.messages.show(`❌ إجابة خاطئة! محاولات لا نهائية متاحة`, 'error', 3000);
+            } else {
+              this.messages.show(`❌ إجابة خاطئة! المحاولات المتبقية: ${this.state.stats.lives}`, 'error', 3000);
+            }
+            
             // تحديث العرض وإعادة تعيين البطاقات
             setTimeout(() => {
               this.resetCardsVisual();
@@ -3083,7 +3098,8 @@
         }
 
         setTimeout(() => {
-          if (this.state.stats.lives > 0) {
+          // التحقق من نهاية اللعبة فقط إذا لم تكن المحاولات لا نهائية
+          if (this.state.maxLives === -1 || this.state.stats.lives > 0) {
             this.newRound();
           } else {
             this.endGame();
@@ -3230,7 +3246,10 @@
         const attemptsElement = document.querySelector('.stat-card.attempts .stat-value');
         const correctElement = document.querySelector('.stat-card.correct .stat-value');
         
-        if (livesElement) livesElement.textContent = this.state.stats.lives;
+        // عرض ∞ للمحاولات اللانهائية
+        if (livesElement) {
+          livesElement.textContent = this.state.maxLives === -1 ? '∞' : this.state.stats.lives;
+        }
         if (attemptsElement) attemptsElement.textContent = this.state.stats.gamesPlayed;
         if (correctElement) correctElement.textContent = this.state.stats.correctAnswers;
       }
