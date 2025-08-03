@@ -4594,6 +4594,9 @@
       }
 
       handleCorrectSelection(cardElement, selectedStudent) {
+        // فحص إعدادات الوقت - إذا كان لا محدود، لا تنهي اللعبة
+        const isUnlimitedTime = this.state.timeLimit === 0; // 0 يعني لا محدود
+        
         // تأثير النجاح على البطاقة
         cardElement.classList.add('correct-selection');
         
@@ -4606,14 +4609,55 @@
         // أصوات النجاح
         this.soundSystem.play('success');
         
-        // تعطيل جميع البطاقات
-        const allCards = document.querySelectorAll('.battle-card');
-        allCards.forEach(card => card.classList.add('disabled'));
+        if (isUnlimitedTime) {
+          // في الوقت اللامحدود، أظهر رسالة نجاح واختر طالب جديد
+          this.messages.show(`✅ ممتاز! تم العثور على ${selectedStudent}. جاري اختيار طالب جديد...`, 'success', 3000);
+          
+          // تحديث الإحصائيات
+          this.updateSurvivalStats();
+          
+          // اختيار طالب جديد وإعادة بدء الجولة
+          setTimeout(() => {
+            this.selectNewTargetStudent();
+            this.startSurvivalGameplay();
+          }, 2000);
+        } else {
+          // في الوقت المحدود، إنهاء اللعبة بالاحتفال
+          // تعطيل جميع البطاقات
+          const allCards = document.querySelectorAll('.battle-card');
+          allCards.forEach(card => card.classList.add('disabled'));
+          
+          // إظهار الاحتفال
+          setTimeout(() => {
+            this.showVictoryCelebration(selectedStudent);
+          }, 1000);
+        }
+      }
+
+      selectNewTargetStudent() {
+        // اختيار طالب جديد عشوائياً
+        const availableStudents = this.state.allStudents.filter(student => student !== this.state.targetStudent);
+        if (availableStudents.length > 0) {
+          this.state.targetStudent = availableStudents[Math.floor(Math.random() * availableStudents.length)];
+        } else {
+          // إذا لم يتبق طلاب، اختر عشوائياً من الجميع
+          this.state.targetStudent = this.state.allStudents[Math.floor(Math.random() * this.state.allStudents.length)];
+        }
+      }
+
+      updateSurvivalStats() {
+        // تحديث عرض الإحصائيات
+        const scoreElement = document.getElementById('scoreCount');
+        const levelElement = document.getElementById('levelCount');
         
-        // إظهار الاحتفال
-        setTimeout(() => {
-          this.showVictoryCelebration(selectedStudent);
-        }, 1000);
+        if (scoreElement) scoreElement.textContent = this.state.stats.score;
+        
+        // زيادة المستوى كل 5 إجابات صحيحة
+        if (this.state.stats.correctAnswers % 5 === 0) {
+          this.state.survival.level++;
+          if (levelElement) levelElement.textContent = this.state.survival.level;
+          this.messages.show(`🎊 تهانينا! وصلت للمستوى ${this.state.survival.level}`, 'success', 3000);
+        }
       }
 
       handleWrongSelection(cardElement, selectedStudent) {
@@ -4777,80 +4821,9 @@
       }
 
       showSurvivalInstructions() {
-        const gameArea = document.getElementById('gameArea');
-        
-        gameArea.innerHTML = `
-          <div class="survival-instructions">
-            <div class="instructions-header">
-              <div class="instructions-icon">🔥</div>
-              <div class="instructions-title">كيف تلعب وضع البقاء؟</div>
-            </div>
-
-            <div class="instructions-content">
-              <div class="instruction-section">
-                <h3>🎯 الهدف</h3>
-                <p>ابق في اللعبة أطول فترة ممكنة! أجب على الأسئلة بسرعة ودقة لتجمع النقاط وتحصل على مكافآت.</p>
-              </div>
-
-              <div class="instruction-section">
-                <h3>❤️ المحاولات</h3>
-                <p><strong>تبدأ بـ 3 محاولات فقط!</strong></p>
-                <ul>
-                  <li>✅ كل إجابة صحيحة = نقاط أكثر</li>
-                  <li>❌ كل إجابة خاطئة = تفقد محاولة</li>
-                  <li>🎁 كل 3 إجابات صحيحة متتالية = محاولة إضافية مجانية!</li>
-                  <li>⏰ انتهاء الوقت = إجابة خاطئة</li>
-                </ul>
-              </div>
-
-              <div class="instruction-section">
-                <h3>🏆 النقاط</h3>
-                <p>كلما أجبت أسرع وأكثر، حصلت على نقاط أكبر:</p>
-                <ul>
-                  <li>💰 <strong>100 نقطة أساسية</strong> لكل إجابة صحيحة</li>
-                  <li>🔥 <strong>+10 نقاط إضافية</strong> لكل إجابة متتالية صحيحة</li>
-                  <li>⚡ <strong>+5 نقاط</strong> لكل ثانية متبقية</li>
-                  <li>📈 <strong>مضاعف المستوى</strong> يزيد النقاط كلما تقدمت</li>
-                </ul>
-              </div>
-
-              <div class="instruction-section">
-                <h3>📈 المستويات</h3>
-                <p>كل 5 إجابات صحيحة ترتقي لمستوى أعلى:</p>
-                <ul>
-                  <li>🆙 مضاعف النقاط يزيد</li>
-                  <li>⏱️ الوقت المتاح يقل (أصعب)</li>
-                  <li>🎯 عدد الخيارات يزيد (أصعب)</li>
-                </ul>
-              </div>
-
-              <div class="instruction-section">
-                <h3>⏱️ الوقت</h3>
-                <p>لديك وقت محدود للإجابة:</p>
-                <ul>
-                  <li>⏰ المستوى الأول: 30 ثانية</li>
-                  <li>📉 كل مستوى جديد: وقت أقل</li>
-                  <li>🚨 آخر 5 ثوان: تحذير أحمر</li>
-                  <li>⏸️ يمكنك الإيقاف المؤقت في أي وقت</li>
-                </ul>
-              </div>
-
-              <div class="instruction-section">
-                <h3>🏅 الهدف النهائي</h3>
-                <p><strong>لا توجد نهاية للعبة!</strong> الهدف هو تحطيم رقمك القياسي والبقاء أطول فترة ممكنة.</p>
-              </div>
-            </div>
-
-            <div class="instructions-controls">
-              <button onclick="game.startSurvivalGame()" class="btn btn-primary btn-large">
-                🔥 ابدأ التحدي!
-              </button>
-              <button onclick="game.resetGame()" class="btn btn-cosmic">
-                🔙 العودة للقائمة
-              </button>
-            </div>
-          </div>
-        `;
+        // دالة مخفية - تعليمات وضع البقاء غير مفعلة
+        this.messages.show('ℹ️ التعليمات غير متاحة في هذا الوضع', 'info', 2000);
+        return;
       }
 
       startSurvivalGame() {
@@ -4937,11 +4910,8 @@
             </div>
 
             <div class="survival-controls">
-              <button onclick="game.pauseSurvival()" class="btn btn-secondary">
+              <button onclick="game.pauseSurvivalGame()" class="btn btn-secondary">
                 ⏸️ إيقاف مؤقت
-              </button>
-              <button onclick="game.showSurvivalInstructions()" class="btn btn-info">
-                ❓ كيف ألعب؟
               </button>
               <button onclick="game.resetGame()" class="btn btn-cosmic">
                 🏠 إنهاء وضع البقاء
