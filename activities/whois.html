@@ -1153,6 +1153,30 @@
       }
     }
 
+    .mode-indicator {
+      background: var(--gradient-success);
+      color: var(--white);
+      padding: 4px 12px;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-top: 8px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(39, 174, 96, 0.3);
+      animation: modeGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes modeGlow {
+      0%, 100% {
+        opacity: 0.9;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.01);
+      }
+    }
+
     /* واجهة إخفاء الطالب المستهدف */
     .hidden-target {
       background: rgba(0, 0, 0, 0.1);
@@ -2989,6 +3013,7 @@
           <div class="manual-game-interface">
             <div class="target-student-display">
               <div class="target-title">${isRandomMode ? '🎲 الطالب المختار عشوائياً' : '🎯 الطالب المستهدف'}</div>
+              ${isRandomMode ? '<div class="mode-indicator">🤖 اختيار تلقائي • لا تكرار</div>' : ''}
               <div class="hidden-target" id="hiddenTarget">
                 <div class="secret-icon">🔒</div>
                 <div class="secret-text">مخفي عن الطلاب</div>
@@ -3081,7 +3106,7 @@
       }
 
       checkAnswer(selectedStudent) {
-        if (this.state.gameMode === 'manual') {
+        if (this.state.gameMode === 'manual' || this.state.gameMode === 'random') {
           this.checkManualAnswer(selectedStudent);
         } else {
           this.checkRegularAnswer(selectedStudent);
@@ -3344,6 +3369,15 @@
         }
         if (attemptsElement) attemptsElement.textContent = this.state.stats.gamesPlayed;
         if (correctElement) correctElement.textContent = this.state.stats.correctAnswers;
+        
+        // تحديث مؤشر التقدم في الوضع العشوائي
+        if (this.state.gameMode === 'random') {
+          const progressElement = document.querySelector('.random-progress');
+          if (progressElement) {
+            const remaining = this.state.allStudents.length - this.state.usedStudents.length;
+            progressElement.textContent = `الجولة ${this.state.usedStudents.length} من ${this.state.allStudents.length} • ${remaining} متبقي`;
+          }
+        }
       }
 
       revealTarget() {
@@ -3458,4 +3492,3 @@
   </script>
 </body>
 </html>
-
