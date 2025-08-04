@@ -1101,14 +1101,37 @@
             color: #0c5460;
             border-left: 4px solid #17a2b8;
         }
+            
+        /* تحسينات للهواتف الذكية */
+        @media (max-width: 768px) {
+            .game-layout {
+                flex-direction: column;
+                padding: 10px;
+            }
+            
+            .monopoly-board {
+                width: 90vw;
+                height: 90vw;
+                max-width: 400px;
+                max-height: 400px;
+            }
+            
+            .game-controls-section {
+                width: 100%;
+                max-height: 40vh;
+            }
+            
+            .players-panel {
+                max-height: 150px;
             }
             
             .control-btn {
-                font-size: 20px;
+                font-size: 14px;
+                padding: 10px 20px;
             }
             
             header h1 {
-                font-size: 2rem;
+                font-size: 1.8rem;
             }
         }
 
@@ -2287,43 +2310,146 @@
 
         // إعداد اللاعبين المحدث
         function setupPlayers() {
-            const playerCount = parseInt(playerCountSelect.value);
+            const playerCount = parseInt(playerCountSelect?.value || document.getElementById('player-count')?.value || 4);
             
             if (!useStudentData) {
                 // الطريقة اليدوية التقليدية
                 setupManualPlayers(playerCount);
+            } else {
+                // إخفاء الحاوية اليدوية إذا كانت تستخدم بيانات الطلاب
+                const manualContainer = document.getElementById('manual-entry-container');
+                if (manualContainer) {
+                    manualContainer.style.display = 'none';
+                }
             }
+            
+            // تحديث عرض الطلاب المختارين
+            updateSelectedStudentsDisplay();
         }
 
         // إعداد اللاعبين اليدوي
         function setupManualPlayers(playerCount) {
-            playerNamesContainer.innerHTML = '';
-            playerNamesContainer.style.display = 'block';
+            const container = document.getElementById('manual-entry-container') || 
+                            document.getElementById('player-names-container');
+            
+            if (!container) {
+                console.error('❌ لم يتم العثور على حاوية إدخال الأسماء');
+                return;
+            }
+            
+            container.innerHTML = '';
+            container.style.display = 'block';
+            
+            // إضافة عنوان
+            const title = document.createElement('h4');
+            title.textContent = '✍️ أدخل أسماء اللاعبين:';
+            title.style.color = 'var(--oman-red)';
+            title.style.marginBottom = '15px';
+            container.appendChild(title);
             
             for (let i = 0; i < playerCount; i++) {
                 const div = document.createElement('div');
                 div.className = 'player-setup-section';
-                div.innerHTML = `
-                    <label for="player-${i}-name">🎮 اسم اللاعب ${i + 1}:</label>
-                    <input type="text" id="player-${i}-name" class="oman-btn" style="margin: 10px; padding: 8px; width: 200px;" placeholder="أدخل الاسم" required>
-                    <div style="margin: 10px 0;">
-                        <label>اختر الرمز: ${playerTokens[i]}</label>
-                        <span style="font-size: 24px; margin: 0 10px; color: ${playerColors[i]};">●</span>
-                    </div>
+                div.style.cssText = `
+                    background: #f8f9fa;
+                    border-radius: 8px;
+                    padding: 15px;
+                    margin: 10px 0;
+                    border-left: 4px solid ${playerColors[i]};
                 `;
-                playerNamesContainer.appendChild(div);
+                
+                div.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                        <span style="font-size: 24px;">${playerTokens[i]}</span>
+                        <label for="player-${i}-name" style="font-weight: bold;">لاعب ${i + 1}:</label>
+                    </div>
+                    <input type="text" id="player-${i}-name" 
+                           placeholder="أدخل اسم اللاعب ${i + 1}" 
+                           style="
+                               width: 100%; 
+                               padding: 10px; 
+                               border: 2px solid #ddd; 
+                               border-radius: 5px;
+                               font-size: 16px;
+                           " required>
+                `;
+                container.appendChild(div);
+            }
+            
+            // إضافة زر بدء اللعبة إذا لم يكن موجوداً
+            let startBtn = container.querySelector('.start-game-manual-btn');
+            if (!startBtn) {
+                startBtn = document.createElement('button');
+                startBtn.className = 'start-game-manual-btn oman-btn';
+                startBtn.textContent = '🎮 بدء اللعبة';
+                startBtn.style.cssText = `
+                    background: linear-gradient(135deg, var(--oman-green) 0%, var(--light-green) 100%);
+                    color: white;
+                    border: none;
+                    padding: 15px 30px;
+                    border-radius: 25px;
+                    font-size: 18px;
+                    font-weight: bold;
+                    cursor: pointer;
+                    margin-top: 20px;
+                    width: 100%;
+                `;
+                
+                startBtn.addEventListener('click', function() {
+                    console.log('🎯 النقر على زر بدء اللعبة اليدوي');
+                    startGameWithSelectedStudents();
+                });
+                
+                container.appendChild(startBtn);
             }
         }
 
-        // عرض شبكة الطلاب للاختيار اليدوي (محدث)
-        function showStudentGrid() {
-            if (studentData.length === 0) {
-                alert('⚠️ لا توجد بيانات طلاب متاحة. يرجى التأكد من الاتصال بالإنترنت أو استخدام الإدخال اليدوي.');
-                return;
+        // تحديث حالة الاختيار
+        function updateSelectionStatus() {
+            const statusElement = document.getElementById('selection-status');
+            const countElement = document.getElementById('selection-count');
+            const requiredElement = document.getElementById('required-count');
+            const playerCount = parseInt(document.getElementById('player-count')?.value || 4);
+            
+            if (countElement) {
+                countElement.textContent = selectedStudents.length;
+            }
+            if (requiredElement) {
+                requiredElement.textContent = playerCount;
             }
             
-            const selectedClass = document.getElementById('class-selector').value;
-            const filteredStudents = filterStudentsByClass(selectedClass);
+            if (statusElement) {
+                if (selectedStudents.length === playerCount) {
+                    statusElement.style.color = 'var(--oman-green)';
+                    statusElement.textContent = '✅ جاهز للبدء';
+                } else if (selectedStudents.length > playerCount) {
+                    statusElement.style.color = 'var(--oman-red)';
+                    statusElement.textContent = '⚠️ تم تجاوز العدد المطلوب';
+                } else {
+                    statusElement.style.color = '#666';
+                    statusElement.textContent = `اختر ${playerCount - selectedStudents.length} طلاب إضافيين`;
+                }
+            }
+            
+            console.log(`📊 حالة الاختيار: ${selectedStudents.length}/${playerCount}`);
+        }
+
+        // ملء قائمة الصفوف المحسنة
+        function populateClassOptions(data) {
+            const classSelect = document.getElementById('class-selector');
+            if (!classSelect || !data) return;
+            
+            classSelect.innerHTML = '<option value="">اختر الصف</option>';
+            
+            Object.keys(data).forEach(className => {
+                const option = document.createElement('option');
+                option.value = className;
+                option.textContent = `${className} (${data[className].length} طالب)`;
+                classSelect.appendChild(option);
+            });
+            
+            console.log('✅ تم تحديث قائمة الصفوف:', Object.keys(data));
+        }
             
             if (filteredStudents.length === 0) {
                 alert('⚠️ لا توجد طلاب في الصف المختار.');
@@ -2564,34 +2690,124 @@
             updateSelectedStudentsDisplay();
         }
 
-        // بدء اللعبة مع اللاعبين المحددين (محدث)
+        // بدء اللعبة مع الطلاب المختارين - دالة محسنة
         function startGameWithSelectedStudents() {
-            if (selectedStudents.length < 2) {
-                showHelpMessage('يجب اختيار لاعبين على الأقل لبدء اللعبة', 'error');
-                return;
-            }
+            console.log('🎯 محاولة بدء اللعبة...');
+            console.log('الطلاب المختارين:', selectedStudents);
+            console.log('استخدام بيانات الطلاب:', useStudentData);
             
-            if (selectedStudents.length > 8) {
-                showHelpMessage('الحد الأقصى هو 8 لاعبين', 'error');
-                return;
-            }
+            const requiredCount = parseInt(document.getElementById('player-count').value);
             
-            showHelpMessage(`بدء اللعبة مع ${selectedStudents.length} لاعبين...`, 'success');
-            
-            // نسخ أسماء الطلاب إلى اللاعبين
-            for (let i = 0; i < selectedStudents.length; i++) {
-                const nameInput = document.getElementById(`player${i + 1}-name`);
-                if (nameInput) {
-                    nameInput.value = selectedStudents[i];
+            if (useStudentData) {
+                if (selectedStudents.length !== requiredCount) {
+                    alert(`⚠️ يرجى اختيار ${requiredCount} طلاب بالضبط! (المختار حالياً: ${selectedStudents.length})`);
+                    return;
+                }
+                
+                // إنشاء اللاعبين من الطلاب المختارين
+                players = [];
+                selectedStudents.forEach((student, i) => {
+                    const studentName = typeof student === 'string' ? student : student.name || student;
+                    players.push({
+                        id: i,
+                        name: studentName,
+                        money: 1500,
+                        position: 0,
+                        properties: [],
+                        color: playerColors[i],
+                        token: playerTokens[i]
+                    });
+                });
+            } else {
+                // إنشاء لاعبين من الأسماء اليدوية
+                players = [];
+                for (let i = 0; i < requiredCount; i++) {
+                    const nameInput = document.getElementById(`player-${i}-name`);
+                    const playerName = nameInput ? nameInput.value.trim() : `لاعب ${i+1}`;
+                    
+                    if (!playerName) {
+                        alert(`⚠️ يرجى إدخال اسم للاعب ${i+1}`);
+                        return;
+                    }
+                    
+                    players.push({
+                        id: i,
+                        name: playerName,
+                        money: 1500,
+                        position: 0,
+                        properties: [],
+                        color: playerColors[i],
+                        token: playerTokens[i]
+                    });
                 }
             }
             
-            // تعيين عدد اللاعبين
-            document.getElementById('player-count').value = selectedStudents.length;
+            // التحقق من عدم تكرار الأسماء
+            const names = players.map(p => p.name);
+            const uniqueNames = new Set(names);
+            if (uniqueNames.size !== names.length) {
+                alert('⚠️ لا يمكن أن يكون هناك لاعبان بنفس الاسم!');
+                return;
+            }
             
-            // إغلاق نافذة الإعداد وبدء اللعبة
-            setupModal.style.display = 'none';
-            startGame();
+            // بدء اللعبة
+            console.log('🎮 بدء اللعبة مع اللاعبين:', players);
+            initGame();
+        }
+
+        // إظهار تحديد الطلاب
+        function showStudentSelection() {
+            const studentSelectionContainer = document.getElementById('student-selection-container');
+            const manualEntryContainer = document.getElementById('manual-entry-container');
+            
+            if (studentSelectionContainer) {
+                studentSelectionContainer.style.display = 'block';
+            }
+            if (manualEntryContainer) {
+                manualEntryContainer.style.display = 'none';
+            }
+            
+            // تحديث قوائم الطلاب إذا كانت البيانات متوفرة
+            if (studentData) {
+                populateClassOptions(studentData);
+            }
+        }
+
+        // إظهار الإدخال اليدوي
+        function showManualEntry() {
+            const studentSelectionContainer = document.getElementById('student-selection-container');
+            const manualEntryContainer = document.getElementById('manual-entry-container');
+            
+            if (studentSelectionContainer) {
+                studentSelectionContainer.style.display = 'none';
+            }
+            if (manualEntryContainer) {
+                manualEntryContainer.style.display = 'block';
+            }
+            
+            // إنشاء حقول الإدخال اليدوي
+            createManualPlayerInputs();
+        }
+
+        // إنشاء حقول الإدخال اليدوي
+        function createManualPlayerInputs() {
+            const container = document.getElementById('manual-entry-container');
+            if (!container) return;
+            
+            const playerCount = parseInt(document.getElementById('player-count').value);
+            
+            container.innerHTML = `
+                <h4 style="color: var(--oman-red); margin-bottom: 15px;">✍️ أدخل أسماء اللاعبين:</h4>
+                <div class="manual-inputs">
+                    ${Array.from({length: playerCount}, (_, i) => `
+                        <div class="player-input-group">
+                            <label for="player-${i}-name">لاعب ${i+1}:</label>
+                            <input type="text" id="player-${i}-name" placeholder="اسم اللاعب ${i+1}" 
+                                   style="width: 100%; padding: 8px; border: 2px solid #ddd; border-radius: 5px; margin-top: 5px;">
+                        </div>
+                    `).join('')}
+                </div>
+            `;
         }
 
         // معالج حدث تغيير الصف
@@ -2647,25 +2863,6 @@
         window.addEventListener('DOMContentLoaded', () => {
             console.log('🎮 بدء تحميل لعبة مونوبولي عُمان...');
             
-            // التحقق من وجود العناصر المطلوبة
-            const elementsToCheck = [
-                'selected-students-list',
-                'selection-status', 
-                'selection-count',
-                'required-count',
-                'class-selector',
-                'selection-mode'
-            ];
-            
-            elementsToCheck.forEach(id => {
-                const element = document.getElementById(id);
-                if (element) {
-                    console.log(`✅ العنصر ${id} موجود`);
-                } else {
-                    console.error(`❌ العنصر ${id} غير موجود`);
-                }
-            });
-            
             // تحميل بيانات الطلاب
             loadStudentData();
             
@@ -2673,14 +2870,79 @@
             setupPlayers();
             setupModal.style.display = 'block';
             
+            // تهيئة الأزرار الرئيسية
+            initializeButtons();
+            
             // تعيين الإدخال اليدوي كافتراضي
-            manualEntryBtn.style.background = 'linear-gradient(135deg, var(--oman-red) 0%, #a01717 100%)';
+            const manualEntryBtn = document.getElementById('manual-entry-btn');
+            if (manualEntryBtn) {
+                manualEntryBtn.style.background = 'linear-gradient(135deg, var(--oman-red) 0%, #a01717 100%)';
+            }
             
             // تحديث عداد الاختيار
             updateSelectionStatus();
             
             console.log('🎮 تم تحميل اللعبة بنجاح!');
         });
+
+        // تهيئة الأزرار الرئيسية
+        function initializeButtons() {
+            console.log('🔧 تهيئة الأزرار...');
+            
+            // زر استخدام بيانات الطلاب
+            const useStudentDataBtn = document.getElementById('student-selection-btn');
+            if (useStudentDataBtn) {
+                useStudentDataBtn.addEventListener('click', function() {
+                    console.log('🎯 تم النقر على زر استخدام بيانات الطلاب');
+                    useStudentData = true;
+                    showStudentSelection();
+                    this.style.background = 'linear-gradient(135deg, var(--oman-green) 0%, var(--light-green) 100%)';
+                    
+                    const manualBtn = document.getElementById('manual-entry-btn');
+                    if (manualBtn) {
+                        manualBtn.style.background = 'linear-gradient(135deg, #6c757d 0%, #5a6268 100%)';
+                    }
+                });
+            }
+            
+            // زر الإدخال اليدوي
+            const manualEntryBtn = document.getElementById('manual-entry-btn');
+            if (manualEntryBtn) {
+                manualEntryBtn.addEventListener('click', function() {
+                    console.log('🎯 تم النقر على زر الإدخال اليدوي');
+                    useStudentData = false;
+                    showManualEntry();
+                    this.style.background = 'linear-gradient(135deg, var(--oman-red) 0%, #a01717 100%)';
+                    
+                    const studentBtn = document.getElementById('student-selection-btn');
+                    if (studentBtn) {
+                        studentBtn.style.background = 'linear-gradient(135deg, #6c757d 0%, #5a6268 100%)';
+                    }
+                });
+            }
+            
+            // زر بدء اللعبة
+            const startGameBtn = document.querySelector('button[onclick="startGameWithSelectedStudents()"]');
+            if (startGameBtn) {
+                startGameBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('🎯 تم النقر على زر بدء اللعبة');
+                    startGameWithSelectedStudents();
+                });
+            }
+            
+            // تهيئة أزرار التحكم بعدد اللاعبين
+            const playerCountSelect = document.getElementById('player-count');
+            if (playerCountSelect) {
+                playerCountSelect.addEventListener('change', function() {
+                    console.log('🎯 تم تغيير عدد اللاعبين إلى:', this.value);
+                    setupPlayers();
+                    updateSelectionStatus();
+                });
+            }
+            
+            console.log('✅ تم تهيئة الأزرار بنجاح');
+        }
 
         // ===== دوال إضافية محسنة للعبة =====
 
