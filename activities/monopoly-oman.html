@@ -2,3375 +2,1280 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مونوبولي سلطنة عُمان</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="مونوبولي سلطنة عُمان - لعبة العقارات التعليمية">
+    <title>مونوبولي سلطنة عُمان - لعبة العقارات العُمانية</title>
+    
+    <!-- الخطوط والأيقونات -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- المكتبات الخارجية -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    
+    <!-- الأنماط والسكريبت الموحد -->
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="../assets/js/activityUtils.js"></script>
+
     <style>
+        /* ===========================================
+           نظام الألوان العُماني المتقدم
+        =========================================== */
         :root {
-            --oman-red: #db1f1f;
-            --oman-green: #008000;
-            --oman-white: #ffffff;
-            --gold: #FFD700;
-            --dark-blue: #003366;
-            --light-green: #00a65a;
-            --shadow: 0 4px 15px rgba(0,0,0,0.1);
+            /* الألوان العُمانية الرئيسية */
+            --oman-red: #DC143C;
+            --oman-green: #228B22;
+            --oman-white: #FFFFFF;
+            --accent-gold: #FFD700;
+            
+            /* تدرجات مونوبولي مخصصة */
+            --gradient-red: linear-gradient(135deg, var(--oman-red) 0%, #B71C1C 100%);
+            --gradient-green: linear-gradient(135deg, var(--oman-green) 0%, #1B5E20 100%);
+            --gradient-gold: linear-gradient(135deg, var(--accent-gold) 0%, #F57C00 100%);
+            --gradient-background: linear-gradient(135deg, #0F172A 0%, #1E293B 25%, #334155 50%, #475569 75%, #64748B 100%);
+            
+            /* ألوان المونوبولي التقليدية */
+            --property-brown: #8B4513;
+            --property-light-blue: #87CEEB;
+            --property-pink: #FF1493;
+            --property-orange: #FF8C00;
+            --property-red: var(--oman-red);
+            --property-yellow: #FFD700;
+            --property-green: var(--oman-green);
+            --property-dark-blue: #191970;
+            --utility-color: #F0F8FF;
+            --railroad-color: #2F4F4F;
+            
+            /* ألوان النظام */
+            --success-color: #22C55E;
+            --warning-color: #F59E0B;
+            --danger-color: #EF4444;
+            --info-color: #3B82F6;
+            
+            /* ألوان النص والخلفيات */
+            --text-primary: #FFFFFF;
+            --text-secondary: #E2E8F0;
+            --text-muted: #94A3B8;
+            --text-dark: #1E293B;
+            --text-board: #1F2937;
+            
+            /* خلفيات وأسطح */
+            --background-primary: #0F172A;
+            --background-secondary: #1E293B;
+            --surface-elevated: rgba(255, 255, 255, 0.1);
+            --surface-glass: rgba(255, 255, 255, 0.05);
+            --surface-board: rgba(255, 255, 255, 0.98);
+            
+            /* ظلال وتأثيرات */
+            --shadow-small: 0 2px 8px rgba(0, 0, 0, 0.15);
+            --shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.25);
+            --shadow-large: 0 8px 32px rgba(0, 0, 0, 0.35);
+            --shadow-glow-red: 0 0 24px rgba(220, 20, 60, 0.4);
+            --shadow-glow-green: 0 0 24px rgba(34, 139, 34, 0.4);
+            --shadow-glow-gold: 0 0 24px rgba(255, 215, 0, 0.4);
+            --shadow-board: 0 12px 48px rgba(0, 0, 0, 0.4);
+            
+            /* أنصاف أقطار الحدود */
+            --border-radius-small: 8px;
+            --border-radius-medium: 12px;
+            --border-radius-large: 16px;
+            --border-radius-xl: 24px;
+            
+            /* انتقالات */
+            --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-normal: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ===========================================
+           الإعدادات العامة
+        =========================================== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
         body {
             font-family: 'Cairo', sans-serif;
-            background: linear-gradient(135deg, #f0f4f8 0%, #e8f5e8 100%);
+            background: var(--gradient-background);
+            background-attachment: fixed;
             margin: 0;
             padding: 0;
-            color: #333;
+            color: var(--text-primary);
             min-height: 100vh;
+            position: relative;
+            line-height: 1.6;
+            overflow-x: hidden;
         }
 
-        /* أزرار التحكم */
+        /* خلفية متحركة متطورة */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 25% 25%, rgba(220, 20, 60, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(34, 139, 34, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.08) 0%, transparent 50%);
+            animation: monopolyFlow 25s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes monopolyFlow {
+            0%, 100% { 
+                transform: scale(1) rotate(0deg);
+                opacity: 0.6;
+            }
+            25% { 
+                transform: scale(1.2) rotate(90deg);
+                opacity: 0.8;
+            }
+            50% { 
+                transform: scale(0.8) rotate(180deg);
+                opacity: 0.4;
+            }
+            75% { 
+                transform: scale(1.1) rotate(270deg);
+                opacity: 0.7;
+            }
+        }
+
+        /* ===========================================
+           أزرار التحكم
+        =========================================== */
         .control-btn {
             position: fixed;
             top: 15px;
-            font-size: 24px;
-            background: none;
-            border: none;
+            font-size: 20px;
+            background: var(--surface-glass);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
             cursor: pointer;
-            transition: all 0.3s ease;
-            padding: 8px;
+            transition: var(--transition-normal);
+            padding: 12px;
             z-index: 2147483647;
             border-radius: 50%;
-            background-color: rgba(255,255,255,0.9);
-            box-shadow: var(--shadow);
+            backdrop-filter: blur(16px);
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-medium);
+            font-weight: 600;
         }
         
         .control-btn:hover {
-            transform: scale(1.1);
-            background-color: var(--oman-red);
-            color: white;
-        }
-        
-        #homeBtn {
-            right: 15px;
-        }
-        
-        #fullscreenBtn {
-            left: 15px;
-        }
-
-        header {
-            background: linear-gradient(135deg, var(--oman-red) 0%, #a01717 100%);
+            transform: translateY(-3px) scale(1.1);
+            background: var(--gradient-red);
             color: var(--oman-white);
-            padding: 1.5rem;
+            border-color: var(--oman-red);
+            box-shadow: var(--shadow-glow-red);
+        }
+
+        #returnToIndex {
+            right: 20px;
+        }
+
+        #soundToggle {
+            right: 80px;
+        }
+
+        /* ===========================================
+           الحاوية الرئيسية
+        =========================================== */
+        .monopoly-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* العنوان الرئيسي */
+        .game-title {
             text-align: center;
-            box-shadow: var(--shadow);
-            position: relative;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: var(--surface-glass);
+            border-radius: var(--border-radius-xl);
+            backdrop-filter: blur(16px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow-large);
         }
 
-        header h1 {
-            margin: 0 0 10px 0;
-            font-size: 2.5rem;
+        .game-title h1 {
+            font-size: 3rem;
             font-weight: 700;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
-        .oman-btn {
-            background: linear-gradient(135deg, var(--oman-green) 0%, var(--light-green) 100%);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            margin: 8px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow);
+        .game-title p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        /* ===========================================
+           لوحة اللعبة
+        =========================================== */
+        .game-board {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            aspect-ratio: 1;
+            background: var(--surface-board);
+            border-radius: var(--border-radius-large);
+            box-shadow: var(--shadow-board);
             position: relative;
+            border: 4px solid var(--oman-red);
             overflow: hidden;
         }
 
-        .oman-btn::before {
-            content: '';
+        /* مربعات اللوحة */
+        .board-square {
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .oman-btn:hover::before {
-            left: 100%;
-        }
-
-        .oman-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-        }
-
-        .oman-btn:active {
-            transform: translateY(0);
-        }
-
-        .game-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            max-width: 1400px;
-            margin: 30px auto;
-            gap: 30px;
-            padding: 0 20px;
-        }
-
-        .game-board {
-            width: 700px;
-            height: 700px;
-            background: linear-gradient(135deg, #f9f3e9 0%, #fff8e1 100%);
-            position: relative;
-            border: 15px solid var(--dark-blue);
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            display: grid;
-            grid-template-columns: repeat(11, 1fr);
-            grid-template-rows: repeat(11, 1fr);
-            animation: boardGlow 3s ease-in-out infinite alternate;
-        }
-
-        @keyframes boardGlow {
-            0% { box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-            100% { box-shadow: 0 10px 40px rgba(219, 31, 31, 0.3); }
-        }
-
-        .board-cell {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 1px solid #ddd;
-            font-size: 11px;
-            text-align: center;
-            padding: 3px;
-            position: relative;
-            background-color: rgba(255,255,255,0.9);
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-
-        .corner-cell {
-            background: linear-gradient(135deg, var(--oman-red) 0%, #a01717 100%);
-            color: white;
-            font-weight: bold;
-            font-size: 12px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-        }
-
-        .property-cell {
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .property-cell:hover {
-            transform: scale(1.1);
-            z-index: 10;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-
-        .player-controls {
+            border: 2px solid var(--text-dark);
+            background: white;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, white 0%, #f8f9fa 100%);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            width: 280px;
-            border: 3px solid var(--oman-green);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-align: center;
+            padding: 5px;
+            transition: var(--transition-normal);
+            cursor: pointer;
+            color: var(--text-dark);
         }
 
-        .player-controls h3 {
-            color: var(--oman-red);
-            margin-bottom: 20px;
-            font-size: 1.4rem;
-            font-weight: 700;
+        .board-square:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-medium);
+            z-index: 10;
         }
 
-        .dice-container {
-            display: flex;
-            justify-content: space-around;
-            width: 100%;
-            margin: 25px 0;
-            gap: 15px;
+        /* مربعات الزوايا */
+        .corner-square {
+            width: 120px;
+            height: 120px;
         }
 
-        .dice {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, white 0%, #f0f0f0 100%);
-            border: 3px solid var(--oman-red);
-            border-radius: 12px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 28px;
-            font-weight: bold;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-            animation: diceFloat 2s ease-in-out infinite alternate;
+        /* مربعات الجانب */
+        .side-square {
+            width: 80px;
+            height: 120px;
         }
 
-        @keyframes diceFloat {
-            0% { transform: translateY(0px); }
-            100% { transform: translateY(-5px); }
+        /* ألوان المجموعات */
+        .brown { background-color: var(--property-brown) !important; color: white; }
+        .light-blue { background-color: var(--property-light-blue) !important; }
+        .pink { background-color: var(--property-pink) !important; color: white; }
+        .orange { background-color: var(--property-orange) !important; }
+        .red { background-color: var(--property-red) !important; color: white; }
+        .yellow { background-color: var(--property-yellow) !important; }
+        .green { background-color: var(--property-green) !important; color: white; }
+        .dark-blue { background-color: var(--property-dark-blue) !important; color: white; }
+        .utility { background-color: var(--utility-color) !important; }
+        .railroad { background-color: var(--railroad-color) !important; color: white; }
+
+        /* مواضع المربعات */
+        /* الصف السفلي */
+        .square-0 { bottom: 0; right: 0; }
+        .square-1 { bottom: 0; right: 120px; }
+        .square-2 { bottom: 0; right: 200px; }
+        .square-3 { bottom: 0; right: 280px; }
+        .square-4 { bottom: 0; right: 360px; }
+        .square-5 { bottom: 0; right: 440px; }
+        .square-6 { bottom: 0; right: 520px; }
+        .square-7 { bottom: 0; right: 600px; }
+        .square-8 { bottom: 0; right: 680px; }
+        .square-9 { bottom: 0; right: 760px; }
+        .square-10 { bottom: 0; left: 0; }
+
+        /* الصف الأيسر */
+        .square-11 { left: 0; bottom: 120px; transform: rotate(90deg); }
+        .square-12 { left: 0; bottom: 200px; transform: rotate(90deg); }
+        .square-13 { left: 0; bottom: 280px; transform: rotate(90deg); }
+        .square-14 { left: 0; bottom: 360px; transform: rotate(90deg); }
+        .square-15 { left: 0; bottom: 440px; transform: rotate(90deg); }
+        .square-16 { left: 0; bottom: 520px; transform: rotate(90deg); }
+        .square-17 { left: 0; bottom: 600px; transform: rotate(90deg); }
+        .square-18 { left: 0; bottom: 680px; transform: rotate(90deg); }
+        .square-19 { left: 0; bottom: 760px; transform: rotate(90deg); }
+        .square-20 { top: 0; left: 0; }
+
+        /* الصف العلوي */
+        .square-21 { top: 0; left: 120px; transform: rotate(180deg); }
+        .square-22 { top: 0; left: 200px; transform: rotate(180deg); }
+        .square-23 { top: 0; left: 280px; transform: rotate(180deg); }
+        .square-24 { top: 0; left: 360px; transform: rotate(180deg); }
+        .square-25 { top: 0; left: 440px; transform: rotate(180deg); }
+        .square-26 { top: 0; left: 520px; transform: rotate(180deg); }
+        .square-27 { top: 0; left: 600px; transform: rotate(180deg); }
+        .square-28 { top: 0; left: 680px; transform: rotate(180deg); }
+        .square-29 { top: 0; left: 760px; transform: rotate(180deg); }
+        .square-30 { top: 0; right: 0; }
+
+        /* الصف الأيمن */
+        .square-31 { right: 0; top: 120px; transform: rotate(270deg); }
+        .square-32 { right: 0; top: 200px; transform: rotate(270deg); }
+        .square-33 { right: 0; top: 280px; transform: rotate(270deg); }
+        .square-34 { right: 0; top: 360px; transform: rotate(270deg); }
+        .square-35 { right: 0; top: 440px; transform: rotate(270deg); }
+        .square-36 { right: 0; top: 520px; transform: rotate(270deg); }
+        .square-37 { right: 0; top: 600px; transform: rotate(270deg); }
+        .square-38 { right: 0; top: 680px; transform: rotate(270deg); }
+        .square-39 { right: 0; top: 760px; transform: rotate(270deg); }
+
+        /* ===========================================
+           عناصر تحكم اللعبة
+        =========================================== */
+        .game-controls {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: var(--surface-glass);
+            border-radius: var(--border-radius-large);
+            backdrop-filter: blur(16px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
         }
 
-        .dice:hover {
-            transform: scale(1.1) translateY(-5px);
+        .control-button {
+            background: var(--gradient-red);
+            color: var(--text-primary);
+            border: none;
+            padding: 15px 30px;
+            margin: 10px;
+            border-radius: var(--border-radius-medium);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-normal);
+            font-family: 'Cairo', sans-serif;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .control-button:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-glow-red);
+        }
+
+        .control-button.green {
+            background: var(--gradient-green);
+        }
+
+        .control-button.green:hover {
+            box-shadow: var(--shadow-glow-green);
+        }
+
+        .control-button.gold {
+            background: var(--gradient-gold);
+            color: var(--text-dark);
+        }
+
+        .control-button.gold:hover {
+            box-shadow: var(--shadow-glow-gold);
+        }
+
+        /* ===========================================
+           معلومات اللاعبين
+        =========================================== */
+        .players-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .player-card {
+            background: var(--surface-glass);
+            border-radius: var(--border-radius-large);
+            padding: 20px;
+            backdrop-filter: blur(16px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: var(--transition-normal);
+        }
+
+        .player-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-large);
+            border-color: var(--oman-red);
+        }
+
+        .player-card h3 {
+            color: var(--accent-gold);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            font-weight: 600;
         }
 
         .player-info {
-            background: linear-gradient(135deg, white 0%, #f8f9fa 100%);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            width: 280px;
-            border: 3px solid var(--gold);
-        }
-
-        .current-player {
-            margin-bottom: 25px;
-            padding-bottom: 25px;
-            border-bottom: 2px solid #eee;
-            text-align: center;
-        }
-
-        .current-player h3 {
-            color: var(--oman-red);
-            font-size: 1.3rem;
+            display: flex;
+            justify-content: space-between;
             margin-bottom: 10px;
-            font-weight: 700;
+            color: var(--text-secondary);
         }
 
-        .current-player p {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--oman-green);
-        }
-
-        #properties-list {
-            list-style-type: none;
-            padding: 0;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        #properties-list li {
-            padding: 8px 12px;
-            margin: 5px 0;
-            background-color: rgba(0, 128, 0, 0.1);
-            border-right: 4px solid var(--oman-green);
-            border-radius: 5px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        #properties-list li:hover {
-            background-color: rgba(0, 128, 0, 0.2);
-            transform: translateX(5px);
-        }
-
-        .player-token {
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            position: absolute;
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 5;
-            border: 3px solid white;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
-            animation: tokenPulse 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes tokenPulse {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.1); }
-        }
-
-        /* أنماط النوافذ المنبثقة المحدثة */
+        /* ===========================================
+           النوافذ المنبثقة
+        =========================================== */
         .modal {
             display: none;
             position: fixed;
-            z-index: 1000;
+            z-index: 10000;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.8);
-            overflow: auto;
-            backdrop-filter: blur(5px);
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
         }
 
         .modal-content {
-            background: linear-gradient(135deg, #fefefe 0%, #f8f9fa 100%);
-            margin: 3% auto;
+            background: var(--surface-board);
+            margin: 5% auto;
             padding: 30px;
-            border: 5px solid var(--oman-red);
-            border-radius: 20px;
-            width: 85%;
-            max-width: 800px;
+            border-radius: var(--border-radius-xl);
+            width: 90%;
+            max-width: 600px;
             position: relative;
-            animation: modalSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: var(--shadow-large);
+            color: var(--text-dark);
+            animation: modalSlideIn 0.3s ease-out;
         }
 
         @keyframes modalSlideIn {
-            from {opacity: 0; transform: translateY(-100px) scale(0.8);}
-            to {opacity: 1; transform: translateY(0) scale(1);}
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         .close {
-            color: var(--oman-red);
+            color: var(--text-muted);
             float: left;
-            font-size: 32px;
+            font-size: 28px;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s ease;
-            padding: 5px;
-            border-radius: 50%;
+            transition: var(--transition-fast);
         }
 
         .close:hover {
-            background-color: var(--oman-red);
-            color: white;
-            transform: scale(1.2);
-        }
-
-        .modal-header {
-            padding: 15px 0;
-            border-bottom: 3px solid var(--oman-green);
-        }
-
-        .modal-body {
-            padding: 25px 0;
-            max-height: 60vh;
-            overflow-y: auto;
-        }
-
-        .modal-footer {
-            padding: 15px 0;
-            border-top: 3px solid var(--oman-green);
-            text-align: center;
-        }
-
-        .modal h2 {
             color: var(--oman-red);
-            text-align: center;
-            font-size: 2.2rem;
-            margin-bottom: 20px;
-            font-weight: 700;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .modal h3 {
-            color: var(--oman-green);
-            margin-top: 25px;
-            font-weight: 600;
-            font-size: 1.3rem;
-        }
-
-        .close-btn {
-            background: linear-gradient(135deg, var(--oman-red) 0%, #a01717 100%);
-        }
-
-        .close-btn:hover {
-            background: linear-gradient(135deg, #a01717 0%, #8b1414 100%);
-        }
-
-        /* تحسين ألوان العقارات */
-        .property-brown {
-            background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
-            color: white;
-            border: 2px solid #654321;
-        }
-
-        .property-lightblue {
-            background: linear-gradient(135deg, #ADD8E6 0%, #87CEEB 100%);
-            color: #003366;
-            border: 2px solid #4682B4;
-        }
-
-        .property-pink {
-            background: linear-gradient(135deg, #FFC0CB 0%, #FFB6C1 100%);
-            color: #8B008B;
-            border: 2px solid #DA70D6;
-        }
-
-        .property-orange {
-            background: linear-gradient(135deg, #FFA500 0%, #FF8C00 100%);
-            color: white;
-            border: 2px solid #FF6347;
-        }
-
-        .property-red {
-            background: linear-gradient(135deg, #FF0000 0%, #DC143C 100%);
-            color: white;
-            border: 2px solid #B22222;
-        }
-
-        .property-yellow {
-            background: linear-gradient(135deg, #FFFF00 0%, #FFD700 100%);
-            color: #8B4513;
-            border: 2px solid #DAA520;
-        }
-
-        .property-green {
-            background: linear-gradient(135deg, #008000 0%, #228B22 100%);
-            color: white;
-            border: 2px solid #006400;
-        }
-
-        .property-darkblue {
-            background: linear-gradient(135deg, #00008B 0%, #191970 100%);
-            color: white;
-            border: 2px solid #000080;
-        }
-
-        .property-station {
-            background: linear-gradient(135deg, #333333 0%, #555555 100%);
-            color: white;
-            border: 2px solid #000000;
-        }
-
-        .property-utility {
-            background: linear-gradient(135deg, #FFFFFF 0%, #F0F0F0 100%);
-            border: 3px dashed var(--oman-green);
-            color: var(--oman-green);
-        }
-
-        /* تحسينات إضافية لواجهة اختيار الطلاب */
-        .student-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 10px;
-            padding: 15px;
-        }
-
-        .student-card {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border: 2px solid var(--oman-green);
-            border-radius: 10px;
-            padding: 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-
-        .student-card:hover {
-            background: linear-gradient(135deg, var(--oman-green) 0%, var(--light-green) 100%);
-            color: white;
-            transform: translateY(-3px);
-            box-shadow: var(--shadow);
-        }
-
-        .student-card.selected {
-            background: linear-gradient(135deg, var(--oman-red) 0%, #a01717 100%);
-            color: white;
-            border-color: var(--oman-red);
-        }
-
-        .selected-student-chip {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--oman-green) 0%, var(--light-green) 100%);
-            color: white;
-            padding: 5px 15px;
-            margin: 5px;
-            border-radius: 20px;
-            font-weight: 600;
-            position: relative;
-        }
-
-        .selected-student-chip .remove-btn {
-            background: var(--oman-red);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            margin-right: 8px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        .player-setup-section {
-            background: rgba(0, 128, 0, 0.05);
-            border: 2px solid var(--oman-green);
-            border-radius: 15px;
-            padding: 20px;
-            margin: 15px 0;
-        }
-
-        /* تحسينات إضافية للبحث والتصفية */
-        .search-container {
-            position: relative;
-            display: inline-block;
-        }
-
-        .search-input {
-            padding: 12px 15px;
-            border: 2px solid var(--oman-green);
-            border-radius: 25px;
-            width: 300px;
-            text-align: center;
-            font-family: 'Cairo', sans-serif;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: var(--oman-red);
-            box-shadow: 0 0 10px rgba(219, 31, 31, 0.3);
-            transform: scale(1.02);
-        }
-
-        .student-counter {
-            text-align: center;
-            padding: 12px;
-            background: linear-gradient(135deg, var(--oman-green) 0%, var(--light-green) 100%);
-            color: white;
-            border-radius: 15px;
-            margin-bottom: 15px;
-            font-weight: bold;
-            font-size: 16px;
-            box-shadow: var(--shadow);
-        }
-
-        .selection-status {
-            text-align: center;
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 15px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .selection-complete {
-            background: linear-gradient(135deg, var(--oman-green) 0%, var(--light-green) 100%);
-            color: white;
-        }
-
-        .selection-incomplete {
-            background: linear-gradient(135deg, var(--gold) 0%, #FFB347 100%);
-            color: var(--dark-blue);
-        }
-
-        /* تحسين بطاقات الطلاب */
-        .student-card {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border: 2px solid var(--oman-green);
-            border-radius: 12px;
-            padding: 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .student-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: left 0.6s;
-        }
-
-        .student-card:hover::before {
-            left: 100%;
-        }
-
-        .student-card:hover {
-            background: linear-gradient(135deg, var(--oman-green) 0%, var(--light-green) 100%);
-            color: white;
-            transform: translateY(-5px) scale(1.03);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
-
-        .student-card.selected {
-            background: linear-gradient(135deg, var(--oman-red) 0%, #a01717 100%);
-            color: white;
-            border-color: var(--oman-red);
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(219, 31, 31, 0.4);
-        }
-
-        .student-card.selected::after {
-            content: '✓';
-            position: absolute;
-            top: 5px;
-            left: 5px;
-            background: white;
-            color: var(--oman-red);
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        /* تحسين محدد الصف ونوع الاختيار */
-        #class-selector, #selection-mode {
-            background: linear-gradient(135deg, white 0%, #f8f9fa 100%);
-            border: 2px solid var(--oman-green);
-            border-radius: 20px;
-            padding: 10px 15px;
-            font-family: 'Cairo', sans-serif;
-            font-weight: 600;
-            color: var(--dark-blue);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        #class-selector:focus, #selection-mode:focus {
-            outline: none;
-            border-color: var(--oman-red);
-            box-shadow: 0 0 10px rgba(219, 31, 31, 0.3);
-            transform: scale(1.02);
-        }
-
-        #class-selector option, #selection-mode option {
-            padding: 10px;
-            background: white;
-        }
-
-        /* تحسين حالة الاختيار */
-        #selection-status {
-            border: 2px solid #ddd;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            transition: all 0.3s ease;
-        }
-
-        #selection-status.selection-complete {
-            background: linear-gradient(135deg, var(--oman-green) 0%, var(--light-green) 100%);
-            color: white;
-            border-color: var(--oman-green);
-        }
-
-        #selection-status.selection-incomplete {
-            background: linear-gradient(135deg, var(--gold) 0%, #FFB347 100%);
-            color: var(--dark-blue);
-            border-color: var(--gold);
-        }
-
-        /* تحسين قائمة الطلاب المختارين */
-        #selected-students-list {
-            min-height: 60px;
-            border: 2px solid #ddd;
-            border-radius: 12px;
-            padding: 15px;
-            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-            transition: all 0.3s ease;
-        }
-
-        #selected-students-list.has-students {
-            border-color: var(--oman-green);
-            background: linear-gradient(135deg, #e8f5e8 0%, #ffffff 100%);
-        }
-
-        .selected-student-item {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--oman-green) 0%, var(--light-green) 100%);
-            color: white;
-            padding: 8px 15px;
-            margin: 4px;
-            border-radius: 20px;
-            font-weight: 600;
-            position: relative;
-            animation: studentAppear 0.3s ease;
-        }
-
-        @keyframes studentAppear {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .selected-student-item .remove-btn {
-            background: rgba(255,255,255,0.3);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            margin-right: 8px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.2s ease;
-        }
-
-        .selected-student-item .remove-btn:hover {
-            background: var(--oman-red);
             transform: scale(1.1);
         }
 
-        /* تحسين شريط البحث وعداد الطلاب */
-        .search-input {
-            background: linear-gradient(135deg, white 0%, #f8f9fa 100%);
-            border: 2px solid var(--oman-green);
-            border-radius: 20px;
-            padding: 10px 15px;
-            font-family: 'Cairo', sans-serif;
-            font-weight: 600;
-            color: var(--dark-blue);
-            width: 250px;
-            transition: all 0.3s ease;
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: var(--oman-red);
-            box-shadow: 0 0 10px rgba(219, 31, 31, 0.3);
-            transform: scale(1.02);
-        }
-
-        .student-counter {
-            background: linear-gradient(135deg, var(--gold) 0%, #FFB347 100%);
-            color: var(--dark-blue);
-            padding: 10px 15px;
-            border-radius: 15px;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        /* تحسين خطوات الاختيار */
-        #selection-mode-container {
-            background: linear-gradient(135deg, #e8f5e8 0%, #ffffff 100%);
-            border: 2px solid var(--oman-green);
-            border-radius: 15px;
-            padding: 15px;
-            margin: 15px 0;
-        }
-
-        #manual-selection-container {
-            background: linear-gradient(135deg, #f0f4f8 0%, #ffffff 100%);
-            border: 2px solid var(--oman-green);
-            border-radius: 15px;
-            padding: 20px;
-            margin: 15px 0;
-        }
-
-        #class-info {
-            background: linear-gradient(135deg, var(--gold) 0%, #FFB347 100%);
-            color: var(--dark-blue);
-            padding: 12px 20px;
-            border-radius: 12px;
-            text-align: center;
-            font-weight: bold;
-            margin: 15px 0;
-            border: 2px solid #DAA520;
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .player-dropdown {
-            background: linear-gradient(135deg, white 0%, #f8f9fa 100%);
-            border-radius: 15px;
-            padding: 15px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .player-dropdown:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        }
-
-        .oman-btn.secondary {
-            background: linear-gradient(135deg, var(--gold) 0%, #FFB347 100%);
-            color: var(--dark-blue);
-        }
-        
+        /* ===========================================
+           الاستجابة للأجهزة المحمولة
+        =========================================== */
         @media (max-width: 768px) {
-            .game-container {
-                flex-direction: column;
-                align-items: center;
+            .monopoly-container {
                 padding: 10px;
             }
-            
+
+            .game-title h1 {
+                font-size: 2rem;
+            }
+
+            .game-title p {
+                font-size: 1rem;
+            }
+
             .game-board {
-                width: 90vw;
-                height: 90vw;
-                max-width: 500px;
-                max-height: 500px;
+                max-width: 100%;
             }
-            
-            .player-controls, .player-info {
-                width: 90%;
-                max-width: 400px;
+
+            .corner-square {
+                width: 80px;
+                height: 80px;
             }
-            
-            .setup-form h3 {
-                font-size: 18px;
+
+            .side-square {
+                width: 50px;
+                height: 80px;
             }
-            
+
+            .board-square {
+                font-size: 0.6rem;
+                padding: 3px;
+            }
+
+            /* إعادة تموضع المربعات للشاشات الصغيرة */
+            .square-1 { right: 80px; }
+            .square-2 { right: 130px; }
+            .square-3 { right: 180px; }
+            .square-4 { right: 230px; }
+            .square-5 { right: 280px; }
+            .square-6 { right: 330px; }
+            .square-7 { right: 380px; }
+            .square-8 { right: 430px; }
+            .square-9 { right: 480px; }
+
+            .control-button {
+                padding: 12px 24px;
+                font-size: 1rem;
+                margin: 8px;
+            }
+
+            .players-info {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .game-title {
+                padding: 20px;
+            }
+
+            .game-title h1 {
+                font-size: 1.5rem;
+            }
+
+            .corner-square {
+                width: 60px;
+                height: 60px;
+            }
+
+            .side-square {
+                width: 40px;
+                height: 60px;
+            }
+
+            .board-square {
+                font-size: 0.5rem;
+                padding: 2px;
+            }
+
             .control-btn {
-                font-size: 14px;
-                padding: 10px 20px;
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+                top: 10px;
             }
-        }
 
-        /* ===== أنماط لوحة اللعبة الرئيسية الجديدة ===== */
-        
-        #main-game-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            z-index: 1000;
-            overflow: hidden;
-        }
-        
-        .game-layout {
-            display: flex;
-            width: 100%;
-            height: 100%;
-            padding: 20px;
-            gap: 20px;
-            box-sizing: border-box;
-        }
-        
-        .game-board-section {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .monopoly-board {
-            width: 600px;
-            height: 600px;
-            background: #f0f0f0;
-            border: 3px solid var(--oman-red);
-            border-radius: 10px;
-            position: relative;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        
-        .board-space {
-            position: absolute;
-            background: white;
-            border: 2px solid #333;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            text-align: center;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-        
-        .board-space:hover {
-            background: #f9f9f9;
-            transform: scale(1.05);
-            z-index: 10;
-        }
-        
-        .space-header {
-            font-size: 8px;
-            font-weight: bold;
-            margin-bottom: 2px;
-            color: #333;
-            line-height: 1.1;
-        }
-        
-        .space-price {
-            font-size: 7px;
-            color: var(--oman-red);
-            font-weight: bold;
-        }
-        
-        .space-players {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1px;
-            margin-top: 2px;
-        }
-        
-        .player-token {
-            font-size: 8px !important;
-            width: 16px !important;
-            height: 16px !important;
-            border: 1px solid #fff;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .special-space {
-            background: linear-gradient(135deg, var(--oman-green) 0%, var(--light-green) 100%);
-            color: white;
-        }
-        
-        .game-controls-section {
-            width: 350px;
-            background: rgba(255,255,255,0.95);
-            border-radius: 15px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        
-        .players-panel {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 15px;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        
-        .player-card {
-            background: white;
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 10px;
-            border-left: 4px solid #ddd;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .player-card.current-turn {
-            border-left-color: var(--oman-red);
-            background: linear-gradient(135deg, #fff5f5 0%, #ffeaea 100%);
-            transform: translateX(5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-        }
-        
-        .player-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 8px;
-        }
-        
-        .player-token-display {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        
-        .player-name {
-            font-weight: bold;
-            font-size: 16px;
-            color: #333;
-        }
-        
-        .player-money {
-            font-size: 14px;
-            color: var(--oman-green);
-            font-weight: bold;
-            margin-bottom: 4px;
-        }
-        
-        .player-properties {
-            font-size: 12px;
-            color: #666;
-        }
-        
-        .dice-section {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .roll-dice-button {
-            background: linear-gradient(135deg, var(--oman-red) 0%, #d32f2f 100%);
-            color: white;
-            border: none;
-            border-radius: 25px;
-            padding: 15px 30px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        
-        .roll-dice-button:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-        }
-        
-        .roll-dice-button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-        
-        .dice-display {
-            margin-top: 15px;
-            font-size: 20px;
-        }
-        
-        .dice-result {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        
-        .dice {
-            font-size: 30px;
-            padding: 10px;
-            background: white;
-            border-radius: 8px;
-            border: 2px solid #ddd;
-            min-width: 50px;
-            text-align: center;
-        }
-        
-        .total {
-            background: var(--oman-green);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 16px;
-        }
-        
-        .game-messages {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 15px;
-            max-height: 200px;
-            overflow-y: auto;
-            border: 1px solid #ddd;
-        }
-        
-        .game-message {
-            padding: 8px 12px;
-            margin-bottom: 8px;
-            border-radius: 5px;
-            font-size: 14px;
-            line-height: 1.4;
-        }
-        
-        .game-message.success {
-            background: #d4edda;
-            color: #155724;
-            border-left: 4px solid #28a745;
-        }
-        
-        .game-message.warning {
-            background: #fff3cd;
-            color: #856404;
-            border-left: 4px solid #ffc107;
-        }
-        
-        .game-message.error {
-            background: #f8d7da;
-            color: #721c24;
-            border-left: 4px solid #dc3545;
-        }
-        
-        .game-message.info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border-left: 4px solid #17a2b8;
-        }
-            
-        /* تحسينات للهواتف الذكية */
-        @media (max-width: 768px) {
-            .game-layout {
-                flex-direction: column;
-                padding: 10px;
+            #returnToIndex {
+                right: 10px;
             }
-            
-            .monopoly-board {
-                width: 90vw;
-                height: 90vw;
-                max-width: 400px;
-                max-height: 400px;
-            }
-            
-            .game-controls-section {
-                width: 100%;
-                max-height: 40vh;
-            }
-            
-            .players-panel {
-                max-height: 150px;
-            }
-            
-            .control-btn {
-                font-size: 14px;
-                padding: 10px 20px;
-            }
-            
-            header h1 {
-                font-size: 1.8rem;
-            }
-        }
 
-        /* تأثيرات إضافية */
-        .game-board:hover {
-            transform: scale(1.02);
-            transition: transform 0.3s ease;
-        }
-
-        .oman-btn.primary {
-            background: linear-gradient(135deg, var(--oman-red) 0%, #a01717 100%);
-        }
-
-        .oman-btn.secondary {
-            background: linear-gradient(135deg, var(--gold) 0%, #FFB347 100%);
-            color: var(--dark-blue);
-        }
-        /* تحسينات للنظام الجديد */
-        #start-game-container {
-            animation: fadeInUp 0.5s ease;
-        }
-        
-        #start-game-container button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0,128,0,0.3);
-        }
-        
-        .selection-step-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            color: var(--oman-green);
-            margin-bottom: 15px;
-        }
-        
-        .step-indicator {
-            background: var(--oman-green);
-            color: white;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-        
-        .step-indicator.completed {
-            background: var(--light-green);
-        }
-        
-        .step-indicator.active {
-            background: var(--gold);
-            animation: pulse 1.5s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-        
-        /* تأثيرات الاختيار العشوائي */
-        @keyframes bounceIn {
-            0% { 
-                transform: scale(0.3);
-                opacity: 0;
-            }
-            50% { 
-                transform: scale(1.05);
-                opacity: 0.8;
-            }
-            100% { 
-                transform: scale(1);
-                opacity: 1;
+            #soundToggle {
+                right: 60px;
             }
         }
     </style>
 </head>
+
 <body>
-    <!-- أزرار التحكم -->
-    <button class="control-btn" id="homeBtn" title="العودة للصفحة الرئيسية">🏠</button>
-    <button class="control-btn" id="fullscreenBtn" title="ملء الشاشة/الخروج">⛶</button>
+    <!-- أزرار التحكم العلوية -->
+    <button id="returnToIndex" class="control-btn" title="العودة للصفحة الرئيسية">
+        <i class="fas fa-home"></i>
+    </button>
+    <button id="soundToggle" class="control-btn" title="تشغيل/إيقاف الصوت">
+        <i class="fas fa-volume-up"></i>
+    </button>
 
-    <header>
-        <h1>🏰 مونوبولي سلطنة عُمان 🎲</h1>
-        <p>اكتشف معالم عُمان الجميلة واستثمر في أشهر المواقع السياحية</p>
-        <button id="help-btn" class="oman-btn">📚 تعليمات اللعبة</button>
-    </header>
-
-    <main>
-        <div class="game-container">
-            <div class="game-board" id="game-board">
-                <!-- سيتم توليد لوحة اللعب ديناميكيًا -->
-            </div>
-
-            <div class="player-controls">
-                <h3>🎮 تحكم اللاعب</h3>
-                <div class="dice-container">
-                    <div class="dice" id="dice1">🎲</div>
-                    <div class="dice" id="dice2">🎲</div>
-                </div>
-                <button id="roll-btn" class="oman-btn primary">🎯 اطر النرد</button>
-                <button id="end-turn-btn" class="oman-btn secondary">⏭️ انهي دورك</button>
-            </div>
-
-            <div class="player-info">
-                <div class="current-player">
-                    <h3>👤 اللاعب الحالي: <span id="current-player-name">...</span></h3>
-                    <p>💰 الرصيد: <span id="current-player-balance">0</span> ريال عُماني</p>
-                </div>
-                <div class="properties-owned">
-                    <h4>🏘️ العقارات المملوكة:</h4>
-                    <ul id="properties-list"></ul>
-                </div>
-            </div>
+    <!-- الحاوية الرئيسية -->
+    <div class="monopoly-container">
+        <!-- العنوان الرئيسي -->
+        <div class="game-title">
+            <h1><i class="fas fa-building"></i> مونوبولي سلطنة عُمان</h1>
+            <p>لعبة العقارات العُمانية التعليمية - استكشف معالم سلطنة عُمان الجميلة</p>
         </div>
-    </main>
 
-    <!-- نافذة التعليمات المنبثقة -->
-    <div id="help-modal" class="modal">
+        <!-- لوحة اللعبة -->
+        <div class="game-board" id="gameBoard">
+            <!-- مربعات اللوحة سيتم إنشاؤها بواسطة JavaScript -->
+        </div>
+
+        <!-- عناصر تحكم اللعبة -->
+        <div class="game-controls">
+            <button class="control-button" id="startGame">
+                <i class="fas fa-play"></i> بدء اللعبة
+            </button>
+            <button class="control-button green" id="rollDice">
+                <i class="fas fa-dice"></i> رمي النرد
+            </button>
+            <button class="control-button gold" id="endTurn">
+                <i class="fas fa-exchange-alt"></i> إنهاء الدور
+            </button>
+            <button class="control-button" id="showRules">
+                <i class="fas fa-book"></i> قواعد اللعبة
+            </button>
+        </div>
+
+        <!-- معلومات اللاعبين -->
+        <div class="players-info" id="playersInfo">
+            <!-- معلومات اللاعبين سيتم إنشاؤها بواسطة JavaScript -->
+        </div>
+    </div>
+
+    <!-- النوافذ المنبثقة -->
+    <!-- نافذة قواعد اللعبة -->
+    <div id="rulesModal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>تعليمات لعبة مونوبولي عُمان</h2>
-            <div class="modal-body">
-                <h3>🎲 كيفية اللعب:</h3>
-                <p>1. تبدأ اللعبة باختيار عدد اللاعبين وأسمائهم.</p>
-                <p>2. يرمي اللاعب النرد ويتحرك حسب العدد الظاهر.</p>
-                <p>3. عند الوقوف على عقار غير مملوك، يمكنك شراؤه أو بيعه في المزاد.</p>
-                <p>4. إذا كان العقار مملوكًا لخصم، تدفع له إيجارًا حسب قيمة المربع.</p>
+            <span class="close" data-modal="rulesModal">&times;</span>
+            <h2><i class="fas fa-book"></i> قواعد لعبة مونوبولي عُمان</h2>
+            <div style="max-height: 400px; overflow-y: auto; margin-top: 20px;">
+                <h3>🎯 الهدف من اللعبة:</h3>
+                <p>شراء العقارات العُمانية وتطويرها لتحقيق أكبر ربح ممكن.</p>
                 
-                <h3>🏰 المعالم العُمانية:</h3>
-                <p>تحتوي اللعبة على أشهر المعالم في عُمان مثل:</p>
+                <h3>🎲 كيفية اللعب:</h3>
                 <ul>
-                    <li>قصر العلم</li>
-                    <li>سوق مطرح</li>
-                    <li>جبال الحجر</li>
-                    <li>وادي شاب</li>
-                    <li>قلعة نزوى</li>
-                    <li>شاطئ المغسيل</li>
+                    <li>كل لاعب يبدأ بمبلغ 1500 ريال عُماني</li>
+                    <li>ارمي النرد وتحرك على اللوحة</li>
+                    <li>اشتر العقارات التي تهبط عليها</li>
+                    <li>اجمع الإيجار من اللاعبين الآخرين</li>
+                    <li>طور عقاراتك لزيادة الإيجار</li>
                 </ul>
                 
-                <h3>💰 العملة:</h3>
-                <p>تستخدم اللعبة الريال العُماني كعملة رئيسية.</p>
+                <h3>🏠 أنواع المربعات:</h3>
+                <ul>
+                    <li><strong>العقارات:</strong> يمكن شراؤها وتطويرها</li>
+                    <li><strong>المحطات:</strong> شركات النقل العُمانية</li>
+                    <li><strong>المرافق:</strong> الكهرباء والمياه</li>
+                    <li><strong>الضرائب:</strong> ادفع المبلغ المحدد</li>
+                    <li><strong>الفرصة والصندوق:</strong> اسحب بطاقة</li>
+                </ul>
                 
                 <h3>🏆 الفوز:</h3>
-                <p>يفوز آخر لاعب قادر على دفع ديونه وتبقى لديه أموال وعقارات.</p>
-            </div>
-            <div class="modal-footer">
-                <button class="oman-btn close-btn">حسناً</button>
+                <p>آخر لاعب يبقى في اللعبة (لم يفلس) يكون الفائز!</p>
             </div>
         </div>
     </div>
 
-    <!-- نافذة اختيار اللاعبين -->
-    <div id="setup-modal" class="modal">
+    <!-- نافذة معلومات العقار -->
+    <div id="propertyModal" class="modal">
         <div class="modal-content">
-            <h2>🎮 إعداد اللعبة</h2>
-            <div class="modal-body">
-                <div id="player-setup">
-                    <h3>اختر عدد اللاعبين (2-6):</h3>
-                    <select id="player-count" class="oman-btn" style="width: 200px; text-align: center;">
-                        <option value="2">2 لاعبين</option>
-                        <option value="3">3 لاعبين</option>
-                        <option value="4">4 لاعبين</option>
-                        <option value="5">5 لاعبين</option>
-                        <option value="6">6 لاعبين</option>
-                    </select>
-                    
-                    <div style="margin: 20px 0;">
-                        <button id="use-student-data-btn" class="oman-btn secondary">📚 استخدام قائمة الصف</button>
-                        <button id="manual-entry-btn" class="oman-btn">✏️ إدخال يدوي</button>
-                    </div>
-                    
-                    <!-- قسم استخدام بيانات الطلاب -->
-                    <div id="student-selection-section" style="display: none;">
-                        <h4>🎯 اختيار الطلاب من القائمة:</h4>
-                        
-                        <!-- الخطوة 1: محدد الصف -->
-                        <div style="margin: 15px 0; text-align: center;">
-                            <label for="class-selector" style="display: block; margin-bottom: 10px; font-weight: bold; color: var(--oman-green);">📋 الخطوة 1: اختر الصف</label>
-                            <select id="class-selector" class="oman-btn" style="width: 250px; text-align: center;">
-                                <option value="">-- اختر الصف --</option>
-                            </select>
-                        </div>
-                        
-                        <!-- الخطوة 2: نوع الاختيار (يظهر بعد اختيار الصف) -->
-                        <div id="selection-mode-container" style="margin: 15px 0; text-align: center; display: none;">
-                            <label for="selection-mode" style="display: block; margin-bottom: 10px; font-weight: bold; color: var(--oman-green);">⚙️ الخطوة 2: اختر طريقة الاختيار</label>
-                            <select id="selection-mode" class="oman-btn" style="width: 280px; text-align: center;">
-                                <option value="">-- اختر طريقة الاختيار --</option>
-                                <option value="manual">👆 اختيار يدوي من قوائم منسدلة</option>
-                                <option value="grid">🎯 اختيار تفاعلي من الشبكة</option>
-                                <option value="free">🆓 أسماء افتراضية (لاعب 1، لاعب 2...)</option>
-                            </select>
-                        </div>
-                        
-                        <!-- شبكة الطلاب للاختيار التفاعلي -->
-                        <div id="students-grid-container" style="display: none; margin: 20px 0;">
-                            <h5 style="color: var(--oman-green); margin-bottom: 10px;">📋 اختر الطلاب المشاركين:</h5>
-                            <div id="students-grid" style="
-                                display: grid;
-                                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-                                gap: 10px;
-                                max-height: 300px;
-                                overflow-y: auto;
-                                border: 2px solid var(--oman-green);
-                                border-radius: 10px;
-                                padding: 15px;
-                                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-                            ">
-                                <p style="text-align: center; color: #666; grid-column: 1/-1; margin: 20px 0;">
-                                    اختر الصف ونوع الاختيار أولاً لعرض الطلاب
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <!-- الخطوة 3: القوائم المنسدلة للاختيار اليدوي -->
-                        <div id="manual-selection-container" style="display: none; margin: 20px 0;">
-                            <h5 style="color: var(--oman-green); text-align: center;">👥 الخطوة 3: اختر اللاعبين</h5>
-                            <div id="player-dropdowns" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin: 15px 0;">
-                                <!-- سيتم إضافة القوائم المنسدلة هنا -->
-                            </div>
-                        </div>
-                        
-                        <!-- معلومات الصف المختار -->
-                        <div id="class-info" style="display: none; margin: 15px 0; padding: 10px; background: var(--gold); color: var(--dark-blue); border-radius: 8px; text-align: center; font-weight: bold;">
-                        </div>
-                        
-                        <!-- عرض الطلاب المختارين -->
-                        <div id="selected-students-display" style="margin: 15px 0;">
-                            <h5>🎮 اللاعبون المختارون:</h5>
-                            <div id="selected-students-list" style="min-height: 60px; border: 1px solid #ddd; border-radius: 8px; padding: 10px; background: #f9f9f9;">
-                                <p style="color: #666; text-align: center; margin: 0;">لم يتم اختيار لاعبين بعد</p>
-                            </div>
-                            <!-- زر البدء مع الطلاب المختارين -->
-                            <div id="start-game-container" style="margin-top: 15px; text-align: center; display: none;">
-                                <button onclick="startGameWithSelectedStudents()" class="oman-btn" style="background: linear-gradient(135deg, var(--oman-green) 0%, var(--light-green) 100%); font-size: 16px; padding: 12px 30px;">
-                                    🎮 البدء باللعبة
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- حالة الاختيار -->
-                        <div id="selection-status" style="margin: 15px 0; padding: 10px; border-radius: 8px; text-align: center; font-weight: bold; display: none;">
-                            <span id="selection-count">0</span> من <span id="required-count">2</span> لاعب مطلوب
-                        </div>
-                    </div>
-                    
-                    <!-- قسم الإدخال اليدوي -->
-                    <div id="player-names-container">
-                        <!-- سيتم إضافة حقول أسماء اللاعبين هنا -->
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button id="start-game-btn" class="oman-btn primary">🚀 ابدأ اللعبة</button>
+            <span class="close" data-modal="propertyModal">&times;</span>
+            <div id="propertyInfo">
+                <!-- معلومات العقار سيتم عرضها هنا -->
             </div>
         </div>
     </div>
 
-    <!-- نافذة شراء العقار -->
-    <div id="buy-property-modal" class="modal">
-        <div class="modal-content">
-            <h2>شراء عقار</h2>
-            <div class="modal-body">
-                <p id="property-description"></p>
-                <p id="property-price"></p>
-            </div>
-            <div class="modal-footer">
-                <button id="buy-property-btn" class="oman-btn">شراء العقار</button>
-                <button id="auction-property-btn" class="oman-btn">بيع بالمزاد</button>
-            </div>
-        </div>
-    </div>
-
+    <!-- JavaScript -->
     <script>
-        // إنشاء كائن الصوت
-        const clickSound = new Audio('../assets/media/sounds/Click.mp3');
-        clickSound.preload = 'auto';
+        // ===========================================
+        // بيانات اللعبة الأساسية
+        // ===========================================
+        
+        // بيانات العقارات العُمانية
+        const omanProperties = [
+            // الصف السفلي
+            { id: 0, name: "البداية", type: "start", price: 0, color: "special" },
+            { id: 1, name: "صحار", type: "property", price: 60, color: "brown", rent: [2, 10, 30, 90, 160, 250] },
+            { id: 2, name: "صندوق المجتمع", type: "community", price: 0, color: "special" },
+            { id: 3, name: "الرستاق", type: "property", price: 60, color: "brown", rent: [4, 20, 60, 180, 320, 450] },
+            { id: 4, name: "ضريبة الدخل", type: "tax", price: 200, color: "special" },
+            { id: 5, name: "مطار مسقط", type: "airport", price: 200, color: "railroad", rent: [25, 50, 100, 200] },
+            { id: 6, name: "مطرح", type: "property", price: 100, color: "light-blue", rent: [6, 30, 90, 270, 400, 550] },
+            { id: 7, name: "الفرصة", type: "chance", price: 0, color: "special" },
+            { id: 8, name: "الخوير", type: "property", price: 100, color: "light-blue", rent: [6, 30, 90, 270, 400, 550] },
+            { id: 9, name: "القرم", type: "property", price: 120, color: "light-blue", rent: [8, 40, 100, 300, 450, 600] },
+            
+            // الصف الأيسر
+            { id: 10, name: "السجن/الزيارة", type: "jail", price: 0, color: "special" },
+            { id: 11, name: "صلالة", type: "property", price: 140, color: "pink", rent: [10, 50, 150, 450, 625, 750] },
+            { id: 12, name: "شركة الكهرباء", type: "utility", price: 150, color: "utility", rent: [4, 10] },
+            { id: 13, name: "طاقة", type: "property", price: 140, color: "pink", rent: [10, 50, 150, 450, 625, 750] },
+            { id: 14, name: "مرباط", type: "property", price: 160, color: "pink", rent: [12, 60, 180, 500, 700, 900] },
+            { id: 15, name: "مطار صلالة", type: "airport", price: 200, color: "railroad", rent: [25, 50, 100, 200] },
+            { id: 16, name: "نزوى", type: "property", price: 180, color: "orange", rent: [14, 70, 200, 550, 750, 950] },
+            { id: 17, name: "صندوق المجتمع", type: "community", price: 0, color: "special" },
+            { id: 18, name: "بهلا", type: "property", price: 180, color: "orange", rent: [14, 70, 200, 550, 750, 950] },
+            { id: 19, name: "الحمراء", type: "property", price: 200, color: "orange", rent: [16, 80, 220, 600, 800, 1000] },
+            
+            // الصف العلوي
+            { id: 20, name: "موقف مجاني", type: "free", price: 0, color: "special" },
+            { id: 21, name: "صور", type: "property", price: 220, color: "red", rent: [18, 90, 250, 700, 875, 1050] },
+            { id: 22, name: "الفرصة", type: "chance", price: 0, color: "special" },
+            { id: 23, name: "الكامل والوافي", type: "property", price: 220, color: "red", rent: [18, 90, 250, 700, 875, 1050] },
+            { id: 24, name: "جعلان بني بوعلي", type: "property", price: 240, color: "red", rent: [20, 100, 300, 750, 925, 1100] },
+            { id: 25, name: "مطار صور", type: "airport", price: 200, color: "railroad", rent: [25, 50, 100, 200] },
+            { id: 26, name: "الخابورة", type: "property", price: 260, color: "yellow", rent: [22, 110, 330, 800, 975, 1150] },
+            { id: 27, name: "السويق", type: "property", price: 260, color: "yellow", rent: [22, 110, 330, 800, 975, 1150] },
+            { id: 28, name: "شركة المياه", type: "utility", price: 150, color: "utility", rent: [4, 10] },
+            { id: 29, name: "شناص", type: "property", price: 280, color: "yellow", rent: [24, 120, 360, 850, 1025, 1200] },
+            
+            // الصف الأيمن
+            { id: 30, name: "اذهب للسجن", type: "go-to-jail", price: 0, color: "special" },
+            { id: 31, name: "إبراء", type: "property", price: 300, color: "green", rent: [26, 130, 390, 900, 1100, 1275] },
+            { id: 32, name: "القابل", type: "property", price: 300, color: "green", rent: [26, 130, 390, 900, 1100, 1275] },
+            { id: 33, name: "صندوق المجتمع", type: "community", price: 0, color: "special" },
+            { id: 34, name: "بدية", type: "property", price: 320, color: "green", rent: [28, 150, 450, 1000, 1200, 1400] },
+            { id: 35, name: "مطار الدقم", type: "airport", price: 200, color: "railroad", rent: [25, 50, 100, 200] },
+            { id: 36, name: "الفرصة", type: "chance", price: 0, color: "special" },
+            { id: 37, name: "خصب", type: "property", price: 350, color: "dark-blue", rent: [35, 175, 500, 1100, 1300, 1500] },
+            { id: 38, name: "ضريبة الترف", type: "tax", price: 100, color: "special" },
+            { id: 39, name: "مسندم", type: "property", price: 400, color: "dark-blue", rent: [50, 200, 600, 1400, 1700, 2000] }
+        ];
 
-        // وظيفة تشغيل الصوت
-        function playClickSound() {
-            clickSound.currentTime = 0;
-            clickSound.play().catch(() => {});
-        }
-
-        // متغيرات اللعبة
-        let currentPlayerIndex = 0;
-        let players = [];
-        let properties = [];
-        let gameStarted = false;
-        let currentProperty = null;
-
-        // متغيرات اختيار الطلاب - مع تهيئة محسنة
-        let selectedStudents = [];
-        let useStudentData = false;
-
-        console.log('🔧 تم تهيئة متغيرات الطلاب');
-
-        // عناصر DOM الجديدة - محدثة
-        const useStudentDataBtn = document.getElementById('use-student-data-btn');
-        const manualEntryBtn = document.getElementById('manual-entry-btn');
-        const studentSelectionSection = document.getElementById('student-selection-section');
-        const selectionModeSelect = document.getElementById('selection-mode');
-        const studentGrid = document.getElementById('student-grid');
-        const selectedStudentsList = document.getElementById('selected-students-list');
-        const classSelector = document.getElementById('class-selector');
-        const gameBoard = document.getElementById('game-board');
-        const rollBtn = document.getElementById('roll-btn');
-        const endTurnBtn = document.getElementById('end-turn-btn');
-        const currentPlayerName = document.getElementById('current-player-name');
-        const currentPlayerBalance = document.getElementById('current-player-balance');
-        const propertiesList = document.getElementById('properties-list');
-        const playerCountSelect = document.getElementById('player-count');
-        const playerNamesContainer = document.getElementById('player-names-container');
-        const startGameBtn = document.getElementById('start-game-btn');
-        const helpBtn = document.getElementById('help-btn');
-        const helpModal = document.getElementById('help-modal');
-        const setupModal = document.getElementById('setup-modal');
-        const buyPropertyModal = document.getElementById('buy-property-modal');
-        const propertyDescription = document.getElementById('property-description');
-        const propertyPrice = document.getElementById('property-price');
-        const buyPropertyBtn = document.getElementById('buy-property-btn');
-        const auctionPropertyBtn = document.getElementById('auction-property-btn');
-
-        // ألوان اللاعبين (موسعة لـ 6 لاعبين)
-        const playerColors = ['#FF0000', '#0000FF', '#00FF00', '#FFFF00', '#FF00FF', '#FFA500'];
-        const playerTokens = ['🗡️', '⛵', '🐪', '🏰', '💎', '🌟'];
-
-        // بيانات الطلاب والصفوف - نظام محسن
-        let studentData = {};
-        let availableClasses = [];
-
-        // تحميل بيانات الطلاب والصفوف مع نظام محسن موحد
-        async function loadStudentData() {
-            try {
-                // عرض رسالة التحميل
-                showMessage('جاري تحميل بيانات الطلاب...', 'info');
-                
-                // استخدام المسار المحلي للبيانات - نظام موحد
-                const res = await fetch('../data/studentData.json');
-                if (!res.ok) {
-                    throw new Error('فشل في تحميل ملف البيانات');
-                }
-                
-                const data = await res.json();
-                studentData = data;
-                
-                // تحديث واجهة المستخدم
-                fillClassSelect();
-                useStudentDataBtn.style.display = 'inline-block';
-                useStudentDataBtn.disabled = false;
-                useStudentDataBtn.innerHTML = '📚 استخدام قائمة الصف ✅';
-                
-                // رسالة نجاح
-                showMessage('تم تحميل بيانات الطلاب بنجاح! 🎓', 'success');
-                console.log('✅ تم تحميل بيانات الطلاب من الملف المحلي بنجاح');
-                
-            } catch (e) {
-                console.log('⚠️ خطأ في تحميل بيانات الطلاب:', e.message);
-                showMessage('خطأ في تحميل بيانات الطلاب: ' + e.message, 'error');
-                
-                // إضافة بيانات تجريبية في حالة فشل التحميل - نظام موحد
-                studentData = {
-                    "خامس 1": [
-                        "أحمد بن ماجد بن محفوظ منصور السيابي",
-                        "ابراهيم بن خليل بن ابراهيم رحمت البلوشي",
-                        "العز بن طارق بن عبدالمجيد سعيد البلوشي",
-                        "المهلب بن فهد بن ناصر محمد البوسعيدي",
-                        "الياس بن عيسى بن خلفان سالم الجابري",
-                        "اليزن بن ادريس بن محمد عبدالله الفورى",
-                        "بدر بن فؤاد بن سليمان حميد الرمضاني",
-                        "حسين بن مسعود بن سعيد محمد الحوسني"
-                    ],
-                    "خامس 2": [
-                        "آدم بن محمد بن أحمد خليل الفارسي",
-                        "أنس بن أحمد بن محمد عبدالرحمن الزدجالي",
-                        "أنور محمد عارف البلوشي",
-                        "أوّاب بن ناصر بن مال الله حمدان العمري",
-                        "الوليد بن خالد بن مسلم ثاني الحديدي",
-                        "انس بن ابراهيم بن درويش محمد اليحيائي",
-                        "بدر بن موسى بن أحمد محمد الفوري",
-                        "بدر بن هاشم بن موسى محمد الفارسي"
-                    ],
-                    "سادس 1": [
-                        "تيمور بن فيصل بن علي منين اليوسفي",
-                        "جاسم بن محمد بن سالم راشد الحارثي",
-                        "جابر بن سعيد بن محمد خلفان السيابي",
-                        "حمزة بن خالد بن حمد سيف الحديدي",
-                        "خالد بن سعيد بن خالد ناصر الهطالي",
-                        "راشد بن محمد بن سالم حمود الحبسي",
-                        "سالم بن أحمد بن عبدالله مبارك الضامري",
-                        "سعيد بن يوسف بن سعيد مسكين الحارثي"
-                    ],
-                    "سادس 2": [
-                        "سلطان بن سامي بن حميد ساعد المسلمي",
-                        "سيف بن سعيد بن سيف سعيد السيابي",
-                        "عباد بن أحمد بن حبيب شمبيه المسافر",
-                        "عبدالرحمن بن حسن بن عبدالله خلفان الحديدي",
-                        "عبدالعزيز بن أحمد بن سعيد سيف السيابي",
-                        "عبدالله بن أحمد بن عبدالله مبارك الضامري",
-                        "عبدالله بن خالد بن جمعه حاجي البلوشي",
-                        "عمر بن سليمان بن سالم سعود الحارثي"
-                    ]
-                };
-                
-                // تحديث واجهة المستخدم مع البيانات التجريبية
-                fillClassSelect();
-                useStudentDataBtn.style.display = 'inline-block';
-                useStudentDataBtn.disabled = false;
-                useStudentDataBtn.innerHTML = '📚 بيانات تجريبية ✅';
-                useStudentDataBtn.style.opacity = '0.8';
-                
-                // رسالة تحذيرية
-                showMessage('تم تحميل بيانات تجريبية بدلاً من الملف الأصلي', 'warning');
-            }
-        }
-
-        // نظام إدارة الرسائل الموحد (مطابق للأنشطة الأخرى)
-        class MessageSystem {
-            constructor() {
-                this.container = this.createMessageContainer();
-            }
-
-            createMessageContainer() {
-                let container = document.getElementById('messageArea');
-                if (!container) {
-                    container = document.createElement('div');
-                    container.id = 'messageArea';
-                    container.className = 'message-container';
-                    container.style.cssText = `
-                        position: fixed;
-                        top: 20px;
-                        right: 20px;
-                        z-index: 10000;
-                        max-width: 400px;
-                    `;
-                    document.body.appendChild(container);
-                }
-                return container;
-            }
-
-            show(message, type = 'info', duration = 5000) {
-                this.clear();
-
-                const messageEl = document.createElement('div');
-                messageEl.className = `message ${type}`;
-                messageEl.innerHTML = message;
-                messageEl.style.cssText = `
-                    padding: 15px 20px;
-                    margin-bottom: 10px;
-                    border-radius: 8px;
-                    color: white;
-                    font-weight: bold;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-                    animation: slideInRight 0.3s ease-out;
-                    background: ${this.getTypeColor(type)};
-                `;
-
-                this.container.appendChild(messageEl);
-
-                if (duration > 0) {
-                    setTimeout(() => {
-                        this.clear();
-                    }, duration);
-                }
-
-                return messageEl;
-            }
-
-            getTypeColor(type) {
-                const colors = {
-                    'success': 'linear-gradient(135deg, #28a745, #20c997)',
-                    'error': 'linear-gradient(135deg, #dc3545, #e83e8c)',
-                    'warning': 'linear-gradient(135deg, #fd7e14, #ffc107)',
-                    'info': 'linear-gradient(135deg, #007bff, #6610f2)'
-                };
-                return colors[type] || colors.info;
-            }
-
-            clear() {
-                this.container.innerHTML = '';
-            }
-        }
-
-        // إنشاء نظام الرسائل العام
-        const messageSystem = new MessageSystem();
-
-        // دالة مساعدة لعرض الرسائل (متوافقة مع الأنشطة الأخرى)
-        function showMessage(message, type = 'info', duration = 5000) {
-            messageSystem.show(message, type, duration);
-            console.log(`%c${message}`, `color: ${messageSystem.getTypeColor(type)}; font-weight: bold;`);
-        }
-            classSelect.innerHTML = '<option value="">-- اختر الصف --</option>';
-            
-            Object.keys(studentData).forEach(cls => {
-                const opt = document.createElement('option');
-                opt.value = cls;
-                opt.textContent = `الصف ${cls}`;
-                classSelect.appendChild(opt);
-            });
-        }
-
-        // إظهار شبكة الطلاب للاختيار اليدوي
-        function showStudentGrid() {
-            const selectedClass = document.getElementById('class-selector').value;
-            const studentGrid = document.getElementById('student-grid');
-            const selectionMode = document.getElementById('selection-mode').value;
-            
-            if (!selectedClass || selectionMode !== 'manual') {
-                studentGrid.style.display = 'none';
-                return;
-            }
-            
-            const students = studentData[selectedClass] || [];
-            studentGrid.innerHTML = '';
-            
-            if (students.length === 0) {
-                studentGrid.innerHTML = '<p style="text-align: center; color: #666;">لا توجد طلاب في هذا الصف</p>';
-                studentGrid.style.display = 'block';
-                return;
-            }
-            
-            // إنشاء شبكة الطلاب
-            const gridContainer = document.createElement('div');
-            gridContainer.style.display = 'grid';
-            gridContainer.style.gridTemplateColumns = 'repeat(auto-fill, minmax(150px, 1fr))';
-            gridContainer.style.gap = '10px';
-            gridContainer.style.padding = '10px';
-            
-            students.forEach(student => {
-                const studentCard = document.createElement('div');
-                studentCard.className = 'student-card';
-                studentCard.textContent = student;
-                studentCard.onclick = () => toggleStudentSelection(student, studentCard);
-                gridContainer.appendChild(studentCard);
-            });
-            
-            studentGrid.appendChild(gridContainer);
-            studentGrid.style.display = 'block';
-        }
-
-        // تبديل اختيار الطالب - دالة محسنة
-        function toggleStudentSelection(studentName, cardElement) {
-            const requiredCount = parseInt(document.getElementById('player-count').value);
-            
-            if (cardElement.classList.contains('selected')) {
-                // إلغاء الاختيار
-                cardElement.classList.remove('selected');
-                selectedStudents = selectedStudents.filter(s => {
-                    if (typeof s === 'string') {
-                        return s !== studentName;
-                    } else {
-                        return s.name !== studentName;
-                    }
-                });
-                console.log('تم إلغاء اختيار الطالب:', studentName);
-            } else {
-                // إضافة الاختيار
-                if (selectedStudents.length < requiredCount) {
-                    cardElement.classList.add('selected');
-                    selectedStudents.push(studentName);
-                    console.log('تم اختيار الطالب:', studentName);
-                } else {
-                    alert(`يمكنك اختيار ${requiredCount} لاعبين فقط!`);
-                    return;
-                }
-            }
-            
-            console.log('الطلاب المختارين حالياً:', selectedStudents);
-            updateSelectedStudentsDisplay();
-            updateSelectionStatus();
-        }
-
-        // إنشاء قوائم منسدلة للاختيار اليدوي
-        function createPlayerDropdowns() {
-            const selectedClass = document.getElementById('class-selector').value;
-            const requiredCount = parseInt(document.getElementById('player-count').value);
-            const students = studentData[selectedClass] || [];
-            
-            if (students.length === 0) {
-                alert('⚠️ لا توجد طلاب في هذا الصف!');
-                return;
-            }
-            
-            if (students.length < requiredCount) {
-                alert(`⚠️ عدد الطلاب في هذا الصف (${students.length}) أقل من العدد المطلوب (${requiredCount})`);
-                return;
-            }
-            
-            const container = document.getElementById('player-dropdowns');
-            container.innerHTML = '';
-            
-            // إنشاء قائمة منسدلة لكل لاعب
-            for (let i = 0; i < requiredCount; i++) {
-                const playerDiv = document.createElement('div');
-                playerDiv.style.cssText = `
-                    background: linear-gradient(135deg, white 0%, #f8f9fa 100%);
-                    border: 2px solid ${playerColors[i]};
-                    border-radius: 15px;
-                    padding: 15px;
-                    text-align: center;
-                `;
-                
-                playerDiv.innerHTML = `
-                    <div style="margin-bottom: 10px;">
-                        <span style="font-size: 24px; color: ${playerColors[i]};">${playerTokens[i]}</span>
-                        <strong style="color: ${playerColors[i]};">لاعب ${i + 1}</strong>
-                    </div>
-                    <select id="player-${i}-select" class="oman-btn" style="width: 200px; border-color: ${playerColors[i]};" data-player-index="${i}">
-                        <option value="">-- اختر طالب --</option>
-                        ${students.map(student => `<option value="${student}">${student}</option>`).join('')}
-                    </select>
-                `;
-                
-                container.appendChild(playerDiv);
-                
-                // إضافة معالج للقائمة المنسدلة
-                const select = playerDiv.querySelector('select');
-                select.addEventListener('change', function() {
-                    playClickSound();
-                    updateManualSelection();
-                });
-            }
-            
-            // إظهار الحاوية
-            document.getElementById('manual-selection-container').style.display = 'block';
-            
-            console.log(`تم إنشاء ${requiredCount} قوائم منسدلة للصف ${selectedClass}`);
-        }
-
-        // تحديث الاختيار اليدوي من القوائم المنسدلة
-        function updateManualSelection() {
-            const requiredCount = parseInt(document.getElementById('player-count').value);
-            const newSelectedStudents = [];
-            const usedStudents = new Set();
-            let hasError = false;
-            
-            // جمع الاختيارات من جميع القوائم
-            for (let i = 0; i < requiredCount; i++) {
-                const select = document.getElementById(`player-${i}-select`);
-                if (select && select.value) {
-                    if (usedStudents.has(select.value)) {
-                        // طالب مكرر
-                        select.style.borderColor = 'var(--oman-red)';
-                        select.style.backgroundColor = '#ffebee';
-                        hasError = true;
-                    } else {
-                        // طالب جديد
-                        select.style.borderColor = playerColors[i];
-                        select.style.backgroundColor = 'white';
-                        newSelectedStudents.push(select.value);
-                        usedStudents.add(select.value);
-                    }
-                } else {
-                    // لا يوجد اختيار
-                    if (select) {
-                        select.style.borderColor = playerColors[i];
-                        select.style.backgroundColor = 'white';
-                    }
-                }
-            }
-            
-            if (hasError) {
-                // إظهار رسالة خطأ للطلاب المكررين
-                const errorMessage = document.getElementById('error-message') || document.createElement('div');
-                errorMessage.id = 'error-message';
-                errorMessage.style.cssText = `
-                    background: var(--oman-red);
-                    color: white;
-                    padding: 10px;
-                    border-radius: 8px;
-                    margin: 10px 0;
-                    text-align: center;
-                    font-weight: bold;
-                `;
-                errorMessage.textContent = '⚠️ لا يمكن اختيار نفس الطالب أكثر من مرة!';
-                
-                if (!document.getElementById('error-message')) {
-                    document.getElementById('manual-selection-container').appendChild(errorMessage);
-                }
-                
-                // إزالة الرسالة بعد 3 ثوان
-                setTimeout(() => {
-                    if (document.getElementById('error-message')) {
-                        document.getElementById('error-message').remove();
-                    }
-                }, 3000);
-                
-                return;
-            } else {
-                // إزالة رسالة الخطأ إذا كانت موجودة
-                const errorMessage = document.getElementById('error-message');
-                if (errorMessage) {
-                    errorMessage.remove();
-                }
-            }
-            
-            // تحديث القائمة
-            selectedStudents = newSelectedStudents;
-            console.log('الطلاب المختارين من القوائم المنسدلة:', selectedStudents);
-            updateSelectedStudentsDisplay();
-            updateSelectionStatus();
-        }
-
-        // تحديث عرض الطلاب المختارين - دالة محسنة موحدة
-        function updateSelectedStudentsDisplay() {
-            const displayContainer = document.getElementById('selected-students-list');
-            const startGameContainer = document.getElementById('start-game-container');
-            
-            if (!displayContainer) {
-                console.error('العنصر selected-students-list غير موجود');
-                return;
-            }
-            
-            if (selectedStudents.length === 0) {
-                displayContainer.innerHTML = '<p style="color: #666; text-align: center; margin: 0;">لم يتم اختيار لاعبين بعد</p>';
-                displayContainer.classList.remove('has-students');
-                if (startGameContainer) startGameContainer.style.display = 'none';
-                return;
-            }
-            
-            displayContainer.classList.add('has-students');
-            displayContainer.innerHTML = '';
-            
-            selectedStudents.forEach((student, index) => {
-                const studentItem = document.createElement('div');
-                studentItem.className = 'selected-student-item';
-                studentItem.style.cssText = `
-                    display: inline-block;
-                    background: linear-gradient(135deg, var(--oman-green) 0%, var(--light-green) 100%);
-                    color: white;
-                    padding: 8px 15px;
-                    margin: 4px;
-                    border-radius: 20px;
-                    font-weight: 600;
-                    position: relative;
-                    border: 2px solid ${playerColors[index] || '#ccc'};
-                `;
-                
-                // معالجة أنواع البيانات المختلفة للطلاب
-                let studentName = '';
-                if (typeof student === 'string') {
-                    studentName = student;
-                } else if (student && student.name) {
-                    studentName = student.name;
-                } else {
-                    studentName = 'طالب غير محدد';
-                }
-                
-                studentItem.innerHTML = `
-                    <button class="remove-btn" onclick="removeSelectedStudent('${studentName}')" title="إزالة" style="
-                        background: rgba(255,255,255,0.3);
-                        color: white;
-                        border: none;
-                        border-radius: 50%;
-                        width: 20px;
-                        height: 20px;
-                        margin-left: 8px;
-                        cursor: pointer;
-                        font-size: 12px;
-                        transition: all 0.2s ease;
-                    ">×</button>
-                    <span style="font-size: 18px; margin: 0 5px;">${playerTokens[index] || '🎮'}</span>
-                    <span>${studentName}</span>
-                `;
-                
-                displayContainer.appendChild(studentItem);
-            });
-            
-            // إظهار زر البدء إذا تم اختيار لاعبين كافيين
-            if (startGameContainer && selectedStudents.length >= 2) {
-                startGameContainer.style.display = 'block';
-            } else if (startGameContainer) {
-                startGameContainer.style.display = 'none';
-            }
-            
-            console.log('تم تحديث عرض الطلاب المختارين:', selectedStudents);
-        }
-
-        // بدء اللعبة مع التحقق الشامل
-        function startGameWithSelectedStudents() {
-            const requiredCount = parseInt(document.getElementById('player-count').value);
-            
-            if (useStudentData) {
-                if (selectedStudents.length !== requiredCount) {
-                    alert(`⚠️ يرجى اختيار ${requiredCount} طلاب بالضبط! (المختار حالياً: ${selectedStudents.length})`);
-                    return;
-                }
-                
-                // إنشاء اللاعبين من الطلاب المختارين
-                players = [];
-                selectedStudents.forEach((student, i) => {
-                    const studentName = typeof student === 'string' ? student : student.name || `طالب ${i+1}`;
-                    players.push({
-                        id: i,
-                        name: studentName,
-                        money: 1500,
-                        position: 0,
-                        properties: [],
-                        color: playerColors[i],
-                        token: playerTokens[i]
-                    });
-                });
-            } else {
-                // إنشاء لاعبين افتراضيين
-                players = [];
-                for (let i = 0; i < requiredCount; i++) {
-                    const nameInput = document.getElementById(`player-${i}-name`);
-                    const playerName = nameInput ? nameInput.value.trim() : `لاعب ${i+1}`;
-                    
-                    if (!playerName) {
-                        alert(`⚠️ يرجى إدخال اسم للاعب ${i+1}`);
-                        return;
-                    }
-                    
-                    players.push({
-                        id: i,
-                        name: playerName,
-                        money: 1500,
-                        position: 0,
-                        properties: [],
-                        color: playerColors[i],
-                        token: playerTokens[i]
-                    });
-                }
-            }
-            
-            // التحقق من عدم تكرار الأسماء
-            const names = players.map(p => p.name);
-            const uniqueNames = new Set(names);
-            if (uniqueNames.size !== names.length) {
-                alert('⚠️ لا يمكن أن يكون هناك لاعبان بنفس الاسم!');
-                return;
-            }
-            
-            // بدء اللعبة
-            console.log('🎮 بدء اللعبة مع اللاعبين:', players);
-            initGame();
-        }
-
-        // إزالة طالب مختار
-        function removeSelectedStudent(studentName) {
-            selectedStudents = selectedStudents.filter(s => s !== studentName);
-            updateSelectedStudentsDisplay();
-            updateSelectionStatus();
-            
-            // إزالة التحديد من الشبكة إذا كانت مرئية
-            const studentCards = document.querySelectorAll('.student-card');
-            studentCards.forEach(card => {
-                if (card.textContent === studentName) {
-                    card.classList.remove('selected');
-                }
-            });
-        }
-
-        // تحديث حالة الاختيار - دالة محسنة
-        function updateSelectionStatus() {
-            const requiredCount = parseInt(document.getElementById('player-count').value);
-            const currentCount = selectedStudents.length;
-            const statusElement = document.getElementById('selection-status');
-            const countElement = document.getElementById('selection-count');
-            const requiredElement = document.getElementById('required-count');
-            
-            if (statusElement) {
-                if (countElement) countElement.textContent = currentCount;
-                if (requiredElement) requiredElement.textContent = requiredCount;
-                
-                statusElement.style.display = 'block';
-                
-                if (currentCount === requiredCount) {
-                    statusElement.className = 'selection-complete';
-                    statusElement.style.background = 'linear-gradient(135deg, var(--oman-green) 0%, var(--light-green) 100%)';
-                    statusElement.style.color = 'white';
-                    statusElement.style.borderColor = 'var(--oman-green)';
-                } else if (currentCount > 0) {
-                    statusElement.className = 'selection-incomplete';
-                    statusElement.style.background = 'linear-gradient(135deg, var(--gold) 0%, #FFB347 100%)';
-                    statusElement.style.color = 'var(--dark-blue)';
-                    statusElement.style.borderColor = 'var(--gold)';
-                } else {
-                    statusElement.className = '';
-                    statusElement.style.background = 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)';
-                    statusElement.style.color = '#666';
-                    statusElement.style.borderColor = '#ddd';
-                }
-                
-                console.log(`حالة الاختيار: ${currentCount}/${requiredCount}`);
-            }
-        }
-
-        // تهيئة اللعبة
-        function initGame() {
-            try {
-                console.log('🎯 بدء تهيئة اللعبة...');
-                
-                // إخفاء شاشة الإعداد
-                const setupModal = document.getElementById('setup-modal');
-                if (setupModal) setupModal.style.display = 'none';
-                
-                // إظهار لوحة اللعبة
-                const gameContainer = document.getElementById('main-game-container');
-                if (gameContainer) {
-                    gameContainer.style.display = 'block';
-                } else {
-                    console.log('إنشاء حاوية اللعبة...');
-                    createMainGameContainer();
-                }
-                
-                // إنشاء العقارات
-                createProperties();
-                
-                // عرض لوحة اللعب
-                renderBoard();
-                
-                // تحديث معلومات اللاعبين
-                updatePlayerInfo();
-                
-                // تعيين اللاعب الأول
-                currentPlayerIndex = 0;
-                gameStarted = true;
-                
-                // إظهار رسالة البداية
-                showGameMessage(`🎮 بدأت اللعبة! الدور الأول للاعب: ${players[currentPlayerIndex].name}`, 'success');
-                
-                // تفعيل زر رمي النرد
-                const rollDiceBtn = document.getElementById('roll-dice-btn');
-                if (rollDiceBtn) {
-                    rollDiceBtn.disabled = false;
-                    rollDiceBtn.style.display = 'block';
-                }
-                
-                console.log('✅ تمت تهيئة اللعبة بنجاح مع اللاعبين:', players);
-                
-            } catch (error) {
-                console.error('❌ خطأ في تهيئة اللعبة:', error);
-                alert('حدث خطأ في بدء اللعبة: ' + error.message);
-            }
-        }
-
-        // إنشاء حاوية اللعبة الرئيسية
-        function createMainGameContainer() {
-            const existingContainer = document.getElementById('main-game-container');
-            if (existingContainer) return;
-            
-            const gameContainer = document.createElement('div');
-            gameContainer.id = 'main-game-container';
-            gameContainer.style.display = 'none';
-            gameContainer.innerHTML = `
-                <div class="game-layout">
-                    <div class="game-board-section">
-                        <div id="game-board" class="monopoly-board"></div>
-                    </div>
-                    <div class="game-controls-section">
-                        <div class="players-panel" id="players-info"></div>
-                        <div class="dice-section">
-                            <button id="roll-dice-btn" class="roll-dice-button" onclick="rollDice()" disabled>
-                                🎲 رمي النرد
-                            </button>
-                            <div id="dice-display" class="dice-display"></div>
-                        </div>
-                        <div class="game-messages" id="game-messages"></div>
-                    </div>
-                </div>
-            `;
-            
-            document.body.appendChild(gameContainer);
-        }
-
-        // عرض رسالة في اللعبة
-        function showGameMessage(message, type = 'info') {
-            const messagesContainer = document.getElementById('game-messages');
-            if (!messagesContainer) return;
-            
-            const messageElement = document.createElement('div');
-            messageElement.className = `game-message ${type}`;
-            messageElement.innerHTML = message;
-            
-            messagesContainer.appendChild(messageElement);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            
-            // إزالة الرسائل القديمة
-            const messages = messagesContainer.querySelectorAll('.game-message');
-            if (messages.length > 5) {
-                messages[0].remove();
-            }
-        }
-
-        // إنشاء العقارات العُمانية
-        function createProperties() {
-            properties = [
-                { id: 0, name: 'البدء', type: 'corner', action: 'collect', amount: 200 },
-                { id: 1, name: 'مطار مسقط الدولي', price: 200, rent: 25, color: 'brown', ownedBy: null, houses: 0 },
-                { id: 2, name: 'سوق مطرح', price: 60, rent: 10, color: 'brown', ownedBy: null, houses: 0 },
-                { id: 3, name: 'خزينة المجتمع', type: 'chest' },
-                { id: 4, name: 'ضريبة الدخل', type: 'tax', amount: 200 },
-                { id: 5, name: 'ميناء صحار', price: 200, rent: 25, type: 'station', ownedBy: null },
-                { id: 6, name: 'وادي شاب', price: 100, rent: 30, color: 'lightblue', ownedBy: null, houses: 0 },
-                { id: 7, name: 'فرصة', type: 'chance' },
-                { id: 8, name: 'جبال الحجر', price: 100, rent: 30, color: 'lightblue', ownedBy: null, houses: 0 },
-                { id: 9, name: 'وادي بني خالد', price: 120, rent: 40, color: 'lightblue', ownedBy: null, houses: 0 },
-                { id: 10, name: 'السجن', type: 'jail' },
-                { id: 11, name: 'قلعة نزوى', price: 140, rent: 50, color: 'pink', ownedBy: null, houses: 0 },
-                { id: 12, name: 'شركة الكهرباء', price: 150, rent: 0, type: 'utility', ownedBy: null },
-                { id: 13, name: 'قصر العلم', price: 140, rent: 50, color: 'pink', ownedBy: null, houses: 0 },
-                { id: 14, name: 'متحف عُمان الوطني', price: 160, rent: 60, color: 'pink', ownedBy: null, houses: 0 },
-                { id: 15, name: 'ميناء السلطان قابوس', price: 200, rent: 25, type: 'station', ownedBy: null },
-                { id: 16, name: 'شاطئ المغسيل', price: 180, rent: 70, color: 'orange', ownedBy: null, houses: 0 },
-                { id: 17, name: 'خزينة المجتمع', type: 'chest' },
-                { id: 18, name: 'خور المغسيل', price: 180, rent: 70, color: 'orange', ownedBy: null, houses: 0 },
-                { id: 19, name: 'وادي دوكة', price: 200, rent: 80, color: 'orange', ownedBy: null, houses: 0 },
-                { id: 20, name: 'الراحة', type: 'free' },
-                { id: 21, name: 'سوق نزوى', price: 220, rent: 90, color: 'red', ownedBy: null, houses: 0 },
-                { id: 22, name: 'فرصة', type: 'chance' },
-                { id: 23, name: 'وادي بني عوف', price: 220, rent: 90, color: 'red', ownedBy: null, houses: 0 },
-                { id: 24, name: 'وادي تنوف', price: 240, rent: 100, color: 'red', ownedBy: null, houses: 0 },
-                { id: 25, name: 'ميناء الدقم', price: 200, rent: 25, type: 'station', ownedBy: null },
-                { id: 26, name: 'جبل شمس', price: 260, rent: 110, color: 'yellow', ownedBy: null, houses: 0 },
-                { id: 27, name: 'جبل الأخضر', price: 260, rent: 110, color: 'yellow', ownedBy: null, houses: 0 },
-                { id: 28, name: 'شركة المياه', price: 150, rent: 0, type: 'utility', ownedBy: null },
-                { id: 29, name: 'وادي السحتن', price: 280, rent: 120, color: 'yellow', ownedBy: null, houses: 0 },
-                { id: 30, name: 'اذهب إلى السجن', type: 'goToJail' },
-                { id: 31, name: 'مدينة المعرفة', price: 300, rent: 130, color: 'green', ownedBy: null, houses: 0 },
-                { id: 32, name: 'المنطقة الاقتصادية', price: 300, rent: 130, color: 'green', ownedBy: null, houses: 0 },
-                { id: 33, name: 'خزينة المجتمع', type: 'chest' },
-                { id: 34, name: 'جامعة السلطان قابوس', price: 320, rent: 150, color: 'green', ownedBy: null, houses: 0 },
-                { id: 35, name: 'مطار صلالة', price: 200, rent: 25, type: 'station', ownedBy: null },
-                { id: 36, name: 'فرصة', type: 'chance' },
-                { id: 37, name: 'خور روري', price: 350, rent: 175, color: 'darkblue', ownedBy: null, houses: 0 },
-                { id: 38, name: 'ضريبة الرفاهية', type: 'tax', amount: 100 },
-                { id: 39, name: 'شاطئ البستان', price: 400, rent: 200, color: 'darkblue', ownedBy: null, houses: 0 }
-            ];
-        }
-
-        // عرض لوحة اللعب
-        function renderBoard() {
-            gameBoard.innerHTML = '';
-            
-            // إنشاء لوحة 11x11 (مبسطة للعرض)
-            for (let row = 0; row < 11; row++) {
-                for (let col = 0; col < 11; col++) {
-                    const cell = document.createElement('div');
-                    cell.className = 'board-cell';
-                    
-                    // تحديد الزوايا
-                    if ((row === 0 && col === 0) || (row === 0 && col === 10) || 
-                        (row === 10 && col === 0) || (row === 10 && col === 10)) {
-                        cell.classList.add('corner-cell');
-                        
-                        if (row === 10 && col === 10) cell.textContent = 'البدء';
-                        else if (row === 10 && col === 0) cell.textContent = 'السجن';
-                        else if (row === 0 && col === 0) cell.textContent = 'الراحة';
-                        else if (row === 0 && col === 10) cell.textContent = 'اذهب إلى السجن';
-                    } 
-                    // تحديد الجوانب
-                    else if (row === 0 || row === 10 || col === 0 || col === 10) {
-                        const property = findPropertyByPosition(row, col);
-                        if (property) {
-                            cell.textContent = property.name;
-                            cell.classList.add('property-cell');
-                            
-                            if (property.color) cell.classList.add(`property-${property.color}`);
-                            if (property.type === 'station') cell.classList.add('property-station');
-                            if (property.type === 'utility') cell.classList.add('property-utility');
-                        }
-                    }
-                    
-                    gameBoard.appendChild(cell);
-                }
-            }
-            
-            // وضع قطع اللاعبين
-            players.forEach(player => {
-                const token = document.createElement('div');
-                token.className = 'player-token';
-                token.id = `token-${player.id}`;
-                token.style.backgroundColor = player.color;
-                gameBoard.appendChild(token);
-                movePlayerToken(player.id, player.position || 0);
-            });
-        }
-
-        // دالة مساعدة للعثور على العقار حسب الموضع
-        function findPropertyByPosition(row, col) {
-            // هذه دالة مبسطة، تحتاج لتحسين دقيق لمواقع المربعات
-            if (row === 10 && col > 0 && col < 10) return properties[col];
-            if (row === 0 && col > 0 && col < 10) return properties[20 + (10 - col)];
-            if (col === 10 && row > 0 && row < 10) return properties[30 + (10 - row)];
-            if (col === 0 && row > 0 && row < 10) return properties[10 + row];
-            return null;
-        }
-
-        // دالة لتحريك قطعة اللاعب
-        function movePlayerToken(playerId, position) {
-            const token = document.getElementById(`token-${playerId}`);
-            if (!token) return;
-            
-            // تحديد الموضع بناءً على رقم المربع (0-39)
-            // هذه دالة مبسطة، تحتاج لتحسين دقيق لمواقع المربعات
-            let row, col;
-            
-            if (position < 10) {
-                row = 10;
-                col = 10 - position;
-            } else if (position < 20) {
-                row = 20 - position;
-                col = 0;
-            } else if (position < 30) {
-                row = 0;
-                col = position - 20;
-            } else {
-                row = position - 30;
-                col = 10;
-            }
-            
-            token.style.gridRow = row + 1;
-            token.style.gridColumn = col + 1;
-        }
-
-        // دالة لرمي النرد مع تأثيرات بصرية
-        function rollDice() {
-            if (!gameStarted) return;
-            
-            // تأثير رول النرد
-            const dice1El = document.getElementById('dice1');
-            const dice2El = document.getElementById('dice2');
-            
-            // أنيميشن النرد
-            let rollCount = 0;
-            const rollInterval = setInterval(() => {
-                dice1El.textContent = Math.floor(Math.random() * 6) + 1;
-                dice2El.textContent = Math.floor(Math.random() * 6) + 1;
-                rollCount++;
-                
-                if (rollCount > 10) {
-                    clearInterval(rollInterval);
-                    
-                    const dice1 = Math.floor(Math.random() * 6) + 1;
-                    const dice2 = Math.floor(Math.random() * 6) + 1;
-                    
-                    dice1El.textContent = dice1;
-                    dice2El.textContent = dice2;
-                    
-                    const total = dice1 + dice2;
-                    
-                    // إضافة تأثير بصري
-                    dice1El.style.transform = 'scale(1.2)';
-                    dice2El.style.transform = 'scale(1.2)';
-                    
-                    setTimeout(() => {
-                        dice1El.style.transform = 'scale(1)';
-                        dice2El.style.transform = 'scale(1)';
-                        movePlayer(total);
-                    }, 500);
-                }
-            }, 100);
-        }
-
-        // دالة لتحريك اللاعب
-        function movePlayer(spaces) {
-            const player = players[currentPlayerIndex];
-            player.position = (player.position + spaces) % 40;
-            movePlayerToken(player.id, player.position);
-            
-            // التحقق من العقار الذي وقف عليه اللاعب
-            handlePropertyLanding(player.position);
-        }
-
-        // دالة للتحقق من العقار
-        function handlePropertyLanding(position) {
-            const property = properties[position];
-            if (!property) return;
-            
-            currentProperty = property;
-            
-            if (property.type === 'corner' || property.type === 'free') {
-                // لا شيء يحدث
-            } else if (property.type === 'tax') {
-                players[currentPlayerIndex].money -= property.amount;
-                updatePlayerInfo();
-                alert(`دفعت ضريبة مقدارها ${property.amount} ريال`);
-            } else if (property.type === 'goToJail') {
-                players[currentPlayerIndex].position = 10; // السجن
-                movePlayerToken(players[currentPlayerIndex].id, 10);
-                alert('اذهب إلى السجن!');
-                endTurn();
-            } else if (property.ownedBy === null && (property.price || property.type === 'station' || property.type === 'utility')) {
-                // عرض نافذة لشراء العقار
-                showBuyPropertyModal(property);
-            } else if (property.ownedBy !== null && property.ownedBy !== players[currentPlayerIndex].id) {
-                // دفع الإيجار
-                payRent(property);
-            } else if (property.type === 'chance' || property.type === 'chest') {
-                drawCard(property.type);
-            }
-        }
-
-        // عرض نافذة شراء العقار
-        function showBuyPropertyModal(property) {
-            propertyDescription.textContent = `وقفت على ${property.name}`;
-            propertyPrice.textContent = `سعر الشراء: ${property.price} ريال`;
-            buyPropertyModal.style.display = 'block';
-        }
-
-        // دفع الإيجار        function payRent(property) {
-            const owner = players.find(p => p.id === property.ownedBy);
-            const currentPlayer = players[currentPlayerIndex];
-            
-            let rent = property.rent;
-            if (property.type === 'station') {
-                // احتساب الإيجار لمحطات القطار
-                const ownedStations = properties.filter(p => p.type === 'station' && p.ownedBy === owner.id).length;
-                rent = 25 * Math.pow(2, ownedStations - 1);
-            } else if (property.type === 'utility') {
-                // احتساب الإيجار للمرافق
-                const diceTotal = parseInt(document.getElementById('dice1').textContent) + 
-                                  parseInt(document.getElementById('dice2').textContent);
-                const ownedUtilities = properties.filter(p => p.type === 'utility' && p.ownedBy === owner.id).length;
-                rent = ownedUtilities === 1 ? diceTotal * 4 : diceTotal * 10;
-            }
-            
-            currentPlayer.money -= rent;
-            owner.money += rent;
-            
-            alert(`دفعت إيجار ${rent} ريال لـ ${owner.name} عن ${property.name}`);
-            updatePlayerInfo();
-            
-            if (currentPlayer.money < 0) {
-                alert(`يا للأسف! ${currentPlayer.name} أعلن إفلاسه!`);
-                // إزالة اللاعب من اللعبة
-                players.splice(currentPlayerIndex, 1);
-                if (players.length === 1) {
-                    endGame(players[0]);
-                    return;
-                }
-                if (currentPlayerIndex >= players.length) currentPlayerIndex = 0;
-            }
-            
-            endTurn();
-        }
-
-        // سحب بطاقة فرصة أو خزينة المجتمع
-        function drawCard(type) {
-            const cards = {
-                chance: [
-                    "تقدم إلى قصر العلم. إذا مررت بالبدء، استلم 200 ريال",
-                    "اذهب مباشرة إلى السجن. لا تمر بالبدء ولا تستلم 200 ريال",
-                    "احصل على رخصة بناء. يمكنك بناء منزل إضافي في أي عقار تمتلكه",
-                    "لقد فزت بجائزة مهرجان مسقط. استلم 50 ريال",
-                    "تم اختيارك سفيراً للسياحة العمانية. استلم 100 ريال من كل لاعب"
-                ],
-                chest: [
-                    "ورثت أرضاً في صلالة. استلم 100 ريال",
-                    "دفعت رسوم مدرسة لأطفالك. ادفع 50 ريال",
-                    "بيعك لبعض المنتجات التقليدية. استلم 20 ريال",
-                    "سددت لك البنك قرضاً. استلم 150 ريال",
-                    "دفعت فاتورة كهرباء. ادفع 100 ريال"
-                ]
-            };
-            
-            const randomCard = cards[type][Math.floor(Math.random() * cards[type].length)];
-            alert(randomCard);
-            
-            // معالجة بعض التأثيرات (مبسطة)
-            if (randomCard.includes("استلم")) {
-                const amount = parseInt(randomCard.match(/\d+/)[0]);
-                players[currentPlayerIndex].money += amount;
-            } else if (randomCard.includes("ادفع")) {
-                const amount = parseInt(randomCard.match(/\d+/)[0]);
-                players[currentPlayerIndex].money -= amount;
-            } else if (randomCard.includes("اذهب مباشرة إلى السجن")) {
-                players[currentPlayerIndex].position = 10;
-                movePlayerToken(players[currentPlayerIndex].id, 10);
-            }
-            
-            updatePlayerInfo();
-            endTurn();
-        }
-
-        // دالة لإنهاء الدور
-        function endTurn() {
-            currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
-            updatePlayerInfo();
-        }
-
-        // دالة لتحديث معلومات اللاعب الحالي
-        function updatePlayerInfo() {
-            if (players.length === 0) return;
-            
-            const player = players[currentPlayerIndex];
-            currentPlayerName.textContent = `${player.token} ${player.name}`;
-            currentPlayerBalance.textContent = player.money;
-            
-            // تحديث قائمة العقارات المملوكة
-            propertiesList.innerHTML = '';
-            const ownedProperties = properties.filter(p => p.ownedBy === player.id);
-            ownedProperties.forEach(prop => {
-                const li = document.createElement('li');
-                li.textContent = `${prop.name}`;
-                if (prop.type === 'station' || prop.type === 'utility' || prop.houses > 0) {
-                    li.textContent += ` (${prop.rent} ريال إيجار)`;
-                }
-                propertiesList.appendChild(li);
-            });
-        }
-
-        // نهاية اللعبة
-        function endGame(winner) {
-            gameStarted = false;
-            alert(`مبروك! ${winner.name} فاز باللعبة!`);
-        }
-
-        // إعداد اللاعبين المحدث
-        function setupPlayers() {
-            const playerCount = parseInt(playerCountSelect?.value || document.getElementById('player-count')?.value || 4);
-            
-            if (!useStudentData) {
-                // الطريقة اليدوية التقليدية
-                setupManualPlayers(playerCount);
-            } else {
-                // إخفاء الحاوية اليدوية إذا كانت تستخدم بيانات الطلاب
-                const manualContainer = document.getElementById('manual-entry-container');
-                if (manualContainer) {
-                    manualContainer.style.display = 'none';
-                }
-            }
-            
-            // تحديث عرض الطلاب المختارين
-            updateSelectedStudentsDisplay();
-        }
-
-        // إعداد اللاعبين اليدوي
-        function setupManualPlayers(playerCount) {
-            const container = document.getElementById('manual-entry-container') || 
-                            document.getElementById('player-names-container');
-            
-            if (!container) {
-                console.error('❌ لم يتم العثور على حاوية إدخال الأسماء');
-                return;
-            }
-            
-            container.innerHTML = '';
-            container.style.display = 'block';
-            
-            // إضافة عنوان
-            const title = document.createElement('h4');
-            title.textContent = '✍️ أدخل أسماء اللاعبين:';
-            title.style.color = 'var(--oman-red)';
-            title.style.marginBottom = '15px';
-            container.appendChild(title);
-            
-            for (let i = 0; i < playerCount; i++) {
-                const div = document.createElement('div');
-                div.className = 'player-setup-section';
-                div.style.cssText = `
-                    background: #f8f9fa;
-                    border-radius: 8px;
-                    padding: 15px;
-                    margin: 10px 0;
-                    border-left: 4px solid ${playerColors[i]};
-                `;
-                
-                div.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                        <span style="font-size: 24px;">${playerTokens[i]}</span>
-                        <label for="player-${i}-name" style="font-weight: bold;">لاعب ${i + 1}:</label>
-                    </div>
-                    <input type="text" id="player-${i}-name" 
-                           placeholder="أدخل اسم اللاعب ${i + 1}" 
-                           style="
-                               width: 100%; 
-                               padding: 10px; 
-                               border: 2px solid #ddd; 
-                               border-radius: 5px;
-                               font-size: 16px;
-                           " required>
-                `;
-                container.appendChild(div);
-            }
-            
-            // إضافة زر بدء اللعبة إذا لم يكن موجوداً
-            let startBtn = container.querySelector('.start-game-manual-btn');
-            if (!startBtn) {
-                startBtn = document.createElement('button');
-                startBtn.className = 'start-game-manual-btn oman-btn';
-                startBtn.textContent = '🎮 بدء اللعبة';
-                startBtn.style.cssText = `
-                    background: linear-gradient(135deg, var(--oman-green) 0%, var(--light-green) 100%);
-                    color: white;
-                    border: none;
-                    padding: 15px 30px;
-                    border-radius: 25px;
-                    font-size: 18px;
-                    font-weight: bold;
-                    cursor: pointer;
-                    margin-top: 20px;
-                    width: 100%;
-                `;
-                
-                startBtn.addEventListener('click', function() {
-                    console.log('🎯 النقر على زر بدء اللعبة اليدوي');
-                    startGameWithSelectedStudents();
-                });
-                
-                container.appendChild(startBtn);
-            }
-        }
-
-        // تحديث حالة الاختيار
-        function updateSelectionStatus() {
-            const statusElement = document.getElementById('selection-status');
-            const countElement = document.getElementById('selection-count');
-            const requiredElement = document.getElementById('required-count');
-            const playerCount = parseInt(document.getElementById('player-count')?.value || 4);
-            
-            if (countElement) {
-                countElement.textContent = selectedStudents.length;
-            }
-            if (requiredElement) {
-                requiredElement.textContent = playerCount;
-            }
-            
-            if (statusElement) {
-                if (selectedStudents.length === playerCount) {
-                    statusElement.style.color = 'var(--oman-green)';
-                    statusElement.textContent = '✅ جاهز للبدء';
-                } else if (selectedStudents.length > playerCount) {
-                    statusElement.style.color = 'var(--oman-red)';
-                    statusElement.textContent = '⚠️ تم تجاوز العدد المطلوب';
-                } else {
-                    statusElement.style.color = '#666';
-                    statusElement.textContent = `اختر ${playerCount - selectedStudents.length} طلاب إضافيين`;
-                }
-            }
-            
-        // ملء قائمة الصفوف (نظام موحد مع الأنشطة الأخرى)
-        function fillClassSelect() {
-            const classSelect = document.getElementById('class-selector');
-            if (!classSelect || !studentData) return;
-            
-            classSelect.innerHTML = '<option value="">اختر الصف</option>';
-            
-            Object.keys(studentData).forEach(className => {
-                const studentCount = studentData[className].length;
-                const option = document.createElement('option');
-                option.value = className;
-                option.textContent = `${className} (${studentCount} طالب)`;
-                classSelect.appendChild(option);
-            });
-            
-            console.log('✅ تم تحديث قائمة الصفوف:', Object.keys(studentData));
-            
-            // تفعيل معالج تغيير الصف
-            classSelect.addEventListener('change', function() {
-                const selectedClass = this.value;
-                if (selectedClass && studentData[selectedClass]) {
-                    const studentCount = studentData[selectedClass].length;
-                    showMessage(`� تم اختيار "${selectedClass}" - يحتوي على ${studentCount} طالب`, 'info', 3000);
-                    
-                    // تحديث الطلاب المتاحين للاختيار
-                    populateStudentGrid(selectedClass);
-                } else {
-                    showMessage('⚠️ يرجى اختيار صف صحيح', 'warning');
-                }
-            });
-        }
-
-        // ملء شبكة الطلاب للاختيار (نظام موحد)
-        function populateStudentGrid(className) {
-            const studentsContainer = document.getElementById('students-grid');
-            if (!studentsContainer || !studentData[className]) return;
-            
-            const students = studentData[className];
-            studentsContainer.innerHTML = '';
-            
-            students.forEach((studentName, index) => {
-                const studentCard = document.createElement('div');
-                studentCard.className = 'student-card';
-                studentCard.dataset.studentName = studentName;
-                studentCard.style.cssText = `
-                    background: white;
-                    border: 2px solid #ddd;
-                    border-radius: 8px;
-                    padding: 12px;
-                    margin: 5px;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                    text-align: center;
-                    font-weight: bold;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                `;
-                
-                studentCard.innerHTML = `
-                    <div style="font-size: 14px; color: #333;">${studentName}</div>
-                `;
-                
-                // إضافة معالج النقر
-                studentCard.addEventListener('click', function() {
-                    toggleStudentSelection(studentName, studentCard);
-                });
-                
-                studentsContainer.appendChild(studentCard);
-            });
-            
-            showMessage(`تم عرض ${students.length} طالب من ${className}`, 'info', 2000);
-        }
-
-        // تبديل اختيار الطالب (نظام موحد)
-        function toggleStudentSelection(studentName, cardElement) {
-            const maxPlayers = parseInt(document.getElementById('player-count').value);
-            
-            if (cardElement.classList.contains('selected')) {
-                // إزالة الاختيار
-                cardElement.classList.remove('selected');
-                cardElement.style.borderColor = '#ddd';
-                cardElement.style.background = 'white';
-                
-                selectedStudents = selectedStudents.filter(s => 
-                    (typeof s === 'string' ? s : s.name) !== studentName
-                );
-                
-                showMessage(`تم إلغاء اختيار: ${studentName}`, 'info', 2000);
-            } else {
-                // إضافة الاختيار
-                if (selectedStudents.length >= maxPlayers) {
-                    showMessage(`⚠️ لا يمكن اختيار أكثر من ${maxPlayers} طلاب!`, 'warning');
-                    return;
-                }
-                
-                cardElement.classList.add('selected');
-                cardElement.style.borderColor = 'var(--oman-green)';
-                cardElement.style.background = 'linear-gradient(135deg, var(--oman-green), var(--light-green))';
-                cardElement.style.color = 'white';
-                
-                selectedStudents.push(studentName);
-                showMessage(`تم اختيار: ${studentName}`, 'success', 2000);
-            }
-            
-            updateSelectedStudentsDisplay();
-            updateSelectionStatus();
-        }
-        }
-
-        // ملء قائمة الصفوف المحسنة
-        function populateClassOptions(data) {
-            const classSelect = document.getElementById('class-selector');
-            if (!classSelect || !data) return;
-            
-            classSelect.innerHTML = '<option value="">اختر الصف</option>';
-            
-            Object.keys(data).forEach(className => {
-                const option = document.createElement('option');
-                option.value = className;
-                option.textContent = `${className} (${data[className].length} طالب)`;
-                classSelect.appendChild(option);
-            });
-            
-            console.log('✅ تم تحديث قائمة الصفوف:', Object.keys(data));
-        }
-            
-            if (filteredStudents.length === 0) {
-                alert('⚠️ لا توجد طلاب في الصف المختار.');
-                return;
-            }
-            
-            studentGrid.style.display = 'block';
-            studentGrid.innerHTML = '';
-            studentGrid.className = 'student-grid';
-            
-            // إضافة عداد الطلاب
-            const counterDiv = document.createElement('div');
-            counterDiv.className = 'student-counter';
-            const classText = selectedClass ? `الصف ${selectedClass}` : 'جميع الصفوف';
-            counterDiv.textContent = `${classText}: ${filteredStudents.length} طالب | المطلوب اختيار: ${playerCountSelect.value}`;
-            studentGrid.appendChild(counterDiv);
-            
-            // إضافة شريط البحث
-            const searchDiv = document.createElement('div');
-            searchDiv.style.cssText = 'margin-bottom: 15px; text-align: center;';
-            const searchInput = document.createElement('input');
-            searchInput.type = 'text';
-            searchInput.placeholder = '🔍 ابحث عن طالب...';
-            searchInput.className = 'search-input';
-            
-            searchInput.addEventListener('input', function() {
-                filterAndDisplayStudents(this.value, filteredStudents);
-            });
-            
-            searchDiv.appendChild(searchInput);
-            studentGrid.appendChild(searchDiv);
-            
-            // حاوية بطاقات الطلاب
-            const cardsContainer = document.createElement('div');
-            cardsContainer.id = 'student-cards-container';
-            cardsContainer.className = 'student-grid';
-            studentGrid.appendChild(cardsContainer);
-            
-            // عرض جميع الطلاب
-            displayStudentCards(filteredStudents, cardsContainer);
-        }
-
-        // عرض بطاقات الطلاب
-        function displayStudentCards(students, container) {
-            container.innerHTML = '';
-            
-            students.forEach(student => {
-                const card = document.createElement('div');
-                card.className = 'student-card';
-                card.innerHTML = `
-                    <div>${student}</div>
-                `;
-                
-                // التحقق إذا كان الطالب مختار مسبقاً
-                if (selectedStudents.includes(student)) {
-                    card.classList.add('selected');
-                }
-                
-                card.addEventListener('click', () => {
-                    playClickSound();
-                    toggleStudentSelection(student, card);
-                });
-                
-                container.appendChild(card);
-            });
-        }
-
-        // تصفية وعرض الطلاب مع البحث
-        function filterAndDisplayStudents(searchTerm, studentsToFilter) {
-            const filtered = studentsToFilter.filter(student => 
-                student.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-            
-            const container = document.getElementById('student-cards-container');
-            displayStudentCards(filtered, container);
-        }
-
-        // دالة مساعدة لإظهار رسائل المساعدة
-        function showHelpMessage(message, type = 'info') {
-            const helpDiv = document.createElement('div');
-            helpDiv.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                padding: 15px 20px;
-                border-radius: 10px;
-                color: white;
-                font-weight: bold;
-                z-index: 9999;
-                max-width: 300px;
-                text-align: center;
-                animation: slideInRight 0.3s ease;
-            `;
-            
-            if (type === 'success') {
-                helpDiv.style.background = 'linear-gradient(135deg, var(--oman-green) 0%, var(--light-green) 100%)';
-            } else if (type === 'warning') {
-                helpDiv.style.background = 'linear-gradient(135deg, var(--gold) 0%, #FFB347 100%)';
-                helpDiv.style.color = 'var(--dark-blue)';
-            } else if (type === 'error') {
-                helpDiv.style.background = 'linear-gradient(135deg, var(--oman-red) 0%, #a01717 100%)';
-            } else {
-                helpDiv.style.background = 'linear-gradient(135deg, var(--dark-blue) 0%, #004d40 100%)';
-            }
-            
-            helpDiv.textContent = message;
-            document.body.appendChild(helpDiv);
-            
-            // إزالة الرسالة بعد 3 ثوان
-            setTimeout(() => {
-                helpDiv.style.animation = 'slideOutRight 0.3s ease';
-                setTimeout(() => {
-                    if (helpDiv.parentNode) {
-                        helpDiv.parentNode.removeChild(helpDiv);
-                    }
-                }, 300);
-            }, 3000);
-        }
-
-        // إضافة CSS للرسائل
-        const helpCSS = document.createElement('style');
-        helpCSS.innerHTML = `
-            @keyframes slideInRight {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-            @keyframes slideOutRight {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(helpCSS);
-        function addClickSoundToButtons() {
-            document.querySelectorAll('.oman-btn, .student-card').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    if (!e.target.hasAttribute('data-no-sound')) {
-                        playClickSound();
-                    }
-                });
-            });
-        }
-
-        // إزالة طالب من الاختيار (دالة عامة للنظام) - محسنة
-        window.removeSelectedStudent = function(studentName) {
-            playClickSound();
-            console.log('محاولة إزالة الطالب:', studentName);
-            
-            selectedStudents = selectedStudents.filter(s => {
-                if (typeof s === 'string') {
-                    return s !== studentName;
-                } else {
-                    return s.name !== studentName;
-                }
-            });
-            
-            console.log('الطلاب المتبقين بعد الإزالة:', selectedStudents);
-            updateSelectedStudentsDisplay();
-            updateSelectionStatus();
-            
-            // إزالة التحديد من الشبكة إذا كانت مرئية
-            const studentCards = document.querySelectorAll('.student-card');
-            studentCards.forEach(card => {
-                const cardText = card.querySelector('div')?.textContent || card.textContent;
-                if (cardText === studentName) {
-                    card.classList.remove('selected');
-                }
-            });
+        // ===========================================
+        // متغيرات اللعبة الرئيسية
+        // ===========================================
+        let gameState = {
+            players: [],
+            currentPlayer: 0,
+            gameStarted: false,
+            soundEnabled: true
         };
 
-        // عرض بطاقات الطلاب (محدث)
-        function displayStudentCards(students, container) {
-            container.innerHTML = '';
-            
-            if (students.length === 0) {
-                container.innerHTML = '<div style="text-align: center; padding: 20px; color: #666;">لا توجد نتائج مطابقة للبحث</div>';
-                return;
+        let playerData = [];
+
+        // ===========================================
+        // أنظمة اللعبة الأساسية
+        // ===========================================
+        
+        // نظام الصوت
+        class SoundSystem {
+            constructor() {
+                this.sounds = {
+                    dice: new Audio('../assets/media/sounds/Click.mp3'),
+                    buy: new Audio('../assets/media/sounds/Notification.mp3'),
+                    money: new Audio('../assets/media/sounds/select.mp3'),
+                    win: new Audio('../assets/media/sounds/win.mp3'),
+                    lose: new Audio('../assets/media/sounds/wrong_answer.mp3')
+                };
+                this.enabled = true;
             }
-            
-            students.forEach((student, index) => {
-                const studentCard = document.createElement('div');
-                studentCard.className = 'student-card';
-                studentCard.innerHTML = `
-                    <div style="font-weight: bold; margin-bottom: 5px;">${student.name}</div>
-                    <div style="font-size: 12px; opacity: 0.8;">
-                        ${student.number ? `رقم: ${student.number}` : ''}
-                        ${student.class ? ` | الصف: ${student.class}` : ''}
-                    </div>
+
+            play(soundName) {
+                if (this.enabled && this.sounds[soundName]) {
+                    this.sounds[soundName].currentTime = 0;
+                    this.sounds[soundName].play().catch(e => console.log('خطأ في تشغيل الصوت:', e));
+                }
+            }
+
+            toggle() {
+                this.enabled = !this.enabled;
+                return this.enabled;
+            }
+        }
+
+        // نظام الرسائل
+        class MessageSystem {
+            static show(message, type = 'info', duration = 3000) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `game-message ${type}`;
+                messageDiv.textContent = message;
+                messageDiv.style.cssText = `
+                    position: fixed;
+                    top: 100px;
+                    right: 20px;
+                    background: var(--surface-glass);
+                    color: var(--text-primary);
+                    padding: 15px 20px;
+                    border-radius: var(--border-radius-medium);
+                    border: 2px solid var(--oman-${type === 'error' ? 'red' : 'green'});
+                    backdrop-filter: blur(16px);
+                    box-shadow: var(--shadow-medium);
+                    z-index: 10001;
+                    animation: slideInRight 0.3s ease-out;
+                    font-weight: 600;
+                    max-width: 300px;
                 `;
-                
-                // التحقق من الاختيار المسبق
-                if (selectedStudents.find(s => s.name === student.name)) {
-                    studentCard.classList.add('selected');
-                }
-                
-                studentCard.onclick = () => toggleStudentSelection(student, studentCard);
-                container.appendChild(studentCard);
-            });
-        }
 
-        // تبديل اختيار الطالب
-        function toggleStudentSelection(student, cardElement) {
-            playClickSound();
-            const playerCount = parseInt(playerCountSelect.value);
-            
-            if (selectedStudents.find(s => s.name === student.name)) {
-                // إزالة الطالب
-                selectedStudents = selectedStudents.filter(s => s.name !== student.name);
-                cardElement.classList.remove('selected');
-            } else {
-                // إضافة الطالب
-                if (selectedStudents.length < playerCount) {
-                    selectedStudents.push(student);
-                    cardElement.classList.add('selected');
-                } else {
-                    alert(`⚠️ لا يمكن اختيار أكثر من ${playerCount} طلاب!`);
-                }
-            }
-            
-            updateSelectedStudentsDisplay();
-        }
+                document.body.appendChild(messageDiv);
 
-        // تحديث عرض الطلاب المختارين (محدث)
-        // إزالة طالب مختار (دالة محسنة)
-        function removeSelectedStudent(index) {
-            playClickSound();
-            const removedStudent = selectedStudents[index];
-            selectedStudents.splice(index, 1);
-            
-            // إزالة التحديد من الشبكة
-            const studentCards = document.querySelectorAll('.student-card');
-            studentCards.forEach(card => {
-                const cardName = card.querySelector('div')?.textContent || card.textContent;
-                if (cardName === removedStudent.name) {
-                    card.classList.remove('selected');
-                }
-            });
-            
-            updateSelectedStudentsDisplay();
-        }
-
-        // معالج حدث تغيير الصف
-        document.addEventListener('DOMContentLoaded', function() {
-            
-            if (useStudentData) {
-                if (selectedStudents.length !== requiredCount) {
-                    alert(`⚠️ يرجى اختيار ${requiredCount} طلاب بالضبط! (المختار حالياً: ${selectedStudents.length})`);
-                    return;
-                }
-                
-                // إنشاء اللاعبين من الطلاب المختارين
-                players = [];
-                selectedStudents.forEach((student, i) => {
-                    const studentName = typeof student === 'string' ? student : student.name || student;
-                    players.push({
-                        id: i,
-                        name: studentName,
-                        money: 1500,
-                        position: 0,
-                        properties: [],
-                        color: playerColors[i],
-                        token: playerTokens[i]
-                    });
-                });
-            } else {
-                // إنشاء لاعبين من الأسماء اليدوية
-                players = [];
-                for (let i = 0; i < requiredCount; i++) {
-                    const nameInput = document.getElementById(`player-${i}-name`);
-                    const playerName = nameInput ? nameInput.value.trim() : `لاعب ${i+1}`;
-                    
-                    if (!playerName) {
-                        alert(`⚠️ يرجى إدخال اسم للاعب ${i+1}`);
-                        return;
-                    }
-                    
-                    players.push({
-                        id: i,
-                        name: playerName,
-                        money: 1500,
-                        position: 0,
-                        properties: [],
-                        color: playerColors[i],
-                        token: playerTokens[i]
-                    });
-                }
-            }
-            
-            // التحقق من عدم تكرار الأسماء
-            const names = players.map(p => p.name);
-            const uniqueNames = new Set(names);
-            if (uniqueNames.size !== names.length) {
-                alert('⚠️ لا يمكن أن يكون هناك لاعبان بنفس الاسم!');
-                return;
-            }
-            
-            // بدء اللعبة
-            console.log('🎮 بدء اللعبة مع اللاعبين:', players);
-            initGame();
-        }
-
-        // إظهار تحديد الطلاب
-        function showStudentSelection() {
-            const studentSelectionContainer = document.getElementById('student-selection-container');
-            const manualEntryContainer = document.getElementById('manual-entry-container');
-            
-            if (studentSelectionContainer) {
-                studentSelectionContainer.style.display = 'block';
-            }
-            if (manualEntryContainer) {
-                manualEntryContainer.style.display = 'none';
-            }
-            
-            // تحديث قوائم الطلاب إذا كانت البيانات متوفرة
-            if (studentData) {
-                populateClassOptions(studentData);
-            }
-        }
-
-        // إظهار الإدخال اليدوي
-        function showManualEntry() {
-            const studentSelectionContainer = document.getElementById('student-selection-container');
-            const manualEntryContainer = document.getElementById('manual-entry-container');
-            
-            if (studentSelectionContainer) {
-                studentSelectionContainer.style.display = 'none';
-            }
-            if (manualEntryContainer) {
-                manualEntryContainer.style.display = 'block';
-            }
-            
-            // إنشاء حقول الإدخال اليدوي
-            createManualPlayerInputs();
-        }
-
-        // إنشاء حقول الإدخال اليدوي
-        function createManualPlayerInputs() {
-            const container = document.getElementById('manual-entry-container');
-            if (!container) return;
-            
-            const playerCount = parseInt(document.getElementById('player-count').value);
-            
-            container.innerHTML = `
-                <h4 style="color: var(--oman-red); margin-bottom: 15px;">✍️ أدخل أسماء اللاعبين:</h4>
-                <div class="manual-inputs">
-                    ${Array.from({length: playerCount}, (_, i) => `
-                        <div class="player-input-group">
-                            <label for="player-${i}-name">لاعب ${i+1}:</label>
-                            <input type="text" id="player-${i}-name" placeholder="اسم اللاعب ${i+1}" 
-                                   style="width: 100%; padding: 8px; border: 2px solid #ddd; border-radius: 5px; margin-top: 5px;">
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        }
-
-        // معالج حدث تغيير الصف
-        document.addEventListener('DOMContentLoaded', function() {
-            const classSelector = document.getElementById('class-selector');
-            if (classSelector) {
-                classSelector.addEventListener('change', function() {
-                    const selectedClass = this.value;
-                    if (selectedClass) {
-                        showHelpMessage('تم اختيار الصف بنجاح! اختر الآن نوع الاختيار', 'success');
-                        document.getElementById('selection-mode-container').style.display = 'block';
-                        
-                        // إخفاء الاختيار اليدوي والعرض إذا كانوا ظاهرين
-                        const manualContainer = document.getElementById('manual-selection-container');
-                        if (manualContainer) manualContainer.style.display = 'none';
-                        document.getElementById('selected-students').innerHTML = '';
-                        
-                        // إعادة تعيين نوع الاختيار
-                        document.getElementById('selection-mode').value = '';
-                    } else {
-                        showHelpMessage('يرجى اختيار صف من القائمة', 'warning');
-                        document.getElementById('selection-mode-container').style.display = 'none';
-                        document.getElementById('manual-selection-container').style.display = 'none';
-                        document.getElementById('selected-students').innerHTML = '';
-                    }
-                });
-            }
-
-            // معالج حدث تغيير نوع الاختيار
-            const selectionMode = document.getElementById('selection-mode');
-            if (selectionMode) {
-                selectionMode.addEventListener('change', function() {
-                    const mode = this.value;
-                    const manualContainer = document.getElementById('manual-selection-container');
-                    const gridContainer = document.getElementById('students-grid-container');
-                    
-                    if (mode === 'manual') {
-                        showMessage('تم اختيار الاختيار اليدوي. اختر الطلاب من القوائم', 'info');
-                        if (manualContainer) manualContainer.style.display = 'block';
-                        if (gridContainer) gridContainer.style.display = 'none';
-                        createPlayerDropdowns();
-                    } else if (mode === 'grid') {
-                        showMessage('تم اختيار الاختيار التفاعلي. اختر الطلاب من الشبكة', 'info');
-                        if (manualContainer) manualContainer.style.display = 'none';
-                        if (gridContainer) gridContainer.style.display = 'block';
-                        
-                        const selectedClass = document.getElementById('class-selector').value;
-                        if (selectedClass) {
-                            populateStudentGrid(selectedClass);
+                setTimeout(() => {
+                    messageDiv.style.animation = 'slideOutRight 0.3s ease-in';
+                    setTimeout(() => {
+                        if (messageDiv.parentNode) {
+                            messageDiv.parentNode.removeChild(messageDiv);
                         }
-                    } else if (mode === 'free') {
-                        showMessage('تم اختيار الأسماء الافتراضية. يمكنك البدء مباشرة', 'info');
-                        if (manualContainer) manualContainer.style.display = 'none';
-                        if (gridContainer) gridContainer.style.display = 'none';
-                        document.getElementById('selected-students').innerHTML = '';
-                    } else {
-                        if (manualContainer) manualContainer.style.display = 'none';
-                        if (gridContainer) gridContainer.style.display = 'none';
-                        document.getElementById('selected-students').innerHTML = '';
-                    }
-                });
+                    }, 300);
+                }, duration);
             }
-        });
-
-        // تهيئة اللعبة عند تحميل الصفحة
-        window.addEventListener('DOMContentLoaded', () => {
-            console.log('🎮 بدء تحميل لعبة مونوبولي عُمان...');
-            
-            // تحميل بيانات الطلاب
-            loadStudentData();
-            
-            // إعداد الواجهة الافتراضية
-            setupPlayers();
-            setupModal.style.display = 'block';
-            
-            // تهيئة الأزرار الرئيسية
-            initializeButtons();
-            
-            // تعيين الإدخال اليدوي كافتراضي
-            const manualEntryBtn = document.getElementById('manual-entry-btn');
-            if (manualEntryBtn) {
-                manualEntryBtn.style.background = 'linear-gradient(135deg, var(--oman-red) 0%, #a01717 100%)';
-            }
-            
-            // تحديث عداد الاختيار
-            updateSelectionStatus();
-            
-            console.log('🎮 تم تحميل اللعبة بنجاح!');
-        });
-
-        // تهيئة الأزرار الرئيسية
-        function initializeButtons() {
-            console.log('🔧 تهيئة الأزرار...');
-            
-            // زر استخدام بيانات الطلاب
-            const useStudentDataBtn = document.getElementById('student-selection-btn');
-            if (useStudentDataBtn) {
-                useStudentDataBtn.addEventListener('click', function() {
-                    console.log('🎯 تم النقر على زر استخدام بيانات الطلاب');
-                    useStudentData = true;
-                    showStudentSelection();
-                    this.style.background = 'linear-gradient(135deg, var(--oman-green) 0%, var(--light-green) 100%)';
-                    
-                    const manualBtn = document.getElementById('manual-entry-btn');
-                    if (manualBtn) {
-                        manualBtn.style.background = 'linear-gradient(135deg, #6c757d 0%, #5a6268 100%)';
-                    }
-                });
-            }
-            
-            // زر الإدخال اليدوي
-            const manualEntryBtn = document.getElementById('manual-entry-btn');
-            if (manualEntryBtn) {
-                manualEntryBtn.addEventListener('click', function() {
-                    console.log('🎯 تم النقر على زر الإدخال اليدوي');
-                    useStudentData = false;
-                    showManualEntry();
-                    this.style.background = 'linear-gradient(135deg, var(--oman-red) 0%, #a01717 100%)';
-                    
-                    const studentBtn = document.getElementById('student-selection-btn');
-                    if (studentBtn) {
-                        studentBtn.style.background = 'linear-gradient(135deg, #6c757d 0%, #5a6268 100%)';
-                    }
-                });
-            }
-            
-            // زر بدء اللعبة
-            const startGameBtn = document.querySelector('button[onclick="startGameWithSelectedStudents()"]');
-            if (startGameBtn) {
-                startGameBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    console.log('🎯 تم النقر على زر بدء اللعبة');
-                    startGameWithSelectedStudents();
-                });
-            }
-            
-            // تهيئة أزرار التحكم بعدد اللاعبين
-            const playerCountSelect = document.getElementById('player-count');
-            if (playerCountSelect) {
-                playerCountSelect.addEventListener('change', function() {
-                    console.log('🎯 تم تغيير عدد اللاعبين إلى:', this.value);
-                    setupPlayers();
-                    updateSelectionStatus();
-                });
-            }
-            
-            console.log('✅ تم تهيئة الأزرار بنجاح');
         }
 
-        // ===== دوال إضافية محسنة للعبة =====
+        // إنشاء الأنظمة
+        const soundSystem = new SoundSystem();
 
-        // حساب الإيجار
-        function calculateRent(property) {
-            if (!property.price) return 0;
-            
-            let baseRent = property.rent || Math.floor(property.price * 0.1);
-            
-            // زيادة الإيجار حسب عدد المنازل
-            if (property.houses > 0) {
-                baseRent *= (1 + property.houses * 0.5);
-            }
-            
-            return Math.floor(baseRent);
-        }
-
-        // عرض شراء العقار
-        function offerPropertyPurchase(playerIndex, property) {
-            const player = players[playerIndex];
-            
-            if (player.money < property.price) {
-                showGameMessage(`💸 ${player.name} لا يملك مالاً كافياً لشراء ${property.name}`, 'warning');
-                return;
-            }
-            
-            const confirmed = confirm(`🏠 هل تريد شراء ${property.name} مقابل ${property.price} ر.ع؟`);
-            
-            if (confirmed) {
-                player.money -= property.price;
-                property.ownedBy = playerIndex;
-                player.properties.push(property.id);
+        // ===========================================
+        // تحميل بيانات الطلاب (مطابق لنشاط "من هو")
+        // ===========================================
+        async function loadStudentData() {
+            try {
+                const response = await fetch('../data/studentData.json');
+                if (!response.ok) {
+                    throw new Error('فشل في تحميل بيانات الطلاب');
+                }
+                const data = await response.json();
+                playerData = data.students || [];
                 
-                showGameMessage(`🎉 ${player.name} اشترى ${property.name} مقابل ${property.price} ر.ع!`, 'success');
-                updatePlayerInfo();
-            }
-        }
-
-        // تحديث معلومات اللاعبين
-        function updatePlayerInfo() {
-            const playersInfo = document.getElementById('players-info');
-            if (!playersInfo || !players) return;
-            
-            playersInfo.innerHTML = '';
-            
-            players.forEach((player, index) => {
-                const playerCard = document.createElement('div');
-                playerCard.className = 'player-card';
-                playerCard.innerHTML = `
-                    <div class="player-header">
-                        <span class="player-token-display" style="background: ${player.color || playerColors[index]};">
-                            ${player.token || playerTokens[index]}
-                        </span>
-                        <span class="player-name">${player.name}</span>
-                    </div>
-                    <div class="player-money">💰 ${player.money} ر.ع</div>
-                    <div class="player-properties">🏠 ${player.properties ? player.properties.length : 0} عقار</div>
-                `;
-                
-                if (index === currentPlayerIndex && gameStarted) {
-                    playerCard.classList.add('current-turn');
+                if (playerData.length === 0) {
+                    throw new Error('لا توجد بيانات طلاب');
                 }
                 
+                console.log('✅ تم تحميل بيانات الطلاب بنجاح:', playerData.length, 'طالب');
+                return playerData;
+            } catch (error) {
+                console.warn('⚠️ خطأ في تحميل بيانات الطلاب، استخدام البيانات الافتراضية:', error);
+                
+                // بيانات احتياطية
+                playerData = [
+                    { name: 'أحمد محمد', class: '10أ' },
+                    { name: 'فاطمة سالم', class: '10أ' },
+                    { name: 'محمد علي', class: '10ب' },
+                    { name: 'عائشة خالد', class: '10ب' }
+                ];
+                
+                return playerData;
+            }
+        }
+
+        // ===========================================
+        // إنشاء لوحة اللعبة
+        // ===========================================
+        function createGameBoard() {
+            const board = document.getElementById('gameBoard');
+            board.innerHTML = '';
+
+            omanProperties.forEach((property, index) => {
+                const square = document.createElement('div');
+                square.className = `board-square ${property.color} ${index % 10 === 0 ? 'corner-square' : 'side-square'} square-${index}`;
+                square.id = `square-${index}`;
+                square.innerHTML = `
+                    <div class="property-name">${property.name}</div>
+                    ${property.price > 0 ? `<div class="property-price">${property.price} ر.ع</div>` : ''}
+                `;
+                
+                square.addEventListener('click', () => showPropertyInfo(property));
+                board.appendChild(square);
+            });
+        }
+
+        // ===========================================
+        // معلومات العقار
+        // ===========================================
+        function showPropertyInfo(property) {
+            const modal = document.getElementById('propertyModal');
+            const propertyInfo = document.getElementById('propertyInfo');
+            
+            let infoHTML = `
+                <h2><i class="fas fa-building"></i> ${property.name}</h2>
+                <div style="margin-top: 20px;">
+            `;
+
+            if (property.type === 'property') {
+                infoHTML += `
+                    <p><strong>النوع:</strong> عقار</p>
+                    <p><strong>السعر:</strong> ${property.price} ريال عُماني</p>
+                    <p><strong>المجموعة:</strong> ${getGroupName(property.color)}</p>
+                    <h3>الإيجارات:</h3>
+                    <ul>
+                        <li>أرض فارغة: ${property.rent[0]} ر.ع</li>
+                        <li>منزل واحد: ${property.rent[1]} ر.ع</li>
+                        <li>منزلان: ${property.rent[2]} ر.ع</li>
+                        <li>ثلاثة منازل: ${property.rent[3]} ر.ع</li>
+                        <li>أربعة منازل: ${property.rent[4]} ر.ع</li>
+                        <li>فندق: ${property.rent[5]} ر.ع</li>
+                    </ul>
+                `;
+            } else if (property.type === 'airport') {
+                infoHTML += `
+                    <p><strong>النوع:</strong> مطار</p>
+                    <p><strong>السعر:</strong> ${property.price} ريال عُماني</p>
+                    <h3>الإيجارات:</h3>
+                    <ul>
+                        <li>مطار واحد: ${property.rent[0]} ر.ع</li>
+                        <li>مطاران: ${property.rent[1]} ر.ع</li>
+                        <li>ثلاثة مطارات: ${property.rent[2]} ر.ع</li>
+                        <li>أربعة مطارات: ${property.rent[3]} ر.ع</li>
+                    </ul>
+                `;
+            } else if (property.type === 'utility') {
+                infoHTML += `
+                    <p><strong>النوع:</strong> مرفق عام</p>
+                    <p><strong>السعر:</strong> ${property.price} ريال عُماني</p>
+                    <p><strong>الإيجار:</strong> 4 مرات نتيجة النرد (مرفق واحد) أو 10 مرات (مرفقان)</p>
+                `;
+            } else {
+                infoHTML += `<p><strong>النوع:</strong> ${getSquareTypeName(property.type)}</p>`;
+            }
+
+            infoHTML += '</div>';
+            propertyInfo.innerHTML = infoHTML;
+            modal.style.display = 'block';
+        }
+
+        function getGroupName(color) {
+            const groups = {
+                'brown': 'المجموعة البنية',
+                'light-blue': 'المجموعة الزرقاء الفاتحة',
+                'pink': 'المجموعة الوردية',
+                'orange': 'المجموعة البرتقالية',
+                'red': 'المجموعة الحمراء',
+                'yellow': 'المجموعة الصفراء',
+                'green': 'المجموعة الخضراء',
+                'dark-blue': 'المجموعة الزرقاء الداكنة',
+                'railroad': 'المطارات',
+                'utility': 'المرافق العامة'
+            };
+            return groups[color] || 'غير محدد';
+        }
+
+        function getSquareTypeName(type) {
+            const types = {
+                'start': 'نقطة البداية',
+                'jail': 'السجن/الزيارة',
+                'free': 'موقف مجاني',
+                'go-to-jail': 'اذهب للسجن',
+                'tax': 'ضريبة',
+                'chance': 'الفرصة',
+                'community': 'صندوق المجتمع'
+            };
+            return types[type] || 'غير محدد';
+        }
+
+        // ===========================================
+        // إدارة اللاعبين
+        // ===========================================
+        function initializePlayers() {
+            // إنشاء لاعبين افتراضيين
+            gameState.players = [
+                { name: 'اللاعب الأول', money: 1500, position: 0, properties: [] },
+                { name: 'اللاعب الثاني', money: 1500, position: 0, properties: [] }
+            ];
+            
+            updatePlayersDisplay();
+        }
+
+        function updatePlayersDisplay() {
+            const playersInfo = document.getElementById('playersInfo');
+            playersInfo.innerHTML = '';
+
+            gameState.players.forEach((player, index) => {
+                const playerCard = document.createElement('div');
+                playerCard.className = `player-card ${index === gameState.currentPlayer ? 'current-player' : ''}`;
+                playerCard.innerHTML = `
+                    <h3>${player.name} ${index === gameState.currentPlayer ? '👑' : ''}</h3>
+                    <div class="player-info">
+                        <span>المال:</span>
+                        <span>${player.money} ر.ع</span>
+                    </div>
+                    <div class="player-info">
+                        <span>الموقع:</span>
+                        <span>${omanProperties[player.position].name}</span>
+                    </div>
+                    <div class="player-info">
+                        <span>العقارات:</span>
+                        <span>${player.properties.length}</span>
+                    </div>
+                `;
                 playersInfo.appendChild(playerCard);
             });
         }
 
-        // التحقق من انتهاء اللعبة
-        function checkGameEnd() {
-            const activePlayers = players.filter(player => player.money > 0);
-            
-            if (activePlayers.length === 1) {
-                const winner = activePlayers[0];
-                showGameMessage(`🏆 مبروك! ${winner.name} فاز باللعبة!`, 'success');
-                gameStarted = false;
-                
-                // إخفاء زر النرد
-                const rollBtn = document.getElementById('roll-dice-btn');
-                if (rollBtn) rollBtn.style.display = 'none';
-                
-                setTimeout(() => {
-                    alert(`🎉 تهانينا ${winner.name}! لقد فزت بلعبة مونوبولي عُمان!`);
-                }, 1000);
-                
-                return true;
+        // ===========================================
+        // ميكانيكية اللعبة
+        // ===========================================
+        function rollDice() {
+            if (!gameState.gameStarted) {
+                MessageSystem.show('يجب بدء اللعبة أولاً!', 'error');
+                return;
             }
-            
-            return false;
+
+            const dice1 = Math.floor(Math.random() * 6) + 1;
+            const dice2 = Math.floor(Math.random() * 6) + 1;
+            const total = dice1 + dice2;
+
+            soundSystem.play('dice');
+            MessageSystem.show(`نتيجة النرد: ${dice1} + ${dice2} = ${total}`);
+
+            movePlayer(gameState.currentPlayer, total);
         }
 
-        // إعادة تشغيل اللعبة
-        function restartGame() {
-            const confirmed = confirm('🔄 هل تريد إعادة تشغيل اللعبة؟');
-            if (!confirmed) return;
-            
-            // إعادة تعيين المتغيرات
-            players = [];
-            selectedStudents = [];
-            currentPlayerIndex = 0;
-            gameStarted = false;
-            
-            // إخفاء شاشة اللعبة
-            const gameContainer = document.getElementById('main-game-container');
-            if (gameContainer) gameContainer.style.display = 'none';
-            
-            // إظهار شاشة الإعداد
-            const setupModal = document.getElementById('setup-modal');
-            if (setupModal) setupModal.style.display = 'block';
-            
-            // تنظيف العرض
-            updateSelectedStudentsDisplay();
-            
-            console.log('🔄 تم إعادة تشغيل اللعبة');
+        function movePlayer(playerIndex, steps) {
+            const player = gameState.players[playerIndex];
+            const oldPosition = player.position;
+            player.position = (player.position + steps) % 40;
+
+            // إذا مر اللاعب بنقطة البداية
+            if (player.position < oldPosition) {
+                player.money += 200;
+                MessageSystem.show('مررت بنقطة البداية! حصلت على 200 ر.ع', 'success');
+                soundSystem.play('money');
+            }
+
+            updatePlayersDisplay();
+            handleSquareLanding(playerIndex, player.position);
         }
 
-        // دالة مساعدة لعرض الرسائل مع الألوان
-        function showMessage(message, type = 'info') {
-            const colors = {
-                'success': '#4CAF50',
-                'warning': '#FF9800', 
-                'error': '#F44336',
-                'info': '#2196F3'
-            };
-            
-            console.log(`%c${message}`, `color: ${colors[type] || colors.info}; font-weight: bold;`);
-            
-            // إظهار في واجهة المستخدم أيضاً
-            showGameMessage(message, type);
+        function handleSquareLanding(playerIndex, position) {
+            const player = gameState.players[playerIndex];
+            const property = omanProperties[position];
+
+            MessageSystem.show(`${player.name} هبط على ${property.name}`);
+
+            switch (property.type) {
+                case 'property':
+                case 'airport':
+                case 'utility':
+                    handlePropertyLanding(playerIndex, property);
+                    break;
+                case 'tax':
+                    handleTax(playerIndex, property.price);
+                    break;
+                case 'chance':
+                case 'community':
+                    handleSpecialCard(playerIndex, property.type);
+                    break;
+                case 'go-to-jail':
+                    handleGoToJail(playerIndex);
+                    break;
+            }
         }
 
-        // دالة للحصول على اللاعب الحالي
-        function getCurrentPlayer() {
-            return players[currentPlayerIndex];
-        }
-
-        // دالة للتحقق من حالة اللعبة
-        function getGameStatus() {
-            return {
-                started: gameStarted,
-                currentPlayer: getCurrentPlayer(),
-                playersCount: players.length,
-                turn: currentPlayerIndex + 1
-            };
-        }
-
-    </script>
-    
-    <!-- سكريبت الاختبار المؤقت -->
-    <script>
-        // اختبار سريع للعبة
-        setTimeout(() => {
-            console.log('🧪 اختبار سريع للعبة...');
+        function handlePropertyLanding(playerIndex, property) {
+            const player = gameState.players[playerIndex];
             
-            // اختبار وجود المتغيرات الأساسية
-            const basicVars = ['players', 'selectedStudents', 'gameStarted', 'currentPlayerIndex'];
-            basicVars.forEach(varName => {
-                if (typeof window[varName] !== 'undefined') {
-                    console.log(`✅ المتغير ${varName} موجود`);
+            // التحقق من ملكية العقار
+            const owner = gameState.players.find(p => p.properties.includes(property.id));
+            
+            if (!owner) {
+                // العقار متاح للشراء
+                if (player.money >= property.price) {
+                    if (confirm(`هل تريد شراء ${property.name} مقابل ${property.price} ر.ع؟`)) {
+                        player.money -= property.price;
+                        player.properties.push(property.id);
+                        MessageSystem.show(`تم شراء ${property.name} بنجاح!`, 'success');
+                        soundSystem.play('buy');
+                        updatePlayersDisplay();
+                    }
                 } else {
-                    console.error(`❌ المتغير ${varName} غير موجود`);
+                    MessageSystem.show('ليس لديك مال كافٍ لشراء هذا العقار!', 'error');
+                }
+            } else if (owner !== player) {
+                // دفع إيجار
+                const rent = calculateRent(property, owner);
+                player.money -= rent;
+                owner.money += rent;
+                MessageSystem.show(`دفعت ${rent} ر.ع إيجار لـ ${owner.name}`, 'error');
+                soundSystem.play('money');
+                updatePlayersDisplay();
+            }
+        }
+
+        function calculateRent(property, owner) {
+            if (property.type === 'property') {
+                return property.rent[0]; // إيجار أساسي (يمكن تطويره لاحقاً)
+            } else if (property.type === 'airport') {
+                const airportsOwned = owner.properties.filter(id => 
+                    omanProperties[id].type === 'airport'
+                ).length;
+                return property.rent[airportsOwned - 1];
+            } else if (property.type === 'utility') {
+                const utilitiesOwned = owner.properties.filter(id => 
+                    omanProperties[id].type === 'utility'
+                ).length;
+                return (utilitiesOwned === 1 ? 4 : 10) * (Math.floor(Math.random() * 6) + 1 + Math.floor(Math.random() * 6) + 1);
+            }
+            return 0;
+        }
+
+        function handleTax(playerIndex, amount) {
+            const player = gameState.players[playerIndex];
+            player.money -= amount;
+            MessageSystem.show(`دفعت ${amount} ر.ع ضريبة`, 'error');
+            soundSystem.play('lose');
+            updatePlayersDisplay();
+        }
+
+        function handleSpecialCard(playerIndex, cardType) {
+            const messages = [
+                'تقدم إلى نقطة البداية واحصل على 200 ر.ع',
+                'احصل على 50 ر.ع من البنك',
+                'ادفع 15 ر.ع رسوم إصلاح',
+                'تقدم 3 مربعات',
+                'احصل على 100 ر.ع'
+            ];
+            
+            const message = messages[Math.floor(Math.random() * messages.length)];
+            MessageSystem.show(`بطاقة ${cardType === 'chance' ? 'الفرصة' : 'صندوق المجتمع'}: ${message}`);
+        }
+
+        function handleGoToJail(playerIndex) {
+            const player = gameState.players[playerIndex];
+            player.position = 10; // موقع السجن
+            MessageSystem.show(`${player.name} ذهب إلى السجن!`, 'error');
+            soundSystem.play('lose');
+            updatePlayersDisplay();
+        }
+
+        function endTurn() {
+            if (!gameState.gameStarted) {
+                MessageSystem.show('يجب بدء اللعبة أولاً!', 'error');
+                return;
+            }
+
+            gameState.currentPlayer = (gameState.currentPlayer + 1) % gameState.players.length;
+            MessageSystem.show(`دور ${gameState.players[gameState.currentPlayer].name}`);
+            updatePlayersDisplay();
+        }
+
+        // ===========================================
+        // إدارة اللعبة
+        // ===========================================
+        function startGame() {
+            if (gameState.gameStarted) {
+                MessageSystem.show('اللعبة بدأت بالفعل!', 'error');
+                return;
+            }
+
+            initializePlayers();
+            gameState.gameStarted = true;
+            gameState.currentPlayer = 0;
+            
+            MessageSystem.show('بدأت اللعبة! حظاً موفقاً!', 'success');
+            soundSystem.play('win');
+            updatePlayersDisplay();
+        }
+
+        function showRules() {
+            document.getElementById('rulesModal').style.display = 'block';
+        }
+
+        // ===========================================
+        // معالجة الأحداث
+        // ===========================================
+        function setupEventListeners() {
+            // أزرار التحكم الرئيسية
+            document.getElementById('startGame').addEventListener('click', startGame);
+            document.getElementById('rollDice').addEventListener('click', rollDice);
+            document.getElementById('endTurn').addEventListener('click', endTurn);
+            document.getElementById('showRules').addEventListener('click', showRules);
+
+            // أزرار التحكم العلوية
+            document.getElementById('returnToIndex').addEventListener('click', () => {
+                if (confirm('هل تريد العودة للصفحة الرئيسية؟')) {
+                    window.location.href = '../index.html';
                 }
             });
-            
-            // اختبار وجود الدوال
-            const basicFunctions = ['loadStudentData', 'initGame', 'startGameWithSelectedStudents'];
-            basicFunctions.forEach(funcName => {
-                if (typeof window[funcName] === 'function') {
-                    console.log(`✅ الدالة ${funcName} موجودة`);
-                } else {
-                    console.error(`❌ الدالة ${funcName} غير موجودة`);
+
+            document.getElementById('soundToggle').addEventListener('click', () => {
+                const enabled = soundSystem.toggle();
+                const icon = document.querySelector('#soundToggle i');
+                icon.className = enabled ? 'fas fa-volume-up' : 'fas fa-volume-mute';
+                MessageSystem.show(enabled ? 'تم تشغيل الصوت' : 'تم إيقاف الصوت');
+            });
+
+            // إغلاق النوافذ المنبثقة
+            document.querySelectorAll('.close').forEach(closeBtn => {
+                closeBtn.addEventListener('click', (e) => {
+                    const modalId = e.target.getAttribute('data-modal');
+                    document.getElementById(modalId).style.display = 'none';
+                });
+            });
+
+            // إغلاق النوافذ عند النقر خارجها
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            });
+
+            // اختصارات لوحة المفاتيح
+            document.addEventListener('keydown', (e) => {
+                if (e.key === ' ') {
+                    e.preventDefault();
+                    rollDice();
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    endTurn();
+                } else if (e.key === 'Escape') {
+                    document.querySelectorAll('.modal').forEach(modal => {
+                        modal.style.display = 'none';
+                    });
                 }
             });
-            
-            console.log('🎮 حالة اللعبة الحالية:');
         }
 
+        // ===========================================
+        // تهيئة اللعبة
+        // ===========================================
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('🎮 بدء تحميل مونوبولي عُمان...');
+
+            try {
+                // تحميل بيانات الطلاب
+                await loadStudentData();
+                
+                // إنشاء لوحة اللعبة
+                createGameBoard();
+                
+                // إعداد معالجات الأحداث
+                setupEventListeners();
+                
+                // إضافة أنماط الرسوم المتحركة
+                const animationStyles = `
+                    @keyframes slideInRight {
+                        from {
+                            opacity: 0;
+                            transform: translateX(100px);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: translateX(0);
+                        }
+                    }
+                    
+                    @keyframes slideOutRight {
+                        from {
+                            opacity: 1;
+                            transform: translateX(0);
+                        }
+                        to {
+                            opacity: 0;
+                            transform: translateX(100px);
+                        }
+                    }
+                    
+                    .current-player {
+                        border: 3px solid var(--accent-gold) !important;
+                        box-shadow: var(--shadow-glow-gold) !important;
+                    }
+                `;
+                
+                const styleSheet = document.createElement('style');
+                styleSheet.textContent = animationStyles;
+                document.head.appendChild(styleSheet);
+                
+                MessageSystem.show('تم تحميل مونوبولي عُمان بنجاح! 🎉', 'success');
+                console.log('✅ تم تحميل اللعبة بنجاح!');
+                
+            } catch (error) {
+                console.error('❌ خطأ في تحميل اللعبة:', error);
+                MessageSystem.show('حدث خطأ في تحميل اللعبة', 'error');
+            }
+        });
     </script>
+
+    <!-- المساعد الاستجابي للأجهزة المحمولة -->
+    <script src="../assets/js/responsive-helper.js"></script>
 </body>
 </html>
