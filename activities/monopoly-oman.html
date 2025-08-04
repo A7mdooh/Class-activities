@@ -5006,14 +5006,14 @@
                 setTimeout(() => payerElement.style.animation = '', 500);
             }
 
-            // فحص الإفلاس بعد دفع الإيجار
-            if (payer.money < 0) {
-                setTimeout(() => {
-                    handleBankruptcy(gameState.players.indexOf(payer), rent);
-                }, 1000);
+            // فحص الإفلاس بعد دفع الإيجار باستخدام النظام المحسن
+            const payerIndex = gameState.players.indexOf(payer);
+            const isBankrupt = checkBankruptcyAfterPayment(payerIndex);
+            
+            if (!isBankrupt) {
+                updatePlayersDisplay();
             }
-
-            updatePlayersDisplay();
+            // إذا كان مفلس، الدالة ستتولى العرض والانتقال
         }
 
         function calculateRent(property, owner) {
@@ -5038,7 +5038,13 @@
             player.money -= amount;
             MessageSystem.show(`دفعت ${amount} ر.ع ضريبة`, 'error');
             soundSystem.play('lose');
-            updatePlayersDisplay();
+            
+            // فحص الإفلاس بعد دفع الضريبة
+            const isBankrupt = checkBankruptcyAfterPayment(playerIndex);
+            
+            if (!isBankrupt) {
+                updatePlayersDisplay();
+            }
         }
 
         // بطاقات الصدفة والخزانة العامة
@@ -5216,9 +5222,24 @@
                 // يمكن إنقاذه ببيع الممتلكات
                 showBankruptcyOptions(playerIndex, debt, totalAssets);
             } else {
-                // إفلاس نهائي
+                // إفلاس نهائي فوري
+                console.log(`💔 ${player.name} - إفلاس نهائي! الممتلكات غير كافية`);
                 declareBankruptcy(playerIndex);
             }
+        }
+
+        // فحص الإفلاس الذكي - يتم استدعاؤه بعد أي عملية دفع
+        function checkBankruptcyAfterPayment(playerIndex) {
+            const player = gameState.players[playerIndex];
+            
+            if (player.money < 0 && !player.isBankrupt) {
+                console.log(`🚨 اكتشاف مال سالب لـ ${player.name}: ${player.money} ر.ع`);
+                setTimeout(() => {
+                    handleBankruptcy(playerIndex, Math.abs(player.money));
+                }, 500); // تأخير صغير للسماح بانتهاء العمليات الأخرى
+                return true; // يشير إلى وجود إفلاس
+            }
+            return false; // لا يوجد إفلاس
         }
 
         function calculatePlayerAssets(player) {
@@ -5281,6 +5302,7 @@
                         
                         <div class="bankruptcy-help">
                             💡 يمكنك بيع عقاراتك بنصف السعر الأصلي لسداد الدين
+                            <br>⏰ سيتم إعلان الإفلاس تلقائياً خلال 30 ثانية
                         </div>
                     </div>
                 </div>
@@ -5302,6 +5324,15 @@
 
             document.body.appendChild(modal);
             soundSystem.play('lose');
+
+            // إفلاس تلقائي بعد 30 ثانية لمنع التعليق
+            setTimeout(() => {
+                const stillOpen = document.querySelector('.bankruptcy-modal');
+                if (stillOpen) {
+                    console.log('⏰ إفلاس تلقائي بعد انتهاء الوقت');
+                    declareBankruptcy(playerIndex);
+                }
+            }, 30000);
         }
 
         function sellProperties(playerIndex, debt) {
@@ -5391,13 +5422,27 @@
                 setTimeout(() => {
                     handleGameWin(activePlayers[0]);
                 }, 3000);
+                return;
             } else if (activePlayers.length === 0) {
                 // جميع اللاعبين مفلسون (نادر جداً)
                 MessageSystem.show('🏦 جميع اللاعبين أفلسوا! البنك يفوز! 😅', 'info', 8000);
+                return;
             }
 
             updatePlayersDisplay();
             LeaderboardSystem.updateLeaderboard();
+
+            // إذا كان اللاعب المفلس هو اللاعب الحالي، الانتقال للدور التالي
+            if (playerIndex === gameState.currentPlayer) {
+                console.log('🔄 انتقال تلقائي للدور التالي بعد الإفلاس');
+                setTimeout(() => {
+                    nextTurn();
+                    // تفعيل زر رمي النرد للاعب الجديد
+                    document.getElementById('rollDice').disabled = false;
+                    document.getElementById('endTurn').disabled = true;
+                }, 2000);
+            }
+        }
 
             // الانتقال للاعب التالي إذا كان اللاعب المفلس هو اللاعب الحالي
             if (playerIndex === gameState.currentPlayer) {
@@ -6055,7 +6100,7 @@
                         <div style="margin-top: 20px; padding: 15px; background: rgba(231, 76, 60, 0.4); border-radius: 15px; border: 3px dashed rgba(255,255,255,0.6); position: relative; z-index: 1;">
                             <div style="font-size: 1.3em; font-weight: bold;">⏳ في انتظار البدء</div>
                             <div style="font-size: 1.1em; margin-top: 5px;">اضغط "بدء اللعبة" للبدء!</div>
-                        </div>
+                        </div>ش
                     `}
                 </div>
             `;
@@ -6092,6 +6137,14 @@
             if (!gameState.gameStarted) {
                 MessageSystem.show('يجب بدء اللعبة أولاً!', 'error');
                 return;
+            }
+
+            // فحص إفلاس اللاعب الحالي قبل إنهاء الدور
+            const currentPlayer = gameState.players[gameState.currentPlayer];
+            if (currentPlayer.money < 0 && !currentPlayer.isBankrupt) {
+                console.log(`💸 اكتشاف إفلاس ${currentPlayer.name} في نهاية الدور`);
+                handleBankruptcy(gameState.currentPlayer, Math.abs(currentPlayer.money));
+                return; // إيقاف الدور حتى يتم التعامل مع الإفلاس
             }
 
             // تعطيل أزرار الدور الحالي
