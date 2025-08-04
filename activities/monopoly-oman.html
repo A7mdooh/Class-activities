@@ -34,6 +34,7 @@
             --gradient-red: linear-gradient(135deg, var(--oman-red) 0%, #B71C1C 100%);
             --gradient-green: linear-gradient(135deg, var(--oman-green) 0%, #1B5E20 100%);
             --gradient-gold: linear-gradient(135deg, var(--accent-gold) 0%, #F57C00 100%);
+            --gradient-blue: linear-gradient(135deg, #2196F3 0%, #1565C0 100%);
             --gradient-background: linear-gradient(135deg, #0F172A 0%, #1E293B 25%, #334155 50%, #475569 75%, #64748B 100%);
             
             /* ألوان المونوبولي التقليدية */
@@ -191,6 +192,23 @@
 
         #soundToggle {
             right: 80px;
+        }
+
+        #fullscreenToggle {
+            right: 140px;
+            transition: all 0.3s ease;
+        }
+
+        #fullscreenToggle:hover {
+            transform: translateY(-3px) scale(1.15);
+            background: var(--gradient-blue);
+            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
+        }
+
+        #fullscreenToggle.active {
+            background: var(--gradient-blue);
+            color: white;
+            transform: scale(1.1);
         }
 
         /* ===========================================
@@ -2287,6 +2305,9 @@
     <button id="soundToggle" class="control-btn" title="تشغيل/إيقاف الصوت">
         <i class="fas fa-volume-up"></i>
     </button>
+    <button id="fullscreenToggle" class="control-btn" title="ملء الشاشة">
+        <i class="fas fa-expand"></i>
+    </button>
 
     <!-- الحاوية الرئيسية -->
     <div class="monopoly-container">
@@ -4209,6 +4230,12 @@
         }
 
         function handleRentPayment(payer, receiver, property, rent) {
+            // فحص الإفلاس قبل الدفع
+            if (payer.money < rent) {
+                handleBankruptcy(payer, receiver, rent);
+                return;
+            }
+            
             payer.money -= rent;
             receiver.money += rent;
             
@@ -4223,6 +4250,78 @@
             }
 
             updatePlayersDisplay();
+        }
+
+        // نظام إدارة الإفلاس المحسن
+        function handleBankruptcy(bankruptPlayer, creditor, debt) {
+            console.log(`🏦 معالجة إفلاس ${bankruptPlayer.name} - الدين: ${debt}`);
+            
+            MessageSystem.show(`💸 ${bankruptPlayer.name} أعلن الإفلاس! لا يملك مالاً كافياً لدفع ${formatMoney(debt)}`, 'error', 6000);
+            soundSystem.play('lose');
+            
+            // نقل جميع ممتلكات المفلس للدائن
+            if (bankruptPlayer.properties.length > 0) {
+                bankruptPlayer.properties.forEach(propertyId => {
+                    creditor.properties.push(propertyId);
+                    const propertyElement = document.querySelector(`[data-property="${propertyId}"]`);
+                    if (propertyElement) {
+                        propertyElement.style.borderColor = getPlayerColor(gameState.players.indexOf(creditor));
+                    }
+                });
+                
+                MessageSystem.show(`🏠 تم نقل جميع ممتلكات ${bankruptPlayer.name} إلى ${creditor.name}`, 'info', 5000);
+                bankruptPlayer.properties = [];
+            }
+            
+            // نقل أي أموال متبقية
+            if (bankruptPlayer.money > 0) {
+                creditor.money += bankruptPlayer.money;
+                bankruptPlayer.money = 0;
+            }
+            
+            // إزالة اللاعب من اللعبة
+            bankruptPlayer.isActive = false;
+            bankruptPlayer.bankrupted = true;
+            
+            // تحديث العرض
+            updatePlayersDisplay();
+            
+            // التحقق من نهاية اللعبة
+            setTimeout(() => {
+                checkGameEnd();
+            }, 2000);
+        }
+
+        // فحص نهاية اللعبة
+        function checkGameEnd() {
+            const activePlayers = gameState.players.filter(p => p.isActive !== false);
+            
+            if (activePlayers.length <= 1) {
+                const winner = activePlayers[0];
+                if (winner) {
+                    MessageSystem.show(`🎉 ${winner.name} فاز باللعبة!`, 'success', 8000);
+                    soundSystem.play('win');
+                    
+                    // تأثير بصري للفوز
+                    confetti({
+                        particleCount: 200,
+                        spread: 90,
+                        origin: { y: 0.6 },
+                        colors: ['#FFD700', '#FFA500', '#FF6B6B']
+                    });
+                    
+                    // إيقاف اللعبة
+                    gameState.gameEnded = true;
+                } else {
+                    MessageSystem.show('🤝 انتهت اللعبة بدون فائز!', 'info', 5000);
+                }
+                return;
+            }
+            
+            // المتابعة للاعب التالي إذا كان اللاعب الحالي مفلساً
+            if (gameState.players[gameState.currentPlayer].isActive === false) {
+                nextPlayer();
+            }
         }
 
         function calculateRent(property, owner) {
@@ -4244,8 +4343,16 @@
 
         function handleTax(playerIndex, amount) {
             const player = gameState.players[playerIndex];
+            
+            // فحص الإفلاس قبل دفع الضريبة
+            if (player.money < amount) {
+                MessageSystem.show(`💸 ${player.name} لا يملك مالاً كافياً لدفع الضريبة!`, 'error', 5000);
+                handleBankruptcy(player, null, amount); // لا يوجد دائن محدد للضرائب
+                return;
+            }
+            
             player.money -= amount;
-            MessageSystem.show(`دفعت ${amount} ر.ع ضريبة`, 'error');
+            MessageSystem.show(`دفعت ${formatMoney(amount)} ضريبة`, 'error');
             soundSystem.play('lose');
             updatePlayersDisplay();
         }
@@ -4579,8 +4686,10 @@
                 return;
             }
 
-            // الانتقال للاعب التالي
-            gameState.currentPlayer = (gameState.currentPlayer + 1) % gameState.players.length;
+            // الانتقال للاعب التالي النشط
+            do {
+                gameState.currentPlayer = (gameState.currentPlayer + 1) % gameState.players.length;
+            } while (gameState.players[gameState.currentPlayer].isActive === false);
             
             // إذا عاد للاعب الأول، زيادة المرحلة
             if (gameState.currentPlayer === 0) {
@@ -4591,6 +4700,12 @@
             
             // تمييز اللاعب الحالي
             LeaderboardSystem.highlightCurrentPlayer();
+        }
+
+        // دالة مساعدة للانتقال للاعب التالي
+        function nextPlayer() {
+            nextTurn();
+        }
             
             // إشعار بدور اللاعب الجديد
             const currentPlayer = gameState.players[gameState.currentPlayer];
@@ -4957,7 +5072,7 @@
             // أزرار التحكم العلوية
             document.getElementById('returnToIndex').addEventListener('click', () => {
                 if (confirm('هل تريد العودة للصفحة الرئيسية؟')) {
-                    window.location.href = '../index.html';
+                    window.location.href = '../main.html';
                 }
             });
 
@@ -4967,6 +5082,73 @@
                 icon.className = enabled ? 'fas fa-volume-up' : 'fas fa-volume-mute';
                 MessageSystem.show(enabled ? 'تم تشغيل الصوت' : 'تم إيقاف الصوت');
             });
+
+            // زر ملء الشاشة
+            let isFullscreen = false;
+            document.getElementById('fullscreenToggle').addEventListener('click', () => {
+                const icon = document.querySelector('#fullscreenToggle i');
+                const button = document.getElementById('fullscreenToggle');
+                
+                if (!isFullscreen) {
+                    // طلب ملء الشاشة
+                    if (document.documentElement.requestFullscreen) {
+                        document.documentElement.requestFullscreen();
+                    } else if (document.documentElement.mozRequestFullScreen) {
+                        document.documentElement.mozRequestFullScreen();
+                    } else if (document.documentElement.webkitRequestFullscreen) {
+                        document.documentElement.webkitRequestFullscreen();
+                    } else if (document.documentElement.msRequestFullscreen) {
+                        document.documentElement.msRequestFullscreen();
+                    }
+                    
+                    icon.className = 'fas fa-compress';
+                    button.classList.add('active');
+                    button.title = 'الخروج من ملء الشاشة';
+                    MessageSystem.show('تم تفعيل ملء الشاشة');
+                    isFullscreen = true;
+                } else {
+                    // الخروج من ملء الشاشة
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.mozCancelFullScreen) {
+                        document.mozCancelFullScreen();
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    } else if (document.msExitFullscreen) {
+                        document.msExitFullscreen();
+                    }
+                    
+                    icon.className = 'fas fa-expand';
+                    button.classList.remove('active');
+                    button.title = 'ملء الشاشة';
+                    MessageSystem.show('تم الخروج من ملء الشاشة');
+                    isFullscreen = false;
+                }
+            });
+
+            // مراقبة تغيير حالة ملء الشاشة
+            document.addEventListener('fullscreenchange', handleFullscreenChange);
+            document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+            document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+            document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
+            function handleFullscreenChange() {
+                const icon = document.querySelector('#fullscreenToggle i');
+                const button = document.getElementById('fullscreenToggle');
+                
+                if (document.fullscreenElement || document.webkitFullscreenElement || 
+                    document.mozFullScreenElement || document.msFullscreenElement) {
+                    icon.className = 'fas fa-compress';
+                    button.classList.add('active');
+                    button.title = 'الخروج من ملء الشاشة';
+                    isFullscreen = true;
+                } else {
+                    icon.className = 'fas fa-expand';
+                    button.classList.remove('active');
+                    button.title = 'ملء الشاشة';
+                    isFullscreen = false;
+                }
+            }
 
             // إغلاق النوافذ المنبثقة
             document.querySelectorAll('.close').forEach(closeBtn => {
