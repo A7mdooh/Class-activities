@@ -4384,7 +4384,7 @@
         this.state.survival.isActive = true;
 
         // إعدادات البقاء الأولية
-        this.state.stats.lives = 3; // بداية بـ 3 محاولات
+        this.state.stats.lives = this.state.maxLives; // استخدام إعدادات المحاولات المختارة
         this.state.stats.score = 0;
         this.state.stats.correctAnswers = 0;
         this.state.stats.wrongAnswers = 0;
@@ -4661,8 +4661,10 @@
       }
 
       handleWrongSelection(cardElement, selectedStudent) {
-        // تقليل المحاولات
-        this.state.stats.lives--;
+        // تقليل المحاولات فقط إذا لم تكن لا محدودة
+        if (this.state.maxLives !== -1) {
+          this.state.stats.lives--;
+        }
         this.state.stats.streak = 0;
         
         // تأثير الانفجار
@@ -4671,7 +4673,9 @@
         
         // تحديث العداد
         const livesElement = document.getElementById('livesCount');
-        if (livesElement) livesElement.textContent = this.state.stats.lives;
+        if (livesElement) {
+          livesElement.textContent = this.state.maxLives === -1 ? '∞' : this.state.stats.lives;
+        }
         
         // إزالة البطاقة بعد الانفجار
         setTimeout(() => {
@@ -4679,13 +4683,17 @@
           cardElement.style.transform = 'scale(0) rotate(360deg)';
         }, 500);
         
-        // فحص انتهاء اللعبة
-        if (this.state.stats.lives <= 0) {
+        // فحص انتهاء اللعبة فقط إذا لم تكن المحاولات لا محدودة
+        if (this.state.maxLives !== -1 && this.state.stats.lives <= 0) {
           setTimeout(() => {
             this.showGameOver();
           }, 1000);
         } else {
-          this.messages.show(`❌ خطأ! ${this.state.stats.lives} محاولات متبقية`, 'error', 2000);
+          if (this.state.maxLives === -1) {
+            this.messages.show(`❌ خطأ! محاولات لا محدودة متاحة`, 'error', 2000);
+          } else {
+            this.messages.show(`❌ خطأ! ${this.state.stats.lives} محاولات متبقية`, 'error', 2000);
+          }
         }
       }
 
@@ -5047,7 +5055,11 @@
           // إجابة خاطئة أو انتهاء الوقت
           this.state.stats.wrongAnswers++;
           this.state.stats.streak = 0;
-          this.state.stats.lives--;
+          
+          // تقليل المحاولات فقط إذا لم تكن لا محدودة
+          if (this.state.maxLives !== -1) {
+            this.state.stats.lives--;
+          }
           
           if (isTimeOut) {
             this.soundSystem.play('wrong');
@@ -5066,8 +5078,8 @@
 
         this.updateSurvivalStats();
 
-        // التحقق من نهاية اللعبة
-        if (this.state.stats.lives <= 0) {
+        // التحقق من نهاية اللعبة فقط إذا لم تكن المحاولات لا محدودة
+        if (this.state.maxLives !== -1 && this.state.stats.lives <= 0) {
           setTimeout(() => {
             this.endSurvivalMode();
           }, 2000);
@@ -5111,7 +5123,7 @@
           best: document.querySelector('.survival-stat-card.best .stat-value')
         };
 
-        if (elements.lives) elements.lives.textContent = this.state.stats.lives;
+        if (elements.lives) elements.lives.textContent = this.state.maxLives === -1 ? '∞' : this.state.stats.lives;
         if (elements.score) elements.score.textContent = this.state.stats.score.toLocaleString();
         if (elements.streak) elements.streak.textContent = this.state.stats.streak;
         if (elements.best) elements.best.textContent = this.state.survival.bestScore.toLocaleString();
