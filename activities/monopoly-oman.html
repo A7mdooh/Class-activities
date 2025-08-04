@@ -1770,10 +1770,65 @@
             transform: translateY(-2px) scale(1.02);
         }
 
-        /* تأثير النافذة المحسن */
-        .card-modal {
-            backdrop-filter: blur(8px);
-            background: rgba(0,0,0,0.85) !important;
+        /* تحسينات العقارات القابلة للشراء */
+        .property-square.available {
+            animation: availableProperty 2s infinite;
+        }
+
+        @keyframes availableProperty {
+            0%, 100% { 
+                box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7);
+                border-color: #2ecc71;
+            }
+            50% { 
+                box-shadow: 0 0 0 8px rgba(46, 204, 113, 0.3);
+                border-color: #27ae60;
+            }
+        }
+
+        .property-square.owned {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            border: 3px solid #c0392b;
+        }
+
+        .property-square.owned::after {
+            content: "مملوك";
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        /* تحسين نافذة الشراء */
+        .purchase-content h2 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+
+        .property-details {
+            background: linear-gradient(135deg, #ecf0f1, #bdc3c7);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #27ae60;
+        }
+
+        .property-details p {
+            margin: 8px 0;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .property-details strong {
+            color: #27ae60;
         }
 
         /* لوحة القيادة المحترفة */
@@ -2961,12 +3016,16 @@
                 return;
             }
             
+            // ألوان مختلفة للاعبين
+            const playerColors = ['#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6', '#1abc9c'];
+            
             // إعداد اللعبة
             gameState.players = selectedPlayers.map((player, index) => ({
                 name: player.name,
                 money: 1500,
                 position: 0,
-                properties: []
+                properties: [],
+                color: playerColors[index % playerColors.length]
             }));
             
             gameState.gameStarted = false;
@@ -3220,6 +3279,55 @@
             
             updatePlayersDisplay();
             MessageSystem.show(`تم إعداد ${gameState.players.length} لاعبين`, 'success');
+        }
+
+        function updatePropertyDisplay() {
+            omanProperties.forEach((property, index) => {
+                if (property.type === 'property' || property.type === 'airport' || property.type === 'utility') {
+                    const squareElement = document.getElementById(`square-${index}`);
+                    if (squareElement) {
+                        // التحقق من الملكية
+                        const owner = gameState.players.find(p => p.properties.includes(index));
+                        
+                        if (owner) {
+                            // العقار مملوك
+                            squareElement.classList.remove('available');
+                            squareElement.classList.add('owned');
+                            squareElement.style.backgroundColor = owner.color || '#e74c3c';
+                            
+                            // إضافة اسم المالك
+                            let ownerLabel = squareElement.querySelector('.owner-label');
+                            if (!ownerLabel) {
+                                ownerLabel = document.createElement('div');
+                                ownerLabel.className = 'owner-label';
+                                ownerLabel.style.cssText = `
+                                    position: absolute;
+                                    bottom: 2px;
+                                    left: 2px;
+                                    right: 2px;
+                                    background: rgba(0,0,0,0.8);
+                                    color: white;
+                                    font-size: 8px;
+                                    text-align: center;
+                                    border-radius: 3px;
+                                    padding: 1px;
+                                `;
+                                squareElement.appendChild(ownerLabel);
+                            }
+                            ownerLabel.textContent = owner.name;
+                        } else {
+                            // العقار متاح للشراء
+                            squareElement.classList.remove('owned');
+                            squareElement.classList.add('available');
+                            squareElement.style.backgroundColor = '';
+                            
+                            // إزالة تسمية المالك
+                            const ownerLabel = squareElement.querySelector('.owner-label');
+                            if (ownerLabel) ownerLabel.remove();
+                        }
+                    }
+                }
+            });
         }
 
         function updatePlayersDisplay() {
@@ -3577,7 +3685,7 @@
             
             if (!owner) {
                 // العقار متاح للشراء
-                showPropertyPurchaseDialog(player, property);
+                showPropertyPurchaseDialog(playerIndex, player, property);
             } else if (owner !== player) {
                 // دفع إيجار
                 const rent = calculateRent(property, owner);
@@ -3589,7 +3697,7 @@
             }
         }
 
-        function showPropertyPurchaseDialog(player, property) {
+        function showPropertyPurchaseDialog(playerIndex, player, property) {
             if (player.money < property.price) {
                 MessageSystem.show(`💸 ليس لديك مال كافٍ لشراء ${property.name}! تحتاج ${property.price} ر.ع`, 'error', 5000);
                 soundSystem.play('lose');
@@ -3641,6 +3749,13 @@
             const player = gameState.players[playerIndex];
             const property = omanProperties[propertyId];
             
+            // التحقق من كفاية المال
+            if (player.money < property.price) {
+                MessageSystem.show(`💸 ليس لديك مال كافٍ لشراء ${property.name}!`, 'error');
+                closePurchaseModal();
+                return;
+            }
+
             player.money -= property.price;
             player.properties.push(propertyId);
             
@@ -3659,12 +3774,16 @@
                 colors: ['#FFD700', '#FFA500', '#FF8C00']
             });
 
+            // تحديث مظهر العقارات
+            updatePropertyDisplay();
+
             // فحص الإنجازات
             AchievementSystem.checkAchievement(player, 'first_property');
             AchievementSystem.checkAchievement(player, 'millionaire');
             AchievementSystem.checkAchievement(player, 'monopoly_master');
 
             updatePlayersDisplay();
+            LeaderboardSystem.updateLeaderboard();
         }
 
         function closePurchaseModal() {
@@ -4257,9 +4376,13 @@
             gameState.gameStarted = true;
             gameState.currentPlayer = 0;
             
-            MessageSystem.show('بدأت اللعبة! حظاً موفقاً!', 'success');
+            // تحديث مظهر العقارات
+            updatePropertyDisplay();
+            
+            MessageSystem.show('🎮 بدأت اللعبة! حظاً موفقاً!', 'success');
             soundSystem.play('win');
             updatePlayersDisplay();
+            LeaderboardSystem.updateLeaderboard();
         }
 
         function showRules() {
