@@ -1594,7 +1594,7 @@
             </div>
         </div>
 
-        <!-- واجهة اختيار اللاعبين الذكية -->
+        <!-- واجهة اختيار اللاعبين المبسطة -->
         <div class="smart-player-selection" id="smartPlayerSelection" style="display: none;">
             <div class="selection-header">
                 <div class="header-content">
@@ -1602,7 +1602,7 @@
                         <i class="fas fa-users"></i>
                     </div>
                     <h2>اختيار اللاعبين</h2>
-                    <p class="subtitle">اختر الطلاب المشاركين في المباراة</p>
+                    <p class="subtitle">انقر على الطلاب لاختيارهم في اللعبة</p>
                 </div>
                 <div class="progress-bar">
                     <div class="progress-fill" id="selectionProgress"></div>
@@ -1611,93 +1611,13 @@
                     <span class="selected-count" id="selectedPlayersCount">0</span>
                     <span class="separator">/</span>
                     <span class="total-count" id="totalPlayersNeeded">2</span>
-                    <span class="label">لاعبين</span>
-                </div>
-            </div>
-
-            <div class="selection-modes">
-                <div class="mode-switcher">
-                    <button class="mode-btn active" data-mode="smart">
-                        <i class="fas fa-magic"></i>
-                        <span>اختيار ذكي</span>
-                    </button>
-                    <button class="mode-btn" data-mode="manual">
-                        <i class="fas fa-hand-pointer"></i>
-                        <span>اختيار يدوي</span>
-                    </button>
-                    <button class="mode-btn" data-mode="random">
-                        <i class="fas fa-random"></i>
-                        <span>عشوائي</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- اختيار ذكي -->
-            <div class="smart-selection-container" id="smartSelectionContainer">
-                <div class="smart-features">
-                    <div class="feature-card active" data-filter="all">
-                        <div class="feature-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="feature-content">
-                            <h4>جميع الطلاب</h4>
-                            <p>عرض كامل الصف</p>
-                        </div>
-                    </div>
-                    <div class="feature-card" data-filter="active">
-                        <div class="feature-icon">
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <div class="feature-content">
-                            <h4>الأكثر نشاطاً</h4>
-                            <p>طلاب متفاعلون</p>
-                        </div>
-                    </div>
-                    <div class="feature-card" data-filter="balanced">
-                        <div class="feature-icon">
-                            <i class="fas fa-balance-scale"></i>
-                        </div>
-                        <div class="feature-content">
-                            <h4>اختيار متوازن</h4>
-                            <p>توزيع عادل</p>
-                        </div>
-                    </div>
-                    <div class="feature-card" data-filter="new">
-                        <div class="feature-icon">
-                            <i class="fas fa-seedling"></i>
-                        </div>
-                        <div class="feature-content">
-                            <h4>فرص جديدة</h4>
-                            <p>طلاب أقل مشاركة</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="search-and-sort">
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="studentSearch" placeholder="ابحث عن طالب...">
-                    </div>
-                    <div class="sort-options">
-                        <select id="sortStudents" class="form-control">
-                            <option value="name">الترتيب الأبجدي</option>
-                            <option value="activity">حسب النشاط</option>
-                            <option value="random">عشوائي</option>
-                        </select>
-                    </div>
+                    <span class="label">لاعبين محددين</span>
                 </div>
             </div>
 
             <!-- شبكة الطلاب التفاعلية -->
             <div class="students-interactive-grid" id="studentsInteractiveGrid">
                 <!-- سيتم ملؤها بواسطة JavaScript -->
-            </div>
-
-            <!-- اختيار يدوي -->
-            <div class="manual-selection-container" id="manualSelectionContainer" style="display: none;">
-                <div class="manual-selectors" id="manualSelectors">
-                    <!-- سيتم إنشاؤها ديناميكياً -->
-                </div>
             </div>
 
             <!-- عرض اللاعبين المختارين -->
@@ -1709,7 +1629,7 @@
                 <div class="selected-players-list" id="selectedPlayersList">
                     <div class="empty-state">
                         <i class="fas fa-user-plus"></i>
-                        <p>لم يتم اختيار أي لاعبين بعد</p>
+                        <p>انقر على الطلاب لاختيارهم</p>
                     </div>
                 </div>
             </div>
@@ -1989,11 +1909,9 @@
             }
         }
 
-        // متغيرات اختيار اللاعبين الذكي
+        // متغيرات اختيار اللاعبين المبسطة
         let selectedPlayers = [];
         let currentStudents = [];
-        let selectionMode = 'smart';
-        let activeFilter = 'all';
 
         // ملء قائمة الصفوف (مطابق لباقي الأنشطة)
         function populateClassSelect() {
@@ -2021,7 +1939,7 @@
             });
         }
 
-        // إعداد واجهة اختيار اللاعبين الذكية
+        // إعداد واجهة اختيار اللاعبين البسيطة
         function setupSmartPlayerSelection() {
             const classValue = document.getElementById('classSelect').value;
             if (!classValue) {
@@ -2039,10 +1957,10 @@
             const playersNeeded = parseInt(document.getElementById('playersCount').value);
             document.getElementById('totalPlayersNeeded').textContent = playersNeeded;
             
-            // إنشاء شبكة الطلاب
-            createStudentsGrid();
+            // إنشاء شبكة الطلاب البسيطة
+            createSimpleStudentsGrid();
             
-            // تأثير انتقالي
+            // التمرير إلى الواجهة
             setTimeout(() => {
                 document.getElementById('smartPlayerSelection').scrollIntoView({ 
                     behavior: 'smooth', 
@@ -2051,15 +1969,13 @@
             }, 100);
         }
 
-        // إنشاء شبكة الطلاب التفاعلية
-        function createStudentsGrid() {
+        // إنشاء شبكة الطلاب البسيطة
+        function createSimpleStudentsGrid() {
             const grid = document.getElementById('studentsInteractiveGrid');
             grid.innerHTML = '';
             
-            let studentsToShow = filterAndSortStudents();
-            
-            studentsToShow.forEach((student, index) => {
-                const card = createStudentCard(student, index);
+            currentStudents.forEach((student, index) => {
+                const card = createSimpleStudentCard(student, index);
                 grid.appendChild(card);
             });
             
@@ -2076,157 +1992,98 @@
                             card.style.opacity = '1';
                             card.style.transform = 'translateY(0)';
                         }, 50);
-                    }, index * 50);
+                    }, index * 30);
                 });
             }, 100);
         }
 
-        // إنشاء بطاقة طالب تفاعلية
-        function createStudentCard(student, index) {
+        // إنشاء بطاقة طالب بسيطة
+        function createSimpleStudentCard(student, index) {
             const card = document.createElement('div');
             card.className = 'student-interactive-card';
             card.dataset.studentId = student.id || index;
             card.dataset.studentName = student.name;
-            
-            // إحصائيات وهمية للطالب
-            const stats = generateStudentStats(student);
             
             card.innerHTML = `
                 <div class="student-avatar">
                     ${student.name.charAt(0)}
                 </div>
                 <div class="student-name">${student.name}</div>
-                <div class="student-stats">
-                    <div class="stat-item">
-                        <i class="fas fa-star"></i>
-                        <span>${stats.activity}</span>
-                    </div>
-                    <div class="stat-item">
-                        <i class="fas fa-trophy"></i>
-                        <span>${stats.wins}</span>
-                    </div>
-                    <div class="stat-item">
-                        <i class="fas fa-gamepad"></i>
-                        <span>${stats.games}</span>
-                    </div>
+                <div class="student-status">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>انقر للاختيار</span>
                 </div>
             `;
             
             // إضافة حدث النقر
-            card.addEventListener('click', () => toggleStudentSelection(card, student));
+            card.addEventListener('click', () => toggleSimpleStudentSelection(card, student));
             
             return card;
         }
 
-        // توليد إحصائيات وهمية للطالب
-        function generateStudentStats(student) {
-            // استخدام اسم الطالب لتوليد إحصائيات ثابتة
-            const nameHash = student.name.split('').reduce((a, b) => {
-                a = ((a << 5) - a) + b.charCodeAt(0);
-                return a & a;
-            }, 0);
-            
-            return {
-                activity: Math.abs(nameHash % 5) + 1,
-                wins: Math.abs(nameHash % 10),
-                games: Math.abs(nameHash % 20) + 5
-            };
-        }
-
-        // فلترة وترتيب الطلاب
-        function filterAndSortStudents() {
-            let filtered = [...currentStudents];
-            
-            // تطبيق الفلتر
-            if (activeFilter !== 'all') {
-                filtered = filtered.filter(student => {
-                    const stats = generateStudentStats(student);
-                    switch (activeFilter) {
-                        case 'active':
-                            return stats.activity >= 4;
-                        case 'balanced':
-                            return stats.activity >= 2 && stats.activity <= 4;
-                        case 'new':
-                            return stats.games <= 8;
-                        default:
-                            return true;
-                    }
-                });
-            }
-            
-            // تطبيق البحث
-            const searchTerm = document.getElementById('studentSearch')?.value?.toLowerCase();
-            if (searchTerm) {
-                filtered = filtered.filter(student => 
-                    student.name.toLowerCase().includes(searchTerm)
-                );
-            }
-            
-            // تطبيق الترتيب
-            const sortBy = document.getElementById('sortStudents')?.value || 'name';
-            switch (sortBy) {
-                case 'name':
-                    filtered.sort((a, b) => a.name.localeCompare(b.name, 'ar'));
-                    break;
-                case 'activity':
-                    filtered.sort((a, b) => {
-                        const statsA = generateStudentStats(a);
-                        const statsB = generateStudentStats(b);
-                        return statsB.activity - statsA.activity;
-                    });
-                    break;
-                case 'random':
-                    filtered.sort(() => Math.random() - 0.5);
-                    break;
-            }
-            
-            return filtered;
-        }
-
-        // تبديل اختيار الطالب
-        function toggleStudentSelection(card, student) {
+        // تبديل اختيار الطالب البسيط
+        function toggleSimpleStudentSelection(card, student) {
             const playersNeeded = parseInt(document.getElementById('totalPlayersNeeded').textContent);
-            const isSelected = selectedPlayers.some(p => p.id === student.id);
+            const isSelected = selectedPlayers.some(p => p.id === (student.id || student.name));
             
             if (isSelected) {
                 // إزالة الطالب
-                selectedPlayers = selectedPlayers.filter(p => p.id !== student.id);
+                selectedPlayers = selectedPlayers.filter(p => p.id !== (student.id || student.name));
                 card.classList.remove('selected');
                 
-                // تأثير صوتي
+                // تحديث حالة البطاقة
+                const statusElement = card.querySelector('.student-status');
+                statusElement.innerHTML = `
+                    <i class="fas fa-plus-circle"></i>
+                    <span>انقر للاختيار</span>
+                `;
+                
                 soundSystem.play('Click');
             } else {
                 // إضافة طالب
                 if (selectedPlayers.length >= playersNeeded) {
                     MessageSystem.show(`يمكن اختيار ${playersNeeded} لاعبين فقط!`, 'error');
+                    
+                    // تأثير اهتزاز للبطاقة
+                    card.style.animation = 'shake 0.5s ease-in-out';
+                    setTimeout(() => {
+                        card.style.animation = '';
+                    }, 500);
                     return;
                 }
                 
                 selectedPlayers.push({
                     id: student.id || student.name,
-                    name: student.name,
-                    stats: generateStudentStats(student)
+                    name: student.name
                 });
                 card.classList.add('selected');
                 
-                // تأثير صوتي
+                // تحديث حالة البطاقة
+                const statusElement = card.querySelector('.student-status');
+                statusElement.innerHTML = `
+                    <i class="fas fa-check-circle"></i>
+                    <span>تم الاختيار</span>
+                `;
+                
                 soundSystem.play('select');
                 
                 // تأثير انفجار الكونفيتي عند اكتمال الاختيار
                 if (selectedPlayers.length === playersNeeded) {
                     confetti({
-                        particleCount: 100,
-                        spread: 70,
-                        origin: { y: 0.6 }
+                        particleCount: 50,
+                        spread: 50,
+                        origin: { y: 0.7 }
                     });
+                    
+                    MessageSystem.show('🎉 تم اختيار جميع اللاعبين! يمكنك التأكيد الآن', 'success');
                 }
             }
             
-            updateSelectionUI();
+            updateSimpleSelectionUI();
         }
 
-        // تحديث واجهة الاختيار
-        function updateSelectionUI() {
+        // تحديث واجهة الاختيار البسيطة
+        function updateSimpleSelectionUI() {
             const selectedCount = selectedPlayers.length;
             const totalNeeded = parseInt(document.getElementById('totalPlayersNeeded').textContent);
             
@@ -2242,18 +2099,18 @@
             confirmBtn.disabled = selectedCount !== totalNeeded;
             
             // تحديث معاينة اللاعبين المختارين
-            updateSelectedPlayersPreview();
+            updateSimpleSelectedPlayersPreview();
         }
 
-        // تحديث معاينة اللاعبين المختارين
-        function updateSelectedPlayersPreview() {
+        // تحديث معاينة اللاعبين المختارين البسيطة
+        function updateSimpleSelectedPlayersPreview() {
             const previewContainer = document.getElementById('selectedPlayersList');
             
             if (selectedPlayers.length === 0) {
                 previewContainer.innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-user-plus"></i>
-                        <p>لم يتم اختيار أي لاعبين بعد</p>
+                        <p>انقر على الطلاب لاختيارهم</p>
                     </div>
                 `;
                 return;
@@ -2284,12 +2141,19 @@
             // إزالة التحديد من البطاقة
             const cards = document.querySelectorAll('.student-interactive-card');
             cards.forEach(card => {
-                if (card.dataset.studentId === playerId) {
+                if (card.dataset.studentId === playerId || card.dataset.studentName === playerId) {
                     card.classList.remove('selected');
+                    
+                    // تحديث حالة البطاقة
+                    const statusElement = card.querySelector('.student-status');
+                    statusElement.innerHTML = `
+                        <i class="fas fa-plus-circle"></i>
+                        <span>انقر للاختيار</span>
+                    `;
                 }
             });
             
-            updateSelectionUI();
+            updateSimpleSelectionUI();
             soundSystem.play('Click');
         }
 
@@ -2305,15 +2169,22 @@
                 name: player.name,
                 money: 1500,
                 position: 0,
-                properties: [],
-                stats: player.stats
+                properties: []
             }));
             
             gameState.gameStarted = false;
             gameState.currentPlayer = 0;
             
-            // إخفاء واجهة الاختيار
-            document.getElementById('smartPlayerSelection').style.display = 'none';
+            // إخفاء واجهة الاختيار مع تأثير انتقالي
+            const selectionDiv = document.getElementById('smartPlayerSelection');
+            selectionDiv.style.transform = 'scale(0.95)';
+            selectionDiv.style.opacity = '0';
+            
+            setTimeout(() => {
+                selectionDiv.style.display = 'none';
+                selectionDiv.style.transform = 'scale(1)';
+                selectionDiv.style.opacity = '1';
+            }, 300);
             
             // تفعيل زر بدء اللعبة
             document.getElementById('startGameBtn').disabled = false;
@@ -2321,20 +2192,38 @@
             // تحديث عرض اللاعبين
             updatePlayersDisplay();
             
-            MessageSystem.show(`تم اختيار ${selectedPlayers.length} لاعبين بنجاح! يمكنك الآن بدء اللعبة`, 'success');
+            // إشعار بالجاهزية للعب
+            MessageSystem.show(`🎮 تم إعداد ${selectedPlayers.length} لاعبين بنجاح! اللعبة جاهزة للبدء`, 'success', 5000);
             soundSystem.play('win');
             
-            // تأثير الكونفيتي
+            // تأثير الكونفيتي الكبير
             confetti({
-                particleCount: 150,
-                spread: 100,
+                particleCount: 200,
+                spread: 120,
                 origin: { y: 0.6 }
             });
+            
+            // التمرير إلى أزرار التحكم
+            setTimeout(() => {
+                document.querySelector('.game-controls').scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center' 
+                });
+            }, 500);
         }
 
         // إلغاء اختيار اللاعبين
         function cancelPlayerSelection() {
-            document.getElementById('smartPlayerSelection').style.display = 'none';
+            const selectionDiv = document.getElementById('smartPlayerSelection');
+            selectionDiv.style.transform = 'scale(0.95)';
+            selectionDiv.style.opacity = '0';
+            
+            setTimeout(() => {
+                selectionDiv.style.display = 'none';
+                selectionDiv.style.transform = 'scale(1)';
+                selectionDiv.style.opacity = '1';
+            }, 300);
+            
             selectedPlayers = [];
             MessageSystem.show('تم إلغاء اختيار اللاعبين', 'info');
         }
@@ -2345,10 +2234,21 @@
             
             // إزالة التحديد من جميع البطاقات
             const cards = document.querySelectorAll('.student-interactive-card');
-            cards.forEach(card => card.classList.remove('selected'));
+            cards.forEach(card => {
+                card.classList.remove('selected');
+                
+                // تحديث حالة البطاقة
+                const statusElement = card.querySelector('.student-status');
+                if (statusElement) {
+                    statusElement.innerHTML = `
+                        <i class="fas fa-plus-circle"></i>
+                        <span>انقر للاختيار</span>
+                    `;
+                }
+            });
             
-            updateSelectionUI();
-            MessageSystem.show('تم مسح الاختيار', 'info');
+            updateSimpleSelectionUI();
+            MessageSystem.show('تم مسح جميع الاختيارات', 'info');
             soundSystem.play('Click');
         }
 
@@ -2737,61 +2637,6 @@
 
             // واجهة اختيار اللاعبين الذكية
             // أزرار طرق الاختيار
-            document.querySelectorAll('.mode-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    // إزالة الفئة النشطة من جميع الأزرار
-                    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-                    // إضافة الفئة النشطة للزر المختار
-                    e.target.classList.add('active');
-                    
-                    selectionMode = e.target.dataset.mode;
-                    
-                    // إظهار/إخفاء واجهات الاختيار المختلفة
-                    document.getElementById('smartSelectionContainer').style.display = 
-                        selectionMode === 'smart' ? 'block' : 'none';
-                    document.getElementById('studentsInteractiveGrid').style.display = 
-                        selectionMode !== 'manual' ? 'grid' : 'none';
-                    document.getElementById('manualSelectionContainer').style.display = 
-                        selectionMode === 'manual' ? 'block' : 'none';
-                    
-                    if (selectionMode === 'random') {
-                        handleRandomSelection();
-                    } else if (selectionMode === 'manual') {
-                        setupManualSelection();
-                    } else {
-                        createStudentsGrid();
-                    }
-                });
-            });
-
-            // بطاقات الفلاتر الذكية
-            document.querySelectorAll('.feature-card').forEach(card => {
-                card.addEventListener('click', (e) => {
-                    document.querySelectorAll('.feature-card').forEach(c => c.classList.remove('active'));
-                    card.classList.add('active');
-                    
-                    activeFilter = card.dataset.filter;
-                    createStudentsGrid();
-                    
-                    soundSystem.play('Click');
-                });
-            });
-
-            // البحث والترتيب
-            const searchInput = document.getElementById('studentSearch');
-            if (searchInput) {
-                searchInput.addEventListener('input', () => {
-                    createStudentsGrid();
-                });
-            }
-
-            const sortSelect = document.getElementById('sortStudents');
-            if (sortSelect) {
-                sortSelect.addEventListener('change', () => {
-                    createStudentsGrid();
-                });
-            }
-
             // أزرار التحكم في الاختيار
             document.getElementById('confirmPlayerSelection').addEventListener('click', confirmPlayerSelection);
             document.getElementById('cancelPlayerSelection').addEventListener('click', cancelPlayerSelection);
@@ -2844,78 +2689,6 @@
                     document.getElementById('smartPlayerSelection').style.display = 'none';
                 }
             });
-        }
-
-        // الاختيار العشوائي
-        function handleRandomSelection() {
-            const playersNeeded = parseInt(document.getElementById('totalPlayersNeeded').textContent);
-            
-            // مسح الاختيار الحالي
-            selectedPlayers = [];
-            
-            // اختيار عشوائي
-            const shuffled = [...currentStudents].sort(() => 0.5 - Math.random());
-            selectedPlayers = shuffled.slice(0, playersNeeded).map(student => ({
-                id: student.id || student.name,
-                name: student.name,
-                stats: generateStudentStats(student)
-            }));
-            
-            // تحديث الواجهة
-            updateSelectionUI();
-            createStudentsGrid();
-            
-            MessageSystem.show(`تم اختيار ${playersNeeded} لاعبين عشوائياً!`, 'success');
-            soundSystem.play('select');
-        }
-
-        // إعداد الاختيار اليدوي
-        function setupManualSelection() {
-            const playersNeeded = parseInt(document.getElementById('totalPlayersNeeded').textContent);
-            const manualContainer = document.getElementById('manualSelectors');
-            
-            manualContainer.innerHTML = '';
-            
-            for (let i = 0; i < playersNeeded; i++) {
-                const selector = document.createElement('div');
-                selector.className = 'manual-selector';
-                selector.innerHTML = `
-                    <label>اللاعب ${i + 1}:</label>
-                    <select class="form-control manual-player-select" data-player-index="${i}">
-                        <option value="">-- اختر طالب --</option>
-                        ${currentStudents.map(student => 
-                            `<option value="${student.name}">${student.name}</option>`
-                        ).join('')}
-                    </select>
-                `;
-                
-                manualContainer.appendChild(selector);
-                
-                // إضافة حدث التغيير
-                const select = selector.querySelector('select');
-                select.addEventListener('change', handleManualPlayerSelect);
-            }
-        }
-
-        // معالجة الاختيار اليدوي
-        function handleManualPlayerSelect() {
-            const selects = document.querySelectorAll('.manual-player-select');
-            selectedPlayers = [];
-            
-            selects.forEach((select, index) => {
-                if (select.value) {
-                    const student = currentStudents.find(s => s.name === select.value);
-                    if (student) {
-                        selectedPlayers.push({
-                            id: student.id || student.name,
-                            name: student.name,
-                            stats: generateStudentStats(student)
-                        });
-                    }
-                }
-            });
-            
-            updateSelectionUI();
         }
 
         // ===========================================
