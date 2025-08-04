@@ -2690,13 +2690,8 @@
             updateSelectedStudentsDisplay();
         }
 
-        // بدء اللعبة مع الطلاب المختارين - دالة محسنة
-        function startGameWithSelectedStudents() {
-            console.log('🎯 محاولة بدء اللعبة...');
-            console.log('الطلاب المختارين:', selectedStudents);
-            console.log('استخدام بيانات الطلاب:', useStudentData);
-            
-            const requiredCount = parseInt(document.getElementById('player-count').value);
+        // معالج حدث تغيير الصف
+        document.addEventListener('DOMContentLoaded', function() {
             
             if (useStudentData) {
                 if (selectedStudents.length !== requiredCount) {
@@ -3086,6 +3081,37 @@
                 playersCount: players.length,
                 turn: currentPlayerIndex + 1
             };
+        }
+
+    </script>
+    
+    <!-- سكريبت الاختبار المؤقت -->
+    <script>
+        // اختبار سريع للعبة
+        setTimeout(() => {
+            console.log('🧪 اختبار سريع للعبة...');
+            
+            // اختبار وجود المتغيرات الأساسية
+            const basicVars = ['players', 'selectedStudents', 'gameStarted', 'currentPlayerIndex'];
+            basicVars.forEach(varName => {
+                if (typeof window[varName] !== 'undefined') {
+                    console.log(`✅ المتغير ${varName} موجود`);
+                } else {
+                    console.error(`❌ المتغير ${varName} غير موجود`);
+                }
+            });
+            
+            // اختبار وجود الدوال
+            const basicFunctions = ['loadStudentData', 'initGame', 'startGameWithSelectedStudents'];
+            basicFunctions.forEach(funcName => {
+                if (typeof window[funcName] === 'function') {
+                    console.log(`✅ الدالة ${funcName} موجودة`);
+                } else {
+                    console.error(`❌ الدالة ${funcName} غير موجودة`);
+                }
+            });
+            
+            console.log('🎮 حالة اللعبة الحالية:');
         }
 
     </script>
