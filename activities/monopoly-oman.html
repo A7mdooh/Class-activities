@@ -1942,20 +1942,41 @@
         // إعداد واجهة اختيار اللاعبين البسيطة
         function setupSmartPlayerSelection() {
             const classValue = document.getElementById('classSelect').value;
+            console.log('🎯 إعداد اختيار اللاعبين للصف:', classValue);
+            
             if (!classValue) {
                 MessageSystem.show('يرجى اختيار الصف أولاً!', 'error');
                 return;
             }
 
+            if (!playerData || !playerData[classValue]) {
+                console.error('❌ لا توجد بيانات للصف:', classValue);
+                MessageSystem.show('لا توجد بيانات طلاب لهذا الصف!', 'error');
+                return;
+            }
+
             currentStudents = playerData[classValue];
+            console.log(`📊 تم تحميل ${currentStudents.length} طالب من الصف ${classValue}`);
+            
             selectedPlayers = [];
             
             // إظهار واجهة الاختيار
-            document.getElementById('smartPlayerSelection').style.display = 'block';
+            const selectionDiv = document.getElementById('smartPlayerSelection');
+            if (selectionDiv) {
+                selectionDiv.style.display = 'block';
+                console.log('✅ تم إظهار واجهة الاختيار');
+            } else {
+                console.error('❌ لم يتم العثور على عنصر smartPlayerSelection');
+                return;
+            }
             
             // تحديث عداد اللاعبين المطلوبين
             const playersNeeded = parseInt(document.getElementById('playersCount').value);
-            document.getElementById('totalPlayersNeeded').textContent = playersNeeded;
+            const totalElement = document.getElementById('totalPlayersNeeded');
+            if (totalElement) {
+                totalElement.textContent = playersNeeded;
+                console.log(`🎮 عدد اللاعبين المطلوب: ${playersNeeded}`);
+            }
             
             // إنشاء شبكة الطلاب البسيطة
             createSimpleStudentsGrid();
@@ -1972,16 +1993,34 @@
         // إنشاء شبكة الطلاب البسيطة
         function createSimpleStudentsGrid() {
             const grid = document.getElementById('studentsInteractiveGrid');
+            console.log('🔍 إنشاء شبكة الطلاب:', currentStudents);
+            
+            if (!grid) {
+                console.error('❌ لم يتم العثور على عنصر studentsInteractiveGrid');
+                return;
+            }
+            
+            if (!currentStudents || currentStudents.length === 0) {
+                console.warn('⚠️ لا توجد بيانات طلاب لعرضها');
+                grid.innerHTML = '<div style="text-align: center; padding: 20px; color: white;">لا توجد طلاب في هذا الصف</div>';
+                return;
+            }
+            
             grid.innerHTML = '';
             
             currentStudents.forEach((student, index) => {
+                console.log(`➕ إضافة طالب: ${student.name}`);
                 const card = createSimpleStudentCard(student, index);
                 grid.appendChild(card);
             });
             
+            console.log(`✅ تم إنشاء ${currentStudents.length} بطاقة طالب`);
+            
             // تأثير ظهور متدرج
             setTimeout(() => {
                 const cards = grid.querySelectorAll('.student-interactive-card');
+                console.log(`🎨 تطبيق التأثيرات على ${cards.length} بطاقة`);
+                
                 cards.forEach((card, index) => {
                     setTimeout(() => {
                         card.style.opacity = '0';
@@ -2710,7 +2749,7 @@
                 // إعداد معالجات الأحداث
                 setupEventListeners();
                 
-                // إضافة أنماط الرسوم المتحركة
+                // إضافة أنماط الرسوم المتحركة والبطاقات التفاعلية
                 const animationStyles = `
                     @keyframes slideInRight {
                         from {
@@ -2734,9 +2773,159 @@
                         }
                     }
                     
+                    @keyframes shake {
+                        0%, 100% { transform: translateX(0); }
+                        25% { transform: translateX(-5px); }
+                        75% { transform: translateX(5px); }
+                    }
+                    
                     .current-player {
                         border: 3px solid var(--accent-gold) !important;
                         box-shadow: var(--shadow-glow-gold) !important;
+                    }
+                    
+                    /* تحسين البطاقات التفاعلية */
+                    .students-interactive-grid {
+                        display: grid !important;
+                        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)) !important;
+                        gap: 15px !important;
+                        padding: 0 30px !important;
+                        max-height: 500px !important;
+                        overflow-y: auto !important;
+                        margin-bottom: 30px !important;
+                    }
+                    
+                    .student-interactive-card {
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                        border-radius: 12px !important;
+                        padding: 15px !important;
+                        text-align: center !important;
+                        cursor: pointer !important;
+                        transition: all 0.3s ease !important;
+                        border: 2px solid transparent !important;
+                        position: relative !important;
+                        overflow: hidden !important;
+                        color: white !important;
+                        min-height: 140px !important;
+                        display: flex !important;
+                        flex-direction: column !important;
+                        align-items: center !important;
+                        justify-content: center !important;
+                    }
+                    
+                    .student-interactive-card::before {
+                        content: '';
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+                        z-index: 1;
+                        transition: opacity 0.3s ease;
+                    }
+                    
+                    .student-interactive-card:hover {
+                        transform: translateY(-5px) !important;
+                        box-shadow: 0 10px 25px rgba(0,0,0,0.2) !important;
+                        border-color: #ffd700 !important;
+                    }
+                    
+                    .student-interactive-card:hover::before {
+                        opacity: 0.8;
+                    }
+                    
+                    .student-interactive-card.selected {
+                        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%) !important;
+                        border-color: #ffd700 !important;
+                        transform: translateY(-3px) !important;
+                        box-shadow: 0 8px 20px rgba(17, 153, 142, 0.4) !important;
+                    }
+                    
+                    .student-interactive-card.selected::before {
+                        background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%);
+                    }
+                    
+                    .student-avatar {
+                        width: 50px !important;
+                        height: 50px !important;
+                        border-radius: 50% !important;
+                        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%) !important;
+                        display: flex !important;
+                        align-items: center !important;
+                        justify-content: center !important;
+                        margin: 0 auto 10px !important;
+                        font-size: 20px !important;
+                        font-weight: bold !important;
+                        color: #333 !important;
+                        position: relative !important;
+                        z-index: 2 !important;
+                        box-shadow: 0 3px 10px rgba(255, 215, 0, 0.4) !important;
+                    }
+                    
+                    .student-name {
+                        font-weight: bold !important;
+                        color: white !important;
+                        margin-bottom: 8px !important;
+                        position: relative !important;
+                        z-index: 2 !important;
+                        font-size: 14px !important;
+                    }
+                    
+                    .student-status {
+                        display: flex !important;
+                        align-items: center !important;
+                        justify-content: center !important;
+                        gap: 5px !important;
+                        color: rgba(255,255,255,0.9) !important;
+                        font-size: 12px !important;
+                        position: relative !important;
+                        z-index: 2 !important;
+                    }
+                    
+                    .student-status i {
+                        font-size: 14px !important;
+                    }
+                    
+                    .selected-player-card {
+                        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%) !important;
+                        border-radius: 10px !important;
+                        padding: 15px !important;
+                        text-align: center !important;
+                        position: relative !important;
+                        color: white !important;
+                        border: 2px solid #ffd700 !important;
+                    }
+                    
+                    .selected-player-card .remove-btn {
+                        position: absolute !important;
+                        top: -8px !important;
+                        right: -8px !important;
+                        background: #ff4757 !important;
+                        border: none !important;
+                        border-radius: 50% !important;
+                        width: 24px !important;
+                        height: 24px !important;
+                        display: flex !important;
+                        align-items: center !important;
+                        justify-content: center !important;
+                        cursor: pointer !important;
+                        color: white !important;
+                        font-size: 12px !important;
+                        transition: all 0.3s ease !important;
+                        z-index: 3 !important;
+                    }
+                    
+                    .selected-player-card .remove-btn:hover {
+                        background: #ff3838 !important;
+                        transform: scale(1.1) !important;
+                    }
+                    
+                    .player-role {
+                        margin-top: 8px !important;
+                        font-size: 11px !important;
+                        color: rgba(255,255,255,0.8) !important;
+                        font-weight: bold !important;
                     }
                 `;
                 
