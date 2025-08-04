@@ -3465,120 +3465,118 @@
         }
 
         // ===========================================
-        // تحميل بيانات الطلاب (مطابق لنشاط "4.html")
+        // نظام تحميل البيانات الاحترافي (مطابق لملف whois.html)
         // ===========================================
         async function loadStudentData() {
             try {
-                console.log('🔄 محاولة تحميل بيانات الطلاب من الملف...');
+                console.log('🔄 بدء تحميل بيانات الطلاب...');
+                MessageSystem.show('جاري تحميل بيانات الطلاب...', 'info', 10000);
+                
                 const response = await fetch('../data/studentData.json');
                 if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: فشل في تحميل بيانات الطلاب`);
+                    throw new Error(`HTTP ${response.status}: فشل في تحميل ملف البيانات`);
                 }
+                
                 const data = await response.json();
-                
                 if (!data || Object.keys(data).length === 0) {
-                    throw new Error('لا توجد بيانات طلاب في الملف');
+                    throw new Error('ملف البيانات فارغ أو تالف');
                 }
                 
-                // تحويل البيانات من تنسيق الأسماء إلى تنسيق الكائنات
+                // معالجة البيانات وتحويلها للتنسيق المطلوب
                 const formattedData = {};
                 for (const [className, students] of Object.entries(data)) {
-                    formattedData[className] = students.map((studentName, index) => ({
+                    if (Array.isArray(students) && students.length > 0) {
+                        formattedData[className] = students.map((studentName, index) => ({
+                            name: studentName,
+                            id: `${className.replace(/ /g, '_')}_${index + 1}`
+                        }));
+                    }
+                }
+                
+                if (Object.keys(formattedData).length === 0) {
+                    throw new Error('لا توجد بيانات صالحة في الملف');
+                }
+                
+                // حفظ البيانات
+                playerData = formattedData;
+                
+                // عرض معلومات النجاح
+                const totalStudents = Object.values(data).flat().length;
+                const totalClasses = Object.keys(data).length;
+                
+                console.log('� تم تحميل بيانات الطلاب بنجاح!');
+                console.log(`📊 إجمالي الصفوف: ${totalClasses}`);
+                console.log(`👥 إجمالي الطلاب: ${totalStudents}`);
+                
+                MessageSystem.clear();
+                MessageSystem.show(`تم تحميل ${totalStudents} طالب من ${totalClasses} صف بنجاح! 🎓`, 'success', 5000);
+                
+                return true;
+                
+            } catch (error) {
+                console.error('❌ خطأ في تحميل بيانات الطلاب:', error.message);
+                MessageSystem.show('خطأ في تحميل بيانات الطلاب: ' + error.message, 'error', 8000);
+                soundSystem.play('wrong');
+                
+                // بيانات احتياطية في حالة فشل التحميل
+                console.log('🔄 استخدام البيانات الاحتياطية...');
+                const fallbackData = {
+                    "خامس 1": ["أحمد محمد سالم السيابي", "فاطمة علي خالد البلوشي", "سالم خالد أحمد الرواحي", "مريم سعيد محمد الحارثي", "يوسف حمد علي المسكري"],
+                    "خامس 2": ["نورا أحمد سالم البوسعيدي", "محمد سالم يوسف الجابري", "آمنة يوسف حمد الفارسي", "خالد محمد أحمد العبري", "هناء علي سعيد الحديدي"],
+                    "سادس 1": ["عبدالله سعيد محمد الهطالي", "زينب محمد علي المحروقي", "طارق أحمد خالد الشامسي", "رقية سالم يوسف الكندي", "حمد علي أحمد الريامي"],
+                    "سادس 2": ["سعاد خالد محمد البريمي", "عمر محمد سالم الغافري", "ليلى أحمد علي الصوافي", "ناصر سعيد حمد العامري", "عائشة حمد يوسف الخروصي"]
+                };
+                
+                // تحويل البيانات الاحتياطية
+                const formattedFallback = {};
+                for (const [className, students] of Object.entries(fallbackData)) {
+                    formattedFallback[className] = students.map((studentName, index) => ({
                         name: studentName,
                         id: `${className.replace(/ /g, '_')}_${index + 1}`
                     }));
                 }
                 
-                playerData = formattedData;
-                console.log('🎉 تم تحميل بيانات الطلاب بنجاح!');
-                console.log(`📊 إجمالي الصفوف: ${Object.keys(data).length}`);
-                console.log(`👥 إجمالي الطلاب: ${Object.values(data).flat().length}`);
+                playerData = formattedFallback;
+                MessageSystem.show('تم تحميل بيانات احتياطية محدودة بدلاً من الملف الأصلي', 'warning', 8000);
                 
-                // عرض عينة من البيانات لكل صف
-                Object.keys(data).forEach(className => {
-                    console.log(`📝 ${className}: ${data[className].length} طالب`);
-                });
-                
-                // عرض عينة من الأسماء الحقيقية
-                const firstClass = Object.keys(data)[0];
-                console.log(`🎓 عينة من أسماء ${firstClass}:`);
-                data[firstClass].slice(0, 3).forEach((name, index) => {
-                    console.log(`   ${index + 1}. ${name}`);
-                });
-                
-                MessageSystem.show(`تم تحميل ${Object.values(data).flat().length} اسم طالب من ${Object.keys(data).length} صف! 🎓`, 'success', 5000);
-                
-                return playerData;
-            } catch (error) {
-                console.error('❌ خطأ في تحميل بيانات الطلاب:', error.message);
-                MessageSystem.show('⚠️ لا يمكن تحميل بيانات الطلاب! تأكد من وجود ملف studentData.json', 'error', 8000);
-                
-                // لا توجد بيانات احتياطية - يجب استخدام البيانات الحقيقية فقط
-                playerData = {};
-                return playerData;
+                return false;
             }
         }
 
         // متغيرات اختيار اللاعبين المبسطة
-                        id: `${className.replace(/ /g, '_')}_${index + 1}`
-                    }));
-                }
-                
-                playerData = formattedData;
-                console.log('🎉 تم تحميل بيانات الطلاب بنجاح!');
-                console.log(`📊 إجمالي الصفوف: ${Object.keys(data).length}`);
-                console.log(`👥 إجمالي الطلاب: ${Object.values(data).flat().length}`);
-                
-                // عرض عينة من البيانات لكل صف
-                Object.keys(data).forEach(className => {
-                    console.log(`📝 ${className}: ${data[className].length} طالب`);
-                });
-                
-                // عرض عينة من الأسماء الحقيقية
-                const firstClass = Object.keys(data)[0];
-                console.log(`� عينة من أسماء ${firstClass}:`);
-                data[firstClass].slice(0, 3).forEach((name, index) => {
-                    console.log(`   ${index + 1}. ${name}`);
-                });
-                
-                MessageSystem.show(`تم تحميل ${Object.values(data).flat().length} اسم طالب من ${Object.keys(data).length} صف! 🎓`, 'success', 5000);
-                
-                return playerData;
-            } catch (error) {
-                console.error('❌ خطأ في تحميل بيانات الطلاب:', error.message);
-                MessageSystem.show('⚠️ لا يمكن تحميل بيانات الطلاب! تأكد من وجود ملف studentData.json', 'error', 8000);
-                
-                // لا توجد بيانات احتياطية - يجب استخدام البيانات الحقيقية فقط
-                playerData = {};
-                return playerData;
-            }
-        }
 
         // متغيرات اختيار اللاعبين المبسطة
         let selectedPlayers = [];
         let currentStudents = [];
 
-        // ملء قائمة الصفوف (مطابق لباقي الأنشطة)
+        // ملء قائمة الصفوف الاحترافية
         function populateClassSelect() {
-            console.log('📚 ملء قائمة الصفوف...');
+            console.log('📚 بدء ملء قائمة الصفوف...');
             const classSelect = document.getElementById('classSelect');
+            const setupBtn = document.getElementById('setupPlayersBtn');
             
             if (!classSelect) {
-                console.error('❌ لم يتم العثور على عنصر classSelect!');
+                console.error('❌ لم يتم العثور على عنصر classSelect');
                 return;
             }
             
+            // تنظيف القائمة
             classSelect.innerHTML = '<option value="">اختر الصف الدراسي</option>';
             
             if (playerData && Object.keys(playerData).length > 0) {
-                console.log(`✅ تم العثور على ${Object.keys(playerData).length} صف`);
+                console.log(`📊 عدد الصفوف المتاحة: ${Object.keys(playerData).length}`);
+                
+                // إضافة خيارات الصفوف
                 Object.keys(playerData).forEach(className => {
+                    const studentCount = playerData[className].length;
                     const option = document.createElement('option');
                     option.value = className;
-                    option.textContent = className;
+                    option.textContent = `${className} (${studentCount} طالب)`;
                     classSelect.appendChild(option);
-                    console.log(`✅ تم إضافة الصف: ${className}`);
+                    console.log(`➕ إضافة صف: ${className} - ${studentCount} طالب`);
                 });
+                
+                console.log('✅ تم ملء قائمة الصفوف بنجاح');
             } else {
                 console.warn('⚠️ لا توجد بيانات طلاب');
                 // إذا لم تكن هناك بيانات، أضف رسالة تنبيه
@@ -3593,9 +3591,9 @@
             
             // إعداد حدث تغيير الصف
             classSelect.addEventListener('change', () => {
-                const setupBtn = document.getElementById('setupPlayersBtn');
                 if (setupBtn) {
-                    setupBtn.disabled = !classSelect.value;
+                    const playersCount = document.getElementById('playersCount').value;
+                    setupBtn.disabled = !classSelect.value || !playersCount;
                     
                     if (classSelect.value && playerData[classSelect.value]) {
                         const studentCount = playerData[classSelect.value].length;
@@ -3603,6 +3601,8 @@
                     }
                 }
             });
+            
+            console.log('🔧 تم إعداد مستمع أحداث تغيير الصف');
         }
 
         // إعداد واجهة اختيار اللاعبين البسيطة (مثل ملف 4.html)
@@ -3660,7 +3660,6 @@
             document.getElementById('startGameBtn').disabled = false;
             
             console.log('✅ تم إعداد اللاعبين:', randomPlayers.map(p => p.name));
-        }
             
             // التمرير إلى الواجهة
             setTimeout(() => {
@@ -3679,28 +3678,6 @@
             }
             
             startGame();
-        }
-            
-            console.log(`✅ تم إنشاء ${currentStudents.length} بطاقة طالب`);
-            
-            // تأثير ظهور متدرج
-            setTimeout(() => {
-                const cards = grid.querySelectorAll('.student-interactive-card');
-                console.log(`🎨 تطبيق التأثيرات على ${cards.length} بطاقة`);
-                
-                cards.forEach((card, index) => {
-                    setTimeout(() => {
-                        card.style.opacity = '0';
-                        card.style.transform = 'translateY(20px)';
-                        card.style.transition = 'all 0.3s ease-out';
-                        
-                        setTimeout(() => {
-                            card.style.opacity = '1';
-                            card.style.transform = 'translateY(0)';
-                        }, 50);
-                    }, index * 30);
-                });
-            }, 100);
         }
 
         // إنشاء بطاقة طالب بسيطة
