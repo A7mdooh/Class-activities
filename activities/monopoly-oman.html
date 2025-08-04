@@ -1553,58 +1553,76 @@
 
         @keyframes cardSlideOut {
             0% { 
-                transform: translateY(0) rotateX(0deg);
+                transform: translateY(0) rotateX(0deg) scale(1);
                 opacity: 1;
             }
             100% { 
-                transform: translateY(100vh) rotateX(-90deg);
+                transform: translateY(-50px) rotateX(-15deg) scale(0.9);
                 opacity: 0;
             }
         }
 
         .card-modal {
             perspective: 1000px;
+            backdrop-filter: blur(5px);
         }
 
         .card-content {
-            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             border-radius: 20px;
             border: 3px solid;
             padding: 30px;
             text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            max-width: 450px;
             transform-style: preserve-3d;
+            color: white;
+        }
+
+        .card-content h2 {
+            color: white !important;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
         }
 
         .card-text {
-            font-size: 1.2em;
+            font-size: 1.3em;
             margin: 20px 0;
-            padding: 20px;
-            background: rgba(248, 249, 250, 0.8);
-            border-radius: 10px;
-            border-left: 4px solid #007bff;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            border-left: 5px solid #ffd700;
+            color: #ffffff;
+            font-weight: 600;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
         }
 
         .card-player {
             margin: 15px 0;
-            padding: 10px;
-            background: linear-gradient(45deg, #007bff, #0056b3);
-            color: white;
+            padding: 15px;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #2c3e50;
             border-radius: 25px;
             font-weight: bold;
+            font-size: 1.2em;
+            text-shadow: none;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
         }
 
         .btn-execute {
-            padding: 15px 30px;
+            padding: 15px 35px;
             border: none;
-            border-radius: 25px;
+            border-radius: 30px;
             color: white;
             font-weight: bold;
-            font-size: 1.1em;
+            font-size: 1.2em;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 20px;
         }
 
         .btn-execute:hover {
@@ -1720,13 +1738,42 @@
             overflow: visible;
         }
 
-        .fireworks {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: 1000;
+        /* تحسينات إضافية للبطاقات */
+        .card-modal .card-content[style*="border-color: #e74c3c"] {
+            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+            box-shadow: 0 25px 50px rgba(231, 76, 60, 0.4);
+        }
+
+        .card-modal .card-content[style*="border-color: #3498db"] {
+            background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
+            box-shadow: 0 25px 50px rgba(52, 152, 219, 0.4);
+        }
+
+        .card-content .card-text {
+            text-align: center;
+            line-height: 1.6;
+            letter-spacing: 0.5px;
+        }
+
+        .card-content .card-text p {
+            margin: 0;
+            color: white !important;
+            font-size: 1.1em;
+        }
+
+        .btn-execute:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+        }
+
+        .btn-execute:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        /* تأثير النافذة المحسن */
+        .card-modal {
+            backdrop-filter: blur(8px);
+            background: rgba(0,0,0,0.85) !important;
         }
 
         /* لوحة القيادة المحترفة */
@@ -3702,34 +3749,38 @@
         ];
 
         function handleChanceCard(playerIndex) {
+            console.log('🎲 تفعيل بطاقة الصدفة للاعب:', playerIndex);
             const card = chanceCards[Math.floor(Math.random() * chanceCards.length)];
+            console.log('البطاقة المختارة:', card);
             showCardModal(playerIndex, card, 'chance');
         }
 
         function handleCommunityCard(playerIndex) {
+            console.log('🏛️ تفعيل بطاقة الخزانة العامة للاعب:', playerIndex);
             const card = communityCards[Math.floor(Math.random() * communityCards.length)];
+            console.log('البطاقة المختارة:', card);
             showCardModal(playerIndex, card, 'community');
         }
 
         function showCardModal(playerIndex, card, type) {
             const player = gameState.players[playerIndex];
             const cardTitle = type === 'chance' ? '🎲 بطاقة الصدفة' : '🏛️ صندوق الخزانة العامة';
-            const cardColor = type === 'chance' ? '#FF6B35' : '#4ECDC4';
+            const cardColor = type === 'chance' ? '#e74c3c' : '#3498db';
 
             const modal = document.createElement('div');
             modal.className = 'card-modal';
             modal.innerHTML = `
                 <div class="card-content" style="border-color: ${cardColor}">
-                    <h2 style="color: ${cardColor}">${cardTitle}</h2>
+                    <h2 style="color: white !important">${cardTitle}</h2>
                     <div class="card-text">
                         <p>${card.text}</p>
                     </div>
                     <div class="card-player">
                         <strong>${player.name}</strong>
                     </div>
-                    <button onclick="executeCardAction(${playerIndex}, ${JSON.stringify(card).replace(/"/g, '&quot;')}, '${type}')" 
+                    <button onclick="executeCardAction(${playerIndex}, '${encodeURIComponent(JSON.stringify(card))}', '${type}')" 
                             class="btn-execute" style="background: ${cardColor}">
-                        ✨ تنفيذ
+                        ✨ تنفيذ البطاقة
                     </button>
                 </div>
             `;
@@ -3740,7 +3791,7 @@
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background: rgba(0,0,0,0.9);
+                background: rgba(0,0,0,0.8);
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -3752,44 +3803,54 @@
             soundSystem.play('reveal');
         }
 
-        function executeCardAction(playerIndex, cardData, type) {
+        function executeCardAction(playerIndex, encodedCardData, type) {
             const player = gameState.players[playerIndex];
-            const card = JSON.parse(cardData.replace(/&quot;/g, '"'));
+            const card = JSON.parse(decodeURIComponent(encodedCardData));
 
-            // إغلاق النافذة
+            // إغلاق النافذة مع تأثير
             const modal = document.querySelector('.card-modal');
-            if (modal) modal.remove();
-
-            switch (card.action) {
-                case 'money':
-                    handleMoneyChange(playerIndex, card.amount);
-                    break;
-                case 'goToStart':
-                    movePlayerToPosition(playerIndex, 0);
-                    player.money += 200; // مكافأة المرور من البداية
-                    MessageSystem.show(`🎉 ${player.name} وصل للبداية وحصل على 200 ر.ع!`, 'success');
-                    break;
-                case 'goToProperty':
-                    movePlayerToPosition(playerIndex, card.property);
-                    break;
-                case 'goToJail':
-                    handleGoToJail(playerIndex);
-                    break;
-                case 'goToNearestAirport':
-                    moveToNearestAirport(playerIndex);
-                    break;
-                case 'moveBack':
-                    movePlayerBack(playerIndex, card.spaces);
-                    break;
-                case 'collectFromPlayers':
-                    collectFromAllPlayers(playerIndex, card.amount);
-                    break;
-                case 'payForBuildings':
-                    payForBuildings(playerIndex);
-                    break;
+            if (modal) {
+                modal.style.animation = 'cardSlideOut 0.3s ease-in';
+                setTimeout(() => modal.remove(), 300);
             }
 
-            updatePlayersDisplay();
+            // تأثير صوتي للتنفيذ
+            soundSystem.play('select');
+
+            setTimeout(() => {
+                switch (card.action) {
+                    case 'money':
+                        handleMoneyChange(playerIndex, card.amount);
+                        break;
+                    case 'goToStart':
+                        movePlayerToPosition(playerIndex, 0);
+                        player.money += 200; // مكافأة المرور من البداية
+                        MessageSystem.show(`🎉 ${player.name} وصل للبداية وحصل على 200 ر.ع!`, 'success');
+                        soundSystem.play('bonus');
+                        break;
+                    case 'goToProperty':
+                        movePlayerToPosition(playerIndex, card.property);
+                        break;
+                    case 'goToJail':
+                        handleGoToJail(playerIndex);
+                        break;
+                    case 'goToNearestAirport':
+                        moveToNearestAirport(playerIndex);
+                        break;
+                    case 'moveBack':
+                        movePlayerBack(playerIndex, card.spaces);
+                        break;
+                    case 'collectFromPlayers':
+                        collectFromAllPlayers(playerIndex, card.amount);
+                        break;
+                    case 'payForBuildings':
+                        payForBuildings(playerIndex);
+                        break;
+                }
+
+                updatePlayersDisplay();
+                LeaderboardSystem.updateLeaderboard();
+            }, 500);
         }
 
         function handleMoneyChange(playerIndex, amount) {
