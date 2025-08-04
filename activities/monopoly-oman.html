@@ -2825,6 +2825,16 @@
                         <option value="4">👥👥 أربعة لاعبين</option>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label for="playersCount">👥 عدد اللاعبين</label>
+                    <select id="playersCount" class="form-control">
+                        <option value="2">👥 لاعبان</option>
+                        <option value="3">👥👤 ثلاثة لاعبين</option>
+                        <option value="4">👥👥 أربعة لاعبين</option>
+                        <option value="5">👥👥👤 خمسة لاعبين</option>
+                        <option value="6">👥👥👥 ستة لاعبين</option>
+                    </select>
+                </div>
             </div>
 
             <!-- أزرار بدء اللعبة -->
@@ -3595,10 +3605,12 @@
             });
         }
 
-        // إعداد واجهة اختيار اللاعبين البسيطة
+        // إعداد واجهة اختيار اللاعبين البسيطة (مثل ملف 4.html)
         function setupSmartPlayerSelection() {
             const classValue = document.getElementById('classSelect').value;
-            console.log('🎯 إعداد اختيار اللاعبين للصف:', classValue);
+            const playersCount = parseInt(document.getElementById('playersCount').value);
+            
+            console.log('🎯 إعداد اختيار اللاعبين للصف:', classValue, 'عدد اللاعبين:', playersCount);
             
             if (!classValue) {
                 console.warn('⚠️ لم يتم اختيار صف');
@@ -3606,10 +3618,14 @@
                 return;
             }
 
+            if (!playersCount || playersCount < 2 || playersCount > 6) {
+                MessageSystem.show('يرجى اختيار عدد اللاعبين (2-6)!', 'error');
+                return;
+            }
+
             if (!playerData || Object.keys(playerData).length === 0) {
                 console.error('❌ playerData فارغ أو غير موجود');
-                console.log('🔍 محتوى playerData:', playerData);
-                MessageSystem.show('⚠️ لا توجد بيانات طلاب! تأكد من وجود ملف data/studentData.json', 'error', 8000);
+                MessageSystem.show('⚠️ لا توجد بيانات طلاب! تأكد من وجود ملف studentData.json', 'error', 8000);
                 return;
             }
 
@@ -3620,43 +3636,31 @@
                 return;
             }
 
-            currentStudents = playerData[classValue];
-            console.log(`📊 تم تحميل ${currentStudents.length} طالب من الصف ${classValue}`);
-            console.log('🔍 عينة من الطلاب:', currentStudents.slice(0, 3));
-            
-            if (currentStudents.length === 0) {
-                MessageSystem.show('هذا الصف لا يحتوي على أي طلاب!', 'error');
+            const students = playerData[classValue];
+            if (students.length < playersCount) {
+                MessageSystem.show(`الصف يحتوي على ${students.length} طالب فقط، لا يمكن اختيار ${playersCount} لاعبين!`, 'error');
                 return;
             }
+
+            // اختيار عشوائي للاعبين
+            const randomPlayers = [];
+            const availableStudents = [...students];
             
-            selectedPlayers = [];
-            
-            // إظهار واجهة الاختيار
-            const selectionDiv = document.getElementById('smartPlayerSelection');
-            if (selectionDiv) {
-                selectionDiv.style.display = 'block';
-                console.log('✅ تم إظهار واجهة الاختيار');
-            } else {
-                console.error('❌ لم يتم العثور على عنصر smartPlayerSelection');
-                return;
+            for (let i = 0; i < playersCount; i++) {
+                const randomIndex = Math.floor(Math.random() * availableStudents.length);
+                randomPlayers.push(availableStudents.splice(randomIndex, 1)[0]);
             }
+
+            // إعداد اللاعبين
+            initializePlayers(randomPlayers.map(player => player.name));
             
-            // تحديث عداد اللاعبين المطلوبين
-            const playersNeeded = parseInt(document.getElementById('playersCount').value);
-            const totalElement = document.getElementById('totalPlayersNeeded');
-            if (totalElement) {
-                totalElement.textContent = playersNeeded;
-                console.log(`🎮 عدد اللاعبين المطلوب: ${playersNeeded}`);
-            }
+            MessageSystem.show(`تم اختيار ${playersCount} لاعبين عشوائياً من ${classValue}! 🎉`, 'success');
             
-            // التأكد من أن عدد الطلاب كافٍ
-            if (currentStudents.length < playersNeeded) {
-                MessageSystem.show(`⚠️ الصف يحتوي على ${currentStudents.length} طالب فقط، لا يمكن اختيار ${playersNeeded} لاعبين!`, 'error', 8000);
-                return;
-            }
+            // تفعيل زر بدء اللعبة
+            document.getElementById('startGameBtn').disabled = false;
             
-            // إنشاء شبكة الطلاب البسيطة
-            createSimpleStudentsGrid();
+            console.log('✅ تم إعداد اللاعبين:', randomPlayers.map(p => p.name));
+        }
             
             // التمرير إلى الواجهة
             setTimeout(() => {
@@ -3667,29 +3671,15 @@
             }, 100);
         }
 
-        // إنشاء شبكة الطلاب البسيطة
-        function createSimpleStudentsGrid() {
-            const grid = document.getElementById('studentsInteractiveGrid');
-            console.log('🔍 إنشاء شبكة الطلاب:', currentStudents);
-            
-            if (!grid) {
-                console.error('❌ لم يتم العثور على عنصر studentsInteractiveGrid');
+        // دالة بدء اللعبة مع الطلاب المختارين
+        function startGameWithStudents() {
+            if (!gameState.players || gameState.players.length < 2) {
+                MessageSystem.show('يجب إعداد اللاعبين أولاً!', 'error');
                 return;
             }
             
-            if (!currentStudents || currentStudents.length === 0) {
-                console.warn('⚠️ لا توجد بيانات طلاب لعرضها');
-                grid.innerHTML = '<div style="text-align: center; padding: 40px; color: white; font-size: 18px; background: rgba(255,0,0,0.1); border-radius: 10px; border: 2px dashed #ff6b6b;">❌ لا توجد أسماء طلاب متاحة<br><small style="font-size: 14px; opacity: 0.8;">تأكد من وجود ملف data/studentData.json</small></div>';
-                return;
-            }
-            
-            grid.innerHTML = '';
-            
-            currentStudents.forEach((student, index) => {
-                console.log(`➕ إضافة طالب: ${student.name}`);
-                const card = createSimpleStudentCard(student, index);
-                grid.appendChild(card);
-            });
+            startGame();
+        }
             
             console.log(`✅ تم إنشاء ${currentStudents.length} بطاقة طالب`);
             
@@ -6229,7 +6219,15 @@
             document.getElementById('showRules').addEventListener('click', showRules);
 
             // واجهة اختيار اللاعبين الذكية
-            // أزرار طرق الاختيار
+            // إعداد listener لقائمة عدد اللاعبين
+            document.getElementById('playersCount').addEventListener('change', () => {
+                const setupBtn = document.getElementById('setupPlayersBtn');
+                const classSelect = document.getElementById('classSelect');
+                if (setupBtn && classSelect.value) {
+                    setupBtn.disabled = false;
+                }
+            });
+            
             // أزرار التحكم في الاختيار
             document.getElementById('confirmPlayerSelection').addEventListener('click', confirmPlayerSelection);
             document.getElementById('cancelPlayerSelection').addEventListener('click', cancelPlayerSelection);
