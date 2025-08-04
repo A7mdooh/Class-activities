@@ -234,37 +234,90 @@
         }
 
         /* ===========================================
-           لوحة اللعبة
+           لوحة اللعبة العصرية
         =========================================== */
         .game-board {
             width: 100%;
-            max-width: 800px;
-            margin: 0 auto;
+            max-width: 900px;
+            margin: 20px auto;
             aspect-ratio: 1;
-            background: var(--surface-board);
-            border-radius: var(--border-radius-large);
-            box-shadow: var(--shadow-board);
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #1e3c72 100%);
+            border-radius: 20px;
+            box-shadow: 
+                0 20px 40px rgba(0,0,0,0.3),
+                0 0 0 8px rgba(255,255,255,0.1),
+                inset 0 0 50px rgba(255,255,255,0.1);
             position: relative;
-            border: 4px solid var(--oman-red);
-            overflow: hidden;
+            border: 6px solid var(--oman-red);
+            overflow: visible;
+            transform-style: preserve-3d;
+            animation: boardGlow 3s ease-in-out infinite alternate;
         }
 
-        /* مربعات اللوحة */
+        @keyframes boardGlow {
+            0% { 
+                box-shadow: 
+                    0 20px 40px rgba(0,0,0,0.3),
+                    0 0 0 8px rgba(255,255,255,0.1),
+                    inset 0 0 50px rgba(255,255,255,0.1),
+                    0 0 60px rgba(220, 20, 60, 0.3);
+            }
+            100% { 
+                box-shadow: 
+                    0 25px 50px rgba(0,0,0,0.4),
+                    0 0 0 12px rgba(255,255,255,0.15),
+                    inset 0 0 80px rgba(255,255,255,0.15),
+                    0 0 100px rgba(220, 20, 60, 0.5);
+            }
+        }
+
+        /* مربعات اللوحة العصرية */
         .board-square {
             position: absolute;
-            border: 2px solid var(--text-dark);
-            background: white;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 0.8rem;
-            font-weight: 600;
             text-align: center;
-            padding: 5px;
-            transition: var(--transition-normal);
+            padding: 8px 4px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: 3px solid #2c3e50;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #2c3e50;
             cursor: pointer;
-            color: var(--text-dark);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 4px 8px rgba(0,0,0,0.1),
+                inset 0 1px 0 rgba(255,255,255,0.8);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .board-square::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .board-square:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 
+                0 15px 30px rgba(0,0,0,0.2),
+                0 0 20px rgba(220, 20, 60, 0.3),
+                inset 0 1px 0 rgba(255,255,255,0.9);
+            z-index: 10;
+        }
+
+        .board-square:hover::before {
+            transform: translateX(100%);
         }
 
         .board-square:hover {
@@ -273,78 +326,176 @@
             z-index: 10;
         }
 
-        /* مربعات الزوايا */
+        /* مربعات الزوايا العصرية */
         .corner-square {
             width: 120px;
             height: 120px;
+            border-radius: 18px !important;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%) !important;
+            border: 4px solid #c44569 !important;
+            color: white !important;
+            font-size: 0.85rem !important;
+            font-weight: 800 !important;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3) !important;
+            box-shadow: 
+                0 8px 16px rgba(0,0,0,0.2),
+                inset 0 2px 0 rgba(255,255,255,0.3) !important;
         }
 
-        /* مربعات الجانب */
+        .corner-square:hover {
+            background: linear-gradient(135deg, #ff5252 0%, #d84315 100%) !important;
+            transform: translateY(-10px) scale(1.08) !important;
+        }
+
+        /* مربعات الجانب العصرية */
         .side-square {
             width: 80px;
             height: 120px;
+            border-radius: 14px !important;
         }
 
-        /* ألوان المجموعات */
-        .brown { background-color: var(--property-brown) !important; color: white; }
-        .light-blue { background-color: var(--property-light-blue) !important; }
-        .pink { background-color: var(--property-pink) !important; color: white; }
-        .orange { background-color: var(--property-orange) !important; }
-        .red { background-color: var(--property-red) !important; color: white; }
-        .yellow { background-color: var(--property-yellow) !important; }
-        .green { background-color: var(--property-green) !important; color: white; }
-        .dark-blue { background-color: var(--property-dark-blue) !important; color: white; }
-        .utility { background-color: var(--utility-color) !important; }
-        .railroad { background-color: var(--railroad-color) !important; color: white; }
+        /* ألوان المجموعات العصرية */
+        .brown { 
+            background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%) !important; 
+            color: white !important;
+            border-color: #5d2f0b !important;
+        }
+        .light-blue { 
+            background: linear-gradient(135deg, #87ceeb 0%, #4fb3d9 100%) !important;
+            color: #1e3c72 !important;
+            border-color: #2980b9 !important;
+        }
+        .pink { 
+            background: linear-gradient(135deg, #ff69b4 0%, #ff1493 100%) !important; 
+            color: white !important;
+            border-color: #c91d6b !important;
+        }
+        .orange { 
+            background: linear-gradient(135deg, #ffa500 0%, #ff8c00 100%) !important;
+            color: white !important;
+            border-color: #d67700 !important;
+        }
+        .red { 
+            background: linear-gradient(135deg, #dc143c 0%, #b71c1c 100%) !important; 
+            color: white !important;
+            border-color: #8b0000 !important;
+        }
+        .yellow { 
+            background: linear-gradient(135deg, #ffd700 0%, #ffb300 100%) !important;
+            color: #2c3e50 !important;
+            border-color: #e6ac00 !important;
+        }
+        .green { 
+            background: linear-gradient(135deg, #32cd32 0%, #228b22 100%) !important; 
+            color: white !important;
+            border-color: #1a5d1a !important;
+        }
+        .dark-blue { 
+            background: linear-gradient(135deg, #191970 0%, #000080 100%) !important; 
+            color: white !important;
+            border-color: #0a0a3a !important;
+        }
+        .utility { 
+            background: linear-gradient(135deg, #708090 0%, #2f4f4f 100%) !important;
+            color: white !important;
+            border-color: #1c2b2b !important;
+        }
+        .railroad { 
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important; 
+            color: white !important;
+            border-color: #1a252f !important;
+        }
+        .special {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%) !important;
+            color: white !important;
+            border-color: #c44569 !important;
+        }
 
-        /* مواضع المربعات */
+        /* مواضع المربعات المحسنة */
         /* الصف السفلي */
         .square-0 { bottom: 0; right: 0; }
-        .square-1 { bottom: 0; right: 120px; }
-        .square-2 { bottom: 0; right: 200px; }
-        .square-3 { bottom: 0; right: 280px; }
-        .square-4 { bottom: 0; right: 360px; }
-        .square-5 { bottom: 0; right: 440px; }
-        .square-6 { bottom: 0; right: 520px; }
-        .square-7 { bottom: 0; right: 600px; }
-        .square-8 { bottom: 0; right: 680px; }
-        .square-9 { bottom: 0; right: 760px; }
+        .square-1 { bottom: 0; right: 130px; }
+        .square-2 { bottom: 0; right: 220px; }
+        .square-3 { bottom: 0; right: 310px; }
+        .square-4 { bottom: 0; right: 400px; }
+        .square-5 { bottom: 0; right: 490px; }
+        .square-6 { bottom: 0; right: 580px; }
+        .square-7 { bottom: 0; right: 670px; }
+        .square-8 { bottom: 0; right: 760px; }
+        .square-9 { bottom: 0; right: 850px; }
         .square-10 { bottom: 0; left: 0; }
 
         /* الصف الأيسر */
-        .square-11 { left: 0; bottom: 120px; transform: rotate(90deg); }
-        .square-12 { left: 0; bottom: 200px; transform: rotate(90deg); }
-        .square-13 { left: 0; bottom: 280px; transform: rotate(90deg); }
-        .square-14 { left: 0; bottom: 360px; transform: rotate(90deg); }
-        .square-15 { left: 0; bottom: 440px; transform: rotate(90deg); }
-        .square-16 { left: 0; bottom: 520px; transform: rotate(90deg); }
-        .square-17 { left: 0; bottom: 600px; transform: rotate(90deg); }
-        .square-18 { left: 0; bottom: 680px; transform: rotate(90deg); }
-        .square-19 { left: 0; bottom: 760px; transform: rotate(90deg); }
+        .square-11 { left: 0; bottom: 130px; transform: rotate(90deg); }
+        .square-12 { left: 0; bottom: 220px; transform: rotate(90deg); }
+        .square-13 { left: 0; bottom: 310px; transform: rotate(90deg); }
+        .square-14 { left: 0; bottom: 400px; transform: rotate(90deg); }
+        .square-15 { left: 0; bottom: 490px; transform: rotate(90deg); }
+        .square-16 { left: 0; bottom: 580px; transform: rotate(90deg); }
+        .square-17 { left: 0; bottom: 670px; transform: rotate(90deg); }
+        .square-18 { left: 0; bottom: 760px; transform: rotate(90deg); }
+        .square-19 { left: 0; bottom: 850px; transform: rotate(90deg); }
         .square-20 { top: 0; left: 0; }
 
         /* الصف العلوي */
-        .square-21 { top: 0; left: 120px; transform: rotate(180deg); }
-        .square-22 { top: 0; left: 200px; transform: rotate(180deg); }
-        .square-23 { top: 0; left: 280px; transform: rotate(180deg); }
-        .square-24 { top: 0; left: 360px; transform: rotate(180deg); }
-        .square-25 { top: 0; left: 440px; transform: rotate(180deg); }
-        .square-26 { top: 0; left: 520px; transform: rotate(180deg); }
-        .square-27 { top: 0; left: 600px; transform: rotate(180deg); }
-        .square-28 { top: 0; left: 680px; transform: rotate(180deg); }
-        .square-29 { top: 0; left: 760px; transform: rotate(180deg); }
+        .square-21 { top: 0; left: 130px; transform: rotate(180deg); }
+        .square-22 { top: 0; left: 220px; transform: rotate(180deg); }
+        .square-23 { top: 0; left: 310px; transform: rotate(180deg); }
+        .square-24 { top: 0; left: 400px; transform: rotate(180deg); }
+        .square-25 { top: 0; left: 490px; transform: rotate(180deg); }
+        .square-26 { top: 0; left: 580px; transform: rotate(180deg); }
+        .square-27 { top: 0; left: 670px; transform: rotate(180deg); }
+        .square-28 { top: 0; left: 760px; transform: rotate(180deg); }
+        .square-29 { top: 0; left: 850px; transform: rotate(180deg); }
         .square-30 { top: 0; right: 0; }
 
         /* الصف الأيمن */
-        .square-31 { right: 0; top: 120px; transform: rotate(270deg); }
-        .square-32 { right: 0; top: 200px; transform: rotate(270deg); }
-        .square-33 { right: 0; top: 280px; transform: rotate(270deg); }
-        .square-34 { right: 0; top: 360px; transform: rotate(270deg); }
-        .square-35 { right: 0; top: 440px; transform: rotate(270deg); }
-        .square-36 { right: 0; top: 520px; transform: rotate(270deg); }
-        .square-37 { right: 0; top: 600px; transform: rotate(270deg); }
-        .square-38 { right: 0; top: 680px; transform: rotate(270deg); }
-        .square-39 { right: 0; top: 760px; transform: rotate(270deg); }
+        .square-31 { right: 0; top: 130px; transform: rotate(270deg); }
+        .square-32 { right: 0; top: 220px; transform: rotate(270deg); }
+        .square-33 { right: 0; top: 310px; transform: rotate(270deg); }
+        .square-34 { right: 0; top: 400px; transform: rotate(270deg); }
+        .square-35 { right: 0; top: 490px; transform: rotate(270deg); }
+        .square-36 { right: 0; top: 580px; transform: rotate(270deg); }
+        .square-37 { right: 0; top: 670px; transform: rotate(270deg); }
+        .square-38 { right: 0; top: 760px; transform: rotate(270deg); }
+        .square-39 { right: 0; top: 850px; transform: rotate(270deg); }
+
+        /* مركز اللوحة مع شعار عُمان */
+        .game-board::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 45%;
+            height: 45%;
+            background: 
+                radial-gradient(circle at center, rgba(220, 20, 60, 0.1) 0%, transparent 50%),
+                linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(220, 20, 60, 0.05) 100%);
+            border-radius: 50%;
+            border: 4px solid rgba(220, 20, 60, 0.3);
+            backdrop-filter: blur(20px);
+            box-shadow: 
+                inset 0 0 30px rgba(255,255,255,0.1),
+                0 0 40px rgba(220, 20, 60, 0.2);
+        }
+
+        .game-board::before {
+            content: '🇴🇲';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 80px;
+            z-index: 5;
+            text-shadow: 0 0 20px rgba(0,0,0,0.3);
+            animation: flagWave 4s ease-in-out infinite;
+        }
+
+        @keyframes flagWave {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
 
         /* ===========================================
            عناصر تحكم اللعبة
@@ -1311,37 +1462,134 @@
         }
 
         /* ===========================================
-           الاستجابة للأجهزة المحمولة
+           الاستجابة العصرية للأجهزة المختلفة
         =========================================== */
+        
+        /* الشاشات الكبيرة */
+        @media (min-width: 1200px) {
+            .game-board {
+                max-width: 1000px;
+            }
+            
+            .corner-square {
+                width: 140px;
+                height: 140px;
+            }
+            
+            .side-square {
+                width: 90px;
+                height: 140px;
+            }
+        }
+
+        /* الأجهزة اللوحية */
+        @media (max-width: 1024px) {
+            .monopoly-container {
+                padding: 15px;
+            }
+
+            .game-board {
+                max-width: 800px;
+            }
+
+            .corner-square {
+                width: 100px;
+                height: 100px;
+                font-size: 0.7rem !important;
+            }
+
+            .side-square {
+                width: 65px;
+                height: 100px;
+            }
+
+            .board-square {
+                font-size: 0.65rem;
+                padding: 6px 3px;
+            }
+        }
+
+        /* الهواتف الذكية */
         @media (max-width: 768px) {
             .monopoly-container {
-                padding: 10px;
+                padding: 8px;
             }
 
             .game-title h1 {
-                font-size: 2rem;
+                font-size: 1.8rem;
             }
 
             .game-title p {
-                font-size: 1rem;
+                font-size: 0.9rem;
             }
 
             .game-board {
                 max-width: 100%;
+                margin: 15px auto;
+                border-radius: 15px;
             }
 
             .corner-square {
-                width: 80px;
-                height: 80px;
+                width: 70px;
+                height: 70px;
+                font-size: 0.6rem !important;
+                border-radius: 12px !important;
             }
 
             .side-square {
-                width: 50px;
-                height: 80px;
+                width: 45px;
+                height: 70px;
+                border-radius: 10px !important;
             }
 
             .board-square {
-                font-size: 0.6rem;
+                font-size: 0.55rem;
+                padding: 4px 2px;
+                border-width: 2px;
+            }
+
+            .property-content {
+                transform: scale(0.9);
+            }
+
+            .game-board::before {
+                font-size: 50px !important;
+            }
+        }
+
+        /* الهواتف الصغيرة */
+        @media (max-width: 480px) {
+            .game-board {
+                border-radius: 12px;
+                border-width: 4px;
+            }
+
+            .corner-square {
+                width: 60px;
+                height: 60px;
+                font-size: 0.5rem !important;
+            }
+
+            .side-square {
+                width: 35px;
+                height: 60px;
+            }
+
+            .board-square {
+                font-size: 0.45rem;
+                padding: 2px 1px;
+            }
+
+            .game-board::before {
+                font-size: 35px !important;
+            }
+
+            .game-board::after {
+                width: 40%;
+                height: 40%;
+                border-width: 2px;
+            }
+        }
                 padding: 3px;
             }
 
@@ -3751,10 +3999,10 @@
         }
 
         // ===========================================
-        // إنشاء لوحة اللعبة
+        // إنشاء لوحة اللعبة العصرية
         // ===========================================
         function createGameBoard() {
-            console.log('🏗️ بدء إنشاء لوحة اللعبة...');
+            console.log('🏗️ بدء إنشاء لوحة اللعبة العصرية...');
             const board = document.getElementById('gameBoard');
             
             if (!board) {
@@ -3764,8 +4012,8 @@
             
             // منع التكرار - إذا كانت اللوحة تحتوي على مربعات بالفعل
             if (board.children.length > 0) {
-                console.log('ℹ️ اللوحة موجودة بالفعل، تخطي الإنشاء');
-                return;
+                console.log('ℹ️ اللوحة موجودة بالفعل، إعادة إنشاء...');
+                board.innerHTML = ''; // إعادة إنشاء لضمان التحديث
             }
             
             if (!omanProperties || omanProperties.length === 0) {
@@ -3774,23 +4022,73 @@
             }
             
             console.log(`📊 عدد العقارات: ${omanProperties.length}`);
-            board.innerHTML = '';
 
+            // إنشاء المربعات مع التصميم الجديد
             omanProperties.forEach((property, index) => {
                 const square = document.createElement('div');
-                square.className = `board-square ${property.color} ${index % 10 === 0 ? 'corner-square' : 'side-square'} square-${index}`;
+                const isCorner = index % 10 === 0;
+                
+                square.className = `board-square ${property.color} ${isCorner ? 'corner-square' : 'side-square'} square-${index}`;
                 square.id = `square-${index}`;
+                
+                // محتوى محسن للمربعات
                 square.innerHTML = `
-                    <div class="property-name">${property.name}</div>
-                    ${property.price > 0 ? `<div class="property-price">${property.price} ر.ع</div>` : ''}
+                    <div class="property-content">
+                        <div class="property-name" style="font-weight: 800; font-size: ${isCorner ? '0.9rem' : '0.75rem'}; margin-bottom: 4px;">
+                            ${property.name}
+                        </div>
+                        ${property.price > 0 ? `
+                            <div class="property-price" style="background: rgba(0,0,0,0.2); color: white; padding: 2px 6px; border-radius: 8px; font-size: 0.7rem; font-weight: 700;">
+                                ${property.price} ر.ع
+                            </div>
+                        ` : ''}
+                    </div>
                 `;
                 
-                square.addEventListener('click', () => showPropertyInfo(property));
+                // تأثيرات تفاعلية متقدمة
+                square.addEventListener('mouseenter', () => {
+                    square.style.transform += ' rotateY(5deg)';
+                    square.style.boxShadow = '0 20px 40px rgba(0,0,0,0.3), 0 0 30px rgba(220, 20, 60, 0.4)';
+                });
+                
+                square.addEventListener('mouseleave', () => {
+                    square.style.transform = square.style.transform.replace(' rotateY(5deg)', '');
+                    square.style.boxShadow = '';
+                });
+                
+                square.addEventListener('click', () => {
+                    // تأثير النقر
+                    square.style.transform += ' scale(0.95)';
+                    setTimeout(() => {
+                        square.style.transform = square.style.transform.replace(' scale(0.95)', '');
+                        showPropertyInfo(property);
+                    }, 150);
+                });
+                
                 board.appendChild(square);
                 console.log(`✅ تم إنشاء مربع ${index}: ${property.name}`);
+                
+                // تأثير ظهور متدرج
+                setTimeout(() => {
+                    square.style.opacity = '0';
+                    square.style.transform += ' translateY(20px)';
+                    requestAnimationFrame(() => {
+                        square.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                        square.style.opacity = '1';
+                        square.style.transform = square.style.transform.replace(' translateY(20px)', '');
+                    });
+                }, index * 50); // تأخير تدريجي لكل مربع
             });
             
-            console.log('🎯 تم الانتهاء من إنشاء لوحة اللعبة!');
+            console.log('🎯 تم الانتهاء من إنشاء لوحة اللعبة العصرية!');
+            
+            // تأثير نهاية الإنشاء
+            setTimeout(() => {
+                board.style.transform = 'scale(1.02)';
+                setTimeout(() => {
+                    board.style.transform = 'scale(1)';
+                }, 300);
+            }, omanProperties.length * 50 + 500);
         }
 
         // ===========================================
