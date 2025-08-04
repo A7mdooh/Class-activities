@@ -1524,6 +1524,380 @@
                 max-height: 300px;
             }
         }
+
+        /* تأثيرات مثيرة للمونوبولي */
+        @keyframes landingEffect {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
+            50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 215, 0, 0.3); }
+            100% { transform: scale(1); box-shadow: 0 0 0 20px rgba(255, 215, 0, 0); }
+        }
+
+        .landing-effect {
+            animation: landingEffect 1s ease-out;
+        }
+
+        @keyframes cardSlideIn {
+            0% { 
+                transform: translateY(-100vh) rotateX(90deg);
+                opacity: 0;
+            }
+            50% {
+                transform: translateY(0) rotateX(45deg);
+                opacity: 0.7;
+            }
+            100% { 
+                transform: translateY(0) rotateX(0deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes cardSlideOut {
+            0% { 
+                transform: translateY(0) rotateX(0deg);
+                opacity: 1;
+            }
+            100% { 
+                transform: translateY(100vh) rotateX(-90deg);
+                opacity: 0;
+            }
+        }
+
+        .card-modal {
+            perspective: 1000px;
+        }
+
+        .card-content {
+            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+            border-radius: 20px;
+            border: 3px solid;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            max-width: 400px;
+            transform-style: preserve-3d;
+        }
+
+        .card-text {
+            font-size: 1.2em;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(248, 249, 250, 0.8);
+            border-radius: 10px;
+            border-left: 4px solid #007bff;
+        }
+
+        .card-player {
+            margin: 15px 0;
+            padding: 10px;
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+            border-radius: 25px;
+            font-weight: bold;
+        }
+
+        .btn-execute {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-execute:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .purchase-modal {
+            backdrop-filter: blur(10px);
+        }
+
+        .purchase-content {
+            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            max-width: 450px;
+            border: 3px solid #28a745;
+        }
+
+        .property-details {
+            background: rgba(40, 167, 69, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #28a745;
+        }
+
+        .property-details p {
+            margin: 10px 0;
+            font-weight: 500;
+        }
+
+        .purchase-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        .btn-purchase, .btn-decline {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+        }
+
+        .btn-purchase {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-decline {
+            background: linear-gradient(45deg, #dc3545, #c82333);
+            color: white;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .btn-purchase:hover, .btn-decline:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse-effect {
+            animation: pulse 0.6s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.9); }
+        }
+
+        .message-achievement {
+            background: linear-gradient(135deg, #FFD700, #FFA500) !important;
+            border-left: 5px solid #FF8C00 !important;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4) !important;
+        }
+
+        .message-success {
+            background: linear-gradient(135deg, #28a745, #20c997) !important;
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3) !important;
+        }
+
+        .message-error {
+            background: linear-gradient(135deg, #dc3545, #c82333) !important;
+            box-shadow: 0 8px 25px rgba(220, 53, 69, 0.3) !important;
+        }
+
+        .game-board {
+            position: relative;
+            overflow: visible;
+        }
+
+        .fireworks {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* لوحة القيادة المحترفة */
+        .leaderboard-header {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+        }
+
+        .leaderboard-header h3 {
+            margin: 0;
+            color: #333;
+            font-size: 1.5em;
+        }
+
+        .leaderboard-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .leaderboard-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .leaderboard-player {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .leaderboard-player.first {
+            border-color: #FFD700;
+            background: linear-gradient(135deg, #fff9e6, #fff);
+            box-shadow: 0 8px 30px rgba(255, 215, 0, 0.2);
+        }
+
+        .leaderboard-player.second {
+            border-color: #C0C0C0;
+            background: linear-gradient(135deg, #f8f9fa, #fff);
+        }
+
+        .leaderboard-player.third {
+            border-color: #CD7F32;
+            background: linear-gradient(135deg, #fdf7f0, #fff);
+        }
+
+        .leaderboard-player.other {
+            border-color: #6c757d;
+        }
+
+        .leaderboard-player.current-player {
+            transform: scale(1.02);
+            box-shadow: 0 8px 30px rgba(0, 123, 255, 0.3);
+            border-color: #007bff;
+        }
+
+        .leaderboard-player::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .leaderboard-player.current-player::before {
+            opacity: 1;
+        }
+
+        .player-rank {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .rank-emoji {
+            font-size: 2em;
+        }
+
+        .rank-number {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #666;
+        }
+
+        .player-info {
+            flex: 1;
+        }
+
+        .player-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .player-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: rgba(248, 249, 250, 0.8);
+            border-radius: 8px;
+            border-left: 3px solid #007bff;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .stat-value {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .stat-value.total-worth {
+            color: #28a745;
+            font-size: 1.1em;
+        }
+
+        .player-achievements {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .achievement {
+            background: linear-gradient(45deg, #17a2b8, #138496);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(23, 162, 184, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .player-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .leaderboard-stats {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
     </style>
 </head>
 
@@ -1759,13 +2133,21 @@
         ];
 
         // ===========================================
-        // متغيرات اللعبة الرئيسية
+        // متغيرات اللعبة الرئيسية المطورة
         // ===========================================
         let gameState = {
             players: [],
             currentPlayer: 0,
             gameStarted: false,
-            soundEnabled: true
+            soundEnabled: true,
+            turn: 1,
+            doubles: 0,
+            lastRoll: { dice1: 0, dice2: 0, total: 0 },
+            gameMode: 'competitive', // تنافسي
+            animations: true,
+            leaderboard: [],
+            achievements: {},
+            gameHistory: []
         };
 
         let playerData = [];
@@ -1774,7 +2156,7 @@
         // أنظمة اللعبة الأساسية
         // ===========================================
         
-        // نظام الصوت
+        // نظام الصوت الاحترافي
         class SoundSystem {
             constructor() {
                 this.sounds = {
@@ -1782,62 +2164,376 @@
                     buy: new Audio('../assets/media/sounds/Notification.mp3'),
                     money: new Audio('../assets/media/sounds/select.mp3'),
                     win: new Audio('../assets/media/sounds/win.mp3'),
-                    lose: new Audio('../assets/media/sounds/wrong_answer.mp3')
+                    lose: new Audio('../assets/media/sounds/wrong_answer.mp3'),
+                    select: new Audio('../assets/media/sounds/select.mp3'),
+                    achievement: new Audio('../assets/media/sounds/kingdom-sounds/achievement-unlock.mp3'),
+                    victory: new Audio('../assets/media/sounds/kingdom-sounds/battle-victory.mp3'),
+                    bonus: new Audio('../assets/media/sounds/kingdom-sounds/bonus-collect.mp3'),
+                    countdown: new Audio('../assets/media/sounds/kingdom-sounds/countdown-tick.mp3'),
+                    explosion: new Audio('../assets/media/sounds/kingdom-sounds/cosmic-explosion.mp3'),
+                    cheer: new Audio('../assets/media/sounds/kingdom-sounds/crowd-cheer.mp3'),
+                    bell: new Audio('../assets/media/sounds/kingdom-sounds/ancient-bell.mp3')
                 };
                 this.enabled = true;
+                this.volume = 0.7;
+                this.setupVolume();
             }
 
-            play(soundName) {
+            setupVolume() {
+                Object.values(this.sounds).forEach(sound => {
+                    sound.volume = this.volume;
+                });
+            }
+
+            play(soundName, volume = 1.0) {
                 if (this.enabled && this.sounds[soundName]) {
-                    this.sounds[soundName].currentTime = 0;
-                    this.sounds[soundName].play().catch(e => console.log('خطأ في تشغيل الصوت:', e));
+                    const sound = this.sounds[soundName];
+                    sound.volume = this.volume * volume;
+                    sound.currentTime = 0;
+                    sound.play().catch(e => console.log('خطأ في تشغيل الصوت:', e));
                 }
+            }
+
+            playSequence(sounds, delay = 500) {
+                sounds.forEach((sound, index) => {
+                    setTimeout(() => this.play(sound), index * delay);
+                });
             }
 
             toggle() {
                 this.enabled = !this.enabled;
                 return this.enabled;
             }
+
+            setVolume(volume) {
+                this.volume = Math.max(0, Math.min(1, volume));
+                this.setupVolume();
+            }
         }
 
-        // نظام الرسائل
+        // نظام الرسائل الاحترافي
         class MessageSystem {
-            static show(message, type = 'info', duration = 3000) {
+            static show(message, type = 'info', duration = 3000, isImportant = false) {
                 const messageDiv = document.createElement('div');
-                messageDiv.className = `game-message ${type}`;
-                messageDiv.textContent = message;
+                messageDiv.className = `game-message ${type} ${isImportant ? 'important' : ''}`;
+                
+                // إضافة أيقونات للرسائل
+                const icons = {
+                    success: '✅',
+                    error: '❌',
+                    warning: '⚠️',
+                    info: 'ℹ️',
+                    money: '💰',
+                    achievement: '🏆',
+                    dice: '🎲'
+                };
+                
+                const icon = icons[type] || icons.info;
+                messageDiv.innerHTML = `<span class="message-icon">${icon}</span><span class="message-text">${message}</span>`;
+                
                 messageDiv.style.cssText = `
                     position: fixed;
-                    top: 100px;
-                    right: 20px;
-                    background: var(--surface-glass);
-                    color: var(--text-primary);
-                    padding: 15px 20px;
+                    top: ${isImportant ? '50%' : '100px'};
+                    ${isImportant ? 'left: 50%; transform: translateX(-50%) translateY(-50%);' : 'right: 20px;'}
+                    background: ${isImportant ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : 'var(--surface-glass)'};
+                    color: white;
+                    padding: ${isImportant ? '25px 35px' : '15px 20px'};
                     border-radius: var(--border-radius-medium);
                     border: 2px solid var(--oman-${type === 'error' ? 'red' : 'green'});
                     backdrop-filter: blur(16px);
-                    box-shadow: var(--shadow-medium);
-                    z-index: 10001;
-                    animation: slideInRight 0.3s ease-out;
+                    box-shadow: ${isImportant ? '0 20px 40px rgba(0,0,0,0.3)' : 'var(--shadow-medium)'};
+                    z-index: ${isImportant ? '10002' : '10001'};
+                    animation: ${isImportant ? 'bounceIn' : 'slideInRight'} 0.5s ease-out;
                     font-weight: 600;
-                    max-width: 300px;
+                    font-size: ${isImportant ? '18px' : '14px'};
+                    max-width: ${isImportant ? '400px' : '300px'};
+                    text-align: center;
                 `;
 
                 document.body.appendChild(messageDiv);
 
+                // تأثير خاص للرسائل المهمة
+                if (isImportant) {
+                    confetti({
+                        particleCount: 100,
+                        spread: 70,
+                        origin: { y: 0.6 }
+                    });
+                }
+
                 setTimeout(() => {
-                    messageDiv.style.animation = 'slideOutRight 0.3s ease-in';
+                    messageDiv.style.animation = isImportant ? 'bounceOut 0.5s ease-in' : 'slideOutRight 0.3s ease-in';
                     setTimeout(() => {
                         if (messageDiv.parentNode) {
                             messageDiv.parentNode.removeChild(messageDiv);
                         }
-                    }, 300);
+                    }, isImportant ? 500 : 300);
                 }, duration);
+            }
+
+            static showTurnAnnouncement(playerName, turnNumber) {
+                this.show(`🎯 دور ${playerName} - الجولة ${turnNumber}`, 'info', 4000, true);
+            }
+
+            static showMoneyTransaction(player, amount, isReceiving = true) {
+                const action = isReceiving ? 'حصل على' : 'دفع';
+                const icon = isReceiving ? '💰⬆️' : '💰⬇️';
+                this.show(`${icon} ${player} ${action} ${Math.abs(amount)} ر.ع`, 'money', 3000);
+            }
+
+            static showPropertyPurchase(player, property, price) {
+                this.show(`🏠 ${player} اشترى ${property} مقابل ${price} ر.ع`, 'success', 4000);
+            }
+
+            static showRentPayment(payer, receiver, property, amount) {
+                this.show(`🏘️ ${payer} دفع ${amount} ر.ع إيجار ${property} لـ ${receiver}`, 'warning', 4000);
             }
         }
 
         // إنشاء الأنظمة
         const soundSystem = new SoundSystem();
+
+        // ===========================================
+        // نظام الإنجازات والقيادة
+        // ===========================================
+        class AchievementSystem {
+            static achievements = {
+                'first_property': { name: 'أول عقار', description: 'اشتر أول عقار لك', icon: '🏠', unlocked: false },
+                'monopoly_master': { name: 'سيد الاحتكار', description: 'امتلك مجموعة كاملة', icon: '👑', unlocked: false },
+                'millionaire': { name: 'المليونير', description: 'احصل على 2000 ر.ع', icon: '💎', unlocked: false },
+                'lucky_roller': { name: 'محظوظ النرد', description: 'احصل على زوجي 3 مرات متتالية', icon: '🎲', unlocked: false },
+                'rent_collector': { name: 'جامع الإيجارات', description: 'اجمع 500 ر.ع من الإيجارات', icon: '💰', unlocked: false },
+                'speed_buyer': { name: 'مشتري سريع', description: 'اشتر 3 عقارات في 3 أدوار', icon: '⚡', unlocked: false }
+            };
+
+            static checkAchievement(player, type, data = {}) {
+                const playerId = player.name;
+                if (!gameState.achievements[playerId]) {
+                    gameState.achievements[playerId] = {};
+                }
+
+                switch (type) {
+                    case 'first_property':
+                        if (player.properties.length === 1 && !gameState.achievements[playerId].first_property) {
+                            this.unlockAchievement(playerId, 'first_property');
+                        }
+                        break;
+                    case 'millionaire':
+                        if (player.money >= 2000 && !gameState.achievements[playerId].millionaire) {
+                            this.unlockAchievement(playerId, 'millionaire');
+                        }
+                        break;
+                    case 'monopoly_master':
+                        if (this.hasMonopoly(player) && !gameState.achievements[playerId].monopoly_master) {
+                            this.unlockAchievement(playerId, 'monopoly_master');
+                        }
+                        break;
+                    case 'lucky_roller':
+                        if (data.consecutiveDoubles >= 3 && !gameState.achievements[playerId].lucky_roller) {
+                            this.unlockAchievement(playerId, 'lucky_roller');
+                        }
+                        break;
+                }
+            }
+
+            static unlockAchievement(playerId, achievementId) {
+                gameState.achievements[playerId][achievementId] = true;
+                const achievement = this.achievements[achievementId];
+                
+                MessageSystem.show(`🏆 ${playerId} حصل على إنجاز: ${achievement.name}!`, 'achievement', 5000, true);
+                soundSystem.play('achievement');
+                
+                // تأثير خاص للإنجاز
+                confetti({
+                    particleCount: 150,
+                    spread: 120,
+                    origin: { y: 0.6 },
+                    colors: ['#FFD700', '#FFA500', '#FF6347']
+                });
+            }
+
+            static hasMonopoly(player) {
+                const colorGroups = {};
+                player.properties.forEach(propId => {
+                    const prop = omanProperties[propId];
+                    if (prop.type === 'property') {
+                        if (!colorGroups[prop.color]) colorGroups[prop.color] = 0;
+                        colorGroups[prop.color]++;
+                    }
+                });
+
+                const monopolyCounts = {
+                    'brown': 2, 'light-blue': 3, 'pink': 3, 'orange': 3,
+                    'red': 3, 'yellow': 3, 'green': 3, 'dark-blue': 2
+                };
+
+                return Object.keys(colorGroups).some(color => 
+                    colorGroups[color] === monopolyCounts[color]
+                );
+            }
+        }
+
+        // نظام اللوحة القيادية المحترف
+        class LeaderboardSystem {
+            static updateLeaderboard() {
+                const leaderboardDiv = document.getElementById('leaderboard');
+                if (!leaderboardDiv) return;
+
+                // حساب القيمة الصافية لكل لاعب
+                const playersWithNetWorth = gameState.players.map((player, index) => {
+                    const propertyValue = this.calculatePropertyValue(player);
+                    const netWorth = player.money + propertyValue;
+                    
+                    return {
+                        ...player,
+                        index,
+                        propertyValue,
+                        netWorth,
+                        propertiesCount: player.properties.length
+                    };
+                });
+
+                // ترتيب اللاعبين حسب القيمة الصافية
+                playersWithNetWorth.sort((a, b) => b.netWorth - a.netWorth);
+
+                // إنشاء HTML للوحة القيادية
+                leaderboardDiv.innerHTML = `
+                    <div class="leaderboard-header">
+                        <h3>🏆 لوحة القيادة</h3>
+                        <div class="leaderboard-stats">
+                            <span>المرحلة: ${gameState.currentRound}</span>
+                            <span>اللاعب الحالي: ${gameState.players[gameState.currentPlayer]?.name}</span>
+                        </div>
+                    </div>
+                    <div class="leaderboard-list">
+                        ${playersWithNetWorth.map((player, rank) => this.createPlayerCard(player, rank)).join('')}
+                    </div>
+                `;
+
+                // تحديث الأرقام في بطاقات اللاعبين
+                this.updatePlayerCards();
+            }
+
+            static calculatePropertyValue(player) {
+                return player.properties.reduce((total, propertyId) => {
+                    const property = omanProperties[propertyId];
+                    return total + (property ? property.price : 0);
+                }, 0);
+            }
+
+            static createPlayerCard(player, rank) {
+                const rankEmoji = ['🥇', '🥈', '🥉', '🏅'][rank] || '🏅';
+                const rankClass = ['first', 'second', 'third', 'other'][rank] || 'other';
+                
+                return `
+                    <div class="leaderboard-player ${rankClass}" data-player="${player.index}">
+                        <div class="player-rank">
+                            <span class="rank-emoji">${rankEmoji}</span>
+                            <span class="rank-number">#${rank + 1}</span>
+                        </div>
+                        <div class="player-info">
+                            <div class="player-name">${player.name}</div>
+                            <div class="player-stats">
+                                <div class="stat">
+                                    <span class="stat-label">💰 الأموال:</span>
+                                    <span class="stat-value">${player.money} ر.ع</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-label">🏠 العقارات:</span>
+                                    <span class="stat-value">${player.propertyValue} ر.ع</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-label">📊 القيمة الصافية:</span>
+                                    <span class="stat-value total-worth">${player.netWorth} ر.ع</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-label">🏘️ عدد العقارات:</span>
+                                    <span class="stat-value">${player.propertiesCount}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="player-achievements">
+                            ${this.getPlayerAchievements(player)}
+                        </div>
+                    </div>
+                `;
+            }
+
+            static getPlayerAchievements(player) {
+                const achievements = [];
+                
+                if (player.properties.length >= 1) {
+                    achievements.push('<span class="achievement">🏠 مالك عقار</span>');
+                }
+                
+                if (player.money >= 1000) {
+                    achievements.push('<span class="achievement">💰 مليونير</span>');
+                }
+                
+                if (player.properties.length >= 5) {
+                    achievements.push('<span class="achievement">🏘️ مطور عقاري</span>');
+                }
+                
+                return achievements.join('');
+            }
+
+            static updatePlayerCards() {
+                gameState.players.forEach((player, index) => {
+                    const playerElement = document.querySelector(`[data-player="${index}"]`);
+                    if (playerElement) {
+                        // تحديث المعلومات في بطاقة اللاعب
+                        const moneyElement = playerElement.querySelector('.money');
+                        if (moneyElement) {
+                            moneyElement.textContent = `💰 ${player.money} ر.ع`;
+                        }
+                        
+                        const propertiesElement = playerElement.querySelector('.properties-count');
+                        if (propertiesElement) {
+                            propertiesElement.textContent = `🏠 ${player.properties.length}`;
+                        }
+                    }
+                });
+            }
+
+            static highlightCurrentPlayer() {
+                // إزالة التمييز من جميع اللاعبين
+                document.querySelectorAll('.leaderboard-player').forEach(el => {
+                    el.classList.remove('current-player');
+                });
+                
+                // تمييز اللاعب الحالي
+                const currentPlayerElement = document.querySelector(`[data-player="${gameState.currentPlayer}"]`);
+                if (currentPlayerElement) {
+                    currentPlayerElement.classList.add('current-player');
+                }
+            }
+
+            static calculateNetWorth(player) {
+                let netWorth = player.money;
+                player.properties.forEach(propId => {
+                    const prop = omanProperties[propId];
+                    netWorth += prop.price;
+                });
+                return netWorth;
+            }
+
+            static showLeaderboard() {
+                this.updateLeaderboard();
+                const modal = document.getElementById('leaderboardModal');
+                const content = document.getElementById('leaderboardContent');
+                
+                content.innerHTML = gameState.leaderboard.map(entry => `
+                    <div class="leaderboard-entry rank-${entry.rank}">
+                        <div class="rank">${entry.rank === 1 ? '👑' : entry.rank}</div>
+                        <div class="player-name">${entry.name}</div>
+                        <div class="net-worth">${entry.netWorth} ر.ع</div>
+                        <div class="properties">${entry.properties} عقار</div>
+                    </div>
+                `).join('');
+                
+                modal.style.display = 'block';
+            }
+        }
 
         // ===========================================
         // تحميل بيانات الطلاب (مطابق لنشاط "من هو")
@@ -2506,7 +3202,7 @@
         }
 
         // ===========================================
-        // ميكانيكية اللعبة
+        // ميكانيكية اللعبة الاحترافية
         // ===========================================
         function rollDice() {
             if (!gameState.gameStarted) {
@@ -2514,37 +3210,278 @@
                 return;
             }
 
-            const dice1 = Math.floor(Math.random() * 6) + 1;
-            const dice2 = Math.floor(Math.random() * 6) + 1;
-            const total = dice1 + dice2;
+            const player = gameState.players[gameState.currentPlayer];
+            
+            // تعطيل زر النرد أثناء الرمي
+            document.getElementById('rollDice').disabled = true;
+            
+            // تأثير صوتي للترقب
+            soundSystem.play('countdown');
+            
+            // أنيميشن رمي النرد
+            showDiceAnimation(() => {
+                const dice1 = Math.floor(Math.random() * 6) + 1;
+                const dice2 = Math.floor(Math.random() * 6) + 1;
+                const total = dice1 + dice2;
+                const isDouble = dice1 === dice2;
 
-            soundSystem.play('dice');
-            MessageSystem.show(`نتيجة النرد: ${dice1} + ${dice2} = ${total}`);
+                gameState.lastRoll = { dice1, dice2, total };
 
-            movePlayer(gameState.currentPlayer, total);
+                // تحديث عرض النرد
+                updateDiceDisplay(dice1, dice2);
+                
+                // تأثيرات صوتية مختلفة حسب النتيجة
+                if (isDouble) {
+                    soundSystem.play('bell');
+                    gameState.doubles++;
+                } else {
+                    soundSystem.play('dice');
+                    gameState.doubles = 0;
+                }
+
+                // عرض النتيجة مع تأثيرات
+                let message = `🎲 ${player.name}: ${dice1} + ${dice2} = ${total}`;
+                if (isDouble) {
+                    message += ' - زوجي! 🎉';
+                    confetti({
+                        particleCount: 30,
+                        spread: 60,
+                        origin: { y: 0.8 }
+                    });
+                }
+                
+                MessageSystem.show(message, isDouble ? 'success' : 'dice', 4000);
+
+                // فحص الزوجي الثلاثي (سجن)
+                if (gameState.doubles >= 3) {
+                    MessageSystem.show('🚨 ثلاثة زوجيات متتالية! اذهب للسجن!', 'error', 5000, true);
+                    soundSystem.play('lose');
+                    handleGoToJail(gameState.currentPlayer);
+                    gameState.doubles = 0;
+                    document.getElementById('rollDice').disabled = false;
+                    return;
+                }
+
+                // فحص إنجاز النرد المحظوظ
+                AchievementSystem.checkAchievement(player, 'lucky_roller', { consecutiveDoubles: gameState.doubles });
+
+                // تحريك اللاعب
+                setTimeout(() => {
+                    movePlayer(gameState.currentPlayer, total);
+                    
+                    // إعادة تفعيل زر النرد
+                    document.getElementById('rollDice').disabled = false;
+                    
+                    // إذا لم يكن زوجي، يمكن إنهاء الدور
+                    if (!isDouble) {
+                        document.getElementById('endTurn').disabled = false;
+                    }
+                }, 1000);
+            });
+        }
+
+        function showDiceAnimation(callback) {
+            const diceContainer = document.getElementById('diceContainer') || createDiceContainer();
+            
+            // أنيميشن الدوران
+            diceContainer.classList.add('rolling');
+            
+            // محاكاة الرمي لمدة ثانيتين
+            let rollCount = 0;
+            const rollInterval = setInterval(() => {
+                const tempDice1 = Math.floor(Math.random() * 6) + 1;
+                const tempDice2 = Math.floor(Math.random() * 6) + 1;
+                updateDiceDisplay(tempDice1, tempDice2);
+                rollCount++;
+                
+                if (rollCount >= 20) {
+                    clearInterval(rollInterval);
+                    diceContainer.classList.remove('rolling');
+                    callback();
+                }
+            }, 100);
+        }
+
+        function createDiceContainer() {
+            const container = document.createElement('div');
+            container.id = 'diceContainer';
+            container.innerHTML = `
+                <div class="dice-wrapper">
+                    <div class="dice" id="dice1">⚀</div>
+                    <div class="dice" id="dice2">⚀</div>
+                </div>
+            `;
+            container.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 1000;
+                pointer-events: none;
+            `;
+            document.body.appendChild(container);
+            return container;
+        }
+
+        function updateDiceDisplay(dice1, dice2) {
+            const diceSymbols = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+            const dice1Element = document.getElementById('dice1');
+            const dice2Element = document.getElementById('dice2');
+            
+            if (dice1Element && dice2Element) {
+                dice1Element.textContent = diceSymbols[dice1 - 1];
+                dice2Element.textContent = diceSymbols[dice2 - 1];
+            }
         }
 
         function movePlayer(playerIndex, steps) {
             const player = gameState.players[playerIndex];
             const oldPosition = player.position;
-            player.position = (player.position + steps) % 40;
+            
+            // حساب الموقع الجديد
+            let newPosition = (player.position + steps) % 40;
+            let passedStart = newPosition < oldPosition;
+            
+            // أنيميشن الحركة التدريجية
+            animatePlayerMovement(playerIndex, oldPosition, steps, () => {
+                player.position = newPosition;
+                
+                // فحص المرور بنقطة البداية
+                if (passedStart) {
+                    player.money += 200;
+                    MessageSystem.showMoneyTransaction(player.name, 200, true);
+                    MessageSystem.show('🎯 مررت بنقطة البداية! حصلت على 200 ر.ع', 'success', 4000);
+                    soundSystem.play('bonus');
+                    
+                    // تأثير خاص للمرور بالبداية
+                    confetti({
+                        particleCount: 80,
+                        spread: 90,
+                        origin: { y: 0.7 },
+                        colors: ['#00FF00', '#32CD32', '#7FFF00']
+                    });
+                }
 
-            // إذا مر اللاعب بنقطة البداية
-            if (player.position < oldPosition) {
-                player.money += 200;
-                MessageSystem.show('مررت بنقطة البداية! حصلت على 200 ر.ع', 'success');
-                soundSystem.play('money');
+                updatePlayersDisplay();
+                updatePlayerPosition(playerIndex);
+                handleSquareLanding(playerIndex, player.position);
+            });
+        }
+
+        function animatePlayerMovement(playerIndex, startPos, steps, callback) {
+            let currentStep = 0;
+            const player = gameState.players[playerIndex];
+            
+            const moveStep = () => {
+                if (currentStep >= steps) {
+                    callback();
+                    return;
+                }
+                
+                currentStep++;
+                const tempPosition = (startPos + currentStep) % 40;
+                
+                // تحديث الموقع المؤقت
+                updatePlayerPosition(playerIndex, tempPosition);
+                
+                // تأثير صوتي للحركة
+                if (currentStep % 2 === 0) {
+                    soundSystem.play('select', 0.3);
+                }
+                
+                // تأثير بصري للمربع الحالي
+                highlightSquare(tempPosition);
+                
+                setTimeout(moveStep, 300); // سرعة الحركة
+            };
+            
+            moveStep();
+        }
+
+        function updatePlayerPosition(playerIndex, position = null) {
+            const player = gameState.players[playerIndex];
+            const pos = position !== null ? position : player.position;
+            const square = document.getElementById(`square-${pos}`);
+            
+            if (square) {
+                // إزالة اللاعب من المواقع السابقة
+                document.querySelectorAll('.player-token').forEach(token => {
+                    if (token.dataset.player === playerIndex.toString()) {
+                        token.remove();
+                    }
+                });
+                
+                // إضافة اللاعب للموقع الجديد
+                const token = document.createElement('div');
+                token.className = 'player-token';
+                token.dataset.player = playerIndex;
+                token.style.cssText = `
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    background: linear-gradient(135deg, 
+                        ${getPlayerColor(playerIndex)}, 
+                        ${getDarkerColor(getPlayerColor(playerIndex))});
+                    border: 2px solid white;
+                    position: absolute;
+                    bottom: ${5 + (playerIndex * 25)}px;
+                    right: 5px;
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+                    animation: bounceIn 0.5s ease-out;
+                    z-index: 100;
+                `;
+                token.textContent = (playerIndex + 1);
+                token.style.color = 'white';
+                token.style.fontSize = '12px';
+                token.style.fontWeight = 'bold';
+                token.style.display = 'flex';
+                token.style.alignItems = 'center';
+                token.style.justifyContent = 'center';
+                
+                square.appendChild(token);
             }
+        }
 
-            updatePlayersDisplay();
-            handleSquareLanding(playerIndex, player.position);
+        function highlightSquare(position) {
+            // إزالة التمييز السابق
+            document.querySelectorAll('.square-highlight').forEach(el => el.classList.remove('square-highlight'));
+            
+            // إضافة التمييز للمربع الحالي
+            const square = document.getElementById(`square-${position}`);
+            if (square) {
+                square.classList.add('square-highlight');
+                setTimeout(() => square.classList.remove('square-highlight'), 300);
+            }
+        }
+
+        function getPlayerColor(playerIndex) {
+            const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#F4A460', '#98D8C8'];
+            return colors[playerIndex % colors.length];
+        }
+
+        function getDarkerColor(color) {
+            // تحويل اللون لدرجة أغمق
+            const hex = color.replace('#', '');
+            const r = Math.max(0, parseInt(hex.substr(0, 2), 16) - 50);
+            const g = Math.max(0, parseInt(hex.substr(2, 2), 16) - 50);
+            const b = Math.max(0, parseInt(hex.substr(4, 2), 16) - 50);
+            return `rgb(${r}, ${g}, ${b})`;
         }
 
         function handleSquareLanding(playerIndex, position) {
             const player = gameState.players[playerIndex];
             const property = omanProperties[position];
 
-            MessageSystem.show(`${player.name} هبط على ${property.name}`);
+            // تأثير بصري خاص للنزول
+            const square = document.getElementById(`square-${position}`);
+            if (square) {
+                square.classList.add('landing-effect');
+                setTimeout(() => square.classList.remove('landing-effect'), 1000);
+            }
+
+            // رسالة الهبوط مع تأثير صوتي
+            MessageSystem.show(`🎯 ${player.name} هبط على ${property.name}`, 'info', 3000);
+            soundSystem.play('bell', 0.5);
 
             switch (property.type) {
                 case 'property':
@@ -2556,13 +3493,33 @@
                     handleTax(playerIndex, property.price);
                     break;
                 case 'chance':
+                    handleChanceCard(playerIndex);
+                    break;
                 case 'community':
-                    handleSpecialCard(playerIndex, property.type);
+                    handleCommunityCard(playerIndex);
                     break;
                 case 'go-to-jail':
                     handleGoToJail(playerIndex);
                     break;
+                case 'start':
+                    // تأثير خاص للهبوط على البداية
+                    confetti({
+                        particleCount: 60,
+                        spread: 80,
+                        origin: { y: 0.8 }
+                    });
+                    break;
+                case 'jail':
+                    MessageSystem.show('🏛️ مجرد زيارة للسجن!', 'info');
+                    break;
+                case 'free':
+                    MessageSystem.show('🅿️ موقف مجاني - استرح!', 'success');
+                    soundSystem.play('bonus', 0.7);
+                    break;
             }
+
+            // تحديث اللوحة القيادية
+            LeaderboardSystem.updateLeaderboard();
         }
 
         function handlePropertyLanding(playerIndex, property) {
@@ -2573,26 +3530,119 @@
             
             if (!owner) {
                 // العقار متاح للشراء
-                if (player.money >= property.price) {
-                    if (confirm(`هل تريد شراء ${property.name} مقابل ${property.price} ر.ع؟`)) {
-                        player.money -= property.price;
-                        player.properties.push(property.id);
-                        MessageSystem.show(`تم شراء ${property.name} بنجاح!`, 'success');
-                        soundSystem.play('buy');
-                        updatePlayersDisplay();
-                    }
-                } else {
-                    MessageSystem.show('ليس لديك مال كافٍ لشراء هذا العقار!', 'error');
-                }
+                showPropertyPurchaseDialog(player, property);
             } else if (owner !== player) {
                 // دفع إيجار
                 const rent = calculateRent(property, owner);
-                player.money -= rent;
-                owner.money += rent;
-                MessageSystem.show(`دفعت ${rent} ر.ع إيجار لـ ${owner.name}`, 'error');
-                soundSystem.play('money');
-                updatePlayersDisplay();
+                handleRentPayment(player, owner, property, rent);
+            } else {
+                // العقار مملوك للاعب نفسه
+                MessageSystem.show(`🏠 ${property.name} مملوك لك بالفعل!`, 'info');
+                soundSystem.play('select', 0.5);
             }
+        }
+
+        function showPropertyPurchaseDialog(player, property) {
+            if (player.money < property.price) {
+                MessageSystem.show(`💸 ليس لديك مال كافٍ لشراء ${property.name}! تحتاج ${property.price} ر.ع`, 'error', 5000);
+                soundSystem.play('lose');
+                return;
+            }
+
+            // إنشاء نافذة شراء تفاعلية
+            const modal = document.createElement('div');
+            modal.className = 'purchase-modal';
+            modal.innerHTML = `
+                <div class="purchase-content">
+                    <h2>🏠 شراء ${property.name}</h2>
+                    <div class="property-details">
+                        <p><strong>السعر:</strong> ${property.price} ر.ع</p>
+                        <p><strong>المالك الحالي:</strong> غير مملوك</p>
+                        <p><strong>رصيدك:</strong> ${player.money} ر.ع</p>
+                        <p><strong>الرصيد بعد الشراء:</strong> ${player.money - property.price} ر.ع</p>
+                    </div>
+                    <div class="purchase-buttons">
+                        <button onclick="purchaseProperty(${playerIndex}, ${property.id})" class="btn-purchase">
+                            💰 شراء
+                        </button>
+                        <button onclick="closePurchaseModal()" class="btn-decline">
+                            ❌ رفض
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+                animation: fadeIn 0.3s ease-out;
+            `;
+
+            document.body.appendChild(modal);
+            soundSystem.play('notification');
+        }
+
+        function purchaseProperty(playerIndex, propertyId) {
+            const player = gameState.players[playerIndex];
+            const property = omanProperties[propertyId];
+            
+            player.money -= property.price;
+            player.properties.push(propertyId);
+            
+            // إغلاق النافذة
+            closePurchaseModal();
+            
+            // رسائل وتأثيرات النجاح
+            MessageSystem.showPropertyPurchase(player.name, property.name, property.price);
+            soundSystem.playSequence(['buy', 'bonus'], 300);
+            
+            // تأثير بصري للشراء
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.7 },
+                colors: ['#FFD700', '#FFA500', '#FF8C00']
+            });
+
+            // فحص الإنجازات
+            AchievementSystem.checkAchievement(player, 'first_property');
+            AchievementSystem.checkAchievement(player, 'millionaire');
+            AchievementSystem.checkAchievement(player, 'monopoly_master');
+
+            updatePlayersDisplay();
+        }
+
+        function closePurchaseModal() {
+            const modal = document.querySelector('.purchase-modal');
+            if (modal) {
+                modal.style.animation = 'fadeOut 0.3s ease-in';
+                setTimeout(() => modal.remove(), 300);
+            }
+        }
+
+        function handleRentPayment(payer, receiver, property, rent) {
+            payer.money -= rent;
+            receiver.money += rent;
+            
+            MessageSystem.showRentPayment(payer.name, receiver.name, property.name, rent);
+            soundSystem.play('lose');
+            
+            // تأثير بصري لدفع الإيجار
+            const payerElement = document.querySelector(`[data-player="${gameState.players.indexOf(payer)}"]`);
+            if (payerElement) {
+                payerElement.style.animation = 'shake 0.5s ease-in-out';
+                setTimeout(() => payerElement.style.animation = '', 500);
+            }
+
+            updatePlayersDisplay();
         }
 
         function calculateRent(property, owner) {
@@ -2620,25 +3670,494 @@
             updatePlayersDisplay();
         }
 
+        // بطاقات الصدفة والخزانة العامة
+        const chanceCards = [
+            { text: "🎉 تقدم إلى البداية واحصل على 200 ر.ع", action: "goToStart" },
+            { text: "🏠 تقدم إلى مسقط العاصمة", action: "goToProperty", property: 1 },
+            { text: "💰 احصل على 150 ر.ع مكافأة", action: "money", amount: 150 },
+            { text: "📄 ادفع 50 ر.ع ضريبة", action: "money", amount: -50 },
+            { text: "🚗 تقدم إلى أقرب مطار", action: "goToNearestAirport" },
+            { text: "⬅️ ارجع 3 مربعات", action: "moveBack", spaces: 3 },
+            { text: "🏛️ اذهب إلى السجن مباشرة", action: "goToJail" },
+            { text: "🎁 احصل على 100 ر.ع من كل لاعب", action: "collectFromPlayers", amount: 100 },
+            { text: "🔧 ادفع 40 ر.ع لكل منزل و 115 ر.ع لكل فندق", action: "payForBuildings" },
+            { text: "🎯 تقدم إلى صلالة", action: "goToProperty", property: 11 },
+            { text: "🏦 احصل على 200 ر.ع من البنك", action: "money", amount: 200 },
+            { text: "🚫 ادفع غرامة 15 ر.ع", action: "money", amount: -15 }
+        ];
+
+        const communityCards = [
+            { text: "🎓 حصلت على منحة دراسية - احصل على 200 ر.ع", action: "money", amount: 200 },
+            { text: "🏥 ادفع فاتورة المستشفى 100 ر.ع", action: "money", amount: -100 },
+            { text: "📈 أرباح استثمارك - احصل على 50 ر.ع", action: "money", amount: 50 },
+            { text: "🎂 عيد ميلادك - احصل على 10 ر.ع من كل لاعب", action: "collectFromPlayers", amount: 10 },
+            { text: "🚗 غرامة سرعة - ادفع 50 ر.ع", action: "money", amount: -50 },
+            { text: "💼 مكافأة خدمات - احصل على 100 ر.ع", action: "money", amount: 100 },
+            { text: "🏛️ اذهب إلى السجن مباشرة", action: "goToJail" },
+            { text: "🎉 تقدم إلى البداية واحصل على 200 ر.ع", action: "goToStart" },
+            { text: "🏠 ادفع 40 ر.ع لكل منزل و 115 ر.ع لكل فندق", action: "payForBuildings" },
+            { text: "📄 ضريبة الدخل - ادفع 200 ر.ع", action: "money", amount: -200 },
+            { text: "🎁 وراثة - احصل على 100 ر.ع", action: "money", amount: 100 },
+            { text: "💳 خطأ بنكي لصالحك - احصل على 75 ر.ع", action: "money", amount: 75 }
+        ];
+
+        function handleChanceCard(playerIndex) {
+            const card = chanceCards[Math.floor(Math.random() * chanceCards.length)];
+            showCardModal(playerIndex, card, 'chance');
+        }
+
+        function handleCommunityCard(playerIndex) {
+            const card = communityCards[Math.floor(Math.random() * communityCards.length)];
+            showCardModal(playerIndex, card, 'community');
+        }
+
+        function showCardModal(playerIndex, card, type) {
+            const player = gameState.players[playerIndex];
+            const cardTitle = type === 'chance' ? '🎲 بطاقة الصدفة' : '🏛️ صندوق الخزانة العامة';
+            const cardColor = type === 'chance' ? '#FF6B35' : '#4ECDC4';
+
+            const modal = document.createElement('div');
+            modal.className = 'card-modal';
+            modal.innerHTML = `
+                <div class="card-content" style="border-color: ${cardColor}">
+                    <h2 style="color: ${cardColor}">${cardTitle}</h2>
+                    <div class="card-text">
+                        <p>${card.text}</p>
+                    </div>
+                    <div class="card-player">
+                        <strong>${player.name}</strong>
+                    </div>
+                    <button onclick="executeCardAction(${playerIndex}, ${JSON.stringify(card).replace(/"/g, '&quot;')}, '${type}')" 
+                            class="btn-execute" style="background: ${cardColor}">
+                        ✨ تنفيذ
+                    </button>
+                </div>
+            `;
+
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.9);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+                animation: cardSlideIn 0.5s ease-out;
+            `;
+
+            document.body.appendChild(modal);
+            soundSystem.play('reveal');
+        }
+
+        function executeCardAction(playerIndex, cardData, type) {
+            const player = gameState.players[playerIndex];
+            const card = JSON.parse(cardData.replace(/&quot;/g, '"'));
+
+            // إغلاق النافذة
+            const modal = document.querySelector('.card-modal');
+            if (modal) modal.remove();
+
+            switch (card.action) {
+                case 'money':
+                    handleMoneyChange(playerIndex, card.amount);
+                    break;
+                case 'goToStart':
+                    movePlayerToPosition(playerIndex, 0);
+                    player.money += 200; // مكافأة المرور من البداية
+                    MessageSystem.show(`🎉 ${player.name} وصل للبداية وحصل على 200 ر.ع!`, 'success');
+                    break;
+                case 'goToProperty':
+                    movePlayerToPosition(playerIndex, card.property);
+                    break;
+                case 'goToJail':
+                    handleGoToJail(playerIndex);
+                    break;
+                case 'goToNearestAirport':
+                    moveToNearestAirport(playerIndex);
+                    break;
+                case 'moveBack':
+                    movePlayerBack(playerIndex, card.spaces);
+                    break;
+                case 'collectFromPlayers':
+                    collectFromAllPlayers(playerIndex, card.amount);
+                    break;
+                case 'payForBuildings':
+                    payForBuildings(playerIndex);
+                    break;
+            }
+
+            updatePlayersDisplay();
+        }
+
+        function handleMoneyChange(playerIndex, amount) {
+            const player = gameState.players[playerIndex];
+            player.money += amount;
+
+            if (amount > 0) {
+                MessageSystem.show(`💰 ${player.name} حصل على ${amount} ر.ع!`, 'success');
+                soundSystem.play('bonus');
+                confetti({
+                    particleCount: 50,
+                    spread: 60,
+                    origin: { y: 0.8 },
+                    colors: ['#FFD700', '#32CD32']
+                });
+            } else {
+                MessageSystem.show(`💸 ${player.name} دفع ${Math.abs(amount)} ر.ع!`, 'error');
+                soundSystem.play('lose');
+            }
+        }
+
+        function moveToNearestAirport(playerIndex) {
+            const player = gameState.players[playerIndex];
+            const airports = [5, 15, 25, 35]; // مواقع المطارات
+            let nearestAirport = airports[0];
+            let minDistance = Math.abs(player.position - airports[0]);
+
+            airports.forEach(airport => {
+                const distance = (airport - player.position + 40) % 40;
+                if (distance < minDistance) {
+                    nearestAirport = airport;
+                    minDistance = distance;
+                }
+            });
+
+            movePlayerToPosition(playerIndex, nearestAirport);
+        }
+
+        function collectFromAllPlayers(playerIndex, amount) {
+            const player = gameState.players[playerIndex];
+            let totalCollected = 0;
+
+            gameState.players.forEach((otherPlayer, index) => {
+                if (index !== playerIndex) {
+                    const payment = Math.min(amount, otherPlayer.money);
+                    otherPlayer.money -= payment;
+                    totalCollected += payment;
+                }
+            });
+
+            player.money += totalCollected;
+            MessageSystem.show(`💰 ${player.name} جمع ${totalCollected} ر.ع من اللاعبين!`, 'success');
+            soundSystem.play('win');
+        }
+
         function handleSpecialCard(playerIndex, cardType) {
-            const messages = [
-                'تقدم إلى نقطة البداية واحصل على 200 ر.ع',
-                'احصل على 50 ر.ع من البنك',
-                'ادفع 15 ر.ع رسوم إصلاح',
-                'تقدم 3 مربعات',
-                'احصل على 100 ر.ع'
-            ];
+            if (cardType === 'chance') {
+                handleChanceCard(playerIndex);
+            } else {
+                handleCommunityCard(playerIndex);
+            }
+        }
+
+        function movePlayerBack(playerIndex, spaces) {
+            const player = gameState.players[playerIndex];
+            const newPosition = (player.position - spaces + 40) % 40;
+            movePlayerToPosition(playerIndex, newPosition);
+        }
+
+        function movePlayerToPosition(playerIndex, targetPosition) {
+            const player = gameState.players[playerIndex];
+            const oldPosition = player.position;
             
-            const message = messages[Math.floor(Math.random() * messages.length)];
-            MessageSystem.show(`بطاقة ${cardType === 'chance' ? 'الفرصة' : 'صندوق المجتمع'}: ${message}`);
+            // إذا مر من البداية، احصل على 200 ر.ع
+            if (targetPosition < oldPosition && targetPosition !== 0) {
+                player.money += 200;
+                MessageSystem.show(`💰 ${player.name} مر من البداية وحصل على 200 ر.ع!`, 'success');
+            }
+            
+            player.position = targetPosition;
+            animatePlayerMovement(playerIndex, oldPosition, targetPosition, () => {
+                handleSquareLanding(playerIndex, targetPosition);
+            });
+        }
+
+        function payForBuildings(playerIndex) {
+            const player = gameState.players[playerIndex];
+            // حساب تكلفة المباني (سيتم تطوير نظام البناء لاحقاً)
+            const houseCost = 40;
+            const hotelCost = 115;
+            
+            // للآن، سيتم دفع مبلغ ثابت
+            const totalCost = 100;
+            player.money -= totalCost;
+            
+            MessageSystem.show(`🏠 ${player.name} دفع ${totalCost} ر.ع رسوم صيانة!`, 'error');
+            soundSystem.play('lose');
+        }
+
+        function handleTax(playerIndex, amount) {
+            const player = gameState.players[playerIndex];
+            player.money -= amount;
+            
+            MessageSystem.show(`📄 ${player.name} دفع ${amount} ر.ع ضريبة!`, 'error');
+            soundSystem.play('lose');
+            
+            // تأثير بصري للضريبة
+            const playerElement = document.querySelector(`[data-player="${playerIndex}"]`);
+            if (playerElement) {
+                playerElement.classList.add('shake');
+                setTimeout(() => playerElement.classList.remove('shake'), 500);
+            }
+            
+            updatePlayersDisplay();
         }
 
         function handleGoToJail(playerIndex) {
             const player = gameState.players[playerIndex];
+            const oldPosition = player.position;
             player.position = 10; // موقع السجن
-            MessageSystem.show(`${player.name} ذهب إلى السجن!`, 'error');
+            player.inJail = true;
+            player.jailTurns = 0;
+            
+            MessageSystem.show(`🏛️ ${player.name} ذهب إلى السجن!`, 'error');
             soundSystem.play('lose');
+            
+            // تحريك اللاعب إلى السجن مع تأثير خاص
+            animatePlayerMovement(playerIndex, oldPosition, 10, () => {
+                const jailSquare = document.getElementById('square-10');
+                if (jailSquare) {
+                    jailSquare.classList.add('pulse-effect');
+                    setTimeout(() => jailSquare.classList.remove('pulse-effect'), 600);
+                }
+            });
+            
             updatePlayersDisplay();
+        }
+
+        // نظام حساب الإيجار المحترف
+        function calculateRent(property, owner) {
+            let baseRent = property.rent;
+            
+            // إذا كان المالك يملك مجموعة كاملة
+            if (hasMonopoly(owner, property)) {
+                baseRent *= 2;
+            }
+            
+            // إضافة تكلفة المباني (سيتم تطوير هذا لاحقاً)
+            // baseRent += (property.houses * property.houseRent);
+            // if (property.hotel) baseRent = property.hotelRent;
+            
+            return baseRent;
+        }
+
+        function hasMonopoly(player, property) {
+            const colorGroup = getColorGroup(property.id);
+            return colorGroup.every(propId => player.properties.includes(propId));
+        }
+
+        function getColorGroup(propertyId) {
+            // مجموعات الألوان في المونوبولي العماني
+            const colorGroups = {
+                brown: [1, 3],
+                lightBlue: [6, 8, 9],
+                pink: [11, 13, 14],
+                orange: [16, 18, 19],
+                red: [21, 23, 24],
+                yellow: [26, 27, 29],
+                green: [31, 32, 34],
+                blue: [37, 39]
+            };
+            
+            for (const [color, properties] of Object.entries(colorGroups)) {
+                if (properties.includes(propertyId)) {
+                    return properties;
+                }
+            }
+            return [];
+        }
+
+        // ====================================
+        // نظام اللعب المحترف والتنافسي
+        // ====================================
+
+        function nextTurn() {
+            // تحديث اللوحة القيادية
+            LeaderboardSystem.updateLeaderboard();
+            
+            // فحص شرط الفوز
+            const winner = checkWinCondition();
+            if (winner) {
+                handleGameWin(winner);
+                return;
+            }
+
+            // الانتقال للاعب التالي
+            gameState.currentPlayer = (gameState.currentPlayer + 1) % gameState.players.length;
+            
+            // إذا عاد للاعب الأول، زيادة المرحلة
+            if (gameState.currentPlayer === 0) {
+                gameState.currentRound++;
+                MessageSystem.show(`🔄 بداية المرحلة ${gameState.currentRound}`, 'info', 3000);
+                soundSystem.play('notification');
+            }
+            
+            // تمييز اللاعب الحالي
+            LeaderboardSystem.highlightCurrentPlayer();
+            
+            // إشعار بدور اللاعب الجديد
+            const currentPlayer = gameState.players[gameState.currentPlayer];
+            MessageSystem.show(`🎯 دور ${currentPlayer.name}`, 'success', 4000);
+            soundSystem.play('select');
+            
+            // تأثير بصري لتمييز اللاعب الحالي
+            highlightCurrentPlayerOnBoard();
+            
+            updatePlayersDisplay();
+            updateGameInfo();
+        }
+
+        function checkWinCondition() {
+            // فحص إذا كان هناك لاعب واحد فقط لم يفلس
+            const activePlayers = gameState.players.filter(player => player.money >= 0);
+            if (activePlayers.length === 1) {
+                return activePlayers[0];
+            }
+            
+            // فحص إذا وصلت اللعبة لحد زمني معين (مثلاً 20 مرحلة)
+            if (gameState.currentRound >= 20) {
+                // إرجاع اللاعب الأغنى
+                return gameState.players.reduce((richest, player) => {
+                    const playerNetWorth = LeaderboardSystem.calculateNetWorth(player);
+                    const richestNetWorth = LeaderboardSystem.calculateNetWorth(richest);
+                    return playerNetWorth > richestNetWorth ? player : richest;
+                });
+            }
+            
+            return null;
+        }
+
+        function handleGameWin(winner) {
+            // تأثيرات الفوز الرائعة
+            soundSystem.playSequence(['win', 'firework'], 1000);
+            
+            // عرض شاشة الفوز
+            showWinnerScreen(winner);
+            
+            // تأثيرات بصرية للفوز
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    confetti({
+                        particleCount: 100,
+                        spread: 70,
+                        origin: { y: 0.6 },
+                        colors: ['#FFD700', '#FFA500', '#FF6B35', '#4ECDC4', '#45B7D1']
+                    });
+                }, i * 300);
+            }
+            
+            // حفظ الإنجازات
+            AchievementSystem.checkAchievement(winner, 'game_winner');
+            AchievementSystem.saveProgress();
+        }
+
+        function showWinnerScreen(winner) {
+            const modal = document.createElement('div');
+            modal.className = 'winner-modal';
+            modal.innerHTML = `
+                <div class="winner-content">
+                    <h1>🏆 مبروك الفوز! 🏆</h1>
+                    <div class="winner-info">
+                        <h2>${winner.name}</h2>
+                        <p>الفائز بلعبة مونوبولي عُمان!</p>
+                        <div class="winner-stats">
+                            <div class="stat">
+                                <span>💰 الأموال النهائية:</span>
+                                <span>${winner.money} ر.ع</span>
+                            </div>
+                            <div class="stat">
+                                <span>🏠 العقارات المملوكة:</span>
+                                <span>${winner.properties.length}</span>
+                            </div>
+                            <div class="stat">
+                                <span>📊 القيمة الصافية:</span>
+                                <span>${LeaderboardSystem.calculateNetWorth(winner)} ر.ع</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="winner-actions">
+                        <button onclick="restartGame()" class="btn-restart">
+                            🔄 لعبة جديدة
+                        </button>
+                        <button onclick="showFinalLeaderboard()" class="btn-leaderboard">
+                            📊 النتائج النهائية
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.9);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+                animation: fadeIn 0.5s ease-out;
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function highlightCurrentPlayerOnBoard() {
+            // إزالة التمييز من جميع اللاعبين
+            document.querySelectorAll('.player-token').forEach(token => {
+                token.classList.remove('current-player-highlight');
+            });
+            
+            // تمييز اللاعب الحالي على اللوحة
+            const currentPlayerToken = document.querySelector(`[data-player="${gameState.currentPlayer}"]`);
+            if (currentPlayerToken) {
+                currentPlayerToken.classList.add('current-player-highlight');
+            }
+        }
+
+        function updateGameInfo() {
+            const gameInfoDiv = document.getElementById('game-info');
+            if (!gameInfoDiv) return;
+            
+            const currentPlayer = gameState.players[gameState.currentPlayer];
+            gameInfoDiv.innerHTML = `
+                <div class="current-turn">
+                    <h3>🎯 دور: ${currentPlayer.name}</h3>
+                    <p>المرحلة: ${gameState.currentRound}</p>
+                    <p>إجمالي اللاعبين: ${gameState.players.length}</p>
+                </div>
+            `;
+        }
+
+        function restartGame() {
+            // إعادة تعيين حالة اللعبة
+            gameState.currentPlayer = 0;
+            gameState.currentRound = 1;
+            gameState.players.forEach(player => {
+                player.money = 1500;
+                player.position = 0;
+                player.properties = [];
+                player.inJail = false;
+                player.jailTurns = 0;
+            });
+            
+            // إزالة شاشة الفوز
+            const modal = document.querySelector('.winner-modal');
+            if (modal) modal.remove();
+            
+            // إعادة تحديث الشاشة
+            updatePlayersDisplay();
+            LeaderboardSystem.updateLeaderboard();
+            MessageSystem.show('🎮 بدأت لعبة جديدة!', 'success');
+            soundSystem.play('startapp');
+        }
+
+        function showFinalLeaderboard() {
+            LeaderboardSystem.showLeaderboard();
         }
 
         function endTurn() {
@@ -2647,9 +4166,17 @@
                 return;
             }
 
-            gameState.currentPlayer = (gameState.currentPlayer + 1) % gameState.players.length;
-            MessageSystem.show(`دور ${gameState.players[gameState.currentPlayer].name}`);
-            updatePlayersDisplay();
+            // تعطيل أزرار الدور الحالي
+            document.getElementById('rollDice').disabled = true;
+            document.getElementById('endTurn').disabled = true;
+            
+            // الانتقال للدور التالي
+            nextTurn();
+            
+            // تفعيل زر رمي النرد للاعب الجديد
+            setTimeout(() => {
+                document.getElementById('rollDice').disabled = false;
+            }, 1000);
         }
 
         // ===========================================
