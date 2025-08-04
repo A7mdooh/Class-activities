@@ -193,6 +193,23 @@
             right: 80px;
         }
 
+        #fullscreenToggle {
+            right: 140px;
+            transition: all 0.3s ease;
+        }
+
+        #fullscreenToggle:hover {
+            transform: translateY(-3px) scale(1.15);
+            background: var(--gradient-blue);
+            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
+        }
+
+        #fullscreenToggle.active {
+            background: var(--gradient-blue);
+            color: white;
+            transform: scale(1.1);
+        }
+
         /* ===========================================
            الحاوية الرئيسية
         =========================================== */
@@ -2792,6 +2809,9 @@
     </button>
     <button id="soundToggle" class="control-btn" title="تشغيل/إيقاف الصوت">
         <i class="fas fa-volume-up"></i>
+    </button>
+    <button id="fullscreenToggle" class="control-btn" title="ملء الشاشة">
+        <i class="fas fa-expand"></i>
     </button>
 
     <!-- الحاوية الرئيسية -->
@@ -6221,6 +6241,73 @@
                 icon.className = enabled ? 'fas fa-volume-up' : 'fas fa-volume-mute';
                 MessageSystem.show(enabled ? 'تم تشغيل الصوت' : 'تم إيقاف الصوت');
             });
+
+            // زر ملء الشاشة
+            let isFullscreen = false;
+            document.getElementById('fullscreenToggle').addEventListener('click', () => {
+                const icon = document.querySelector('#fullscreenToggle i');
+                const button = document.getElementById('fullscreenToggle');
+                
+                if (!isFullscreen) {
+                    // طلب ملء الشاشة
+                    if (document.documentElement.requestFullscreen) {
+                        document.documentElement.requestFullscreen();
+                    } else if (document.documentElement.mozRequestFullScreen) {
+                        document.documentElement.mozRequestFullScreen();
+                    } else if (document.documentElement.webkitRequestFullscreen) {
+                        document.documentElement.webkitRequestFullscreen();
+                    } else if (document.documentElement.msRequestFullscreen) {
+                        document.documentElement.msRequestFullscreen();
+                    }
+                    
+                    icon.className = 'fas fa-compress';
+                    button.classList.add('active');
+                    button.title = 'الخروج من ملء الشاشة';
+                    MessageSystem.show('تم تفعيل ملء الشاشة');
+                    isFullscreen = true;
+                } else {
+                    // الخروج من ملء الشاشة
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.mozCancelFullScreen) {
+                        document.mozCancelFullScreen();
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    } else if (document.msExitFullscreen) {
+                        document.msExitFullscreen();
+                    }
+                    
+                    icon.className = 'fas fa-expand';
+                    button.classList.remove('active');
+                    button.title = 'ملء الشاشة';
+                    MessageSystem.show('تم الخروج من ملء الشاشة');
+                    isFullscreen = false;
+                }
+            });
+
+            // مراقبة تغيير حالة ملء الشاشة
+            document.addEventListener('fullscreenchange', handleFullscreenChange);
+            document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+            document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+            document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
+            function handleFullscreenChange() {
+                const icon = document.querySelector('#fullscreenToggle i');
+                const button = document.getElementById('fullscreenToggle');
+                
+                if (document.fullscreenElement || document.webkitFullscreenElement || 
+                    document.mozFullScreenElement || document.msFullscreenElement) {
+                    icon.className = 'fas fa-compress';
+                    button.classList.add('active');
+                    button.title = 'الخروج من ملء الشاشة';
+                    isFullscreen = true;
+                } else {
+                    icon.className = 'fas fa-expand';
+                    button.classList.remove('active');
+                    button.title = 'ملء الشاشة';
+                    isFullscreen = false;
+                }
+            }
 
             // إغلاق النوافذ المنبثقة
             document.querySelectorAll('.close').forEach(closeBtn => {
