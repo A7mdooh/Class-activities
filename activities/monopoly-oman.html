@@ -1844,67 +1844,52 @@
         // ===========================================
         async function loadStudentData() {
             try {
+                console.log('🔄 محاولة تحميل بيانات الطلاب من الملف...');
                 const response = await fetch('../data/studentData.json');
                 if (!response.ok) {
-                    throw new Error('فشل في تحميل بيانات الطلاب');
+                    throw new Error(`HTTP ${response.status}: فشل في تحميل بيانات الطلاب`);
                 }
                 const data = await response.json();
                 
                 if (!data || Object.keys(data).length === 0) {
-                    throw new Error('لا توجد بيانات طلاب');
+                    throw new Error('لا توجد بيانات طلاب في الملف');
                 }
                 
-                playerData = data;
-                console.log('✅ تم تحميل بيانات الطلاب بنجاح:', Object.keys(data).length, 'صف');
+                // تحويل البيانات من تنسيق الأسماء إلى تنسيق الكائنات
+                const formattedData = {};
+                for (const [className, students] of Object.entries(data)) {
+                    formattedData[className] = students.map((studentName, index) => ({
+                        name: studentName,
+                        id: `${className.replace(/ /g, '_')}_${index + 1}`
+                    }));
+                }
+                
+                playerData = formattedData;
+                console.log('🎉 تم تحميل بيانات الطلاب الحقيقية بنجاح!');
+                console.log(`📊 إجمالي الصفوف: ${Object.keys(data).length}`);
+                console.log(`👥 إجمالي الطلاب: ${Object.values(data).flat().length}`);
+                
+                // عرض عينة من البيانات لكل صف
+                Object.keys(data).forEach(className => {
+                    console.log(`📝 ${className}: ${data[className].length} طالب`);
+                });
+                
+                // عرض عينة من الأسماء الحقيقية
+                const firstClass = Object.keys(data)[0];
+                console.log(`� عينة من أسماء ${firstClass}:`);
+                data[firstClass].slice(0, 3).forEach((name, index) => {
+                    console.log(`   ${index + 1}. ${name}`);
+                });
+                
+                MessageSystem.show(`تم تحميل ${Object.values(data).flat().length} اسم طالب حقيقي من ${Object.keys(data).length} صف! 🎓`, 'success', 5000);
+                
                 return playerData;
             } catch (error) {
-                console.warn('⚠️ خطأ في تحميل بيانات الطلاب، استخدام البيانات الاحتياطية:', error);
+                console.error('❌ خطأ في تحميل بيانات الطلاب الحقيقية:', error.message);
+                MessageSystem.show('⚠️ لا يمكن تحميل بيانات الطلاب! تأكد من وجود ملف studentData.json', 'error', 8000);
                 
-                // بيانات احتياطية - طلاب عُمانيون حقيقيون
-                playerData = {
-                    'خامس 1': [
-                        { name: 'أحمد سالم الفارسي', id: 'std_001' },
-                        { name: 'فاطمة محمد البلوشي', id: 'std_002' },
-                        { name: 'علي خالد الهنائي', id: 'std_003' },
-                        { name: 'مريم سعيد الزدجالي', id: 'std_004' },
-                        { name: 'محمد عبدالله الكندي', id: 'std_005' },
-                        { name: 'عائشة أحمد السيابي', id: 'std_006' },
-                        { name: 'سعد سليمان العبري', id: 'std_007' },
-                        { name: 'خديجة يوسف المحروقي', id: 'std_008' }
-                    ],
-                    'خامس 2': [
-                        { name: 'عمر حمود الغافري', id: 'std_009' },
-                        { name: 'سارة طالب الرحبي', id: 'std_010' },
-                        { name: 'حمزة سالم الحراصي', id: 'std_011' },
-                        { name: 'نور علي البطاشي', id: 'std_012' },
-                        { name: 'يوسف راشد الجابري', id: 'std_013' },
-                        { name: 'آمنة حسن الحبسي', id: 'std_014' },
-                        { name: 'زياد مبارك الصوافي', id: 'std_015' },
-                        { name: 'ريم ناصر المعولي', id: 'std_016' }
-                    ],
-                    'سادس 1': [
-                        { name: 'ماجد عبدالرحمن العريمي', id: 'std_017' },
-                        { name: 'هدى سيف المقبالي', id: 'std_018' },
-                        { name: 'طارق محمود الراشدي', id: 'std_019' },
-                        { name: 'منى صالح الحوسني', id: 'std_020' },
-                        { name: 'كريم فهد الشكيلي', id: 'std_021' },
-                        { name: 'رقية حميد الحضرمي', id: 'std_022' },
-                        { name: 'بدر إبراهيم السالمي', id: 'std_023' },
-                        { name: 'شيماء خميس النبهاني', id: 'std_024' }
-                    ],
-                    'سادس 2': [
-                        { name: 'أنس عثمان الوهيبي', id: 'std_025' },
-                        { name: 'دانة سلطان القطيطي', id: 'std_026' },
-                        { name: 'وليد جمعة الغيثي', id: 'std_027' },
-                        { name: 'لينا فايز الكلباني', id: 'std_028' },
-                        { name: 'أسامة مسلم الظاهري', id: 'std_029' },
-                        { name: 'ياسمين كامل الخروصي', id: 'std_030' },
-                        { name: 'صقر راشد المنذري', id: 'std_031' },
-                        { name: 'نوال أحمد الجهوري', id: 'std_032' }
-                    ]
-                };
-                
-                console.log('✅ تم استخدام البيانات الاحتياطية:', Object.keys(playerData).length, 'صف');
+                // لا توجد بيانات احتياطية - يجب استخدام البيانات الحقيقية فقط
+                playerData = {};
                 return playerData;
             }
         }
@@ -1925,6 +1910,15 @@
                     option.textContent = className;
                     classSelect.appendChild(option);
                 });
+            } else {
+                // إذا لم تكن هناك بيانات، أضف رسالة تنبيه
+                const option = document.createElement('option');
+                option.value = "";
+                option.textContent = "لا توجد بيانات طلاب متاحة";
+                option.disabled = true;
+                classSelect.appendChild(option);
+                
+                MessageSystem.show('⚠️ لم يتم تحميل بيانات الطلاب! تأكد من وجود ملف studentData.json', 'error', 10000);
             }
             
             // إعداد حدث تغيير الصف
@@ -1949,14 +1943,24 @@
                 return;
             }
 
-            if (!playerData || !playerData[classValue]) {
+            if (!playerData || Object.keys(playerData).length === 0) {
+                MessageSystem.show('⚠️ لا توجد بيانات طلاب! تأكد من وجود ملف studentData.json', 'error', 8000);
+                return;
+            }
+
+            if (!playerData[classValue]) {
                 console.error('❌ لا توجد بيانات للصف:', classValue);
                 MessageSystem.show('لا توجد بيانات طلاب لهذا الصف!', 'error');
                 return;
             }
 
             currentStudents = playerData[classValue];
-            console.log(`📊 تم تحميل ${currentStudents.length} طالب من الصف ${classValue}`);
+            console.log(`📊 تم تحميل ${currentStudents.length} طالب حقيقي من الصف ${classValue}`);
+            
+            if (currentStudents.length === 0) {
+                MessageSystem.show('هذا الصف لا يحتوي على أي طلاب!', 'error');
+                return;
+            }
             
             selectedPlayers = [];
             
@@ -1976,6 +1980,12 @@
             if (totalElement) {
                 totalElement.textContent = playersNeeded;
                 console.log(`🎮 عدد اللاعبين المطلوب: ${playersNeeded}`);
+            }
+            
+            // التأكد من أن عدد الطلاب كافٍ
+            if (currentStudents.length < playersNeeded) {
+                MessageSystem.show(`⚠️ الصف يحتوي على ${currentStudents.length} طالب فقط، لا يمكن اختيار ${playersNeeded} لاعبين!`, 'error', 8000);
+                return;
             }
             
             // إنشاء شبكة الطلاب البسيطة
@@ -2002,7 +2012,7 @@
             
             if (!currentStudents || currentStudents.length === 0) {
                 console.warn('⚠️ لا توجد بيانات طلاب لعرضها');
-                grid.innerHTML = '<div style="text-align: center; padding: 20px; color: white;">لا توجد طلاب في هذا الصف</div>';
+                grid.innerHTML = '<div style="text-align: center; padding: 40px; color: white; font-size: 18px; background: rgba(255,0,0,0.1); border-radius: 10px; border: 2px dashed #ff6b6b;">❌ لا توجد أسماء طلاب حقيقية متاحة<br><small style="font-size: 14px; opacity: 0.8;">تأكد من وجود ملف studentData.json</small></div>';
                 return;
             }
             
