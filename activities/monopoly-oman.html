@@ -1326,8 +1326,29 @@
                             <select id="selection-mode" class="oman-btn" style="width: 280px; text-align: center;">
                                 <option value="">-- اختر طريقة الاختيار --</option>
                                 <option value="manual">👆 اختيار يدوي من قوائم منسدلة</option>
+                                <option value="grid">🎯 اختيار تفاعلي من الشبكة</option>
                                 <option value="free">🆓 أسماء افتراضية (لاعب 1، لاعب 2...)</option>
                             </select>
+                        </div>
+                        
+                        <!-- شبكة الطلاب للاختيار التفاعلي -->
+                        <div id="students-grid-container" style="display: none; margin: 20px 0;">
+                            <h5 style="color: var(--oman-green); margin-bottom: 10px;">📋 اختر الطلاب المشاركين:</h5>
+                            <div id="students-grid" style="
+                                display: grid;
+                                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                                gap: 10px;
+                                max-height: 300px;
+                                overflow-y: auto;
+                                border: 2px solid var(--oman-green);
+                                border-radius: 10px;
+                                padding: 15px;
+                                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                            ">
+                                <p style="text-align: center; color: #666; grid-column: 1/-1; margin: 20px 0;">
+                                    اختر الصف ونوع الاختيار أولاً لعرض الطلاب
+                                </p>
+                            </div>
                         </div>
                         
                         <!-- الخطوة 3: القوائم المنسدلة للاختيار اليدوي -->
@@ -1447,48 +1468,166 @@
         let studentData = {};
         let availableClasses = [];
 
-        // تحميل بيانات الطلاب والصفوف مع نظام محسن
+        // تحميل بيانات الطلاب والصفوف مع نظام محسن موحد
         async function loadStudentData() {
             try {
-                // استخدام المسار المحلي للبيانات
+                // عرض رسالة التحميل
+                showMessage('جاري تحميل بيانات الطلاب...', 'info');
+                
+                // استخدام المسار المحلي للبيانات - نظام موحد
                 const res = await fetch('../data/studentData.json');
-                if (!res.ok) throw new Error('فشل في تحميل بيانات الطلاب من المسار المحلي');
+                if (!res.ok) {
+                    throw new Error('فشل في تحميل ملف البيانات');
+                }
                 
                 const data = await res.json();
                 studentData = data;
-                fillClassSelect();
                 
                 // تحديث واجهة المستخدم
+                fillClassSelect();
                 useStudentDataBtn.style.display = 'inline-block';
                 useStudentDataBtn.disabled = false;
                 useStudentDataBtn.innerHTML = '📚 استخدام قائمة الصف ✅';
                 
+                // رسالة نجاح
+                showMessage('تم تحميل بيانات الطلاب بنجاح! 🎓', 'success');
                 console.log('✅ تم تحميل بيانات الطلاب من الملف المحلي بنجاح');
                 
             } catch (e) {
                 console.log('⚠️ خطأ في تحميل بيانات الطلاب:', e.message);
-                console.log('💡 تحقق من وجود ملف ../data/studentData.json');
+                showMessage('خطأ في تحميل بيانات الطلاب: ' + e.message, 'error');
                 
-                // إظهار رسالة تحذير بدلاً من alert
-                showMessage("⚠️ لم يتم العثور على ملف بيانات الطلاب في المسار المحلي. سيتم استخدام الإدخال اليدوي.", 'warning');
+                // إضافة بيانات تجريبية في حالة فشل التحميل - نظام موحد
+                studentData = {
+                    "خامس 1": [
+                        "أحمد بن ماجد بن محفوظ منصور السيابي",
+                        "ابراهيم بن خليل بن ابراهيم رحمت البلوشي",
+                        "العز بن طارق بن عبدالمجيد سعيد البلوشي",
+                        "المهلب بن فهد بن ناصر محمد البوسعيدي",
+                        "الياس بن عيسى بن خلفان سالم الجابري",
+                        "اليزن بن ادريس بن محمد عبدالله الفورى",
+                        "بدر بن فؤاد بن سليمان حميد الرمضاني",
+                        "حسين بن مسعود بن سعيد محمد الحوسني"
+                    ],
+                    "خامس 2": [
+                        "آدم بن محمد بن أحمد خليل الفارسي",
+                        "أنس بن أحمد بن محمد عبدالرحمن الزدجالي",
+                        "أنور محمد عارف البلوشي",
+                        "أوّاب بن ناصر بن مال الله حمدان العمري",
+                        "الوليد بن خالد بن مسلم ثاني الحديدي",
+                        "انس بن ابراهيم بن درويش محمد اليحيائي",
+                        "بدر بن موسى بن أحمد محمد الفوري",
+                        "بدر بن هاشم بن موسى محمد الفارسي"
+                    ],
+                    "سادس 1": [
+                        "تيمور بن فيصل بن علي منين اليوسفي",
+                        "جاسم بن محمد بن سالم راشد الحارثي",
+                        "جابر بن سعيد بن محمد خلفان السيابي",
+                        "حمزة بن خالد بن حمد سيف الحديدي",
+                        "خالد بن سعيد بن خالد ناصر الهطالي",
+                        "راشد بن محمد بن سالم حمود الحبسي",
+                        "سالم بن أحمد بن عبدالله مبارك الضامري",
+                        "سعيد بن يوسف بن سعيد مسكين الحارثي"
+                    ],
+                    "سادس 2": [
+                        "سلطان بن سامي بن حميد ساعد المسلمي",
+                        "سيف بن سعيد بن سيف سعيد السيابي",
+                        "عباد بن أحمد بن حبيب شمبيه المسافر",
+                        "عبدالرحمن بن حسن بن عبدالله خلفان الحديدي",
+                        "عبدالعزيز بن أحمد بن سعيد سيف السيابي",
+                        "عبدالله بن أحمد بن عبدالله مبارك الضامري",
+                        "عبدالله بن خالد بن جمعه حاجي البلوشي",
+                        "عمر بن سليمان بن سالم سعود الحارثي"
+                    ]
+                };
                 
-                // تحديث واجهة المستخدم عند فشل التحميل
+                // تحديث واجهة المستخدم مع البيانات التجريبية
+                fillClassSelect();
                 useStudentDataBtn.style.display = 'inline-block';
-                useStudentDataBtn.disabled = true;
-                useStudentDataBtn.innerHTML = '📚 قائمة الصف غير متوفرة ❌';
-                useStudentDataBtn.style.opacity = '0.6';
+                useStudentDataBtn.disabled = false;
+                useStudentDataBtn.innerHTML = '📚 بيانات تجريبية ✅';
+                useStudentDataBtn.style.opacity = '0.8';
                 
-                document.getElementById('class-selector').innerHTML = '<option value="">لا توجد بيانات صفوف</option>';
-                
-                // التبديل تلقائياً للإدخال اليدوي
-                const manualBtn = document.getElementById('manual-entry-btn');
-                if (manualBtn) manualBtn.click();
+                // رسالة تحذيرية
+                showMessage('تم تحميل بيانات تجريبية بدلاً من الملف الأصلي', 'warning');
             }
         }
 
-        // ملء قائمة الصفوف
-        function fillClassSelect() {
-            const classSelect = document.getElementById('class-selector');
+        // نظام إدارة الرسائل الموحد (مطابق للأنشطة الأخرى)
+        class MessageSystem {
+            constructor() {
+                this.container = this.createMessageContainer();
+            }
+
+            createMessageContainer() {
+                let container = document.getElementById('messageArea');
+                if (!container) {
+                    container = document.createElement('div');
+                    container.id = 'messageArea';
+                    container.className = 'message-container';
+                    container.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        z-index: 10000;
+                        max-width: 400px;
+                    `;
+                    document.body.appendChild(container);
+                }
+                return container;
+            }
+
+            show(message, type = 'info', duration = 5000) {
+                this.clear();
+
+                const messageEl = document.createElement('div');
+                messageEl.className = `message ${type}`;
+                messageEl.innerHTML = message;
+                messageEl.style.cssText = `
+                    padding: 15px 20px;
+                    margin-bottom: 10px;
+                    border-radius: 8px;
+                    color: white;
+                    font-weight: bold;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                    animation: slideInRight 0.3s ease-out;
+                    background: ${this.getTypeColor(type)};
+                `;
+
+                this.container.appendChild(messageEl);
+
+                if (duration > 0) {
+                    setTimeout(() => {
+                        this.clear();
+                    }, duration);
+                }
+
+                return messageEl;
+            }
+
+            getTypeColor(type) {
+                const colors = {
+                    'success': 'linear-gradient(135deg, #28a745, #20c997)',
+                    'error': 'linear-gradient(135deg, #dc3545, #e83e8c)',
+                    'warning': 'linear-gradient(135deg, #fd7e14, #ffc107)',
+                    'info': 'linear-gradient(135deg, #007bff, #6610f2)'
+                };
+                return colors[type] || colors.info;
+            }
+
+            clear() {
+                this.container.innerHTML = '';
+            }
+        }
+
+        // إنشاء نظام الرسائل العام
+        const messageSystem = new MessageSystem();
+
+        // دالة مساعدة لعرض الرسائل (متوافقة مع الأنشطة الأخرى)
+        function showMessage(message, type = 'info', duration = 5000) {
+            messageSystem.show(message, type, duration);
+            console.log(`%c${message}`, `color: ${messageSystem.getTypeColor(type)}; font-weight: bold;`);
+        }
             classSelect.innerHTML = '<option value="">-- اختر الصف --</option>';
             
             Object.keys(studentData).forEach(cls => {
@@ -2431,7 +2570,112 @@
                 }
             }
             
-            console.log(`📊 حالة الاختيار: ${selectedStudents.length}/${playerCount}`);
+        // ملء قائمة الصفوف (نظام موحد مع الأنشطة الأخرى)
+        function fillClassSelect() {
+            const classSelect = document.getElementById('class-selector');
+            if (!classSelect || !studentData) return;
+            
+            classSelect.innerHTML = '<option value="">اختر الصف</option>';
+            
+            Object.keys(studentData).forEach(className => {
+                const studentCount = studentData[className].length;
+                const option = document.createElement('option');
+                option.value = className;
+                option.textContent = `${className} (${studentCount} طالب)`;
+                classSelect.appendChild(option);
+            });
+            
+            console.log('✅ تم تحديث قائمة الصفوف:', Object.keys(studentData));
+            
+            // تفعيل معالج تغيير الصف
+            classSelect.addEventListener('change', function() {
+                const selectedClass = this.value;
+                if (selectedClass && studentData[selectedClass]) {
+                    const studentCount = studentData[selectedClass].length;
+                    showMessage(`� تم اختيار "${selectedClass}" - يحتوي على ${studentCount} طالب`, 'info', 3000);
+                    
+                    // تحديث الطلاب المتاحين للاختيار
+                    populateStudentGrid(selectedClass);
+                } else {
+                    showMessage('⚠️ يرجى اختيار صف صحيح', 'warning');
+                }
+            });
+        }
+
+        // ملء شبكة الطلاب للاختيار (نظام موحد)
+        function populateStudentGrid(className) {
+            const studentsContainer = document.getElementById('students-grid');
+            if (!studentsContainer || !studentData[className]) return;
+            
+            const students = studentData[className];
+            studentsContainer.innerHTML = '';
+            
+            students.forEach((studentName, index) => {
+                const studentCard = document.createElement('div');
+                studentCard.className = 'student-card';
+                studentCard.dataset.studentName = studentName;
+                studentCard.style.cssText = `
+                    background: white;
+                    border: 2px solid #ddd;
+                    border-radius: 8px;
+                    padding: 12px;
+                    margin: 5px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    text-align: center;
+                    font-weight: bold;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                `;
+                
+                studentCard.innerHTML = `
+                    <div style="font-size: 14px; color: #333;">${studentName}</div>
+                `;
+                
+                // إضافة معالج النقر
+                studentCard.addEventListener('click', function() {
+                    toggleStudentSelection(studentName, studentCard);
+                });
+                
+                studentsContainer.appendChild(studentCard);
+            });
+            
+            showMessage(`تم عرض ${students.length} طالب من ${className}`, 'info', 2000);
+        }
+
+        // تبديل اختيار الطالب (نظام موحد)
+        function toggleStudentSelection(studentName, cardElement) {
+            const maxPlayers = parseInt(document.getElementById('player-count').value);
+            
+            if (cardElement.classList.contains('selected')) {
+                // إزالة الاختيار
+                cardElement.classList.remove('selected');
+                cardElement.style.borderColor = '#ddd';
+                cardElement.style.background = 'white';
+                
+                selectedStudents = selectedStudents.filter(s => 
+                    (typeof s === 'string' ? s : s.name) !== studentName
+                );
+                
+                showMessage(`تم إلغاء اختيار: ${studentName}`, 'info', 2000);
+            } else {
+                // إضافة الاختيار
+                if (selectedStudents.length >= maxPlayers) {
+                    showMessage(`⚠️ لا يمكن اختيار أكثر من ${maxPlayers} طلاب!`, 'warning');
+                    return;
+                }
+                
+                cardElement.classList.add('selected');
+                cardElement.style.borderColor = 'var(--oman-green)';
+                cardElement.style.background = 'linear-gradient(135deg, var(--oman-green), var(--light-green))';
+                cardElement.style.color = 'white';
+                
+                selectedStudents.push(studentName);
+                showMessage(`تم اختيار: ${studentName}`, 'success', 2000);
+            }
+            
+            updateSelectedStudentsDisplay();
+            updateSelectionStatus();
+        }
         }
 
         // ملء قائمة الصفوف المحسنة
@@ -2837,17 +3081,30 @@
                 selectionMode.addEventListener('change', function() {
                     const mode = this.value;
                     const manualContainer = document.getElementById('manual-selection-container');
+                    const gridContainer = document.getElementById('students-grid-container');
                     
                     if (mode === 'manual') {
-                        showHelpMessage('تم اختيار الاختيار اليدوي. اختر الطلاب من القوائم', 'info');
+                        showMessage('تم اختيار الاختيار اليدوي. اختر الطلاب من القوائم', 'info');
                         if (manualContainer) manualContainer.style.display = 'block';
+                        if (gridContainer) gridContainer.style.display = 'none';
                         createPlayerDropdowns();
-                    } else if (mode === 'free') {
-                        showHelpMessage('تم اختيار الأسماء الافتراضية. يمكنك البدء مباشرة', 'info');
+                    } else if (mode === 'grid') {
+                        showMessage('تم اختيار الاختيار التفاعلي. اختر الطلاب من الشبكة', 'info');
                         if (manualContainer) manualContainer.style.display = 'none';
+                        if (gridContainer) gridContainer.style.display = 'block';
+                        
+                        const selectedClass = document.getElementById('class-selector').value;
+                        if (selectedClass) {
+                            populateStudentGrid(selectedClass);
+                        }
+                    } else if (mode === 'free') {
+                        showMessage('تم اختيار الأسماء الافتراضية. يمكنك البدء مباشرة', 'info');
+                        if (manualContainer) manualContainer.style.display = 'none';
+                        if (gridContainer) gridContainer.style.display = 'none';
                         document.getElementById('selected-students').innerHTML = '';
                     } else {
                         if (manualContainer) manualContainer.style.display = 'none';
+                        if (gridContainer) gridContainer.style.display = 'none';
                         document.getElementById('selected-students').innerHTML = '';
                     }
                 });
