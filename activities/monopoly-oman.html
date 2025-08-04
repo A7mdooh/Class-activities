@@ -2483,15 +2483,18 @@
 
                 // حساب القيمة الصافية لكل لاعب
                 const playersWithNetWorth = gameState.players.map((player, index) => {
+                    // التحقق من صحة بيانات اللاعب
+                    validatePlayerData(player);
+                    
                     const propertyValue = this.calculatePropertyValue(player);
-                    const netWorth = player.money + propertyValue;
+                    const netWorth = (player.money || 0) + propertyValue;
                     
                     return {
                         ...player,
                         index,
                         propertyValue,
                         netWorth,
-                        propertiesCount: player.properties.length
+                        propertiesCount: player.properties ? player.properties.length : 0
                     };
                 });
 
@@ -2517,9 +2520,16 @@
             }
 
             static calculatePropertyValue(player) {
+                if (!player || !player.properties || !Array.isArray(player.properties)) {
+                    return 0;
+                }
+                
                 return player.properties.reduce((total, propertyId) => {
                     const property = omanProperties[propertyId];
-                    return total + (property ? property.price : 0);
+                    if (property && typeof property.price === 'number') {
+                        return total + property.price;
+                    }
+                    return total;
                 }, 0);
             }
 
@@ -2538,15 +2548,15 @@
                             <div class="player-stats">
                                 <div class="stat">
                                     <span class="stat-label">💰 الأموال:</span>
-                                    <span class="stat-value">${player.money} ر.ع</span>
+                                    <span class="stat-value">${formatMoney(player.money)}</span>
                                 </div>
                                 <div class="stat">
                                     <span class="stat-label">🏠 العقارات:</span>
-                                    <span class="stat-value">${player.propertyValue} ر.ع</span>
+                                    <span class="stat-value">${formatMoney(player.propertyValue)}</span>
                                 </div>
                                 <div class="stat">
                                     <span class="stat-label">📊 القيمة الصافية:</span>
-                                    <span class="stat-value total-worth">${player.netWorth} ر.ع</span>
+                                    <span class="stat-value total-worth">${formatMoney(player.netWorth)}</span>
                                 </div>
                                 <div class="stat">
                                     <span class="stat-label">🏘️ عدد العقارات:</span>
@@ -2581,17 +2591,20 @@
 
             static updatePlayerCards() {
                 gameState.players.forEach((player, index) => {
+                    // التحقق من صحة بيانات اللاعب
+                    validatePlayerData(player);
+                    
                     const playerElement = document.querySelector(`[data-player="${index}"]`);
                     if (playerElement) {
                         // تحديث المعلومات في بطاقة اللاعب
                         const moneyElement = playerElement.querySelector('.money');
                         if (moneyElement) {
-                            moneyElement.textContent = `💰 ${player.money} ر.ع`;
+                            moneyElement.textContent = formatMoney(player.money);
                         }
                         
                         const propertiesElement = playerElement.querySelector('.properties-count');
                         if (propertiesElement) {
-                            propertiesElement.textContent = `🏠 ${player.properties.length}`;
+                            propertiesElement.textContent = player.properties ? player.properties.length : 0;
                         }
                     }
                 });
@@ -2611,11 +2624,21 @@
             }
 
             static calculateNetWorth(player) {
-                let netWorth = player.money;
-                player.properties.forEach(propId => {
-                    const prop = omanProperties[propId];
-                    netWorth += prop.price;
-                });
+                if (!player || typeof player.money !== 'number') {
+                    return 0;
+                }
+                
+                let netWorth = player.money || 0;
+                
+                if (player.properties && Array.isArray(player.properties)) {
+                    player.properties.forEach(propId => {
+                        const prop = omanProperties[propId];
+                        if (prop && typeof prop.price === 'number') {
+                            netWorth += prop.price;
+                        }
+                    });
+                }
+                
                 return netWorth;
             }
 
@@ -3020,13 +3043,21 @@
             const playerColors = ['#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6', '#1abc9c'];
             
             // إعداد اللعبة
-            gameState.players = selectedPlayers.map((player, index) => ({
-                name: player.name,
-                money: 1500,
-                position: 0,
-                properties: [],
-                color: playerColors[index % playerColors.length]
-            }));
+            gameState.players = selectedPlayers.map((player, index) => {
+                const newPlayer = {
+                    name: player.name || `اللاعب ${index + 1}`,
+                    money: 1500,
+                    position: 0,
+                    properties: [],
+                    color: playerColors[index % playerColors.length],
+                    inJail: false,
+                    jailTurns: 0
+                };
+                
+                // التحقق من صحة البيانات
+                validatePlayerData(newPlayer);
+                return newPlayer;
+            });
             
             gameState.gameStarted = false;
             gameState.currentPlayer = 0;
@@ -3330,26 +3361,73 @@
             });
         }
 
+        // دالة مساعدة لعرض المال بشكل آمن
+        function formatMoney(amount) {
+            if (typeof amount !== 'number' || isNaN(amount)) {
+                console.warn('⚠️ قيمة مال غير صحيحة:', amount);
+                return '0 ر.ع';
+            }
+            return `${Math.round(amount)} ر.ع`;
+        }
+
+        // دالة مساعدة للتأكد من صحة بيانات اللاعب
+        function validatePlayerData(player) {
+            if (!player) {
+                console.error('❌ بيانات لاعب مفقودة');
+                return false;
+            }
+            
+            // التأكد من وجود المال كرقم
+            if (typeof player.money !== 'number' || isNaN(player.money)) {
+                console.warn('⚠️ إصلاح مال اللاعب:', player.name, 'من', player.money, 'إلى 1500');
+                player.money = 1500; // إعادة تعيين المال الافتراضي
+            }
+            
+            // التأكد من وجود الموقع كرقم
+            if (typeof player.position !== 'number' || isNaN(player.position)) {
+                console.warn('⚠️ إصلاح موقع اللاعب:', player.name, 'من', player.position, 'إلى 0');
+                player.position = 0;
+            }
+            
+            // التأكد من وجود قائمة العقارات
+            if (!Array.isArray(player.properties)) {
+                console.warn('⚠️ إصلاح قائمة عقارات اللاعب:', player.name);
+                player.properties = [];
+            }
+            
+            return true;
+        }
+
         function updatePlayersDisplay() {
             const playersInfo = document.getElementById('playersInfo');
+            if (!playersInfo) return;
+            
             playersInfo.innerHTML = '';
 
             gameState.players.forEach((player, index) => {
+                // التحقق من صحة بيانات اللاعب
+                validatePlayerData(player);
+                
                 const playerCard = document.createElement('div');
                 playerCard.className = `player-card ${index === gameState.currentPlayer ? 'current-player' : ''}`;
+                playerCard.setAttribute('data-player', index);
+                
+                const currentPosition = player.position >= 0 && player.position < omanProperties.length ? 
+                    player.position : 0;
+                
                 playerCard.innerHTML = `
-                    <h3>${player.name} ${index === gameState.currentPlayer ? '👑' : ''}</h3>
+                    <h3>${player.name || `اللاعب ${index + 1}`} ${index === gameState.currentPlayer ? '👑' : ''}</h3>
                     <div class="player-info">
                         <span>المال:</span>
-                        <span>${player.money} ر.ع</span>
+                        <span class="money">${formatMoney(player.money)}</span>
                     </div>
                     <div class="player-info">
                         <span>الموقع:</span>
-                        <span>${omanProperties[player.position].name}</span>
+                        <span>${omanProperties[currentPosition]?.name || 'البداية'}</span>
                     </div>
                     <div class="player-info">
                         <span>العقارات:</span>
-                        <span>${player.properties.length}</span>
+                        <span class="properties-count">${player.properties ? player.properties.length : 0}</span>
                     </div>
                 `;
                 playersInfo.appendChild(playerCard);
@@ -3698,8 +3776,11 @@
         }
 
         function showPropertyPurchaseDialog(playerIndex, player, property) {
+            // التحقق من صحة بيانات اللاعب
+            validatePlayerData(player);
+            
             if (player.money < property.price) {
-                MessageSystem.show(`💸 ليس لديك مال كافٍ لشراء ${property.name}! تحتاج ${property.price} ر.ع`, 'error', 5000);
+                MessageSystem.show(`💸 ليس لديك مال كافٍ لشراء ${property.name}! تحتاج ${formatMoney(property.price)}`, 'error', 5000);
                 soundSystem.play('lose');
                 return;
             }
@@ -3711,10 +3792,10 @@
                 <div class="purchase-content">
                     <h2>🏠 شراء ${property.name}</h2>
                     <div class="property-details">
-                        <p><strong>السعر:</strong> ${property.price} ر.ع</p>
+                        <p><strong>السعر:</strong> ${formatMoney(property.price)}</p>
                         <p><strong>المالك الحالي:</strong> غير مملوك</p>
-                        <p><strong>رصيدك:</strong> ${player.money} ر.ع</p>
-                        <p><strong>الرصيد بعد الشراء:</strong> ${player.money - property.price} ر.ع</p>
+                        <p><strong>رصيدك:</strong> ${formatMoney(player.money)}</p>
+                        <p><strong>الرصيد بعد الشراء:</strong> ${formatMoney(player.money - property.price)}</p>
                     </div>
                     <div class="purchase-buttons">
                         <button onclick="purchaseProperty(${playerIndex}, ${property.id})" class="btn-purchase">
