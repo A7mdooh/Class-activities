@@ -234,90 +234,37 @@
         }
 
         /* ===========================================
-           لوحة اللعبة العصرية
+           لوحة اللعبة
         =========================================== */
         .game-board {
             width: 100%;
-            max-width: 900px;
-            margin: 20px auto;
+            max-width: 800px;
+            margin: 0 auto;
             aspect-ratio: 1;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #1e3c72 100%);
-            border-radius: 20px;
-            box-shadow: 
-                0 20px 40px rgba(0,0,0,0.3),
-                0 0 0 8px rgba(255,255,255,0.1),
-                inset 0 0 50px rgba(255,255,255,0.1);
+            background: var(--surface-board);
+            border-radius: var(--border-radius-large);
+            box-shadow: var(--shadow-board);
             position: relative;
-            border: 6px solid var(--oman-red);
-            overflow: visible;
-            transform-style: preserve-3d;
-            animation: boardGlow 3s ease-in-out infinite alternate;
+            border: 4px solid var(--oman-red);
+            overflow: hidden;
         }
 
-        @keyframes boardGlow {
-            0% { 
-                box-shadow: 
-                    0 20px 40px rgba(0,0,0,0.3),
-                    0 0 0 8px rgba(255,255,255,0.1),
-                    inset 0 0 50px rgba(255,255,255,0.1),
-                    0 0 60px rgba(220, 20, 60, 0.3);
-            }
-            100% { 
-                box-shadow: 
-                    0 25px 50px rgba(0,0,0,0.4),
-                    0 0 0 12px rgba(255,255,255,0.15),
-                    inset 0 0 80px rgba(255,255,255,0.15),
-                    0 0 100px rgba(220, 20, 60, 0.5);
-            }
-        }
-
-        /* مربعات اللوحة العصرية */
+        /* مربعات اللوحة */
         .board-square {
             position: absolute;
+            border: 2px solid var(--text-dark);
+            background: white;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
             text-align: center;
-            padding: 8px 4px;
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-            border: 3px solid #2c3e50;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #2c3e50;
+            padding: 5px;
+            transition: var(--transition-normal);
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 
-                0 4px 8px rgba(0,0,0,0.1),
-                inset 0 1px 0 rgba(255,255,255,0.8);
-            backdrop-filter: blur(10px);
-            overflow: hidden;
-        }
-
-        .board-square::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
-            transform: translateX(-100%);
-            transition: transform 0.6s;
-        }
-
-        .board-square:hover {
-            transform: translateY(-8px) scale(1.05);
-            box-shadow: 
-                0 15px 30px rgba(0,0,0,0.2),
-                0 0 20px rgba(220, 20, 60, 0.3),
-                inset 0 1px 0 rgba(255,255,255,0.9);
-            z-index: 10;
-        }
-
-        .board-square:hover::before {
-            transform: translateX(100%);
+            color: var(--text-dark);
         }
 
         .board-square:hover {
@@ -326,176 +273,78 @@
             z-index: 10;
         }
 
-        /* مربعات الزوايا العصرية */
+        /* مربعات الزوايا */
         .corner-square {
             width: 120px;
             height: 120px;
-            border-radius: 18px !important;
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%) !important;
-            border: 4px solid #c44569 !important;
-            color: white !important;
-            font-size: 0.85rem !important;
-            font-weight: 800 !important;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3) !important;
-            box-shadow: 
-                0 8px 16px rgba(0,0,0,0.2),
-                inset 0 2px 0 rgba(255,255,255,0.3) !important;
         }
 
-        .corner-square:hover {
-            background: linear-gradient(135deg, #ff5252 0%, #d84315 100%) !important;
-            transform: translateY(-10px) scale(1.08) !important;
-        }
-
-        /* مربعات الجانب العصرية */
+        /* مربعات الجانب */
         .side-square {
             width: 80px;
             height: 120px;
-            border-radius: 14px !important;
         }
 
-        /* ألوان المجموعات العصرية */
-        .brown { 
-            background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%) !important; 
-            color: white !important;
-            border-color: #5d2f0b !important;
-        }
-        .light-blue { 
-            background: linear-gradient(135deg, #87ceeb 0%, #4fb3d9 100%) !important;
-            color: #1e3c72 !important;
-            border-color: #2980b9 !important;
-        }
-        .pink { 
-            background: linear-gradient(135deg, #ff69b4 0%, #ff1493 100%) !important; 
-            color: white !important;
-            border-color: #c91d6b !important;
-        }
-        .orange { 
-            background: linear-gradient(135deg, #ffa500 0%, #ff8c00 100%) !important;
-            color: white !important;
-            border-color: #d67700 !important;
-        }
-        .red { 
-            background: linear-gradient(135deg, #dc143c 0%, #b71c1c 100%) !important; 
-            color: white !important;
-            border-color: #8b0000 !important;
-        }
-        .yellow { 
-            background: linear-gradient(135deg, #ffd700 0%, #ffb300 100%) !important;
-            color: #2c3e50 !important;
-            border-color: #e6ac00 !important;
-        }
-        .green { 
-            background: linear-gradient(135deg, #32cd32 0%, #228b22 100%) !important; 
-            color: white !important;
-            border-color: #1a5d1a !important;
-        }
-        .dark-blue { 
-            background: linear-gradient(135deg, #191970 0%, #000080 100%) !important; 
-            color: white !important;
-            border-color: #0a0a3a !important;
-        }
-        .utility { 
-            background: linear-gradient(135deg, #708090 0%, #2f4f4f 100%) !important;
-            color: white !important;
-            border-color: #1c2b2b !important;
-        }
-        .railroad { 
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important; 
-            color: white !important;
-            border-color: #1a252f !important;
-        }
-        .special {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%) !important;
-            color: white !important;
-            border-color: #c44569 !important;
-        }
+        /* ألوان المجموعات */
+        .brown { background-color: var(--property-brown) !important; color: white; }
+        .light-blue { background-color: var(--property-light-blue) !important; }
+        .pink { background-color: var(--property-pink) !important; color: white; }
+        .orange { background-color: var(--property-orange) !important; }
+        .red { background-color: var(--property-red) !important; color: white; }
+        .yellow { background-color: var(--property-yellow) !important; }
+        .green { background-color: var(--property-green) !important; color: white; }
+        .dark-blue { background-color: var(--property-dark-blue) !important; color: white; }
+        .utility { background-color: var(--utility-color) !important; }
+        .railroad { background-color: var(--railroad-color) !important; color: white; }
 
-        /* مواضع المربعات المحسنة */
+        /* مواضع المربعات */
         /* الصف السفلي */
         .square-0 { bottom: 0; right: 0; }
-        .square-1 { bottom: 0; right: 130px; }
-        .square-2 { bottom: 0; right: 220px; }
-        .square-3 { bottom: 0; right: 310px; }
-        .square-4 { bottom: 0; right: 400px; }
-        .square-5 { bottom: 0; right: 490px; }
-        .square-6 { bottom: 0; right: 580px; }
-        .square-7 { bottom: 0; right: 670px; }
-        .square-8 { bottom: 0; right: 760px; }
-        .square-9 { bottom: 0; right: 850px; }
+        .square-1 { bottom: 0; right: 120px; }
+        .square-2 { bottom: 0; right: 200px; }
+        .square-3 { bottom: 0; right: 280px; }
+        .square-4 { bottom: 0; right: 360px; }
+        .square-5 { bottom: 0; right: 440px; }
+        .square-6 { bottom: 0; right: 520px; }
+        .square-7 { bottom: 0; right: 600px; }
+        .square-8 { bottom: 0; right: 680px; }
+        .square-9 { bottom: 0; right: 760px; }
         .square-10 { bottom: 0; left: 0; }
 
         /* الصف الأيسر */
-        .square-11 { left: 0; bottom: 130px; transform: rotate(90deg); }
-        .square-12 { left: 0; bottom: 220px; transform: rotate(90deg); }
-        .square-13 { left: 0; bottom: 310px; transform: rotate(90deg); }
-        .square-14 { left: 0; bottom: 400px; transform: rotate(90deg); }
-        .square-15 { left: 0; bottom: 490px; transform: rotate(90deg); }
-        .square-16 { left: 0; bottom: 580px; transform: rotate(90deg); }
-        .square-17 { left: 0; bottom: 670px; transform: rotate(90deg); }
-        .square-18 { left: 0; bottom: 760px; transform: rotate(90deg); }
-        .square-19 { left: 0; bottom: 850px; transform: rotate(90deg); }
+        .square-11 { left: 0; bottom: 120px; transform: rotate(90deg); }
+        .square-12 { left: 0; bottom: 200px; transform: rotate(90deg); }
+        .square-13 { left: 0; bottom: 280px; transform: rotate(90deg); }
+        .square-14 { left: 0; bottom: 360px; transform: rotate(90deg); }
+        .square-15 { left: 0; bottom: 440px; transform: rotate(90deg); }
+        .square-16 { left: 0; bottom: 520px; transform: rotate(90deg); }
+        .square-17 { left: 0; bottom: 600px; transform: rotate(90deg); }
+        .square-18 { left: 0; bottom: 680px; transform: rotate(90deg); }
+        .square-19 { left: 0; bottom: 760px; transform: rotate(90deg); }
         .square-20 { top: 0; left: 0; }
 
         /* الصف العلوي */
-        .square-21 { top: 0; left: 130px; transform: rotate(180deg); }
-        .square-22 { top: 0; left: 220px; transform: rotate(180deg); }
-        .square-23 { top: 0; left: 310px; transform: rotate(180deg); }
-        .square-24 { top: 0; left: 400px; transform: rotate(180deg); }
-        .square-25 { top: 0; left: 490px; transform: rotate(180deg); }
-        .square-26 { top: 0; left: 580px; transform: rotate(180deg); }
-        .square-27 { top: 0; left: 670px; transform: rotate(180deg); }
-        .square-28 { top: 0; left: 760px; transform: rotate(180deg); }
-        .square-29 { top: 0; left: 850px; transform: rotate(180deg); }
+        .square-21 { top: 0; left: 120px; transform: rotate(180deg); }
+        .square-22 { top: 0; left: 200px; transform: rotate(180deg); }
+        .square-23 { top: 0; left: 280px; transform: rotate(180deg); }
+        .square-24 { top: 0; left: 360px; transform: rotate(180deg); }
+        .square-25 { top: 0; left: 440px; transform: rotate(180deg); }
+        .square-26 { top: 0; left: 520px; transform: rotate(180deg); }
+        .square-27 { top: 0; left: 600px; transform: rotate(180deg); }
+        .square-28 { top: 0; left: 680px; transform: rotate(180deg); }
+        .square-29 { top: 0; left: 760px; transform: rotate(180deg); }
         .square-30 { top: 0; right: 0; }
 
         /* الصف الأيمن */
-        .square-31 { right: 0; top: 130px; transform: rotate(270deg); }
-        .square-32 { right: 0; top: 220px; transform: rotate(270deg); }
-        .square-33 { right: 0; top: 310px; transform: rotate(270deg); }
-        .square-34 { right: 0; top: 400px; transform: rotate(270deg); }
-        .square-35 { right: 0; top: 490px; transform: rotate(270deg); }
-        .square-36 { right: 0; top: 580px; transform: rotate(270deg); }
-        .square-37 { right: 0; top: 670px; transform: rotate(270deg); }
-        .square-38 { right: 0; top: 760px; transform: rotate(270deg); }
-        .square-39 { right: 0; top: 850px; transform: rotate(270deg); }
-
-        /* مركز اللوحة مع شعار عُمان */
-        .game-board::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 45%;
-            height: 45%;
-            background: 
-                radial-gradient(circle at center, rgba(220, 20, 60, 0.1) 0%, transparent 50%),
-                linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(220, 20, 60, 0.05) 100%);
-            border-radius: 50%;
-            border: 4px solid rgba(220, 20, 60, 0.3);
-            backdrop-filter: blur(20px);
-            box-shadow: 
-                inset 0 0 30px rgba(255,255,255,0.1),
-                0 0 40px rgba(220, 20, 60, 0.2);
-        }
-
-        .game-board::before {
-            content: '🇴🇲';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 80px;
-            z-index: 5;
-            text-shadow: 0 0 20px rgba(0,0,0,0.3);
-            animation: flagWave 4s ease-in-out infinite;
-        }
-
-        @keyframes flagWave {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.1); }
-        }
+        .square-31 { right: 0; top: 120px; transform: rotate(270deg); }
+        .square-32 { right: 0; top: 200px; transform: rotate(270deg); }
+        .square-33 { right: 0; top: 280px; transform: rotate(270deg); }
+        .square-34 { right: 0; top: 360px; transform: rotate(270deg); }
+        .square-35 { right: 0; top: 440px; transform: rotate(270deg); }
+        .square-36 { right: 0; top: 520px; transform: rotate(270deg); }
+        .square-37 { right: 0; top: 600px; transform: rotate(270deg); }
+        .square-38 { right: 0; top: 680px; transform: rotate(270deg); }
+        .square-39 { right: 0; top: 760px; transform: rotate(270deg); }
 
         /* ===========================================
            عناصر تحكم اللعبة
@@ -1462,132 +1311,38 @@
         }
 
         /* ===========================================
-           الاستجابة العصرية للأجهزة المختلفة
+           الاستجابة للأجهزة المحمولة
         =========================================== */
-        
-        /* الشاشات الكبيرة */
-        @media (min-width: 1200px) {
-            .game-board {
-                max-width: 1000px;
-            }
-            
-            .corner-square {
-                width: 140px;
-                height: 140px;
-            }
-            
-            .side-square {
-                width: 90px;
-                height: 140px;
-            }
-        }
-
-        /* الأجهزة اللوحية */
-        @media (max-width: 1024px) {
-            .monopoly-container {
-                padding: 15px;
-            }
-
-            .game-board {
-                max-width: 800px;
-            }
-
-            .corner-square {
-                width: 100px;
-                height: 100px;
-                font-size: 0.7rem !important;
-            }
-
-            .side-square {
-                width: 65px;
-                height: 100px;
-            }
-
-            .board-square {
-                font-size: 0.65rem;
-                padding: 6px 3px;
-            }
-        }
-
-        /* الهواتف الذكية */
         @media (max-width: 768px) {
             .monopoly-container {
-                padding: 8px;
+                padding: 10px;
             }
 
             .game-title h1 {
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
 
             .game-title p {
-                font-size: 0.9rem;
+                font-size: 1rem;
             }
 
             .game-board {
                 max-width: 100%;
-                margin: 15px auto;
-                border-radius: 15px;
             }
 
             .corner-square {
-                width: 70px;
-                height: 70px;
-                font-size: 0.6rem !important;
-                border-radius: 12px !important;
+                width: 80px;
+                height: 80px;
             }
 
             .side-square {
-                width: 45px;
-                height: 70px;
-                border-radius: 10px !important;
+                width: 50px;
+                height: 80px;
             }
 
             .board-square {
-                font-size: 0.55rem;
-                padding: 4px 2px;
-                border-width: 2px;
-            }
-
-            .property-content {
-                transform: scale(0.9);
-            }
-
-            .game-board::before {
-                font-size: 50px !important;
-            }
-        }
-
-        /* الهواتف الصغيرة */
-        @media (max-width: 480px) {
-            .game-board {
-                border-radius: 12px;
-                border-width: 4px;
-            }
-
-            .corner-square {
-                width: 60px;
-                height: 60px;
-                font-size: 0.5rem !important;
-            }
-
-            .side-square {
-                width: 35px;
-                height: 60px;
-            }
-
-            .board-square {
-                font-size: 0.45rem;
-                padding: 2px 1px;
-            }
-
-            .game-board::before {
-                font-size: 35px !important;
-            }
-
-            .game-board::after {
-                width: 40%;
-                height: 40%;
-                border-width: 2px;
+                font-size: 0.6rem;
+                padding: 3px;
             }
 
             /* إعادة تموضع المربعات للشاشات الصغيرة */
@@ -2140,38 +1895,6 @@
             color: #ecf0f1 !important;
         }
 
-        /* تنسيق البطاقة المفلسة */
-        .player-card.bankrupt-player {
-            background: linear-gradient(135deg, #7f8c8d, #95a5a6) !important;
-            opacity: 0.6 !important;
-            border: 3px solid #e74c3c !important;
-            filter: grayscale(80%) !important;
-            position: relative;
-        }
-
-        .player-card.bankrupt-player::after {
-            content: "💔 مُفلِس";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-15deg);
-            background: rgba(231, 76, 60, 0.9);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-weight: bold;
-            font-size: 1.2em;
-            border: 2px solid #c0392b;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            z-index: 10;
-        }
-
-        .player-card.bankrupt-player h3,
-        .player-card.bankrupt-player .stat-item div,
-        .player-card.bankrupt-player .player-info {
-            color: #7f8c8d !important;
-        }
-
         .player-card.current-player {
             background: linear-gradient(135deg, #00d2ff, #3a7bd5, #667eea);
             border: 4px solid #fff;
@@ -2296,235 +2019,6 @@
             }
             100% {
                 transform: translateX(100%) translateY(100%) rotate(45deg);
-            }
-        }
-
-        /* تنسيق نافذة السجن */
-        .jail-modal {
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        .jail-content {
-            background: linear-gradient(135deg, #2c3e50, #34495e);
-            color: white;
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-            max-width: 500px;
-            width: 90%;
-            border: 3px solid #e74c3c;
-        }
-
-        .jail-options {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .jail-btn {
-            padding: 15px 25px;
-            border: none;
-            border-radius: 15px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .jail-btn-try {
-            background: linear-gradient(45deg, #3498db, #2980b9);
-            color: white;
-        }
-
-        .jail-btn-try:hover {
-            background: linear-gradient(45deg, #2980b9, #1f639b);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
-        }
-
-        .jail-btn-pay {
-            background: linear-gradient(45deg, #e67e22, #d35400);
-            color: white;
-        }
-
-        .jail-btn-pay:hover {
-            background: linear-gradient(45deg, #d35400, #bf4f00);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(230, 126, 34, 0.4);
-        }
-
-        .jail-btn small {
-            display: block;
-            font-size: 12px;
-            opacity: 0.8;
-            margin-top: 5px;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        @keyframes fadeOut {
-            from { opacity: 1; transform: scale(1); }
-            to { opacity: 0; transform: scale(0.8); }
-        }
-
-        /* تنسيق نوافذ الإفلاس */
-        .bankruptcy-modal {
-            animation: bankruptcySlideIn 0.5s ease-out;
-        }
-
-        .bankruptcy-content {
-            background: linear-gradient(135deg, #2c3e50, #34495e);
-            color: white;
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
-            max-width: 600px;
-            width: 90%;
-            border: 3px solid #e74c3c;
-        }
-
-        .bankruptcy-header h2 {
-            margin: 0 0 10px 0;
-            font-size: 2em;
-        }
-
-        .bankruptcy-warning {
-            background: rgba(231, 76, 60, 0.3);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            border: 2px solid #e74c3c;
-            font-weight: bold;
-        }
-
-        .bankruptcy-details {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
-            margin: 20px 0;
-            padding: 20px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 10px;
-        }
-
-        .debt-info, .assets-info, .current-money {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 8px;
-        }
-
-        .debt-amount, .assets-amount, .money-amount {
-            font-weight: bold;
-            font-size: 1.2em;
-        }
-
-        .debt-amount {
-            color: #e74c3c;
-        }
-
-        .assets-amount {
-            color: #f39c12;
-        }
-
-        .money-amount.negative {
-            color: #e74c3c;
-        }
-
-        .bankruptcy-options {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .bankruptcy-btn {
-            padding: 15px 25px;
-            border: none;
-            border-radius: 15px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .sell-btn {
-            background: linear-gradient(45deg, #f39c12, #e67e22);
-            color: white;
-        }
-
-        .sell-btn:hover {
-            background: linear-gradient(45deg, #e67e22, #d35400);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(243, 156, 18, 0.4);
-        }
-
-        .bankrupt-btn {
-            background: linear-gradient(45deg, #e74c3c, #c0392b);
-            color: white;
-        }
-
-        .bankrupt-btn:hover {
-            background: linear-gradient(45deg, #c0392b, #a93226);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
-        }
-
-        .bankruptcy-btn small {
-            display: block;
-            font-size: 12px;
-            opacity: 0.8;
-            margin-top: 5px;
-        }
-
-        .bankruptcy-help {
-            background: rgba(52, 152, 219, 0.2);
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 15px;
-            border: 2px solid #3498db;
-            font-size: 14px;
-        }
-
-        @keyframes bankruptcySlideIn {
-            from { 
-                opacity: 0; 
-                transform: translateY(-50px) scale(0.9); 
-            }
-            to { 
-                opacity: 1; 
-                transform: translateY(0) scale(1); 
-            }
-        }
-
-        @keyframes bankruptcyExplosion {
-            0% { 
-                opacity: 0; 
-                transform: translate(-50%, -50%) scale(0.5); 
-            }
-            20% { 
-                opacity: 1; 
-                transform: translate(-50%, -50%) scale(1.2); 
-            }
-            80% { 
-                opacity: 1; 
-                transform: translate(-50%, -50%) scale(1); 
-            }
-            100% { 
-                opacity: 0; 
-                transform: translate(-50%, -50%) scale(0.8); 
             }
         }
 
@@ -2849,18 +2343,6 @@
                     <i class="fas fa-book"></i>
                     📖 قواعد اللعبة
                 </button>
-                <button id="testCards" class="btn btn-secondary" onclick="testCardDemo()">
-                    <i class="fas fa-vial"></i>
-                    🧪 اختبار البطاقات
-                </button>
-                <button id="testJail" class="btn btn-secondary" onclick="testJailDemo()">
-                    <i class="fas fa-building"></i>
-                    🏛️ اختبار السجن
-                </button>
-                <button id="testBankruptcy" class="btn btn-secondary" onclick="testBankruptcyDemo()">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    💔 اختبار الإفلاس
-                </button>
             </div>
         </div>
 
@@ -3046,7 +2528,7 @@
             gameHistory: []
         };
 
-        let playerData = {};
+        let playerData = [];
 
         // ===========================================
         // أنظمة اللعبة الأساسية
@@ -3515,27 +2997,17 @@
 
         // ملء قائمة الصفوف (مطابق لباقي الأنشطة)
         function populateClassSelect() {
-            console.log('📚 ملء قائمة الصفوف...');
             const classSelect = document.getElementById('classSelect');
-            
-            if (!classSelect) {
-                console.error('❌ لم يتم العثور على عنصر classSelect!');
-                return;
-            }
-            
             classSelect.innerHTML = '<option value="">اختر الصف الدراسي</option>';
             
             if (playerData && Object.keys(playerData).length > 0) {
-                console.log(`✅ تم العثور على ${Object.keys(playerData).length} صف`);
                 Object.keys(playerData).forEach(className => {
                     const option = document.createElement('option');
                     option.value = className;
                     option.textContent = className;
                     classSelect.appendChild(option);
-                    console.log(`✅ تم إضافة الصف: ${className}`);
                 });
             } else {
-                console.warn('⚠️ لا توجد بيانات طلاب');
                 // إذا لم تكن هناك بيانات، أضف رسالة تنبيه
                 const option = document.createElement('option');
                 option.value = "";
@@ -3549,13 +3021,11 @@
             // إعداد حدث تغيير الصف
             classSelect.addEventListener('change', () => {
                 const setupBtn = document.getElementById('setupPlayersBtn');
-                if (setupBtn) {
-                    setupBtn.disabled = !classSelect.value;
-                    
-                    if (classSelect.value && playerData[classSelect.value]) {
-                        const studentCount = playerData[classSelect.value].length;
-                        MessageSystem.show(`📚 تم اختيار "${classSelect.value}" - يحتوي على ${studentCount} طالب`, 'success', 3000);
-                    }
+                setupBtn.disabled = !classSelect.value;
+                
+                if (classSelect.value) {
+                    const studentCount = playerData[classSelect.value].length;
+                    MessageSystem.show(`📚 تم اختيار "${classSelect.value}" - يحتوي على ${studentCount} طالب`, 'success', 3000);
                 }
             });
         }
@@ -3566,28 +3036,23 @@
             console.log('🎯 إعداد اختيار اللاعبين للصف:', classValue);
             
             if (!classValue) {
-                console.warn('⚠️ لم يتم اختيار صف');
                 MessageSystem.show('يرجى اختيار الصف أولاً!', 'error');
                 return;
             }
 
             if (!playerData || Object.keys(playerData).length === 0) {
-                console.error('❌ playerData فارغ أو غير موجود');
-                console.log('🔍 محتوى playerData:', playerData);
                 MessageSystem.show('⚠️ لا توجد بيانات طلاب! تأكد من وجود ملف studentData.json', 'error', 8000);
                 return;
             }
 
             if (!playerData[classValue]) {
                 console.error('❌ لا توجد بيانات للصف:', classValue);
-                console.log('🔍 الصفوف المتاحة:', Object.keys(playerData));
                 MessageSystem.show('لا توجد بيانات طلاب لهذا الصف!', 'error');
                 return;
             }
 
             currentStudents = playerData[classValue];
             console.log(`📊 تم تحميل ${currentStudents.length} طالب من الصف ${classValue}`);
-            console.log('🔍 عينة من الطلاب:', currentStudents.slice(0, 3));
             
             if (currentStudents.length === 0) {
                 MessageSystem.show('هذا الصف لا يحتوي على أي طلاب!', 'error');
@@ -3996,96 +3461,24 @@
         }
 
         // ===========================================
-        // إنشاء لوحة اللعبة العصرية
+        // إنشاء لوحة اللعبة
         // ===========================================
         function createGameBoard() {
-            console.log('🏗️ بدء إنشاء لوحة اللعبة العصرية...');
             const board = document.getElementById('gameBoard');
-            
-            if (!board) {
-                console.error('❌ لم يتم العثور على عنصر gameBoard!');
-                return;
-            }
-            
-            // منع التكرار - إذا كانت اللوحة تحتوي على مربعات بالفعل
-            if (board.children.length > 0) {
-                console.log('ℹ️ اللوحة موجودة بالفعل، إعادة إنشاء...');
-                board.innerHTML = ''; // إعادة إنشاء لضمان التحديث
-            }
-            
-            if (!omanProperties || omanProperties.length === 0) {
-                console.error('❌ بيانات omanProperties غير متوفرة!');
-                return;
-            }
-            
-            console.log(`📊 عدد العقارات: ${omanProperties.length}`);
+            board.innerHTML = '';
 
-            // إنشاء المربعات مع التصميم الجديد
             omanProperties.forEach((property, index) => {
                 const square = document.createElement('div');
-                const isCorner = index % 10 === 0;
-                
-                square.className = `board-square ${property.color} ${isCorner ? 'corner-square' : 'side-square'} square-${index}`;
+                square.className = `board-square ${property.color} ${index % 10 === 0 ? 'corner-square' : 'side-square'} square-${index}`;
                 square.id = `square-${index}`;
-                
-                // محتوى محسن للمربعات
                 square.innerHTML = `
-                    <div class="property-content">
-                        <div class="property-name" style="font-weight: 800; font-size: ${isCorner ? '0.9rem' : '0.75rem'}; margin-bottom: 4px;">
-                            ${property.name}
-                        </div>
-                        ${property.price > 0 ? `
-                            <div class="property-price" style="background: rgba(0,0,0,0.2); color: white; padding: 2px 6px; border-radius: 8px; font-size: 0.7rem; font-weight: 700;">
-                                ${property.price} ر.ع
-                            </div>
-                        ` : ''}
-                    </div>
+                    <div class="property-name">${property.name}</div>
+                    ${property.price > 0 ? `<div class="property-price">${property.price} ر.ع</div>` : ''}
                 `;
                 
-                // تأثيرات تفاعلية متقدمة
-                square.addEventListener('mouseenter', () => {
-                    square.style.transform += ' rotateY(5deg)';
-                    square.style.boxShadow = '0 20px 40px rgba(0,0,0,0.3), 0 0 30px rgba(220, 20, 60, 0.4)';
-                });
-                
-                square.addEventListener('mouseleave', () => {
-                    square.style.transform = square.style.transform.replace(' rotateY(5deg)', '');
-                    square.style.boxShadow = '';
-                });
-                
-                square.addEventListener('click', () => {
-                    // تأثير النقر
-                    square.style.transform += ' scale(0.95)';
-                    setTimeout(() => {
-                        square.style.transform = square.style.transform.replace(' scale(0.95)', '');
-                        showPropertyInfo(property);
-                    }, 150);
-                });
-                
+                square.addEventListener('click', () => showPropertyInfo(property));
                 board.appendChild(square);
-                console.log(`✅ تم إنشاء مربع ${index}: ${property.name}`);
-                
-                // تأثير ظهور متدرج
-                setTimeout(() => {
-                    square.style.opacity = '0';
-                    square.style.transform += ' translateY(20px)';
-                    requestAnimationFrame(() => {
-                        square.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-                        square.style.opacity = '1';
-                        square.style.transform = square.style.transform.replace(' translateY(20px)', '');
-                    });
-                }, index * 50); // تأخير تدريجي لكل مربع
             });
-            
-            console.log('🎯 تم الانتهاء من إنشاء لوحة اللعبة العصرية!');
-            
-            // تأثير نهاية الإنشاء
-            setTimeout(() => {
-                board.style.transform = 'scale(1.02)';
-                setTimeout(() => {
-                    board.style.transform = 'scale(1)';
-                }, 300);
-            }, omanProperties.length * 50 + 500);
         }
 
         // ===========================================
@@ -4293,7 +3686,7 @@
                 
                 const isCurrentPlayer = index === gameState.currentPlayer;
                 const playerCard = document.createElement('div');
-                playerCard.className = `player-card ${isCurrentPlayer ? 'current-player' : ''} ${player.isBankrupt ? 'bankrupt-player' : ''}`;
+                playerCard.className = `player-card ${isCurrentPlayer ? 'current-player' : ''}`;
                 playerCard.setAttribute('data-player', index);
                 
                 const currentPosition = player.position >= 0 && player.position < omanProperties.length ? 
@@ -4319,12 +3712,8 @@
                     
                     <h3 style="color: ${isCurrentPlayer ? '#fff' : '#2c3e50'};">
                         ${player.name || `اللاعب ${index + 1}`} 
-                        ${player.isBankrupt ? '💔' : ''}
-                        ${player.inJail ? '🏛️' : ''}
                         ${isCurrentPlayer ? '👑' : ''}
                         ${isCurrentPlayer ? '<span style="color: #ffeb3b;">◀ دورك</span>' : ''}
-                        ${player.inJail ? '<span style="color: #e74c3c; font-size: 0.8em;">في السجن</span>' : ''}
-                        ${player.isBankrupt ? '<span style="color: #e74c3c; font-size: 0.8em; font-weight: bold;">مُفلِس</span>' : ''}
                     </h3>
                     
                     ${playerStatus}
@@ -4360,17 +3749,6 @@
                         <div class="player-position-indicator" style="color: ${isCurrentPlayer ? '#ecf0f1' : '#34495e'}; font-weight: bold;">
                             ${omanProperties[currentPosition]?.name || 'البداية'}
                         </div>
-                        
-                        ${player.inJail ? `
-                            <div style="background: rgba(231, 76, 60, 0.2); padding: 10px; border-radius: 10px; margin-top: 10px; border: 2px solid #e74c3c;">
-                                <div style="color: #e74c3c; font-weight: bold; font-size: 0.9em;">
-                                    🏛️ في السجن - المحاولة ${player.jailTurns || 0}/3
-                                </div>
-                                <div style="font-size: 0.8em; color: ${isCurrentPlayer ? '#ecf0f1' : '#7f8c8d'}; margin-top: 5px;">
-                                    يمكن الخروج بزوجي أو دفع 50 ر.ع
-                                </div>
-                            </div>
-                        ` : ''}
                     </div>
                     
                     ${isCurrentPlayer && gameState.gameStarted ? `
@@ -4390,162 +3768,6 @@
         }
 
         // ===========================================
-        // اختبار نظام السحب
-        // ===========================================
-        
-        function testBankruptcyDemo() {
-            console.log('💔 بدء العرض التجريبي لنظام الإفلاس');
-            
-            // إنشاء لاعبين تجريبيين
-            if (!gameState.players || gameState.players.length < 2) {
-                gameState.players = [
-                    {
-                        name: "لاعب تجريبي 1",
-                        money: 50, // مال قليل
-                        position: 5,
-                        properties: [1, 3], // بعض العقارات
-                        inJail: false,
-                        jailTurns: 0,
-                        isBankrupt: false
-                    },
-                    {
-                        name: "لاعب تجريبي 2",
-                        money: 1500,
-                        position: 10,
-                        properties: [],
-                        inJail: false,
-                        jailTurns: 0,
-                        isBankrupt: false
-                    }
-                ];
-                gameState.currentPlayer = 0;
-                gameState.gameStarted = true;
-                gameState.propertyOwners = {
-                    1: gameState.players[0],
-                    3: gameState.players[0]
-                };
-            }
-            
-            // محاكاة موقف إفلاس
-            MessageSystem.show('💸 محاكاة موقف إفلاس...', 'info', 2000);
-            setTimeout(() => {
-                // تقليل مال اللاعب لحد الإفلاس
-                const player = gameState.players[0];
-                player.money = -200; // إفلاس
-                
-                updatePlayersDisplay();
-                
-                setTimeout(() => {
-                    handleBankruptcy(0, 300);
-                }, 1000);
-            }, 1000);
-            
-            console.log('💔 اختبار الإفلاس مُفعّل!');
-        }
-
-        function testJailDemo() {
-            console.log('🏛️ بدء العرض التجريبي لنظام السجن');
-            
-            // إنشاء لاعب تجريبي إذا لم يكن موجود
-            if (!gameState.players || gameState.players.length === 0) {
-                gameState.players = [{
-                    name: "لاعب تجريبي",
-                    money: 1500,
-                    position: 5,
-                    properties: [],
-                    inJail: false,
-                    jailTurns: 0
-                }];
-                gameState.currentPlayer = 0;
-                gameState.gameStarted = true;
-            }
-            
-            // إرسال اللاعب للسجن
-            MessageSystem.show('🏛️ إرسال اللاعب التجريبي للسجن...', 'info', 2000);
-            setTimeout(() => {
-                handleGoToJail(0);
-                updatePlayersDisplay();
-                
-                // اختبار آخر بعد 3 ثوان
-                setTimeout(() => {
-                    MessageSystem.show('🎲 محاولة الهروب من السجن...', 'info', 2000);
-                    gameState.players[0].jailTurns = 1; // محاكاة محاولة واحدة
-                    setTimeout(() => {
-                        handleJailTurn(gameState.players[0]);
-                    }, 1000);
-                }, 3000);
-            }, 1000);
-            
-            console.log('🏛️ اختبار السجن مكتمل!');
-        }
-
-        function testCardDemo() {
-            console.log('🧪 بدء العرض التجريبي لنظام البطاقات');
-            
-            // إنشاء لاعب تجريبي إذا لم يكن موجود
-            if (!gameState.players || gameState.players.length === 0) {
-                gameState.players = [{
-                    name: "لاعب تجريبي",
-                    money: 1500,
-                    position: 0,
-                    properties: []
-                }];
-                gameState.currentPlayer = 0;
-            }
-            
-            // اختبار بطاقة صدفة
-            MessageSystem.show('🎲 اختبار بطاقة الصدفة...', 'info', 2000);
-            setTimeout(() => {
-                handleChanceCard(0);
-            }, 1000);
-            
-            // اختبار بطاقة خزانة بعد 3 ثوان
-            setTimeout(() => {
-                MessageSystem.show('🏛️ اختبار بطاقة الخزانة...', 'info', 2000);
-                setTimeout(() => {
-                    handleCommunityCard(0);
-                }, 1000);
-            }, 3000);
-            
-            // طباعة تقرير النظام
-            const testResult = testCardSystem();
-            console.log('📊 تقرير نظام البطاقات:', testResult);
-            
-            return testResult;
-        }
-
-        function testCardSystem() {
-            console.log('🧪 اختبار نظام السحب...');
-            
-            // اختبار بطاقة الصدفة
-            console.log('📊 اختبار بطاقات الصدفة:', chanceCards.length, 'بطاقة');
-            chanceCards.forEach((card, index) => {
-                console.log(`${index + 1}. ${card.text}`);
-            });
-            
-            // اختبار بطاقة الخزانة
-            console.log('📊 اختبار بطاقات الخزانة:', communityCards.length, 'بطاقة');
-            communityCards.forEach((card, index) => {
-                console.log(`${index + 1}. ${card.text}`);
-            });
-            
-            // اختبار سحب عشوائي
-            const randomChance = chanceCards[Math.floor(Math.random() * chanceCards.length)];
-            const randomCommunity = communityCards[Math.floor(Math.random() * communityCards.length)];
-            
-            console.log('🎲 بطاقة صدفة عشوائية:', randomChance.text);
-            console.log('🏛️ بطاقة خزانة عشوائية:', randomCommunity.text);
-            
-            return {
-                chanceCardsCount: chanceCards.length,
-                communityCardsCount: communityCards.length,
-                randomChance,
-                randomCommunity,
-                systemWorking: true
-            };
-        }
-
-        // ===========================================
         // ميكانيكية اللعبة الاحترافية
         // ===========================================
         function rollDice() {
@@ -4555,12 +3777,6 @@
             }
 
             const player = gameState.players[gameState.currentPlayer];
-            
-            // فحص حالة السجن أولاً
-            if (player.inJail) {
-                handleJailTurn(player);
-                return;
-            }
             
             // تعطيل زر النرد أثناء الرمي
             document.getElementById('rollDice').disabled = true;
@@ -5006,14 +4222,7 @@
                 setTimeout(() => payerElement.style.animation = '', 500);
             }
 
-            // فحص الإفلاس بعد دفع الإيجار باستخدام النظام المحسن
-            const payerIndex = gameState.players.indexOf(payer);
-            const isBankrupt = checkBankruptcyAfterPayment(payerIndex);
-            
-            if (!isBankrupt) {
-                updatePlayersDisplay();
-            }
-            // إذا كان مفلس، الدالة ستتولى العرض والانتقال
+            updatePlayersDisplay();
         }
 
         function calculateRent(property, owner) {
@@ -5038,13 +4247,7 @@
             player.money -= amount;
             MessageSystem.show(`دفعت ${amount} ر.ع ضريبة`, 'error');
             soundSystem.play('lose');
-            
-            // فحص الإفلاس بعد دفع الضريبة
-            const isBankrupt = checkBankruptcyAfterPayment(playerIndex);
-            
-            if (!isBankrupt) {
-                updatePlayersDisplay();
-            }
+            updatePlayersDisplay();
         }
 
         // بطاقات الصدفة والخزانة العامة
@@ -5185,7 +4388,6 @@
 
         function handleMoneyChange(playerIndex, amount) {
             const player = gameState.players[playerIndex];
-            const oldMoney = player.money;
             player.money += amount;
 
             if (amount > 0) {
@@ -5200,287 +4402,7 @@
             } else {
                 MessageSystem.show(`💸 ${player.name} دفع ${Math.abs(amount)} ر.ع!`, 'error');
                 soundSystem.play('lose');
-                
-                // فحص الإفلاس
-                if (player.money < 0) {
-                    handleBankruptcy(playerIndex, Math.abs(amount));
-                }
             }
-        }
-
-        // نظام الإفلاس المتطور
-        function handleBankruptcy(playerIndex, debtAmount) {
-            const player = gameState.players[playerIndex];
-            const debt = Math.abs(player.money); // المبلغ السالب
-            
-            console.log(`💸 ${player.name} مفلس! الدين: ${debt} ر.ع`);
-            
-            // حساب القيمة الإجمالية لممتلكات اللاعب
-            const totalAssets = calculatePlayerAssets(player);
-            
-            if (totalAssets >= debt) {
-                // يمكن إنقاذه ببيع الممتلكات
-                showBankruptcyOptions(playerIndex, debt, totalAssets);
-            } else {
-                // إفلاس نهائي فوري
-                console.log(`💔 ${player.name} - إفلاس نهائي! الممتلكات غير كافية`);
-                declareBankruptcy(playerIndex);
-            }
-        }
-
-        // فحص الإفلاس الذكي - يتم استدعاؤه بعد أي عملية دفع
-        function checkBankruptcyAfterPayment(playerIndex) {
-            const player = gameState.players[playerIndex];
-            
-            if (player.money < 0 && !player.isBankrupt) {
-                console.log(`🚨 اكتشاف مال سالب لـ ${player.name}: ${player.money} ر.ع`);
-                setTimeout(() => {
-                    handleBankruptcy(playerIndex, Math.abs(player.money));
-                }, 500); // تأخير صغير للسماح بانتهاء العمليات الأخرى
-                return true; // يشير إلى وجود إفلاس
-            }
-            return false; // لا يوجد إفلاس
-        }
-
-        function calculatePlayerAssets(player) {
-            let totalValue = 0;
-            
-            // قيمة العقارات (نصف السعر الأصلي)
-            if (player.properties) {
-                player.properties.forEach(propId => {
-                    const property = omanProperties.find(p => p.id === propId);
-                    if (property) {
-                        totalValue += Math.floor(property.price * 0.5); // بيع بنصف السعر
-                    }
-                });
-            }
-            
-            return totalValue;
-        }
-
-        function showBankruptcyOptions(playerIndex, debt, totalAssets) {
-            const player = gameState.players[playerIndex];
-            
-            const modal = document.createElement('div');
-            modal.className = 'bankruptcy-modal';
-            modal.innerHTML = `
-                <div class="bankruptcy-content">
-                    <div class="bankruptcy-header">
-                        <h2 style="color: #e74c3c;">💸 إنذار إفلاس!</h2>
-                        <div class="bankruptcy-warning">
-                            ⚠️ ${player.name} لا يملك مالاً كافياً!
-                        </div>
-                    </div>
-                    
-                    <div class="bankruptcy-details">
-                        <div class="debt-info">
-                            <div class="debt-label">💰 المبلغ المطلوب:</div>
-                            <div class="debt-amount">${formatMoney(debt)}</div>
-                        </div>
-                        
-                        <div class="assets-info">
-                            <div class="assets-label">🏠 قيمة الممتلكات:</div>
-                            <div class="assets-amount">${formatMoney(totalAssets)}</div>
-                        </div>
-                        
-                        <div class="current-money">
-                            <div class="money-label">💸 الرصيد الحالي:</div>
-                            <div class="money-amount negative">${formatMoney(player.money)}</div>
-                        </div>
-                    </div>
-                    
-                    <div class="bankruptcy-options">
-                        <button onclick="sellProperties(${playerIndex}, ${debt})" class="bankruptcy-btn sell-btn">
-                            🏠 بيع الممتلكات
-                            <small>بيع العقارات لسداد الدين</small>
-                        </button>
-                        
-                        <button onclick="declareBankruptcy(${playerIndex})" class="bankruptcy-btn bankrupt-btn">
-                            💔 إعلان الإفلاس
-                            <small>الخروج من اللعبة</small>
-                        </button>
-                        
-                        <div class="bankruptcy-help">
-                            💡 يمكنك بيع عقاراتك بنصف السعر الأصلي لسداد الدين
-                            <br>⏰ سيتم إعلان الإفلاس تلقائياً خلال 30 ثانية
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            modal.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.9);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                z-index: 10000;
-                animation: bankruptcySlideIn 0.5s ease-out;
-            `;
-
-            document.body.appendChild(modal);
-            soundSystem.play('lose');
-
-            // إفلاس تلقائي بعد 30 ثانية لمنع التعليق
-            setTimeout(() => {
-                const stillOpen = document.querySelector('.bankruptcy-modal');
-                if (stillOpen) {
-                    console.log('⏰ إفلاس تلقائي بعد انتهاء الوقت');
-                    declareBankruptcy(playerIndex);
-                }
-            }, 30000);
-        }
-
-        function sellProperties(playerIndex, debt) {
-            const player = gameState.players[playerIndex];
-            let totalSold = 0;
-            const soldProperties = [];
-
-            // بيع العقارات واحداً تلو الآخر حتى سداد الدين
-            if (player.properties) {
-                for (let i = player.properties.length - 1; i >= 0 && (player.money + totalSold) < 0; i--) {
-                    const propId = player.properties[i];
-                    const property = omanProperties.find(p => p.id === propId);
-                    
-                    if (property) {
-                        const sellPrice = Math.floor(property.price * 0.5);
-                        totalSold += sellPrice;
-                        soldProperties.push(property.name);
-                        
-                        // إزالة العقار من ملكية اللاعب
-                        player.properties.splice(i, 1);
-                        
-                        // إزالة ملكية العقار من نظام اللعبة
-                        delete gameState.propertyOwners[propId];
-                    }
-                }
-            }
-
-            // إضافة المال المحصل من البيع
-            player.money += totalSold;
-
-            // إغلاق نافذة الإفلاس
-            const modal = document.querySelector('.bankruptcy-modal');
-            if (modal) modal.remove();
-
-            // عرض نتيجة البيع
-            if (player.money >= 0) {
-                MessageSystem.show(`🏠 ${player.name} باع عقاراته مقابل ${formatMoney(totalSold)} وتجنب الإفلاس!`, 'success');
-                soundSystem.play('victory');
-                confetti({
-                    particleCount: 100,
-                    spread: 70,
-                    origin: { y: 0.8 },
-                    colors: ['#27AE60', '#F39C12']
-                });
-            } else {
-                MessageSystem.show(`💸 البيع لم يكفِ! ${player.name} ما زال مديناً بـ ${formatMoney(Math.abs(player.money))}`, 'error');
-                // لا يزال مفلساً
-                setTimeout(() => {
-                    declareBankruptcy(playerIndex);
-                }, 2000);
-            }
-
-            updatePlayersDisplay();
-            LeaderboardSystem.updateLeaderboard();
-        }
-
-        function declareBankruptcy(playerIndex) {
-            const player = gameState.players[playerIndex];
-            
-            // إغلاق أي نوافذ مفتوحة
-            const modal = document.querySelector('.bankruptcy-modal');
-            if (modal) modal.remove();
-
-            // إعلان الإفلاس
-            MessageSystem.show(`💔 ${player.name} أعلن إفلاسه وخرج من اللعبة!`, 'error', 8000, true);
-            soundSystem.play('lose');
-
-            // تحرير جميع ممتلكات اللاعب
-            if (player.properties) {
-                player.properties.forEach(propId => {
-                    delete gameState.propertyOwners[propId];
-                });
-            }
-
-            // وضع علامة الإفلاس
-            player.isBankrupt = true;
-            player.money = 0;
-            player.properties = [];
-
-            // تأثيرات بصرية للإفلاس
-            createBankruptcyEffect(player.name);
-
-            // فحص إذا بقي لاعب واحد فقط
-            const activePlayers = gameState.players.filter(p => !p.isBankrupt);
-            if (activePlayers.length === 1) {
-                // فوز بالإفلاس
-                setTimeout(() => {
-                    handleGameWin(activePlayers[0]);
-                }, 3000);
-                return;
-            } else if (activePlayers.length === 0) {
-                // جميع اللاعبين مفلسون (نادر جداً)
-                MessageSystem.show('🏦 جميع اللاعبين أفلسوا! البنك يفوز! 😅', 'info', 8000);
-                return;
-            }
-
-            updatePlayersDisplay();
-            LeaderboardSystem.updateLeaderboard();
-
-            // إذا كان اللاعب المفلس هو اللاعب الحالي، الانتقال للدور التالي
-            if (playerIndex === gameState.currentPlayer) {
-                console.log('🔄 انتقال تلقائي للدور التالي بعد الإفلاس');
-                setTimeout(() => {
-                    nextTurn();
-                    // تفعيل زر رمي النرد للاعب الجديد
-                    document.getElementById('rollDice').disabled = false;
-                    document.getElementById('endTurn').disabled = true;
-                }, 2000);
-            }
-        }
-
-            // الانتقال للاعب التالي إذا كان اللاعب المفلس هو اللاعب الحالي
-            if (playerIndex === gameState.currentPlayer) {
-                setTimeout(() => {
-                    nextTurn();
-                }, 2000);
-            }
-        }
-
-        function createBankruptcyEffect(playerName) {
-            // تأثير بصري للإفلاس
-            const effect = document.createElement('div');
-            effect.innerHTML = `
-                <div style="
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    background: linear-gradient(45deg, #e74c3c, #c0392b);
-                    color: white;
-                    padding: 30px;
-                    border-radius: 20px;
-                    text-align: center;
-                    z-index: 10001;
-                    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-                    animation: bankruptcyExplosion 3s ease-out forwards;
-                ">
-                    <div style="font-size: 3em;">💔</div>
-                    <div style="font-size: 1.5em; margin: 10px 0;">${playerName}</div>
-                    <div style="font-size: 2em; font-weight: bold;">مُفلِس!</div>
-                </div>
-            `;
-            
-            document.body.appendChild(effect);
-            
-            setTimeout(() => {
-                effect.remove();
-            }, 3000);
         }
 
         function moveToNearestAirport(playerIndex) {
@@ -5600,158 +4522,6 @@
             updatePlayersDisplay();
         }
 
-        // نظام السجن المتطور
-        function handleJailTurn(player) {
-            player.jailTurns++;
-            
-            // تعطيل زر النرد أثناء المعالجة
-            document.getElementById('rollDice').disabled = true;
-            
-            MessageSystem.show(`🏛️ ${player.name} في السجن - المحاولة ${player.jailTurns}/3`, 'warning', 3000);
-            
-            // عرض خيارات الخروج من السجن
-            showJailOptions(player);
-        }
-
-        function showJailOptions(player) {
-            const modal = document.createElement('div');
-            modal.className = 'jail-modal';
-            modal.innerHTML = `
-                <div class="jail-content">
-                    <h2 style="color: #e74c3c;">🏛️ ${player.name} في السجن</h2>
-                    <p>المحاولة ${player.jailTurns} من 3</p>
-                    
-                    <div class="jail-options">
-                        <button onclick="tryJailEscape('dice')" class="jail-btn jail-btn-try">
-                            🎲 رمي النرد للخروج
-                            <small>تحتاج زوجي للخروج</small>
-                        </button>
-                        
-                        <button onclick="tryJailEscape('pay')" class="jail-btn jail-btn-pay">
-                            💰 دفع كفالة 50 ر.ع
-                            <small>الخروج فوراً</small>
-                        </button>
-                        
-                        ${player.jailTurns >= 3 ? `
-                            <div style="background: #e74c3c; color: white; padding: 10px; border-radius: 10px; margin-top: 10px;">
-                                ⚠️ محاولتك الأخيرة! سيتم إجبارك على الدفع إذا فشلت.
-                            </div>
-                        ` : ''}
-                    </div>
-                </div>
-            `;
-
-            modal.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.8);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                z-index: 10000;
-                animation: fadeIn 0.3s ease-out;
-            `;
-
-            document.body.appendChild(modal);
-            soundSystem.play('notification');
-        }
-
-        function tryJailEscape(method) {
-            const player = gameState.players[gameState.currentPlayer];
-            const modal = document.querySelector('.jail-modal');
-            
-            if (method === 'pay') {
-                // دفع الكفالة
-                if (player.money >= 50) {
-                    player.money -= 50;
-                    releaseFromJail(player, 'paid');
-                } else {
-                    MessageSystem.show('💸 ليس لديك مال كافٍ للكفالة!', 'error');
-                    return;
-                }
-            } else if (method === 'dice') {
-                // رمي النرد للخروج
-                const dice1 = Math.floor(Math.random() * 6) + 1;
-                const dice2 = Math.floor(Math.random() * 6) + 1;
-                const isDouble = dice1 === dice2;
-                
-                updateDiceDisplay(dice1, dice2);
-                
-                if (isDouble) {
-                    // نجح في الخروج
-                    releaseFromJail(player, 'escaped');
-                    // يتحرك بالنرد المرمي
-                    setTimeout(() => {
-                        movePlayer(gameState.currentPlayer, dice1 + dice2);
-                    }, 1000);
-                } else {
-                    // فشل في الخروج
-                    if (player.jailTurns >= 3) {
-                        // إجباري على الدفع
-                        MessageSystem.show('💸 المحاولة الأخيرة فشلت! دفع إجباري للكفالة.', 'error');
-                        if (player.money >= 50) {
-                            player.money -= 50;
-                            releaseFromJail(player, 'forced');
-                            // يتحرك بالنرد المرمي
-                            setTimeout(() => {
-                                movePlayer(gameState.currentPlayer, dice1 + dice2);
-                            }, 1000);
-                        } else {
-                            MessageSystem.show('💸 لا يمكنك دفع الكفالة! ستبقى في السجن.', 'error');
-                            setTimeout(() => {
-                                nextTurn();
-                            }, 2000);
-                        }
-                    } else {
-                        MessageSystem.show(`🚫 فشل الهروب! النرد: ${dice1} + ${dice2}`, 'error');
-                        setTimeout(() => {
-                            nextTurn();
-                        }, 2000);
-                    }
-                }
-            }
-            
-            if (modal) {
-                modal.style.animation = 'fadeOut 0.3s ease-in';
-                setTimeout(() => modal.remove(), 300);
-            }
-        }
-
-        function releaseFromJail(player, method) {
-            player.inJail = false;
-            player.jailTurns = 0;
-            
-            let message = '';
-            switch (method) {
-                case 'paid':
-                    message = `💰 ${player.name} دفع 50 ر.ع وخرج من السجن!`;
-                    soundSystem.play('coin');
-                    break;
-                case 'escaped':
-                    message = `🎉 ${player.name} هرب من السجن بزوجي!`;
-                    soundSystem.play('victory');
-                    confetti({
-                        particleCount: 50,
-                        spread: 60,
-                        origin: { y: 0.8 }
-                    });
-                    break;
-                case 'forced':
-                    message = `💸 ${player.name} أُجبر على دفع الكفالة!`;
-                    soundSystem.play('lose');
-                    break;
-            }
-            
-            MessageSystem.show(message, method === 'escaped' ? 'success' : 'info');
-            updatePlayersDisplay();
-            
-            // إعادة تفعيل زر النرد
-            document.getElementById('rollDice').disabled = false;
-        }
-
         // نظام حساب الإيجار المحترف
         function calculateRent(property, owner) {
             let baseRent = property.rent;
@@ -5809,25 +4579,15 @@
                 return;
             }
 
-            // البحث عن اللاعب التالي غير المفلس
-            let attempts = 0;
-            do {
-                gameState.currentPlayer = (gameState.currentPlayer + 1) % gameState.players.length;
-                attempts++;
-                
-                // إذا عاد للاعب الأول، زيادة المرحلة
-                if (gameState.currentPlayer === 0) {
-                    gameState.currentRound++;
-                    MessageSystem.show(`🔄 بداية المرحلة ${gameState.currentRound}`, 'info', 3000);
-                    soundSystem.play('notification');
-                }
-                
-                // منع اللولب اللانهائي
-                if (attempts >= gameState.players.length) {
-                    console.error('جميع اللاعبين مفلسون!');
-                    break;
-                }
-            } while (gameState.players[gameState.currentPlayer].isBankrupt);
+            // الانتقال للاعب التالي
+            gameState.currentPlayer = (gameState.currentPlayer + 1) % gameState.players.length;
+            
+            // إذا عاد للاعب الأول، زيادة المرحلة
+            if (gameState.currentPlayer === 0) {
+                gameState.currentRound++;
+                MessageSystem.show(`🔄 بداية المرحلة ${gameState.currentRound}`, 'info', 3000);
+                soundSystem.play('notification');
+            }
             
             // تمييز اللاعب الحالي
             LeaderboardSystem.highlightCurrentPlayer();
@@ -5859,21 +4619,15 @@
 
         function checkWinCondition() {
             // فحص إذا كان هناك لاعب واحد فقط لم يفلس
-            const activePlayers = gameState.players.filter(player => !player.isBankrupt);
+            const activePlayers = gameState.players.filter(player => player.money >= 0);
             if (activePlayers.length === 1) {
                 return activePlayers[0];
             }
             
-            // فحص إذا لم يبق أي لاعب نشط (حالة نادرة)
-            if (activePlayers.length === 0) {
-                // البنك يفوز!
-                return { name: "البنك المركزي العُماني", isBank: true };
-            }
-            
             // فحص إذا وصلت اللعبة لحد زمني معين (مثلاً 20 مرحلة)
             if (gameState.currentRound >= 20) {
-                // إرجاع اللاعب الأغنى من اللاعبين النشطين
-                return activePlayers.reduce((richest, player) => {
+                // إرجاع اللاعب الأغنى
+                return gameState.players.reduce((richest, player) => {
                     const playerNetWorth = LeaderboardSystem.calculateNetWorth(player);
                     const richestNetWorth = LeaderboardSystem.calculateNetWorth(richest);
                     return playerNetWorth > richestNetWorth ? player : richest;
@@ -6100,7 +4854,7 @@
                         <div style="margin-top: 20px; padding: 15px; background: rgba(231, 76, 60, 0.4); border-radius: 15px; border: 3px dashed rgba(255,255,255,0.6); position: relative; z-index: 1;">
                             <div style="font-size: 1.3em; font-weight: bold;">⏳ في انتظار البدء</div>
                             <div style="font-size: 1.1em; margin-top: 5px;">اضغط "بدء اللعبة" للبدء!</div>
-                        </div>ش
+                        </div>
                     `}
                 </div>
             `;
@@ -6137,14 +4891,6 @@
             if (!gameState.gameStarted) {
                 MessageSystem.show('يجب بدء اللعبة أولاً!', 'error');
                 return;
-            }
-
-            // فحص إفلاس اللاعب الحالي قبل إنهاء الدور
-            const currentPlayer = gameState.players[gameState.currentPlayer];
-            if (currentPlayer.money < 0 && !currentPlayer.isBankrupt) {
-                console.log(`💸 اكتشاف إفلاس ${currentPlayer.name} في نهاية الدور`);
-                handleBankruptcy(gameState.currentPlayer, Math.abs(currentPlayer.money));
-                return; // إيقاف الدور حتى يتم التعامل مع الإفلاس
             }
 
             // تعطيل أزرار الدور الحالي
@@ -6211,7 +4957,7 @@
             // أزرار التحكم العلوية
             document.getElementById('returnToIndex').addEventListener('click', () => {
                 if (confirm('هل تريد العودة للصفحة الرئيسية؟')) {
-                    window.location.href = '../main.html';
+                    window.location.href = '../index.html';
                 }
             });
 
@@ -6265,24 +5011,16 @@
 
             try {
                 // تحميل بيانات الطلاب
-                console.log('🔄 بدء تحميل بيانات الطلاب...');
                 await loadStudentData();
-                console.log('✅ تم تحميل بيانات الطلاب');
                 
                 // ملء قائمة الصفوف
-                console.log('📚 ملء قائمة الصفوف...');
                 populateClassSelect();
-                console.log('✅ تم ملء قائمة الصفوف');
                 
                 // إنشاء لوحة اللعبة
-                console.log('🏗️ إنشاء لوحة اللعبة...');
                 createGameBoard();
-                console.log('✅ تم إنشاء لوحة اللعبة');
                 
                 // إعداد معالجات الأحداث
-                console.log('⚙️ إعداد معالجات الأحداث...');
                 setupEventListeners();
-                console.log('✅ تم إعداد معالجات الأحداث');
                 
                 // إضافة أنماط الرسوم المتحركة والبطاقات التفاعلية
                 const animationStyles = `
