@@ -3472,19 +3472,42 @@
                 console.log('🔄 بدء تحميل بيانات الطلاب...');
                 MessageSystem.show('جاري تحميل بيانات الطلاب...', 'info', 10000);
                 
-                // استخدام المسار الصحيح للأنشطة في مجلد activities
-                console.log('📡 تحميل البيانات من: ../data/studentData.json');
-                const response = await fetch('../data/studentData.json');
+                // تجربة مسارات متعددة مثل باقي الأنشطة
+                const paths = [
+                    '../data/studentData.json',
+                    './data/studentData.json', 
+                    'data/studentData.json',
+                    '../../data/studentData.json'
+                ];
                 
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: فشل في تحميل ملف البيانات`);
+                let data = null;
+                let workingPath = null;
+                
+                for (const path of paths) {
+                    try {
+                        console.log(`🔍 محاولة تحميل: ${path}`);
+                        const response = await fetch(path);
+                        
+                        if (response.ok) {
+                            data = await response.json();
+                            workingPath = path;
+                            console.log(`✅ نجح التحميل من: ${path}`);
+                            break;
+                        } else {
+                            console.log(`❌ فشل ${path}: HTTP ${response.status}`);
+                        }
+                    } catch (pathError) {
+                        console.log(`❌ خطأ في ${path}: ${pathError.message}`);
+                    }
                 }
                 
-                const data = await response.json();
-                console.log('📊 البيانات المحملة:', data);
-                if (!data || Object.keys(data).length === 0) {
-                    throw new Error('ملف البيانات فارغ أو تالف');
+                if (!data) {
+                    throw new Error('فشل في تحميل الملف من جميع المسارات المحتملة');
                 }
+                
+                console.log('📊 البيانات المحملة من:', workingPath);
+                console.log('📊 محتوى البيانات:', data);
+                
                 if (!data || Object.keys(data).length === 0) {
                     throw new Error('ملف البيانات فارغ أو تالف');
                 }
@@ -3525,11 +3548,30 @@
                 
             } catch (error) {
                 console.error('❌ خطأ في تحميل بيانات الطلاب:', error.message);
-                console.error('🔍 معلومات تشخيصية:');
+                console.error('🔍 معلومات تشخيصية مفصلة:');
                 console.error('   - المسار الحالي:', window.location.href);
                 console.error('   - البروتوكول:', window.location.protocol);
                 console.error('   - اسم الملف:', window.location.pathname);
-                MessageSystem.show(`❌ فشل في تحميل ملف studentData.json: ${error.message}`, 'error', 15000);
+                console.error('   - المضيف:', window.location.host);
+                console.error('   - نوع الخطأ:', error.constructor.name);
+                
+                // رسالة مفصلة للمستخدم
+                const errorDetails = `
+                ❌ فشل في تحميل ملف studentData.json
+                
+                السبب المحتمل:
+                • إذا كنت تفتح الملف مباشرة (file://) فهذا قد يسبب مشاكل CORS
+                • تأكد من وجود ملف ../data/studentData.json
+                
+                الحلول المقترحة:
+                1. استخدم خادم HTTP محلي (python -m http.server)
+                2. أو افتح من خلال VS Code Live Server
+                3. أو تأكد من المسار الصحيح
+                
+                تفاصيل الخطأ: ${error.message}
+                `;
+                
+                MessageSystem.show(errorDetails, 'error', 20000);
                 soundSystem.play('wrong');
                 
                 // لا توجد بيانات احتياطية - فشل كامل
