@@ -3472,12 +3472,42 @@
                 console.log('🔄 بدء تحميل بيانات الطلاب...');
                 MessageSystem.show('جاري تحميل بيانات الطلاب...', 'info', 10000);
                 
-                const response = await fetch('../data/studentData.json');
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: فشل في تحميل ملف البيانات`);
+                // تجربة مسارات متعددة للملف
+                const possiblePaths = [
+                    '../data/studentData.json',
+                    './data/studentData.json',
+                    'data/studentData.json',
+                    '/data/studentData.json'
+                ];
+                
+                let response;
+                let workingPath;
+                
+                for (const path of possiblePaths) {
+                    try {
+                        console.log(`🔍 تجربة المسار: ${path}`);
+                        response = await fetch(path);
+                        if (response.ok) {
+                            workingPath = path;
+                            console.log(`✅ نجح تحميل الملف من: ${path}`);
+                            break;
+                        }
+                    } catch (pathError) {
+                        console.log(`❌ فشل المسار: ${path} - ${pathError.message}`);
+                    }
+                }
+                
+                if (!response || !response.ok) {
+                    throw new Error(`فشل في العثور على ملف البيانات في جميع المسارات المحتملة`);
                 }
                 
                 const data = await response.json();
+                if (!data || Object.keys(data).length === 0) {
+                    throw new Error('ملف البيانات فارغ أو تالف');
+                }
+                
+                console.log(`📂 تم تحميل البيانات من: ${workingPath}`);
+                console.log('📊 البيانات المحملة:', data);
                 if (!data || Object.keys(data).length === 0) {
                     throw new Error('ملف البيانات فارغ أو تالف');
                 }
@@ -3490,6 +3520,9 @@
                             name: studentName,
                             id: `${className.replace(/ /g, '_')}_${index + 1}`
                         }));
+                        console.log(`📝 صف "${className}": ${students.length} طالب`);
+                    } else {
+                        console.warn(`⚠️ صف "${className}" لا يحتوي على بيانات صالحة`);
                     }
                 }
                 
@@ -3515,7 +3548,11 @@
                 
             } catch (error) {
                 console.error('❌ خطأ في تحميل بيانات الطلاب:', error.message);
-                MessageSystem.show('❌ فشل في تحميل ملف studentData.json - تأكد من وجود الملف والاتصال بالخادم', 'error', 10000);
+                console.error('🔍 معلومات تشخيصية:');
+                console.error('   - المسار الحالي:', window.location.href);
+                console.error('   - البروتوكول:', window.location.protocol);
+                console.error('   - اسم الملف:', window.location.pathname);
+                MessageSystem.show(`❌ فشل في تحميل ملف studentData.json: ${error.message}`, 'error', 15000);
                 soundSystem.play('wrong');
                 
                 // لا توجد بيانات احتياطية - فشل كامل
