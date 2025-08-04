@@ -1865,7 +1865,7 @@
                 }
                 
                 playerData = formattedData;
-                console.log('🎉 تم تحميل بيانات الطلاب الحقيقية بنجاح!');
+                console.log('🎉 تم تحميل بيانات الطلاب بنجاح!');
                 console.log(`📊 إجمالي الصفوف: ${Object.keys(data).length}`);
                 console.log(`👥 إجمالي الطلاب: ${Object.values(data).flat().length}`);
                 
@@ -1881,11 +1881,11 @@
                     console.log(`   ${index + 1}. ${name}`);
                 });
                 
-                MessageSystem.show(`تم تحميل ${Object.values(data).flat().length} اسم طالب حقيقي من ${Object.keys(data).length} صف! 🎓`, 'success', 5000);
+                MessageSystem.show(`تم تحميل ${Object.values(data).flat().length} اسم طالب من ${Object.keys(data).length} صف! 🎓`, 'success', 5000);
                 
                 return playerData;
             } catch (error) {
-                console.error('❌ خطأ في تحميل بيانات الطلاب الحقيقية:', error.message);
+                console.error('❌ خطأ في تحميل بيانات الطلاب:', error.message);
                 MessageSystem.show('⚠️ لا يمكن تحميل بيانات الطلاب! تأكد من وجود ملف studentData.json', 'error', 8000);
                 
                 // لا توجد بيانات احتياطية - يجب استخدام البيانات الحقيقية فقط
@@ -1955,7 +1955,7 @@
             }
 
             currentStudents = playerData[classValue];
-            console.log(`📊 تم تحميل ${currentStudents.length} طالب حقيقي من الصف ${classValue}`);
+            console.log(`📊 تم تحميل ${currentStudents.length} طالب من الصف ${classValue}`);
             
             if (currentStudents.length === 0) {
                 MessageSystem.show('هذا الصف لا يحتوي على أي طلاب!', 'error');
@@ -2012,7 +2012,7 @@
             
             if (!currentStudents || currentStudents.length === 0) {
                 console.warn('⚠️ لا توجد بيانات طلاب لعرضها');
-                grid.innerHTML = '<div style="text-align: center; padding: 40px; color: white; font-size: 18px; background: rgba(255,0,0,0.1); border-radius: 10px; border: 2px dashed #ff6b6b;">❌ لا توجد أسماء طلاب حقيقية متاحة<br><small style="font-size: 14px; opacity: 0.8;">تأكد من وجود ملف studentData.json</small></div>';
+                grid.innerHTML = '<div style="text-align: center; padding: 40px; color: white; font-size: 18px; background: rgba(255,0,0,0.1); border-radius: 10px; border: 2px dashed #ff6b6b;">❌ لا توجد أسماء طلاب متاحة<br><small style="font-size: 14px; opacity: 0.8;">تأكد من وجود ملف studentData.json</small></div>';
                 return;
             }
             
@@ -2124,7 +2124,12 @@
                         origin: { y: 0.7 }
                     });
                     
-                    MessageSystem.show('🎉 تم اختيار جميع اللاعبين! يمكنك التأكيد الآن', 'success');
+                    MessageSystem.show('🎉 تم اختيار جميع اللاعبين! سيتم إعداد اللعبة تلقائياً...', 'success');
+                    
+                    // إخفاء واجهة الاختيار تلقائياً بعد ثانيتين
+                    setTimeout(() => {
+                        confirmPlayerSelection();
+                    }, 2000);
                 }
             }
             
