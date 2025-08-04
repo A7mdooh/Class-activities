@@ -193,23 +193,6 @@
             right: 80px;
         }
 
-        #fullscreenToggle {
-            right: 140px;
-            transition: all 0.3s ease;
-        }
-
-        #fullscreenToggle:hover {
-            transform: translateY(-3px) scale(1.15);
-            background: var(--gradient-blue);
-            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
-        }
-
-        #fullscreenToggle.active {
-            background: var(--gradient-blue);
-            color: white;
-            transform: scale(1.1);
-        }
-
         /* ===========================================
            الحاوية الرئيسية
         =========================================== */
@@ -2809,9 +2792,6 @@
     </button>
     <button id="soundToggle" class="control-btn" title="تشغيل/إيقاف الصوت">
         <i class="fas fa-volume-up"></i>
-    </button>
-    <button id="fullscreenToggle" class="control-btn" title="ملء الشاشة">
-        <i class="fas fa-expand"></i>
     </button>
 
     <!-- الحاوية الرئيسية -->
@@ -6211,122 +6191,6 @@
         }
 
         // ===========================================
-        // إعداد الأزرار العلوية
-        // ===========================================
-        function setupTopButtons() {
-            // زر العودة للرئيسية
-            const returnBtn = document.getElementById('returnToIndex');
-            if (returnBtn) {
-                returnBtn.addEventListener('click', () => {
-                    if (confirm('هل تريد العودة للصفحة الرئيسية؟')) {
-                        window.location.href = '../main.html';
-                    }
-                });
-                console.log('✅ تم ربط زر العودة للرئيسية');
-            } else {
-                console.error('❌ لم يتم العثور على زر العودة للرئيسية');
-            }
-
-            // زر الصوت
-            const soundBtn = document.getElementById('soundToggle');
-            if (soundBtn) {
-                soundBtn.addEventListener('click', () => {
-                    const enabled = soundSystem.toggle();
-                    const icon = document.querySelector('#soundToggle i');
-                    if (icon) {
-                        icon.className = enabled ? 'fas fa-volume-up' : 'fas fa-volume-mute';
-                    }
-                    MessageSystem.show(enabled ? 'تم تشغيل الصوت' : 'تم إيقاف الصوت');
-                });
-                console.log('✅ تم ربط زر الصوت');
-            } else {
-                console.error('❌ لم يتم العثور على زر الصوت');
-            }
-
-            // زر ملء الشاشة
-            const fullscreenBtn = document.getElementById('fullscreenToggle');
-            if (fullscreenBtn) {
-                let isFullscreen = false;
-                fullscreenBtn.addEventListener('click', () => {
-                    const icon = document.querySelector('#fullscreenToggle i');
-                    const button = document.getElementById('fullscreenToggle');
-                    
-                    if (!isFullscreen) {
-                        // طلب ملء الشاشة
-                        if (document.documentElement.requestFullscreen) {
-                            document.documentElement.requestFullscreen();
-                        } else if (document.documentElement.mozRequestFullScreen) {
-                            document.documentElement.mozRequestFullScreen();
-                        } else if (document.documentElement.webkitRequestFullscreen) {
-                            document.documentElement.webkitRequestFullscreen();
-                        } else if (document.documentElement.msRequestFullscreen) {
-                            document.documentElement.msRequestFullscreen();
-                        }
-                        
-                        if (icon) icon.className = 'fas fa-compress';
-                        if (button) {
-                            button.classList.add('active');
-                            button.title = 'الخروج من ملء الشاشة';
-                        }
-                        MessageSystem.show('تم تفعيل ملء الشاشة');
-                        isFullscreen = true;
-                    } else {
-                        // الخروج من ملء الشاشة
-                        if (document.exitFullscreen) {
-                            document.exitFullscreen();
-                        } else if (document.mozCancelFullScreen) {
-                            document.mozCancelFullScreen();
-                        } else if (document.webkitExitFullscreen) {
-                            document.webkitExitFullscreen();
-                        } else if (document.msExitFullscreen) {
-                            document.msExitFullscreen();
-                        }
-                        
-                        if (icon) icon.className = 'fas fa-expand';
-                        if (button) {
-                            button.classList.remove('active');
-                            button.title = 'ملء الشاشة';
-                        }
-                        MessageSystem.show('تم الخروج من ملء الشاشة');
-                        isFullscreen = false;
-                    }
-                });
-
-                // مراقبة تغيير حالة ملء الشاشة
-                function handleFullscreenChange() {
-                    const icon = document.querySelector('#fullscreenToggle i');
-                    const button = document.getElementById('fullscreenToggle');
-                    
-                    if (document.fullscreenElement || document.webkitFullscreenElement || 
-                        document.mozFullScreenElement || document.msFullscreenElement) {
-                        if (icon) icon.className = 'fas fa-compress';
-                        if (button) {
-                            button.classList.add('active');
-                            button.title = 'الخروج من ملء الشاشة';
-                        }
-                        isFullscreen = true;
-                    } else {
-                        if (icon) icon.className = 'fas fa-expand';
-                        if (button) {
-                            button.classList.remove('active');
-                            button.title = 'ملء الشاشة';
-                        }
-                        isFullscreen = false;
-                    }
-                }
-
-                document.addEventListener('fullscreenchange', handleFullscreenChange);
-                document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-                document.addEventListener('mozfullscreenchange', handleFullscreenChange);
-                document.addEventListener('MSFullscreenChange', handleFullscreenChange);
-
-                console.log('✅ تم ربط زر ملء الشاشة');
-            } else {
-                console.error('❌ لم يتم العثور على زر ملء الشاشة');
-            }
-        }
-
-        // ===========================================
         // معالجة الأحداث
         // ===========================================
         function setupEventListeners() {
@@ -6343,6 +6207,20 @@
             document.getElementById('confirmPlayerSelection').addEventListener('click', confirmPlayerSelection);
             document.getElementById('cancelPlayerSelection').addEventListener('click', cancelPlayerSelection);
             document.getElementById('clearSelection').addEventListener('click', clearSelection);
+
+            // أزرار التحكم العلوية
+            document.getElementById('returnToIndex').addEventListener('click', () => {
+                if (confirm('هل تريد العودة للصفحة الرئيسية؟')) {
+                    window.location.href = '../index.html';
+                }
+            });
+
+            document.getElementById('soundToggle').addEventListener('click', () => {
+                const enabled = soundSystem.toggle();
+                const icon = document.querySelector('#soundToggle i');
+                icon.className = enabled ? 'fas fa-volume-up' : 'fas fa-volume-mute';
+                MessageSystem.show(enabled ? 'تم تشغيل الصوت' : 'تم إيقاف الصوت');
+            });
 
             // إغلاق النوافذ المنبثقة
             document.querySelectorAll('.close').forEach(closeBtn => {
@@ -6405,11 +6283,6 @@
                 console.log('⚙️ إعداد معالجات الأحداث...');
                 setupEventListeners();
                 console.log('✅ تم إعداد معالجات الأحداث');
-                
-                // إعداد الأزرار العلوية (إضافي للتأكد)
-                console.log('🔧 إعداد الأزرار العلوية...');
-                setupTopButtons();
-                console.log('✅ تم إعداد الأزرار العلوية');
                 
                 // إضافة أنماط الرسوم المتحركة والبطاقات التفاعلية
                 const animationStyles = `
