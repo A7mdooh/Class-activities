@@ -1837,6 +1837,62 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            color: #2c3e50;
+        }
+
+        .player-card h3 {
+            color: #2c3e50 !important;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .player-card .stats-grid {
+            color: #34495e !important;
+        }
+
+        .player-card .stats-grid .stat-label {
+            color: #7f8c8d !important;
+            font-weight: 600;
+        }
+
+        .player-card .stats-grid .stat-value {
+            color: #2c3e50 !important;
+            font-weight: bold;
+        }
+
+        /* إضافة تنسيق للنصوص الأخرى في البطاقة */
+        .player-card .player-info {
+            color: #2c3e50 !important;
+        }
+
+        .player-card .player-position-indicator {
+            color: #34495e !important;
+            font-weight: bold !important;
+        }
+
+        .player-card .stat-item div {
+            color: #2c3e50 !important;
+        }
+
+        .player-card .stat-item div:last-child {
+            color: #7f8c8d !important;
+        }
+
+        /* تأكد من وضوح النصوص في البطاقة النشطة */
+        .player-card.current-player .stat-item div {
+            color: #fff !important;
+        }
+
+        .player-card.current-player .stat-item div:last-child {
+            color: #ecf0f1 !important;
+        }
+
+        .player-card.current-player .player-info {
+            color: #fff !important;
+        }
+
+        .player-card.current-player .player-position-indicator {
+            color: #ecf0f1 !important;
         }
 
         .player-card.current-player {
@@ -3654,10 +3710,10 @@
                 playerCard.innerHTML = `
                     ${isCurrentPlayer ? '<div class="current-player-indicator">دورك الآن</div>' : ''}
                     
-                    <h3>
+                    <h3 style="color: ${isCurrentPlayer ? '#fff' : '#2c3e50'};">
                         ${player.name || `اللاعب ${index + 1}`} 
                         ${isCurrentPlayer ? '👑' : ''}
-                        ${isCurrentPlayer ? '<span style="color: #e74c3c;">◀ دورك</span>' : ''}
+                        ${isCurrentPlayer ? '<span style="color: #ffeb3b;">◀ دورك</span>' : ''}
                     </h3>
                     
                     ${playerStatus}
@@ -3665,32 +3721,32 @@
                     <div class="player-stats-enhanced">
                         <div class="stat-item">
                             <div style="font-size: 1.2em; color: #27ae60;">💰</div>
-                            <div style="font-weight: bold;">${formatMoney(player.money)}</div>
-                            <div style="font-size: 0.8em; color: #7f8c8d;">الأموال</div>
+                            <div style="font-weight: bold; color: ${isCurrentPlayer ? '#fff' : '#2c3e50'};">${formatMoney(player.money)}</div>
+                            <div style="font-size: 0.8em; color: ${isCurrentPlayer ? '#ecf0f1' : '#7f8c8d'};">الأموال</div>
                         </div>
                         
                         <div class="stat-item">
                             <div style="font-size: 1.2em; color: #3498db;">🏠</div>
-                            <div style="font-weight: bold;">${player.properties ? player.properties.length : 0}</div>
-                            <div style="font-size: 0.8em; color: #7f8c8d;">العقارات</div>
+                            <div style="font-weight: bold; color: ${isCurrentPlayer ? '#fff' : '#2c3e50'};">${player.properties ? player.properties.length : 0}</div>
+                            <div style="font-size: 0.8em; color: ${isCurrentPlayer ? '#ecf0f1' : '#7f8c8d'};">العقارات</div>
                         </div>
                         
                         <div class="stat-item">
                             <div style="font-size: 1.2em; color: #9b59b6;">📊</div>
-                            <div style="font-weight: bold;">${formatMoney(netWorth)}</div>
-                            <div style="font-size: 0.8em; color: #7f8c8d;">القيمة الصافية</div>
+                            <div style="font-weight: bold; color: ${isCurrentPlayer ? '#fff' : '#2c3e50'};">${formatMoney(netWorth)}</div>
+                            <div style="font-size: 0.8em; color: ${isCurrentPlayer ? '#ecf0f1' : '#7f8c8d'};">القيمة الصافية</div>
                         </div>
                         
                         <div class="stat-item">
                             <div style="font-size: 1.2em; color: #e67e22;">🏘️</div>
-                            <div style="font-weight: bold;">${formatMoney(propertyValue)}</div>
-                            <div style="font-size: 0.8em; color: #7f8c8d;">قيمة العقارات</div>
+                            <div style="font-weight: bold; color: ${isCurrentPlayer ? '#fff' : '#2c3e50'};">${formatMoney(propertyValue)}</div>
+                            <div style="font-size: 0.8em; color: ${isCurrentPlayer ? '#ecf0f1' : '#7f8c8d'};">قيمة العقارات</div>
                         </div>
                     </div>
                     
                     <div class="player-info">
-                        <span>📍 الموقع الحالي:</span>
-                        <div class="player-position-indicator">
+                        <span style="color: ${isCurrentPlayer ? '#fff' : '#2c3e50'};">📍 الموقع الحالي:</span>
+                        <div class="player-position-indicator" style="color: ${isCurrentPlayer ? '#ecf0f1' : '#34495e'}; font-weight: bold;">
                             ${omanProperties[currentPosition]?.name || 'البداية'}
                         </div>
                     </div>
