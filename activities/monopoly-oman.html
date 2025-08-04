@@ -562,6 +562,539 @@
             box-shadow: var(--shadow-glow-red);
         }
 
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 0 20px rgba(108, 117, 125, 0.4);
+        }
+
+        /* ===========================================
+           واجهة اختيار اللاعبين الذكية
+        =========================================== */
+        .smart-player-selection {
+            background: var(--surface-glass);
+            border-radius: var(--border-radius-xl);
+            padding: 0;
+            margin: 30px 0;
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow-large);
+            overflow: hidden;
+            animation: slideInUp 0.5s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .selection-header {
+            background: linear-gradient(135deg, var(--oman-red) 0%, #B71C1C 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .selection-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20"><defs><radialGradient id="a" cx="50%" cy="50%"><stop offset="0%" stop-color="rgba(255,255,255,0.1)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></radialGradient></defs><circle cx="10" cy="10" r="10" fill="url(%23a)"><animate attributeName="cx" values="10;90;10" dur="3s" repeatCount="indefinite"/></circle></svg>');
+            opacity: 0.3;
+            animation: headerFlow 6s ease-in-out infinite;
+        }
+
+        @keyframes headerFlow {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .icon-wrapper {
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .icon-wrapper i {
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        .selection-header h2 {
+            margin: 0 0 10px 0;
+            font-size: 2.2rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-gold) 0%, #FFA000 100%);
+            width: 0%;
+            transition: width 0.5s ease-out;
+            border-radius: 3px;
+        }
+
+        .selection-counter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .selected-count {
+            font-size: 1.8rem;
+            color: var(--accent-gold);
+            font-weight: 800;
+        }
+
+        .selection-modes {
+            padding: 20px 30px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mode-switcher {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .mode-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-secondary);
+            padding: 12px 20px;
+            border-radius: var(--border-radius-medium);
+            cursor: pointer;
+            transition: var(--transition-normal);
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 140px;
+            justify-content: center;
+        }
+
+        .mode-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .mode-btn.active {
+            background: var(--gradient-gold);
+            border-color: var(--accent-gold);
+            color: var(--text-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow-gold);
+        }
+
+        .smart-selection-container {
+            padding: 30px;
+        }
+
+        .smart-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius-medium);
+            padding: 20px;
+            cursor: pointer;
+            transition: var(--transition-normal);
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .feature-card.active {
+            background: var(--gradient-green);
+            border-color: var(--oman-green);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-glow-green);
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 1.5rem;
+        }
+
+        .feature-card.active .feature-icon {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .feature-content h4 {
+            margin: 0 0 8px 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .feature-content p {
+            margin: 0;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .search-and-sort {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--border-radius-medium);
+            background: var(--surface-board);
+            color: var(--text-dark);
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+            transition: var(--transition-normal);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.3);
+        }
+
+        .students-interactive-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+            padding: 0 30px;
+            max-height: 500px;
+            overflow-y: auto;
+            margin-bottom: 30px;
+        }
+
+        .student-interactive-card {
+            background: var(--surface-board);
+            border: 2px solid transparent;
+            border-radius: var(--border-radius-medium);
+            padding: 20px;
+            cursor: pointer;
+            transition: var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .student-interactive-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .student-interactive-card:hover::before {
+            left: 100%;
+        }
+
+        .student-interactive-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-medium);
+            border-color: var(--oman-red);
+        }
+
+        .student-interactive-card.selected {
+            background: var(--gradient-green);
+            color: white;
+            border-color: var(--oman-green);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-glow-green);
+        }
+
+        .student-interactive-card.selected .student-avatar {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: white;
+        }
+
+        .student-avatar {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-red);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 1.5rem;
+            color: white;
+            font-weight: 700;
+        }
+
+        .student-name {
+            text-align: center;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .student-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .student-interactive-card.selected .student-stats {
+            opacity: 1;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .selected-players-preview {
+            padding: 0 30px 20px;
+            border-top: 2px solid rgba(255, 255, 255, 0.1);
+            margin-top: 20px;
+        }
+
+        .selected-players-preview h3 {
+            color: var(--accent-gold);
+            margin: 20px 0 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .selected-players-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            min-height: 100px;
+        }
+
+        .selected-player-card {
+            background: var(--gradient-green);
+            color: white;
+            border-radius: var(--border-radius-medium);
+            padding: 15px;
+            text-align: center;
+            position: relative;
+            animation: slideInScale 0.3s ease-out;
+        }
+
+        @keyframes slideInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .selected-player-card .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            color: white;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .selected-player-card .remove-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: var(--text-muted);
+            padding: 40px;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .manual-selection-container {
+            padding: 30px;
+        }
+
+        .manual-selectors {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .manual-selector {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius-medium);
+            padding: 20px;
+        }
+
+        .manual-selector label {
+            display: block;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .selection-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.03);
+            border-top: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .action-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: var(--border-radius-medium);
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-normal);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 150px;
+            justify-content: center;
+        }
+
+        .action-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .action-btn:not(:disabled):hover {
+            transform: translateY(-3px);
+        }
+
+        .action-btn.primary {
+            background: var(--gradient-green);
+            color: white;
+        }
+
+        .action-btn.primary:not(:disabled):hover {
+            box-shadow: var(--shadow-glow-green);
+        }
+
+        .action-btn.secondary {
+            background: var(--gradient-gold);
+            color: var(--text-dark);
+        }
+
+        .action-btn.secondary:hover {
+            box-shadow: var(--shadow-glow-gold);
+        }
+
+        .action-btn.danger {
+            background: var(--gradient-red);
+            color: white;
+        }
+
+        .action-btn.danger:hover {
+            box-shadow: var(--shadow-glow-red);
+        }
+
         .selection-header {
             text-align: center;
             margin-bottom: 30px;
@@ -848,6 +1381,69 @@
                 min-width: auto;
             }
 
+            /* واجهة اختيار اللاعبين للأجهزة المحمولة */
+            .smart-features {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 10px;
+            }
+
+            .feature-card {
+                padding: 15px;
+            }
+
+            .feature-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+                margin-bottom: 10px;
+            }
+
+            .search-and-sort {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .students-interactive-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                gap: 10px;
+                padding: 0 15px;
+            }
+
+            .student-interactive-card {
+                padding: 15px;
+            }
+
+            .student-avatar {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+                margin-bottom: 10px;
+            }
+
+            .selected-players-list {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 10px;
+            }
+
+            .selection-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .action-btn {
+                width: 100%;
+                min-width: auto;
+            }
+
+            .mode-switcher {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .mode-btn {
+                min-width: auto;
+            }
+
             /* واجهة اختيار الطلاب للأجهزة المحمولة */
             .selection-controls {
                 grid-template-columns: 1fr;
@@ -975,21 +1571,162 @@
 
             <!-- أزرار بدء اللعبة -->
             <div class="game-buttons">
-                <button id="startGameBtn" class="btn btn-primary" disabled>
+                <button id="setupPlayersBtn" class="btn btn-primary" disabled>
+                    <i class="fas fa-users-cog"></i>
+                    ⚙️ إعداد اللاعبين
+                </button>
+                <button id="startGameBtn" class="btn btn-success" disabled>
                     <i class="fas fa-play"></i>
                     🎲 بدء اللعبة
                 </button>
-                <button id="rollDice" class="btn btn-success" disabled>
+                <button id="rollDice" class="btn btn-warning" disabled>
                     <i class="fas fa-dice"></i>
                     🎲 رمي النرد
                 </button>
-                <button id="endTurn" class="btn btn-warning" disabled>
+                <button id="endTurn" class="btn btn-info" disabled>
                     <i class="fas fa-exchange-alt"></i>
                     🔄 إنهاء الدور
                 </button>
-                <button id="showRules" class="btn btn-info">
+                <button id="showRules" class="btn btn-secondary">
                     <i class="fas fa-book"></i>
                     📖 قواعد اللعبة
+                </button>
+            </div>
+        </div>
+
+        <!-- واجهة اختيار اللاعبين الذكية -->
+        <div class="smart-player-selection" id="smartPlayerSelection" style="display: none;">
+            <div class="selection-header">
+                <div class="header-content">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h2>اختيار اللاعبين</h2>
+                    <p class="subtitle">اختر الطلاب المشاركين في المباراة</p>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="selectionProgress"></div>
+                </div>
+                <div class="selection-counter">
+                    <span class="selected-count" id="selectedPlayersCount">0</span>
+                    <span class="separator">/</span>
+                    <span class="total-count" id="totalPlayersNeeded">2</span>
+                    <span class="label">لاعبين</span>
+                </div>
+            </div>
+
+            <div class="selection-modes">
+                <div class="mode-switcher">
+                    <button class="mode-btn active" data-mode="smart">
+                        <i class="fas fa-magic"></i>
+                        <span>اختيار ذكي</span>
+                    </button>
+                    <button class="mode-btn" data-mode="manual">
+                        <i class="fas fa-hand-pointer"></i>
+                        <span>اختيار يدوي</span>
+                    </button>
+                    <button class="mode-btn" data-mode="random">
+                        <i class="fas fa-random"></i>
+                        <span>عشوائي</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- اختيار ذكي -->
+            <div class="smart-selection-container" id="smartSelectionContainer">
+                <div class="smart-features">
+                    <div class="feature-card active" data-filter="all">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h4>جميع الطلاب</h4>
+                            <p>عرض كامل الصف</p>
+                        </div>
+                    </div>
+                    <div class="feature-card" data-filter="active">
+                        <div class="feature-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h4>الأكثر نشاطاً</h4>
+                            <p>طلاب متفاعلون</p>
+                        </div>
+                    </div>
+                    <div class="feature-card" data-filter="balanced">
+                        <div class="feature-icon">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h4>اختيار متوازن</h4>
+                            <p>توزيع عادل</p>
+                        </div>
+                    </div>
+                    <div class="feature-card" data-filter="new">
+                        <div class="feature-icon">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h4>فرص جديدة</h4>
+                            <p>طلاب أقل مشاركة</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="search-and-sort">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="studentSearch" placeholder="ابحث عن طالب...">
+                    </div>
+                    <div class="sort-options">
+                        <select id="sortStudents" class="form-control">
+                            <option value="name">الترتيب الأبجدي</option>
+                            <option value="activity">حسب النشاط</option>
+                            <option value="random">عشوائي</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- شبكة الطلاب التفاعلية -->
+            <div class="students-interactive-grid" id="studentsInteractiveGrid">
+                <!-- سيتم ملؤها بواسطة JavaScript -->
+            </div>
+
+            <!-- اختيار يدوي -->
+            <div class="manual-selection-container" id="manualSelectionContainer" style="display: none;">
+                <div class="manual-selectors" id="manualSelectors">
+                    <!-- سيتم إنشاؤها ديناميكياً -->
+                </div>
+            </div>
+
+            <!-- عرض اللاعبين المختارين -->
+            <div class="selected-players-preview" id="selectedPlayersPreview">
+                <h3>
+                    <i class="fas fa-check-circle"></i>
+                    اللاعبون المختارون
+                </h3>
+                <div class="selected-players-list" id="selectedPlayersList">
+                    <div class="empty-state">
+                        <i class="fas fa-user-plus"></i>
+                        <p>لم يتم اختيار أي لاعبين بعد</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- أزرار التحكم -->
+            <div class="selection-actions">
+                <button class="action-btn secondary" id="clearSelection">
+                    <i class="fas fa-undo"></i>
+                    إعادة تعيين
+                </button>
+                <button class="action-btn primary" id="confirmPlayerSelection" disabled>
+                    <i class="fas fa-check"></i>
+                    تأكيد الاختيار
+                </button>
+                <button class="action-btn danger" id="cancelPlayerSelection">
+                    <i class="fas fa-times"></i>
+                    إلغاء
                 </button>
             </div>
         </div>
@@ -1252,6 +1989,12 @@
             }
         }
 
+        // متغيرات اختيار اللاعبين الذكي
+        let selectedPlayers = [];
+        let currentStudents = [];
+        let selectionMode = 'smart';
+        let activeFilter = 'all';
+
         // ملء قائمة الصفوف (مطابق لباقي الأنشطة)
         function populateClassSelect() {
             const classSelect = document.getElementById('classSelect');
@@ -1268,14 +2011,345 @@
             
             // إعداد حدث تغيير الصف
             classSelect.addEventListener('change', () => {
-                const startBtn = document.getElementById('startGameBtn');
-                startBtn.disabled = !classSelect.value;
+                const setupBtn = document.getElementById('setupPlayersBtn');
+                setupBtn.disabled = !classSelect.value;
                 
                 if (classSelect.value) {
                     const studentCount = playerData[classSelect.value].length;
                     MessageSystem.show(`📚 تم اختيار "${classSelect.value}" - يحتوي على ${studentCount} طالب`, 'success', 3000);
                 }
             });
+        }
+
+        // إعداد واجهة اختيار اللاعبين الذكية
+        function setupSmartPlayerSelection() {
+            const classValue = document.getElementById('classSelect').value;
+            if (!classValue) {
+                MessageSystem.show('يرجى اختيار الصف أولاً!', 'error');
+                return;
+            }
+
+            currentStudents = playerData[classValue];
+            selectedPlayers = [];
+            
+            // إظهار واجهة الاختيار
+            document.getElementById('smartPlayerSelection').style.display = 'block';
+            
+            // تحديث عداد اللاعبين المطلوبين
+            const playersNeeded = parseInt(document.getElementById('playersCount').value);
+            document.getElementById('totalPlayersNeeded').textContent = playersNeeded;
+            
+            // إنشاء شبكة الطلاب
+            createStudentsGrid();
+            
+            // تأثير انتقالي
+            setTimeout(() => {
+                document.getElementById('smartPlayerSelection').scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center' 
+                });
+            }, 100);
+        }
+
+        // إنشاء شبكة الطلاب التفاعلية
+        function createStudentsGrid() {
+            const grid = document.getElementById('studentsInteractiveGrid');
+            grid.innerHTML = '';
+            
+            let studentsToShow = filterAndSortStudents();
+            
+            studentsToShow.forEach((student, index) => {
+                const card = createStudentCard(student, index);
+                grid.appendChild(card);
+            });
+            
+            // تأثير ظهور متدرج
+            setTimeout(() => {
+                const cards = grid.querySelectorAll('.student-interactive-card');
+                cards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.style.opacity = '0';
+                        card.style.transform = 'translateY(20px)';
+                        card.style.transition = 'all 0.3s ease-out';
+                        
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                            card.style.transform = 'translateY(0)';
+                        }, 50);
+                    }, index * 50);
+                });
+            }, 100);
+        }
+
+        // إنشاء بطاقة طالب تفاعلية
+        function createStudentCard(student, index) {
+            const card = document.createElement('div');
+            card.className = 'student-interactive-card';
+            card.dataset.studentId = student.id || index;
+            card.dataset.studentName = student.name;
+            
+            // إحصائيات وهمية للطالب
+            const stats = generateStudentStats(student);
+            
+            card.innerHTML = `
+                <div class="student-avatar">
+                    ${student.name.charAt(0)}
+                </div>
+                <div class="student-name">${student.name}</div>
+                <div class="student-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-star"></i>
+                        <span>${stats.activity}</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-trophy"></i>
+                        <span>${stats.wins}</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-gamepad"></i>
+                        <span>${stats.games}</span>
+                    </div>
+                </div>
+            `;
+            
+            // إضافة حدث النقر
+            card.addEventListener('click', () => toggleStudentSelection(card, student));
+            
+            return card;
+        }
+
+        // توليد إحصائيات وهمية للطالب
+        function generateStudentStats(student) {
+            // استخدام اسم الطالب لتوليد إحصائيات ثابتة
+            const nameHash = student.name.split('').reduce((a, b) => {
+                a = ((a << 5) - a) + b.charCodeAt(0);
+                return a & a;
+            }, 0);
+            
+            return {
+                activity: Math.abs(nameHash % 5) + 1,
+                wins: Math.abs(nameHash % 10),
+                games: Math.abs(nameHash % 20) + 5
+            };
+        }
+
+        // فلترة وترتيب الطلاب
+        function filterAndSortStudents() {
+            let filtered = [...currentStudents];
+            
+            // تطبيق الفلتر
+            if (activeFilter !== 'all') {
+                filtered = filtered.filter(student => {
+                    const stats = generateStudentStats(student);
+                    switch (activeFilter) {
+                        case 'active':
+                            return stats.activity >= 4;
+                        case 'balanced':
+                            return stats.activity >= 2 && stats.activity <= 4;
+                        case 'new':
+                            return stats.games <= 8;
+                        default:
+                            return true;
+                    }
+                });
+            }
+            
+            // تطبيق البحث
+            const searchTerm = document.getElementById('studentSearch')?.value?.toLowerCase();
+            if (searchTerm) {
+                filtered = filtered.filter(student => 
+                    student.name.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // تطبيق الترتيب
+            const sortBy = document.getElementById('sortStudents')?.value || 'name';
+            switch (sortBy) {
+                case 'name':
+                    filtered.sort((a, b) => a.name.localeCompare(b.name, 'ar'));
+                    break;
+                case 'activity':
+                    filtered.sort((a, b) => {
+                        const statsA = generateStudentStats(a);
+                        const statsB = generateStudentStats(b);
+                        return statsB.activity - statsA.activity;
+                    });
+                    break;
+                case 'random':
+                    filtered.sort(() => Math.random() - 0.5);
+                    break;
+            }
+            
+            return filtered;
+        }
+
+        // تبديل اختيار الطالب
+        function toggleStudentSelection(card, student) {
+            const playersNeeded = parseInt(document.getElementById('totalPlayersNeeded').textContent);
+            const isSelected = selectedPlayers.some(p => p.id === student.id);
+            
+            if (isSelected) {
+                // إزالة الطالب
+                selectedPlayers = selectedPlayers.filter(p => p.id !== student.id);
+                card.classList.remove('selected');
+                
+                // تأثير صوتي
+                soundSystem.play('Click');
+            } else {
+                // إضافة طالب
+                if (selectedPlayers.length >= playersNeeded) {
+                    MessageSystem.show(`يمكن اختيار ${playersNeeded} لاعبين فقط!`, 'error');
+                    return;
+                }
+                
+                selectedPlayers.push({
+                    id: student.id || student.name,
+                    name: student.name,
+                    stats: generateStudentStats(student)
+                });
+                card.classList.add('selected');
+                
+                // تأثير صوتي
+                soundSystem.play('select');
+                
+                // تأثير انفجار الكونفيتي عند اكتمال الاختيار
+                if (selectedPlayers.length === playersNeeded) {
+                    confetti({
+                        particleCount: 100,
+                        spread: 70,
+                        origin: { y: 0.6 }
+                    });
+                }
+            }
+            
+            updateSelectionUI();
+        }
+
+        // تحديث واجهة الاختيار
+        function updateSelectionUI() {
+            const selectedCount = selectedPlayers.length;
+            const totalNeeded = parseInt(document.getElementById('totalPlayersNeeded').textContent);
+            
+            // تحديث العداد
+            document.getElementById('selectedPlayersCount').textContent = selectedCount;
+            
+            // تحديث شريط التقدم
+            const progress = (selectedCount / totalNeeded) * 100;
+            document.getElementById('selectionProgress').style.width = `${progress}%`;
+            
+            // تحديث زر التأكيد
+            const confirmBtn = document.getElementById('confirmPlayerSelection');
+            confirmBtn.disabled = selectedCount !== totalNeeded;
+            
+            // تحديث معاينة اللاعبين المختارين
+            updateSelectedPlayersPreview();
+        }
+
+        // تحديث معاينة اللاعبين المختارين
+        function updateSelectedPlayersPreview() {
+            const previewContainer = document.getElementById('selectedPlayersList');
+            
+            if (selectedPlayers.length === 0) {
+                previewContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-user-plus"></i>
+                        <p>لم يتم اختيار أي لاعبين بعد</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            previewContainer.innerHTML = '';
+            selectedPlayers.forEach((player, index) => {
+                const playerCard = document.createElement('div');
+                playerCard.className = 'selected-player-card';
+                playerCard.innerHTML = `
+                    <button class="remove-btn" onclick="removeSelectedPlayer('${player.id}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <div class="student-avatar" style="width: 40px; height: 40px; margin: 0 auto 10px;">
+                        ${player.name.charAt(0)}
+                    </div>
+                    <div class="student-name" style="font-size: 0.9rem;">${player.name}</div>
+                    <div class="player-role">لاعب ${index + 1}</div>
+                `;
+                previewContainer.appendChild(playerCard);
+            });
+        }
+
+        // إزالة لاعب مختار
+        function removeSelectedPlayer(playerId) {
+            selectedPlayers = selectedPlayers.filter(p => p.id !== playerId);
+            
+            // إزالة التحديد من البطاقة
+            const cards = document.querySelectorAll('.student-interactive-card');
+            cards.forEach(card => {
+                if (card.dataset.studentId === playerId) {
+                    card.classList.remove('selected');
+                }
+            });
+            
+            updateSelectionUI();
+            soundSystem.play('Click');
+        }
+
+        // تأكيد اختيار اللاعبين
+        function confirmPlayerSelection() {
+            if (selectedPlayers.length === 0) {
+                MessageSystem.show('يرجى اختيار اللاعبين أولاً!', 'error');
+                return;
+            }
+            
+            // إعداد اللعبة
+            gameState.players = selectedPlayers.map((player, index) => ({
+                name: player.name,
+                money: 1500,
+                position: 0,
+                properties: [],
+                stats: player.stats
+            }));
+            
+            gameState.gameStarted = false;
+            gameState.currentPlayer = 0;
+            
+            // إخفاء واجهة الاختيار
+            document.getElementById('smartPlayerSelection').style.display = 'none';
+            
+            // تفعيل زر بدء اللعبة
+            document.getElementById('startGameBtn').disabled = false;
+            
+            // تحديث عرض اللاعبين
+            updatePlayersDisplay();
+            
+            MessageSystem.show(`تم اختيار ${selectedPlayers.length} لاعبين بنجاح! يمكنك الآن بدء اللعبة`, 'success');
+            soundSystem.play('win');
+            
+            // تأثير الكونفيتي
+            confetti({
+                particleCount: 150,
+                spread: 100,
+                origin: { y: 0.6 }
+            });
+        }
+
+        // إلغاء اختيار اللاعبين
+        function cancelPlayerSelection() {
+            document.getElementById('smartPlayerSelection').style.display = 'none';
+            selectedPlayers = [];
+            MessageSystem.show('تم إلغاء اختيار اللاعبين', 'info');
+        }
+
+        // مسح الاختيار الحالي
+        function clearSelection() {
+            selectedPlayers = [];
+            
+            // إزالة التحديد من جميع البطاقات
+            const cards = document.querySelectorAll('.student-interactive-card');
+            cards.forEach(card => card.classList.remove('selected'));
+            
+            updateSelectionUI();
+            MessageSystem.show('تم مسح الاختيار', 'info');
+            soundSystem.play('Click');
         }
 
         // بدء اللعبة مع الطلاب المختارين
@@ -1655,10 +2729,73 @@
         // ===========================================
         function setupEventListeners() {
             // أزرار التحكم الرئيسية
+            document.getElementById('setupPlayersBtn').addEventListener('click', setupSmartPlayerSelection);
             document.getElementById('startGameBtn').addEventListener('click', startGameWithStudents);
             document.getElementById('rollDice').addEventListener('click', rollDice);
             document.getElementById('endTurn').addEventListener('click', endTurn);
             document.getElementById('showRules').addEventListener('click', showRules);
+
+            // واجهة اختيار اللاعبين الذكية
+            // أزرار طرق الاختيار
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    // إزالة الفئة النشطة من جميع الأزرار
+                    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                    // إضافة الفئة النشطة للزر المختار
+                    e.target.classList.add('active');
+                    
+                    selectionMode = e.target.dataset.mode;
+                    
+                    // إظهار/إخفاء واجهات الاختيار المختلفة
+                    document.getElementById('smartSelectionContainer').style.display = 
+                        selectionMode === 'smart' ? 'block' : 'none';
+                    document.getElementById('studentsInteractiveGrid').style.display = 
+                        selectionMode !== 'manual' ? 'grid' : 'none';
+                    document.getElementById('manualSelectionContainer').style.display = 
+                        selectionMode === 'manual' ? 'block' : 'none';
+                    
+                    if (selectionMode === 'random') {
+                        handleRandomSelection();
+                    } else if (selectionMode === 'manual') {
+                        setupManualSelection();
+                    } else {
+                        createStudentsGrid();
+                    }
+                });
+            });
+
+            // بطاقات الفلاتر الذكية
+            document.querySelectorAll('.feature-card').forEach(card => {
+                card.addEventListener('click', (e) => {
+                    document.querySelectorAll('.feature-card').forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                    
+                    activeFilter = card.dataset.filter;
+                    createStudentsGrid();
+                    
+                    soundSystem.play('Click');
+                });
+            });
+
+            // البحث والترتيب
+            const searchInput = document.getElementById('studentSearch');
+            if (searchInput) {
+                searchInput.addEventListener('input', () => {
+                    createStudentsGrid();
+                });
+            }
+
+            const sortSelect = document.getElementById('sortStudents');
+            if (sortSelect) {
+                sortSelect.addEventListener('change', () => {
+                    createStudentsGrid();
+                });
+            }
+
+            // أزرار التحكم في الاختيار
+            document.getElementById('confirmPlayerSelection').addEventListener('click', confirmPlayerSelection);
+            document.getElementById('cancelPlayerSelection').addEventListener('click', cancelPlayerSelection);
+            document.getElementById('clearSelection').addEventListener('click', clearSelection);
 
             // أزرار التحكم العلوية
             document.getElementById('returnToIndex').addEventListener('click', () => {
@@ -1703,8 +2840,82 @@
                     document.querySelectorAll('.modal').forEach(modal => {
                         modal.style.display = 'none';
                     });
+                    // إخفاء واجهة اختيار الطلاب أيضاً
+                    document.getElementById('smartPlayerSelection').style.display = 'none';
                 }
             });
+        }
+
+        // الاختيار العشوائي
+        function handleRandomSelection() {
+            const playersNeeded = parseInt(document.getElementById('totalPlayersNeeded').textContent);
+            
+            // مسح الاختيار الحالي
+            selectedPlayers = [];
+            
+            // اختيار عشوائي
+            const shuffled = [...currentStudents].sort(() => 0.5 - Math.random());
+            selectedPlayers = shuffled.slice(0, playersNeeded).map(student => ({
+                id: student.id || student.name,
+                name: student.name,
+                stats: generateStudentStats(student)
+            }));
+            
+            // تحديث الواجهة
+            updateSelectionUI();
+            createStudentsGrid();
+            
+            MessageSystem.show(`تم اختيار ${playersNeeded} لاعبين عشوائياً!`, 'success');
+            soundSystem.play('select');
+        }
+
+        // إعداد الاختيار اليدوي
+        function setupManualSelection() {
+            const playersNeeded = parseInt(document.getElementById('totalPlayersNeeded').textContent);
+            const manualContainer = document.getElementById('manualSelectors');
+            
+            manualContainer.innerHTML = '';
+            
+            for (let i = 0; i < playersNeeded; i++) {
+                const selector = document.createElement('div');
+                selector.className = 'manual-selector';
+                selector.innerHTML = `
+                    <label>اللاعب ${i + 1}:</label>
+                    <select class="form-control manual-player-select" data-player-index="${i}">
+                        <option value="">-- اختر طالب --</option>
+                        ${currentStudents.map(student => 
+                            `<option value="${student.name}">${student.name}</option>`
+                        ).join('')}
+                    </select>
+                `;
+                
+                manualContainer.appendChild(selector);
+                
+                // إضافة حدث التغيير
+                const select = selector.querySelector('select');
+                select.addEventListener('change', handleManualPlayerSelect);
+            }
+        }
+
+        // معالجة الاختيار اليدوي
+        function handleManualPlayerSelect() {
+            const selects = document.querySelectorAll('.manual-player-select');
+            selectedPlayers = [];
+            
+            selects.forEach((select, index) => {
+                if (select.value) {
+                    const student = currentStudents.find(s => s.name === select.value);
+                    if (student) {
+                        selectedPlayers.push({
+                            id: student.id || student.name,
+                            name: student.name,
+                            stats: generateStudentStats(student)
+                        });
+                    }
+                }
+            });
+            
+            updateSelectionUI();
         }
 
         // ===========================================
