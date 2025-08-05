@@ -1497,8 +1497,8 @@
         }
 
         .student-card {
-            background: linear-gradient(135deg, #ff7f00 0%, #ffd700 100%);
-            color: white;
+            background: var(--surface-board);
+            color: var(--text-dark);
             padding: 15px;
             border-radius: var(--border-radius-medium);
             cursor: pointer;
@@ -1506,13 +1506,12 @@
             border: 2px solid transparent;
             text-align: center;
             font-weight: 600;
-            box-shadow: 0 4px 15px rgba(255, 127, 0, 0.3);
         }
 
         .student-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(255, 127, 0, 0.5);
-            border-color: #ffd700;
+            box-shadow: var(--shadow-medium);
+            border-color: var(--oman-red);
         }
 
         .student-card.selected {
@@ -1832,11 +1831,8 @@
             }
 
             .student-card {
-                background: linear-gradient(135deg, #ff7f00 0%, #ffd700 100%);
-                color: white;
                 padding: 10px;
                 font-size: 0.9rem;
-                box-shadow: 0 3px 12px rgba(255, 127, 0, 0.3);
             }
 
             .selection-actions {
@@ -6782,23 +6778,15 @@
                         <div class="winner-stats">
                             <div class="stat">
                                 <span>💰 الأموال النهائية:</span>
-                                <span>${formatMoney(winner.money)}</span>
+                                <span>${winner.money} ر.ع</span>
                             </div>
                             <div class="stat">
                                 <span>🏠 العقارات المملوكة:</span>
-                                <span>${winner.properties ? winner.properties.length : 0}</span>
+                                <span>${winner.properties.length}</span>
                             </div>
                             <div class="stat">
                                 <span>📊 القيمة الصافية:</span>
-                                <span>${formatMoney(LeaderboardSystem.calculateNetWorth(winner))}</span>
-                            </div>
-                            <div class="stat">
-                                <span>🎯 المراحل المكتملة:</span>
-                                <span>${gameState.currentRound}</span>
-                            </div>
-                            <div class="stat">
-                                <span>🏆 نوع الفوز:</span>
-                                <span>${winner.isBank ? 'فوز البنك' : (gameState.currentRound >= 20 ? 'الأغنى' : 'الناجي الوحيد')}</span>
+                                <span>${LeaderboardSystem.calculateNetWorth(winner)} ر.ع</span>
                             </div>
                         </div>
                     </div>
@@ -6978,21 +6966,15 @@
         }
 
         function restartGame() {
-            // إعادة تعيين حالة اللعبة بالكامل
+            // إعادة تعيين حالة اللعبة
             gameState.currentPlayer = 0;
             gameState.currentRound = 1;
-            gameState.gameStarted = false;
-            gameState.doubles = 0;
-            gameState.propertyOwners = {};
-            
-            // إعادة تعيين جميع بيانات اللاعبين
             gameState.players.forEach(player => {
                 player.money = 1500;
                 player.position = 0;
                 player.properties = [];
                 player.inJail = false;
                 player.jailTurns = 0;
-                player.isBankrupt = false;
             });
             
             // إزالة شاشة الفوز
