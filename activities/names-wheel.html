@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎡 عجلة الأسماء الذكية المتطورة - نظام اختيار تفاعلي</title>
+    
+    <!-- الخطوط والأيقونات -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- المكتبات الخارجية -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+    
+    <!-- CSS المتطور -->
+    <style>
+        :root {
+            /* نظام ألوان عُماني متطور */
+            --primary: #00796B;
+            --primary-light: #4DB6AC;
+            --primary-dark: #004D40;
+            --secondary: #FF5722;
+            --accent: #FFD700;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --error: #F44336;
+            --text-primary: #212121;
+            --text-secondary: #757575;
+            --background: #0a0a0a;
+            --surface: rgba(255, 255, 255, 0.1);
+            --holographic-bg: linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0.1) 0%,
+                rgba(0, 121, 107, 0.1) 25%,
+                rgba(255, 87, 34, 0.1) 50%,
+                rgba(255, 215, 0, 0.1) 75%,
+                rgba(255, 255, 255, 0.1) 100%
+            );
+            --gradient-cosmic: linear-gradient(45deg, #00796B, #4DB6AC, #FF5722, #FFD700);
+            --shadow-large: 0 20px 60px rgba(0, 0, 0, 0.3);
+            --shadow-medium: 0 10px 30px rgba(0, 0, 0, 0.2);
+            --border-radius: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --transition-normal: 0.3s ease-out;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg,
+                #e0f7fa 0%,
+                #b2dfdb 25%,
+                #80cbc4 50%,
+                #4db6ac 75%,
+                #26a69a 100%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 121, 107, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 87, 34, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 215, 0, 0.2) 0%, transparent 50%);
+            z-index: -1;
+            animation: backgroundShift 20s ease-in-out infinite;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(-20px, 20px) rotate(1deg); }
+            50% { transform: translate(20px, -20px) rotate(-1deg); }
+            75% { transform: translate(-10px, -10px) rotate(0.5deg); }
+        }
+
+        .cosmic-container {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: var(--holographic-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: var(--shadow-large);
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 4px;
+            background: var(--gradient-cosmic);
+            border-radius: 2px;
+            animation: cosmicPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes cosmicPulse {
+            0%, 100% { opacity: 0.6; transform: translateX(-50%) scaleX(1); }
+            50% { opacity: 1; transform: translateX(-50%) scaleX(1.2); }
+        }
+
+        .main-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: var(--gradient-cosmic);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 6s ease-in-out infinite;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        /* اختيار الصف المتطور */
+        .class-selector {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.98) 0%, 
+                rgba(232, 245, 233, 0.95) 50%,
+                rgba(255, 255, 255, 0.98) 100%);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: 
+                0 8px 32px rgba(0, 121, 107, 0.12),
+                0 2px 8px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 121, 107, 0.1);
+            animation: slideUp 0.8s ease-out 0.2s both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .class-selector::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, 
+                var(--primary) 0%,
+                var(--primary-light) 50%,
+                var(--accent) 100%);
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        .class-selector h3 {
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-bottom: var(--spacing-lg);
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .class-selector h3 span:first-child {
+            font-size: 1.6rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-5px); }
+            60% { transform: translateY(-3px); }
+        }
+
+        .select-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fffe 100%);
+            border: 2px solid rgba(0, 121, 107, 0.15);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all var(--transition-normal);
+            box-shadow: 
+                0 4px 16px rgba(0, 121, 107, 0.1),
+                inset 0 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        .select-wrapper:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 6px 20px rgba(0, 121, 107, 0.15);
+        }
+
+        .class-select {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            background: transparent;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            cursor: pointer;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        .select-icon {
+            padding: 0 15px;
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .select-arrow {
+            padding: 0 15px;
+            color: var(--primary);
+            transition: transform var(--transition-normal);
+        }
+
+        .select-wrapper:hover .select-arrow {
+            transform: translateY(-2px);
+        }
+
+        /* عجلة الأسماء ثلاثية الأبعاد */
+        .wheel-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            padding: 40px 0;
+        }
+
+        .wheel-3d-container {
+            position: relative;
+            width: 500px;
+            height: 500px;
+            perspective: 1000px;
+        }
+
+        .wheel-3d {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            animation: float3D 6s ease-in-out infinite;
+        }
+
+        @keyframes float3D {
+            0%, 100% { transform: translateY(0px) rotateX(5deg); }
+            50% { transform: translateY(-15px) rotateX(-5deg); }
+        }
+
+        .wheel-canvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: 
+                0 0 50px rgba(0, 121, 107, 0.4),
+                0 0 100px rgba(255, 87, 34, 0.3),
+                inset 0 0 50px rgba(255, 255, 255, 0.1);
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .wheel-pointer {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 50px solid var(--accent);
+            z-index: 10;
+            filter: drop-shadow(0 5px 15px rgba(255, 215, 0, 0.6));
+            animation: pointerGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes pointerGlow {
+            0%, 100% { filter: drop-shadow(0 5px 15px rgba(255, 215, 0, 0.6)); }
+            50% { filter: drop-shadow(0 5px 25px rgba(255, 215, 0, 0.9)); }
+        }
+
+        /* لوحة التحكم */
+        .control-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            background: var(--surface);
+            backdrop-filter: blur(15px);
+            padding: 40px;
+            border-radius: 25px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: var(--shadow-medium);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .spin-button {
+            padding: 20px 50px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-medium);
+            position: relative;
+            overflow: hidden;
+            min-width: 250px;
+        }
+
+        .spin-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .spin-button:hover::before {
+            left: 100%;
+        }
+
+        .spin-button:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 121, 107, 0.4);
+        }
+
+        .spin-button:disabled {
+            opacity: 0.6;
+            transform: none;
+            cursor: not-allowed;
+        }
+
+        .spin-button.spinning {
+            animation: buttonSpin 2s linear infinite;
+        }
+
+        @keyframes buttonSpin {
+            0% { transform: translateY(-3px) rotate(0deg); }
+            100% { transform: translateY(-3px) rotate(360deg); }
+        }
+
+        /* منطقة عرض النتيجة */
+        .result-display {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.95) 0%, 
+                rgba(248, 255, 254, 0.9) 100%);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-medium);
+            border: 2px solid rgba(0, 121, 107, 0.1);
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-display::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, 
+                var(--primary) 0%,
+                var(--accent) 50%,
+                var(--secondary) 100%);
+        }
+
+        .rolling-animation {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .welcome-message {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .rolling-names {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary);
+            animation: rollText 0.1s ease-in-out infinite;
+            text-shadow: 2px 2px 4px rgba(0, 121, 107, 0.3);
+        }
+
+        @keyframes rollText {
+            0% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-5px) scale(1.05); }
+            100% { transform: translateY(0) scale(1); }
+        }
+
+        .selected-name {
+            font-size: 4rem;
+            font-weight: 900;
+            background: var(--gradient-cosmic);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: selectedPulse 2s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes selectedPulse {
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        /* لوحة الإحصائيات */
+        .stats-panel {
+            background: var(--surface);
+            backdrop-filter: blur(15px);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: var(--shadow-medium);
+            margin-top: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        /* الأزرار الإضافية */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-btn.reset {
+            background: linear-gradient(45deg, var(--warning), #FFB74D);
+            color: white;
+        }
+
+        .action-btn.remove {
+            background: linear-gradient(45deg, var(--error), #E57373);
+            color: white;
+        }
+
+        .action-btn.honor {
+            background: linear-gradient(45deg, var(--accent), #FFEB3B);
+            color: var(--text-primary);
+        }
+
+        .action-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* نظام الجزيئات */
+        .particle-system {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: particleFloat 15s linear infinite;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* التجاوب مع الشاشات */
+        @media (max-width: 768px) {
+            .cosmic-container {
+                margin: 10px;
+                padding: 15px;
+            }
+
+            .main-title {
+                font-size: 2.5rem;
+            }
+
+            .wheel-3d-container {
+                width: 350px;
+                height: 350px;
+            }
+
+            .selected-name {
+                font-size: 2.5rem;
+            }
+
+            .rolling-names {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .wheel-3d-container {
+                width: 280px;
+                height: 280px;
+            }
+
+            .control-panel {
+                padding: 20px;
+            }
+
+            .spin-button {
+                padding: 15px 30px;
+                font-size: 1.2rem;
+                min-width: 200px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- نظام الجزيئات -->
+    <div class="particle-system" id="particleSystem"></div>
+
+    <!-- الحاوية الرئيسية -->
+    <div class="cosmic-container">
+        <!-- العنوان الرئيسي -->
+        <div class="header">
+            <h1 class="main-title">🎡 عجلة الأسماء الذكية المتطورة</h1>
+            <p class="subtitle">
+                نظام اختيار تفاعلي بتقنية ثلاثية الأبعاد<br>
+                اختر الطلاب بشكل عشوائي وعادل مع تأثيرات بصرية مذهلة!
+            </p>
+        </div>
+
+        <!-- اختيار الصف -->
+        <div class="class-selector" data-aos="fade-up">
+            <h3>
+                <span>🎓</span>
+                <span>اختر الصف الدراسي</span>
+            </h3>
+            <div class="select-wrapper">
+                <div class="select-icon">📚</div>
+                <select class="class-select" id="classSelect">
+                    <option value="">-- اختر الصف الدراسي --</option>
+                </select>
+                <div class="select-arrow">
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- منطقة عرض النتيجة -->
+        <div class="result-display" id="resultDisplay" data-aos="zoom-in">
+            <div class="rolling-animation" id="rollingAnimation">
+                <div class="welcome-message" id="welcomeMessage">
+                    👋 مرحباً بك في عجلة الأسماء الذكية<br>
+                    اختر الصف الدراسي أولاً لبدء المتعة!
+                </div>
+            </div>
+        </div>
+
+        <!-- منطقة العجلة -->
+        <div class="wheel-container" data-aos="fade-up">
+            <!-- العجلة ثلاثية الأبعاد -->
+            <div class="wheel-3d-container">
+                <div class="wheel-pointer"></div>
+                <div class="wheel-3d">
+                    <canvas class="wheel-canvas" id="wheelCanvas" width="500" height="500"></canvas>
+                </div>
+            </div>
+
+            <!-- لوحة التحكم -->
+            <div class="control-panel">
+                <button class="spin-button" id="spinButton" disabled>
+                    <i class="fas fa-play"></i>
+                    ابدأ الاختيار العشوائي
+                </button>
+
+                <div class="action-buttons">
+                    <button class="action-btn reset" id="resetButton" disabled>
+                        <i class="fas fa-redo"></i>
+                        إعادة تعيين
+                    </button>
+                    <button class="action-btn remove" id="removeButton" disabled>
+                        <i class="fas fa-user-minus"></i>
+                        إزالة من القائمة
+                    </button>
+                    <button class="action-btn honor" id="honorButton" disabled>
+                        <i class="fas fa-star"></i>
+                        إضافة لقائمة الشرف
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- لوحة الإحصائيات -->
+        <div class="stats-panel" id="statsPanel" data-aos="fade-up">
+            <h4 style="text-align: center; color: var(--primary); margin-bottom: 20px;">
+                📊 إحصائيات الاختيار
+            </h4>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-value" id="totalStudents">0</span>
+                    <span class="stat-label">إجمالي الطلاب</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="availableStudents">0</span>
+                    <span class="stat-label">الطلاب المتاحون</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="selectedCount">0</span>
+                    <span class="stat-label">تم اختيارهم</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="honoredCount">0</span>
+                    <span class="stat-label">قائمة الشرف</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- المكتبات الخارجية -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+
+    <script>
+        // ===========================================
+        // إعدادات النظام
+        // ===========================================
+        
+        // بيانات المدرسة والطلاب
+        let schoolData = {};
+        let studentData = {};
+        let currentStudents = [];
+        let availableStudents = [];
+        let selectedStudents = [];
+        let honoredStudents = [];
+        let currentSelectedName = '';
+        
+        // متغيرات العجلة
+        let wheelCanvas, wheelCtx;
+        let isSpinning = false;
+        let currentRotation = 0;
+        let spinSpeed = 0;
+        let students = [];
+
+        // الأصوات
+        let soundEnabled = true;
+        const sounds = {
+            spin: new Howl({
+                src: ['data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2+LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmswBDGH0fPTfCgELH3J8N2QQAoUXrTp66hVFApGn+DyvmswBDGH0fPTfCgE'],
+                volume: 0.6
+            }),
+            select: new Howl({
+                src: ['data:audio/wav;base64,UklGRv4CAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YdoCAAC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4QEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAuLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4QEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLhAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBA'],
+                volume: 0.8
+            }),
+            notification: new Howl({
+                src: ['data:audio/wav;base64,UklGRpQDAABXQVZFZm10IBAAAAABAAEAVFYAAKhWAQACABAAZGF0YXADAAD////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'],
+                volume: 0.4
+            })
+        };
+
+        // ===========================================
+        // تحميل بيانات المدرسة والطلاب
+        // ===========================================
+        async function loadSchoolData() {
+            try {
+                // تحميل بيانات المدرسة
+                const schoolResponse = await fetch('../config/school.json');
+                if (schoolResponse.ok) {
+                    schoolData = await schoolResponse.json();
+                }
+                
+                // تحميل بيانات الطلاب
+                const studentResponse = await fetch('../data/studentData.json');
+                if (studentResponse.ok) {
+                    studentData = await studentResponse.json();
+                } else {
+                    // بيانات افتراضية
+                    studentData = {
+                        "خامس 1": ["أحمد محمد السيابي", "فاطمة سعيد البلوشي", "عبدالله خالد الحارثي", "مريم أحمد الرواحي", "سالم راشد العمري", "نور الهدى المحرمي"],
+                        "خامس 2": ["محمد علي اليحيائي", "عائشة سالم الحبسي", "يوسف أحمد الكندي", "هدى محمد البوسعيدي", "خالد سعيد الغافري", "زينب علي الهنائي"],
+                        "سادس 1": ["عمر حسن المعمري", "رقية سالم الشحي", "حمد خليفة الراشدي", "أسماء محمد الجابري", "طارق سعيد العلوي", "فاطمة أحمد الكلباني"],
+                        "سادس 2": ["سعيد محمد الحارثي", "مريم سالم البطاشي", "عبدالرحمن أحمد الفارسي", "نورا سعيد المقبالي", "ماجد خالد الرئيسي", "ليلى محمد الشامسي"]
+                    };
+                }
+                
+                // تعبئة قائمة الصفوف
+                populateClassSelect();
+                console.log('تم تحميل بيانات المدرسة والطلاب بنجاح');
+            } catch (error) {
+                console.warn('تعذر تحميل بيانات المدرسة، سيتم استخدام البيانات الافتراضية');
+                // بيانات افتراضية في حالة الخطأ
+                studentData = {
+                    "الصف الخامس الأساسي (1)": ["أحمد محمد", "فاطمة سعيد", "عبدالله خالد", "مريم أحمد", "سالم راشد"],
+                    "الصف الخامس الأساسي (2)": ["محمد علي", "عائشة سالم", "يوسف أحمد", "هدى محمد", "خالد سعيد"],
+                    "الصف السادس الأساسي (1)": ["عمر حسن", "رقية سالم", "حمد خليفة", "أسماء محمد", "طارق سعيد"],
+                    "الصف السادس الأساسي (2)": ["سعيد محمد", "مريم سالم", "عبدالرحمن أحمد", "نورا سعيد", "ماجد خالد"]
+                };
+                populateClassSelect();
+            }
+        }
+
+        // ===========================================
+        // تعبئة قائمة الصفوف
+        // ===========================================
+        function populateClassSelect() {
+            const classSelect = document.getElementById('classSelect');
+            classSelect.innerHTML = '<option value="">-- اختر الصف الدراسي --</option>';
+            
+            Object.keys(studentData).forEach(className => {
+                const option = document.createElement('option');
+                option.value = className;
+                option.textContent = className;
+                classSelect.appendChild(option);
+            });
+        }
+
+        // ===========================================
+        // تحديث قائمة الطلاب عند اختيار الصف
+        // ===========================================
+        function updateStudentsList() {
+            const classSelect = document.getElementById('classSelect');
+            const selectedClass = classSelect.value;
+            
+            if (selectedClass && studentData[selectedClass]) {
+                currentStudents = [...studentData[selectedClass]];
+                availableStudents = [...currentStudents];
+                selectedStudents = [];
+                currentSelectedName = '';
+                
+                updateUI();
+                createWheel();
+                showWelcomeMessage();
+                playSound('notification');
+                
+                console.log(`✅ تم تحميل ${currentStudents.length} طالب من الصف ${selectedClass}`);
+            } else {
+                currentStudents = [];
+                availableStudents = [];
+                resetDisplay();
+            }
+        }
+
+        // ===========================================
+        // تحديث واجهة المستخدم
+        // ===========================================
+        function updateUI() {
+            const hasStudents = availableStudents.length > 0;
+            
+            document.getElementById('spinButton').disabled = !hasStudents || isSpinning;
+            document.getElementById('removeButton').disabled = !currentSelectedName || isSpinning;
+            document.getElementById('honorButton').disabled = !currentSelectedName || isSpinning;
+            document.getElementById('resetButton').disabled = currentStudents.length === 0;
+            
+            // تحديث الإحصائيات
+            document.getElementById('totalStudents').textContent = currentStudents.length;
+            document.getElementById('availableStudents').textContent = availableStudents.length;
+            document.getElementById('selectedCount').textContent = selectedStudents.length;
+            document.getElementById('honoredCount').textContent = honoredStudents.length;
+        }
+
+        // ===========================================
+        // عرض رسالة الترحيب
+        // ===========================================
+        function showWelcomeMessage() {
+            const honoredCount = honoredStudents.length;
+            let message = `🎯 الصف محدد ونحن جاهزون!<br>${availableStudents.length} طالب متاح للاختيار`;
+            
+            if (honoredCount > 0) {
+                message += `<br>🏆 ${honoredCount} طالب مُكرم في لوحة الشرف`;
+            }
+            
+            document.getElementById('rollingAnimation').innerHTML = `
+                <div class="welcome-message">
+                    ${message}
+                </div>
+            `;
+        }
+
+        // ===========================================
+        // إنشاء العجلة
+        // ===========================================
+        function createWheel() {
+            if (availableStudents.length === 0) return;
+            
+            wheelCanvas = document.getElementById('wheelCanvas');
+            wheelCtx = wheelCanvas.getContext('2d');
+            students = [...availableStudents];
+            
+            drawWheel();
+        }
+
+        function drawWheel() {
+            if (!wheelCtx || students.length === 0) return;
+            
+            const centerX = wheelCanvas.width / 2;
+            const centerY = wheelCanvas.height / 2;
+            const radius = 220;
+            const segmentAngle = (2 * Math.PI) / students.length;
+            
+            wheelCtx.clearRect(0, 0, wheelCanvas.width, wheelCanvas.height);
+            
+            // رسم الشرائح
+            students.forEach((student, index) => {
+                const startAngle = currentRotation + (index * segmentAngle);
+                const endAngle = startAngle + segmentAngle;
+                
+                // ألوان متدرجة
+                const hue = (index * 360) / students.length;
+                const color = `hsl(${hue}, 70%, 60%)`;
+                
+                // رسم الشريحة
+                wheelCtx.beginPath();
+                wheelCtx.moveTo(centerX, centerY);
+                wheelCtx.arc(centerX, centerY, radius, startAngle, endAngle);
+                wheelCtx.closePath();
+                
+                // تدرج لوني
+                const gradient = wheelCtx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
+                gradient.addColorStop(0, color);
+                gradient.addColorStop(1, `hsl(${hue}, 50%, 40%)`);
+                
+                wheelCtx.fillStyle = gradient;
+                wheelCtx.fill();
+                
+                // رسم الحدود
+                wheelCtx.strokeStyle = '#ffffff';
+                wheelCtx.lineWidth = 3;
+                wheelCtx.stroke();
+                
+                // رسم النص
+                const textAngle = startAngle + segmentAngle / 2;
+                const textX = centerX + Math.cos(textAngle) * (radius * 0.7);
+                const textY = centerY + Math.sin(textAngle) * (radius * 0.7);
+                
+                wheelCtx.save();
+                wheelCtx.translate(textX, textY);
+                wheelCtx.rotate(textAngle + Math.PI / 2);
+                
+                wheelCtx.font = 'bold 16px Cairo, Arial';
+                wheelCtx.textAlign = 'center';
+                wheelCtx.fillStyle = '#ffffff';
+                wheelCtx.strokeStyle = '#000000';
+                wheelCtx.lineWidth = 1;
+                
+                // تقسيم النص لأسطر متعددة إذا كان طويلاً
+                const words = student.split(' ');
+                const firstName = words[0];
+                const lastName = words.slice(1).join(' ');
+                
+                wheelCtx.strokeText(firstName, 0, -8);
+                wheelCtx.fillText(firstName, 0, -8);
+                
+                if (lastName) {
+                    wheelCtx.strokeText(lastName, 0, 8);
+                    wheelCtx.fillText(lastName, 0, 8);
+                }
+                
+                wheelCtx.restore();
+            });
+            
+            // رسم الدائرة الخارجية
+            wheelCtx.beginPath();
+            wheelCtx.arc(centerX, centerY, radius + 5, 0, 2 * Math.PI);
+            wheelCtx.strokeStyle = '#00796B';
+            wheelCtx.lineWidth = 8;
+            wheelCtx.shadowColor = '#00796B';
+            wheelCtx.shadowBlur = 20;
+            wheelCtx.stroke();
+        }
+
+        // ===========================================
+        // دوران العجلة
+        // ===========================================
+        function spinWheel() {
+            if (isSpinning || availableStudents.length === 0) return;
+            
+            isSpinning = true;
+            document.getElementById('spinButton').classList.add('spinning');
+            document.getElementById('spinButton').innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الاختيار...';
+            
+            // تشغيل صوت الدوران
+            playSound('spin');
+            
+            // حساب دوران عشوائي
+            const baseSpins = 5 + Math.random() * 5;
+            const finalAngle = Math.random() * 2 * Math.PI;
+            const totalRotation = baseSpins * 2 * Math.PI + finalAngle;
+            
+            // رسوم متحركة للدوران
+            const startTime = Date.now();
+            const duration = 4000;
+            const startRotation = currentRotation;
+            
+            function animate() {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // منحنى إبطاء متطور
+                const easeOut = 1 - Math.pow(1 - progress, 4);
+                currentRotation = startRotation + totalRotation * easeOut;
+                
+                drawWheel();
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    finishSpin();
+                }
+            }
+            
+            animate();
+        }
+
+        function finishSpin() {
+            isSpinning = false;
+            
+            // حساب الطالب المختار
+            const normalizedAngle = (2 * Math.PI - (currentRotation % (2 * Math.PI))) % (2 * Math.PI);
+            const segmentAngle = (2 * Math.PI) / students.length;
+            const selectedIndex = Math.floor(normalizedAngle / segmentAngle);
+            currentSelectedName = students[selectedIndex];
+            
+            // إضافة إلى قائمة المختارين
+            selectedStudents.push(currentSelectedName);
+            
+            // عرض النتيجة
+            showSelectedStudent(currentSelectedName);
+            
+            // تشغيل صوت النجاح
+            playSound('select');
+            
+            // إعادة تفعيل الزر
+            document.getElementById('spinButton').classList.remove('spinning');
+            document.getElementById('spinButton').innerHTML = '<i class="fas fa-play"></i> ابدأ الاختيار العشوائي';
+            
+            updateUI();
+            
+            console.log(`🎯 تم اختيار: ${currentSelectedName}`);
+        }
+
+        // ===========================================
+        // عرض الطالب المختار
+        // ===========================================
+        function showSelectedStudent(studentName) {
+            document.getElementById('rollingAnimation').innerHTML = `
+                <div class="selected-name">
+                    🎉 ${studentName}
+                </div>
+            `;
+            
+            // تأثيرات بصرية
+            createCelebrationEffect();
+        }
+
+        function createCelebrationEffect() {
+            const container = document.getElementById('resultDisplay');
+            
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.style.cssText = `
+                    position: absolute;
+                    width: 8px;
+                    height: 8px;
+                    background: linear-gradient(45deg, #FFD700, #FF6B6B);
+                    border-radius: 50%;
+                    left: ${50 + Math.random() * 20 - 10}%;
+                    top: ${50 + Math.random() * 20 - 10}%;
+                    animation: explode 2s ease-out forwards;
+                    pointer-events: none;
+                `;
+                
+                container.appendChild(particle);
+                
+                setTimeout(() => {
+                    if (particle.parentNode) {
+                        particle.parentNode.removeChild(particle);
+                    }
+                }, 2000);
+            }
+        }
+
+        // ===========================================
+        // وظائف الأزرار
+        // ===========================================
+        function removeStudent() {
+            if (!currentSelectedName) return;
+            
+            const index = availableStudents.indexOf(currentSelectedName);
+            if (index > -1) {
+                availableStudents.splice(index, 1);
+            }
+            
+            currentSelectedName = '';
+            createWheel();
+            showWelcomeMessage();
+            updateUI();
+            
+            playSound('notification');
+            console.log(`🗑️ تم إزالة الطالب من القائمة`);
+        }
+
+        function addToHonorList() {
+            if (!currentSelectedName) return;
+            
+            if (!honoredStudents.includes(currentSelectedName)) {
+                honoredStudents.push(currentSelectedName);
+            }
+            
+            playSound('select');
+            updateUI();
+            
+            console.log(`🏆 تم إضافة ${currentSelectedName} لقائمة الشرف`);
+        }
+
+        function resetAllStudents() {
+            if (confirm('هل أنت متأكد من إعادة تعيين جميع الطلاب؟')) {
+                availableStudents = [...currentStudents];
+                selectedStudents = [];
+                currentSelectedName = '';
+                
+                createWheel();
+                showWelcomeMessage();
+                updateUI();
+                
+                playSound('notification');
+                console.log('🔄 تم إعادة تعيين جميع الطلاب');
+            }
+        }
+
+        function resetDisplay() {
+            document.getElementById('rollingAnimation').innerHTML = `
+                <div class="welcome-message">
+                    👋 مرحباً بك في عجلة الأسماء الذكية<br>
+                    اختر الصف الدراسي أولاً لبدء المتعة!
+                </div>
+            `;
+            
+            if (wheelCtx) {
+                wheelCtx.clearRect(0, 0, wheelCanvas.width, wheelCanvas.height);
+            }
+        }
+
+        // ===========================================
+        // تشغيل الأصوات
+        // ===========================================
+        function playSound(soundName) {
+            if (soundEnabled && sounds[soundName]) {
+                sounds[soundName].play();
+            }
+        }
+
+        // ===========================================
+        // نظام الجزيئات
+        // ===========================================
+        function initParticleSystem() {
+            const container = document.getElementById('particleSystem');
+            
+            function createParticle() {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                
+                const colors = ['#00796B', '#FF5722', '#FFD700'];
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                
+                container.appendChild(particle);
+                
+                setTimeout(() => {
+                    if (particle.parentNode) {
+                        particle.parentNode.removeChild(particle);
+                    }
+                }, 15000);
+            }
+
+            // إنشاء جزيئات ابتدائية
+            for (let i = 0; i < 20; i++) {
+                setTimeout(createParticle, i * 500);
+            }
+
+            // إضافة جزيئات جديدة دورياً
+            setInterval(createParticle, 2000);
+        }
+
+        // ===========================================
+        // تهيئة النظام
+        // ===========================================
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadSchoolData();
+            initParticleSystem();
+            
+            // تفعيل مكتبة AOS للرسوم المتحركة
+            AOS.init({
+                duration: 1000,
+                easing: 'ease-out-cubic',
+                once: true
+            });
+            
+            // ربط الأحداث
+            document.getElementById('classSelect').addEventListener('change', updateStudentsList);
+            document.getElementById('spinButton').addEventListener('click', spinWheel);
+            document.getElementById('removeButton').addEventListener('click', removeStudent);
+            document.getElementById('honorButton').addEventListener('click', addToHonorList);
+            document.getElementById('resetButton').addEventListener('click', resetAllStudents);
+            
+            updateUI();
+            console.log('🎡 تم تهيئة عجلة الأسماء الذكية بنجاح!');
+        });
+
+        // إضافة الأنماط الديناميكية
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes explode {
+                0% {
+                    transform: scale(0) rotate(0deg);
+                    opacity: 1;
+                }
+                50% {
+                    transform: scale(1.5) rotate(180deg);
+                    opacity: 0.8;
+                }
+                100% {
+                    transform: scale(0) rotate(360deg) translateY(-100px);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
