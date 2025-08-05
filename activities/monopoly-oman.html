@@ -6778,15 +6778,23 @@
                         <div class="winner-stats">
                             <div class="stat">
                                 <span>💰 الأموال النهائية:</span>
-                                <span>${winner.money} ر.ع</span>
+                                <span>${formatMoney(winner.money)}</span>
                             </div>
                             <div class="stat">
                                 <span>🏠 العقارات المملوكة:</span>
-                                <span>${winner.properties.length}</span>
+                                <span>${winner.properties ? winner.properties.length : 0}</span>
                             </div>
                             <div class="stat">
                                 <span>📊 القيمة الصافية:</span>
-                                <span>${LeaderboardSystem.calculateNetWorth(winner)} ر.ع</span>
+                                <span>${formatMoney(LeaderboardSystem.calculateNetWorth(winner))}</span>
+                            </div>
+                            <div class="stat">
+                                <span>🎯 المراحل المكتملة:</span>
+                                <span>${gameState.currentRound}</span>
+                            </div>
+                            <div class="stat">
+                                <span>🏆 نوع الفوز:</span>
+                                <span>${winner.isBank ? 'فوز البنك' : (gameState.currentRound >= 20 ? 'الأغنى' : 'الناجي الوحيد')}</span>
                             </div>
                         </div>
                     </div>
@@ -6966,15 +6974,21 @@
         }
 
         function restartGame() {
-            // إعادة تعيين حالة اللعبة
+            // إعادة تعيين حالة اللعبة بالكامل
             gameState.currentPlayer = 0;
             gameState.currentRound = 1;
+            gameState.gameStarted = false;
+            gameState.doubles = 0;
+            gameState.propertyOwners = {};
+            
+            // إعادة تعيين جميع بيانات اللاعبين
             gameState.players.forEach(player => {
                 player.money = 1500;
                 player.position = 0;
                 player.properties = [];
                 player.inJail = false;
                 player.jailTurns = 0;
+                player.isBankrupt = false;
             });
             
             // إزالة شاشة الفوز
