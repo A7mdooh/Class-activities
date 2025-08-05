@@ -4225,6 +4225,18 @@ ${alternatePaths.map(path => `   • ${path}`).join('\n')}
             if (!playerData || Object.keys(playerData).length === 0) {
                 console.error('❌ playerData فارغ أو غير موجود');
                 MessageSystem.show('❌ لا توجد بيانات طلاب! يجب تحميل ملف studentData.json أولاً', 'error', 10000);
+                
+                // محاولة إعادة تحميل البيانات
+                console.log('🔄 محاولة إعادة تحميل البيانات...');
+                loadStudentData().then((success) => {
+                    if (success) {
+                        console.log('✅ تم إعادة تحميل البيانات بنجاح');
+                        populateClassSelect();
+                        MessageSystem.show('✅ تم إعادة تحميل بيانات الطلاب! حاول مرة أخرى', 'success');
+                    } else {
+                        console.error('❌ فشل في إعادة تحميل البيانات');
+                    }
+                });
                 return;
             }
 
@@ -4241,32 +4253,49 @@ ${alternatePaths.map(path => `   • ${path}`).join('\n')}
                 return;
             }
 
-            // اختيار عشوائي للاعبين
-            const randomPlayers = [];
-            const availableStudents = [...students];
+            // إعادة تعيين اختيار اللاعبين
+            selectedPlayers = [];
             
-            for (let i = 0; i < playersCount; i++) {
-                const randomIndex = Math.floor(Math.random() * availableStudents.length);
-                randomPlayers.push(availableStudents.splice(randomIndex, 1)[0]);
-            }
-
-            // إعداد اللاعبين
-            initializePlayers(randomPlayers.map(player => player.name));
+            // تحديث عداد اللاعبين المطلوب
+            document.getElementById('totalPlayersNeeded').textContent = playersCount;
             
-            MessageSystem.show(`تم اختيار ${playersCount} لاعبين عشوائياً من ${classValue}! 🎉`, 'success');
+            // عرض واجهة اختيار اللاعبين التفاعلية
+            displayStudentsInteractiveGrid(students);
             
-            // تفعيل زر بدء اللعبة
-            document.getElementById('startGameBtn').disabled = false;
+            // إظهار الواجهة
+            const selectionDiv = document.getElementById('smartPlayerSelection');
+            selectionDiv.style.display = 'block';
             
-            console.log('✅ تم إعداد اللاعبين:', randomPlayers.map(p => p.name));
+            MessageSystem.show(`اختر ${playersCount} طلاب من ${classValue} للمشاركة في اللعبة! �`, 'info', 4000);
             
             // التمرير إلى الواجهة
             setTimeout(() => {
-                document.getElementById('smartPlayerSelection').scrollIntoView({ 
+                selectionDiv.scrollIntoView({ 
                     behavior: 'smooth', 
                     block: 'center' 
                 });
             }, 100);
+        }
+        
+        // عرض شبكة الطلاب التفاعلية
+        function displayStudentsInteractiveGrid(students) {
+            const gridContainer = document.getElementById('studentsInteractiveGrid');
+            
+            if (!gridContainer) {
+                console.error('❌ لم يتم العثور على studentsInteractiveGrid');
+                return;
+            }
+            
+            // تنظيف الشبكة
+            gridContainer.innerHTML = '';
+            
+            // إنشاء بطاقات الطلاب
+            students.forEach((student, index) => {
+                const card = createSimpleStudentCard(student, index);
+                gridContainer.appendChild(card);
+            });
+            
+            console.log(`✅ تم عرض ${students.length} بطاقة طالب`);
         }
 
         // دالة بدء اللعبة مع الطلاب المختارين
@@ -4592,9 +4621,14 @@ ${alternatePaths.map(path => `   • ${path}`).join('\n')}
         }
 
         // تحديث واجهة الاختيار
+        // تحديث واجهة الاختيار
         function updateSelectionUI() {
-            updateSimplePlayerSelectionStatus();
-            updateSimpleSelectedPlayersPreview();
+            updateSimpleSelectionUI();
+        }
+        
+        // تحديث حالة اختيار اللاعبين البسيط
+        function updateSimplePlayerSelectionStatus() {
+            updateSimpleSelectionUI();
         }
                 
                 selectedPlayers.push({
