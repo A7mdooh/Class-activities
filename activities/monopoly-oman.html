@@ -3472,40 +3472,37 @@
                 console.log('🔄 بدء تحميل بيانات الطلاب...');
                 MessageSystem.show('جاري تحميل بيانات الطلاب...', 'info', 10000);
                 
-                // تجربة مسارات متعددة مثل باقي الأنشطة
-                const paths = [
-                    '../data/studentData.json',
-                    './data/studentData.json', 
-                    'data/studentData.json',
-                    '../../data/studentData.json'
-                ];
+                // معلومات تشخيصية
+                console.log('📍 معلومات البيئة:');
+                console.log('   - URL الحالي:', window.location.href);
+                console.log('   - البروتوكول:', window.location.protocol);
+                console.log('   - المضيف:', window.location.host);
+                console.log('   - المسار:', window.location.pathname);
                 
-                let data = null;
-                let workingPath = null;
+                // تجربة المسار الأساسي أولاً (مثل الأنشطة الأخرى)
+                const primaryPath = '../data/studentData.json';
+                console.log(`🔍 محاولة تحميل من المسار الأساسي: ${primaryPath}`);
                 
-                for (const path of paths) {
-                    try {
-                        console.log(`🔍 محاولة تحميل: ${path}`);
-                        const response = await fetch(path);
-                        
-                        if (response.ok) {
-                            data = await response.json();
-                            workingPath = path;
-                            console.log(`✅ نجح التحميل من: ${path}`);
-                            break;
-                        } else {
-                            console.log(`❌ فشل ${path}: HTTP ${response.status}`);
-                        }
-                    } catch (pathError) {
-                        console.log(`❌ خطأ في ${path}: ${pathError.message}`);
+                const response = await fetch(primaryPath, {
+                    method: 'GET',
+                    cache: 'no-cache',
+                    headers: {
+                        'Content-Type': 'application/json'
                     }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`خطأ HTTP: ${response.status} - ${response.statusText}`);
                 }
+                
+                const data = await response.json();
+                console.log(`✅ نجح التحميل من: ${primaryPath}`);
                 
                 if (!data) {
-                    throw new Error('فشل في تحميل الملف من جميع المسارات المحتملة');
+                    throw new Error('فشل في تحميل الملف من المسار الأساسي');
                 }
                 
-                console.log('📊 البيانات المحملة من:', workingPath);
+                console.log('📊 البيانات المحملة:');
                 console.log('📊 محتوى البيانات:', data);
                 
                 if (!data || Object.keys(data).length === 0) {
@@ -3555,28 +3552,131 @@
                 console.error('   - المضيف:', window.location.host);
                 console.error('   - نوع الخطأ:', error.constructor.name);
                 
-                // رسالة مفصلة للمستخدم
-                const errorDetails = `
-                ❌ فشل في تحميل ملف studentData.json
+                // محاولة مسارات بديلة
+                console.log('🔄 محاولة مسارات بديلة...');
+                const alternatePaths = [
+                    './data/studentData.json',
+                    'data/studentData.json',
+                    '../../data/studentData.json'
+                ];
                 
-                السبب المحتمل:
-                • إذا كنت تفتح الملف مباشرة (file://) فهذا قد يسبب مشاكل CORS
-                • تأكد من وجود ملف ../data/studentData.json
+                let fallbackSuccess = false;
                 
-                الحلول المقترحة:
-                1. استخدم خادم HTTP محلي (python -m http.server)
-                2. أو افتح من خلال VS Code Live Server
-                3. أو تأكد من المسار الصحيح
+                for (const altPath of alternatePaths) {
+                    try {
+                        console.log(`🔍 محاولة المسار البديل: ${altPath}`);
+                        const altResponse = await fetch(altPath, {
+                            method: 'GET',
+                            cache: 'no-cache',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        
+                        if (altResponse.ok) {
+                            const altData = await altResponse.json();
+                            if (altData && Object.keys(altData).length > 0) {
+                                console.log(`✅ نجح التحميل من المسار البديل: ${altPath}`);
+                                
+                                // معالجة البيانات
+                                const formattedData = {};
+                                for (const [className, students] of Object.entries(altData)) {
+                                    if (Array.isArray(students) && students.length > 0) {
+                                        formattedData[className] = students.map((studentName, index) => ({
+                                            name: studentName,
+                                            id: `${className.replace(/ /g, '_')}_${index + 1}`
+                                        }));
+                                    }
+                                }
+                                
+                                playerData = formattedData;
+                                const totalStudents = Object.values(altData).flat().length;
+                                const totalClasses = Object.keys(altData).length;
+                                
+                                MessageSystem.clear();
+                                MessageSystem.show(`تم تحميل ${totalStudents} طالب من ${totalClasses} صف بنجاح! 🎓`, 'success', 5000);
+                                
+                                fallbackSuccess = true;
+                                return true;
+                            }
+                        }
+                    } catch (altError) {
+                        console.log(`❌ فشل المسار البديل ${altPath}: ${altError.message}`);
+                    }
+                }
                 
-                تفاصيل الخطأ: ${error.message}
-                `;
-                
-                MessageSystem.show(errorDetails, 'error', 20000);
-                soundSystem.play('wrong');
-                
-                // لا توجد بيانات احتياطية - فشل كامل
-                playerData = {};
-                return false;
+                if (!fallbackSuccess) {
+                    // رسالة مفصلة للمستخدم
+                    const isFileProtocol = window.location.protocol === 'file:';
+                    const corsMessage = isFileProtocol ? 
+                        'تم اكتشاف استخدام بروتوكول file:// - هذا يمنع تحميل الملفات بسبب سياسة CORS' : 
+                        'فشل في تحميل الملف من خادم HTTP';
+                    
+                    const errorDetails = `
+❌ فشل في تحميل ملف studentData.json من جميع المسارات
+
+السبب: ${corsMessage}
+
+الحلول المقترحة:
+${isFileProtocol ? `
+🔧 الحل الأمثل - استخدام خادم HTTP محلي:
+1. افتح Terminal/Command Prompt
+2. انتقل لمجلد: ${window.location.pathname.split('/').slice(0, -2).join('/')}
+3. نفذ: python -m http.server 8000
+4. افتح: http://localhost:8000/activities/monopoly-oman.html
+
+🔧 بديل - VS Code Live Server:
+1. افتح المشروع في VS Code
+2. انقر بالزر الأيمن على monopoly-oman.html
+3. اختر "Open with Live Server"
+` : `
+🔧 تحقق من:
+1. وجود ملف data/studentData.json
+2. صحة مسار الملف
+3. إعدادات الخادم
+`}
+
+المسار الحالي: ${window.location.href}
+تفاصيل الخطأ: ${error.message}
+                    `;
+                    
+                    MessageSystem.show(errorDetails, 'error', 30000);
+                    soundSystem.play('wrong');
+                    
+                    // إضافة زر لإعادة المحاولة
+                    setTimeout(() => {
+                        const retryButton = document.createElement('button');
+                        retryButton.innerHTML = '🔄 إعادة المحاولة';
+                        retryButton.style.cssText = `
+                            position: fixed;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                            background: linear-gradient(135deg, #4CAF50, #45a049);
+                            color: white;
+                            border: none;
+                            padding: 15px 30px;
+                            font-size: 18px;
+                            border-radius: 10px;
+                            cursor: pointer;
+                            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+                            z-index: 10000;
+                            font-family: 'Cairo', sans-serif;
+                        `;
+                        
+                        retryButton.onclick = async () => {
+                            retryButton.remove();
+                            MessageSystem.clear();
+                            await loadStudentData();
+                        };
+                        
+                        document.body.appendChild(retryButton);
+                    }, 2000);
+                    
+                    // لا توجد بيانات احتياطية - فشل كامل
+                    playerData = {};
+                    return false;
+                }
             }
         }
 
