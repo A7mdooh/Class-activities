@@ -3194,6 +3194,16 @@
             static showRentPayment(payer, receiver, property, amount) {
                 this.show(`🏘️ ${payer} دفع ${amount} ر.ع إيجار ${property} لـ ${receiver}`, 'warning', 4000);
             }
+
+            static clear() {
+                // إزالة جميع الرسائل الحالية
+                const messages = document.querySelectorAll('.game-message');
+                messages.forEach(message => {
+                    if (message.parentNode) {
+                        message.parentNode.removeChild(message);
+                    }
+                });
+            }
         }
 
         // إنشاء الأنظمة
@@ -3480,7 +3490,17 @@
                 console.log('   - المسار:', window.location.pathname);
                 
                 // تجربة المسار الأساسي أولاً (مثل الأنشطة الأخرى)
-                const primaryPath = '../data/studentData.json';
+                let primaryPath = '../data/studentData.json';
+                
+                // إذا كان الموقع مستضاف على GitHub Pages، نحتاج لتعديل المسار
+                if (window.location.hostname.includes('github.io')) {
+                    // استخراج اسم المستودع من المسار
+                    const pathParts = window.location.pathname.split('/');
+                    const repoName = pathParts[1]; // Class-activities عادة
+                    primaryPath = `/${repoName}/data/studentData.json`;
+                    console.log(`🌐 تم اكتشاف GitHub Pages، استخدام المسار: ${primaryPath}`);
+                }
+                
                 console.log(`🔍 محاولة تحميل من المسار الأساسي: ${primaryPath}`);
                 
                 const response = await fetch(primaryPath, {
@@ -3554,11 +3574,22 @@
                 
                 // محاولة مسارات بديلة
                 console.log('🔄 محاولة مسارات بديلة...');
-                const alternatePaths = [
+                let alternatePaths = [
                     './data/studentData.json',
                     'data/studentData.json',
-                    '../../data/studentData.json'
+                    '../../data/studentData.json',
+                    '../data/studentData.json'
                 ];
+                
+                // إضافة مسارات خاصة بـ GitHub Pages
+                if (window.location.hostname.includes('github.io')) {
+                    const pathParts = window.location.pathname.split('/');
+                    const repoName = pathParts[1];
+                    alternatePaths.unshift(
+                        `/${repoName}/data/studentData.json`,
+                        `https://${window.location.hostname}/${repoName}/data/studentData.json`
+                    );
+                }
                 
                 let fallbackSuccess = false;
                 
@@ -3608,9 +3639,16 @@
                 if (!fallbackSuccess) {
                     // رسالة مفصلة للمستخدم
                     const isFileProtocol = window.location.protocol === 'file:';
-                    const corsMessage = isFileProtocol ? 
-                        'تم اكتشاف استخدام بروتوكول file:// - هذا يمنع تحميل الملفات بسبب سياسة CORS' : 
-                        'فشل في تحميل الملف من خادم HTTP';
+                    const isGitHubPages = window.location.hostname.includes('github.io');
+                    
+                    let corsMessage;
+                    if (isFileProtocol) {
+                        corsMessage = 'تم اكتشاف استخدام بروتوكول file:// - هذا يمنع تحميل الملفات بسبب سياسة CORS';
+                    } else if (isGitHubPages) {
+                        corsMessage = 'فشل في تحميل الملف من GitHub Pages - قد يكون المسار غير صحيح أو الملف غير موجود';
+                    } else {
+                        corsMessage = 'فشل في تحميل الملف من خادم HTTP';
+                    }
                     
                     const errorDetails = `
 ❌ فشل في تحميل ملف studentData.json من جميع المسارات
@@ -3629,6 +3667,15 @@ ${isFileProtocol ? `
 1. افتح المشروع في VS Code
 2. انقر بالزر الأيمن على monopoly-oman.html
 3. اختر "Open with Live Server"
+` : isGitHubPages ? `
+🔧 إذا كنت تستخدم GitHub Pages:
+1. تأكد من وجود مجلد "data" في جذر المستودع
+2. تأكد من وجود ملف "studentData.json" في مجلد data
+3. تأكد من أن الملف تم رفعه للمستودع (git add, commit, push)
+4. انتظر بضع دقائق لتحديث GitHub Pages
+
+🔧 المسارات المجربة:
+${alternatePaths.map(path => `   • ${path}`).join('\n')}
 ` : `
 🔧 تحقق من:
 1. وجود ملف data/studentData.json
