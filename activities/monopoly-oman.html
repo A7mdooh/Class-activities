@@ -4018,255 +4018,92 @@
         }
 
         // ===========================================
-        // نظام تحميل البيانات الاحترافي (مطابق لملف whois.html)
+        // نظام تحميل البيانات المبسط والفعال
         // ===========================================
         async function loadStudentData() {
+            console.log('🔄 بدء تحميل بيانات الطلاب...');
+            MessageSystem.show('جاري تحميل بيانات الطلاب...', 'info', 2000);
+            
             try {
-                console.log('🔄 بدء تحميل بيانات الطلاب...');
-                MessageSystem.show('جاري تحميل بيانات الطلاب...', 'info', 10000);
-                
-                // معلومات تشخيصية
-                console.log('📍 معلومات البيئة:');
-                console.log('   - URL الحالي:', window.location.href);
-                console.log('   - البروتوكول:', window.location.protocol);
-                console.log('   - المضيف:', window.location.host);
-                console.log('   - المسار:', window.location.pathname);
-                
-                // تجربة المسار الأساسي أولاً (مثل الأنشطة الأخرى)
-                let primaryPath = '../data/studentData.json';
-                
-                // إذا كان الموقع مستضاف على GitHub Pages، نحتاج لتعديل المسار
+                // تحديد المسار الصحيح
+                let dataURL;
                 if (window.location.hostname.includes('github.io')) {
-                    // استخراج اسم المستودع من المسار
+                    // مسار GitHub Pages
                     const pathParts = window.location.pathname.split('/');
-                    const repoName = pathParts[1]; // Class-activities عادة
-                    primaryPath = `/${repoName}/data/studentData.json`;
-                    console.log(`🌐 تم اكتشاف GitHub Pages، استخدام المسار: ${primaryPath}`);
+                    const repoName = pathParts[1];
+                    dataURL = `/${repoName}/data/studentData.json`;
+                } else {
+                    // مسار محلي
+                    dataURL = '../data/studentData.json';
                 }
                 
-                console.log(`🔍 محاولة تحميل من المسار الأساسي: ${primaryPath}`);
+                console.log(`📂 محاولة تحميل من: ${dataURL}`);
                 
-                const response = await fetch(primaryPath, {
-                    method: 'GET',
-                    cache: 'no-cache',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
+                const response = await fetch(dataURL);
                 
                 if (!response.ok) {
-                    throw new Error(`خطأ HTTP: ${response.status} - ${response.statusText}`);
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 
                 const data = await response.json();
-                console.log(`✅ نجح التحميل من: ${primaryPath}`);
+                console.log('📋 البيانات المحملة:', data);
                 
-                if (!data) {
-                    throw new Error('فشل في تحميل الملف من المسار الأساسي');
-                }
-                
-                console.log('📊 البيانات المحملة:');
-                console.log('📊 محتوى البيانات:', data);
-                
-                if (!data || Object.keys(data).length === 0) {
-                    throw new Error('ملف البيانات فارغ أو تالف');
-                }
-                
-                // معالجة البيانات وتحويلها للتنسيق المطلوب
+                // تحويل البيانات للتنسيق المطلوب
                 const formattedData = {};
                 for (const [className, students] of Object.entries(data)) {
                     if (Array.isArray(students) && students.length > 0) {
                         formattedData[className] = students.map((studentName, index) => ({
                             name: studentName,
-                            id: `${className.replace(/ /g, '_')}_${index + 1}`
+                            id: `${className.replace(/ /g, '_')}_${index + 1}`,
+                            gender: studentName.includes('فاطمة') || studentName.includes('سارة') || 
+                                   studentName.includes('نورا') || studentName.includes('عائشة') || 
+                                   studentName.includes('مريم') || studentName.includes('هدى') ? 'female' : 'male'
                         }));
-                        console.log(`📝 صف "${className}": ${students.length} طالب`);
-                    } else {
-                        console.warn(`⚠️ صف "${className}" لا يحتوي على بيانات صالحة`);
                     }
                 }
                 
-                if (Object.keys(formattedData).length === 0) {
-                    throw new Error('لا توجد بيانات صالحة في الملف');
-                }
-                
-                // حفظ البيانات
                 playerData = formattedData;
-                
-                // عرض معلومات النجاح
                 const totalStudents = Object.values(data).flat().length;
                 const totalClasses = Object.keys(data).length;
                 
-                console.log('� تم تحميل بيانات الطلاب بنجاح!');
-                console.log(`📊 إجمالي الصفوف: ${totalClasses}`);
-                console.log(`👥 إجمالي الطلاب: ${totalStudents}`);
-                
+                console.log(`✅ تم تحميل ${totalStudents} طالب من ${totalClasses} صف`);
                 MessageSystem.clear();
-                MessageSystem.show(`تم تحميل ${totalStudents} طالب من ${totalClasses} صف بنجاح! 🎓`, 'success', 5000);
+                MessageSystem.show(`✅ تم تحميل ${totalStudents} طالب من ${totalClasses} صف`, 'success', 3000);
                 
                 return true;
                 
             } catch (error) {
-                console.error('❌ خطأ في تحميل بيانات الطلاب:', error.message);
-                console.error('🔍 معلومات تشخيصية مفصلة:');
-                console.error('   - المسار الحالي:', window.location.href);
-                console.error('   - البروتوكول:', window.location.protocol);
-                console.error('   - اسم الملف:', window.location.pathname);
-                console.error('   - المضيف:', window.location.host);
-                console.error('   - نوع الخطأ:', error.constructor.name);
+                console.error('❌ خطأ في تحميل البيانات:', error);
                 
-                // محاولة مسارات بديلة
-                console.log('🔄 محاولة مسارات بديلة...');
-                let alternatePaths = [
-                    './data/studentData.json',
-                    'data/studentData.json',
-                    '../../data/studentData.json',
-                    '../data/studentData.json'
-                ];
+                // استخدام البيانات الاحتياطية
+                console.log('🔄 تحميل البيانات الاحتياطية...');
+                playerData = {
+                    "5أ": [
+                        { name: "أحمد محمد الشرقي", gender: "male", id: "5أ_1" },
+                        { name: "سارة علي البوسعيدي", gender: "female", id: "5أ_2" },
+                        { name: "محمد عبدالله الهنائي", gender: "male", id: "5أ_3" },
+                        { name: "فاطمة سالم الفارسي", gender: "female", id: "5أ_4" },
+                        { name: "يوسف خالد المعمري", gender: "male", id: "5أ_5" }
+                    ],
+                    "5ب": [
+                        { name: "نورا حمد الحارثي", gender: "female", id: "5ب_1" },
+                        { name: "سلطان راشد العبري", gender: "male", id: "5ب_2" },
+                        { name: "عائشة سعيد الكندي", gender: "female", id: "5ب_3" },
+                        { name: "زياد أحمد الرواحي", gender: "male", id: "5ب_4" }
+                    ],
+                    "6أ": [
+                        { name: "مريم يوسف الغافري", gender: "female", id: "6أ_1" },
+                        { name: "عبدالرحمن محمد الصالحي", gender: "male", id: "6أ_2" },
+                        { name: "هدى سليمان الحبسي", gender: "female", id: "6أ_3" },
+                        { name: "طارق فيصل الشحي", gender: "male", id: "6أ_4" }
+                    ]
+                };
                 
-                // إضافة مسارات خاصة بـ GitHub Pages
-                if (window.location.hostname.includes('github.io')) {
-                    const pathParts = window.location.pathname.split('/');
-                    const repoName = pathParts[1];
-                    alternatePaths.unshift(
-                        `/${repoName}/data/studentData.json`,
-                        `https://${window.location.hostname}/${repoName}/data/studentData.json`
-                    );
-                }
+                MessageSystem.clear();
+                MessageSystem.show('⚠️ تم استخدام البيانات الاحتياطية', 'warning', 3000);
+                console.log('✅ تم تحميل البيانات الاحتياطية');
                 
-                let fallbackSuccess = false;
-                
-                for (const altPath of alternatePaths) {
-                    try {
-                        console.log(`🔍 محاولة المسار البديل: ${altPath}`);
-                        const altResponse = await fetch(altPath, {
-                            method: 'GET',
-                            cache: 'no-cache',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            }
-                        });
-                        
-                        if (altResponse.ok) {
-                            const altData = await altResponse.json();
-                            if (altData && Object.keys(altData).length > 0) {
-                                console.log(`✅ نجح التحميل من المسار البديل: ${altPath}`);
-                                
-                                // معالجة البيانات
-                                const formattedData = {};
-                                for (const [className, students] of Object.entries(altData)) {
-                                    if (Array.isArray(students) && students.length > 0) {
-                                        formattedData[className] = students.map((studentName, index) => ({
-                                            name: studentName,
-                                            id: `${className.replace(/ /g, '_')}_${index + 1}`
-                                        }));
-                                    }
-                                }
-                                
-                                playerData = formattedData;
-                                const totalStudents = Object.values(altData).flat().length;
-                                const totalClasses = Object.keys(altData).length;
-                                
-                                MessageSystem.clear();
-                                MessageSystem.show(`تم تحميل ${totalStudents} طالب من ${totalClasses} صف بنجاح! 🎓`, 'success', 5000);
-                                
-                                fallbackSuccess = true;
-                                return true;
-                            }
-                        }
-                    } catch (altError) {
-                        console.log(`❌ فشل المسار البديل ${altPath}: ${altError.message}`);
-                    }
-                }
-                
-                if (!fallbackSuccess) {
-                    // رسالة مفصلة للمستخدم
-                    const isFileProtocol = window.location.protocol === 'file:';
-                    const isGitHubPages = window.location.hostname.includes('github.io');
-                    
-                    let corsMessage;
-                    if (isFileProtocol) {
-                        corsMessage = 'تم اكتشاف استخدام بروتوكول file:// - هذا يمنع تحميل الملفات بسبب سياسة CORS';
-                    } else if (isGitHubPages) {
-                        corsMessage = 'فشل في تحميل الملف من GitHub Pages - قد يكون المسار غير صحيح أو الملف غير موجود';
-                    } else {
-                        corsMessage = 'فشل في تحميل الملف من خادم HTTP';
-                    }
-                    
-                    const errorDetails = `
-❌ فشل في تحميل ملف studentData.json من جميع المسارات
-
-السبب: ${corsMessage}
-
-الحلول المقترحة:
-${isFileProtocol ? `
-🔧 الحل الأمثل - استخدام خادم HTTP محلي:
-1. افتح Terminal/Command Prompt
-2. انتقل لمجلد: ${window.location.pathname.split('/').slice(0, -2).join('/')}
-3. نفذ: python -m http.server 8000
-4. افتح: http://localhost:8000/activities/monopoly-oman.html
-
-🔧 بديل - VS Code Live Server:
-1. افتح المشروع في VS Code
-2. انقر بالزر الأيمن على monopoly-oman.html
-3. اختر "Open with Live Server"
-` : isGitHubPages ? `
-🔧 إذا كنت تستخدم GitHub Pages:
-1. تأكد من وجود مجلد "data" في جذر المستودع
-2. تأكد من وجود ملف "studentData.json" في مجلد data
-3. تأكد من أن الملف تم رفعه للمستودع (git add, commit, push)
-4. انتظر بضع دقائق لتحديث GitHub Pages
-
-🔧 المسارات المجربة:
-${alternatePaths.map(path => `   • ${path}`).join('\n')}
-` : `
-🔧 تحقق من:
-1. وجود ملف data/studentData.json
-2. صحة مسار الملف
-3. إعدادات الخادم
-`}
-
-المسار الحالي: ${window.location.href}
-تفاصيل الخطأ: ${error.message}
-                    `;
-                    
-                    MessageSystem.show(errorDetails, 'error', 30000);
-                    soundSystem.play('wrong');
-                    
-                    // إضافة زر لإعادة المحاولة
-                    setTimeout(() => {
-                        const retryButton = document.createElement('button');
-                        retryButton.innerHTML = '🔄 إعادة المحاولة';
-                        retryButton.style.cssText = `
-                            position: fixed;
-                            top: 50%;
-                            left: 50%;
-                            transform: translate(-50%, -50%);
-                            background: linear-gradient(135deg, #4CAF50, #45a049);
-                            color: white;
-                            border: none;
-                            padding: 15px 30px;
-                            font-size: 18px;
-                            border-radius: 10px;
-                            cursor: pointer;
-                            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-                            z-index: 10000;
-                            font-family: 'Cairo', sans-serif;
-                        `;
-                        
-                        retryButton.onclick = async () => {
-                            retryButton.remove();
-                            MessageSystem.clear();
-                            await loadStudentData();
-                        };
-                        
-                        document.body.appendChild(retryButton);
-                    }, 2000);
-                    
-                    // لا توجد بيانات احتياطية - فشل كامل
-                    playerData = {};
-                    return false;
-                }
+                return false;
             }
         }
 
@@ -7208,105 +7045,215 @@ ${alternatePaths.map(path => `   • ${path}`).join('\n')}
         // معالجة الأحداث
         // ===========================================
         function setupEventListeners() {
+            console.log('🔧 بدء إعداد معالجات الأحداث...');
+            
+            // التحقق من وجود العناصر قبل إضافة الأحداث
+            const setupPlayersBtn = document.getElementById('setupPlayersBtn');
+            const startGameBtn = document.getElementById('startGameBtn');
+            const rollDice = document.getElementById('rollDice');
+            const endTurn = document.getElementById('endTurn');
+            const showRules = document.getElementById('showRules');
+            
             // أزرار التحكم الرئيسية
-            document.getElementById('setupPlayersBtn').addEventListener('click', setupSmartPlayerSelection);
-            document.getElementById('startGameBtn').addEventListener('click', startGameWithStudents);
-            document.getElementById('rollDice').addEventListener('click', rollDice);
-            document.getElementById('endTurn').addEventListener('click', endTurn);
-            document.getElementById('showRules').addEventListener('click', showRules);
+            if (setupPlayersBtn) {
+                setupPlayersBtn.addEventListener('click', setupSmartPlayerSelection);
+                console.log('✅ تم ربط setupPlayersBtn');
+            }
+            if (startGameBtn) {
+                startGameBtn.addEventListener('click', startGameWithStudents);
+                console.log('✅ تم ربط startGameBtn');
+            }
+            if (rollDice) {
+                rollDice.addEventListener('click', rollDice);
+                console.log('✅ تم ربط rollDice');
+            }
+            if (endTurn) {
+                endTurn.addEventListener('click', endTurn);
+                console.log('✅ تم ربط endTurn');
+            }
+            if (showRules) {
+                showRules.addEventListener('click', showRules);
+                console.log('✅ تم ربط showRules');
+            }
 
             // واجهة اختيار اللاعبين الذكية
-            // إعداد listener لقائمة عدد اللاعبين
-            document.getElementById('playersCount').addEventListener('change', () => {
-                const setupBtn = document.getElementById('setupPlayersBtn');
-                const classSelect = document.getElementById('classSelect');
-                if (setupBtn && classSelect.value) {
-                    setupBtn.disabled = false;
-                }
-            });
+            const playersCount = document.getElementById('playersCount');
+            if (playersCount) {
+                playersCount.addEventListener('change', () => {
+                    const setupBtn = document.getElementById('setupPlayersBtn');
+                    const classSelect = document.getElementById('classSelect');
+                    if (setupBtn && classSelect && classSelect.value) {
+                        setupBtn.disabled = false;
+                    }
+                });
+                console.log('✅ تم ربط playersCount');
+            }
             
             // أزرار التحكم في الاختيار
-            document.getElementById('confirmPlayerSelection').addEventListener('click', confirmPlayerSelection);
-            document.getElementById('cancelPlayerSelection').addEventListener('click', cancelPlayerSelection);
-            document.getElementById('clearSelection').addEventListener('click', clearSelection);
+            const confirmBtn = document.getElementById('confirmPlayerSelection');
+            const cancelBtn = document.getElementById('cancelPlayerSelection');
+            const clearBtn = document.getElementById('clearSelection');
+            
+            if (confirmBtn) {
+                confirmBtn.addEventListener('click', confirmPlayerSelection);
+                console.log('✅ تم ربط confirmPlayerSelection');
+            }
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', cancelPlayerSelection);
+                console.log('✅ تم ربط cancelPlayerSelection');
+            }
+            if (clearBtn) {
+                clearBtn.addEventListener('click', clearSelection);
+                console.log('✅ تم ربط clearSelection');
+            }
 
             // أزرار التحكم العلوية المحسّنة
-            document.getElementById('returnToIndex').addEventListener('click', () => {
-                if (confirm('هل تريد العودة للصفحة الرئيسية؟')) {
-                    window.location.href = '../index.html';
-                }
-            });
+            setupTopControlButtons();
+            
+            console.log('✅ تم إعداد جميع معالجات الأحداث');
+        }
+        
+        // إعداد أزرار التحكم العلوية
+        function setupTopControlButtons() {
+            console.log('🎮 إعداد أزرار التحكم العلوية...');
+            
+            // زر العودة للرئيسية
+            const returnToIndex = document.getElementById('returnToIndex');
+            if (returnToIndex) {
+                returnToIndex.addEventListener('click', () => {
+                    if (confirm('هل تريد العودة للصفحة الرئيسية؟')) {
+                        window.location.href = '../index.html';
+                    }
+                });
+                console.log('✅ تم ربط زر العودة للرئيسية');
+            } else {
+                console.error('❌ لم يتم العثور على زر returnToIndex');
+            }
 
-            document.getElementById('soundToggle').addEventListener('click', () => {
-                const enabled = soundSystem.toggle();
-                const icon = document.querySelector('#soundToggle i');
-                icon.className = enabled ? 'fas fa-volume-up' : 'fas fa-volume-mute';
-                MessageSystem.show(enabled ? '🔊 تم تشغيل الصوت' : '🔇 تم إيقاف الصوت', 'info', 2000);
-            });
+            // زر التحكم بالصوت
+            const soundToggle = document.getElementById('soundToggle');
+            if (soundToggle) {
+                soundToggle.addEventListener('click', () => {
+                    try {
+                        const enabled = soundSystem.toggle();
+                        const icon = soundToggle.querySelector('i');
+                        if (icon) {
+                            icon.className = enabled ? 'fas fa-volume-up' : 'fas fa-volume-mute';
+                        }
+                        MessageSystem.show(enabled ? '🔊 تم تشغيل الصوت' : '🔇 تم إيقاف الصوت', 'info', 2000);
+                    } catch (error) {
+                        console.error('خطأ في تبديل الصوت:', error);
+                        MessageSystem.show('خطأ في تبديل الصوت', 'error', 2000);
+                    }
+                });
+                console.log('✅ تم ربط زر التحكم بالصوت');
+            } else {
+                console.error('❌ لم يتم العثور على زر soundToggle');
+            }
 
             // زر ملء الشاشة
-            document.getElementById('fullscreenToggle').addEventListener('click', () => {
-                if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen().then(() => {
-                        const icon = document.querySelector('#fullscreenToggle i');
-                        icon.className = 'fas fa-compress';
-                        MessageSystem.show('🖥️ تم تفعيل ملء الشاشة', 'success', 2000);
-                    }).catch(err => {
-                        MessageSystem.show('❌ لا يمكن تفعيل ملء الشاشة', 'error', 2000);
-                    });
-                } else {
-                    document.exitFullscreen().then(() => {
-                        const icon = document.querySelector('#fullscreenToggle i');
-                        icon.className = 'fas fa-expand';
-                        MessageSystem.show('🪟 تم إلغاء ملء الشاشة', 'info', 2000);
-                    });
-                }
-            });
+            const fullscreenToggle = document.getElementById('fullscreenToggle');
+            if (fullscreenToggle) {
+                fullscreenToggle.addEventListener('click', () => {
+                    try {
+                        if (!document.fullscreenElement) {
+                            document.documentElement.requestFullscreen().then(() => {
+                                const icon = fullscreenToggle.querySelector('i');
+                                if (icon) {
+                                    icon.className = 'fas fa-compress';
+                                }
+                                MessageSystem.show('🖥️ تم تفعيل ملء الشاشة', 'success', 2000);
+                            }).catch(err => {
+                                console.error('خطأ في ملء الشاشة:', err);
+                                MessageSystem.show('❌ لا يمكن تفعيل ملء الشاشة', 'error', 2000);
+                            });
+                        } else {
+                            document.exitFullscreen().then(() => {
+                                const icon = fullscreenToggle.querySelector('i');
+                                if (icon) {
+                                    icon.className = 'fas fa-expand';
+                                }
+                                MessageSystem.show('🪟 تم إلغاء ملء الشاشة', 'info', 2000);
+                            });
+                        }
+                    } catch (error) {
+                        console.error('خطأ في ملء الشاشة:', error);
+                        MessageSystem.show('❌ ملء الشاشة غير مدعوم', 'error', 2000);
+                    }
+                });
+                console.log('✅ تم ربط زر ملء الشاشة');
+            } else {
+                console.error('❌ لم يتم العثور على زر fullscreenToggle');
+            }
 
             // زر معلومات اللعبة
-            document.getElementById('gameInfo').addEventListener('click', () => {
-                const gameInfoModal = document.createElement('div');
-                gameInfoModal.className = 'modal';
-                gameInfoModal.style.display = 'block';
-                gameInfoModal.innerHTML = `
-                    <div class="modal-content">
-                        <span class="close" onclick="this.closest('.modal').remove()">&times;</span>
-                        <h2><i class="fas fa-info-circle"></i> معلومات اللعبة</h2>
-                        <div class="game-info-content">
-                            <div class="info-section">
-                                <h3>🎮 نوع اللعبة</h3>
-                                <p>مونوبولي سلطنة عُمان التعليمي</p>
-                            </div>
-                            <div class="info-section">
-                                <h3>🎯 الهدف</h3>
-                                <p>تعلم الجغرافيا العُمانية وإدارة الأموال من خلال شراء العقارات</p>
-                            </div>
-                            <div class="info-section">
-                                <h3>👥 عدد اللاعبين</h3>
-                                <p>2-6 لاعبين</p>
-                            </div>
-                            <div class="info-section">
-                                <h3>⏱️ مدة اللعبة</h3>
-                                <p>30-60 دقيقة</p>
-                            </div>
-                            <div class="info-section">
-                                <h3>🏛️ الأماكن</h3>
-                                <p>مدن ومعالم حقيقية من سلطنة عُمان</p>
-                            </div>
-                            <div class="info-section">
-                                <h3>📱 الإصدار</h3>
-                                <p>الإصدار التعليمي 2025</p>
-                            </div>
+            const gameInfo = document.getElementById('gameInfo');
+            if (gameInfo) {
+                gameInfo.addEventListener('click', () => {
+                    try {
+                        showGameInfoModal();
+                        MessageSystem.show('📖 تم عرض معلومات اللعبة', 'info', 2000);
+                    } catch (error) {
+                        console.error('خطأ في عرض معلومات اللعبة:', error);
+                        MessageSystem.show('❌ خطأ في عرض المعلومات', 'error', 2000);
+                    }
+                });
+                console.log('✅ تم ربط زر معلومات اللعبة');
+            } else {
+                console.error('❌ لم يتم العثور على زر gameInfo');
+            }
+        }
+        
+        // عرض نافذة معلومات اللعبة
+        function showGameInfoModal() {
+            const gameInfoModal = document.createElement('div');
+            gameInfoModal.className = 'modal';
+            gameInfoModal.style.display = 'block';
+            gameInfoModal.innerHTML = `
+                <div class="modal-content">
+                    <span class="close" onclick="this.closest('.modal').remove()">&times;</span>
+                    <h2><i class="fas fa-info-circle"></i> معلومات اللعبة</h2>
+                    <div class="game-info-content">
+                        <div class="info-section">
+                            <h3>🎮 نوع اللعبة</h3>
+                            <p>مونوبولي سلطنة عُمان التعليمي</p>
                         </div>
-                        <div class="modal-footer">
-                            <button onclick="this.closest('.modal').remove()" class="btn btn-primary">حسناً</button>
+                        <div class="info-section">
+                            <h3>🎯 الهدف</h3>
+                            <p>تعلم الجغرافيا العُمانية وإدارة الأموال من خلال شراء العقارات</p>
+                        </div>
+                        <div class="info-section">
+                            <h3>👥 عدد اللاعبين</h3>
+                            <p>2-6 لاعبين</p>
+                        </div>
+                        <div class="info-section">
+                            <h3>⏱️ مدة اللعبة</h3>
+                            <p>30-60 دقيقة</p>
+                        </div>
+                        <div class="info-section">
+                            <h3>🏛️ الأماكن</h3>
+                            <p>مدن ومعالم حقيقية من سلطنة عُمان</p>
+                        </div>
+                        <div class="info-section">
+                            <h3>📱 الإصدار</h3>
+                            <p>الإصدار التعليمي 2025</p>
+                        </div>
+                        <div class="info-section">
+                            <h3>🔄 حالة البيانات</h3>
+                            <p>البيانات: ${playerData && Object.keys(playerData).length > 0 ? '✅ محملة بنجاح' : '❌ غير محملة'}</p>
+                            <p>عدد الصفوف: ${playerData ? Object.keys(playerData).length : 0}</p>
                         </div>
                     </div>
-                `;
-                document.body.appendChild(gameInfoModal);
-                
-                MessageSystem.show('📖 تم عرض معلومات اللعبة', 'info', 2000);
-            });
+                    <div class="modal-footer">
+                        <button onclick="this.closest('.modal').remove()" class="btn btn-primary">حسناً</button>
+                        ${!playerData || Object.keys(playerData).length === 0 ? 
+                            '<button onclick="this.closest(\'.modal\').remove(); location.reload();" class="btn btn-secondary">إعادة تحميل الصفحة</button>' : 
+                            ''}
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(gameInfoModal);
+        }
 
             // إغلاق النوافذ المنبثقة
             document.querySelectorAll('.close').forEach(closeBtn => {
