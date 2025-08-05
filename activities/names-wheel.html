@@ -595,6 +595,16 @@
             color: white;
         }
 
+        .action-btn.switch-system {
+            background: linear-gradient(45deg, #9b59b6, #8e44ad);
+            color: white;
+        }
+
+        .action-btn.switch-system:hover {
+            background: linear-gradient(45deg, #8e44ad, #7d3c98);
+            transform: translateY(-2px);
+        }
+
         .action-btn.remove {
             background: linear-gradient(45deg, var(--error), #E57373);
             color: white;
@@ -1979,6 +1989,10 @@
                         <i class="fas fa-redo"></i>
                         إعادة تعيين
                     </button>
+                    <button class="action-btn switch-system" id="switchSystemBtn" disabled>
+                        <i class="fas fa-exchange-alt"></i>
+                        <span id="switchSystemText">تبديل للبطاقات</span>
+                    </button>
                     <button class="action-btn remove" id="removeButton" disabled>
                         <i class="fas fa-user-minus"></i>
                         إزالة من القائمة
@@ -2628,12 +2642,16 @@
             document.getElementById('removeButton').disabled = !currentSelectedName || isSpinning;
             document.getElementById('honorButton').disabled = !currentSelectedName || isSpinning;
             document.getElementById('resetButton').disabled = currentStudents.length === 0;
+            document.getElementById('switchSystemBtn').disabled = !hasStudents || isSpinning || cardsSelectionActive;
             
             // تحديث نص زر الاختيار حسب النظام
             const spinButtonText = document.getElementById('spinButtonText');
             if (spinButtonText) {
                 spinButtonText.textContent = useCardsSystem ? 'ابدأ اختيار البطاقة' : 'ابدأ دوران العجلة';
             }
+            
+            // تحديث نص زر التبديل
+            updateSwitchButtonText();
             
             // تحديث حالة أزرار لوحة الشرف
             const hasHonors = honoredStudents.length > 0;
@@ -3575,6 +3593,50 @@
             console.log(`🏆 تم اختيار: ${studentName} بنظام البطاقات`);
         }
 
+        // ===========================================
+        // التبديل اليدوي بين الأنظمة
+        // ===========================================
+        
+        function manualSwitchSystem() {
+            if (isSpinning || cardsSelectionActive) {
+                showToast('❌ لا يمكن التبديل أثناء الاختيار', 'error');
+                return;
+            }
+            
+            if (availableStudents.length === 0) {
+                showToast('❌ اختر صفاً أولاً', 'error');
+                return;
+            }
+            
+            playSound('menuOpen');
+            
+            if (useCardsSystem) {
+                // التبديل للعجلة
+                switchToWheelSystem();
+                showToast('🎡 تم التبديل للعجلة الكلاسيكية', 'success');
+            } else {
+                // التبديل للبطاقات
+                switchToCardsSystem();
+                showToast('🎴 تم التبديل لنظام البطاقات', 'success');
+            }
+            
+            updateSwitchButtonText();
+            showWelcomeMessage();
+        }
+        
+        function updateSwitchButtonText() {
+            const switchText = document.getElementById('switchSystemText');
+            const switchBtn = document.getElementById('switchSystemBtn');
+            
+            if (useCardsSystem) {
+                switchText.textContent = 'تبديل للعجلة';
+                switchBtn.title = 'التبديل للعجلة الكلاسيكية';
+            } else {
+                switchText.textContent = 'تبديل للبطاقات';
+                switchBtn.title = 'التبديل لنظام البطاقات التفاعلي';
+            }
+        }
+
         function showToast(message, type = 'info') {
             const toast = document.createElement('div');
             toast.className = `toast toast-${type}`;
@@ -3721,6 +3783,7 @@
             document.getElementById('removeButton').addEventListener('click', removeStudent);
             document.getElementById('honorButton').addEventListener('click', addToHonorList);
             document.getElementById('resetButton').addEventListener('click', resetAllStudents);
+            document.getElementById('switchSystemBtn').addEventListener('click', manualSwitchSystem);
             document.getElementById('soundToggle').addEventListener('click', toggleSound);
             
             // ربط أحداث الأزرار العلوية
