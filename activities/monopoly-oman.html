@@ -5455,7 +5455,10 @@
         }
 
         function showDiceAnimation(callback) {
-            const diceContainer = document.getElementById('diceContainer') || createDiceContainer();
+            let diceContainer = document.getElementById('diceContainer');
+            if (!diceContainer) {
+                diceContainer = createDiceContainer();
+            }
             
             // أنيميشن الدوران
             diceContainer.classList.add('rolling');
@@ -5492,7 +5495,47 @@
                 transform: translate(-50%, -50%);
                 z-index: 1000;
                 pointer-events: none;
+                background: rgba(0,0,0,0.8);
+                border-radius: 15px;
+                padding: 20px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             `;
+            
+            // إضافة أنماط النرد
+            const diceStyle = document.createElement('style');
+            diceStyle.textContent = `
+                .dice-wrapper {
+                    display: flex;
+                    gap: 20px;
+                    align-items: center;
+                    justify-content: center;
+                }
+                .dice {
+                    width: 60px;
+                    height: 60px;
+                    background: white;
+                    border-radius: 10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 40px;
+                    color: #333;
+                    border: 2px solid #ddd;
+                    transition: all 0.1s ease;
+                }
+                .rolling .dice {
+                    animation: diceRoll 0.1s infinite;
+                }
+                @keyframes diceRoll {
+                    0% { transform: rotate(0deg); }
+                    25% { transform: rotate(90deg); }
+                    50% { transform: rotate(180deg); }
+                    75% { transform: rotate(270deg); }
+                    100% { transform: rotate(360deg); }
+                }
+            `;
+            document.head.appendChild(diceStyle);
+            
             document.body.appendChild(container);
             return container;
         }
@@ -7015,9 +7058,9 @@
             // التحقق من وجود العناصر قبل إضافة الأحداث
             const setupPlayersBtn = document.getElementById('setupPlayersBtn');
             const startGameBtn = document.getElementById('startGameBtn');
-            const rollDice = document.getElementById('rollDice');
-            const endTurn = document.getElementById('endTurn');
-            const showRules = document.getElementById('showRules');
+            const rollDiceBtn = document.getElementById('rollDice');
+            const endTurnBtn = document.getElementById('endTurn');
+            const showRulesBtn = document.getElementById('showRules');
             
             // أزرار التحكم الرئيسية
             if (setupPlayersBtn) {
@@ -7028,16 +7071,16 @@
                 startGameBtn.addEventListener('click', startGameWithStudents);
                 console.log('✅ تم ربط startGameBtn');
             }
-            if (rollDice) {
-                rollDice.addEventListener('click', rollDice);
+            if (rollDiceBtn) {
+                rollDiceBtn.addEventListener('click', () => rollDice());
                 console.log('✅ تم ربط rollDice');
             }
-            if (endTurn) {
-                endTurn.addEventListener('click', endTurn);
+            if (endTurnBtn) {
+                endTurnBtn.addEventListener('click', () => endTurn());
                 console.log('✅ تم ربط endTurn');
             }
-            if (showRules) {
-                showRules.addEventListener('click', showRules);
+            if (showRulesBtn) {
+                showRulesBtn.addEventListener('click', showRules);
                 console.log('✅ تم ربط showRules');
             }
 
