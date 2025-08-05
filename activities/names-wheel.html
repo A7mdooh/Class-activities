@@ -559,6 +559,16 @@
             color: var(--text-primary);
         }
 
+        .action-btn.sound-on {
+            background: linear-gradient(45deg, var(--success), #66BB6A);
+            color: white;
+        }
+
+        .action-btn.sound-off {
+            background: linear-gradient(45deg, var(--text-secondary), #9E9E9E);
+            color: white;
+        }
+
         .action-btn:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
@@ -605,6 +615,292 @@
                 transform: translateY(-10vh) rotate(360deg);
                 opacity: 0;
             }
+        }
+
+        /* عجلة المهام الإضافية */
+        .task-wheel-section {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.95) 0%, 
+                rgba(248, 255, 254, 0.9) 100%);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            margin: var(--spacing-xl) 0;
+            box-shadow: var(--shadow-medium);
+            border: 2px solid rgba(255, 87, 34, 0.2);
+            animation: slideInFromRight 0.8s ease-out;
+        }
+
+        @keyframes slideInFromRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .task-header {
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .task-header h3 {
+            font-size: 1.8rem;
+            color: var(--secondary);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .task-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .task-wheel-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+        }
+
+        .task-wheel-pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 30px solid var(--secondary);
+            z-index: 10;
+            filter: drop-shadow(0 3px 8px rgba(255, 87, 34, 0.5));
+            animation: taskPointerGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes taskPointerGlow {
+            0%, 100% { filter: drop-shadow(0 3px 8px rgba(255, 87, 34, 0.5)); }
+            50% { filter: drop-shadow(0 3px 15px rgba(255, 87, 34, 0.8)); }
+        }
+
+        #taskWheelCanvas {
+            border-radius: 50%;
+            box-shadow: 
+                0 0 30px rgba(255, 87, 34, 0.3),
+                0 0 60px rgba(255, 215, 0, 0.2);
+            border: 3px solid rgba(255, 255, 255, 0.4);
+            animation: taskWheelFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes taskWheelFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+        }
+
+        .task-spin-btn {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            background: linear-gradient(45deg, var(--secondary), #FF8A65);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            box-shadow: 0 6px 20px rgba(255, 87, 34, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .task-spin-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 87, 34, 0.4);
+        }
+
+        .task-spin-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .task-spin-btn.spinning {
+            animation: taskButtonSpin 1s linear infinite;
+        }
+
+        @keyframes taskButtonSpin {
+            0% { transform: translateY(-2px) rotate(0deg); }
+            100% { transform: translateY(-2px) rotate(360deg); }
+        }
+
+        /* نتيجة المهمة */
+        .task-result {
+            background: linear-gradient(45deg, var(--secondary), #FF8A65);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(255, 87, 34, 0.3);
+            animation: taskResultPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes taskResultPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .task-result h4 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .task-result p {
+            font-size: 1.1rem;
+            line-height: 1.4;
+        }
+
+        /* نظام المكافآت */
+        .rewards-panel {
+            background: linear-gradient(135deg, 
+                rgba(255, 215, 0, 0.1) 0%, 
+                rgba(255, 193, 7, 0.1) 100%);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-top: 20px;
+            animation: goldShimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes goldShimmer {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.2); }
+            50% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.4); }
+        }
+
+        .rewards-header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .rewards-header h4 {
+            color: var(--accent);
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+
+        .achievement-badge {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--accent), #FFEB3B);
+            color: var(--text-primary);
+            padding: 8px 15px;
+            border-radius: 20px;
+            margin: 5px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+            animation: badgeFloat 2s ease-in-out infinite;
+        }
+
+        @keyframes badgeFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-3px); }
+        }
+
+        /* تأثيرات خاصة للاحتفال */
+        .celebration-fireworks {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .firework {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            animation: fireworkExplode 2s ease-out forwards;
+        }
+
+        @keyframes fireworkExplode {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(2);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* إشعارات الإنجازات */
+        .achievement-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--accent), #FFEB3B);
+            color: var(--text-primary);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+            z-index: 2000;
+            max-width: 350px;
+            animation: achievementSlideIn 0.5s ease-out;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes achievementSlideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .achievement-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .achievement-icon {
+            font-size: 2.5rem;
+            animation: achievementBounce 1s ease-in-out infinite;
+        }
+
+        @keyframes achievementBounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .achievement-text h4 {
+            margin: 0 0 5px 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .achievement-text p {
+            margin: 0 0 5px 0;
+            font-size: 0.9rem;
+        }
+
+        .achievement-text strong {
+            font-size: 1rem;
+            font-weight: 800;
         }
 
         /* التجاوب مع الشاشات */
@@ -702,6 +998,22 @@
             </div>
         </div>
 
+        <!-- عجلة المهام الإضافية -->
+        <div class="task-wheel-section" id="taskWheelSection" style="display: none;">
+            <div class="task-header">
+                <h3>🎯 عجلة المهام العشوائية</h3>
+                <p>اختر مهمة عشوائية للطالب المحدد!</p>
+            </div>
+            <div class="task-wheel-container">
+                <div class="task-wheel-pointer"></div>
+                <canvas id="taskWheelCanvas" width="300" height="300"></canvas>
+                <button class="task-spin-btn" id="taskSpinButton">
+                    <i class="fas fa-magic"></i>
+                    اختر المهمة
+                </button>
+            </div>
+        </div>
+
         <!-- منطقة العجلة -->
         <div class="wheel-container" data-aos="fade-up">
             <!-- العجلة ثلاثية الأبعاد -->
@@ -731,6 +1043,10 @@
                     <button class="action-btn honor" id="honorButton" disabled>
                         <i class="fas fa-star"></i>
                         إضافة لقائمة الشرف
+                    </button>
+                    <button class="action-btn sound-on" id="soundToggle">
+                        <i class="fas fa-volume-up"></i>
+                        إيقاف الأصوات
                     </button>
                 </div>
             </div>
@@ -789,26 +1105,329 @@
         let spinSpeed = 0;
         let students = [];
 
-        // الأصوات
+        // متغيرات عجلة المهام
+        let taskWheelCanvas, taskWheelCtx;
+        let isTaskSpinning = false;
+        let currentTaskRotation = 0;
+        let currentSelectedTask = '';
+        
+        // قائمة المهام الإبداعية
+        const creativeTasks = [
+            { name: "اقرأ فقرة", icon: "📖", color: "#4CAF50", description: "اقرأ فقرة من الكتاب بصوت واضح" },
+            { name: "أجب على سؤال", icon: "❓", color: "#2196F3", description: "أجب على سؤال من المعلم" },
+            { name: "اكتب على السبورة", icon: "✏️", color: "#FF9800", description: "اكتب الإجابة على السبورة" },
+            { name: "قدم عرضاً", icon: "🎭", color: "#9C27B0", description: "قدم عرضاً قصيراً للصف" },
+            { name: "شارك فكرة", icon: "💡", color: "#FFEB3B", description: "شارك فكرة إبداعية حول الموضوع" },
+            { name: "ارسم مخططاً", icon: "🎨", color: "#00BCD4", description: "ارسم مخططاً أو رسمة توضيحية" },
+            { name: "اطرح سؤالاً", icon: "🤔", color: "#795548", description: "اطرح سؤالاً ذكياً على زملائك" },
+            { name: "قم بتمثيل", icon: "🎪", color: "#E91E63", description: "مثل المفهوم أو القصة بطريقة مسرحية" }
+        ];
+
+        // نظام النقاط والمكافآت
+        let playerPoints = {};
+        let achievements = [];
+        
+        const achievementLevels = [
+            { name: "مشارك نشط", points: 10, icon: "🌟", color: "#4CAF50" },
+            { name: "نجم الصف", points: 25, icon: "⭐", color: "#FF9800" },
+            { name: "عبقري المدرسة", points: 50, icon: "🏆", color: "#FFD700" },
+            { name: "أسطورة التعلم", points: 100, icon: "👑", color: "#9C27B0" }
+        ];
+
+        // نظام الأصوات المتطور من Kingdom Sounds
         let soundEnabled = true;
+        let backgroundMusic = null;
+        
         const sounds = {
-            spin: new Howl({
-                src: ['data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2+LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmswBDGH0fPTfCgELH3J8N2QQAoUXrTp66hVFApGn+DyvmswBDGH0fPTfCgE'],
+            // أصوات واجهة المستخدم
+            buttonHover: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/button-hover.mp3'],
+                volume: 0.3
+            }),
+            menuOpen: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/menu-open.mp3'],
+                volume: 0.4
+            }),
+            cosmicClick: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/cosmic-click.mp3'],
+                volume: 0.5
+            }),
+            
+            // أصوات العجلة والدوران
+            wheelSpin: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/cosmic-portal.mp3'],
+                volume: 0.6,
+                loop: false
+            }),
+            wheelSpinning: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/mystic-wind.mp3'],
+                volume: 0.4,
+                loop: true
+            }),
+            countdownTick: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/countdown-tick.mp3'],
+                volume: 0.5
+            }),
+            
+            // أصوات النتائج والاختيار
+            studentSelect: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/epic-victory.mp3'],
+                volume: 0.7
+            }),
+            characterIntro: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/character-intro.mp3'],
                 volume: 0.6
             }),
-            select: new Howl({
-                src: ['data:audio/wav;base64,UklGRv4CAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YdoCAAC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4QEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAuLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4QEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLhAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBA'],
+            royalFanfare: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/royal-fanfare.mp3'],
                 volume: 0.8
             }),
-            notification: new Howl({
-                src: ['data:audio/wav;base64,UklGRpQDAABXQVZFZm10IBAAAAABAAEAVFYAAKhWAQACABAAZGF0YXADAAD////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////'],
+            
+            // أصوات المهام
+            taskWheelSpin: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/magic-sparkle.mp3'],
+                volume: 0.5
+            }),
+            taskSelect: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/spell-cast.mp3'],
+                volume: 0.6
+            }),
+            creativitySpark: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/creativity-spark.mp3'],
+                volume: 0.5
+            }),
+            
+            // أصوات النقاط والإنجازات
+            pointEarn: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/point-earn.mp3'],
+                volume: 0.6
+            }),
+            bonusCollect: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/bonus-collect.mp3'],
+                volume: 0.7
+            }),
+            achievementUnlock: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/achievement-unlock.mp3'],
+                volume: 0.8
+            }),
+            levelUp: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/level-up.mp3'],
+                volume: 0.9
+            }),
+            perfectScore: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/perfect-score.mp3'],
+                volume: 1.0
+            }),
+            
+            // أصوات الاحتفال والتأثيرات
+            crowdCheer: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/crowd-cheer.mp3'],
+                volume: 0.7
+            }),
+            fireworksBurst: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/fireworks-burst.mp3'],
+                volume: 0.8
+            }),
+            goldenConfetti: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/golden-confetti.mp3'],
+                volume: 0.6
+            }),
+            crownCeremony: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/crown-ceremony.mp3'],
+                volume: 0.9
+            }),
+            ultimateTriumph: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/ultimate-triumph.mp3'],
+                volume: 1.0
+            }),
+            
+            // أصوات التفكير والتحليل
+            thinkingTime: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/thinking-time.mp3'],
                 volume: 0.4
+            }),
+            brainActivate: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/brain-activate.mp3'],
+                volume: 0.5
+            }),
+            greatIdea: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/great-idea.mp3'],
+                volume: 0.6
+            }),
+            
+            // أصوات الأخطاء والتحذيرات
+            timeWarning: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/time-warning.mp3'],
+                volume: 0.7
+            }),
+            pointLose: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/point-lose.mp3'],
+                volume: 0.5
+            }),
+            
+            // أصوات خاصة
+            ancientBell: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/ancient-bell.mp3'],
+                volume: 0.6
+            }),
+            wisdomChime: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/wisdom-chime.mp3'],
+                volume: 0.5
+            }),
+            knowledgeUnlock: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/knowledge-unlock.mp3'],
+                volume: 0.7
+            }),
+            settingChange: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/setting-change.mp3'],
+                volume: 0.5
+            }),
+            panelSlide: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/panel-slide.mp3'],
+                volume: 0.4
+            }),
+            
+            // موسيقى الخلفية
+            adventureTheme: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/adventure-theme.mp3'],
+                volume: 0.2,
+                loop: true
+            }),
+            castleAtmosphere: new Howl({
+                src: ['../assets/media/sounds/kingdom-sounds/castle-atmosphere.mp3'],
+                volume: 0.15,
+                loop: true
             })
         };
 
         // ===========================================
-        // تحميل بيانات المدرسة والطلاب
+        // نظام إدارة الأصوات المتطور
         // ===========================================
+        
+        // تشغيل صوت مع معالجة الأخطاء
+        function playSound(soundName, delay = 0) {
+            if (!soundEnabled || !sounds[soundName]) {
+                console.warn(`⚠️ الصوت غير متوفر: ${soundName}`);
+                return;
+            }
+            
+            setTimeout(() => {
+                try {
+                    sounds[soundName].play();
+                    console.log(`🔊 تم تشغيل الصوت: ${soundName}`);
+                } catch (error) {
+                    console.error(`❌ خطأ في تشغيل الصوت ${soundName}:`, error);
+                }
+            }, delay);
+        }
+
+        // إيقاف جميع الأصوات
+        function stopAllSounds() {
+            Object.values(sounds).forEach(sound => {
+                try {
+                    sound.stop();
+                } catch (error) {
+                    console.warn('خطأ في إيقاف صوت:', error);
+                }
+            });
+        }
+
+        // تشغيل موسيقى الخلفية
+        function startBackgroundMusic() {
+            if (!soundEnabled) return;
+            
+            stopBackgroundMusic();
+            backgroundMusic = sounds.adventureTheme;
+            
+            try {
+                backgroundMusic.play();
+                console.log('🎵 بدء موسيقى الخلفية');
+            } catch (error) {
+                console.error('خطأ في تشغيل موسيقى الخلفية:', error);
+            }
+        }
+
+        // إيقاف موسيقى الخلفية
+        function stopBackgroundMusic() {
+            if (backgroundMusic) {
+                try {
+                    backgroundMusic.stop();
+                    backgroundMusic = null;
+                    console.log('🔇 تم إيقاف موسيقى الخلفية');
+                } catch (error) {
+                    console.warn('خطأ في إيقاف موسيقى الخلفية:', error);
+                }
+            }
+        }
+
+        // تغيير مستوى الصوت
+        function adjustVolume(volumeLevel) {
+            Object.values(sounds).forEach(sound => {
+                try {
+                    sound.volume(sound._volume * volumeLevel);
+                } catch (error) {
+                    console.warn('خطأ في تعديل مستوى الصوت:', error);
+                }
+            });
+        }
+
+        // تبديل حالة الصوت
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            
+            if (!soundEnabled) {
+                stopAllSounds();
+                stopBackgroundMusic();
+                console.log('🔇 تم إيقاف جميع الأصوات');
+            } else {
+                playSound('cosmicClick');
+                console.log('🔊 تم تفعيل الأصوات');
+            }
+            
+            updateSoundButton();
+        }
+
+        // تحديث زر التحكم بالصوت
+        function updateSoundButton() {
+            const soundButton = document.getElementById('soundToggle');
+            if (soundButton) {
+                soundButton.innerHTML = soundEnabled ? 
+                    '<i class="fas fa-volume-up"></i> إيقاف الأصوات' : 
+                    '<i class="fas fa-volume-mute"></i> تشغيل الأصوات';
+                soundButton.className = `action-btn ${soundEnabled ? 'sound-on' : 'sound-off'}`;
+            }
+        }
+
+        // تشغيل أصوات متتالية للاحتفال
+        function playCelebrationSequence() {
+            playSound('fireworksBurst');
+            playSound('crowdCheer', 500);
+            playSound('goldenConfetti', 1000);
+            playSound('royalFanfare', 1500);
+        }
+
+        // تشغيل أصوات الإنجاز حسب المستوى
+        function playAchievementSound(level) {
+            switch(level) {
+                case 1:
+                    playSound('pointEarn');
+                    break;
+                case 2:
+                    playSound('bonusCollect');
+                    playSound('achievementUnlock', 300);
+                    break;
+                case 3:
+                    playSound('levelUp');
+                    playSound('crownCeremony', 500);
+                    break;
+                case 4:
+                    playSound('ultimateTriumph');
+                    playCelebrationSequence();
+                    break;
+                default:
+                    playSound('pointEarn');
+            }
+        }
         async function loadSchoolData() {
             try {
                 // تحميل بيانات المدرسة
@@ -878,13 +1497,22 @@
                 updateUI();
                 createWheel();
                 showWelcomeMessage();
-                playSound('notification');
+                
+                // تشغيل أصوات الترحيب
+                playSound('menuOpen');
+                playSound('wisdomChime', 300);
+                
+                // بدء موسيقى الخلفية
+                setTimeout(() => {
+                    startBackgroundMusic();
+                }, 1000);
                 
                 console.log(`✅ تم تحميل ${currentStudents.length} طالب من الصف ${selectedClass}`);
             } else {
                 currentStudents = [];
                 availableStudents = [];
                 resetDisplay();
+                stopBackgroundMusic();
             }
         }
 
@@ -1026,8 +1654,12 @@
             document.getElementById('spinButton').classList.add('spinning');
             document.getElementById('spinButton').innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الاختيار...';
             
-            // تشغيل صوت الدوران
-            playSound('spin');
+            // تشغيل أصوات الدوران
+            playSound('wheelSpin');
+            playSound('brainActivate', 200);
+            
+            // بدء صوت الدوران المستمر
+            sounds.wheelSpinning.play();
             
             // حساب دوران عشوائي
             const baseSpins = 5 + Math.random() * 5;
@@ -1038,6 +1670,12 @@
             const startTime = Date.now();
             const duration = 4000;
             const startRotation = currentRotation;
+            
+            // تشغيل أصوات العد التنازلي
+            setTimeout(() => playSound('countdownTick'), 1000);
+            setTimeout(() => playSound('countdownTick'), 2000);
+            setTimeout(() => playSound('countdownTick'), 3000);
+            setTimeout(() => playSound('thinkingTime'), 3500);
             
             function animate() {
                 const elapsed = Date.now() - startTime;
@@ -1062,6 +1700,9 @@
         function finishSpin() {
             isSpinning = false;
             
+            // إيقاف صوت الدوران المستمر
+            sounds.wheelSpinning.stop();
+            
             // حساب الطالب المختار
             const normalizedAngle = (2 * Math.PI - (currentRotation % (2 * Math.PI))) % (2 * Math.PI);
             const segmentAngle = (2 * Math.PI) / students.length;
@@ -1074,8 +1715,11 @@
             // عرض النتيجة
             showSelectedStudent(currentSelectedName);
             
-            // تشغيل صوت النجاح
-            playSound('select');
+            // تشغيل أصوات النجاح والاحتفال
+            playSound('ancientBell');
+            playSound('studentSelect', 300);
+            playSound('characterIntro', 600);
+            playSound('knowledgeUnlock', 900);
             
             // إعادة تفعيل الزر
             document.getElementById('spinButton').classList.remove('spinning');
@@ -1095,6 +1739,9 @@
                     🎉 ${studentName}
                 </div>
             `;
+            
+            // إظهار عجلة المهام
+            showTaskWheel();
             
             // تأثيرات بصرية
             createCelebrationEffect();
@@ -1128,6 +1775,301 @@
         }
 
         // ===========================================
+        // عجلة المهام الإبداعية
+        // ===========================================
+        function showTaskWheel() {
+            const taskSection = document.getElementById('taskWheelSection');
+            taskSection.style.display = 'block';
+            
+            // إنشاء عجلة المهام
+            createTaskWheel();
+        }
+
+        function createTaskWheel() {
+            taskWheelCanvas = document.getElementById('taskWheelCanvas');
+            taskWheelCtx = taskWheelCanvas.getContext('2d');
+            
+            drawTaskWheel();
+        }
+
+        function drawTaskWheel() {
+            if (!taskWheelCtx) return;
+            
+            const centerX = taskWheelCanvas.width / 2;
+            const centerY = taskWheelCanvas.height / 2;
+            const radius = 130;
+            const segmentAngle = (2 * Math.PI) / creativeTasks.length;
+            
+            taskWheelCtx.clearRect(0, 0, taskWheelCanvas.width, taskWheelCanvas.height);
+            
+            // رسم شرائح المهام
+            creativeTasks.forEach((task, index) => {
+                const startAngle = currentTaskRotation + (index * segmentAngle);
+                const endAngle = startAngle + segmentAngle;
+                
+                // رسم الشريحة
+                taskWheelCtx.beginPath();
+                taskWheelCtx.moveTo(centerX, centerY);
+                taskWheelCtx.arc(centerX, centerY, radius, startAngle, endAngle);
+                taskWheelCtx.closePath();
+                
+                // تدرج لوني
+                const gradient = taskWheelCtx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
+                gradient.addColorStop(0, task.color);
+                gradient.addColorStop(1, task.color + '80');
+                
+                taskWheelCtx.fillStyle = gradient;
+                taskWheelCtx.fill();
+                
+                // رسم الحدود
+                taskWheelCtx.strokeStyle = '#ffffff';
+                taskWheelCtx.lineWidth = 2;
+                taskWheelCtx.stroke();
+                
+                // رسم الأيقونة والنص
+                const textAngle = startAngle + segmentAngle / 2;
+                const iconX = centerX + Math.cos(textAngle) * (radius * 0.6);
+                const iconY = centerY + Math.sin(textAngle) * (radius * 0.6);
+                
+                taskWheelCtx.save();
+                taskWheelCtx.translate(iconX, iconY);
+                taskWheelCtx.rotate(textAngle + Math.PI / 2);
+                
+                // رسم الأيقونة
+                taskWheelCtx.font = 'bold 20px Arial';
+                taskWheelCtx.textAlign = 'center';
+                taskWheelCtx.fillStyle = '#ffffff';
+                taskWheelCtx.fillText(task.icon, 0, -10);
+                
+                // رسم النص
+                taskWheelCtx.font = 'bold 10px Cairo, Arial';
+                taskWheelCtx.fillText(task.name, 0, 8);
+                
+                taskWheelCtx.restore();
+            });
+            
+            // رسم الدائرة الخارجية
+            taskWheelCtx.beginPath();
+            taskWheelCtx.arc(centerX, centerY, radius + 3, 0, 2 * Math.PI);
+            taskWheelCtx.strokeStyle = '#FF5722';
+            taskWheelCtx.lineWidth = 4;
+            taskWheelCtx.stroke();
+        }
+
+        function spinTaskWheel() {
+            if (isTaskSpinning) return;
+            
+            isTaskSpinning = true;
+            const taskSpinButton = document.getElementById('taskSpinButton');
+            taskSpinButton.classList.add('spinning');
+            taskSpinButton.innerHTML = '<i class="fas fa-magic fa-spin"></i> جاري الاختيار...';
+            taskSpinButton.disabled = true;
+            
+            // تشغيل أصوات دوران المهام
+            playSound('taskWheelSpin');
+            playSound('creativitySpark', 200);
+            
+            // حساب دوران عشوائي
+            const baseSpins = 3 + Math.random() * 3;
+            const finalAngle = Math.random() * 2 * Math.PI;
+            const totalRotation = baseSpins * 2 * Math.PI + finalAngle;
+            
+            // رسوم متحركة للدوران
+            const startTime = Date.now();
+            const duration = 3000;
+            const startRotation = currentTaskRotation;
+            
+            // تشغيل أصوات التفكير
+            setTimeout(() => playSound('thinkingTime'), 1000);
+            setTimeout(() => playSound('greatIdea'), 2500);
+            
+            function animate() {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                currentTaskRotation = startRotation + totalRotation * easeOut;
+                
+                drawTaskWheel();
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    finishTaskSpin();
+                }
+            }
+            
+            animate();
+        }
+
+        function finishTaskSpin() {
+            isTaskSpinning = false;
+            
+            // حساب المهمة المختارة
+            const normalizedAngle = (2 * Math.PI - (currentTaskRotation % (2 * Math.PI))) % (2 * Math.PI);
+            const segmentAngle = (2 * Math.PI) / creativeTasks.length;
+            const selectedIndex = Math.floor(normalizedAngle / segmentAngle);
+            currentSelectedTask = creativeTasks[selectedIndex];
+            
+            // إعادة تفعيل الزر
+            const taskSpinButton = document.getElementById('taskSpinButton');
+            taskSpinButton.classList.remove('spinning');
+            taskSpinButton.innerHTML = '<i class="fas fa-magic"></i> اختر المهمة';
+            taskSpinButton.disabled = false;
+            
+            // عرض النتيجة
+            showTaskResult();
+            
+            // إضافة نقاط للطالب
+            addPointsToStudent();
+            
+            // تشغيل أصوات النجاح والمهمة
+            playSound('taskSelect');
+            playSound('wisdomChime', 300);
+            
+            // تأثيرات احتفالية
+            createFireworksEffect();
+            
+            console.log(`🎯 المهمة المختارة: ${currentSelectedTask.name}`);
+        }
+
+        function showTaskResult() {
+            const taskSection = document.getElementById('taskWheelSection');
+            
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'task-result';
+            resultDiv.innerHTML = `
+                <h4>${currentSelectedTask.icon} ${currentSelectedTask.name}</h4>
+                <p>${currentSelectedTask.description}</p>
+            `;
+            
+            // إزالة النتيجة السابقة إن وجدت
+            const existingResult = taskSection.querySelector('.task-result');
+            if (existingResult) {
+                existingResult.remove();
+            }
+            
+            taskSection.appendChild(resultDiv);
+        }
+
+        function addPointsToStudent() {
+            if (!currentSelectedName) return;
+            
+            if (!playerPoints[currentSelectedName]) {
+                playerPoints[currentSelectedName] = 0;
+            }
+            
+            playerPoints[currentSelectedName] += 5;
+            
+            // تشغيل صوت كسب النقاط
+            playSound('pointEarn');
+            
+            // فحص الإنجازات
+            checkAchievements();
+            
+            console.log(`🏆 ${currentSelectedName} حصل على 5 نقاط! المجموع: ${playerPoints[currentSelectedName]}`);
+        }
+
+        function checkAchievements() {
+            if (!currentSelectedName) return;
+            
+            const playerScore = playerPoints[currentSelectedName] || 0;
+            
+            achievementLevels.forEach((level, index) => {
+                if (playerScore >= level.points && !achievements.includes(`${currentSelectedName}-${level.name}`)) {
+                    achievements.push(`${currentSelectedName}-${level.name}`);
+                    showAchievementNotification(level);
+                    playAchievementSound(index + 1);
+                }
+            });
+        }
+
+        function showAchievementNotification(achievement) {
+            const notification = document.createElement('div');
+            notification.className = 'achievement-notification';
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(45deg, ${achievement.color}, ${achievement.color}80);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+                z-index: 2000;
+                animation: slideInFromRight 0.5s ease-out;
+                font-weight: 600;
+            `;
+            notification.innerHTML = `
+                ${achievement.icon} إنجاز جديد: ${achievement.name}!
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+            
+            // إضافة الشارة لقائمة المكافآت
+            updateRewardsPanel();
+        }
+
+        function updateRewardsPanel() {
+            let rewardsPanel = document.getElementById('rewardsPanel');
+            if (!rewardsPanel) {
+                rewardsPanel = document.createElement('div');
+                rewardsPanel.id = 'rewardsPanel';
+                rewardsPanel.className = 'rewards-panel';
+                document.querySelector('.cosmic-container').appendChild(rewardsPanel);
+            }
+            
+            const playerAchievements = achievements.filter(a => a.startsWith(currentSelectedName));
+            
+            rewardsPanel.innerHTML = `
+                <div class="rewards-header">
+                    <h4>🏆 إنجازات ${currentSelectedName}</h4>
+                    <p>النقاط: ${playerPoints[currentSelectedName] || 0}</p>
+                </div>
+                <div class="achievements-list">
+                    ${playerAchievements.map(achievement => {
+                        const levelName = achievement.split('-')[1];
+                        const level = achievementLevels.find(l => l.name === levelName);
+                        return level ? `<span class="achievement-badge">${level.icon} ${level.name}</span>` : '';
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        function createFireworksEffect() {
+            const container = document.createElement('div');
+            container.className = 'celebration-fireworks';
+            document.body.appendChild(container);
+            
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const firework = document.createElement('div');
+                    firework.className = 'firework';
+                    firework.style.cssText = `
+                        left: ${Math.random() * 100}%;
+                        top: ${Math.random() * 100}%;
+                        background: hsl(${Math.random() * 360}, 70%, 60%);
+                    `;
+                    container.appendChild(firework);
+                    
+                    setTimeout(() => {
+                        if (firework.parentNode) {
+                            firework.remove();
+                        }
+                    }, 2000);
+                }, i * 100);
+            }
+            
+            setTimeout(() => {
+                container.remove();
+            }, 3000);
+        }
+
+        // ===========================================
         // وظائف الأزرار
         // ===========================================
         function removeStudent() {
@@ -1143,7 +2085,10 @@
             showWelcomeMessage();
             updateUI();
             
-            playSound('notification');
+            // تشغيل صوت الإزالة
+            playSound('pointLose');
+            playSound('panelSlide', 200);
+            
             console.log(`🗑️ تم إزالة الطالب من القائمة`);
         }
 
@@ -1152,12 +2097,16 @@
             
             if (!honoredStudents.includes(currentSelectedName)) {
                 honoredStudents.push(currentSelectedName);
+                
+                // تشغيل أصوات التكريم
+                playSound('crownCeremony');
+                playSound('royalFanfare', 500);
+                playSound('perfectScore', 1000);
+                
+                console.log(`🏆 تم إضافة ${currentSelectedName} لقائمة الشرف`);
             }
             
-            playSound('select');
             updateUI();
-            
-            console.log(`🏆 تم إضافة ${currentSelectedName} لقائمة الشرف`);
         }
 
         function resetAllStudents() {
@@ -1166,12 +2115,27 @@
                 selectedStudents = [];
                 currentSelectedName = '';
                 
+                // إخفاء عجلة المهام والمكافآت
+                const taskSection = document.getElementById('taskWheelSection');
+                taskSection.style.display = 'none';
+                
+                const rewardsPanel = document.getElementById('rewardsPanel');
+                if (rewardsPanel) {
+                    rewardsPanel.remove();
+                }
+                
                 createWheel();
                 showWelcomeMessage();
                 updateUI();
                 
-                playSound('notification');
+                // تشغيل أصوات إعادة التعيين
+                playSound('settingChange');
+                playSound('ancientBell', 400);
+                
                 console.log('🔄 تم إعادة تعيين جميع الطلاب');
+            } else {
+                // تشغيل صوت الإلغاء
+                playSound('panelSlide');
             }
         }
 
@@ -1182,6 +2146,10 @@
                     اختر الصف الدراسي أولاً لبدء المتعة!
                 </div>
             `;
+            
+            // إخفاء عجلة المهام
+            const taskSection = document.getElementById('taskWheelSection');
+            taskSection.style.display = 'none';
             
             if (wheelCtx) {
                 wheelCtx.clearRect(0, 0, wheelCanvas.width, wheelCanvas.height);
@@ -1250,8 +2218,43 @@
             document.getElementById('removeButton').addEventListener('click', removeStudent);
             document.getElementById('honorButton').addEventListener('click', addToHonorList);
             document.getElementById('resetButton').addEventListener('click', resetAllStudents);
+            document.getElementById('soundToggle').addEventListener('click', toggleSound);
+            
+            // ربط أحداث عجلة المهام
+            document.getElementById('taskSpinButton').addEventListener('click', spinTaskWheel);
+            
+            // إضافة تأثيرات صوتية للأزرار
+            document.querySelectorAll('button').forEach(button => {
+                button.addEventListener('mouseenter', () => {
+                    if (soundEnabled && !button.disabled) {
+                        playSound('buttonHover');
+                    }
+                });
+                
+                button.addEventListener('click', () => {
+                    if (soundEnabled && !button.disabled) {
+                        playSound('cosmicClick');
+                    }
+                });
+            });
+            
+            // إضافة تأثيرات صوتية للقائمة المنسدلة
+            document.getElementById('classSelect').addEventListener('change', () => {
+                if (soundEnabled) {
+                    playSound('menuOpen');
+                }
+            });
             
             updateUI();
+            
+            // تشغيل ترحيب صوتي
+            setTimeout(() => {
+                if (soundEnabled) {
+                    playSound('ancientBell');
+                    playSound('wisdomChime', 500);
+                }
+            }, 1000);
+            
             console.log('🎡 تم تهيئة عجلة الأسماء الذكية بنجاح!');
         });
 
