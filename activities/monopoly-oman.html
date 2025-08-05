@@ -2299,6 +2299,400 @@
             }
         }
 
+        /* أنماط البطاقات المحسّنة */
+        .student-card.interactive.enhanced {
+            position: relative;
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin: 10px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid #e9ecef;
+            overflow: hidden;
+            min-height: 200px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .student-card.interactive.enhanced:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+
+        .student-card.interactive.enhanced.selected {
+            border-color: #4CAF50;
+            background: linear-gradient(145deg, #f8fff8, #ffffff);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
+        }
+
+        .card-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: inherit;
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .student-avatar-enhanced {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .avatar-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .avatar-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff6b35;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.4);
+        }
+
+        .selection-indicator {
+            position: relative;
+        }
+
+        .selection-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+
+        .student-card.selected .selection-circle {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            transform: scale(1.1);
+        }
+
+        .card-content {
+            text-align: center;
+            margin: 15px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .student-name-enhanced {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0 0 8px 0;
+            line-height: 1.4;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .student-meta {
+            color: #6c757d;
+            font-size: 12px;
+            margin-bottom: 15px;
+        }
+
+        .card-footer {
+            position: relative;
+            z-index: 1;
+            margin-top: auto;
+        }
+
+        .action-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 15px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .student-card.selected .action-button {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: #155724;
+        }
+
+        .action-text {
+            font-weight: 500;
+        }
+
+        .action-icon {
+            font-size: 12px;
+        }
+
+        .card-effects {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            border-radius: inherit;
+            overflow: hidden;
+        }
+
+        .ripple-effect {
+            position: absolute;
+            background: rgba(76, 175, 80, 0.3);
+            border-radius: 50%;
+            transform: scale(0);
+            pointer-events: none;
+        }
+
+        .ripple-effect.animate {
+            animation: rippleAnimation 0.6s ease-out;
+        }
+
+        @keyframes rippleAnimation {
+            to {
+                transform: scale(1);
+                opacity: 0;
+            }
+        }
+
+        .success-animation {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            color: #4CAF50;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: successPop 1s ease-out;
+        }
+
+        @keyframes successPop {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0;
+            }
+        }
+
+        @keyframes cardShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: translate(-50%, -50%) scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+        }
+
+        .game-ready-notification {
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .notification-content {
+            text-align: center;
+        }
+
+        .notification-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            animation: pulse 2s infinite;
+        }
+
+        .notification-text h3 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+        }
+
+        .notification-text p {
+            margin: 0 0 15px 0;
+            opacity: 0.9;
+        }
+
+        .ready-players {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin: 15px 0;
+        }
+
+        .ready-player {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .notification-start-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .notification-start-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* أنماط اختيار عدد اللاعبين المحسّن */
+        .players-count-selector {
+            margin-top: 10px;
+        }
+
+        .players-count-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .player-count-option {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .player-count-option:hover {
+            border-color: #007bff;
+            background: #f8f9ff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.2);
+        }
+
+        .player-count-option.selected {
+            border-color: #28a745;
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: #155724;
+            transform: scale(1.05);
+        }
+
+        .player-count-option.selected::before {
+            content: '✓';
+            position: absolute;
+            top: 5px;
+            right: 8px;
+            background: #28a745;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .option-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .option-label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .option-number {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .player-count-option.selected .option-label,
+        .player-count-option.selected .option-number {
+            color: #155724;
+        }
+
         /* تنسيق نافذة السجن */
         .jail-modal {
             animation: fadeIn 0.3s ease-out;
@@ -2819,15 +3213,36 @@
                 
                 <div class="form-group">
                     <label for="playersCount">👥 عدد اللاعبين</label>
-                    <select id="playersCount" class="form-control">
-                        <option value="2">👥 لاعبان</option>
-                        <option value="3">👥👤 ثلاثة لاعبين</option>
-                        <option value="4">👥👥 أربعة لاعبين</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="playersCount">👥 عدد اللاعبين</label>
-                    <select id="playersCount" class="form-control">
+                    <div class="players-count-selector">
+                        <div class="players-count-options">
+                            <div class="player-count-option" data-count="2">
+                                <div class="option-icon">👥</div>
+                                <div class="option-label">لاعبان</div>
+                                <div class="option-number">2</div>
+                            </div>
+                            <div class="player-count-option" data-count="3">
+                                <div class="option-icon">👥👤</div>
+                                <div class="option-label">ثلاثة</div>
+                                <div class="option-number">3</div>
+                            </div>
+                            <div class="player-count-option" data-count="4">
+                                <div class="option-icon">👥👥</div>
+                                <div class="option-label">أربعة</div>
+                                <div class="option-number">4</div>
+                            </div>
+                            <div class="player-count-option" data-count="5">
+                                <div class="option-icon">👥👥👤</div>
+                                <div class="option-label">خمسة</div>
+                                <div class="option-number">5</div>
+                            </div>
+                            <div class="player-count-option" data-count="6">
+                                <div class="option-icon">👥👥👥</div>
+                                <div class="option-label">ستة</div>
+                                <div class="option-number">6</div>
+                            </div>
+                        </div>
+                    </div>
+                    <select id="playersCount" class="form-control" style="display: none;">
                         <option value="2">👥 لاعبان</option>
                         <option value="3">👥👤 ثلاثة لاعبين</option>
                         <option value="4">👥👥 أربعة لاعبين</option>
@@ -3864,60 +4279,323 @@ ${alternatePaths.map(path => `   • ${path}`).join('\n')}
             startGame();
         }
 
-        // إنشاء بطاقة طالب بسيطة
+        // إنشاء بطاقة طالب محسّنة وتفاعلية
         function createSimpleStudentCard(student, index) {
             const card = document.createElement('div');
-            card.className = 'student-interactive-card';
-            card.dataset.studentId = student.id || index;
-            card.dataset.studentName = student.name;
+            card.className = 'student-card interactive enhanced';
+            card.setAttribute('data-student-id', student.id || student.name);
+            
+            // ألوان متنوعة للبطاقات
+            const cardColors = [
+                'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+                'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+                'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+                'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
+                'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
+                'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)'
+            ];
+            
+            const cardColor = cardColors[index % cardColors.length];
             
             card.innerHTML = `
-                <div class="student-avatar">
-                    ${student.name.charAt(0)}
+                <div class="card-background" style="background: ${cardColor}; opacity: 0.1; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: inherit;"></div>
+                <div class="card-header">
+                    <div class="student-avatar-enhanced">
+                        <div class="avatar-circle" style="background: ${cardColor};">
+                            <span class="avatar-letter">${student.name.charAt(0)}</span>
+                        </div>
+                        <div class="avatar-badge">
+                            <span>${index + 1}</span>
+                        </div>
+                    </div>
+                    <div class="selection-indicator">
+                        <div class="selection-circle">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
                 </div>
-                <div class="student-name">${student.name}</div>
-                <div class="student-status">
-                    <i class="fas fa-plus-circle"></i>
-                    <span>انقر للاختيار</span>
+                <div class="card-content">
+                    <h4 class="student-name-enhanced" title="${student.name}">${student.name}</h4>
+                    <div class="student-meta">
+                        <span class="student-id">طالب رقم: ${index + 1}</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="action-button">
+                        <span class="action-text">انقر للاختيار</span>
+                        <i class="fas fa-hand-pointer action-icon"></i>
+                    </div>
+                </div>
+                <div class="card-effects">
+                    <div class="ripple-effect"></div>
+                    <div class="success-animation">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
                 </div>
             `;
             
-            // إضافة حدث النقر
-            card.addEventListener('click', () => toggleSimpleStudentSelection(card, student));
+            // إضافة تأثيرات تفاعلية
+            card.addEventListener('mouseenter', () => {
+                if (!card.classList.contains('selected')) {
+                    card.style.transform = 'translateY(-8px) scale(1.02)';
+                    card.style.boxShadow = '0 15px 35px rgba(0,0,0,0.2)';
+                }
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                if (!card.classList.contains('selected')) {
+                    card.style.transform = 'translateY(0) scale(1)';
+                    card.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
+                }
+            });
+            
+            // إضافة حدث النقر مع تأثيرات
+            card.addEventListener('click', (e) => {
+                // تأثير الموجة عند النقر
+                createRippleEffect(e, card);
+                setTimeout(() => {
+                    toggleEnhancedStudentSelection(card, student, index);
+                }, 100);
+            });
             
             return card;
         }
 
-        // تبديل اختيار الطالب البسيط
-        function toggleSimpleStudentSelection(card, student) {
+        // تبديل اختيار الطالب المحسّن
+        function toggleEnhancedStudentSelection(card, student, index) {
             const playersNeeded = parseInt(document.getElementById('totalPlayersNeeded').textContent);
             const isSelected = selectedPlayers.some(p => p.id === (student.id || student.name));
             
             if (isSelected) {
-                // إزالة الطالب
-                selectedPlayers = selectedPlayers.filter(p => p.id !== (student.id || student.name));
-                card.classList.remove('selected');
-                
-                // تحديث حالة البطاقة
-                const statusElement = card.querySelector('.student-status');
-                statusElement.innerHTML = `
-                    <i class="fas fa-plus-circle"></i>
-                    <span>انقر للاختيار</span>
-                `;
-                
-                soundSystem.play('Click');
+                // إزالة الطالب مع تأثيرات
+                deselectStudentCard(card, student);
             } else {
-                // إضافة طالب
+                // إضافة طالب مع تأثيرات
                 if (selectedPlayers.length >= playersNeeded) {
-                    MessageSystem.show(`يمكن اختيار ${playersNeeded} لاعبين فقط!`, 'error');
-                    
-                    // تأثير اهتزاز للبطاقة
-                    card.style.animation = 'shake 0.5s ease-in-out';
-                    setTimeout(() => {
-                        card.style.animation = '';
-                    }, 500);
+                    showMaxPlayersReachedAnimation(card);
                     return;
                 }
+                
+                selectStudentCard(card, student, index);
+            }
+            
+            updateSelectionUI();
+        }
+        
+        // إنشاء تأثير الموجة عند النقر
+        function createRippleEffect(e, element) {
+            const ripple = element.querySelector('.ripple-effect');
+            const rect = element.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.classList.add('animate');
+            
+            setTimeout(() => {
+                ripple.classList.remove('animate');
+            }, 600);
+        }
+        
+        // اختيار بطاقة الطالب
+        function selectStudentCard(card, student, index) {
+            // إضافة للقائمة
+            selectedPlayers.push({
+                id: student.id || student.name,
+                name: student.name,
+                index: index
+            });
+            
+            // تحديث مظهر البطاقة
+            card.classList.add('selected');
+            
+            // تحديث الأيقونات والنصوص
+            const selectionCircle = card.querySelector('.selection-circle');
+            const actionText = card.querySelector('.action-text');
+            const actionIcon = card.querySelector('.action-icon');
+            const successAnimation = card.querySelector('.success-animation');
+            
+            selectionCircle.innerHTML = '<i class="fas fa-check"></i>';
+            selectionCircle.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
+            actionText.textContent = 'تم الاختيار';
+            actionIcon.className = 'fas fa-check action-icon';
+            
+            // تأثير النجاح
+            successAnimation.style.display = 'flex';
+            setTimeout(() => {
+                successAnimation.style.display = 'none';
+            }, 1000);
+            
+            // تأثيرات صوتية
+            soundSystem.play('select');
+            
+            // تأثير بصري للبطاقة
+            card.style.transform = 'translateY(-5px) scale(1.05)';
+            card.style.boxShadow = '0 10px 30px rgba(76, 175, 80, 0.3)';
+            
+            // فحص اكتمال الاختيار
+            const playersNeeded = parseInt(document.getElementById('totalPlayersNeeded').textContent);
+            if (selectedPlayers.length === playersNeeded) {
+                setTimeout(() => {
+                    showSelectionCompleteAnimation();
+                }, 500);
+            }
+        }
+        
+        // إلغاء اختيار بطاقة الطالب
+        function deselectStudentCard(card, student) {
+            // إزالة من القائمة
+            selectedPlayers = selectedPlayers.filter(p => p.id !== (student.id || student.name));
+            
+            // تحديث مظهر البطاقة
+            card.classList.remove('selected');
+            
+            // إعادة تعيين الأيقونات والنصوص
+            const selectionCircle = card.querySelector('.selection-circle');
+            const actionText = card.querySelector('.action-text');
+            const actionIcon = card.querySelector('.action-icon');
+            
+            selectionCircle.innerHTML = '<i class="fas fa-plus"></i>';
+            selectionCircle.style.background = 'linear-gradient(135deg, #6c757d, #495057)';
+            actionText.textContent = 'انقر للاختيار';
+            actionIcon.className = 'fas fa-hand-pointer action-icon';
+            
+            // إعادة تعيين التأثيرات البصرية
+            card.style.transform = 'translateY(0) scale(1)';
+            card.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
+            
+            // صوت الإلغاء
+            soundSystem.play('Click');
+        }
+        
+        // إظهار تأثير الوصول للحد الأقصى
+        function showMaxPlayersReachedAnimation(card) {
+            const playersNeeded = parseInt(document.getElementById('totalPlayersNeeded').textContent);
+            
+            // رسالة تحذيرية
+            MessageSystem.show(`🚫 تم الوصول للحد الأقصى! يمكن اختيار ${playersNeeded} لاعبين فقط`, 'warning', 3000);
+            
+            // تأثير اهتزاز للبطاقة
+            card.style.animation = 'cardShake 0.6s ease-in-out';
+            card.style.borderColor = '#ff4757';
+            
+            setTimeout(() => {
+                card.style.animation = '';
+                card.style.borderColor = '';
+            }, 600);
+            
+            // صوت خطأ
+            soundSystem.play('wrong_answer');
+        }
+        
+        // إظهار تأثير اكتمال الاختيار
+        function showSelectionCompleteAnimation() {
+            const playersNeeded = parseInt(document.getElementById('totalPlayersNeeded').textContent);
+            
+            // إخفاء البطاقات غير المختارة تدريجياً
+            const allCards = document.querySelectorAll('.student-card:not(.selected)');
+            allCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0.3';
+                    card.style.transform = 'scale(0.9)';
+                    card.style.filter = 'blur(2px)';
+                    card.style.pointerEvents = 'none';
+                }, index * 100);
+            });
+            
+            // تأثيرات الكونفيتي
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#4CAF50', '#2196F3', '#FF9800', '#E91E63']
+            });
+            
+            // رسالة النجاح
+            MessageSystem.show(`🎉 ممتاز! تم اختيار ${playersNeeded} لاعبين بنجاح`, 'success', 4000);
+            
+            // صوت النجاح
+            soundSystem.play('win');
+            
+            // تفعيل زر التأكيد مع تأثيرات
+            const confirmBtn = document.getElementById('confirmPlayerSelection');
+            confirmBtn.disabled = false;
+            confirmBtn.style.animation = 'pulse 1s infinite';
+            confirmBtn.innerHTML = '<i class="fas fa-rocket"></i> ابدأ اللعبة الآن!';
+            
+            // إظهار إشعار الجاهزية
+            setTimeout(() => {
+                showGameReadyNotification();
+            }, 2000);
+        }
+        
+        // إظهار إشعار جاهزية اللعبة
+        function showGameReadyNotification() {
+            const notification = document.createElement('div');
+            notification.className = 'game-ready-notification';
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <div class="notification-icon">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <div class="notification-text">
+                        <h3>🚀 اللعبة جاهزة للبدء!</h3>
+                        <p>تم اختيار جميع اللاعبين بنجاح</p>
+                        <div class="ready-players">
+                            ${selectedPlayers.map(player => `
+                                <span class="ready-player">${player.name}</span>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <button class="notification-start-btn" onclick="confirmPlayerSelection(); document.body.removeChild(this.closest('.game-ready-notification'));">
+                        <i class="fas fa-play"></i>
+                        ابدأ اللعبة
+                    </button>
+                </div>
+            `;
+            
+            notification.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 30px;
+                border-radius: 20px;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+                z-index: 10003;
+                text-align: center;
+                min-width: 350px;
+                animation: bounceIn 0.6s ease-out;
+                font-family: 'Cairo', sans-serif;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // إزالة الإشعار تلقائياً بعد 10 ثواني
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.style.animation = 'fadeOut 0.5s ease-in';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            document.body.removeChild(notification);
+                        }
+                    }, 500);
+                }
+            }, 10000);
+        }
+
+        // تحديث واجهة الاختيار
+        function updateSelectionUI() {
+            updateSimplePlayerSelectionStatus();
+            updateSimpleSelectedPlayersPreview();
+        }
                 
                 selectedPlayers.push({
                     id: student.id || student.name,
@@ -6662,6 +7340,78 @@ ${alternatePaths.map(path => `   • ${path}`).join('\n')}
                 MessageSystem.show('حدث خطأ في تحميل اللعبة', 'error');
             }
         });
+
+        // إعداد واجهة اختيار عدد اللاعبين المحسّنة
+        document.addEventListener('DOMContentLoaded', () => {
+            const playerCountOptions = document.querySelectorAll('.player-count-option');
+            const playersCountSelect = document.getElementById('playersCount');
+            
+            // تعيين القيمة الافتراضية
+            const defaultOption = document.querySelector('.player-count-option[data-count="2"]');
+            if (defaultOption) {
+                defaultOption.classList.add('selected');
+                playersCountSelect.value = '2';
+            }
+            
+            // إضافة أحداث النقر لخيارات عدد اللاعبين
+            playerCountOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    // إزالة التحديد من جميع الخيارات
+                    playerCountOptions.forEach(opt => opt.classList.remove('selected'));
+                    
+                    // تحديد الخيار المنقور
+                    option.classList.add('selected');
+                    
+                    // تحديث قيمة الـ select المخفي
+                    const count = option.getAttribute('data-count');
+                    playersCountSelect.value = count;
+                    
+                    // تحديث عداد اللاعبين المطلوب
+                    document.getElementById('totalPlayersNeeded').textContent = count;
+                    
+                    // تأثير صوتي
+                    soundSystem.play('Click');
+                    
+                    // تأثير بصري
+                    option.style.animation = 'pulse 0.3s ease';
+                    setTimeout(() => {
+                        option.style.animation = '';
+                    }, 300);
+                    
+                    // إعادة تعيين اختيار اللاعبين إذا تم تغيير العدد
+                    selectedPlayers = [];
+                    updateSelectionUI();
+                    
+                    // رسالة إعلامية
+                    MessageSystem.show(`تم اختيار ${count} لاعبين للعبة! 🎮`, 'info', 2000);
+                    
+                    // تحديث حالة الأزرار
+                    updateSetupButtonState();
+                });
+                
+                // تأثيرات التفاعل
+                option.addEventListener('mouseenter', () => {
+                    if (!option.classList.contains('selected')) {
+                        option.style.transform = 'translateY(-2px) scale(1.02)';
+                    }
+                });
+                
+                option.addEventListener('mouseleave', () => {
+                    if (!option.classList.contains('selected')) {
+                        option.style.transform = 'translateY(0) scale(1)';
+                    }
+                });
+            });
+        });
+        
+        // تحديث حالة زر الإعداد
+        function updateSetupButtonState() {
+            const classSelect = document.getElementById('classSelect');
+            const playersCount = document.getElementById('playersCount').value;
+            const setupBtn = document.getElementById('setupPlayersBtn');
+            
+            setupBtn.disabled = !classSelect.value || !playersCount;
+        }
     </script>
 
     <!-- المساعد الاستجابي للأجهزة المحمولة -->
