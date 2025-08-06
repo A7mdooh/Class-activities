@@ -798,6 +798,71 @@
             gap: 15px;
         }
 
+        /* تصميم أنماط الاختيار */
+        .selection-mode-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .mode-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .mode-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(0, 121, 107, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .mode-card.active {
+            background: linear-gradient(145deg, rgba(0, 121, 107, 0.3), rgba(0, 121, 107, 0.1));
+            border-color: #00796B;
+            box-shadow: 0 0 15px rgba(0, 121, 107, 0.3);
+        }
+
+        .mode-icon {
+            font-size: 1.8em;
+            margin-bottom: 8px;
+        }
+
+        .mode-title {
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 4px;
+            font-size: 0.9em;
+        }
+
+        .mode-desc {
+            font-size: 0.75em;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.2;
+        }
+
+        /* تسميات السرعة */
+        .speed-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7em;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 5px;
+        }
+
+        /* الإعدادات المتقدمة */
+        .advanced-toggles {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
         .toggle-item {
             display: flex;
             align-items: center;
@@ -2245,7 +2310,7 @@
     <div class="settings-overlay" id="settingsOverlay">
         <div class="settings-modal">
             <div class="settings-header">
-                <h3 class="settings-title">⚙️ إعدادات العجلة</h3>
+                <h3 class="settings-title">🎴 إعدادات البطاقات الذكية</h3>
                 <button class="close-settings-btn" id="closeSettingsBtn">
                     ✕
                 </button>
@@ -2286,6 +2351,67 @@
                                 <span class="toggle-slider"></span>
                             </label>
                             <span class="toggle-label">🎵 الموسيقى الخلفية</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- إعدادات سرعة الاختيار -->
+                <div class="setting-item">
+                    <label class="setting-label" for="selectionSpeedSlider">⚡ سرعة اختيار البطاقات</label>
+                    <input type="range" id="selectionSpeedSlider" class="speed-slider" min="1" max="5" value="3">
+                    <div class="speed-value" id="selectionSpeedValue">متوسط</div>
+                    <div class="speed-labels">
+                        <span>بطيء جداً</span>
+                        <span>سريع جداً</span>
+                    </div>
+                </div>
+
+                <!-- أنماط الاختيار الذكية -->
+                <div class="setting-item">
+                    <label class="setting-label">🎯 نمط الاختيار الذكي</label>
+                    <div class="selection-mode-grid">
+                        <div class="mode-card active" data-mode="dual">
+                            <div class="mode-icon">🎴🎯</div>
+                            <div class="mode-title">مزدوج ذكي</div>
+                            <div class="mode-desc">اختيار اسم + مهمة معاً</div>
+                        </div>
+                        <div class="mode-card" data-mode="names-only">
+                            <div class="mode-icon">👥</div>
+                            <div class="mode-title">أسماء فقط</div>
+                            <div class="mode-desc">اختيار الطلاب فقط</div>
+                        </div>
+                        <div class="mode-card" data-mode="tasks-only">
+                            <div class="mode-icon">📝</div>
+                            <div class="mode-title">مهام فقط</div>
+                            <div class="mode-desc">اختيار المهام فقط</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- إعدادات متقدمة -->
+                <div class="setting-item">
+                    <label class="setting-label">⚙️ إعدادات متقدمة</label>
+                    <div class="advanced-toggles">
+                        <div class="toggle-item">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="shuffleEffectToggle" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span class="toggle-label">🎲 تأثير الخلط</span>
+                        </div>
+                        <div class="toggle-item">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="eliminationEffectToggle" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span class="toggle-label">⚡ تأثير الإقصاء</span>
+                        </div>
+                        <div class="toggle-item">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="autoHonorToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span class="toggle-label">🏆 إضافة تلقائية للشرف</span>
                         </div>
                     </div>
                 </div>
@@ -2496,6 +2622,31 @@
         let selectedStudentName = '';
         let selectedTask = null;
         let isSelectionActive = false;
+        
+        // إعدادات النظام الذكية
+        let systemSettings = {
+            selectionMode: 'dual', // 'dual', 'names-only', 'tasks-only'
+            selectionSpeed: 3, // 1-5 (1=بطيء جداً, 5=سريع جداً)
+            shuffleEffect: true,
+            eliminationEffect: true,
+            autoHonor: false,
+            volume: 70,
+            sounds: {
+                selection: true,
+                effects: true,
+                achievements: true,
+                backgroundMusic: true
+            }
+        };
+        
+        // سرعات الاختيار (بالميلي ثانية)
+        const selectionSpeeds = {
+            1: { delay: 200, duration: 3000 }, // بطيء جداً
+            2: { delay: 150, duration: 2500 }, // بطيء
+            3: { delay: 100, duration: 2000 }, // متوسط
+            4: { delay: 75, duration: 1500 },  // سريع
+            5: { delay: 50, duration: 1000 }   // سريع جداً
+        };
         
         // بطاقات المهام الاحترافية المرقمة (1-40)
         const smartTaskCards = Array.from({ length: 40 }, (_, i) => ({
@@ -3191,8 +3342,72 @@
         function spinWheel() {
             if (isSpinning || availableStudents.length === 0) return;
             
-            // بدء نظام البطاقات المزدوج الجديد
-            startDualCardSelection();
+            // تحديد نوع الاختيار حسب النمط المختار
+            switch(systemSettings.selectionMode) {
+                case 'dual':
+                    startDualCardSelection();
+                    break;
+                case 'names-only':
+                    startNameOnlySelection();
+                    break;
+                case 'tasks-only':
+                    startTaskOnlySelection();
+                    break;
+                default:
+                    startDualCardSelection();
+            }
+        }
+
+        // ===========================================
+        // أنماط الاختيار المختلفة
+        // ===========================================
+        function startNameOnlySelection() {
+            currentStep = 'names-only';
+            showCardsContainer();
+            
+            // إظهار بطاقات الأسماء فقط
+            document.getElementById('nameCardsSystem').style.display = 'block';
+            document.getElementById('taskCardsSystem').style.display = 'none';
+            document.getElementById('finalResult').style.display = 'none';
+            
+            createNameCards();
+            playSound('gameStart');
+            
+            // بدء عملية الاختيار مع السرعة المحددة
+            setTimeout(() => {
+                startNameCardSelection();
+            }, 500);
+        }
+        
+        function startTaskOnlySelection() {
+            currentStep = 'tasks-only';
+            showCardsContainer();
+            
+            // إظهار بطاقات المهام فقط
+            document.getElementById('nameCardsSystem').style.display = 'none';
+            document.getElementById('taskCardsSystem').style.display = 'block';
+            document.getElementById('finalResult').style.display = 'none';
+            
+            createTaskCards();
+            playSound('gameStart');
+            
+            // بدء عملية الاختيار مع السرعة المحددة
+            setTimeout(() => {
+                startTaskCardSelection();
+            }, 500);
+        }
+        
+        function showCardsContainer() {
+            const cardsContainer = document.getElementById('cardsContainer');
+            const wheelContainer = document.getElementById('wheelContainer');
+            
+            wheelContainer.style.display = 'none';
+            cardsContainer.style.display = 'block';
+            
+            // تحديث زر التحكم
+            const spinButton = document.getElementById('spinButton');
+            spinButton.classList.add('spinning');
+            spinButton.disabled = true;
         }
 
         // ===========================================
@@ -3849,12 +4064,16 @@
             const nameCards = document.querySelectorAll('#nameCardsGrid .student-card');
             let remainingNameCards = Array.from(nameCards);
             
-            // إضافة تأثير الخلط
-            nameCards.forEach(card => {
-                card.classList.add('shuffling');
-            });
+            // الحصول على إعدادات السرعة
+            const speedSettings = selectionSpeeds[systemSettings.selectionSpeed];
             
-            playSound('cardShuffle');
+            // إضافة تأثير الخلط إذا كان مفعلاً
+            if (systemSettings.shuffleEffect) {
+                nameCards.forEach(card => {
+                    card.classList.add('shuffling');
+                });
+                playSound('cardShuffle');
+            }
             
             // عملية الإقصاء التدريجي
             function eliminateNameCard() {
@@ -3882,9 +4101,14 @@
                         </div>
                     `;
                     
-                    // الانتقال لاختيار المهمة
+                    // الانتقال لاختيار المهمة أو إنهاء العملية
                     setTimeout(() => {
-                        transitionToTaskSelection();
+                        if (systemSettings.selectionMode === 'dual') {
+                            transitionToTaskSelection();
+                        } else {
+                            // إنهاء اختيار الأسماء فقط
+                            finishNameOnlySelection();
+                        }
                     }, 2500);
                     
                     return;
@@ -3894,23 +4118,93 @@
                 const randomIndex = Math.floor(Math.random() * remainingNameCards.length);
                 const cardToEliminate = remainingNameCards[randomIndex];
                 
-                // تأثير الإضاءة قبل الإقصاء
-                cardToEliminate.classList.add('highlighted');
-                playSound('tick');
+                // تأثير الإضاءة قبل الإقصاء (إذا كان مفعلاً)
+                if (systemSettings.eliminationEffect) {
+                    cardToEliminate.classList.add('highlighted');
+                    playSound('tick');
+                }
                 
                 setTimeout(() => {
                     cardToEliminate.classList.remove('highlighted');
                     cardToEliminate.classList.add('eliminated');
                     remainingNameCards.splice(randomIndex, 1);
                     
-                    // تسريع الإقصاء تدريجياً
-                    const nextSpeed = Math.max(80, 200 - (nameCards.length - remainingNameCards.length) * 10);
-                    setTimeout(eliminateNameCard, nextSpeed);
-                }, 400);
+                    // تسريع الإقصاء تدريجياً باستخدام السرعة المحددة
+                    const baseSpeed = speedSettings.delay;
+                    const acceleratedSpeed = Math.max(50, baseSpeed - (nameCards.length - remainingNameCards.length) * 5);
+                    setTimeout(eliminateNameCard, acceleratedSpeed);
+                }, speedSettings.delay);
             }
             
             // بدء عملية الإقصاء
-            setTimeout(eliminateNameCard, 1000);
+            setTimeout(eliminateNameCard, speedSettings.duration / 2);
+        }
+        
+        function finishNameOnlySelection() {
+            // إظهار النتيجة النهائية للاسم المختار فقط
+            document.getElementById('nameCardsSystem').style.display = 'none';
+            document.getElementById('finalResult').style.display = 'block';
+            
+            document.getElementById('finalResult').innerHTML = `
+                <h2>🎉 النتيجة النهائية</h2>
+                <div class="selected-pair">
+                    <div class="selected-student">
+                        <h4>👥 الطالب المختار</h4>
+                        <p>${selectedStudentName}</p>
+                    </div>
+                </div>
+                <button class="next-round-btn" onclick="resetForNextRound()">
+                    🔄 جولة جديدة
+                </button>
+            `;
+            
+            // إضافة للشرف تلقائياً إذا كان مفعلاً
+            if (systemSettings.autoHonor) {
+                addStudentToHonor(selectedStudentName);
+            }
+            
+            // تشغيل أصوات الاحتفال
+            playSound('perfectScore');
+            playSound('achievementUnlock', 500);
+            
+            // إعادة تفعيل الزر
+            resetButtonState();
+        }
+        
+        function finishTaskOnlySelection() {
+            // إظهار النتيجة النهائية للمهمة المختارة فقط
+            document.getElementById('taskCardsSystem').style.display = 'none';
+            document.getElementById('finalResult').style.display = 'block';
+            
+            document.getElementById('finalResult').innerHTML = `
+                <h2>🎯 النتيجة النهائية</h2>
+                <div class="selected-pair">
+                    <div class="selected-task">
+                        <h4>📝 المهمة المختارة</h4>
+                        <p>${selectedTask.title}</p>
+                        <span>${selectedTask.description}</span>
+                    </div>
+                </div>
+                <button class="next-round-btn" onclick="resetForNextRound()">
+                    🔄 جولة جديدة
+                </button>
+            `;
+            
+            // تشغيل أصوات الاحتفال
+            playSound('perfectScore');
+            playSound('achievementUnlock', 500);
+            
+            // إعادة تفعيل الزر
+            resetButtonState();
+        }
+        
+        function resetButtonState() {
+            const spinButton = document.getElementById('spinButton');
+            spinButton.classList.remove('spinning');
+            spinButton.disabled = false;
+            
+            // تحديث النص حسب النمط
+            updateUIForMode(systemSettings.selectionMode);
         }
         
         function transitionToTaskSelection() {
@@ -3941,12 +4235,16 @@
             const taskCards = document.querySelectorAll('#taskCardsGrid .task-card');
             let remainingTaskCards = Array.from(taskCards);
             
-            // إضافة تأثير الخلط
-            taskCards.forEach(card => {
-                card.classList.add('shuffling');
-            });
+            // الحصول على إعدادات السرعة
+            const speedSettings = selectionSpeeds[systemSettings.selectionSpeed];
             
-            playSound('cardShuffle');
+            // إضافة تأثير الخلط إذا كان مفعلاً
+            if (systemSettings.shuffleEffect) {
+                taskCards.forEach(card => {
+                    card.classList.add('shuffling');
+                });
+                playSound('cardShuffle');
+            }
             
             function eliminateTaskCard() {
                 if (remainingTaskCards.length <= 1) {
@@ -3974,18 +4272,26 @@
                         </div>
                     `;
                     
-                    // إزالة الطالب من القائمة المتاحة
-                    const studentIndex = availableStudents.indexOf(selectedStudentName);
-                    if (studentIndex > -1) {
-                        availableStudents.splice(studentIndex, 1);
-                        selectedStudents.push(selectedStudentName);
-                        currentSelectedName = selectedStudentName;
+                    // تحديد الإجراء التالي حسب النمط
+                    if (systemSettings.selectionMode === 'dual') {
+                        // إزالة الطالب من القائمة المتاحة
+                        const studentIndex = availableStudents.indexOf(selectedStudentName);
+                        if (studentIndex > -1) {
+                            availableStudents.splice(studentIndex, 1);
+                            selectedStudents.push(selectedStudentName);
+                            currentSelectedName = selectedStudentName;
+                        }
+                        
+                        // الانتقال للنتيجة النهائية
+                        setTimeout(() => {
+                            showFinalResult();
+                        }, 2500);
+                    } else {
+                        // إنهاء اختيار المهام فقط
+                        setTimeout(() => {
+                            finishTaskOnlySelection();
+                        }, 2500);
                     }
-                    
-                    // الانتقال للنتيجة النهائية
-                    setTimeout(() => {
-                        showFinalResult();
-                    }, 2500);
                     
                     return;
                 }
@@ -3994,20 +4300,25 @@
                 const randomIndex = Math.floor(Math.random() * remainingTaskCards.length);
                 const cardToEliminate = remainingTaskCards[randomIndex];
                 
-                cardToEliminate.classList.add('highlighted');
-                playSound('tick');
+                // تأثير الإضاءة قبل الإقصاء (إذا كان مفعلاً)
+                if (systemSettings.eliminationEffect) {
+                    cardToEliminate.classList.add('highlighted');
+                    playSound('tick');
+                }
                 
                 setTimeout(() => {
                     cardToEliminate.classList.remove('highlighted');
                     cardToEliminate.classList.add('eliminated');
                     remainingTaskCards.splice(randomIndex, 1);
                     
-                    const nextSpeed = Math.max(100, 250 - (taskCards.length - remainingTaskCards.length) * 15);
-                    setTimeout(eliminateTaskCard, nextSpeed);
-                }, 500);
+                    // تسريع الإقصاء تدريجياً باستخدام السرعة المحددة
+                    const baseSpeed = speedSettings.delay;
+                    const acceleratedSpeed = Math.max(50, baseSpeed - (taskCards.length - remainingTaskCards.length) * 8);
+                    setTimeout(eliminateTaskCard, acceleratedSpeed);
+                }, speedSettings.delay);
             }
             
-            setTimeout(eliminateTaskCard, 800);
+            setTimeout(eliminateTaskCard, speedSettings.duration / 2);
         }
         
         function showFinalResult() {
@@ -4248,11 +4559,134 @@
         }
 
         // ===========================================
+        // نظام الإعدادات الذكية
+        // ===========================================
+        function initSettingsSystem() {
+            // تهيئة شريط السرعة
+            const speedSlider = document.getElementById('selectionSpeedSlider');
+            const speedValue = document.getElementById('selectionSpeedValue');
+            
+            speedSlider.addEventListener('input', function() {
+                systemSettings.selectionSpeed = parseInt(this.value);
+                updateSpeedLabel(this.value);
+                saveSettings();
+            });
+            
+            // تهيئة أنماط الاختيار
+            const modeCards = document.querySelectorAll('.mode-card');
+            modeCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const mode = this.dataset.mode;
+                    selectMode(mode);
+                });
+            });
+            
+            // تهيئة الإعدادات المتقدمة
+            initAdvancedToggles();
+            
+            // تحميل الإعدادات المحفوظة
+            loadSettings();
+        }
+        
+        function updateSpeedLabel(speed) {
+            const speedValue = document.getElementById('selectionSpeedValue');
+            const labels = ['', 'بطيء جداً', 'بطيء', 'متوسط', 'سريع', 'سريع جداً'];
+            speedValue.textContent = labels[speed] || 'متوسط';
+        }
+        
+        function selectMode(mode) {
+            // إزالة التحديد من جميع البطاقات
+            document.querySelectorAll('.mode-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // تحديد البطاقة المختارة
+            document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+            
+            // تحديث الإعدادات
+            systemSettings.selectionMode = mode;
+            
+            // تحديث واجهة المستخدم
+            updateUIForMode(mode);
+            
+            // حفظ الإعدادات
+            saveSettings();
+            
+            // تشغيل صوت التأكيد
+            playSound('modeSwitch');
+        }
+        
+        function updateUIForMode(mode) {
+            const spinButton = document.getElementById('spinButton');
+            const spinButtonText = document.getElementById('spinButtonText');
+            
+            switch(mode) {
+                case 'dual':
+                    spinButtonText.textContent = '🎴 ابدأ الاختيار المزدوج';
+                    break;
+                case 'names-only':
+                    spinButtonText.textContent = '👥 اختر طالب';
+                    break;
+                case 'tasks-only':
+                    spinButtonText.textContent = '📝 اختر مهمة';
+                    break;
+            }
+        }
+        
+        function initAdvancedToggles() {
+            const toggles = [
+                'shuffleEffectToggle',
+                'eliminationEffectToggle', 
+                'autoHonorToggle'
+            ];
+            
+            toggles.forEach(toggleId => {
+                const toggle = document.getElementById(toggleId);
+                if (toggle) {
+                    toggle.addEventListener('change', function() {
+                        const setting = toggleId.replace('Toggle', '');
+                        systemSettings[setting] = this.checked;
+                        saveSettings();
+                    });
+                }
+            });
+        }
+        
+        function saveSettings() {
+            localStorage.setItem('smartCardsSettings', JSON.stringify(systemSettings));
+        }
+        
+        function loadSettings() {
+            const saved = localStorage.getItem('smartCardsSettings');
+            if (saved) {
+                systemSettings = { ...systemSettings, ...JSON.parse(saved) };
+            }
+            
+            // تطبيق الإعدادات على الواجهة
+            applySettingsToUI();
+        }
+        
+        function applySettingsToUI() {
+            // تطبيق سرعة الاختيار
+            document.getElementById('selectionSpeedSlider').value = systemSettings.selectionSpeed;
+            updateSpeedLabel(systemSettings.selectionSpeed);
+            
+            // تطبيق نمط الاختيار
+            selectMode(systemSettings.selectionMode);
+            
+            // تطبيق الإعدادات المتقدمة
+            document.getElementById('shuffleEffectToggle').checked = systemSettings.shuffleEffect;
+            document.getElementById('eliminationEffectToggle').checked = systemSettings.eliminationEffect;
+            document.getElementById('autoHonorToggle').checked = systemSettings.autoHonor;
+        }
+
+        // ===========================================
         // تهيئة النظام
         // ===========================================
         document.addEventListener('DOMContentLoaded', async function() {
             await loadSchoolData();
             initParticleSystem();
+            initSettingsSystem();
             
             // تفعيل مكتبة AOS للرسوم المتحركة
             AOS.init({
