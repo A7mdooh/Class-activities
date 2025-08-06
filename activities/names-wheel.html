@@ -2276,6 +2276,54 @@
             line-height: 1.5;
         }
 
+        /* تصميم عناصر النتيجة المحدثة */
+        .large-name {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 
+                0 2px 4px rgba(0, 0, 0, 0.8),
+                0 0 15px rgba(255, 215, 0, 0.6);
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .task-icon-large {
+            font-size: 4em;
+            text-align: center;
+            margin: 20px 0;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+        }
+
+        .task-title-large {
+            font-size: 2em;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 
+                0 2px 4px rgba(0, 0, 0, 0.8),
+                0 0 10px rgba(255, 215, 0, 0.4);
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .task-desc-large {
+            font-size: 1.3em;
+            color: #F0F0F0;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+            line-height: 1.6;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .student-info, .task-info {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            margin: 15px 0;
+        }
+
         .selected-student h4, .selected-task h4 {
             color: #FFD700;
             text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
@@ -4085,6 +4133,10 @@
             currentStep = 'names';
             selectedStudentName = '';
             selectedTask = null;
+            
+            // إظهار حاوية البطاقات
+            showCardsContainer();
+            
             createNameCards();
             document.getElementById('nameCardsSystem').style.display = 'block';
             document.getElementById('taskCardsSystem').style.display = 'none';
@@ -4271,17 +4323,14 @@
                 console.log('✅ تم تحديث بيانات الطالب:', selectedStudentName);
             }
             
-            document.getElementById('finalResult').innerHTML = `
-                <h2>🎉 النتيجة النهائية</h2>
-                <div class="selected-pair">
-                    <div class="selected-student">
-                        <h4>👥 الطالب المختار</h4>
-                        <p>${selectedStudentName}</p>
+            // عرض النتيجة النهائية
+            document.getElementById('selectedPair').innerHTML = `
+                <div class="selected-student">
+                    <h4>👥 الطالب المختار</h4>
+                    <div class="student-info">
+                        <div class="large-name">${selectedStudentName}</div>
                     </div>
                 </div>
-                <button class="next-round-btn" onclick="resetForNextRound()">
-                    🔄 جولة جديدة
-                </button>
             `;
             
             // إضافة للشرف تلقائياً إذا كان مفعلاً
@@ -4308,18 +4357,16 @@
             document.getElementById('taskCardsSystem').style.display = 'none';
             document.getElementById('finalResult').style.display = 'block';
             
-            document.getElementById('finalResult').innerHTML = `
-                <h2>🎯 النتيجة النهائية</h2>
-                <div class="selected-pair">
-                    <div class="selected-task">
-                        <h4>📝 المهمة المختارة</h4>
-                        <p>${selectedTask.title}</p>
-                        <span>${selectedTask.description}</span>
+            // عرض النتيجة النهائية
+            document.getElementById('selectedPair').innerHTML = `
+                <div class="selected-task">
+                    <h4>📝 المهمة المختارة</h4>
+                    <div class="task-info">
+                        <div class="task-icon-large">${selectedTask.icon}</div>
+                        <div class="task-title-large">${selectedTask.title}</div>
+                        <div class="task-desc-large">${selectedTask.description}</div>
                     </div>
                 </div>
-                <button class="next-round-btn" onclick="resetForNextRound()">
-                    🔄 جولة جديدة
-                </button>
             `;
             
             // تشغيل أصوات الاحتفال
@@ -4520,17 +4567,40 @@
             isSelectionActive = false;
             isSpinning = false;
             
+            // إخفاء شاشة النتيجة النهائية
+            const finalResult = document.getElementById('finalResult');
+            const nameCardsSystem = document.getElementById('nameCardsSystem');
+            const taskCardsSystem = document.getElementById('taskCardsSystem');
+            
+            if (finalResult) finalResult.style.display = 'none';
+            if (taskCardsSystem) taskCardsSystem.style.display = 'none';
+            
             // إعادة إظهار نظام البطاقات
             initializeCardsSystem();
             
             // تحديث نص الزر
             const spinBtn = document.getElementById('spinButton');
-            spinBtn.innerHTML = '<i class="fas fa-play"></i> <span id="spinButtonText">� ابدأ اختيار البطاقات</span>';
+            if (spinBtn) {
+                spinBtn.innerHTML = '<i class="fas fa-play"></i> <span id="spinButtonText">🎴 ابدأ اختيار البطاقات</span>';
+                spinBtn.disabled = false;
+                spinBtn.classList.remove('spinning');
+            }
+            
+            // تنظيف محتوى النتيجة
+            const selectedPair = document.getElementById('selectedPair');
+            if (selectedPair) {
+                selectedPair.innerHTML = '';
+            }
             
             updateUI();
             playSound('menuOpen');
             
-            console.log('🔄 بدء جولة جديدة');
+            console.log('🔄 بدء جولة جديدة - تم تنظيف جميع العناصر');
+        }
+        
+        // دالة بديلة للتوافق مع الأزرار
+        function resetForNextRound() {
+            startNewRound();
         }
 
         // ===========================================
