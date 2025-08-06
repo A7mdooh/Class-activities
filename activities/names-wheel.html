@@ -3271,10 +3271,11 @@
         // ===========================================
         function updateUI() {
             const hasStudents = availableStudents.length > 0;
+            const hasSelectedStudent = currentSelectedName || selectedStudentName;
             
             document.getElementById('spinButton').disabled = !hasStudents || isSpinning || isSelectionActive;
-            document.getElementById('removeButton').disabled = !currentSelectedName || isSpinning || isSelectionActive;
-            document.getElementById('honorButton').disabled = !currentSelectedName || isSpinning || isSelectionActive;
+            document.getElementById('removeButton').disabled = !hasSelectedStudent || isSpinning || isSelectionActive;
+            document.getElementById('honorButton').disabled = !hasSelectedStudent || isSpinning || isSelectionActive;
             document.getElementById('resetButton').disabled = currentStudents.length === 0;
             
             // تحديث نص زر الاختيار حسب المرحلة
@@ -3901,14 +3902,16 @@
         // وظائف الأزرار
         // ===========================================
         function removeStudent() {
-            if (!currentSelectedName) return;
+            const studentName = currentSelectedName || selectedStudentName;
+            if (!studentName) return;
             
-            const index = availableStudents.indexOf(currentSelectedName);
+            const index = availableStudents.indexOf(studentName);
             if (index > -1) {
                 availableStudents.splice(index, 1);
             }
             
             currentSelectedName = '';
+            selectedStudentName = '';
             createWheel();
             showWelcomeMessage();
             updateUI();
@@ -3921,10 +3924,11 @@
         }
 
         function addToHonorList() {
-            if (!currentSelectedName) return;
+            const studentName = currentSelectedName || selectedStudentName;
+            if (!studentName) return;
             
-            if (!honoredStudents.includes(currentSelectedName)) {
-                honoredStudents.push(currentSelectedName);
+            if (!honoredStudents.includes(studentName)) {
+                honoredStudents.push(studentName);
                 
                 // تشغيل أصوات التكريم
                 playSound('crownCeremony');
@@ -3932,12 +3936,12 @@
                 playSound('perfectScore', 1000);
                 
                 // إضافة للوحة الشرف مع الوقت
-                addToHonorBoard(currentSelectedName);
+                addToHonorBoard(studentName);
                 
                 // إظهار لوحة الشرف
                 document.getElementById('honorBoard').style.display = 'block';
                 
-                console.log(`🏆 تم إضافة ${currentSelectedName} لقائمة الشرف`);
+                console.log(`🏆 تم إضافة ${studentName} لقائمة الشرف`);
             }
             
             updateUI();
@@ -4248,9 +4252,20 @@
         }
         
         function finishNameOnlySelection() {
+            console.log('🎯 بدء انهاء اختيار الاسم فقط للطالب:', selectedStudentName);
+            
             // إظهار النتيجة النهائية للاسم المختار فقط
             document.getElementById('nameCardsSystem').style.display = 'none';
             document.getElementById('finalResult').style.display = 'block';
+            
+            // تحديث بيانات الطلاب
+            const studentIndex = availableStudents.indexOf(selectedStudentName);
+            if (studentIndex > -1) {
+                availableStudents.splice(studentIndex, 1);
+                selectedStudents.push(selectedStudentName);
+                currentSelectedName = selectedStudentName;
+                console.log('✅ تم تحديث بيانات الطالب:', selectedStudentName);
+            }
             
             document.getElementById('finalResult').innerHTML = `
                 <h2>🎉 النتيجة النهائية</h2>
@@ -4267,15 +4282,21 @@
             
             // إضافة للشرف تلقائياً إذا كان مفعلاً
             if (systemSettings.autoHonor) {
-                addStudentToHonor(selectedStudentName);
+                addToHonorList();
             }
             
             // تشغيل أصوات الاحتفال
             playSound('perfectScore');
             playSound('achievementUnlock', 500);
             
-            // إعادة تفعيل الزر
+            // إعادة تفعيل الأزرار وتحديث الواجهة
             resetButtonState();
+            updateUI();
+            
+            // تفعيل أزرار التحكم
+            enableControlButtons();
+            
+            console.log('🎉 تم انهاء عملية اختيار الاسم بنجاح');
         }
         
         function finishTaskOnlySelection() {
@@ -4312,6 +4333,19 @@
             
             // تحديث النص حسب النمط
             updateUIForMode(systemSettings.selectionMode);
+        }
+        
+        function enableControlButtons() {
+            // تفعيل أزرار التحكم عند وجود طالب مختار
+            if (selectedStudentName || currentSelectedName) {
+                const name = selectedStudentName || currentSelectedName;
+                currentSelectedName = name; // التأكد من تحديث المتغير العام
+                
+                document.getElementById('removeButton').disabled = false;
+                document.getElementById('honorButton').disabled = false;
+                
+                console.log('✅ تم تفعيل أزرار التحكم للطالب:', name);
+            }
         }
         
         function transitionToTaskSelection() {
