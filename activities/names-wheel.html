@@ -2947,12 +2947,43 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 20px;
+            margin: 10px;
         }
 
         .next-round-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .remove-and-select-btn {
+            background: linear-gradient(45deg, #F44336, #FF8A65);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .remove-and-select-btn:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(45deg, #D32F2F, #FF7043);
+            box-shadow: 0 8px 25px rgba(244, 67, 54, 0.4);
+        }
+
+        .result-actions {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 25px;
         }
 
         /* حركات البطاقات الجديدة */
@@ -3208,6 +3239,9 @@
                     <div class="result-actions">
                         <button id="nextRoundBtn" class="next-round-btn">
                             🔄 جولة جديدة
+                        </button>
+                        <button id="removeAndSelectBtn" class="remove-and-select-btn">
+                            🗑️ إزالة هذا الطالب واختيار آخر
                         </button>
                     </div>
                 </div>
@@ -6542,6 +6576,70 @@
                     
                     playSound('cosmicClick');
                     console.log('🔄 بدء جولة جديدة مع إظهار البطاقات');
+                });
+            }
+            
+            // زر إزالة الطالب واختيار آخر (الحل الإبداعي!)
+            const removeAndSelectBtn = document.getElementById('removeAndSelectBtn');
+            if (removeAndSelectBtn) {
+                removeAndSelectBtn.addEventListener('click', () => {
+                    const currentStudent = currentSelectedName || selectedStudentName;
+                    if (!currentStudent) {
+                        showToast('❌ لا يوجد طالب محدد للإزالة', 'warning');
+                        return;
+                    }
+                    
+                    // تأكيد الإزالة
+                    if (!confirm(`هل تريد إزالة "${currentStudent}" من القائمة واختيار طالب آخر؟`)) {
+                        return;
+                    }
+                    
+                    console.log(`🎯 الحل الإبداعي: إزالة ${currentStudent} واختيار طالب آخر`);
+                    
+                    // إزالة الطالب من جميع القوائم
+                    const availableIndex = availableStudents.indexOf(currentStudent);
+                    const selectedIndex = selectedStudents.indexOf(currentStudent);
+                    
+                    if (availableIndex > -1) {
+                        availableStudents.splice(availableIndex, 1);
+                    }
+                    if (selectedIndex > -1) {
+                        selectedStudents.splice(selectedIndex, 1);
+                    }
+                    
+                    // إضافة للمحذوفين
+                    if (!removedStudents.includes(currentStudent)) {
+                        removedStudents.push(currentStudent);
+                    }
+                    
+                    // تنظيف المتغيرات
+                    currentSelectedName = '';
+                    selectedStudentName = '';
+                    selectedTask = null;
+                    currentStep = 'names';
+                    
+                    // إخفاء النتيجة النهائية
+                    const finalResult = document.getElementById('finalResult');
+                    if (finalResult) finalResult.style.display = 'none';
+                    
+                    // فحص إذا كان هناك طلاب متاحون
+                    if (availableStudents.length === 0) {
+                        showToast('📭 لا يوجد طلاب متاحون أكثر للاختيار', 'info');
+                        showWelcomeMessage();
+                        updateUI();
+                        return;
+                    }
+                    
+                    // بدء اختيار جديد فوراً!
+                    showToast(`🗑️ تم إزالة ${currentStudent} - جاري اختيار طالب آخر...`, 'info');
+                    
+                    setTimeout(() => {
+                        // تفعيل نظام الاختيار الجديد
+                        spinWheel();
+                    }, 1000);
+                    
+                    playSound('pointLose');
+                    console.log(`✨ تم تطبيق الحل الإبداعي بنجاح!`);
                 });
             }
             
