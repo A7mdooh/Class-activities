@@ -3149,8 +3149,27 @@
         }
 
         @keyframes buttonPulse {
-            0%, 100% { box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); }
-            50% { box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5); }
+            0%, 100% { 
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+                transform: scale(1.05);
+            }
+        }
+
+        /* حالة الزر المعطل */
+        .remove-btn:disabled {
+            background: linear-gradient(45deg, #9E9E9E, #BDBDBD) !important;
+            cursor: not-allowed !important;
+            opacity: 0.5 !important;
+            transform: none !important;
+        }
+
+        .remove-btn:disabled:hover {
+            transform: none !important;
+            box-shadow: 0 4px 15px rgba(158, 158, 158, 0.3) !important;
         }
 
         /* تحسين أيقونة الإغلاق */
@@ -7158,6 +7177,20 @@
                         taskCardsSystem.style.display = 'none';
                     }
                     
+                    // إعادة تفعيل الأزرار لحالتها الطبيعية
+                    const removeStudentBtn = document.getElementById('removeStudentBtn');
+                    const continueSelectionBtn = document.getElementById('continueSelectionBtn');
+                    
+                    if (removeStudentBtn) {
+                        removeStudentBtn.disabled = false;
+                        removeStudentBtn.style.opacity = '1';
+                        removeStudentBtn.style.cursor = 'pointer';
+                    }
+                    
+                    if (continueSelectionBtn) {
+                        continueSelectionBtn.style.animation = 'none';
+                    }
+                    
                     // إعادة إظهار العجلة والبطاقات
                     showWelcomeMessage();
                     updateUI();
@@ -7217,13 +7250,16 @@
                     currentSelectedTask = null;
                     currentStep = 'names';
                     
-                    // إخفاء النتيجة النهائية
-                    const finalResult = document.getElementById('finalResult');
-                    if (finalResult) finalResult.style.display = 'none';
+                    // لا نخفي النتيجة النهائية - نتركها مفتوحة
+                    // const finalResult = document.getElementById('finalResult');
+                    // if (finalResult) finalResult.style.display = 'none';
                     
                     // فحص إذا كان هناك طلاب متاحون
                     if (availableStudents.length === 0) {
                         showToast('📭 لا يوجد طلاب متاحون أكثر للاختيار', 'info');
+                        // إخفاء النافذة فقط إذا لم يعد هناك طلاب
+                        const finalResult = document.getElementById('finalResult');
+                        if (finalResult) finalResult.style.display = 'none';
                         showWelcomeMessage();
                         updateUI();
                         return;
@@ -7232,31 +7268,62 @@
                     const removedTaskInfo = currentTaskForConfirm ? ` والبطاقة` : '';
                     showToast(`🗑️ تم إزالة ${currentStudent}${removedTaskInfo} من القائمة`, 'success');
                     
-                    // إعادة عرض نظام البطاقات أو العجلة
+                    // تحديث محتوى النافذة بدلاً من إخفائها
+                    const selectedPair = document.getElementById('selectedPair');
+                    if (selectedPair) {
+                        selectedPair.innerHTML = `
+                            <div style="text-align: center; padding: 20px; color: #666;">
+                                <i class="fas fa-check-circle" style="font-size: 3rem; color: #4CAF50; margin-bottom: 15px;"></i>
+                                <p style="font-size: 1.2rem; margin-bottom: 10px;">تم إزالة الطالب بنجاح</p>
+                                <p style="font-size: 1rem; color: #888;">
+                                    <strong>${currentStudent}</strong> ${removedTaskInfo}<br>
+                                    <small>اضغط على "متابعة" لاختيار طالب آخر أو "إغلاق" للعودة للقائمة الرئيسية</small>
+                                </p>
+                                <div style="margin-top: 15px; padding: 10px; background: #E8F5E8; border-radius: 8px; font-size: 0.9rem;">
+                                    📊 الطلاب المتاحون: <strong>${availableStudents.length}</strong>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
+                    // تحديث البطاقات في الخلفية (مخفية)
                     const nameCardsSystem = document.getElementById('nameCardsSystem');
                     const taskCardsSystem = document.getElementById('taskCardsSystem');
                     
-                    // إظهار نظام البطاقات إذا كان مفعلاً
                     if (nameCardsSystem) {
-                        nameCardsSystem.style.display = 'block';
-                        // إعادة إنشاء البطاقات المتاحة
+                        nameCardsSystem.style.display = 'none'; // مخفية حتى يضغط متابعة
+                        // تحديث البطاقات في الخلفية
                         if (availableStudents.length > 0) {
                             createNameCards();
-                            showCardsContainer();
                         }
                     }
                     
-                    // إخفاء نظام المهام مؤقتاً
                     if (taskCardsSystem) {
                         taskCardsSystem.style.display = 'none';
                     }
                     
-                    // إعادة عرض رسالة الترحيب
-                    showWelcomeMessage();
+                    // تعطيل زر الإزالة وتفعيل زر المتابعة
+                    const removeStudentBtn = document.getElementById('removeStudentBtn');
+                    const continueSelectionBtn = document.getElementById('continueSelectionBtn');
+                    
+                    if (removeStudentBtn) {
+                        removeStudentBtn.disabled = true;
+                        removeStudentBtn.style.opacity = '0.5';
+                        removeStudentBtn.style.cursor = 'not-allowed';
+                    }
+                    
+                    if (continueSelectionBtn) {
+                        continueSelectionBtn.disabled = false;
+                        continueSelectionBtn.style.opacity = '1';
+                        continueSelectionBtn.style.cursor = 'pointer';
+                        // تأثير بصري لجذب الانتباه
+                        continueSelectionBtn.style.animation = 'buttonPulse 1.5s ease-in-out infinite';
+                    }
+                    
                     updateUI();
                     
                     playSound('pointLose');
-                    console.log(`✅ تم إزالة ${currentStudent} بنجاح`);
+                    console.log(`✅ تم إزالة ${currentStudent} بنجاح - النافذة تبقى مفتوحة`);
                 });
             }
             
@@ -7295,6 +7362,20 @@
                     
                     if (taskCardsSystem) {
                         taskCardsSystem.style.display = 'none';
+                    }
+                    
+                    // إعادة تفعيل الأزرار لحالتها الطبيعية
+                    const removeStudentBtn = document.getElementById('removeStudentBtn');
+                    const continueSelectionBtn = document.getElementById('continueSelectionBtn');
+                    
+                    if (removeStudentBtn) {
+                        removeStudentBtn.disabled = false;
+                        removeStudentBtn.style.opacity = '1';
+                        removeStudentBtn.style.cursor = 'pointer';
+                    }
+                    
+                    if (continueSelectionBtn) {
+                        continueSelectionBtn.style.animation = 'none';
                     }
                     
                     // بدء اختيار جديد فوراً!
