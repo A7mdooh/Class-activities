@@ -4803,13 +4803,26 @@
             const taskCardsSystem = document.getElementById('taskCardsSystem');
             
             if (finalResult) finalResult.style.display = 'none';
-            if (nameCardsSystem) nameCardsSystem.style.display = 'none';
             if (taskCardsSystem) taskCardsSystem.style.display = 'none';
+            
+            // إظهار بطاقات الأسماء المحدثة بدلاً من إخفائها
+            if (nameCardsSystem) nameCardsSystem.style.display = 'block';
             
             // تنظيف البطاقات المحددة
             document.querySelectorAll('.student-card.selected, .task-card.selected').forEach(card => {
                 card.classList.remove('selected', 'highlighted');
             });
+            
+            // إعادة إنشاء بطاقات الأسماء لتعكس التغييرات
+            if (availableStudents.length > 0) {
+                showCardsContainer();
+                createNameCards();
+                console.log('🎴 تم تحديث بطاقات الأسماء بعد الإزالة');
+            } else {
+                // إخفاء البطاقات إذا لم يعد هناك طلاب متاحون
+                if (nameCardsSystem) nameCardsSystem.style.display = 'none';
+                console.log('📭 لا توجد بطاقات للعرض - جميع الطلاب محذوفون');
+            }
             
             clearPreviousMessages();
             showWelcomeMessage();
@@ -4888,11 +4901,21 @@
                     availableStudents.sort(); // ترتيب القائمة
                 }
                 
+                // تحديث بطاقات الأسماء لتشمل الطالب المستعاد
+                const nameCardsSystem = document.getElementById('nameCardsSystem');
+                if (nameCardsSystem && availableStudents.length > 0) {
+                    nameCardsSystem.style.display = 'block';
+                    showCardsContainer();
+                    createNameCards();
+                    console.log(`🎴 تم تحديث البطاقات لتشمل ${studentName}`);
+                }
+                
                 updateUI();
+                showWelcomeMessage();
                 
                 // تشغيل صوت النجاح
                 playSound('achievementUnlock');
-                playSound('bonus');
+                playSound('bonusCollect', 300);
                 
                 // إظهار رسالة نجاح
                 showToast(`✅ تم استعادة ${studentName} إلى القائمة`, 'success');
