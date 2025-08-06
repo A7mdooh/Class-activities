@@ -3,51 +3,58 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <meta name="theme-color" content="#4A90E2"/>
-  <meta name="description" content="برج الأسماء - لعبة تعليمية تفاعلية"/>
-  <meta name="keywords" content="برج, أسماء, لعبة, تعليم, تفاعلي"/>
+  <meta name="theme-color" content="#1a1a2e"/>
+  <meta name="description" content="برج الأسماء - لعبة تعليمية ثلاثية الأبعاد"/>
+  <meta name="keywords" content="برج, أسماء, لعبة, تعليم, ثلاثي الأبعاد, تفاعلي"/>
   <meta name="author" content="الأستاذ أحمد بن عبدالله الضامري"/>
 
-  <title>برج الأسماء - لعبة تعليمية تفاعلية</title>
+  <title>برج الأسماء المتطور - تجربة ثلاثية الأبعاد</title>
 
   <!-- الخطوط والأيقونات -->
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  
+  <!-- مكتبة Three.js للرسوم ثلاثية الأبعاد -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
   <!-- فافيكون -->
   <link rel="icon" type="image/png" href="../assets/media/images/school-logo.png">
 
   <style>
     :root {
-      /* نظام ألوان اللعبة */
-      --primary-color: #4A90E2;
-      --primary-light: #6BA3F0;
-      --primary-dark: #2E5C8A;
-      --secondary-color: #7B68EE;
-      --accent-color: #FFD700;
-      --success-color: #2ECC71;
-      --error-color: #E74C3C;
-      --warning-color: #F39C12;
-      --text-primary: #2C3E50;
-      --text-secondary: #7F8C8D;
-      --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      --tower-gold: #FFD700;
-      --tower-stone: #8B7355;
-      --tower-shadow: rgba(0, 0, 0, 0.3);
+      /* نظام ألوان متطور بتدرجات ثلاثية الأبعاد */
+      --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      --tower-gradient: linear-gradient(45deg, #ffd700 0%, #ffb347 25%, #ff6b35 50%, #f7931e 75%, #ffd700 100%);
+      --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      --error-gradient: linear-gradient(135deg, #fc466b 0%, #3f5efb 100%);
+      --cosmic-gradient: linear-gradient(45deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
       
-      /* التخطيط */
-      --border-radius: 15px;
-      --border-radius-small: 8px;
-      --spacing-xs: 4px;
-      --spacing-sm: 8px;
-      --spacing-md: 16px;
-      --spacing-lg: 24px;
-      --spacing-xl: 32px;
+      /* ألوان أساسية */
+      --primary-color: #667eea;
+      --secondary-color: #764ba2;
+      --accent-color: #ffd700;
+      --success-color: #11998e;
+      --error-color: #fc466b;
+      --cosmic-blue: #0f0c29;
+      --cosmic-purple: #302b63;
+      --neon-cyan: #00f5ff;
+      --neon-pink: #ff073a;
+      --crystal-blue: #4facfe;
       
-      /* الانتقالات */
-      --transition-fast: 0.2s ease-out;
-      --transition-normal: 0.3s ease-out;
-      --transition-slow: 0.5s ease-out;
+      /* ظلال وتأثيرات */
+      --shadow-neon: 0 0 20px rgba(0, 245, 255, 0.5);
+      --shadow-gold: 0 0 30px rgba(255, 215, 0, 0.6);
+      --shadow-cosmic: 0 20px 60px rgba(15, 12, 41, 0.8);
+      
+      /* متغيرات ثلاثية الأبعاد */
+      --perspective: 1000px;
+      --transform-style: preserve-3d;
+      
+      /* متغيرات الحركة */
+      --bounce-timing: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      --cosmic-timing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --elastic-timing: cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     * {
@@ -58,12 +65,302 @@
 
     body {
       font-family: 'Cairo', sans-serif;
-      background: var(--background);
-      background-attachment: fixed;
-      color: var(--text-primary);
+      background: var(--cosmic-gradient);
+      color: white;
       min-height: 100vh;
       overflow-x: hidden;
       position: relative;
+      perspective: var(--perspective);
+    }
+
+    /* خلفية كونية متحركة ثلاثية الأبعاد */
+    .cosmic-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -10;
+      background: var(--cosmic-gradient);
+    }
+
+    .cosmic-background::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(2px 2px at 20% 30%, #fff, transparent),
+        radial-gradient(2px 2px at 40% 70%, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1px 1px at 90% 40%, #fff, transparent),
+        radial-gradient(1px 1px at 50% 50%, rgba(255,255,255,0.6), transparent),
+        radial-gradient(2px 2px at 80% 10%, #fff, transparent);
+      background-repeat: repeat;
+      background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px, 400px 400px;
+      animation: cosmicDrift 20s linear infinite;
+      opacity: 0.8;
+    }
+
+    .cosmic-background::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(0, 245, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 7, 58, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(79, 172, 254, 0.1) 0%, transparent 50%);
+      animation: nebulaFloat 15s ease-in-out infinite;
+    }
+
+    @keyframes cosmicDrift {
+      0% { transform: translateX(0) translateY(0); }
+      25% { transform: translateX(-50px) translateY(-100px); }
+      50% { transform: translateX(50px) translateY(-200px); }
+      75% { transform: translateX(-25px) translateY(-300px); }
+      100% { transform: translateX(0) translateY(-400px); }
+    }
+
+    @keyframes nebulaFloat {
+      0%, 100% { 
+        transform: scale(1) rotate(0deg);
+        opacity: 0.6;
+      }
+      33% { 
+        transform: scale(1.1) rotate(120deg);
+        opacity: 0.8;
+      }
+      66% { 
+        transform: scale(0.9) rotate(240deg);
+        opacity: 0.7;
+      }
+    }
+
+    /* جسيمات متحركة ثلاثية الأبعاد */
+    .particles-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -5;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: var(--neon-cyan);
+      border-radius: 50%;
+      box-shadow: 
+        0 0 10px var(--neon-cyan),
+        0 0 20px var(--neon-cyan),
+        0 0 30px var(--neon-cyan);
+      animation: particleFloat 8s linear infinite;
+    }
+
+    .particle:nth-child(odd) {
+      background: var(--neon-pink);
+      box-shadow: 
+        0 0 10px var(--neon-pink),
+        0 0 20px var(--neon-pink),
+        0 0 30px var(--neon-pink);
+      animation-duration: 12s;
+      animation-delay: -4s;
+    }
+
+    @keyframes particleFloat {
+      0% {
+        transform: translateY(100vh) translateX(0) rotateZ(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100px) translateX(100px) rotateZ(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* أزرار التحكم المتطورة */
+    .control-buttons {
+      position: fixed;
+      top: 20px;
+      display: flex;
+      gap: 15px;
+      z-index: 1000;
+      transform-style: var(--transform-style);
+    }
+
+    .control-buttons.right {
+      right: 20px;
+    }
+
+    .control-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+      backdrop-filter: blur(15px);
+      color: var(--neon-cyan);
+      font-size: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.4s var(--elastic-timing);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    .control-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--primary-gradient);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: -1;
+    }
+
+    .control-btn:hover {
+      transform: translateY(-5px) scale(1.1);
+      box-shadow: 
+        0 15px 45px rgba(0, 245, 255, 0.4),
+        0 0 20px var(--neon-cyan);
+      color: white;
+    }
+
+    .control-btn:hover::before {
+      opacity: 1;
+    }
+
+    .control-btn:active {
+      transform: translateY(-2px) scale(1.05);
+    }
+
+    /* الحاوي الرئيسي المتطور */
+    .main-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      position: relative;
+      z-index: 10;
+      transform-style: var(--transform-style);
+    }
+
+    /* رأس الصفحة السينمائي */
+    .header {
+      text-align: center;
+      margin-bottom: 50px;
+      animation: headerEntrance 2s var(--elastic-timing);
+      transform-style: var(--transform-style);
+    }
+
+    .header-card {
+      background: linear-gradient(135deg, 
+        rgba(255,255,255,0.1) 0%, 
+        rgba(255,255,255,0.05) 100%);
+      backdrop-filter: blur(20px);
+      border-radius: 25px;
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-cosmic);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .header-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: var(--tower-gradient);
+      animation: gradientShift 3s ease-in-out infinite;
+    }
+
+    .header-title {
+      font-family: 'Orbitron', 'Cairo', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 900;
+      margin-bottom: 20px;
+      background: var(--tower-gradient);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      animation: titleGlow 2s ease-in-out infinite alternate;
+    }
+
+    .header-title .tower-icon {
+      font-size: 1.2em;
+      animation: towerPulse 3s ease-in-out infinite;
+      filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
+    }
+
+    .header-subtitle {
+      font-size: clamp(1.1rem, 3vw, 1.4rem);
+      color: rgba(255,255,255,0.9);
+      font-weight: 500;
+      line-height: 1.6;
+      animation: subtitleFloat 4s ease-in-out infinite;
+    }
+
+    @keyframes headerEntrance {
+      0% {
+        opacity: 0;
+        transform: rotateX(-90deg) translateY(-100px);
+      }
+      50% {
+        opacity: 0.5;
+        transform: rotateX(-45deg) translateY(-50px);
+      }
+      100% {
+        opacity: 1;
+        transform: rotateX(0deg) translateY(0);
+      }
+    }
+
+    @keyframes titleGlow {
+      0% { filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5)); }
+      100% { filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.9)); }
+    }
+
+    @keyframes towerPulse {
+      0%, 100% { transform: scale(1) rotateY(0deg); }
+      50% { transform: scale(1.1) rotateY(180deg); }
+    }
+
+    @keyframes subtitleFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { transform: translateX(-100%); }
+      50% { transform: translateX(100%); }
     }
 
     /* خلفية متحركة */
@@ -259,268 +556,1041 @@
       line-height: 1.6;
     }
 
-    /* شاشة البداية */
+    /* شاشة البداية الهولوجرافية */
     .start-screen {
       display: block;
-      animation: fadeIn 0.6s ease-out;
+      animation: screenMaterialize 1.5s var(--elastic-timing);
+      transform-style: var(--transform-style);
     }
 
     .setup-card {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: var(--border-radius);
-      padding: var(--spacing-xl);
-      margin-bottom: var(--spacing-lg);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-      backdrop-filter: blur(10px);
+      background: linear-gradient(135deg, 
+        rgba(255,255,255,0.15) 0%, 
+        rgba(255,255,255,0.05) 100%);
+      backdrop-filter: blur(25px);
+      border-radius: 30px;
+      padding: 40px;
+      margin-bottom: 30px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 
+        0 20px 80px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255,255,255,0.1);
+      animation: cardFloat 6s ease-in-out infinite;
+    }
+
+    .setup-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(from 0deg, 
+        transparent, 
+        rgba(0, 245, 255, 0.1), 
+        transparent, 
+        rgba(255, 7, 58, 0.1), 
+        transparent);
+      animation: hologramRotate 8s linear infinite;
+      z-index: -1;
     }
 
     .setup-section {
-      margin-bottom: var(--spacing-xl);
+      margin-bottom: 40px;
+      animation: sectionSlideIn 1s var(--bounce-timing);
     }
 
     .setup-title {
-      font-size: 1.5rem;
+      font-family: 'Orbitron', 'Cairo', sans-serif;
+      font-size: 1.8rem;
       font-weight: 700;
-      color: var(--primary-color);
-      margin-bottom: var(--spacing-md);
+      background: var(--success-gradient);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 25px;
       display: flex;
       align-items: center;
-      gap: var(--spacing-sm);
+      gap: 15px;
+      position: relative;
+    }
+
+    .setup-title i {
+      font-size: 1.5em;
+      background: var(--success-gradient);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: iconPulse 2s ease-in-out infinite;
     }
 
     .form-group {
-      margin-bottom: var(--spacing-lg);
+      margin-bottom: 30px;
+      animation: formSlideUp 1s var(--elastic-timing);
     }
 
     .form-label {
       display: block;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: var(--spacing-sm);
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 15px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
     }
 
     .form-select {
       width: 100%;
-      padding: 15px 20px;
-      border: 2px solid #E8ECEF;
-      border-radius: var(--border-radius-small);
-      font-size: 1rem;
+      padding: 20px 25px;
+      border: 2px solid rgba(255,255,255,0.2);
+      border-radius: 15px;
+      font-size: 1.1rem;
       font-family: 'Cairo', sans-serif;
-      background: white;
-      color: var(--text-primary);
-      transition: all var(--transition-normal);
+      background: linear-gradient(135deg, 
+        rgba(255,255,255,0.1) 0%, 
+        rgba(255,255,255,0.05) 100%);
+      backdrop-filter: blur(10px);
+      color: white;
+      transition: all 0.4s var(--cosmic-timing);
       cursor: pointer;
+      position: relative;
     }
 
     .form-select:focus {
       outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+      border-color: var(--neon-cyan);
+      box-shadow: 
+        0 0 20px rgba(0, 245, 255, 0.4),
+        0 0 40px rgba(0, 245, 255, 0.2);
+      transform: translateY(-2px);
     }
 
+    .form-select option {
+      background: var(--cosmic-blue);
+      color: white;
+      padding: 10px;
+    }
+
+    /* محدد عدد الطلاب الهولوجرافي */
     .student-count-selector {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-      gap: var(--spacing-sm);
-      margin-top: var(--spacing-md);
+      grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+      gap: 15px;
+      margin-top: 25px;
     }
 
     .count-btn {
-      padding: 15px 10px;
-      border: 2px solid var(--primary-color);
-      border-radius: var(--border-radius-small);
-      background: transparent;
-      color: var(--primary-color);
-      font-size: 1rem;
-      font-weight: 600;
+      padding: 20px 15px;
+      border: 2px solid var(--neon-cyan);
+      border-radius: 15px;
+      background: linear-gradient(135deg, 
+        rgba(0, 245, 255, 0.1) 0%, 
+        rgba(0, 245, 255, 0.05) 100%);
+      backdrop-filter: blur(10px);
+      color: var(--neon-cyan);
+      font-size: 1.2rem;
+      font-weight: 700;
       cursor: pointer;
-      transition: all var(--transition-normal);
-      font-family: 'Cairo', sans-serif;
+      transition: all 0.4s var(--elastic-timing);
+      font-family: 'Orbitron', 'Cairo', sans-serif;
+      position: relative;
+      overflow: hidden;
+      text-shadow: 0 0 10px var(--neon-cyan);
     }
 
-    .count-btn:hover,
+    .count-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(0, 245, 255, 0.3), 
+        transparent);
+      transition: left 0.6s ease;
+    }
+
+    .count-btn:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 
+        0 10px 30px rgba(0, 245, 255, 0.4),
+        0 0 20px var(--neon-cyan);
+      border-color: var(--neon-pink);
+      color: var(--neon-pink);
+      text-shadow: 0 0 15px var(--neon-pink);
+    }
+
+    .count-btn:hover::before {
+      left: 100%;
+    }
+
     .count-btn.selected {
-      background: var(--primary-color);
+      background: var(--success-gradient);
+      border-color: var(--success-color);
       color: white;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+      box-shadow: 
+        0 0 30px rgba(17, 153, 142, 0.6),
+        0 10px 40px rgba(17, 153, 142, 0.3);
+      transform: scale(1.1);
     }
 
+    /* معاينة الطلاب الذكية */
     .students-preview {
-      margin-top: var(--spacing-lg);
+      margin-top: 30px;
+      animation: previewSlideIn 1s var(--bounce-timing);
     }
 
     .students-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: var(--spacing-sm);
-      max-height: 300px;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 15px;
+      max-height: 350px;
       overflow-y: auto;
-      padding: var(--spacing-md);
-      background: rgba(248, 249, 250, 0.5);
-      border-radius: var(--border-radius-small);
+      padding: 25px;
+      background: linear-gradient(135deg, 
+        rgba(255,255,255,0.1) 0%, 
+        rgba(255,255,255,0.02) 100%);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+      scrollbar-width: thin;
+      scrollbar-color: var(--neon-cyan) transparent;
+    }
+
+    .students-grid::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .students-grid::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+    }
+
+    .students-grid::-webkit-scrollbar-thumb {
+      background: var(--neon-cyan);
+      border-radius: 10px;
+      box-shadow: 0 0 10px var(--neon-cyan);
     }
 
     .student-card {
-      background: white;
-      padding: var(--spacing-md);
-      border-radius: var(--border-radius-small);
+      background: linear-gradient(135deg, 
+        rgba(255,255,255,0.15) 0%, 
+        rgba(255,255,255,0.05) 100%);
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      border-radius: 15px;
       text-align: center;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      font-weight: 500;
-      color: var(--text-primary);
-      border: 2px solid transparent;
-      transition: all var(--transition-normal);
+      font-weight: 600;
+      color: white;
+      border: 2px solid rgba(255,255,255,0.1);
+      transition: all 0.4s var(--elastic-timing);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      animation: cardMaterialize 1s var(--bounce-timing);
+    }
+
+    .student-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--success-gradient);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: -1;
+    }
+
+    .student-card:hover {
+      transform: translateY(-8px) scale(1.05);
+      box-shadow: 
+        0 15px 40px rgba(255,255,255,0.2),
+        0 0 20px rgba(255,255,255,0.1);
+      border-color: var(--neon-cyan);
     }
 
     .student-card.selected {
-      border-color: var(--primary-color);
-      background: var(--primary-color);
+      border-color: var(--success-color);
       color: white;
-      transform: scale(1.05);
+      text-shadow: 0 0 10px rgba(255,255,255,0.8);
+      box-shadow: 
+        0 0 30px rgba(17, 153, 142, 0.6),
+        0 15px 50px rgba(17, 153, 142, 0.3);
+      transform: scale(1.1);
     }
 
+    .student-card.selected::before {
+      opacity: 1;
+    }
+
+    /* زر البداية الملحمي */
     .start-game-btn {
       width: 100%;
-      padding: 20px;
+      padding: 25px;
       border: none;
-      border-radius: var(--border-radius);
-      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      border-radius: 20px;
+      background: var(--tower-gradient);
       color: white;
-      font-size: 1.3rem;
-      font-weight: 700;
+      font-size: 1.5rem;
+      font-weight: 800;
+      font-family: 'Orbitron', 'Cairo', sans-serif;
       cursor: pointer;
-      transition: all var(--transition-normal);
-      font-family: 'Cairo', sans-serif;
-      margin-top: var(--spacing-lg);
-      box-shadow: 0 8px 25px rgba(74, 144, 226, 0.3);
+      transition: all 0.4s var(--elastic-timing);
+      margin-top: 30px;
+      position: relative;
+      overflow: hidden;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      box-shadow: 
+        0 10px 40px rgba(255, 215, 0, 0.4),
+        0 0 20px rgba(255, 215, 0, 0.2);
+    }
+
+    .start-game-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255,255,255,0.3), 
+        transparent);
+      transition: left 0.6s ease;
     }
 
     .start-game-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 35px rgba(74, 144, 226, 0.4);
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 
+        0 20px 60px rgba(255, 215, 0, 0.6),
+        0 0 40px rgba(255, 215, 0, 0.4);
+      text-shadow: 0 0 20px rgba(255,255,255,0.8);
+    }
+
+    .start-game-btn:hover::before {
+      left: 100%;
     }
 
     .start-game-btn:disabled {
-      opacity: 0.6;
+      opacity: 0.5;
       cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .start-game-btn:disabled:hover {
       transform: none;
     }
 
-    /* شاشة اللعبة */
+    @keyframes screenMaterialize {
+      0% {
+        opacity: 0;
+        transform: scale(0.8) rotateY(-90deg);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) rotateY(0deg);
+      }
+    }
+
+    @keyframes cardFloat {
+      0%, 100% { 
+        transform: translateY(0) rotateX(0deg); 
+      }
+      50% { 
+        transform: translateY(-10px) rotateX(2deg); 
+      }
+    }
+
+    @keyframes hologramRotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes sectionSlideIn {
+      0% {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes iconPulse {
+      0%, 100% { 
+        transform: scale(1);
+        filter: drop-shadow(0 0 5px rgba(17, 153, 142, 0.5));
+      }
+      50% { 
+        transform: scale(1.2);
+        filter: drop-shadow(0 0 15px rgba(17, 153, 142, 0.8));
+      }
+    }
+
+    @keyframes formSlideUp {
+      0% {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes previewSlideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(50px) scale(0.9);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes cardMaterialize {
+      0% {
+        opacity: 0;
+        transform: scale(0.5) rotateZ(-180deg);
+      }
+      70% {
+        transform: scale(1.1) rotateZ(0deg);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) rotateZ(0deg);
+      }
+    }
+
+    /* واجهة اللعبة ثلاثية الأبعاد */
     .game-screen {
       display: none;
-      animation: fadeIn 0.6s ease-out;
+      position: relative;
+      min-height: 100vh;
+      perspective: 2000px;
+      transform-style: var(--transform-style);
+      animation: gameScreenEnter 2s var(--cosmic-timing);
     }
 
     .game-container {
-      display: flex;
-      gap: var(--spacing-xl);
-      align-items: flex-start;
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 40px;
+      align-items: start;
+      padding: 20px;
     }
 
+    /* حاوية البرج الثلاثي الأبعاد */
     .tower-container {
-      flex: 1;
+      perspective: 3000px;
+      transform-style: var(--transform-style);
       display: flex;
       flex-direction: column;
       align-items: center;
       position: relative;
+      background: linear-gradient(135deg, 
+        rgba(255,255,255,0.1) 0%, 
+        rgba(255,255,255,0.02) 100%);
+      backdrop-filter: blur(20px);
+      border-radius: 30px;
+      padding: 40px;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 
+        0 20px 80px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
     }
 
-    /* تصميم البرج */
+    /* البرج الثلاثي الأبعاد */
     .tower {
       display: flex;
       flex-direction: column-reverse;
       align-items: center;
-      gap: 5px;
-      padding: var(--spacing-lg);
+      gap: 8px;
       position: relative;
-      min-height: 400px;
+      min-height: 500px;
+      transform-style: var(--transform-style);
+      animation: towerFloat 12s ease-in-out infinite;
     }
 
-    /* الكنز في أعلى البرج */
+    .tower::before {
+      content: '';
+      position: absolute;
+      bottom: -50px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 6px;
+      height: calc(100% + 100px);
+      background: linear-gradient(to top, 
+        rgba(255, 215, 0, 0.8) 0%,
+        rgba(255, 215, 0, 0.4) 50%,
+        transparent 100%);
+      box-shadow: 
+        0 0 20px rgba(255, 215, 0, 0.6),
+        0 0 40px rgba(255, 215, 0, 0.3);
+      border-radius: 3px;
+      z-index: -1;
+      animation: energyFlow 3s ease-in-out infinite;
+    }
+
+    /* الكنز الهولوجرافي */
     .treasure {
-      font-size: 4rem;
-      margin-bottom: var(--spacing-lg);
-      animation: treasureGlow 2s ease-in-out infinite alternate;
-      filter: drop-shadow(0 0 20px var(--tower-gold));
+      font-size: 5rem;
+      margin-bottom: 30px;
+      position: relative;
       z-index: 100;
+      animation: treasureFloat 4s ease-in-out infinite;
+      filter: drop-shadow(0 0 30px var(--tower-gold));
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
     }
 
-    @keyframes treasureGlow {
-      0% { transform: scale(1) rotate(0deg); }
-      100% { transform: scale(1.1) rotate(5deg); }
+    .treasure::before {
+      content: '';
+      position: absolute;
+      top: -20px;
+      left: -20px;
+      right: -20px;
+      bottom: -20px;
+      background: conic-gradient(from 0deg, 
+        transparent, 
+        rgba(255, 215, 0, 0.3), 
+        transparent);
+      border-radius: 50%;
+      animation: treasureAura 6s linear infinite;
+      z-index: -1;
     }
 
-    /* درجات البرج */
+    /* درجات البرج المتطورة */
     .tower-step {
-      width: 280px;
-      height: 60px;
-      background: linear-gradient(145deg, #D4AF37, #B8860B);
-      border: 3px solid #8B7355;
-      border-radius: var(--border-radius);
+      width: 300px;
+      height: 70px;
+      background: linear-gradient(135deg, 
+        rgba(255,255,255,0.2) 0%, 
+        rgba(255,255,255,0.05) 100%);
+      backdrop-filter: blur(20px);
+      border: 2px solid rgba(255,255,255,0.2);
+      border-radius: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       font-weight: 700;
-      color: white;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      color: rgba(255,255,255,0.8);
       cursor: pointer;
-      transition: all var(--transition-normal);
+      transition: all 0.5s var(--elastic-timing);
       position: relative;
+      overflow: hidden;
+      transform-style: var(--transform-style);
       box-shadow: 
-        0 4px 8px rgba(0, 0, 0, 0.2),
-        inset 0 2px 4px rgba(255, 255, 255, 0.3);
-      margin: 2px 0;
+        0 15px 40px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      animation: stepMaterialize 1s var(--bounce-timing);
+      animation-delay: calc(var(--step-index, 0) * 0.1s);
+      margin: 3px 0;
+    }
+
+    .tower-step::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--tower-gradient);
+      opacity: 0;
+      transition: all 0.4s ease;
+      border-radius: 18px;
+      z-index: -1;
+    }
+
+    .tower-step::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(from 0deg, 
+        transparent, 
+        rgba(255,255,255,0.3), 
+        transparent);
+      opacity: 0;
+      transition: all 0.6s ease;
+      animation: stepAura 4s linear infinite;
     }
 
     .tower-step:hover {
-      transform: translateY(-3px) scale(1.05);
+      transform: translateY(-15px) scale(1.08) rotateX(15deg);
+      border-color: var(--neon-cyan);
+      color: var(--neon-cyan);
+      text-shadow: 0 0 20px var(--neon-cyan);
       box-shadow: 
-        0 8px 20px rgba(0, 0, 0, 0.3),
-        inset 0 2px 4px rgba(255, 255, 255, 0.4);
+        0 25px 80px rgba(0, 245, 255, 0.4),
+        0 0 40px var(--neon-cyan),
+        inset 0 0 30px rgba(0, 245, 255, 0.1);
+    }
+
+    .tower-step:hover::after {
+      opacity: 1;
     }
 
     .tower-step.correct {
-      background: linear-gradient(145deg, var(--success-color), #27AE60);
-      border-color: #1E8449;
-      animation: correctAnswer 0.6s ease-out;
+      background: var(--success-gradient);
+      border-color: var(--success-color);
+      color: white;
+      text-shadow: 0 0 15px rgba(255,255,255,0.8);
+      box-shadow: 
+        0 0 50px rgba(17, 153, 142, 0.8),
+        0 25px 80px rgba(17, 153, 142, 0.4),
+        inset 0 0 30px rgba(255,255,255,0.2);
+      animation: correctPulse 1s ease-out;
+    }
+
+    .tower-step.correct::before {
+      opacity: 1;
     }
 
     .tower-step.falling {
-      animation: fallDown 1s ease-in forwards;
+      animation: fallDown3D 2s ease-in forwards;
       z-index: 1;
     }
 
-    @keyframes correctAnswer {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
+    @keyframes gameScreenEnter {
+      0% {
+        opacity: 0;
+        transform: scale(0.8) rotateY(-90deg);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) rotateY(0deg);
+      }
     }
 
-    @keyframes fallDown {
+    @keyframes towerFloat {
+      0%, 100% { 
+        transform: translateY(0) rotateX(0deg); 
+      }
+      33% { 
+        transform: translateY(-25px) rotateX(8deg); 
+      }
+      66% { 
+        transform: translateY(-15px) rotateX(-5deg); 
+      }
+    }
+
+    @keyframes energyFlow {
+      0%, 100% { 
+        opacity: 0.8;
+        transform: translateX(-50%) scaleY(1);
+      }
+      50% { 
+        opacity: 1;
+        transform: translateX(-50%) scaleY(1.3);
+      }
+    }
+
+    @keyframes treasureFloat {
+      0%, 100% { 
+        transform: translateY(0) rotateY(0deg) scale(1); 
+      }
+      25% { 
+        transform: translateY(-15px) rotateY(90deg) scale(1.1); 
+      }
+      50% { 
+        transform: translateY(-20px) rotateY(180deg) scale(1.05); 
+      }
+      75% { 
+        transform: translateY(-10px) rotateY(270deg) scale(1.1); 
+      }
+    }
+
+    @keyframes treasureAura {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes stepMaterialize {
+      0% {
+        opacity: 0;
+        transform: scale(0.3) rotateY(-180deg);
+      }
+      70% {
+        transform: scale(1.1) rotateY(0deg);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) rotateY(0deg);
+      }
+    }
+
+    @keyframes stepAura {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes correctPulse {
+      0% { transform: scale(1); }
+      50% { 
+        transform: scale(1.2) rotateY(180deg);
+        box-shadow: 
+          0 0 60px rgba(17, 153, 142, 0.9),
+          0 35px 100px rgba(17, 153, 142, 0.6);
+      }
+      100% { transform: scale(1) rotateY(360deg); }
+    }
+
+    @keyframes fallDown3D {
       0% { 
-        transform: translateY(0) rotate(0deg);
+        transform: translateY(0) rotateX(0deg) rotateZ(0deg);
         opacity: 1;
       }
+      50% {
+        transform: translateY(400px) rotateX(360deg) rotateZ(180deg);
+        opacity: 0.7;
+      }
       100% { 
-        transform: translateY(800px) rotate(720deg);
+        transform: translateY(1000px) rotateX(720deg) rotateZ(1080deg);
         opacity: 0;
       }
     }
 
-    /* لوحة التحكم */
+    /* لوحة التحكم الذكية */
     .control-panel {
-      width: 350px;
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: var(--border-radius);
-      padding: var(--spacing-xl);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      width: 400px;
+      background: linear-gradient(135deg, 
+        rgba(255,255,255,0.2) 0%, 
+        rgba(255,255,255,0.05) 100%);
+      backdrop-filter: blur(30px);
+      border-radius: 30px;
+      padding: 30px;
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 
+        0 20px 80px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+      animation: panelSlideIn 1.5s var(--elastic-timing);
+    }
+
+    .control-panel::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(from 90deg, 
+        transparent, 
+        rgba(0, 245, 255, 0.1), 
+        transparent, 
+        rgba(255, 7, 58, 0.1), 
+        transparent);
+      animation: panelAura 12s linear infinite;
+      z-index: -1;
+    }
+
+    /* معلومات اللاعب الحالي */
+    .current-player-info {
+      text-align: center;
+      margin-bottom: 40px;
+      animation: playerInfoSlide 1s var(--bounce-timing);
+    }
+
+    .player-avatar-large {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: var(--success-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 25px;
+      font-size: 3rem;
+      color: white;
+      font-weight: 800;
+      border: 4px solid rgba(255,255,255,0.3);
+      box-shadow: 
+        0 0 50px rgba(17, 153, 142, 0.8),
+        0 20px 60px rgba(17, 153, 142, 0.4),
+        inset 0 0 30px rgba(255,255,255,0.2);
+      animation: avatarRotate 6s ease-in-out infinite;
+      transform-style: var(--transform-style);
+    }
+
+    .player-name-large {
+      font-size: 2rem;
+      font-weight: 800;
+      background: var(--tower-gradient);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 15px;
+      text-shadow: 0 0 30px rgba(255,215,0,0.5);
+      font-family: 'Orbitron', 'Cairo', sans-serif;
+      animation: nameGlow 3s ease-in-out infinite;
+    }
+
+    .player-status-large {
+      color: rgba(255,255,255,0.8);
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    /* إحصائيات اللعبة */
+    .game-statistics {
+      margin-bottom: 30px;
+    }
+
+    .stats-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: var(--neon-gradient);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 25px;
+      text-align: center;
+      font-family: 'Orbitron', 'Cairo', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, 
+        rgba(255,255,255,0.15) 0%, 
+        rgba(255,255,255,0.05) 100%);
+      backdrop-filter: blur(15px);
+      padding: 25px 20px;
+      border-radius: 20px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.4s var(--elastic-timing);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255,255,255,0.2), 
+        transparent);
+      transition: left 0.6s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-8px) scale(1.05);
+      box-shadow: 
+        0 20px 50px rgba(255,255,255,0.1),
+        0 0 30px rgba(255,255,255,0.05);
+    }
+
+    .stat-card:hover::before {
+      left: 100%;
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: var(--tower-gradient);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: block;
+      margin-bottom: 10px;
+      font-family: 'Orbitron', 'Cairo', sans-serif;
+      animation: numberPulse 2s ease-in-out infinite;
+    }
+
+    .stat-name {
+      color: rgba(255,255,255,0.8);
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* أزرار التحكم */
+    .control-buttons {
+      display: grid;
+      gap: 20px;
+    }
+
+    .control-btn {
+      padding: 20px 25px;
+      border: none;
+      border-radius: 20px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.4s var(--elastic-timing);
+      font-family: 'Orbitron', 'Cairo', sans-serif;
+      position: relative;
+      overflow: hidden;
+      text-transform: uppercase;
+      letter-spacing: 1px;
       backdrop-filter: blur(10px);
-      position: sticky;
-      top: var(--spacing-lg);
+      border: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .control-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255,255,255,0.3), 
+        transparent);
+      transition: left 0.6s ease;
+    }
+
+    .control-btn:hover::before {
+      left: 100%;
+    }
+
+    .next-player-btn {
+      background: var(--success-gradient);
+      color: white;
+      box-shadow: 
+        0 0 30px rgba(17, 153, 142, 0.6),
+        0 15px 40px rgba(17, 153, 142, 0.3);
+    }
+
+    .next-player-btn:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 
+        0 0 50px rgba(17, 153, 142, 0.8),
+        0 25px 60px rgba(17, 153, 142, 0.5);
+    }
+
+    .skip-turn-btn {
+      background: var(--warning-gradient);
+      color: white;
+      box-shadow: 
+        0 0 30px rgba(255, 193, 7, 0.6),
+        0 15px 40px rgba(255, 193, 7, 0.3);
+    }
+
+    .skip-turn-btn:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 
+        0 0 50px rgba(255, 193, 7, 0.8),
+        0 25px 60px rgba(255, 193, 7, 0.5);
+    }
+
+    .restart-btn {
+      background: var(--danger-gradient);
+      color: white;
+      box-shadow: 
+        0 0 30px rgba(220, 53, 69, 0.6),
+        0 15px 40px rgba(220, 53, 69, 0.3);
+    }
+
+    .restart-btn:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 
+        0 0 50px rgba(220, 53, 69, 0.8),
+        0 25px 60px rgba(220, 53, 69, 0.5);
+    }
+
+    .end-game-btn {
+      background: linear-gradient(135deg, 
+        rgba(255,255,255,0.2) 0%, 
+        rgba(255,255,255,0.1) 100%);
+      color: rgba(255,255,255,0.9);
+      border-color: rgba(255,255,255,0.3);
+    }
+
+    .end-game-btn:hover {
+      transform: translateY(-5px) scale(1.02);
+      background: linear-gradient(135deg, 
+        rgba(255,255,255,0.3) 0%, 
+        rgba(255,255,255,0.2) 100%);
+      box-shadow: 
+        0 0 30px rgba(255,255,255,0.3),
+        0 15px 40px rgba(255,255,255,0.2);
+    }
+
+    @keyframes panelSlideIn {
+      0% {
+        opacity: 0;
+        transform: translateX(100px) rotateY(-45deg);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0) rotateY(0deg);
+      }
+    }
+
+    @keyframes panelAura {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes playerInfoSlide {
+      0% {
+        opacity: 0;
+        transform: translateY(-50px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes avatarRotate {
+      0%, 100% { 
+        transform: rotateY(0deg) scale(1);
+      }
+      50% { 
+        transform: rotateY(180deg) scale(1.1);
+      }
+    }
+
+    @keyframes nameGlow {
+      0%, 100% { 
+        filter: drop-shadow(0 0 10px rgba(255,215,0,0.5));
+      }
+      50% { 
+        filter: drop-shadow(0 0 30px rgba(255,215,0,0.8));
+      }
+    }
+
+    @keyframes numberPulse {
+      0%, 100% { 
+        transform: scale(1);
+      }
+      50% { 
+        transform: scale(1.1);
+      }
     }
 
     .game-info {
@@ -940,7 +2010,6 @@
       <div class="game-container">
         <!-- البرج -->
         <div class="tower-container">
-          <div class="treasure">💎</div>
           <div class="tower" id="tower">
             <!-- سيتم ملء درجات البرج ديناميكياً -->
           </div>
@@ -948,36 +2017,61 @@
 
         <!-- لوحة التحكم -->
         <div class="control-panel">
-          <div class="game-info">
-            <div class="info-item">
-              <div class="info-label">الصف المختار</div>
-              <div class="info-value" id="selectedClass">-</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">عدد الطلاب</div>
-              <div class="info-value" id="totalStudents">-</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">الطلاب المتبقون</div>
-              <div class="info-value" id="remainingStudents">-</div>
+          <!-- معلومات اللاعب الحالي -->
+          <div class="current-player-info">
+            <div class="player-avatar-large" id="currentPlayerAvatar">؟</div>
+            <div class="player-name-large" id="currentPlayerName">اختر الطلاب</div>
+            <div class="player-status-large">في انتظار الدور</div>
+          </div>
+
+          <!-- إحصائيات اللعبة -->
+          <div class="game-statistics">
+            <h3 class="stats-title">
+              <i class="fas fa-chart-line"></i>
+              إحصائيات اللعبة
+            </h3>
+            <div class="stats-grid">
+              <div class="stat-card">
+                <span class="stat-number" id="roundDisplay">1</span>
+                <span class="stat-name">الجولة</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-number" id="totalStepsDisplay">0</span>
+                <span class="stat-name">المحاولات</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-number" id="correctStepsDisplay">0</span>
+                <span class="stat-name">صحيحة</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-number" id="wrongStepsDisplay">0</span>
+                <span class="stat-name">خاطئة</span>
+              </div>
             </div>
           </div>
 
-          <div class="current-student" id="currentStudentCard" style="display: none;">
-            <div class="current-student-name" id="currentStudentName">-</div>
-            <div class="current-student-level" id="currentStudentLevel">-</div>
-          </div>
-
-          <div class="game-actions">
-            <button class="action-btn primary" id="newGameBtn">
+          <!-- أزرار التحكم -->
+          <div class="control-buttons">
+            <button class="control-btn next-player-btn" id="nextPlayerBtn">
+              <i class="fas fa-arrow-right"></i>
+              اللاعب التالي
+            </button>
+            <button class="control-btn skip-turn-btn" id="skipTurnBtn">
+              <i class="fas fa-forward"></i>
+              تخطي الدور
+            </button>
+            <button class="control-btn restart-btn" id="restartBtn">
               <i class="fas fa-refresh"></i>
-              لعبة جديدة
+              إعادة تشغيل
             </button>
-            <button class="action-btn" id="resetTowerBtn">
-              <i class="fas fa-undo"></i>
-              إعادة بناء البرج
+            <button class="control-btn end-game-btn" id="endGameBtn">
+              <i class="fas fa-stop"></i>
+              إنهاء اللعبة
             </button>
-            <button class="action-btn" id="shuffleStudentsBtn">
+          </div>
+        </div>
+      </div>
+    </div>
               <i class="fas fa-random"></i>
               خلط الطلاب
             </button>
@@ -985,95 +2079,584 @@
         </div>
       </div>
     </div>
-
-    <!-- نتيجة اللعبة -->
-    <div class="game-result" id="gameResult">
-      <div class="result-card">
-        <div class="result-title" id="resultTitle">🏆 تهانينا!</div>
-        <div class="winner-name" id="winnerName">الطالب الفائز</div>
-        <p id="resultMessage">لقد وصل إلى قمة البرج وحصل على الكنز!</p>
-        <button class="start-game-btn" id="playAgainBtn">
-          <i class="fas fa-play"></i>
-          العب مرة أخرى
-        </button>
-      </div>
-    </div>
   </div>
-
-  <!-- نافذة التقييم -->
-  <div class="evaluation-modal" id="evaluationModal">
-    <div class="evaluation-content">
-      <h2 class="evaluation-title">
-        <i class="fas fa-question-circle"></i>
-        تقييم الإجابة
-      </h2>
-      <div class="evaluation-student" id="evaluationStudent">
-        اسم الطالب
-      </div>
-      <div class="evaluation-buttons">
-        <button class="eval-btn correct" id="correctBtn">
-          <i class="fas fa-check"></i>
-          إجابة صحيحة
-        </button>
-        <button class="eval-btn wrong" id="wrongBtn">
-          <i class="fas fa-times"></i>
-          إجابة خاطئة
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- الأصوات -->
-  <audio id="clickSound" preload="auto">
-    <source src="../assets/media/sounds/Click.mp3" type="audio/mpeg">
-  </audio>
-  <audio id="correctSound" preload="auto">
-    <source src="../assets/media/sounds/win.mp3" type="audio/mpeg">
-  </audio>
-  <audio id="wrongSound" preload="auto">
-    <source src="../assets/media/sounds/wrong_answer.mp3" type="audio/mpeg">
-  </audio>
-  <audio id="winSound" preload="auto">
-    <source src="../assets/media/sounds/firework.gif" type="audio/mpeg">
-  </audio>
 
   <script>
-    console.log('🚀 بدء تحميل لعبة برج الأسماء...');
+    // نظام الصوت الذكي المتطور
+    class SmartAudioSystem {
+      constructor() {
+        this.sounds = {};
+        this.backgroundMusic = null;
+        this.volume = 0.7;
+        this.soundEnabled = true;
+        this.initializeAudio();
+      }
 
-    // متغيرات اللعبة
-    let studentsData = {};
-    let selectedClass = '';
-    let selectedStudents = [];
-    let selectedCount = 0;
-    let currentStudentIndex = 0;
-    let gameActive = false;
-    let soundEnabled = true;
+      async initializeAudio() {
+        try {
+          await this.loadSounds();
+        } catch (error) {
+          console.log('Audio initialization failed:', error);
+        }
+      }
 
-    // عناصر DOM
-    const elements = {
-      // شاشة البداية
-      classSelect: document.getElementById('classSelect'),
-      studentCountSection: document.getElementById('studentCountSection'),
-      studentsPreview: document.getElementById('studentsPreview'),
-      studentsGrid: document.getElementById('studentsGrid'),
-      startGameBtn: document.getElementById('startGameBtn'),
-      startScreen: document.getElementById('startScreen'),
+      async loadSounds() {
+        const soundFiles = {
+          'ui-hover': 'button-hover.mp3',
+          'ui-click': 'cosmic-click.mp3',
+          'ui-success': 'achievement-unlock.mp3',
+          'ui-error': 'cosmic-explosion.mp3',
+          'game-start': 'adventure-theme.mp3',
+          'step-correct': 'bonus-collect.mp3',
+          'step-wrong': 'cosmic-explosion.mp3',
+          'tower-complete': 'battle-victory.mp3',
+          'crown-ceremony': 'crown-ceremony.mp3',
+          'step-hover': 'crystal-bonus.mp3',
+          'player-change': 'character-intro.mp3',
+          'castle-ambient': 'castle-atmosphere.mp3',
+          'energy-flow': 'cosmic-portal.mp3'
+        };
+
+        for (const [key, filename] of Object.entries(soundFiles)) {
+          try {
+            const audio = new Audio(`../assets/media/sounds/kingdom-sounds/${filename}`);
+            audio.preload = 'auto';
+            audio.volume = this.volume;
+            this.sounds[key] = audio;
+          } catch (error) {
+            console.log(`Failed to load sound: ${filename}`);
+          }
+        }
+
+        if (this.sounds['castle-ambient']) {
+          this.backgroundMusic = this.sounds['castle-ambient'];
+          this.backgroundMusic.loop = true;
+          this.backgroundMusic.volume = 0.3;
+        }
+      }
+
+      play(soundKey, options = {}) {
+        if (!this.soundEnabled || !this.sounds[soundKey]) return;
+        
+        try {
+          const sound = this.sounds[soundKey];
+          sound.currentTime = 0;
+          sound.volume = (options.volume || 1) * this.volume;
+          sound.play().catch(() => {});
+        } catch (error) {
+          console.log('Sound play error:', error);
+        }
+      }
+
+      playBackgroundMusic() {
+        if (this.backgroundMusic && this.soundEnabled) {
+          this.backgroundMusic.play().catch(() => {});
+        }
+      }
+
+      stopBackgroundMusic() {
+        if (this.backgroundMusic) {
+          this.backgroundMusic.pause();
+          this.backgroundMusic.currentTime = 0;
+        }
+      }
+
+      setVolume(volume) {
+        this.volume = Math.max(0, Math.min(1, volume));
+        Object.values(this.sounds).forEach(sound => {
+          sound.volume = this.volume;
+        });
+        if (this.backgroundMusic) {
+          this.backgroundMusic.volume = this.volume * 0.3;
+        }
+      }
+
+      toggleSound() {
+        this.soundEnabled = !this.soundEnabled;
+        if (!this.soundEnabled) {
+          this.stopBackgroundMusic();
+        } else {
+          this.playBackgroundMusic();
+        }
+        return this.soundEnabled;
+      }
+    }
+
+    // نظام إدارة اللعبة المتطور
+    class TowerGameManager {
+      constructor() {
+        this.audioSystem = new SmartAudioSystem();
+        this.students = [];
+        this.selectedStudents = [];
+        this.currentPlayerIndex = 0;
+        this.towerSteps = [];
+        this.gameState = 'setup';
+        this.round = 1;
+        this.stats = {
+          totalSteps: 0,
+          correctSteps: 0,
+          wrongSteps: 0,
+          timeStarted: null
+        };
+        this.initializeElements();
+        this.loadStudentData();
+        this.setupEventListeners();
+        this.startAmbientEffects();
+      }
+
+      initializeElements() {
+        this.elements = {
+          startScreen: document.getElementById('startScreen'),
+          gameScreen: document.getElementById('gameScreen'),
+          classSelect: document.getElementById('classSelect'),
+          studentCountButtons: document.querySelectorAll('.count-btn'),
+          studentsPreview: document.getElementById('studentsPreview'),
+          startGameBtn: document.getElementById('startGameBtn'),
+          currentPlayerName: document.getElementById('currentPlayerName'),
+          currentPlayerAvatar: document.getElementById('currentPlayerAvatar'),
+          tower: document.getElementById('tower'),
+          treasure: document.getElementById('treasure'),
+          roundDisplay: document.getElementById('roundDisplay'),
+          totalStepsDisplay: document.getElementById('totalStepsDisplay'),
+          correctStepsDisplay: document.getElementById('correctStepsDisplay'),
+          nextPlayerBtn: document.getElementById('nextPlayerBtn'),
+          skipTurnBtn: document.getElementById('skipTurnBtn'),
+          restartBtn: document.getElementById('restartBtn'),
+          endGameBtn: document.getElementById('endGameBtn')
+        };
+      }
+
+      async loadStudentData() {
+        try {
+          const response = await fetch('../data/studentData.json');
+          const data = await response.json();
+          this.students = data;
+          this.populateClassSelect();
+        } catch (error) {
+          console.error('Error loading student data:', error);
+          this.showErrorMessage('فشل في تحميل بيانات الطلاب');
+        }
+      }
+
+      populateClassSelect() {
+        this.elements.classSelect.innerHTML = '<option value="">اختر الصف</option>';
+        
+        Object.keys(this.students).forEach(className => {
+          const option = document.createElement('option');
+          option.value = className;
+          option.textContent = className;
+          this.elements.classSelect.appendChild(option);
+        });
+      }
+
+      setupEventListeners() {
+        this.elements.classSelect.addEventListener('change', (e) => {
+          this.onClassSelect(e.target.value);
+          this.audioSystem.play('ui-click');
+        });
+
+        this.elements.studentCountButtons.forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            this.selectStudentCount(parseInt(e.target.dataset.count));
+            this.audioSystem.play('ui-click');
+          });
+          
+          btn.addEventListener('mouseenter', () => {
+            this.audioSystem.play('ui-hover', { volume: 0.3 });
+          });
+        });
+
+        this.elements.startGameBtn.addEventListener('click', () => {
+          this.startGame();
+          this.audioSystem.play('game-start');
+        });
+
+        if (this.elements.nextPlayerBtn) {
+          this.elements.nextPlayerBtn.addEventListener('click', () => {
+            this.nextPlayer();
+            this.audioSystem.play('player-change');
+          });
+        }
+
+        if (this.elements.skipTurnBtn) {
+          this.elements.skipTurnBtn.addEventListener('click', () => {
+            this.skipTurn();
+            this.audioSystem.play('ui-click');
+          });
+        }
+
+        if (this.elements.restartBtn) {
+          this.elements.restartBtn.addEventListener('click', () => {
+            this.restartGame();
+            this.audioSystem.play('ui-click');
+          });
+        }
+
+        if (this.elements.endGameBtn) {
+          this.elements.endGameBtn.addEventListener('click', () => {
+            this.endGame();
+            this.audioSystem.play('ui-click');
+          });
+        }
+
+        document.querySelectorAll('.control-btn, .start-game-btn, .count-btn').forEach(btn => {
+          btn.addEventListener('mouseenter', () => {
+            this.audioSystem.play('ui-hover', { volume: 0.2 });
+          });
+        });
+      }
+
+      onClassSelect(className) {
+        if (!className || !this.students[className]) {
+          this.clearStudentSelection();
+          return;
+        }
+
+        const classStudents = this.students[className];
+        this.updateStudentCountButtons(classStudents.length);
+        this.elements.studentsPreview.innerHTML = '';
+        this.selectedStudents = [];
+        this.updateStartButton();
+      }
+
+      selectStudentCount(count) {
+        this.elements.studentCountButtons.forEach(btn => {
+          btn.classList.remove('selected');
+        });
+
+        const selectedBtn = document.querySelector(`[data-count="${count}"]`);
+        selectedBtn?.classList.add('selected');
+
+        this.showStudentSelection(count);
+      }
+
+      showStudentSelection(count) {
+        const className = this.elements.classSelect.value;
+        if (!className || !this.students[className]) return;
+
+        const classStudents = this.students[className];
+        const shuffledStudents = [...classStudents].sort(() => Math.random() - 0.5);
+        const selectedStudents = shuffledStudents.slice(0, count);
+
+        this.selectedStudents = selectedStudents;
+        this.displayStudentPreview(selectedStudents);
+        this.updateStartButton();
+      }
+
+      displayStudentPreview(students) {
+        const container = this.elements.studentsPreview;
+        container.innerHTML = `
+          <h4 class="setup-title">
+            <i class="fas fa-users"></i>
+            الطلاب المشاركون (${students.length})
+          </h4>
+          <div class="students-grid">
+            ${students.map((student, index) => `
+              <div class="student-card" style="animation-delay: ${index * 0.1}s">
+                ${student}
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      updateStudentCountButtons(maxStudents) {
+        this.elements.studentCountButtons.forEach(btn => {
+          const count = parseInt(btn.dataset.count);
+          btn.style.display = count <= maxStudents ? 'block' : 'none';
+          btn.disabled = count > maxStudents;
+        });
+      }
+
+      updateStartButton() {
+        const canStart = this.selectedStudents.length > 0;
+        this.elements.startGameBtn.disabled = !canStart;
+        
+        if (canStart) {
+          this.elements.startGameBtn.textContent = `🚀 بدء اللعبة مع ${this.selectedStudents.length} طلاب`;
+        } else {
+          this.elements.startGameBtn.textContent = 'اختر الطلاب أولاً';
+        }
+      }
+
+      startGame() {
+        if (this.selectedStudents.length === 0) return;
+
+        this.gameState = 'playing';
+        this.stats.timeStarted = Date.now();
+        this.currentPlayerIndex = 0;
+        
+        this.elements.startScreen.style.display = 'none';
+        this.elements.gameScreen.style.display = 'block';
+        
+        this.createTower();
+        this.updateCurrentPlayer();
+        this.updateStats();
+        this.audioSystem.playBackgroundMusic();
+        this.animateGameStart();
+      }
+
+      createTower() {
+        const stepCount = Math.min(10, this.selectedStudents.length + 3);
+        this.towerSteps = [];
+        this.elements.tower.innerHTML = '<div class="treasure">👑</div>';
+
+        for (let i = 0; i < stepCount; i++) {
+          const step = document.createElement('div');
+          step.className = 'tower-step';
+          step.style.setProperty('--step-index', i);
+          step.textContent = `المرحلة ${i + 1}`;
+          step.addEventListener('click', () => this.handleStepClick(i));
+          
+          step.addEventListener('mouseenter', () => {
+            this.audioSystem.play('step-hover', { volume: 0.3 });
+          });
+          
+          this.elements.tower.appendChild(step);
+          this.towerSteps.push({
+            element: step,
+            completed: false,
+            attempts: 0
+          });
+        }
+      }
+
+      handleStepClick(stepIndex) {
+        if (this.gameState !== 'playing') return;
+
+        const step = this.towerSteps[stepIndex];
+        if (step.completed) return;
+
+        step.attempts++;
+        this.stats.totalSteps++;
+
+        const isCorrect = Math.random() > 0.4;
+        
+        if (isCorrect) {
+          this.handleCorrectStep(stepIndex);
+        } else {
+          this.handleIncorrectStep(stepIndex);
+        }
+
+        this.updateStats();
+      }
+
+      handleCorrectStep(stepIndex) {
+        const step = this.towerSteps[stepIndex];
+        step.completed = true;
+        step.element.classList.add('correct');
+        step.element.textContent = `✅ ${this.selectedStudents[this.currentPlayerIndex]}`;
+        
+        this.stats.correctSteps++;
+        this.audioSystem.play('step-correct');
+        
+        if (this.checkTowerCompletion()) {
+          this.completeTower();
+        } else {
+          setTimeout(() => this.nextPlayer(), 1500);
+        }
+      }
+
+      handleIncorrectStep(stepIndex) {
+        const step = this.towerSteps[stepIndex];
+        step.element.classList.add('falling');
+        
+        this.stats.wrongSteps++;
+        this.audioSystem.play('step-wrong');
+        
+        setTimeout(() => {
+          step.element.remove();
+          const remainingSteps = this.towerSteps.filter(s => !s.completed && s.element.parentNode).length;
+          
+          if (remainingSteps <= 1) {
+            this.gameState = 'finished';
+            setTimeout(() => {
+              alert('💥 انهار البرج! حاول مرة أخرى');
+              this.restartGame();
+            }, 500);
+          } else {
+            this.nextPlayer();
+          }
+        }, 2000);
+      }
+
+      nextPlayer() {
+        this.currentPlayerIndex = (this.currentPlayerIndex + 1) % this.selectedStudents.length;
+        this.updateCurrentPlayer();
+        this.audioSystem.play('player-change');
+      }
+
+      skipTurn() {
+        this.nextPlayer();
+      }
+
+      updateCurrentPlayer() {
+        const currentStudent = this.selectedStudents[this.currentPlayerIndex];
+        if (this.elements.currentPlayerName) {
+          this.elements.currentPlayerName.textContent = currentStudent;
+        }
+        if (this.elements.currentPlayerAvatar) {
+          this.elements.currentPlayerAvatar.textContent = currentStudent.charAt(0);
+        }
+      }
+
+      updateStats() {
+        if (this.elements.roundDisplay) {
+          this.elements.roundDisplay.textContent = this.round;
+        }
+        if (this.elements.totalStepsDisplay) {
+          this.elements.totalStepsDisplay.textContent = this.stats.totalSteps;
+        }
+        if (this.elements.correctStepsDisplay) {
+          this.elements.correctStepsDisplay.textContent = this.stats.correctSteps;
+        }
+      }
+
+      checkTowerCompletion() {
+        return this.towerSteps.every(step => step.completed);
+      }
+
+      completeTower() {
+        this.gameState = 'finished';
+        this.audioSystem.play('tower-complete');
+        this.audioSystem.play('crown-ceremony');
+        
+        this.animateVictory();
+        
+        setTimeout(() => {
+          this.showResults();
+        }, 3000);
+      }
+
+      restartGame() {
+        this.gameState = 'setup';
+        this.selectedStudents = [];
+        this.currentPlayerIndex = 0;
+        this.round = 1;
+        this.stats = {
+          totalSteps: 0,
+          correctSteps: 0,
+          wrongSteps: 0,
+          timeStarted: null
+        };
+
+        this.elements.gameScreen.style.display = 'none';
+        this.elements.startScreen.style.display = 'block';
+        this.audioSystem.stopBackgroundMusic();
+        this.clearStudentSelection();
+      }
+
+      endGame() {
+        this.showResults();
+      }
+
+      showResults() {
+        const totalTime = this.stats.timeStarted ? 
+          Math.round((Date.now() - this.stats.timeStarted) / 1000) : 0;
+        
+        const successRate = Math.round((this.stats.correctSteps / Math.max(this.stats.totalSteps, 1)) * 100);
+        
+        alert(`
+🏆 انتهت اللعبة! 🏆
+
+⏱️ الوقت المستغرق: ${totalTime} ثانية
+📊 إجمالي المحاولات: ${this.stats.totalSteps}
+✅ المحاولات الصحيحة: ${this.stats.correctSteps}
+❌ المحاولات الخاطئة: ${this.stats.wrongSteps}
+📈 نسبة النجاح: ${successRate}%
+
+شكراً لكم على المشاركة! 🎉
+        `);
+      }
+
+      clearStudentSelection() {
+        this.elements.studentsPreview.innerHTML = '';
+        this.elements.studentCountButtons.forEach(btn => {
+          btn.classList.remove('selected');
+        });
+        this.selectedStudents = [];
+        this.updateStartButton();
+      }
+
+      animateGameStart() {
+        if (this.elements.tower) {
+          this.elements.tower.style.animation = 'towerFloat 12s ease-in-out infinite';
+        }
+      }
+
+      animateVictory() {
+        if (this.elements.treasure) {
+          this.elements.treasure.style.animation = 'treasureFloat 2s ease-in-out infinite';
+        }
+        this.createCelebrationParticles();
+      }
+
+      createCelebrationParticles() {
+        for (let i = 0; i < 30; i++) {
+          setTimeout(() => {
+            this.createParticle();
+          }, i * 100);
+        }
+      }
+
+      createParticle() {
+        const particle = document.createElement('div');
+        particle.style.cssText = `
+          position: fixed;
+          width: 10px;
+          height: 10px;
+          background: radial-gradient(circle, gold, orange);
+          border-radius: 50%;
+          pointer-events: none;
+          z-index: 10000;
+          left: ${Math.random() * window.innerWidth}px;
+          top: ${window.innerHeight}px;
+          animation: particleFly 3s ease-out forwards;
+        `;
+        
+        document.body.appendChild(particle);
+        
+        setTimeout(() => {
+          particle.remove();
+        }, 3000);
+      }
+
+      startAmbientEffects() {
+        setInterval(() => {
+          if (this.gameState === 'playing' && Math.random() > 0.9) {
+            this.audioSystem.play('energy-flow', { volume: 0.1 });
+          }
+        }, 8000);
+      }
+
+      showErrorMessage(message) {
+        alert(`⚠️ خطأ: ${message}`);
+      }
+    }
+
+    // تشغيل اللعبة عند تحميل الصفحة
+    document.addEventListener('DOMContentLoaded', () => {
+      window.towerGame = new TowerGameManager();
       
-      // شاشة اللعبة
-      gameScreen: document.getElementById('gameScreen'),
-      tower: document.getElementById('tower'),
-      selectedClassDisplay: document.getElementById('selectedClass'),
-      totalStudentsDisplay: document.getElementById('totalStudents'),
-      remainingStudentsDisplay: document.getElementById('remainingStudents'),
-      currentStudentCard: document.getElementById('currentStudentCard'),
-      currentStudentName: document.getElementById('currentStudentName'),
-      currentStudentLevel: document.getElementById('currentStudentLevel'),
-      
-      // نافذة التقييم
-      evaluationModal: document.getElementById('evaluationModal'),
-      evaluationStudent: document.getElementById('evaluationStudent'),
-      correctBtn: document.getElementById('correctBtn'),
-      wrongBtn: document.getElementById('wrongBtn'),
+      // إضافة CSS للجزيئات
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes particleFly {
+          0% {
+            transform: translateY(0) rotate(0deg) scale(1);
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(-${window.innerHeight + 100}px) rotate(720deg) scale(0);
+            opacity: 0;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    });
+  </script>
+</body>
+</html>
       
       // نتيجة اللعبة
       gameResult: document.getElementById('gameResult'),
@@ -1604,10 +3187,6 @@
     });
 
     window.addEventListener('unhandledrejection', (e) => {
-      console.error('💥 خطأ غير معالج في Promise:', e.reason);
-    });
-
-    console.log('📝 تم تحميل جميع النصوص البرمجية لبرج الأسماء!');
   </script>
 </body>
 </html>
