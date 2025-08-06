@@ -3677,7 +3677,11 @@
             // تحديث نص زر الاختيار حسب المرحلة
             const spinButtonText = document.getElementById('spinButtonText');
             if (spinButtonText) {
-                if (currentStep === 'names') {
+                if (currentStudents.length === 0) {
+                    spinButtonText.textContent = '📋 اختر صف دراسي أولاً';
+                } else if (availableStudents.length === 0) {
+                    spinButtonText.textContent = '🔄 أعد تعيين النظام';
+                } else if (currentStep === 'names') {
                     spinButtonText.textContent = '🎴 ابدأ اختيار البطاقات';
                 } else if (currentStep === 'tasks') {
                     spinButtonText.textContent = '🎯 جاري اختيار المهمة...';
@@ -3745,12 +3749,19 @@
         // ===========================================
         function showWelcomeMessage() {
             const systemType = 'بطاقات الأسماء الذكية';
+            let message;
             
-            let message = `� الصف محدد ونحن جاهزون!<br>${availableStudents.length} طالب متاح للاختيار`;
-            message += `<br>🎮 النظام المستخدم: ${systemType}`;
-            
-            if (honoredStudents.length > 0) {
-                message += `<br>🏆 ${honoredStudents.length} طالب مُكرم في لوحة الشرف`;
+            if (currentStudents.length === 0) {
+                message = `📋 مرحباً بك في نظام ${systemType}<br>⬆️ يرجى اختيار الصف الدراسي من القائمة أعلاه لبدء الاستخدام`;
+            } else if (availableStudents.length === 0) {
+                message = `🔄 جميع الطلاب تم اختيارهم!<br>انقر على "إعادة تعيين" لبدء جولة جديدة<br>أو استخدم "عرض المحذوفين" لاستعادة طلاب`;
+            } else {
+                message = `✅ الصف محدد ونحن جاهزون!<br>${availableStudents.length} طالب متاح للاختيار`;
+                message += `<br>🎮 النظام المستخدم: ${systemType}`;
+                
+                if (honoredStudents.length > 0) {
+                    message += `<br>🏆 ${honoredStudents.length} طالب مُكرم في لوحة الشرف`;
+                }
             }
             
             // عرض الرسالة في نظام البطاقات
@@ -3857,7 +3868,23 @@
         // دوران العجلة
         // ===========================================
         function spinWheel() {
-            if (isSpinning || availableStudents.length === 0) return;
+            if (isSpinning) {
+                console.log('⏳ عملية الاختيار قيد التنفيذ بالفعل...');
+                return;
+            }
+            
+            if (availableStudents.length === 0) {
+                if (currentStudents.length === 0) {
+                    showToast('❌ يرجى اختيار صف دراسي أولاً من القائمة المنسدلة أعلاه', 'warning');
+                    console.log('❌ لا يوجد طلاب - يرجى اختيار صف دراسي');
+                } else {
+                    showToast('❌ لا يوجد طلاب متاحون للاختيار. يرجى إعادة تعيين النظام', 'warning');
+                    console.log('❌ لا يوجد طلاب متاحون');
+                }
+                return;
+            }
+            
+            console.log(`🎲 بدء الاختيار - عدد الطلاب المتاحين: ${availableStudents.length}`);
             
             // إضافة تأثير بصري عند النقر على الزر
             const spinButton = document.getElementById('spinButton');
@@ -5740,6 +5767,7 @@
             });
             
             updateUI();
+            showWelcomeMessage(); // إظهار رسالة الترحيب الأولية
             
             // تشغيل ترحيب صوتي
             setTimeout(() => {
