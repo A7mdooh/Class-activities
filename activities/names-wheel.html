@@ -7139,6 +7139,25 @@
                         finalResult.style.display = 'none';
                     }
                     
+                    // إعادة عرض نظام البطاقات أو العجلة
+                    const nameCardsSystem = document.getElementById('nameCardsSystem');
+                    const taskCardsSystem = document.getElementById('taskCardsSystem');
+                    
+                    // إظهار نظام البطاقات إذا كان مفعلاً
+                    if (nameCardsSystem) {
+                        nameCardsSystem.style.display = 'block';
+                        // التأكد من وجود البطاقات
+                        if (availableStudents.length > 0) {
+                            createNameCards();
+                            showCardsContainer();
+                        }
+                    }
+                    
+                    // إخفاء نظام المهام مؤقتاً
+                    if (taskCardsSystem) {
+                        taskCardsSystem.style.display = 'none';
+                    }
+                    
                     // إعادة إظهار العجلة والبطاقات
                     showWelcomeMessage();
                     updateUI();
@@ -7202,10 +7221,37 @@
                     const finalResult = document.getElementById('finalResult');
                     if (finalResult) finalResult.style.display = 'none';
                     
+                    // فحص إذا كان هناك طلاب متاحون
+                    if (availableStudents.length === 0) {
+                        showToast('📭 لا يوجد طلاب متاحون أكثر للاختيار', 'info');
+                        showWelcomeMessage();
+                        updateUI();
+                        return;
+                    }
+                    
                     const removedTaskInfo = currentTaskForConfirm ? ` والبطاقة` : '';
                     showToast(`🗑️ تم إزالة ${currentStudent}${removedTaskInfo} من القائمة`, 'success');
                     
-                    // إعادة إظهار العجلة
+                    // إعادة عرض نظام البطاقات أو العجلة
+                    const nameCardsSystem = document.getElementById('nameCardsSystem');
+                    const taskCardsSystem = document.getElementById('taskCardsSystem');
+                    
+                    // إظهار نظام البطاقات إذا كان مفعلاً
+                    if (nameCardsSystem) {
+                        nameCardsSystem.style.display = 'block';
+                        // إعادة إنشاء البطاقات المتاحة
+                        if (availableStudents.length > 0) {
+                            createNameCards();
+                            showCardsContainer();
+                        }
+                    }
+                    
+                    // إخفاء نظام المهام مؤقتاً
+                    if (taskCardsSystem) {
+                        taskCardsSystem.style.display = 'none';
+                    }
+                    
+                    // إعادة عرض رسالة الترحيب
                     showWelcomeMessage();
                     updateUI();
                     
@@ -7234,6 +7280,22 @@
                     // إخفاء النتيجة النهائية
                     const finalResult = document.getElementById('finalResult');
                     if (finalResult) finalResult.style.display = 'none';
+                    
+                    // إعادة عرض نظام البطاقات
+                    const nameCardsSystem = document.getElementById('nameCardsSystem');
+                    const taskCardsSystem = document.getElementById('taskCardsSystem');
+                    
+                    if (nameCardsSystem) {
+                        nameCardsSystem.style.display = 'block';
+                        if (availableStudents.length > 0) {
+                            createNameCards();
+                            showCardsContainer();
+                        }
+                    }
+                    
+                    if (taskCardsSystem) {
+                        taskCardsSystem.style.display = 'none';
+                    }
                     
                     // بدء اختيار جديد فوراً!
                     showToast('🎯 جاري اختيار طالب آخر...', 'info');
