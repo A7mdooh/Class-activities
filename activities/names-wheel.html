@@ -3103,6 +3103,320 @@
             background: linear-gradient(45deg, #1976D2, #42A5F5);
             transform: translateY(-2px);
         }
+
+        /* ستايلات بطاقات المهام لوضع "مهام فقط" */
+        .task-only-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .task-only-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .task-only-card:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border-color: #2196F3;
+        }
+
+        .task-only-card.selected {
+            background: linear-gradient(135deg, #4CAF50, #81C784);
+            color: white;
+            transform: translateY(-8px) scale(1.1);
+            box-shadow: 0 20px 40px rgba(76, 175, 80, 0.4);
+        }
+
+        .task-only-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            font-weight: bold;
+            margin: 0 auto 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .task-only-color {
+            width: 70px;
+            height: 70px;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .color-icon {
+            font-size: 1.5em;
+            margin-bottom: 2px;
+        }
+
+        .color-name {
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .task-only-desc {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        .task-only-card.selected .task-only-desc {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .no-tasks-message {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .no-tasks-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .no-tasks-text {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .no-tasks-desc {
+            font-size: 0.9em;
+            color: #999;
+        }
+
+        /* ستايلات نتيجة المهمة فقط */
+        .task-only-result {
+            text-align: center;
+            padding: 40px 30px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+        }
+
+        .result-header {
+            margin-bottom: 30px;
+        }
+
+        .result-header h2 {
+            color: #2c3e50;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-subtitle {
+            color: #7f8c8d;
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+
+        .task-result-main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .task-result-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            padding: 25px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            animation: cardFloat 3s ease-in-out infinite;
+        }
+
+        .number-result-card .task-result-number {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .color-result-card .task-result-color {
+            width: 140px;
+            height: 140px;
+            border-radius: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .color-result-icon {
+            font-size: 3em;
+            margin-bottom: 8px;
+        }
+
+        .color-result-name {
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+
+        .task-card-label {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #34495e;
+            margin-top: 10px;
+        }
+
+        .task-result-details {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid #e3f2fd;
+            min-width: 300px;
+        }
+
+        .task-detail-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .task-detail-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .detail-icon {
+            font-size: 1.3em;
+            width: 30px;
+            text-align: center;
+        }
+
+        .detail-text {
+            font-size: 1em;
+            color: #495057;
+        }
+
+        .detail-text strong {
+            color: #2c3e50;
+        }
+
+        .task-result-actions {
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 15px;
+            border: 2px dashed #3498db;
+        }
+
+        .action-instruction {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #2980b9;
+        }
+
+        .instruction-icon {
+            font-size: 1.5em;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+
+        .instruction-text {
+            font-size: 1em;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        @keyframes cardFloat {
+            0%, 100% { 
+                transform: translateY(0px);
+            }
+            50% { 
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes sparkle {
+            0%, 100% { 
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 0.7;
+                transform: scale(1.2);
+            }
+        }
+
+        @keyframes taskResultPulse {
+            0% { 
+                transform: scale(1);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            }
+            50% { 
+                transform: scale(1.05);
+                box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+            }
+            100% { 
+                transform: scale(1);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            }
+        }
+
+        /* تخطيط متجاوب للنتيجة */
+        @media (min-width: 768px) {
+            .task-result-main {
+                flex-direction: row;
+                align-items: flex-start;
+                justify-content: center;
+                gap: 40px;
+            }
+            
+            .task-result-details {
+                min-width: 350px;
+            }
+        }
     </style>
 </head>
 
@@ -4361,18 +4675,32 @@
                 return;
             }
             
-            if (availableStudents.length === 0) {
-                if (currentStudents.length === 0) {
-                    console.log('❌ لا يوجد طلاب - يرجى اختيار صف دراسي');
-                    showToast('❌ يرجى اختيار صف دراسي أولاً من القائمة المنسدلة أعلاه', 'warning');
-                } else {
-                    console.log('❌ لا يوجد طلاب متاحون');
-                    showToast('❌ لا يوجد طلاب متاحون للاختيار. يرجى إعادة تعيين النظام', 'warning');
-                }
-                return;
-            }
+            const mode = systemSettings?.selectionMode || 'dual';
             
-            console.log(`🎲 بدء الاختيار - عدد الطلاب المتاحين: ${availableStudents.length}`);
+            // فحص متطلبات الوضع
+            if (mode === 'tasks-only') {
+                // في وضع المهام فقط، نحتاج للتحقق من وجود بطاقات متاحة
+                const availableTasks = getAvailableTaskCards();
+                if (availableTasks.length === 0) {
+                    console.log('❌ لا توجد بطاقات متاحة');
+                    showToast('❌ لا توجد بطاقات متاحة للاختيار. جميع البطاقات محذوفة', 'warning');
+                    return;
+                }
+                console.log(`🎴 عدد البطاقات المتاحة: ${availableTasks.length}`);
+            } else {
+                // في الأوضاع الأخرى، نحتاج لطلاب متاحين
+                if (availableStudents.length === 0) {
+                    if (currentStudents.length === 0) {
+                        console.log('❌ لا يوجد طلاب - يرجى اختيار صف دراسي');
+                        showToast('❌ يرجى اختيار صف دراسي أولاً من القائمة المنسدلة أعلاه', 'warning');
+                    } else {
+                        console.log('❌ لا يوجد طلاب متاحون');
+                        showToast('❌ لا يوجد طلاب متاحون للاختيار. يرجى إعادة تعيين النظام', 'warning');
+                    }
+                    return;
+                }
+                console.log(`🎲 عدد الطلاب المتاحين: ${availableStudents.length}`);
+            }
             
             // تفعيل حالة الاختيار
             isSpinning = true;
@@ -4398,16 +4726,36 @@
             // إظهار نظام البطاقات المتطور
             showCardsContainer();
             
-            // بدء اختيار الأسماء
-            console.log('🎯 بدء نظام البطاقات المتطور...');
+            // اختيار النظام المناسب حسب الوضع
+            console.log(`🎯 بدء النظام في الوضع: ${mode}`);
             
             const nameCardsSystem = document.getElementById('nameCardsSystem');
             const taskCardsSystem = document.getElementById('taskCardsSystem');
             
-            if (nameCardsSystem) nameCardsSystem.style.display = 'block';
-            if (taskCardsSystem) taskCardsSystem.style.display = 'none';
-            
-            createNameCards();
+            if (mode === 'tasks-only') {
+                // وضع المهام فقط
+                if (nameCardsSystem) nameCardsSystem.style.display = 'none';
+                if (taskCardsSystem) taskCardsSystem.style.display = 'block';
+                createTaskOnlyCards();
+                
+                // إيقاف حالة الدوران فوراً حيث لا نحتاج للدوران
+                isSpinning = false;
+                isSelectionActive = false;
+                
+                // إعادة تفعيل الزر
+                if (spinButton) {
+                    spinButton.classList.remove('spinning');
+                    spinButton.style.animation = '';
+                    spinButton.disabled = false;
+                }
+                
+                console.log('📝 تم إظهار بطاقات المهام للاختيار');
+            } else {
+                // الأوضاع الأخرى (dual أو names-only)
+                if (nameCardsSystem) nameCardsSystem.style.display = 'block';
+                if (taskCardsSystem) taskCardsSystem.style.display = 'none';
+                createNameCards();
+            }
             
             // بدء اختيار الاسم بعد عرض البطاقات
             setTimeout(() => {
@@ -5481,7 +5829,199 @@
                 }, index * 60);
             });
         }
-        
+
+        // دالة إنشاء بطاقات المهام (الأرقام والألوان) لوضع "مهام فقط"
+        function createTaskOnlyCards() {
+            const grid = document.getElementById('taskCardsGrid');
+            grid.innerHTML = '';
+            grid.className = 'cards-grid task-only-cards';
+            
+            const availableTasks = getAvailableTaskCards();
+            
+            if (availableTasks.length === 0) {
+                grid.innerHTML = `
+                    <div class="no-tasks-message">
+                        <div class="no-tasks-icon">🗑️</div>
+                        <div class="no-tasks-text">لا توجد بطاقات متاحة</div>
+                        <div class="no-tasks-desc">جميع البطاقات تم حذفها</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            availableTasks.forEach((task, index) => {
+                const card = document.createElement('div');
+                card.className = `task-only-card ${task.type}-card`;
+                card.setAttribute('data-task-id', task.id);
+                card.setAttribute('data-task-type', task.type);
+                card.setAttribute('data-index', index);
+                
+                if (task.type === 'number') {
+                    card.innerHTML = `
+                        <div class="task-only-number" style="background: ${task.color}; color: white;">
+                            ${task.value}
+                        </div>
+                        <div class="task-only-desc">${task.description}</div>
+                    `;
+                } else {
+                    card.innerHTML = `
+                        <div class="task-only-color" style="background: linear-gradient(135deg, ${task.color}, ${task.color}CC);">
+                            <div class="color-icon">${task.icon}</div>
+                            <div class="color-name">${task.value}</div>
+                        </div>
+                        <div class="task-only-desc">${task.description}</div>
+                    `;
+                }
+                
+                grid.appendChild(card);
+            });
+            
+            // تأثير دخول متدرج للبطاقات
+            const cards = grid.querySelectorAll('.task-only-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px) rotateY(90deg)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0) rotateY(0deg)';
+                }, index * 80);
+            });
+            
+            console.log(`🎴 تم إنشاء ${availableTasks.length} بطاقة مهام للاختيار`);
+        }
+
+        // دالة اختيار بطاقة المهمة في وضع "مهام فقط"
+        function selectTaskOnlyCard(taskId, taskType) {
+            const availableTasks = getAvailableTaskCards();
+            const selectedTask = availableTasks.find(task => task.id === taskId && task.type === taskType);
+            
+            if (!selectedTask) {
+                showToast('❌ البطاقة غير متاحة!', 'warning');
+                return;
+            }
+            
+            // تشغيل صوت الاختيار
+            playSound('flashCard');
+            
+            // تحديد البطاقة المختارة
+            currentSelectedTask = selectedTask;
+            
+            // تحديث مظهر البطاقات
+            const cards = document.querySelectorAll('.task-only-card');
+            cards.forEach(card => {
+                card.classList.remove('selected');
+                if (card.getAttribute('data-task-id') === taskId && 
+                    card.getAttribute('data-task-type') === taskType) {
+                    card.classList.add('selected');
+                }
+            });
+            
+            // إظهار النتيجة النهائية
+            setTimeout(() => {
+                showTaskOnlyResult(selectedTask);
+            }, 800);
+            
+            console.log(`🎯 تم اختيار البطاقة: ${selectedTask.type === 'number' ? 'رقم' : 'لون'} ${selectedTask.value}`);
+        }
+
+        // دالة إظهار نتيجة اختيار المهمة فقط
+        function showTaskOnlyResult(task) {
+            const finalResult = document.getElementById('finalResult');
+            const selectedPair = document.getElementById('selectedPair');
+            
+            let resultHTML = '';
+            
+            if (task.type === 'number') {
+                resultHTML = `
+                    <div class="result-display task-only-result">
+                        <div class="result-header">
+                            <h2>🎯 المهمة المختارة</h2>
+                            <div class="result-subtitle">بطاقة رقم محددة</div>
+                        </div>
+                        <div class="task-result-main">
+                            <div class="task-result-card number-result-card">
+                                <div class="task-result-number" style="background: ${task.color};">
+                                    ${task.value}
+                                </div>
+                                <div class="task-card-label">رقم ${task.value}</div>
+                            </div>
+                            <div class="task-result-details">
+                                <div class="task-detail-item">
+                                    <span class="detail-icon">🎲</span>
+                                    <span class="detail-text">نوع البطاقة: <strong>رقم</strong></span>
+                                </div>
+                                <div class="task-detail-item">
+                                    <span class="detail-icon">🔢</span>
+                                    <span class="detail-text">القيمة: <strong>${task.value}</strong></span>
+                                </div>
+                                <div class="task-detail-item">
+                                    <span class="detail-icon">📝</span>
+                                    <span class="detail-text">الوصف: <strong>${task.description}</strong></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="task-result-actions">
+                            <div class="action-instruction">
+                                <span class="instruction-icon">✨</span>
+                                <span class="instruction-text">يمكن للمعلم الآن استخدام هذه المهمة أو إزالتها من القائمة</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                resultHTML = `
+                    <div class="result-display task-only-result">
+                        <div class="result-header">
+                            <h2>🎯 المهمة المختارة</h2>
+                            <div class="result-subtitle">بطاقة لون محددة</div>
+                        </div>
+                        <div class="task-result-main">
+                            <div class="task-result-card color-result-card">
+                                <div class="task-result-color" style="background: linear-gradient(135deg, ${task.color}, ${task.color}CC);">
+                                    <div class="color-result-icon">${task.icon}</div>
+                                    <div class="color-result-name">${task.value}</div>
+                                </div>
+                                <div class="task-card-label">${task.value}</div>
+                            </div>
+                            <div class="task-result-details">
+                                <div class="task-detail-item">
+                                    <span class="detail-icon">🎨</span>
+                                    <span class="detail-text">نوع البطاقة: <strong>لون</strong></span>
+                                </div>
+                                <div class="task-detail-item">
+                                    <span class="detail-icon">🌈</span>
+                                    <span class="detail-text">اللون: <strong>${task.value}</strong></span>
+                                </div>
+                                <div class="task-detail-item">
+                                    <span class="detail-icon">📝</span>
+                                    <span class="detail-text">الوصف: <strong>${task.description}</strong></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="task-result-actions">
+                            <div class="action-instruction">
+                                <span class="instruction-icon">✨</span>
+                                <span class="instruction-text">يمكن للمعلم الآن استخدام هذه المهمة أو إزالتها من القائمة</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            selectedPair.innerHTML = resultHTML;
+            finalResult.style.display = 'block';
+            
+            // تأثيرات احتفالية
+            playCelebrationSequence();
+            
+            // تحديث حالة النظام
+            currentStep = 'complete';
+            updateUI();
+            
+            console.log(`✨ تم إظهار نتيجة المهمة: ${task.value}`);
+        }
+
         // دوال الأنيميشن أثناء الاختيار
         function showSelectionAnimation(type, remaining) {
             const animationId = type === 'names' ? 'nameSelectionAnimation' : 'taskSelectionAnimation';
@@ -6331,18 +6871,45 @@
         function updateUIForMode(mode) {
             const spinButton = document.getElementById('spinButton');
             const spinButtonText = document.getElementById('spinButtonText');
+            const nameCardsSystem = document.getElementById('nameCardsSystem');
+            const taskCardsSystem = document.getElementById('taskCardsSystem');
+            const wheelSection = document.getElementById('wheelSection');
+            const removeAndSelectBtn = document.getElementById('removeAndSelectBtn');
+            
+            // تحديث نص زر الإزالة حسب الوضع
+            if (removeAndSelectBtn) {
+                if (mode === 'tasks-only') {
+                    removeAndSelectBtn.innerHTML = '🗑️ إزالة هذه البطاقة واختيار أخرى';
+                } else {
+                    removeAndSelectBtn.innerHTML = '🗑️ إزالة الطالب والبطاقة واختيار آخر';
+                }
+            }
+            
+            // إخفاء جميع الأنظمة أولاً
+            if (nameCardsSystem) nameCardsSystem.style.display = 'none';
+            if (taskCardsSystem) taskCardsSystem.style.display = 'none';
+            if (wheelSection) wheelSection.style.display = 'none';
             
             switch(mode) {
                 case 'dual':
                     spinButtonText.textContent = '🎴 ابدأ الاختيار المزدوج';
+                    if (nameCardsSystem) nameCardsSystem.style.display = 'block';
                     break;
                 case 'names-only':
                     spinButtonText.textContent = '👥 اختر طالب';
+                    if (wheelSection) wheelSection.style.display = 'block';
                     break;
                 case 'tasks-only':
                     spinButtonText.textContent = '📝 اختر مهمة';
+                    if (taskCardsSystem) {
+                        taskCardsSystem.style.display = 'block';
+                        // إنشاء بطاقات المهام للاختيار
+                        createTaskOnlyCards();
+                    }
                     break;
             }
+            
+            console.log(`🔄 تم تحديث الواجهة للوضع: ${mode}`);
         }
         
         function initAdvancedToggles() {
@@ -6416,6 +6983,19 @@
             document.getElementById('soundToggle').addEventListener('click', toggleSound);
             document.getElementById('viewRemovedButton').addEventListener('click', showRemovedStudents);
             document.getElementById('viewRemovedTasksButton').addEventListener('click', showRemovedTasks);
+            
+            // ربط أحداث النقر على بطاقات المهام في وضع "مهام فقط"
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.task-only-card') && systemSettings.selectionMode === 'tasks-only') {
+                    const card = e.target.closest('.task-only-card');
+                    const taskId = card.getAttribute('data-task-id');
+                    const taskType = card.getAttribute('data-task-type');
+                    
+                    if (taskId && taskType && !isSelectionActive) {
+                        selectTaskOnlyCard(taskId, taskType);
+                    }
+                }
+            });
             
             // ربط حدث الجولة الجديدة
             document.getElementById('nextRoundBtn').addEventListener('click', startNewRound);
@@ -6846,24 +7426,132 @@
             const removeAndSelectBtn = document.getElementById('removeAndSelectBtn');
             if (removeAndSelectBtn) {
                 removeAndSelectBtn.addEventListener('click', () => {
-                    const currentStudent = currentSelectedName || selectedStudentName;
-                    if (!currentStudent) {
-                        showToast('❌ لا يوجد طالب محدد للإزالة', 'warning');
-                        return;
+                    const mode = systemSettings?.selectionMode || 'dual';
+                    
+                    if (mode === 'tasks-only') {
+                        // في وضع المهام فقط، نحذف البطاقة فقط
+                        const currentTaskForRemoval = currentSelectedTask || selectedTask;
+                        if (!currentTaskForRemoval) {
+                            showToast('❌ لا توجد بطاقة محددة للإزالة', 'warning');
+                            return;
+                        }
+                        
+                        // تأكيد الإزالة
+                        if (!confirm(`هل تريد إزالة البطاقة "${currentTaskForRemoval.type === 'number' ? 'رقم' : 'لون'} ${currentTaskForRemoval.value}" واختيار بطاقة أخرى؟`)) {
+                            return;
+                        }
+                        
+                        // إزالة البطاقة
+                        if (!removedTasks.some(removed => removed.id === currentTaskForRemoval.id && removed.type === currentTaskForRemoval.type)) {
+                            removedTasks.push(currentTaskForRemoval);
+                            console.log(`🗑️ تم إزالة البطاقة: ${currentTaskForRemoval.type === 'number' ? 'رقم' : 'لون'} ${currentTaskForRemoval.value}`);
+                        }
+                        
+                        // تنظيف المتغيرات
+                        currentSelectedTask = null;
+                        selectedTask = null;
+                        currentStep = 'names';
+                        
+                        // إخفاء النتيجة النهائية
+                        const finalResult = document.getElementById('finalResult');
+                        if (finalResult) finalResult.style.display = 'none';
+                        
+                        // فحص إذا كان هناك بطاقات متاحة
+                        const availableTasks = getAvailableTaskCards();
+                        if (availableTasks.length === 0) {
+                            showToast('📭 لا توجد بطاقات متاحة أكثر للاختيار', 'info');
+                            showWelcomeMessage();
+                            updateUI();
+                            return;
+                        }
+                        
+                        // بدء اختيار جديد فوراً!
+                        showToast(`🗑️ تم إزالة البطاقة - جاري عرض البطاقات المتاحة...`, 'info');
+                        
+                        setTimeout(() => {
+                            // إعادة إنشاء بطاقات المهام
+                            createTaskOnlyCards();
+                            updateUI();
+                        }, 1000);
+                        
+                        playSound('pointLose');
+                        console.log(`✨ تم حذف البطاقة بنجاح في وضع المهام فقط!`);
+                        
+                    } else {
+                        // في الأوضاع الأخرى، العمل كالمعتاد
+                        const currentStudent = currentSelectedName || selectedStudentName;
+                        if (!currentStudent) {
+                            showToast('❌ لا يوجد طالب محدد للإزالة', 'warning');
+                            return;
+                        }
+                        
+                        // تأكيد الإزالة
+                        const currentTaskForConfirm = currentSelectedTask || selectedTask;
+                        const taskInfo = currentTaskForConfirm ? ` والبطاقة (${currentTaskForConfirm.type === 'number' ? 'رقم' : 'لون'} ${currentTaskForConfirm.value})` : '';
+                        if (!confirm(`هل تريد إزالة "${currentStudent}"${taskInfo} من القائمة واختيار طالب آخر؟`)) {
+                            return;
+                        }
+                        
+                        console.log(`🎯 الحل الإبداعي: إزالة ${currentStudent} واختيار طالب آخر`);
+                        
+                        // إزالة الطالب من جميع القوائم
+                        const availableIndex = availableStudents.indexOf(currentStudent);
+                        const selectedIndex = selectedStudents.indexOf(currentStudent);
+                        
+                        if (availableIndex > -1) {
+                            availableStudents.splice(availableIndex, 1);
+                        }
+                        if (selectedIndex > -1) {
+                            selectedStudents.splice(selectedIndex, 1);
+                        }
+                        
+                        // إضافة للمحذوفين
+                        if (!removedStudents.includes(currentStudent)) {
+                            removedStudents.push(currentStudent);
+                        }
+                        
+                        // إزالة البطاقة أيضاً إذا كانت موجودة
+                        const currentTask = currentSelectedTask || selectedTask;
+                        if (currentTask) {
+                            // إضافة البطاقة للمحذوفين إذا لم تكن محذوفة مسبقاً
+                            if (!removedTasks.some(removed => removed.id === currentTask.id && removed.type === currentTask.type)) {
+                                removedTasks.push(currentTask);
+                                console.log(`🗑️ تم إزالة البطاقة: ${currentTask.type === 'number' ? 'رقم' : 'لون'} ${currentTask.value}`);
+                            }
+                        }
+                        
+                        // تنظيف المتغيرات
+                        currentSelectedName = '';
+                        selectedStudentName = '';
+                        selectedTask = null;
+                        currentSelectedTask = null;
+                        currentStep = 'names';
+                        
+                        // إخفاء النتيجة النهائية
+                        const finalResult = document.getElementById('finalResult');
+                        if (finalResult) finalResult.style.display = 'none';
+                        
+                        // فحص إذا كان هناك طلاب متاحون
+                        if (availableStudents.length === 0) {
+                            showToast('📭 لا يوجد طلاب متاحون أكثر للاختيار', 'info');
+                            showWelcomeMessage();
+                            updateUI();
+                            return;
+                        }
+                        
+                        // بدء اختيار جديد فوراً!
+                        const removedTaskInfo = currentTaskForConfirm ? ` والبطاقة` : '';
+                        showToast(`🗑️ تم إزالة ${currentStudent}${removedTaskInfo} - جاري اختيار طالب آخر...`, 'info');
+                        
+                        setTimeout(() => {
+                            // تفعيل نظام الاختيار الجديد
+                            spinWheel();
+                        }, 1000);
+                        
+                        playSound('pointLose');
+                        console.log(`✨ تم تطبيق الحل الإبداعي بنجاح!`);
                     }
-                    
-                    // تأكيد الإزالة
-                    const currentTaskForConfirm = currentSelectedTask || selectedTask;
-                    const taskInfo = currentTaskForConfirm ? ` والبطاقة (${currentTaskForConfirm.type === 'number' ? 'رقم' : 'لون'} ${currentTaskForConfirm.value})` : '';
-                    if (!confirm(`هل تريد إزالة "${currentStudent}"${taskInfo} من القائمة واختيار طالب آخر؟`)) {
-                        return;
-                    }
-                    
-                    console.log(`🎯 الحل الإبداعي: إزالة ${currentStudent} واختيار طالب آخر`);
-                    
-                    // إزالة الطالب من جميع القوائم
-                    const availableIndex = availableStudents.indexOf(currentStudent);
-                    const selectedIndex = selectedStudents.indexOf(currentStudent);
+                });
                     
                     if (availableIndex > -1) {
                         availableStudents.splice(availableIndex, 1);
@@ -6915,13 +7603,13 @@
                         spinWheel();
                     }, 1000);
                     
-                    playSound('pointLose');
-                    console.log(`✨ تم تطبيق الحل الإبداعي بنجاح!`);
-                });
-            }
+                        playSound('pointLose');
+                        console.log(`✨ تم تطبيق الحل الإبداعي بنجاح!`);
+                    }
+                };
+        
             
             console.log('🎮 تم تفعيل مستمعي الأحداث المتقدمة');
-        }
 
     </script>
 
