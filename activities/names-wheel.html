@@ -3004,6 +3004,105 @@
                 box-shadow: 0 0 50px rgba(255, 215, 0, 1);
             }
         }
+
+        /* ستايلات البطاقات المحذوفة */
+        .removed-tasks-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .removed-tasks-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .removed-task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .removed-task-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .task-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .task-display {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .task-description {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .restore-task-btn {
+            background: linear-gradient(45deg, #4CAF50, #81C784);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .restore-task-btn:hover {
+            background: linear-gradient(45deg, #45a049, #66BB6A);
+            transform: scale(1.05);
+        }
+
+        .removed-tasks-actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .clear-all-btn, .restore-all-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .clear-all-btn {
+            background: linear-gradient(45deg, #F44336, #FF8A65);
+            color: white;
+        }
+
+        .restore-all-btn {
+            background: linear-gradient(45deg, #2196F3, #64B5F6);
+            color: white;
+        }
+
+        .clear-all-btn:hover {
+            background: linear-gradient(45deg, #D32F2F, #FF7043);
+            transform: translateY(-2px);
+        }
+
+        .restore-all-btn:hover {
+            background: linear-gradient(45deg, #1976D2, #42A5F5);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 
@@ -3241,7 +3340,7 @@
                             🔄 جولة جديدة
                         </button>
                         <button id="removeAndSelectBtn" class="remove-and-select-btn">
-                            🗑️ إزالة هذا الطالب واختيار آخر
+                            🗑️ إزالة الطالب والبطاقة واختيار آخر
                         </button>
                     </div>
                 </div>
@@ -3263,6 +3362,10 @@
                     <button class="action-btn view-removed" id="viewRemovedButton" disabled>
                         <i class="fas fa-trash-alt"></i>
                         عرض المحذوفين
+                    </button>
+                    <button class="action-btn view-removed" id="viewRemovedTasksButton" disabled>
+                        <i class="fas fa-credit-card"></i>
+                        البطاقات المحذوفة
                     </button>
                     <button class="action-btn remove" id="removeButton" disabled>
                         <i class="fas fa-user-minus"></i>
@@ -3354,6 +3457,7 @@
         let selectedStudents = [];
         let honoredStudents = [];
         let removedStudents = []; // قائمة الطلاب المحذوفين
+        let removedTasks = []; // قائمة البطاقات المحذوفة
         let currentSelectedName = '';
         
         // متغيرات العجلة
@@ -3453,6 +3557,13 @@
 
         // دمج جميع البطاقات
         const allTaskCards = [...taskCards.numbers, ...taskCards.colors];
+
+        // دالة للحصول على البطاقات المتاحة (غير المحذوفة)
+        function getAvailableTaskCards() {
+            return allTaskCards.filter(card => !removedTasks.some(removed => 
+                removed.id === card.id && removed.type === card.type
+            ));
+        }
 
         // نظام النقاط والمكافآت
         let playerPoints = {};
@@ -3940,6 +4051,7 @@
                 availableStudents = [...currentStudents];
                 selectedStudents = [];
                 removedStudents = []; // إعادة تعيين المحذوفين
+                removedTasks = []; // إعادة تعيين البطاقات المحذوفة
                 currentSelectedName = '';
                 selectedStudentName = '';
                 selectedTask = null;
@@ -3978,6 +4090,7 @@
                 availableStudents = [];
                 selectedStudents = [];
                 removedStudents = [];
+                removedTasks = []; // إعادة تعيين البطاقات المحذوفة
                 currentSelectedName = '';
                 
                 updateUI();
@@ -4016,6 +4129,10 @@
                 }
                 if (viewRemovedButton) {
                     viewRemovedButton.disabled = removedStudents.length === 0;
+                }
+                const viewRemovedTasksButton = document.getElementById('viewRemovedTasksButton');
+                if (viewRemovedTasksButton) {
+                    viewRemovedTasksButton.disabled = removedTasks.length === 0;
                 }
                 
                 // تحديث نص زر الاختيار حسب المرحلة
@@ -4110,7 +4227,9 @@
                 const isCardsVisible = nameCardsSystem && nameCardsSystem.style.display !== 'none';
                 
                 if (isCardsVisible) {
+                    const availableTaskCards = getAvailableTaskCards();
                     message = `🎴 البطاقات جاهزة للاختيار!<br>${availableStudents.length} طالب متاح`;
+                    message += `<br>🃏 ${availableTaskCards.length}/${allTaskCards.length} بطاقة متاحة`;
                     message += `<br>🎯 انقر على "ابدأ اختيار البطاقات" لبدء العملية`;
                 } else {
                     message = `✅ الصف محدد ونحن جاهزون!<br>${availableStudents.length} طالب متاح للاختيار`;
@@ -4119,6 +4238,9 @@
                 
                 if (honoredStudents.length > 0) {
                     message += `<br>🏆 ${honoredStudents.length} طالب مُكرم في لوحة الشرف`;
+                }
+                if (removedTasks.length > 0) {
+                    message += `<br>🗑️ ${removedTasks.length} بطاقة محذوفة`;
                 }
             }
             
@@ -4475,12 +4597,26 @@
             const centerX = taskWheelCanvas.width / 2;
             const centerY = taskWheelCanvas.height / 2;
             const radius = 130;
-            const segmentAngle = (2 * Math.PI) / allTaskCards.length;
+            const availableTaskCards = getAvailableTaskCards();
+            
+            if (availableTaskCards.length === 0) {
+                // رسم رسالة "لا توجد بطاقات متاحة"
+                taskWheelCtx.clearRect(0, 0, taskWheelCanvas.width, taskWheelCanvas.height);
+                taskWheelCtx.fillStyle = '#FF5722';
+                taskWheelCtx.fillRect(0, 0, taskWheelCanvas.width, taskWheelCanvas.height);
+                taskWheelCtx.fillStyle = 'white';
+                taskWheelCtx.font = 'bold 18px Arial';
+                taskWheelCtx.textAlign = 'center';
+                taskWheelCtx.fillText('لا توجد بطاقات متاحة', centerX, centerY);
+                return;
+            }
+            
+            const segmentAngle = (2 * Math.PI) / availableTaskCards.length;
             
             taskWheelCtx.clearRect(0, 0, taskWheelCanvas.width, taskWheelCanvas.height);
             
             // رسم شرائح البطاقات
-            allTaskCards.forEach((card, index) => {
+            availableTaskCards.forEach((card, index) => {
                 const startAngle = currentTaskRotation + (index * segmentAngle);
                 const endAngle = startAngle + segmentAngle;
                 
@@ -4551,6 +4687,13 @@
         function spinTaskWheel() {
             if (isTaskSpinning) return;
             
+            // فحص وجود بطاقات متاحة
+            const availableTaskCards = getAvailableTaskCards();
+            if (availableTaskCards.length === 0) {
+                showToast('❌ لا توجد بطاقات متاحة للاختيار!', 'warning');
+                return;
+            }
+            
             isTaskSpinning = true;
             const taskSpinButton = document.getElementById('taskSpinButton');
             taskSpinButton.classList.add('spinning');
@@ -4597,11 +4740,23 @@
         function finishTaskSpin() {
             isTaskSpinning = false;
             
-            // حساب البطاقة المختارة
+            // الحصول على البطاقات المتاحة فقط
+            const availableTaskCards = getAvailableTaskCards();
+            
+            if (availableTaskCards.length === 0) {
+                showToast('❌ لا توجد بطاقات متاحة أكثر!', 'warning');
+                const taskSpinButton = document.getElementById('taskSpinButton');
+                taskSpinButton.classList.remove('spinning');
+                taskSpinButton.innerHTML = '<i class="fas fa-magic"></i> اختر البطاقة';
+                taskSpinButton.disabled = false;
+                return;
+            }
+            
+            // حساب البطاقة المختارة من البطاقات المتاحة
             const normalizedAngle = (2 * Math.PI - (currentTaskRotation % (2 * Math.PI))) % (2 * Math.PI);
-            const segmentAngle = (2 * Math.PI) / allTaskCards.length;
+            const segmentAngle = (2 * Math.PI) / availableTaskCards.length;
             const selectedIndex = Math.floor(normalizedAngle / segmentAngle);
-            currentSelectedTask = allTaskCards[selectedIndex];
+            currentSelectedTask = availableTaskCards[selectedIndex];
             
             // إعادة تفعيل الزر
             const taskSpinButton = document.getElementById('taskSpinButton');
@@ -4978,6 +5133,112 @@
                 
                 showToast('🗑️ تم مسح قائمة الطلاب المحذوفين', 'success');
                 console.log('🗑️ تم مسح قائمة الطلاب المحذوفين');
+            }
+        }
+
+        // دالة عرض البطاقات المحذوفة
+        function showRemovedTasks() {
+            if (removedTasks.length === 0) {
+                showToast('📋 لا توجد بطاقات محذوفة', 'info');
+                return;
+            }
+
+            let content = `
+                <div class="removed-tasks-list">
+                    <h4>البطاقات المحذوفة (${removedTasks.length})</h4>
+                    <div class="removed-tasks-grid">
+            `;
+
+            removedTasks.forEach((task, index) => {
+                const taskDisplay = task.type === 'number' ? 
+                    `رقم ${task.value}` : 
+                    `${task.icon} ${task.value}`;
+                
+                content += `
+                    <div class="removed-task-item" style="background: ${task.color}20; border-left: 4px solid ${task.color};">
+                        <div class="task-info">
+                            <span class="task-display">${taskDisplay}</span>
+                            <span class="task-description">${task.description}</span>
+                        </div>
+                        <button onclick="restoreTask(${index})" class="restore-task-btn">
+                            <i class="fas fa-undo"></i> استعادة
+                        </button>
+                    </div>
+                `;
+            });
+
+            content += `
+                    </div>
+                    <div class="removed-tasks-actions">
+                        <button onclick="clearRemovedTasks()" class="clear-all-btn">
+                            <i class="fas fa-trash"></i> مسح الكل
+                        </button>
+                        <button onclick="restoreAllTasks()" class="restore-all-btn">
+                            <i class="fas fa-undo-alt"></i> استعادة الكل
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            showModal('البطاقات المحذوفة', content);
+        }
+
+        // دالة استعادة بطاقة واحدة
+        function restoreTask(index) {
+            if (index >= 0 && index < removedTasks.length) {
+                const restoredTask = removedTasks.splice(index, 1)[0];
+                showToast(`🔄 تم استعادة البطاقة: ${restoredTask.type === 'number' ? 'رقم' : ''} ${restoredTask.value}`, 'success');
+                updateUI();
+                closeModal();
+                
+                // إعادة رسم العجلة إذا كانت مرئية
+                if (document.getElementById('taskWheelSection').style.display !== 'none') {
+                    drawTaskWheel();
+                }
+                
+                console.log(`🔄 تم استعادة البطاقة: ${restoredTask.value}`);
+            }
+        }
+
+        // دالة استعادة جميع البطاقات
+        function restoreAllTasks() {
+            if (removedTasks.length === 0) {
+                showToast('📋 لا توجد بطاقات محذوفة لاستعادتها', 'info');
+                return;
+            }
+
+            if (confirm(`هل أنت متأكد من استعادة جميع البطاقات المحذوفة (${removedTasks.length} بطاقة)؟`)) {
+                const restoredCount = removedTasks.length;
+                removedTasks.length = 0; // مسح القائمة
+                updateUI();
+                closeModal();
+                
+                // إعادة رسم العجلة إذا كانت مرئية
+                if (document.getElementById('taskWheelSection').style.display !== 'none') {
+                    drawTaskWheel();
+                }
+                
+                playSound('achievementUnlock');
+                showToast(`🔄 تم استعادة ${restoredCount} بطاقة`, 'success');
+                console.log(`🔄 تم استعادة ${restoredCount} بطاقة`);
+            }
+        }
+
+        // دالة مسح جميع البطاقات المحذوفة
+        function clearRemovedTasks() {
+            if (removedTasks.length === 0) {
+                showToast('📋 لا توجد بطاقات محذوفة لمسحها', 'info');
+                return;
+            }
+            
+            if (confirm(`هل أنت متأكد من مسح قائمة البطاقات المحذوفة (${removedTasks.length} بطاقة)؟`)) {
+                removedTasks.length = 0; // مسح القائمة
+                updateUI();
+                closeModal();
+                
+                playSound('bookClose');
+                showToast('🗑️ تم مسح قائمة البطاقات المحذوفة', 'success');
+                console.log('🗑️ تم مسح قائمة البطاقات المحذوفة');
             }
         }
 
@@ -5820,6 +6081,7 @@
                 availableStudents = [...currentStudents];
                 selectedStudents = [];
                 removedStudents = []; // إعادة تعيين الطلاب المحذوفين
+                removedTasks = []; // إعادة تعيين البطاقات المحذوفة
                 currentSelectedName = '';
                 selectedStudentName = '';
                 selectedTask = null;
@@ -6153,6 +6415,7 @@
             document.getElementById('resetButton').addEventListener('click', resetAllStudents);
             document.getElementById('soundToggle').addEventListener('click', toggleSound);
             document.getElementById('viewRemovedButton').addEventListener('click', showRemovedStudents);
+            document.getElementById('viewRemovedTasksButton').addEventListener('click', showRemovedTasks);
             
             // ربط حدث الجولة الجديدة
             document.getElementById('nextRoundBtn').addEventListener('click', startNewRound);
@@ -6590,7 +6853,9 @@
                     }
                     
                     // تأكيد الإزالة
-                    if (!confirm(`هل تريد إزالة "${currentStudent}" من القائمة واختيار طالب آخر؟`)) {
+                    const currentTaskForConfirm = currentSelectedTask || selectedTask;
+                    const taskInfo = currentTaskForConfirm ? ` والبطاقة (${currentTaskForConfirm.type === 'number' ? 'رقم' : 'لون'} ${currentTaskForConfirm.value})` : '';
+                    if (!confirm(`هل تريد إزالة "${currentStudent}"${taskInfo} من القائمة واختيار طالب آخر؟`)) {
                         return;
                     }
                     
@@ -6612,10 +6877,21 @@
                         removedStudents.push(currentStudent);
                     }
                     
+                    // إزالة البطاقة أيضاً إذا كانت موجودة
+                    const currentTask = currentSelectedTask || selectedTask;
+                    if (currentTask) {
+                        // إضافة البطاقة للمحذوفين إذا لم تكن محذوفة مسبقاً
+                        if (!removedTasks.some(removed => removed.id === currentTask.id && removed.type === currentTask.type)) {
+                            removedTasks.push(currentTask);
+                            console.log(`🗑️ تم إزالة البطاقة: ${currentTask.type === 'number' ? 'رقم' : 'لون'} ${currentTask.value}`);
+                        }
+                    }
+                    
                     // تنظيف المتغيرات
                     currentSelectedName = '';
                     selectedStudentName = '';
                     selectedTask = null;
+                    currentSelectedTask = null;
                     currentStep = 'names';
                     
                     // إخفاء النتيجة النهائية
@@ -6631,7 +6907,8 @@
                     }
                     
                     // بدء اختيار جديد فوراً!
-                    showToast(`🗑️ تم إزالة ${currentStudent} - جاري اختيار طالب آخر...`, 'info');
+                    const removedTaskInfo = currentTaskForConfirm ? ` والبطاقة` : '';
+                    showToast(`🗑️ تم إزالة ${currentStudent}${removedTaskInfo} - جاري اختيار طالب آخر...`, 'info');
                     
                     setTimeout(() => {
                         // تفعيل نظام الاختيار الجديد
