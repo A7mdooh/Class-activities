@@ -3573,39 +3573,49 @@
         }
         async function loadSchoolData() {
             try {
-                // تحميل بيانات المدرسة
-                const schoolResponse = await fetch('../config/school.json');
-                if (schoolResponse.ok) {
-                    schoolData = await schoolResponse.json();
+                console.log('📚 جاري تحميل بيانات الطلاب...');
+                const response = await fetch('../data/studentData.json');
+                
+                if (!response.ok) {
+                    throw new Error('فشل في تحميل بيانات الطلاب');
                 }
                 
-                // تحميل بيانات الطلاب
-                const studentResponse = await fetch('../data/studentData.json');
-                if (studentResponse.ok) {
-                    studentData = await studentResponse.json();
-                } else {
-                    // بيانات افتراضية
-                    studentData = {
-                        "خامس 1": ["أحمد محمد السيابي", "فاطمة سعيد البلوشي", "عبدالله خالد الحارثي", "مريم أحمد الرواحي", "سالم راشد العمري", "نور الهدى المحرمي"],
-                        "خامس 2": ["محمد علي اليحيائي", "عائشة سالم الحبسي", "يوسف أحمد الكندي", "هدى محمد البوسعيدي", "خالد سعيد الغافري", "زينب علي الهنائي"],
-                        "سادس 1": ["عمر حسن المعمري", "رقية سالم الشحي", "حمد خليفة الراشدي", "أسماء محمد الجابري", "طارق سعيد العلوي", "فاطمة أحمد الكلباني"],
-                        "سادس 2": ["سعيد محمد الحارثي", "مريم سالم البطاشي", "عبدالرحمن أحمد الفارسي", "نورا سعيد المقبالي", "ماجد خالد الرئيسي", "ليلى محمد الشامسي"]
-                    };
-                }
+                studentData = await response.json();
+                console.log('✅ تم تحميل بيانات الطلاب من الملف الخارجي:', studentData);
+                
+                // بيانات المدرسة الافتراضية
+                schoolData = {
+                    name: "مدرسة التميز النموذجية",
+                    logo: "assets/media/images/school-logo.png",
+                    academicYear: "2024-2025"
+                };
                 
                 // تعبئة قائمة الصفوف
                 populateClassSelect();
-                console.log('تم تحميل بيانات المدرسة والطلاب بنجاح');
+                console.log(`✅ تم تحميل بيانات المدرسة والطلاب - ${Object.keys(studentData).length} صف دراسي`);
+                
             } catch (error) {
-                console.warn('تعذر تحميل بيانات المدرسة، سيتم استخدام البيانات الافتراضية');
-                // بيانات افتراضية في حالة الخطأ
+                console.error('❌ خطأ في تحميل بيانات الطلاب:', error);
+                console.log('📋 استخدام بيانات تجريبية بسيطة...');
+                
+                // بيانات تجريبية بسيطة في حالة فشل التحميل
                 studentData = {
-                    "الصف الخامس الأساسي (1)": ["أحمد محمد", "فاطمة سعيد", "عبدالله خالد", "مريم أحمد", "سالم راشد"],
-                    "الصف الخامس الأساسي (2)": ["محمد علي", "عائشة سالم", "يوسف أحمد", "هدى محمد", "خالد سعيد"],
-                    "الصف السادس الأساسي (1)": ["عمر حسن", "رقية سالم", "حمد خليفة", "أسماء محمد", "طارق سعيد"],
-                    "الصف السادس الأساسي (2)": ["سعيد محمد", "مريم سالم", "عبدالرحمن أحمد", "نورا سعيد", "ماجد خالد"]
+                    "الصف الخامس الأساسي (1)": [
+                        "أحمد محمد السيابي", "فاطمة سعيد البلوشي", "عبدالله خالد الحارثي"
+                    ],
+                    "الصف الخامس الأساسي (2)": [
+                        "محمد علي اليحيائي", "عائشة سالم الحبسي", "يوسف أحمد الكندي"
+                    ]
                 };
+                
+                schoolData = {
+                    name: "مدرسة التميز النموذجية",
+                    logo: "assets/media/images/school-logo.png",
+                    academicYear: "2024-2025"
+                };
+                
                 populateClassSelect();
+                showToast('⚠️ تم استخدام بيانات تجريبية - تأكد من وجود ملف البيانات', 'warning');
             }
         }
 
@@ -3614,6 +3624,11 @@
         // ===========================================
         function populateClassSelect() {
             const classSelect = document.getElementById('classSelect');
+            if (!classSelect) {
+                console.error('❌ عنصر اختيار الصف غير موجود');
+                return;
+            }
+            
             classSelect.innerHTML = '<option value="">-- اختر الصف الدراسي --</option>';
             
             Object.keys(studentData).forEach(className => {
@@ -3621,24 +3636,39 @@
                 option.value = className;
                 option.textContent = className;
                 classSelect.appendChild(option);
+                
+                console.log(`📚 تم إضافة صف: ${className} (${studentData[className].length} طالب)`);
             });
+            
+            console.log(`✅ تم إنشاء قائمة الصفوف بنجاح - ${Object.keys(studentData).length} صف متاح`);
         }
 
         // ===========================================
         // تحديث قائمة الطلاب عند اختيار الصف
         // ===========================================
         function updateStudentsList() {
+            console.log('🔄 تحديث قائمة الطلاب...');
+            
             const classSelect = document.getElementById('classSelect');
+            if (!classSelect) {
+                console.error('❌ عنصر اختيار الصف غير موجود');
+                return;
+            }
+            
             const selectedClass = classSelect.value;
+            console.log(`📋 الصف المختار: "${selectedClass}"`);
             
             if (selectedClass && studentData[selectedClass]) {
                 currentStudents = [...studentData[selectedClass]];
                 availableStudents = [...currentStudents];
                 selectedStudents = [];
+                removedStudents = []; // إعادة تعيين المحذوفين
                 currentSelectedName = '';
                 
-                // تهيئة نظام البطاقات الجديد
-                initializeCardsSystem();
+                console.log(`👥 تم تحميل ${currentStudents.length} طالب:`);
+                currentStudents.forEach((student, index) => {
+                    console.log(`   ${index + 1}. ${student}`);
+                });
                 
                 updateUI();
                 showWelcomeMessage();
@@ -3647,17 +3677,17 @@
                 playSound('menuOpen');
                 playSound('wisdomChime', 300);
                 
-                // بدء موسيقى الخلفية
-                setTimeout(() => {
-                    startBackgroundMusic();
-                }, 1000);
-                
                 console.log(`✅ تم تحميل ${currentStudents.length} طالب من الصف ${selectedClass}`);
             } else {
+                console.log('🚫 لا يوجد صف مختار أو بيانات غير متوفرة');
                 currentStudents = [];
                 availableStudents = [];
-                resetDisplay();
-                stopBackgroundMusic();
+                selectedStudents = [];
+                removedStudents = [];
+                currentSelectedName = '';
+                
+                updateUI();
+                showWelcomeMessage();
             }
         }
 
@@ -4476,9 +4506,6 @@
             // تنظيف النتائج السابقة
             clearPreviousMessages();
             
-            // إعادة إنشاء نظام البطاقات (نحن نستخدم البطاقات دائماً)
-            initializeCardsSystem();
-            
             showWelcomeMessage();
             updateUI();
             
@@ -4552,8 +4579,6 @@
                     availableStudents.sort(); // ترتيب القائمة
                 }
                 
-                // إعادة إنشاء نظام البطاقات
-                initializeCardsSystem();
                 updateUI();
                 
                 // تشغيل صوت النجاح
@@ -4764,20 +4789,6 @@
         // ===========================================
         // نظام البطاقات المزدوج الجديد
         // ===========================================
-        
-        function initializeCardsSystem() {
-            currentStep = 'names';
-            selectedStudentName = '';
-            selectedTask = null;
-            
-            // إظهار حاوية البطاقات
-            showCardsContainer();
-            
-            createNameCards();
-            document.getElementById('nameCardsSystem').style.display = 'block';
-            document.getElementById('taskCardsSystem').style.display = 'none';
-            document.getElementById('finalResult').style.display = 'none';
-        }
         
         function createNameCards() {
             const grid = document.getElementById('nameCardsGrid');
@@ -5343,9 +5354,6 @@
                 taskCardsGrid.innerHTML = '';
                 taskCardsGrid.className = 'cards-grid task-cards';
             }
-            
-            // إعادة إظهار نظام البطاقات
-            initializeCardsSystem();
             
             // تحديث نص الزر
             const spinBtn = document.getElementById('spinButton');
