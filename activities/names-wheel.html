@@ -3476,7 +3476,7 @@
             }),
             flashCard: new Howl({
                 src: ['../assets/media/sounds/kingdom-sounds/Flash-Card.mp3'],
-                volume: 0.4
+                volume: 0.6  // زيادة مستوى الصوت قليلاً لجعله أوضح
             }),
             
             // أصوات النتائج والاختيار
@@ -6205,6 +6205,7 @@
             let iterations = 0;
             const maxIterations = 20 + Math.floor(Math.random() * 15);
             
+            // تشغيل صوت Flash-Card في البداية
             playSound('flashCard', 0, 'selection');
             
             const selectionInterval = setInterval(() => {
@@ -6217,6 +6218,11 @@
                 const cards = document.querySelectorAll('.student-card');
                 if (cards[currentIndex]) {
                     cards[currentIndex].classList.add('highlighted');
+                    
+                    // تشغيل صوت Flash-Card أثناء التنقل بين البطاقات
+                    if (iterations < maxIterations - 5) { // توقف عن الصوت قبل النهاية بقليل
+                        playSound('flashCard', 0, 'selection');
+                    }
                 }
                 
                 currentIndex = (currentIndex + 1) % availableStudents.length;
@@ -6284,7 +6290,8 @@
             let iterations = 0;
             const maxIterations = 15 + Math.floor(Math.random() * 10);
             
-            playSound('taskWheelSpin', 0, 'selection');
+            // تشغيل صوت Flash-Card للمهام أيضاً
+            playSound('flashCard', 0, 'selection');
             
             const selectionInterval = setInterval(() => {
                 // إزالة التحديد السابق
@@ -6296,6 +6303,11 @@
                 const cards = document.querySelectorAll('.task-card');
                 if (cards[currentIndex]) {
                     cards[currentIndex].classList.add('highlighted');
+                    
+                    // تشغيل صوت Flash-Card أثناء التنقل بين بطاقات المهام
+                    if (iterations < maxIterations - 3) { // توقف عن الصوت قبل النهاية بقليل
+                        playSound('flashCard', 0, 'selection');
+                    }
                 }
                 
                 currentIndex = (currentIndex + 1) % smartTaskCards.length;
