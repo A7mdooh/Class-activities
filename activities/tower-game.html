@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <meta name="theme-color" content="#4A90E2"/>
+  <meta name="description" content="برج الأسماء - لعبة تعليمية تفاعلية"/>
+  <meta name="keywords" content="برج, أسماء, لعبة, تعليم, تفاعلي"/>
+  <meta name="author" content="الأستاذ أحمد بن عبدالله الضامري"/>
+
+  <title>برج الأسماء - لعبة تعليمية تفاعلية</title>
+
+  <!-- الخطوط والأيقونات -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+
+  <!-- فافيكون -->
+  <link rel="icon" type="image/png" href="../assets/media/images/school-logo.png">
+
+  <style>
+    :root {
+      /* نظام ألوان اللعبة */
+      --primary-color: #4A90E2;
+      --primary-light: #6BA3F0;
+      --primary-dark: #2E5C8A;
+      --secondary-color: #7B68EE;
+      --accent-color: #FFD700;
+      --success-color: #2ECC71;
+      --error-color: #E74C3C;
+      --warning-color: #F39C12;
+      --text-primary: #2C3E50;
+      --text-secondary: #7F8C8D;
+      --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --tower-gold: #FFD700;
+      --tower-stone: #8B7355;
+      --tower-shadow: rgba(0, 0, 0, 0.3);
+      
+      /* التخطيط */
+      --border-radius: 15px;
+      --border-radius-small: 8px;
+      --spacing-xs: 4px;
+      --spacing-sm: 8px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+      --spacing-xl: 32px;
+      
+      /* الانتقالات */
+      --transition-fast: 0.2s ease-out;
+      --transition-normal: 0.3s ease-out;
+      --transition-slow: 0.5s ease-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: var(--background);
+      background-attachment: fixed;
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* خلفية متحركة */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(123, 104, 238, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 60%, rgba(74, 144, 226, 0.1) 0%, transparent 50%);
+      animation: backgroundFloat 20s ease-in-out infinite;
+      z-index: -2;
+    }
+
+    /* غيوم متحركة */
+    .clouds {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .cloud {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 50px;
+      opacity: 0.6;
+      animation: cloudFloat 30s linear infinite;
+    }
+
+    .cloud::before,
+    .cloud::after {
+      content: '';
+      position: absolute;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 50px;
+    }
+
+    .cloud1 {
+      width: 100px;
+      height: 40px;
+      top: 10%;
+      animation-duration: 25s;
+    }
+
+    .cloud1::before {
+      width: 50px;
+      height: 50px;
+      top: -25px;
+      left: 10px;
+    }
+
+    .cloud1::after {
+      width: 60px;
+      height: 30px;
+      top: -15px;
+      right: 10px;
+    }
+
+    .cloud2 {
+      width: 80px;
+      height: 30px;
+      top: 20%;
+      animation-duration: 35s;
+      animation-delay: -10s;
+    }
+
+    .cloud2::before {
+      width: 40px;
+      height: 40px;
+      top: -20px;
+      left: 15px;
+    }
+
+    .cloud2::after {
+      width: 50px;
+      height: 25px;
+      top: -10px;
+      right: 15px;
+    }
+
+    @keyframes cloudFloat {
+      0% { transform: translateX(-200px); }
+      100% { transform: translateX(calc(100vw + 200px)); }
+    }
+
+    @keyframes backgroundFloat {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(-20px, 20px) rotate(1deg); }
+      50% { transform: translate(20px, -20px) rotate(-1deg); }
+      75% { transform: translate(-10px, -10px) rotate(0.5deg); }
+    }
+
+    /* أزرار التحكم */
+    .control-buttons {
+      position: fixed;
+      top: var(--spacing-md);
+      display: flex;
+      gap: var(--spacing-sm);
+      z-index: 1000;
+    }
+
+    .control-buttons.right {
+      right: var(--spacing-md);
+    }
+
+    .control-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--primary-color);
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      transition: all var(--transition-normal);
+      backdrop-filter: blur(10px);
+    }
+
+    .control-btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      background: var(--primary-color);
+      color: white;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    /* الحاوي الرئيسي */
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--spacing-xl) var(--spacing-lg);
+      position: relative;
+      z-index: 10;
+    }
+
+    /* رأس الصفحة */
+    .header {
+      text-align: center;
+      margin-bottom: var(--spacing-xl);
+      animation: slideDown 0.8s ease-out;
+    }
+
+    .header-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-xl);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+    }
+
+    .header-title {
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
+      font-weight: 800;
+      margin-bottom: var(--spacing-sm);
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-md);
+    }
+
+    .header-subtitle {
+      font-size: clamp(1rem, 3vw, 1.3rem);
+      color: var(--text-secondary);
+      font-weight: 500;
+      line-height: 1.6;
+    }
+
+    /* شاشة البداية */
+    .start-screen {
+      display: block;
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    .setup-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-xl);
+      margin-bottom: var(--spacing-lg);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      backdrop-filter: blur(10px);
+    }
+
+    .setup-section {
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .setup-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: var(--spacing-md);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+
+    .form-group {
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .form-label {
+      display: block;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .form-select {
+      width: 100%;
+      padding: 15px 20px;
+      border: 2px solid #E8ECEF;
+      border-radius: var(--border-radius-small);
+      font-size: 1rem;
+      font-family: 'Cairo', sans-serif;
+      background: white;
+      color: var(--text-primary);
+      transition: all var(--transition-normal);
+      cursor: pointer;
+    }
+
+    .form-select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    }
+
+    .student-count-selector {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-md);
+    }
+
+    .count-btn {
+      padding: 15px 10px;
+      border: 2px solid var(--primary-color);
+      border-radius: var(--border-radius-small);
+      background: transparent;
+      color: var(--primary-color);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      font-family: 'Cairo', sans-serif;
+    }
+
+    .count-btn:hover,
+    .count-btn.selected {
+      background: var(--primary-color);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+    }
+
+    .students-preview {
+      margin-top: var(--spacing-lg);
+    }
+
+    .students-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: var(--spacing-sm);
+      max-height: 300px;
+      overflow-y: auto;
+      padding: var(--spacing-md);
+      background: rgba(248, 249, 250, 0.5);
+      border-radius: var(--border-radius-small);
+    }
+
+    .student-card {
+      background: white;
+      padding: var(--spacing-md);
+      border-radius: var(--border-radius-small);
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      font-weight: 500;
+      color: var(--text-primary);
+      border: 2px solid transparent;
+      transition: all var(--transition-normal);
+    }
+
+    .student-card.selected {
+      border-color: var(--primary-color);
+      background: var(--primary-color);
+      color: white;
+      transform: scale(1.05);
+    }
+
+    .start-game-btn {
+      width: 100%;
+      padding: 20px;
+      border: none;
+      border-radius: var(--border-radius);
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      font-size: 1.3rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      font-family: 'Cairo', sans-serif;
+      margin-top: var(--spacing-lg);
+      box-shadow: 0 8px 25px rgba(74, 144, 226, 0.3);
+    }
+
+    .start-game-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(74, 144, 226, 0.4);
+    }
+
+    .start-game-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* شاشة اللعبة */
+    .game-screen {
+      display: none;
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    .game-container {
+      display: flex;
+      gap: var(--spacing-xl);
+      align-items: flex-start;
+    }
+
+    .tower-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    /* تصميم البرج */
+    .tower {
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      gap: 5px;
+      padding: var(--spacing-lg);
+      position: relative;
+      min-height: 400px;
+    }
+
+    /* الكنز في أعلى البرج */
+    .treasure {
+      font-size: 4rem;
+      margin-bottom: var(--spacing-lg);
+      animation: treasureGlow 2s ease-in-out infinite alternate;
+      filter: drop-shadow(0 0 20px var(--tower-gold));
+      z-index: 100;
+    }
+
+    @keyframes treasureGlow {
+      0% { transform: scale(1) rotate(0deg); }
+      100% { transform: scale(1.1) rotate(5deg); }
+    }
+
+    /* درجات البرج */
+    .tower-step {
+      width: 280px;
+      height: 60px;
+      background: linear-gradient(145deg, #D4AF37, #B8860B);
+      border: 3px solid #8B7355;
+      border-radius: var(--border-radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      position: relative;
+      box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.2),
+        inset 0 2px 4px rgba(255, 255, 255, 0.3);
+      margin: 2px 0;
+    }
+
+    .tower-step:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 
+        0 8px 20px rgba(0, 0, 0, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.4);
+    }
+
+    .tower-step.correct {
+      background: linear-gradient(145deg, var(--success-color), #27AE60);
+      border-color: #1E8449;
+      animation: correctAnswer 0.6s ease-out;
+    }
+
+    .tower-step.falling {
+      animation: fallDown 1s ease-in forwards;
+      z-index: 1;
+    }
+
+    @keyframes correctAnswer {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes fallDown {
+      0% { 
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% { 
+        transform: translateY(800px) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    /* لوحة التحكم */
+    .control-panel {
+      width: 350px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-xl);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: var(--spacing-lg);
+    }
+
+    .game-info {
+      text-align: center;
+      margin-bottom: var(--spacing-lg);
+      padding-bottom: var(--spacing-lg);
+      border-bottom: 2px solid #E8ECEF;
+    }
+
+    .info-item {
+      margin-bottom: var(--spacing-md);
+    }
+
+    .info-label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .info-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-top: var(--spacing-xs);
+    }
+
+    .current-student {
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: var(--spacing-lg);
+      border-radius: var(--border-radius);
+      text-align: center;
+      margin-bottom: var(--spacing-lg);
+      box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+    }
+
+    .current-student-name {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .current-student-level {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+
+    /* نافذة التقييم */
+    .evaluation-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .evaluation-content {
+      background: white;
+      border-radius: var(--border-radius);
+      padding: var(--spacing-xl);
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: slideUp 0.4s ease-out;
+    }
+
+    .evaluation-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .evaluation-student {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-xl);
+      padding: var(--spacing-md);
+      background: rgba(74, 144, 226, 0.1);
+      border-radius: var(--border-radius-small);
+    }
+
+    .evaluation-buttons {
+      display: flex;
+      gap: var(--spacing-md);
+    }
+
+    .eval-btn {
+      flex: 1;
+      padding: 15px 20px;
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      font-family: 'Cairo', sans-serif;
+    }
+
+    .eval-btn.correct {
+      background: var(--success-color);
+      color: white;
+      box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+    }
+
+    .eval-btn.correct:hover {
+      background: #27AE60;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
+    }
+
+    .eval-btn.wrong {
+      background: var(--error-color);
+      color: white;
+      box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+    }
+
+    .eval-btn.wrong:hover {
+      background: #C0392B;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+    }
+
+    /* أزرار إضافية */
+    .game-actions {
+      margin-top: var(--spacing-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+    }
+
+    .action-btn {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid var(--primary-color);
+      border-radius: var(--border-radius);
+      background: transparent;
+      color: var(--primary-color);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      font-family: 'Cairo', sans-serif;
+    }
+
+    .action-btn:hover {
+      background: var(--primary-color);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .action-btn.primary {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .action-btn.primary:hover {
+      background: var(--primary-dark);
+    }
+
+    /* نتيجة اللعبة */
+    .game-result {
+      display: none;
+      text-align: center;
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    .result-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-xl);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(15px);
+    }
+
+    .result-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .result-title.success {
+      color: var(--success-color);
+    }
+
+    .result-title.failure {
+      color: var(--error-color);
+    }
+
+    .winner-name {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: var(--spacing-md);
+    }
+
+    /* الرسوم المتحركة */
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* التجاوب مع الشاشات المختلفة */
+    @media (max-width: 768px) {
+      .main-container {
+        padding: var(--spacing-lg) var(--spacing-md);
+      }
+
+      .game-container {
+        flex-direction: column;
+        gap: var(--spacing-lg);
+      }
+
+      .control-panel {
+        width: 100%;
+        position: static;
+      }
+
+      .tower-step {
+        width: 100%;
+        max-width: 300px;
+      }
+
+      .evaluation-buttons {
+        flex-direction: column;
+      }
+
+      .student-count-selector {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .students-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header-title {
+        font-size: 2rem;
+        flex-direction: column;
+      }
+
+      .tower-step {
+        width: 100%;
+        font-size: 1rem;
+        height: 50px;
+      }
+
+      .treasure {
+        font-size: 3rem;
+      }
+
+      .setup-card {
+        padding: var(--spacing-lg);
+      }
+    }
+
+    /* تحسينات إضافية */
+    .hidden {
+      display: none !important;
+    }
+
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    /* تأثيرات صوتية بصرية */
+    .sound-effect {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 5rem;
+      z-index: 3000;
+      animation: soundPulse 0.6s ease-out forwards;
+      pointer-events: none;
+    }
+
+    @keyframes soundPulse {
+      0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- غيوم متحركة -->
+  <div class="clouds">
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+  </div>
+
+  <!-- أزرار التحكم -->
+  <div class="control-buttons right">
+    <button class="control-btn" id="backBtn" title="العودة للصفحة الرئيسية" aria-label="العودة للصفحة الرئيسية">
+      🏠
+    </button>
+    <button class="control-btn" id="fullscreenBtn" title="ملء الشاشة" aria-label="ملء الشاشة">
+      ⛶
+    </button>
+    <button class="control-btn" id="soundToggle" title="تشغيل/إيقاف الصوت" aria-label="تشغيل/إيقاف الصوت">
+      🔊
+    </button>
+  </div>
+
+  <!-- المحتوى الرئيسي -->
+  <div class="main-container">
+    <!-- رأس الصفحة -->
+    <header class="header">
+      <div class="header-card">
+        <h1 class="header-title">
+          <span>🏰</span>
+          <span>برج الأسماء</span>
+        </h1>
+        <p class="header-subtitle">
+          لعبة تعليمية تفاعلية لبناء برج المعرفة مع طلابك
+        </p>
+      </div>
+    </header>
+
+    <!-- شاشة البداية -->
+    <div class="start-screen" id="startScreen">
+      <div class="setup-card">
+        <div class="setup-section">
+          <h2 class="setup-title">
+            <i class="fas fa-users"></i>
+            اختر الصف الدراسي
+          </h2>
+          <div class="form-group">
+            <label class="form-label" for="classSelect">الصف:</label>
+            <select class="form-select" id="classSelect">
+              <option value="">اختر الصف الدراسي...</option>
+              <!-- سيتم تعبئة الصفوف ديناميكياً -->
+            </select>
+          </div>
+        </div>
+
+        <div class="setup-section" id="studentCountSection" style="display: none;">
+          <h2 class="setup-title">
+            <i class="fas fa-hashtag"></i>
+            عدد الطلاب المشاركين
+          </h2>
+          <div class="student-count-selector">
+            <button class="count-btn" data-count="5">5</button>
+            <button class="count-btn" data-count="6">6</button>
+            <button class="count-btn" data-count="7">7</button>
+            <button class="count-btn" data-count="8">8</button>
+            <button class="count-btn" data-count="10">10</button>
+            <button class="count-btn" data-count="12">12</button>
+            <button class="count-btn" data-count="15">15</button>
+            <button class="count-btn" data-count="20">20</button>
+          </div>
+        </div>
+
+        <div class="setup-section" id="studentsPreview" style="display: none;">
+          <h2 class="setup-title">
+            <i class="fas fa-eye"></i>
+            الطلاب المشاركون
+          </h2>
+          <div class="students-preview">
+            <div class="students-grid" id="studentsGrid">
+              <!-- سيتم ملؤها ديناميكياً -->
+            </div>
+          </div>
+        </div>
+
+        <button class="start-game-btn" id="startGameBtn" disabled>
+          <i class="fas fa-play"></i>
+          ابدأ اللعبة
+        </button>
+      </div>
+    </div>
+
+    <!-- شاشة اللعبة -->
+    <div class="game-screen" id="gameScreen">
+      <div class="game-container">
+        <!-- البرج -->
+        <div class="tower-container">
+          <div class="treasure">💎</div>
+          <div class="tower" id="tower">
+            <!-- سيتم ملء درجات البرج ديناميكياً -->
+          </div>
+        </div>
+
+        <!-- لوحة التحكم -->
+        <div class="control-panel">
+          <div class="game-info">
+            <div class="info-item">
+              <div class="info-label">الصف المختار</div>
+              <div class="info-value" id="selectedClass">-</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">عدد الطلاب</div>
+              <div class="info-value" id="totalStudents">-</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">الطلاب المتبقون</div>
+              <div class="info-value" id="remainingStudents">-</div>
+            </div>
+          </div>
+
+          <div class="current-student" id="currentStudentCard" style="display: none;">
+            <div class="current-student-name" id="currentStudentName">-</div>
+            <div class="current-student-level" id="currentStudentLevel">-</div>
+          </div>
+
+          <div class="game-actions">
+            <button class="action-btn primary" id="newGameBtn">
+              <i class="fas fa-refresh"></i>
+              لعبة جديدة
+            </button>
+            <button class="action-btn" id="resetTowerBtn">
+              <i class="fas fa-undo"></i>
+              إعادة بناء البرج
+            </button>
+            <button class="action-btn" id="shuffleStudentsBtn">
+              <i class="fas fa-random"></i>
+              خلط الطلاب
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- نتيجة اللعبة -->
+    <div class="game-result" id="gameResult">
+      <div class="result-card">
+        <div class="result-title" id="resultTitle">🏆 تهانينا!</div>
+        <div class="winner-name" id="winnerName">الطالب الفائز</div>
+        <p id="resultMessage">لقد وصل إلى قمة البرج وحصل على الكنز!</p>
+        <button class="start-game-btn" id="playAgainBtn">
+          <i class="fas fa-play"></i>
+          العب مرة أخرى
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة التقييم -->
+  <div class="evaluation-modal" id="evaluationModal">
+    <div class="evaluation-content">
+      <h2 class="evaluation-title">
+        <i class="fas fa-question-circle"></i>
+        تقييم الإجابة
+      </h2>
+      <div class="evaluation-student" id="evaluationStudent">
+        اسم الطالب
+      </div>
+      <div class="evaluation-buttons">
+        <button class="eval-btn correct" id="correctBtn">
+          <i class="fas fa-check"></i>
+          إجابة صحيحة
+        </button>
+        <button class="eval-btn wrong" id="wrongBtn">
+          <i class="fas fa-times"></i>
+          إجابة خاطئة
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- الأصوات -->
+  <audio id="clickSound" preload="auto">
+    <source src="../assets/media/sounds/Click.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="correctSound" preload="auto">
+    <source src="../assets/media/sounds/win.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="wrongSound" preload="auto">
+    <source src="../assets/media/sounds/wrong_answer.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="winSound" preload="auto">
+    <source src="../assets/media/sounds/firework.gif" type="audio/mpeg">
+  </audio>
+
+  <script>
+    console.log('🚀 بدء تحميل لعبة برج الأسماء...');
+
+    // متغيرات اللعبة
+    let studentsData = {};
+    let selectedClass = '';
+    let selectedStudents = [];
+    let selectedCount = 0;
+    let currentStudentIndex = 0;
+    let gameActive = false;
+    let soundEnabled = true;
+
+    // عناصر DOM
+    const elements = {
+      // شاشة البداية
+      classSelect: document.getElementById('classSelect'),
+      studentCountSection: document.getElementById('studentCountSection'),
+      studentsPreview: document.getElementById('studentsPreview'),
+      studentsGrid: document.getElementById('studentsGrid'),
+      startGameBtn: document.getElementById('startGameBtn'),
+      startScreen: document.getElementById('startScreen'),
+      
+      // شاشة اللعبة
+      gameScreen: document.getElementById('gameScreen'),
+      tower: document.getElementById('tower'),
+      selectedClassDisplay: document.getElementById('selectedClass'),
+      totalStudentsDisplay: document.getElementById('totalStudents'),
+      remainingStudentsDisplay: document.getElementById('remainingStudents'),
+      currentStudentCard: document.getElementById('currentStudentCard'),
+      currentStudentName: document.getElementById('currentStudentName'),
+      currentStudentLevel: document.getElementById('currentStudentLevel'),
+      
+      // نافذة التقييم
+      evaluationModal: document.getElementById('evaluationModal'),
+      evaluationStudent: document.getElementById('evaluationStudent'),
+      correctBtn: document.getElementById('correctBtn'),
+      wrongBtn: document.getElementById('wrongBtn'),
+      
+      // نتيجة اللعبة
+      gameResult: document.getElementById('gameResult'),
+      resultTitle: document.getElementById('resultTitle'),
+      winnerName: document.getElementById('winnerName'),
+      resultMessage: document.getElementById('resultMessage'),
+      
+      // أزرار التحكم
+      newGameBtn: document.getElementById('newGameBtn'),
+      resetTowerBtn: document.getElementById('resetTowerBtn'),
+      shuffleStudentsBtn: document.getElementById('shuffleStudentsBtn'),
+      playAgainBtn: document.getElementById('playAgainBtn'),
+      backBtn: document.getElementById('backBtn'),
+      fullscreenBtn: document.getElementById('fullscreenBtn'),
+      soundToggle: document.getElementById('soundToggle'),
+      
+      // الأصوات
+      clickSound: document.getElementById('clickSound'),
+      correctSound: document.getElementById('correctSound'),
+      wrongSound: document.getElementById('wrongSound'),
+      winSound: document.getElementById('winSound')
+    };
+
+    // تحميل بيانات الطلاب
+    async function loadStudentsData() {
+      try {
+        console.log('📂 جاري تحميل بيانات الطلاب...');
+        const response = await fetch('../data/studentData.json');
+        const allStudentsData = await response.json();
+        
+        // تحويل البيانات إلى التنسيق المطلوب للعبة
+        studentsData = {};
+        
+        // مجموعة الصفوف المتاحة
+        const classGroups = {};
+        
+        Object.keys(allStudentsData).forEach(className => {
+          // استخراج اسم الصف الأساسي (مثل "خامس" من "خامس 1")
+          const parts = className.split(' ');
+          const baseClassName = parts[0];
+          
+          // تحديد اسم العرض للصف
+          let displayName;
+          switch(baseClassName) {
+            case 'خامس': displayName = 'الصف الخامس'; break;
+            case 'سادس': displayName = 'الصف السادس'; break;
+            case 'سابع': displayName = 'الصف السابع'; break;
+            case 'ثامن': displayName = 'الصف الثامن'; break;
+            case 'تاسع': displayName = 'الصف التاسع'; break;
+            case 'عاشر': displayName = 'الصف العاشر'; break;
+            case 'حادي': displayName = 'الصف الحادي عشر'; break;
+            case 'ثاني': displayName = 'الصف الثاني عشر'; break;
+            default: displayName = `الصف ال${baseClassName}`;
+          }
+          
+          if (!classGroups[displayName]) {
+            classGroups[displayName] = [];
+          }
+          
+          // إضافة الطلاب (استخراج الأسماء الأولى فقط لسهولة العرض)
+          allStudentsData[className].forEach(fullName => {
+            const firstName = fullName.split(' ')[0]; // أول كلمة من الاسم
+            classGroups[displayName].push(firstName);
+          });
+        });
+        
+        // دمج وإزالة المكررات
+        Object.keys(classGroups).forEach(className => {
+          studentsData[className] = [...new Set(classGroups[className])];
+        });
+        
+        console.log('✅ تم تحميل بيانات الطلاب بنجاح');
+        console.log('📊 الصفوف المتاحة:', Object.keys(studentsData));
+        
+        // تحديث قائمة الصفوف ديناميكياً
+        updateClassSelect();
+        
+      } catch (error) {
+        console.error('❌ خطأ في تحميل بيانات الطلاب:', error);
+        showError('فشل في تحميل بيانات الطلاب. تأكد من وجود الملف.');
+      }
+    }
+
+    // تحديث قائمة الصفوف ديناميكياً
+    function updateClassSelect() {
+      const classSelect = elements.classSelect;
+      
+      // مسح الخيارات الحالية (عدا الخيار الافتراضي)
+      while (classSelect.children.length > 1) {
+        classSelect.removeChild(classSelect.lastChild);
+      }
+      
+      // إضافة الصفوف المتاحة
+      Object.keys(studentsData).sort().forEach(className => {
+        const option = document.createElement('option');
+        option.value = className;
+        option.textContent = className;
+        classSelect.appendChild(option);
+      });
+      
+      console.log('📋 تم تحديث قائمة الصفوف');
+    }
+
+    // تشغيل الصوت
+    function playSound(audioElement) {
+      if (soundEnabled && audioElement) {
+        try {
+          audioElement.currentTime = 0;
+          const playPromise = audioElement.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(() => {
+              console.log('🔇 تعذر تشغيل الصوت (يتطلب تفاعل المستخدم)');
+            });
+          }
+        } catch (error) {
+          console.log('🔇 خطأ في تشغيل الصوت:', error);
+        }
+      }
+    }
+
+    // عرض تأثير صوتي بصري
+    function showSoundEffect(emoji) {
+      const effect = document.createElement('div');
+      effect.className = 'sound-effect';
+      effect.textContent = emoji;
+      document.body.appendChild(effect);
+      
+      setTimeout(() => {
+        document.body.removeChild(effect);
+      }, 600);
+    }
+
+    // خلط مصفوفة (Fisher-Yates shuffle)
+    function shuffleArray(array) {
+      const shuffled = [...array];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    }
+
+    // عرض رسالة خطأ
+    function showError(message) {
+      alert(message);
+    }
+
+    // تحديث معاينة الطلاب
+    function updateStudentsPreview() {
+      if (!selectedClass || selectedCount === 0) {
+        elements.studentsPreview.style.display = 'none';
+        return;
+      }
+
+      const classStudents = studentsData[selectedClass] || [];
+      selectedStudents = shuffleArray(classStudents).slice(0, selectedCount);
+      
+      elements.studentsGrid.innerHTML = selectedStudents.map(student => `
+        <div class="student-card">${student}</div>
+      `).join('');
+      
+      elements.studentsPreview.style.display = 'block';
+      elements.startGameBtn.disabled = false;
+      
+      console.log('👥 تم اختيار الطلاب:', selectedStudents);
+    }
+
+    // بناء البرج
+    function buildTower() {
+      console.log('🏗️ جاري بناء البرج...');
+      elements.tower.innerHTML = '';
+      
+      selectedStudents.forEach((student, index) => {
+        const step = document.createElement('div');
+        step.className = 'tower-step';
+        step.textContent = student;
+        step.dataset.index = index;
+        step.dataset.student = student;
+        
+        step.addEventListener('click', () => handleStepClick(step));
+        elements.tower.appendChild(step);
+      });
+      
+      currentStudentIndex = 0;
+      updateGameInfo();
+      console.log('✅ تم بناء البرج بنجاح');
+    }
+
+    // التعامل مع النقر على درجة البرج
+    function handleStepClick(step) {
+      if (!gameActive) return;
+      
+      const studentName = step.dataset.student;
+      const stepIndex = parseInt(step.dataset.index);
+      
+      console.log(`👆 تم النقر على درجة: ${studentName} (المستوى ${stepIndex + 1})`);
+      playSound(elements.clickSound);
+      
+      // عرض نافذة التقييم
+      elements.evaluationStudent.textContent = studentName;
+      elements.evaluationModal.style.display = 'flex';
+      
+      // حفظ مرجع للدرجة المختارة
+      elements.evaluationModal.dataset.currentStep = step.dataset.index;
+    }
+
+    // تحديث معلومات اللعبة
+    function updateGameInfo() {
+      elements.selectedClassDisplay.textContent = selectedClass;
+      elements.totalStudentsDisplay.textContent = selectedStudents.length;
+      
+      const remainingSteps = elements.tower.querySelectorAll('.tower-step:not(.correct):not(.falling)').length;
+      elements.remainingStudentsDisplay.textContent = remainingSteps;
+      
+      if (remainingSteps > 0) {
+        const topStudent = selectedStudents[selectedStudents.length - remainingSteps];
+        elements.currentStudentName.textContent = topStudent;
+        elements.currentStudentLevel.textContent = `المستوى ${selectedStudents.length - remainingSteps + 1}`;
+        elements.currentStudentCard.style.display = 'block';
+      } else {
+        elements.currentStudentCard.style.display = 'none';
+      }
+    }
+
+    // معالجة الإجابة الصحيحة
+    function handleCorrectAnswer() {
+      const stepIndex = parseInt(elements.evaluationModal.dataset.currentStep);
+      const step = elements.tower.querySelector(`[data-index="${stepIndex}"]`);
+      
+      if (step && !step.classList.contains('correct') && !step.classList.contains('falling')) {
+        console.log('✅ إجابة صحيحة!');
+        playSound(elements.correctSound);
+        showSoundEffect('✅');
+        
+        step.classList.add('correct');
+        updateGameInfo();
+        
+        // فحص الفوز
+        const remainingSteps = elements.tower.querySelectorAll('.tower-step:not(.correct):not(.falling)').length;
+        if (remainingSteps === 0) {
+          setTimeout(() => {
+            showGameResult(true, selectedStudents[selectedStudents.length - 1]);
+          }, 1000);
+        }
+      }
+      
+      elements.evaluationModal.style.display = 'none';
+    }
+
+    // معالجة الإجابة الخاطئة
+    function handleWrongAnswer() {
+      const stepIndex = parseInt(elements.evaluationModal.dataset.currentStep);
+      const step = elements.tower.querySelector(`[data-index="${stepIndex}"]`);
+      
+      if (step && !step.classList.contains('falling')) {
+        console.log('❌ إجابة خاطئة!');
+        playSound(elements.wrongSound);
+        showSoundEffect('❌');
+        
+        // إسقاط الدرجة المختارة وجميع الدرجات التحتها
+        const allSteps = Array.from(elements.tower.querySelectorAll('.tower-step'));
+        const stepIndexInTower = allSteps.indexOf(step);
+        
+        for (let i = 0; i <= stepIndexInTower; i++) {
+          if (!allSteps[i].classList.contains('correct')) {
+            allSteps[i].classList.add('falling');
+            
+            // حذف الدرجة بعد انتهاء الرسوم المتحركة
+            setTimeout(() => {
+              if (allSteps[i].parentNode) {
+                allSteps[i].remove();
+              }
+            }, 1000);
+          }
+        }
+        
+        setTimeout(() => {
+          updateGameInfo();
+          
+          // فحص الخسارة (لا توجد درجات متبقية)
+          const remainingSteps = elements.tower.querySelectorAll('.tower-step:not(.correct):not(.falling)').length;
+          if (remainingSteps === 0) {
+            showGameResult(false);
+          }
+        }, 1200);
+      }
+      
+      elements.evaluationModal.style.display = 'none';
+    }
+
+    // عرض نتيجة اللعبة
+    function showGameResult(won, winner = null) {
+      gameActive = false;
+      
+      if (won) {
+        console.log('🏆 انتهت اللعبة - فوز!');
+        playSound(elements.winSound);
+        elements.resultTitle.textContent = '🏆 تهانينا!';
+        elements.resultTitle.className = 'result-title success';
+        elements.winnerName.textContent = winner;
+        elements.resultMessage.textContent = 'لقد وصل إلى قمة البرج وحصل على الكنز!';
+      } else {
+        console.log('💥 انتهت اللعبة - خسارة!');
+        elements.resultTitle.textContent = '💥 انهار البرج!';
+        elements.resultTitle.className = 'result-title failure';
+        elements.winnerName.textContent = 'لم يصل أحد للقمة';
+        elements.resultMessage.textContent = 'حاول مرة أخرى وابن برجاً أقوى!';
+      }
+      
+      setTimeout(() => {
+        elements.gameScreen.style.display = 'none';
+        elements.gameResult.style.display = 'block';
+      }, 2000);
+    }
+
+    // بدء لعبة جديدة
+    function startNewGame() {
+      console.log('🆕 بدء لعبة جديدة...');
+      selectedClass = '';
+      selectedStudents = [];
+      selectedCount = 0;
+      currentStudentIndex = 0;
+      gameActive = false;
+      
+      // إعادة تعيين الواجهة
+      elements.classSelect.value = '';
+      elements.studentCountSection.style.display = 'none';
+      elements.studentsPreview.style.display = 'none';
+      elements.startGameBtn.disabled = true;
+      
+      // إزالة التحديدات السابقة
+      document.querySelectorAll('.count-btn.selected').forEach(btn => {
+        btn.classList.remove('selected');
+      });
+      
+      // عرض شاشة البداية
+      elements.gameScreen.style.display = 'none';
+      elements.gameResult.style.display = 'none';
+      elements.startScreen.style.display = 'block';
+      
+      playSound(elements.clickSound);
+    }
+
+    // بدء اللعبة
+    function startGame() {
+      if (selectedStudents.length === 0) {
+        showError('يرجى اختيار الطلاب أولاً');
+        return;
+      }
+      
+      console.log('🎮 بدء اللعبة...');
+      playSound(elements.clickSound);
+      
+      // بناء البرج
+      buildTower();
+      
+      // عرض شاشة اللعبة
+      elements.startScreen.style.display = 'none';
+      elements.gameResult.style.display = 'none';
+      elements.gameScreen.style.display = 'block';
+      
+      gameActive = true;
+      console.log('✅ اللعبة نشطة الآن');
+    }
+
+    // إعادة بناء البرج
+    function resetTower() {
+      if (selectedStudents.length === 0) return;
+      
+      console.log('🔄 إعادة بناء البرج...');
+      buildTower();
+      gameActive = true;
+      playSound(elements.clickSound);
+    }
+
+    // خلط الطلاب
+    function shuffleStudents() {
+      if (selectedStudents.length === 0) return;
+      
+      console.log('🔀 خلط الطلاب...');
+      selectedStudents = shuffleArray(selectedStudents);
+      updateStudentsPreview();
+      
+      if (gameActive) {
+        buildTower();
+      }
+      
+      playSound(elements.clickSound);
+    }
+
+    // تبديل الملء الشاشة
+    async function toggleFullscreen() {
+      try {
+        if (!document.fullscreenElement) {
+          await document.documentElement.requestFullscreen();
+          console.log('🖥️ تم تفعيل ملء الشاشة');
+        } else {
+          await document.exitFullscreen();
+          console.log('🖥️ تم إلغاء ملء الشاشة');
+        }
+        playSound(elements.clickSound);
+      } catch (error) {
+        console.warn('⚠️ فشل في تغيير وضع ملء الشاشة:', error);
+      }
+    }
+
+    // تبديل الصوت
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      elements.soundToggle.textContent = soundEnabled ? '🔊' : '🔇';
+      console.log('🔊 الصوت:', soundEnabled ? 'مفعل' : 'معطل');
+      playSound(elements.clickSound);
+    }
+
+    // تهيئة الأحداث
+    function initializeEvents() {
+      console.log('⚡ تهيئة الأحداث...');
+      
+      // اختيار الصف
+      elements.classSelect.addEventListener('change', (e) => {
+        selectedClass = e.target.value;
+        console.log('📚 تم اختيار الصف:', selectedClass);
+        
+        if (selectedClass) {
+          elements.studentCountSection.style.display = 'block';
+          playSound(elements.clickSound);
+        } else {
+          elements.studentCountSection.style.display = 'none';
+          elements.studentsPreview.style.display = 'none';
+          elements.startGameBtn.disabled = true;
+        }
+      });
+      
+      // اختيار عدد الطلاب
+      document.querySelectorAll('.count-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.count-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          
+          selectedCount = parseInt(btn.dataset.count);
+          console.log('🔢 تم اختيار العدد:', selectedCount);
+          
+          updateStudentsPreview();
+          playSound(elements.clickSound);
+        });
+      });
+      
+      // أزرار اللعبة
+      elements.startGameBtn.addEventListener('click', startGame);
+      elements.newGameBtn.addEventListener('click', startNewGame);
+      elements.resetTowerBtn.addEventListener('click', resetTower);
+      elements.shuffleStudentsBtn.addEventListener('click', shuffleStudents);
+      elements.playAgainBtn.addEventListener('click', startNewGame);
+      
+      // أزرار التقييم
+      elements.correctBtn.addEventListener('click', handleCorrectAnswer);
+      elements.wrongBtn.addEventListener('click', handleWrongAnswer);
+      
+      // أزرار التحكم
+      elements.backBtn.addEventListener('click', () => {
+        window.location.href = '../main.html';
+      });
+      elements.fullscreenBtn.addEventListener('click', toggleFullscreen);
+      elements.soundToggle.addEventListener('click', toggleSound);
+      
+      // إغلاق نافذة التقييم بالنقر خارجها
+      elements.evaluationModal.addEventListener('click', (e) => {
+        if (e.target === elements.evaluationModal) {
+          elements.evaluationModal.style.display = 'none';
+        }
+      });
+      
+      // اختصارات لوحة المفاتيح
+      document.addEventListener('keydown', (e) => {
+        switch(e.key) {
+          case 'Escape':
+            if (elements.evaluationModal.style.display === 'flex') {
+              elements.evaluationModal.style.display = 'none';
+            } else if (document.fullscreenElement) {
+              document.exitFullscreen();
+            }
+            break;
+          case 'F11':
+            e.preventDefault();
+            toggleFullscreen();
+            break;
+          case ' ':
+            if (elements.evaluationModal.style.display === 'flex') {
+              e.preventDefault();
+              handleCorrectAnswer();
+            }
+            break;
+          case 'Enter':
+            if (elements.evaluationModal.style.display === 'flex') {
+              e.preventDefault();
+              handleCorrectAnswer();
+            }
+            break;
+          case 'x':
+          case 'X':
+            if (elements.evaluationModal.style.display === 'flex') {
+              e.preventDefault();
+              handleWrongAnswer();
+            }
+            break;
+        }
+      });
+      
+      console.log('✅ تم تهيئة جميع الأحداث');
+    }
+
+    // تهيئة التطبيق
+    async function initializeApp() {
+      console.log('🎯 تهيئة تطبيق برج الأسماء...');
+      
+      await loadStudentsData();
+      initializeEvents();
+      
+      console.log('🎉 تم تحميل التطبيق بنجاح!');
+    }
+
+    // بدء التطبيق عند تحميل الصفحة
+    document.addEventListener('DOMContentLoaded', initializeApp);
+
+    // معالجة الأخطاء العامة
+    window.addEventListener('error', (e) => {
+      console.error('💥 خطأ عام في التطبيق:', e.error);
+    });
+
+    window.addEventListener('unhandledrejection', (e) => {
+      console.error('💥 خطأ غير معالج في Promise:', e.reason);
+    });
+
+    console.log('📝 تم تحميل جميع النصوص البرمجية لبرج الأسماء!');
+  </script>
+</body>
+</html>
