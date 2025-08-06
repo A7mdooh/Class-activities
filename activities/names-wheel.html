@@ -2984,6 +2984,205 @@
             flex-wrap: wrap;
             gap: 15px;
             margin-top: 25px;
+            position: relative;
+        }
+
+        /* أزرار التحكم الجديدة المطورة */
+        .remove-btn {
+            background: linear-gradient(45deg, #E53E3E, #FC8181);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Cairo', sans-serif;
+            box-shadow: 0 4px 15px rgba(229, 62, 62, 0.3);
+            min-width: 120px;
+            justify-content: center;
+        }
+
+        .remove-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            background: linear-gradient(45deg, #C53030, #F56565);
+            box-shadow: 0 8px 25px rgba(229, 62, 62, 0.5);
+        }
+
+        .continue-btn {
+            background: linear-gradient(45deg, #38A169, #68D391);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Cairo', sans-serif;
+            box-shadow: 0 4px 15px rgba(56, 161, 105, 0.3);
+            min-width: 120px;
+            justify-content: center;
+        }
+
+        .continue-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            background: linear-gradient(45deg, #2F855A, #48BB78);
+            box-shadow: 0 8px 25px rgba(56, 161, 105, 0.5);
+        }
+
+        /* أيقونة الإغلاق */
+        .close-result-btn {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(45deg, #718096, #A0AEC0);
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(113, 128, 150, 0.4);
+            z-index: 10;
+        }
+
+        .close-result-btn:hover {
+            transform: scale(1.1);
+            background: linear-gradient(45deg, #4A5568, #718096);
+            box-shadow: 0 5px 15px rgba(113, 128, 150, 0.6);
+        }
+
+        /* تحسينات إضافية للنافذة النهائية */
+        .result-container {
+            position: relative;
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.98) 0%, 
+                rgba(248, 255, 254, 0.95) 100%);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 
+                0 15px 40px rgba(0, 0, 0, 0.15),
+                0 5px 20px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(0, 121, 107, 0.1);
+            backdrop-filter: blur(20px);
+            animation: resultSlideIn 0.5s ease-out;
+        }
+
+        @keyframes resultSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .result-container h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .selected-pair {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        /* تأثيرات تفاعلية للأزرار */
+        .remove-btn:active,
+        .continue-btn:active {
+            transform: translateY(-1px) scale(0.98);
+            transition: all 0.1s ease;
+        }
+
+        .close-result-btn:active {
+            transform: scale(0.95);
+            transition: all 0.1s ease;
+        }
+
+        /* تحسينات الرسوم المتحركة للأزرار */
+        .remove-btn::before,
+        .continue-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .remove-btn:hover::before,
+        .continue-btn:hover::before {
+            left: 100%;
+        }
+
+        .remove-btn,
+        .continue-btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* تأثير النبضة للزر النشط */
+        .remove-btn:focus,
+        .continue-btn:focus {
+            outline: none;
+            animation: buttonPulse 1s ease-in-out;
+        }
+
+        @keyframes buttonPulse {
+            0%, 100% { box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); }
+            50% { box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5); }
+        }
+
+        /* تحسين أيقونة الإغلاق */
+        .close-result-btn i {
+            transition: transform 0.3s ease;
+        }
+
+        .close-result-btn:hover i {
+            transform: rotate(90deg);
+        }
+
+        /* رسائل الحالة المحسنة */
+        .action-tooltip {
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 0.8em;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 100;
+        }
+
+        .remove-btn:hover .action-tooltip,
+        .continue-btn:hover .action-tooltip {
+            opacity: 1;
         }
 
         /* حركات البطاقات الجديدة */
@@ -3333,13 +3532,24 @@
             <!-- عرض النتيجة النهائية -->
             <div id="finalResult" class="final-result" style="display: none;">
                 <div class="result-container">
+                    <button id="closeResultBtn" class="close-result-btn" title="إغلاق النافذة">
+                        <i class="fas fa-times"></i>
+                    </button>
                     <h3>🎉 النتيجة النهائية</h3>
                     <div id="selectedPair" class="selected-pair"></div>
                     <div class="result-actions">
                         <button id="nextRoundBtn" class="next-round-btn">
                             🔄 جولة جديدة
                         </button>
-                        <button id="removeAndSelectBtn" class="remove-and-select-btn">
+                        <button id="removeStudentBtn" class="remove-btn" title="إزالة الطالب والبطاقة من القائمة نهائياً">
+                            <i class="fas fa-user-times"></i>
+                            إزالة
+                        </button>
+                        <button id="continueSelectionBtn" class="continue-btn" title="اختيار طالب آخر والاحتفاظ بالطالب الحالي">
+                            <i class="fas fa-arrow-right"></i>
+                            متابعة
+                        </button>
+                        <button id="removeAndSelectBtn" class="remove-and-select-btn" style="display: none;">
                             🗑️ إزالة الطالب والبطاقة واختيار آخر
                         </button>
                     </div>
@@ -6917,6 +7127,123 @@
                     
                     playSound('pointLose');
                     console.log(`✨ تم تطبيق الحل الإبداعي بنجاح!`);
+                });
+            }
+            
+            // زر الإغلاق الجديد
+            const closeResultBtn = document.getElementById('closeResultBtn');
+            if (closeResultBtn) {
+                closeResultBtn.addEventListener('click', () => {
+                    const finalResult = document.getElementById('finalResult');
+                    if (finalResult) {
+                        finalResult.style.display = 'none';
+                    }
+                    
+                    // إعادة إظهار العجلة والبطاقات
+                    showWelcomeMessage();
+                    updateUI();
+                    playSound('cosmicClick');
+                    console.log('❌ تم إغلاق نافذة النتيجة');
+                });
+            }
+            
+            // زر الإزالة الجديد (إزالة الطالب والبطاقة فقط دون اختيار آخر)
+            const removeStudentBtn = document.getElementById('removeStudentBtn');
+            if (removeStudentBtn) {
+                removeStudentBtn.addEventListener('click', () => {
+                    const currentStudent = currentSelectedName || selectedStudentName;
+                    if (!currentStudent) {
+                        showToast('❌ لا يوجد طالب محدد للإزالة', 'warning');
+                        return;
+                    }
+                    
+                    // تأكيد الإزالة
+                    const currentTaskForConfirm = currentSelectedTask || selectedTask;
+                    const taskInfo = currentTaskForConfirm ? ` والبطاقة (${currentTaskForConfirm.type === 'number' ? 'رقم' : 'لون'} ${currentTaskForConfirm.value})` : '';
+                    if (!confirm(`هل تريد إزالة "${currentStudent}"${taskInfo} من القائمة؟`)) {
+                        return;
+                    }
+                    
+                    console.log(`🗑️ إزالة: ${currentStudent} والبطاقة`);
+                    
+                    // إزالة الطالب من جميع القوائم
+                    const availableIndex = availableStudents.indexOf(currentStudent);
+                    const selectedIndex = selectedStudents.indexOf(currentStudent);
+                    
+                    if (availableIndex > -1) {
+                        availableStudents.splice(availableIndex, 1);
+                    }
+                    if (selectedIndex > -1) {
+                        selectedStudents.splice(selectedIndex, 1);
+                    }
+                    
+                    // إضافة للمحذوفين
+                    if (!removedStudents.includes(currentStudent)) {
+                        removedStudents.push(currentStudent);
+                    }
+                    
+                    // إزالة البطاقة أيضاً إذا كانت موجودة
+                    const currentTask = currentSelectedTask || selectedTask;
+                    if (currentTask) {
+                        if (!removedTasks.some(removed => removed.id === currentTask.id && removed.type === currentTask.type)) {
+                            removedTasks.push(currentTask);
+                            console.log(`🗑️ تم إزالة البطاقة: ${currentTask.type === 'number' ? 'رقم' : 'لون'} ${currentTask.value}`);
+                        }
+                    }
+                    
+                    // تنظيف المتغيرات
+                    currentSelectedName = '';
+                    selectedStudentName = '';
+                    selectedTask = null;
+                    currentSelectedTask = null;
+                    currentStep = 'names';
+                    
+                    // إخفاء النتيجة النهائية
+                    const finalResult = document.getElementById('finalResult');
+                    if (finalResult) finalResult.style.display = 'none';
+                    
+                    const removedTaskInfo = currentTaskForConfirm ? ` والبطاقة` : '';
+                    showToast(`🗑️ تم إزالة ${currentStudent}${removedTaskInfo} من القائمة`, 'success');
+                    
+                    // إعادة إظهار العجلة
+                    showWelcomeMessage();
+                    updateUI();
+                    
+                    playSound('pointLose');
+                    console.log(`✅ تم إزالة ${currentStudent} بنجاح`);
+                });
+            }
+            
+            // زر المتابعة الجديد (اختيار طالب آخر دون إزالة الحالي)
+            const continueSelectionBtn = document.getElementById('continueSelectionBtn');
+            if (continueSelectionBtn) {
+                continueSelectionBtn.addEventListener('click', () => {
+                    // فحص إذا كان هناك طلاب متاحون آخرون
+                    if (availableStudents.length <= 1) {
+                        showToast('📭 لا يوجد طلاب متاحون أكثر للاختيار', 'info');
+                        return;
+                    }
+                    
+                    // تنظيف الاختيار الحالي
+                    currentSelectedName = '';
+                    selectedStudentName = '';
+                    selectedTask = null;
+                    currentSelectedTask = null;
+                    currentStep = 'names';
+                    
+                    // إخفاء النتيجة النهائية
+                    const finalResult = document.getElementById('finalResult');
+                    if (finalResult) finalResult.style.display = 'none';
+                    
+                    // بدء اختيار جديد فوراً!
+                    showToast('🎯 جاري اختيار طالب آخر...', 'info');
+                    
+                    setTimeout(() => {
+                        spinWheel();
+                    }, 800);
+                    
+                    playSound('creativitySpark');
+                    console.log('🔄 متابعة الاختيار - طالب جديد');
                 });
             }
             
