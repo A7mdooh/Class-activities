@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎡 عجلة الأسماء الذكية المتطورة - نظام اختيار تفاعلي</title>
+    <title>� بطاقات الأسماء الذكية المتطورة - نظام اختيار تفاعلي</title>
     
     <!-- الخطوط والأيقونات -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet"/>
@@ -1828,6 +1828,156 @@
                 min-width: 200px;
             }
         }
+
+        /* ===== نظام البطاقات التفاعلي الجديد ===== */
+        .cards-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .name-cards-system, .task-cards-system {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .name-cards {
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        }
+
+        .task-cards {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        /* بطاقات المهام */
+        .task-card {
+            background: linear-gradient(145deg, #4CAF50 0%, #2E7D32 100%);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .task-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .task-card:hover::before {
+            left: 100%;
+        }
+
+        .task-card:hover {
+            transform: translateY(-8px) rotateX(10deg) scale(1.05);
+            box-shadow: 
+                0 15px 40px rgba(0, 0, 0, 0.6),
+                0 0 20px rgba(76, 175, 80, 0.4);
+            border-color: #8BC34A;
+        }
+
+        .task-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .task-title {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .task-description {
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.3;
+        }
+
+        /* النتيجة النهائية */
+        .final-result {
+            background: linear-gradient(145deg, #1a1a1a 0%, #2d2d2d 100%);
+            border: 3px solid #FFD700;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 
+                0 0 50px rgba(255, 215, 0, 0.5),
+                inset 0 1px 3px rgba(255, 255, 255, 0.1);
+        }
+
+        .selected-pair {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .selected-student, .selected-task {
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid #FFD700;
+            border-radius: 15px;
+            padding: 20px;
+            min-width: 200px;
+        }
+
+        .next-round-btn {
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .next-round-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        /* حركات البطاقات الجديدة */
+        @keyframes cardShuffle {
+            0%, 100% { transform: translateY(0) rotateZ(0deg); }
+            25% { transform: translateY(-10px) rotateZ(5deg); }
+            50% { transform: translateY(5px) rotateZ(-3deg); }
+            75% { transform: translateY(-5px) rotateZ(2deg); }
+        }
+
+        @keyframes cardWinnerPulse {
+            0%, 100% { 
+                transform: scale(1.2);
+                box-shadow: 0 0 40px rgba(255, 215, 0, 0.9);
+            }
+            50% { 
+                transform: scale(1.25);
+                box-shadow: 0 0 50px rgba(255, 215, 0, 1);
+            }
+        }
     </style>
 </head>
 
@@ -1907,7 +2057,7 @@
     <div class="cosmic-container">
         <!-- العنوان الرئيسي -->
         <div class="header">
-            <h1 class="main-title">🎡 عجلة الأسماء الذكية المتطورة</h1>
+            <h1 class="main-title">� بطاقات الأسماء الذكية المتطورة</h1>
             <p class="subtitle">
                 نظام اختيار تفاعلي بتقنية ثلاثية الأبعاد<br>
                 اختر الطلاب بشكل عشوائي وعادل مع تأثيرات بصرية مذهلة!
@@ -1956,24 +2106,39 @@
             </div>
         </div>
 
-        <!-- منطقة العجلة -->
-        <div class="wheel-container" data-aos="fade-up">
-            <!-- العجلة ثلاثية الأبعاد (للأعداد الصغيرة) -->
-            <div id="traditionalWheel" class="wheel-3d-container">
-                <div class="wheel-pointer"></div>
-                <div class="wheel-3d">
-                    <canvas class="wheel-canvas" id="wheelCanvas" width="500" height="500"></canvas>
+        <!-- منطقة البطاقات التفاعلية -->
+        <div class="cards-container" data-aos="fade-up">
+            <!-- نظام بطاقات الأسماء -->
+            <div id="nameCardsSystem" class="name-cards-system">
+                <div class="cards-header">
+                    <h3>🃏 بطاقات الأسماء</h3>
+                    <p>اختيار الطالب المحظوظ</p>
                 </div>
+                <div id="nameCardsGrid" class="cards-grid name-cards"></div>
+                <div id="nameSelectionAnimation" class="selection-animation"></div>
             </div>
             
-            <!-- نظام البطاقات التفاعلي (للأعداد الكبيرة) -->
-            <div id="cardsSystem" class="cards-system" style="display: none;">
+            <!-- نظام بطاقات المهام -->
+            <div id="taskCardsSystem" class="task-cards-system" style="display: none;">
                 <div class="cards-header">
-                    <h3>🎯 اختيار الطالب بنظام البطاقات</h3>
-                    <p>انقر على زر البدء لاختيار طالب عشوائياً</p>
+                    <h3>🎯 بطاقات المهام</h3>
+                    <p>اختيار المهمة المثيرة</p>
                 </div>
-                <div id="cardsGrid" class="cards-grid"></div>
-                <div id="selectionAnimation" class="selection-animation"></div>
+                <div id="taskCardsGrid" class="cards-grid task-cards"></div>
+                <div id="taskSelectionAnimation" class="selection-animation"></div>
+            </div>
+            
+            <!-- عرض النتيجة النهائية -->
+            <div id="finalResult" class="final-result" style="display: none;">
+                <div class="result-container">
+                    <h3>🎉 النتيجة النهائية</h3>
+                    <div id="selectedPair" class="selected-pair"></div>
+                    <div class="result-actions">
+                        <button id="nextRoundBtn" class="next-round-btn">
+                            🔄 جولة جديدة
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1981,17 +2146,13 @@
             <div class="control-panel">
                 <button class="spin-button" id="spinButton" disabled>
                     <i class="fas fa-play"></i>
-                    <span id="spinButtonText">ابدأ الاختيار العشوائي</span>
+                    <span id="spinButtonText">🎴 ابدأ اختيار البطاقات</span>
                 </button>
 
                 <div class="action-buttons">
                     <button class="action-btn reset" id="resetButton" disabled>
                         <i class="fas fa-redo"></i>
                         إعادة تعيين
-                    </button>
-                    <button class="action-btn switch-system" id="switchSystemBtn" disabled>
-                        <i class="fas fa-exchange-alt"></i>
-                        <span id="switchSystemText">تبديل للبطاقات</span>
                     </button>
                     <button class="action-btn remove" id="removeButton" disabled>
                         <i class="fas fa-user-minus"></i>
@@ -2087,14 +2248,30 @@
         let spinSpeed = 0;
         let students = [];
         
-        // متغيرات نظام البطاقات
-        let useCardsSystem = false;
-        let cardsSelectionActive = false;
-        let cardsEliminationSpeed = 100;
-        let remainingCards = [];
+        // متغيرات نظام البطاقات المزدوج
+        let currentStep = 'names'; // 'names', 'tasks', 'complete'
+        let selectedStudentName = '';
+        let selectedTask = null;
+        let isSelectionActive = false;
         
-        // عتبة التبديل لنظام البطاقات (15 طالب أو أكثر)
-        const CARDS_THRESHOLD = 15;
+        // بيانات مهام البطاقات الجديدة
+        const smartTaskCards = [
+            { icon: '📚', title: 'قراءة نص', description: 'اقرأ نصاً من الكتاب بصوت واضح' },
+            { icon: '✍️', title: 'كتابة إبداعية', description: 'اكتب قصة قصيرة في دقيقتين' },
+            { icon: '🧮', title: 'حل مسألة', description: 'حل مسألة رياضية على السبورة' },
+            { icon: '🎭', title: 'تمثيل', description: 'مثل شخصية تاريخية لمدة دقيقة' },
+            { icon: '🎨', title: 'رسم سريع', description: 'ارسم موضوع الدرس في 3 دقائق' },
+            { icon: '🗣️', title: 'خطابة', description: 'ألق خطبة قصيرة عن موضوع اليوم' },
+            { icon: '🎯', title: 'سؤال صعب', description: 'أجب عن سؤال تحدي من المعلم' },
+            { icon: '🤝', title: 'عمل جماعي', description: 'اختر فريق وأنجز مهمة جماعية' },
+            { icon: '🔬', title: 'تجربة', description: 'اشرح تجربة علمية بسيطة' },
+            { icon: '🎼', title: 'إنشاد', description: 'أنشد أنشودة تعليمية' },
+            { icon: '💡', title: 'فكرة إبداعية', description: 'اقترح حلاً إبداعياً لمشكلة' },
+            { icon: '📝', title: 'ملخص سريع', description: 'لخص الدرس في 5 نقاط' },
+            { icon: '🎪', title: 'عرض تقديمي', description: 'قدم عرضاً قصيراً عن موضوع' },
+            { icon: '🧩', title: 'حل لغز', description: 'حل لغزاً تعليمياً' },
+            { icon: '🏃', title: 'نشاط حركي', description: 'قم بنشاط تعليمي حركي' }
+        ];
 
         // متغيرات عجلة المهام
         let taskWheelCanvas, taskWheelCtx;
@@ -2604,12 +2781,8 @@
                 selectedStudents = [];
                 currentSelectedName = '';
                 
-                // تحديد النظام المناسب حسب عدد الطلاب
-                if (shouldUseCardsSystem()) {
-                    switchToCardsSystem();
-                } else {
-                    switchToWheelSystem();
-                }
+                // تهيئة نظام البطاقات الجديد
+                initializeCardsSystem();
                 
                 updateUI();
                 showWelcomeMessage();
@@ -2638,20 +2811,22 @@
         function updateUI() {
             const hasStudents = availableStudents.length > 0;
             
-            document.getElementById('spinButton').disabled = !hasStudents || isSpinning;
-            document.getElementById('removeButton').disabled = !currentSelectedName || isSpinning;
-            document.getElementById('honorButton').disabled = !currentSelectedName || isSpinning;
+            document.getElementById('spinButton').disabled = !hasStudents || isSpinning || isSelectionActive;
+            document.getElementById('removeButton').disabled = !currentSelectedName || isSpinning || isSelectionActive;
+            document.getElementById('honorButton').disabled = !currentSelectedName || isSpinning || isSelectionActive;
             document.getElementById('resetButton').disabled = currentStudents.length === 0;
-            document.getElementById('switchSystemBtn').disabled = !hasStudents || isSpinning || cardsSelectionActive;
             
-            // تحديث نص زر الاختيار حسب النظام
+            // تحديث نص زر الاختيار حسب المرحلة
             const spinButtonText = document.getElementById('spinButtonText');
             if (spinButtonText) {
-                spinButtonText.textContent = useCardsSystem ? 'ابدأ اختيار البطاقة' : 'ابدأ دوران العجلة';
+                if (currentStep === 'names') {
+                    spinButtonText.textContent = '🎴 ابدأ اختيار البطاقات';
+                } else if (currentStep === 'tasks') {
+                    spinButtonText.textContent = '🎯 جاري اختيار المهمة...';
+                } else {
+                    spinButtonText.textContent = '✅ تم الاختيار بنجاح!';
+                }
             }
-            
-            // تحديث نص زر التبديل
-            updateSwitchButtonText();
             
             // تحديث حالة أزرار لوحة الشرف
             const hasHonors = honoredStudents.length > 0;
@@ -2669,31 +2844,21 @@
         // عرض رسالة الترحيب
         // ===========================================
         function showWelcomeMessage() {
-            const honoredCount = honoredStudents.length;
-            const systemType = useCardsSystem ? 'البطاقات التفاعلية' : 'العجلة الكلاسيكية';
+            const systemType = 'بطاقات الأسماء الذكية';
             
-            let message = `🎯 الصف محدد ونحن جاهزون!<br>${availableStudents.length} طالب متاح للاختيار`;
+            let message = `� الصف محدد ونحن جاهزون!<br>${availableStudents.length} طالب متاح للاختيار`;
             message += `<br>🎮 النظام المستخدم: ${systemType}`;
             
-            if (honoredCount > 0) {
-                message += `<br>🏆 ${honoredCount} طالب مُكرم في لوحة الشرف`;
+            if (honoredStudents.length > 0) {
+                message += `<br>🏆 ${honoredStudents.length} طالب مُكرم في لوحة الشرف`;
             }
             
-            if (useCardsSystem) {
-                // رسالة خاصة بنظام البطاقات
-                document.getElementById('selectionAnimation').innerHTML = `
-                    <div class="welcome-message">
-                        ${message}
-                    </div>
-                `;
-            } else {
-                // رسالة العجلة التقليدية
-                document.getElementById('rollingAnimation').innerHTML = `
-                    <div class="welcome-message">
-                        ${message}
-                    </div>
-                `;
-            }
+            // عرض الرسالة في نظام البطاقات
+            document.getElementById('nameSelectionAnimation').innerHTML = `
+                <div class="welcome-message">
+                    ${message}
+                </div>
+            `;
         }
 
         // ===========================================
@@ -2794,24 +2959,9 @@
         function spinWheel() {
             if (isSpinning || availableStudents.length === 0) return;
             
-            // تحديد النظام المناسب
-            if (useCardsSystem) {
-                startCardsSelection();
-                return;
-            }
-            
-            // العجلة التقليدية
-            isSpinning = true;
-            document.getElementById('spinButton').classList.add('spinning');
-            document.getElementById('spinButton').innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الاختيار...';
-            
-            // تشغيل أصوات الدوران
-            playSound('wheelSpin', 0, 'wheel');
-            playSound('brainActivate', 200, 'wheel');
-            
-            // بدء صوت الدوران المستمر
-            if (audioSettings.wheelSounds) {
-                sounds.wheelSpinning.volume(audioSettings.volume);
+            // بدء نظام البطاقات المزدوج الجديد
+            startDualCardSelection();
+        }
                 sounds.wheelSpinning.play();
             }
             
@@ -3437,32 +3587,23 @@
         }
 
         // ===========================================
-        // وظائف نظام البطاقات التفاعلي
+        // نظام البطاقات المزدوج الجديد
         // ===========================================
         
-        function shouldUseCardsSystem() {
-            return availableStudents.length >= CARDS_THRESHOLD;
+        function initializeCardsSystem() {
+            currentStep = 'names';
+            selectedStudentName = '';
+            selectedTask = null;
+            createNameCards();
+            document.getElementById('nameCardsSystem').style.display = 'block';
+            document.getElementById('taskCardsSystem').style.display = 'none';
+            document.getElementById('finalResult').style.display = 'none';
         }
         
-        function switchToCardsSystem() {
-            useCardsSystem = true;
-            document.getElementById('traditionalWheel').style.display = 'none';
-            document.getElementById('cardsSystem').style.display = 'block';
-            createStudentCards();
-            console.log('🎴 تم التبديل لنظام البطاقات التفاعلي');
-        }
-        
-        function switchToWheelSystem() {
-            useCardsSystem = false;
-            document.getElementById('traditionalWheel').style.display = 'block';
-            document.getElementById('cardsSystem').style.display = 'none';
-            drawWheel();
-            console.log('🎡 تم التبديل للعجلة التقليدية');
-        }
-        
-        function createStudentCards() {
-            const cardsGrid = document.getElementById('cardsGrid');
-            cardsGrid.innerHTML = '';
+        function createNameCards() {
+            const grid = document.getElementById('nameCardsGrid');
+            grid.innerHTML = '';
+            grid.className = 'cards-grid name-cards';
             
             availableStudents.forEach((student, index) => {
                 const card = document.createElement('div');
@@ -3475,122 +3616,303 @@
                     <div class="card-name">${student}</div>
                 `;
                 
-                cardsGrid.appendChild(card);
+                grid.appendChild(card);
             });
             
-            // إضافة تأثير دخول متدرج
-            const cards = cardsGrid.querySelectorAll('.student-card');
+            // تأثير دخول متدرج
+            const cards = grid.querySelectorAll('.student-card');
             cards.forEach((card, index) => {
                 card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
+                card.style.transform = 'translateY(20px) rotateY(90deg)';
                 setTimeout(() => {
-                    card.style.transition = 'all 0.5s ease-out';
+                    card.style.transition = 'all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
                     card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, index * 50);
+                    card.style.transform = 'translateY(0) rotateY(0deg)';
+                }, index * 80);
             });
         }
         
-        function startCardsSelection() {
-            if (cardsSelectionActive) return;
+        function createTaskCards() {
+            const grid = document.getElementById('taskCardsGrid');
+            grid.innerHTML = '';
+            grid.className = 'cards-grid task-cards';
             
-            cardsSelectionActive = true;
+            smartTaskCards.forEach((task, index) => {
+                const card = document.createElement('div');
+                card.className = 'task-card';
+                card.setAttribute('data-task-index', index);
+                
+                card.innerHTML = `
+                    <div class="task-icon">${task.icon}</div>
+                    <div class="task-title">${task.title}</div>
+                    <div class="task-description">${task.description}</div>
+                `;
+                
+                grid.appendChild(card);
+            });
+            
+            // تأثير دخول متدرج للمهام
+            const cards = grid.querySelectorAll('.task-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px) rotateX(90deg)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0) rotateX(0deg)';
+                }, index * 60);
+            });
+        }
+        
+        function startDualCardSelection() {
+            if (isSelectionActive || availableStudents.length === 0) return;
+            
+            isSelectionActive = true;
             isSpinning = true;
             updateUI();
             
-            // إعداد البطاقات للاختيار
-            const cards = document.querySelectorAll('.student-card');
-            remainingCards = Array.from(cards);
+            // تحديث نص الزر
+            const spinBtn = document.getElementById('spinButton');
+            spinBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري اختيار الطالب...';
             
-            // تشغيل الأصوات
+            // تشغيل أصوات البداية
             playSound('startTimer');
-            playSound('wisdomChime', 300);
+            playSound('cardShuffle', 200);
             
-            // إزالة رسالة سابقة
-            document.getElementById('selectionAnimation').innerHTML = '';
+            // بدء اختيار الطالب
+            startNameCardSelection();
+        }
+        
+        function startNameCardSelection() {
+            const nameCards = document.querySelectorAll('#nameCardsGrid .student-card');
+            let remainingNameCards = Array.from(nameCards);
+            
+            // إضافة تأثير الخلط
+            nameCards.forEach(card => {
+                card.classList.add('shuffling');
+            });
+            
+            playSound('cardShuffle');
+            
+            // عملية الإقصاء التدريجي
+            function eliminateNameCard() {
+                if (remainingNameCards.length <= 1) {
+                    // انتهاء اختيار الطالب
+                    const winnerCard = remainingNameCards[0];
+                    selectedStudentName = winnerCard.getAttribute('data-student');
+                    
+                    // إزالة تأثيرات الخلط
+                    nameCards.forEach(card => {
+                        card.classList.remove('shuffling');
+                    });
+                    
+                    // تأثير الفوز
+                    winnerCard.classList.add('selected');
+                    
+                    // أصوات الفوز
+                    playSound('winBlockbusters');
+                    playSound('royalFanfare', 300);
+                    
+                    // عرض رسالة النجاح
+                    document.getElementById('nameSelectionAnimation').innerHTML = `
+                        <div class="selection-message">
+                            🎉 تم اختيار: ${selectedStudentName}
+                        </div>
+                    `;
+                    
+                    // الانتقال لاختيار المهمة
+                    setTimeout(() => {
+                        transitionToTaskSelection();
+                    }, 2500);
+                    
+                    return;
+                }
+                
+                // اختيار بطاقة عشوائية للإقصاء
+                const randomIndex = Math.floor(Math.random() * remainingNameCards.length);
+                const cardToEliminate = remainingNameCards[randomIndex];
+                
+                // تأثير الإضاءة قبل الإقصاء
+                cardToEliminate.classList.add('highlighted');
+                playSound('tick');
+                
+                setTimeout(() => {
+                    cardToEliminate.classList.remove('highlighted');
+                    cardToEliminate.classList.add('eliminated');
+                    remainingNameCards.splice(randomIndex, 1);
+                    
+                    // تسريع الإقصاء تدريجياً
+                    const nextSpeed = Math.max(80, 200 - (nameCards.length - remainingNameCards.length) * 10);
+                    setTimeout(eliminateNameCard, nextSpeed);
+                }, 400);
+            }
             
             // بدء عملية الإقصاء
-            eliminateCardsSequentially();
+            setTimeout(eliminateNameCard, 1000);
         }
         
-        function eliminateCardsSequentially() {
-            if (remainingCards.length <= 1) {
-                // انتهاء الاختيار
-                finishCardsSelection();
-                return;
-            }
+        function transitionToTaskSelection() {
+            currentStep = 'tasks';
             
-            // اختيار بطاقة عشوائية للإقصاء
-            const randomIndex = Math.floor(Math.random() * remainingCards.length);
-            const cardToEliminate = remainingCards[randomIndex];
+            // إخفاء بطاقات الأسماء وإظهار بطاقات المهام
+            document.getElementById('nameCardsSystem').style.display = 'none';
+            document.getElementById('taskCardsSystem').style.display = 'block';
             
-            // إضاءة البطاقة قبل الإقصاء
-            cardToEliminate.classList.add('highlighted');
-            playSound('tick');
+            // تحديث نص الزر
+            const spinBtn = document.getElementById('spinButton');
+            spinBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري اختيار المهمة...';
             
+            // إنشاء بطاقات المهام
+            createTaskCards();
+            
+            // تشغيل أصوات الانتقال
+            playSound('menuOpen');
+            playSound('wisdomChime', 400);
+            
+            // بدء اختيار المهمة بعد فترة
             setTimeout(() => {
-                // إقصاء البطاقة
-                cardToEliminate.classList.remove('highlighted');
-                cardToEliminate.classList.add('eliminated');
-                remainingCards.splice(randomIndex, 1);
-                
-                // تحديد سرعة الإقصاء التالي
-                const newSpeed = Math.max(50, cardsEliminationSpeed - (remainingCards.length * 2));
-                
-                // الانتقال للبطاقة التالية
-                setTimeout(() => {
-                    eliminateCardsSequentially();
-                }, newSpeed);
-                
-            }, 300);
+                startTaskCardSelection();
+            }, 1500);
         }
         
-        function finishCardsSelection() {
-            if (remainingCards.length === 0) return;
+        function startTaskCardSelection() {
+            const taskCards = document.querySelectorAll('#taskCardsGrid .task-card');
+            let remainingTaskCards = Array.from(taskCards);
             
-            const winnerCard = remainingCards[0];
-            const studentName = winnerCard.getAttribute('data-student');
+            // إضافة تأثير الخلط
+            taskCards.forEach(card => {
+                card.classList.add('shuffling');
+            });
             
-            // تأثيرات الفوز
-            winnerCard.classList.add('selected');
-            currentSelectedName = studentName;
+            playSound('cardShuffle');
             
-            // إزالة الطالب من القائمة المتاحة
-            const studentIndex = availableStudents.indexOf(studentName);
-            if (studentIndex > -1) {
-                availableStudents.splice(studentIndex, 1);
-                selectedStudents.push(studentName);
+            function eliminateTaskCard() {
+                if (remainingTaskCards.length <= 1) {
+                    // انتهاء اختيار المهمة
+                    const winnerCard = remainingTaskCards[0];
+                    const taskIndex = parseInt(winnerCard.getAttribute('data-task-index'));
+                    selectedTask = smartTaskCards[taskIndex];
+                    
+                    // إزالة تأثيرات الخلط
+                    taskCards.forEach(card => {
+                        card.classList.remove('shuffling');
+                    });
+                    
+                    // تأثير الفوز
+                    winnerCard.classList.add('selected');
+                    
+                    // أصوات الفوز النهائية
+                    playSound('perfectScore');
+                    playSound('crownCeremony', 500);
+                    
+                    // عرض رسالة النجاح
+                    document.getElementById('taskSelectionAnimation').innerHTML = `
+                        <div class="selection-message">
+                            🎯 تم اختيار: ${selectedTask.title}
+                        </div>
+                    `;
+                    
+                    // إزالة الطالب من القائمة المتاحة
+                    const studentIndex = availableStudents.indexOf(selectedStudentName);
+                    if (studentIndex > -1) {
+                        availableStudents.splice(studentIndex, 1);
+                        selectedStudents.push(selectedStudentName);
+                        currentSelectedName = selectedStudentName;
+                    }
+                    
+                    // الانتقال للنتيجة النهائية
+                    setTimeout(() => {
+                        showFinalResult();
+                    }, 2500);
+                    
+                    return;
+                }
+                
+                // اختيار بطاقة مهمة عشوائية للإقصاء
+                const randomIndex = Math.floor(Math.random() * remainingTaskCards.length);
+                const cardToEliminate = remainingTaskCards[randomIndex];
+                
+                cardToEliminate.classList.add('highlighted');
+                playSound('tick');
+                
+                setTimeout(() => {
+                    cardToEliminate.classList.remove('highlighted');
+                    cardToEliminate.classList.add('eliminated');
+                    remainingTaskCards.splice(randomIndex, 1);
+                    
+                    const nextSpeed = Math.max(100, 250 - (taskCards.length - remainingTaskCards.length) * 15);
+                    setTimeout(eliminateTaskCard, nextSpeed);
+                }, 500);
             }
             
-            // تشغيل أصوات الفوز
-            playSound('winBlockbusters');
-            playSound('royalFanfare', 500);
-            playSound('perfectScore', 1000);
+            setTimeout(eliminateTaskCard, 800);
+        }
+        
+        function showFinalResult() {
+            currentStep = 'complete';
             
-            // عرض رسالة الفوز
-            const selectionAnimation = document.getElementById('selectionAnimation');
-            selectionAnimation.innerHTML = `
-                <div class="selection-message">
-                    🎉 تم اختيار: ${studentName}
+            // إخفاء بطاقات المهام وإظهار النتيجة
+            document.getElementById('taskCardsSystem').style.display = 'none';
+            document.getElementById('finalResult').style.display = 'block';
+            
+            // عرض النتيجة النهائية
+            document.getElementById('selectedPair').innerHTML = `
+                <div class="selected-student">
+                    <h4>👤 الطالب المختار</h4>
+                    <div class="student-info">
+                        <div class="large-name">${selectedStudentName}</div>
+                    </div>
+                </div>
+                <div class="selected-task">
+                    <h4>🎯 المهمة المطلوبة</h4>
+                    <div class="task-info">
+                        <div class="task-icon-large">${selectedTask.icon}</div>
+                        <div class="task-title-large">${selectedTask.title}</div>
+                        <div class="task-desc-large">${selectedTask.description}</div>
+                    </div>
                 </div>
             `;
             
-            // إنهاء حالة الاختيار
-            setTimeout(() => {
-                cardsSelectionActive = false;
-                isSpinning = false;
-                updateUI();
-                
-                // إعادة إنشاء البطاقات للجولة التالية
-                setTimeout(() => {
-                    if (availableStudents.length > 0) {
-                        createStudentCards();
-                    }
-                }, 2000);
-                
-            }, 3000);
+            // تحديث نص الزر
+            const spinBtn = document.getElementById('spinButton');
+            spinBtn.innerHTML = '<i class="fas fa-check"></i> تم الاختيار بنجاح!';
             
-            console.log(`🏆 تم اختيار: ${studentName} بنظام البطاقات`);
+            // إنهاء حالة الاختيار
+            isSelectionActive = false;
+            isSpinning = false;
+            updateUI();
+            
+            // تشغيل احتفالية نهائية
+            playSound('achievement');
+            playSound('crowdCheer', 800);
+            
+            console.log(`🎴 اختيار مكتمل: ${selectedStudentName} - ${selectedTask.title}`);
+        }
+        
+        function startNewRound() {
+            if (availableStudents.length === 0) {
+                showToast('❌ لا يوجد طلاب متاحون لجولة جديدة', 'error');
+                return;
+            }
+            
+            // إعادة تعيين المتغيرات
+            currentStep = 'names';
+            selectedStudentName = '';
+            selectedTask = null;
+            isSelectionActive = false;
+            isSpinning = false;
+            
+            // إعادة إظهار نظام البطاقات
+            initializeCardsSystem();
+            
+            // تحديث نص الزر
+            const spinBtn = document.getElementById('spinButton');
+            spinBtn.innerHTML = '<i class="fas fa-play"></i> <span id="spinButtonText">� ابدأ اختيار البطاقات</span>';
+            
+            updateUI();
+            playSound('menuOpen');
+            
+            console.log('🔄 بدء جولة جديدة');
         }
 
         // ===========================================
@@ -3783,8 +4105,10 @@
             document.getElementById('removeButton').addEventListener('click', removeStudent);
             document.getElementById('honorButton').addEventListener('click', addToHonorList);
             document.getElementById('resetButton').addEventListener('click', resetAllStudents);
-            document.getElementById('switchSystemBtn').addEventListener('click', manualSwitchSystem);
             document.getElementById('soundToggle').addEventListener('click', toggleSound);
+            
+            // ربط حدث الجولة الجديدة
+            document.getElementById('nextRoundBtn').addEventListener('click', startNewRound);
             
             // ربط أحداث الأزرار العلوية
             document.getElementById('settingsBtn').addEventListener('click', openSettings);
@@ -3841,10 +4165,10 @@
                 }
             }, 1000);
             
-            console.log('🎡 تم تهيئة عجلة الأسماء الذكية بنجاح!');
+            console.log('� تم تهيئة نظام بطاقات الأسماء الذكية بنجاح!');
             console.log('🏆 لوحة الشرف متاحة وجاهزة للاستخدام');
             console.log('🎵 نظام الأصوات المتكامل مفعل');
-            console.log('🎯 نظام البطاقات التعليمية جاهز (30 رقم + 5 ألوان)');
+            console.log('🎯 نظام البطاقات المزدوج جاهز (أسماء + مهام)');
             console.log('✨ جميع الميزات تعمل بشكل مثالي!');
         });
 
