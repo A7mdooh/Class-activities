@@ -385,31 +385,56 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 30px;
+            justify-content: center;
+            gap: 25px;
             background: var(--surface);
             backdrop-filter: blur(15px);
-            padding: 40px;
+            padding: 35px 40px;
             border-radius: 25px;
             border: 2px solid rgba(255, 255, 255, 0.2);
             box-shadow: var(--shadow-medium);
             width: 100%;
-            max-width: 600px;
+            max-width: 800px;
+            margin: 20px auto;
+            position: relative;
+        }
+
+        .control-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.1) 0%, 
+                transparent 50%, 
+                rgba(255, 255, 255, 0.05) 100%);
+            border-radius: 25px;
+            pointer-events: none;
         }
 
         .spin-button {
-            padding: 20px 50px;
-            font-size: 1.4rem;
+            padding: 25px 60px;
+            font-size: 1.2em;
             font-weight: 700;
             background: linear-gradient(45deg, var(--primary), var(--primary-light));
             color: white;
             border: none;
-            border-radius: 25px;
+            border-radius: 30px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: var(--shadow-medium);
+            box-shadow: 
+                var(--shadow-medium),
+                0 0 20px rgba(0, 121, 107, 0.3);
             position: relative;
             overflow: hidden;
-            min-width: 250px;
+            min-width: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin: 0 auto;
         }
 
         .spin-button::before {
@@ -574,20 +599,39 @@
             gap: 15px;
             flex-wrap: wrap;
             justify-content: center;
-            margin-top: 20px;
+            align-items: center;
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            width: 100%;
+            max-width: 700px;
         }
 
         .action-btn {
-            padding: 12px 25px;
+            padding: 14px 28px;
             border: none;
-            border-radius: 12px;
+            border-radius: 15px;
             font-family: 'Cairo', sans-serif;
             font-weight: 600;
+            font-size: 0.95em;
             cursor: pointer;
             transition: all var(--transition-normal);
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            gap: 10px;
+            min-width: 140px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
 
         .action-btn.reset {
@@ -1809,6 +1853,21 @@
             .action-buttons {
                 flex-direction: column;
                 align-items: center;
+                gap: 12px;
+                padding: 20px;
+                max-width: 100%;
+            }
+
+            .action-btn {
+                min-width: 200px;
+                width: 100%;
+                max-width: 280px;
+            }
+
+            .control-panel {
+                margin: 10px;
+                padding: 25px 20px;
+                max-width: 95%;
             }
         }
 
