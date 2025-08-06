@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>برج الأسماء - لعبة تعليمية ثلاثية الأبعاد</title>
+  <title>برج الأسماء - مسابقة تنافسية تفاعلية</title>
   
   <!-- الخطوط والأيقونات -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
@@ -463,66 +463,77 @@
       align-items: start;
     }
 
-    /* البرج ثلاثي الأبعاد */
+    /* ========================================
+       البرج والدرجات الاحترافية
+    ======================================== */
     .tower-container {
-      perspective: 1500px;
+      perspective: 2000px;
       display: flex;
       flex-direction: column;
       align-items: center;
       position: relative;
-      min-height: 600px;
+      min-height: 700px;
+      transform-style: preserve-3d;
     }
 
     .tower {
       display: flex;
       flex-direction: column-reverse;
       align-items: center;
-      gap: 8px;
+      gap: 15px;
       position: relative;
       transform-style: preserve-3d;
-      animation: towerFloat 8s ease-in-out infinite;
+      animation: towerFloat 10s ease-in-out infinite;
     }
 
     .treasure {
-      font-size: 4rem;
-      margin-bottom: var(--spacing-lg);
+      font-size: 5rem;
+      margin-bottom: var(--spacing-xl);
       animation: treasureGlow 3s ease-in-out infinite alternate;
-      filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
+      filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.8));
       z-index: 100;
+      transform-style: preserve-3d;
     }
 
     @keyframes treasureGlow {
       0% { 
-        transform: scale(1) rotate(0deg); 
+        transform: scale(1) rotate(0deg) rotateY(0deg); 
         filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
       }
       100% { 
-        transform: scale(1.1) rotate(5deg); 
-        filter: drop-shadow(0 0 40px rgba(255, 215, 0, 1));
+        transform: scale(1.2) rotate(10deg) rotateY(360deg); 
+        filter: drop-shadow(0 0 50px rgba(255, 215, 0, 1));
       }
     }
 
+    /* درجات ثلاثية الأبعاد مع أسماء الطلاب */
     .tower-step {
-      width: 280px;
-      height: 60px;
+      width: 320px;
+      height: 80px;
       background: linear-gradient(135deg, 
-        rgba(255,255,255,0.2) 0%, 
+        rgba(255,255,255,0.25) 0%, 
+        rgba(255,255,255,0.1) 50%,
         rgba(255,255,255,0.05) 100%);
-      backdrop-filter: blur(15px);
-      border: 2px solid rgba(255,255,255,0.2);
-      border-radius: var(--border-radius);
+      backdrop-filter: blur(20px);
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
-      font-weight: 700;
+      font-size: 1.4rem;
+      font-weight: 800;
       color: var(--text-light);
       cursor: pointer;
-      transition: all var(--elastic-timing);
+      transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       position: relative;
       overflow: hidden;
-      margin: 3px 0;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      margin: 5px 0;
+      box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.3),
+        inset 0 2px 5px rgba(255, 255, 255, 0.2),
+        0 0 20px rgba(0, 245, 255, 0.1);
+      transform-style: preserve-3d;
+      transform: rotateX(10deg) rotateY(5deg);
     }
 
     .tower-step::before {
@@ -532,65 +543,187 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: var(--tower-gradient);
+      background: conic-gradient(from 0deg at 50% 50%, 
+        rgba(0, 245, 255, 0.1) 0deg,
+        rgba(255, 7, 58, 0.1) 90deg,
+        rgba(255, 215, 0, 0.1) 180deg,
+        rgba(138, 43, 226, 0.1) 270deg,
+        rgba(0, 245, 255, 0.1) 360deg);
       opacity: 0;
-      transition: opacity var(--transition-normal);
-      border-radius: calc(var(--border-radius) - 2px);
-      z-index: -1;
+      transition: all 0.6s ease;
+      border-radius: 17px;
+      animation: stepAura 8s linear infinite;
+    }
+
+    .tower-step::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, transparent 70%);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: all 0.4s ease;
+      z-index: 2;
+    }
+
+    @keyframes stepAura {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
     .tower-step:hover {
-      transform: translateY(-10px) scale(1.05) rotateX(10deg);
+      transform: translateY(-15px) scale(1.08) rotateX(5deg) rotateY(10deg);
       border-color: var(--neon-cyan);
       color: var(--neon-cyan);
       box-shadow: 
-        0 20px 50px rgba(0, 245, 255, 0.3),
-        0 0 30px var(--neon-cyan);
+        0 25px 60px rgba(0, 245, 255, 0.4),
+        0 0 50px var(--neon-cyan),
+        inset 0 2px 10px rgba(255, 255, 255, 0.3);
+      text-shadow: 0 0 20px currentColor;
+    }
+
+    .tower-step:hover::before {
+      opacity: 1;
+    }
+
+    .tower-step:hover::after {
+      width: 100px;
+      height: 100px;
+      opacity: 0.3;
+    }
+
+    /* حالات الدرجات */
+    .tower-step.active {
+      background: linear-gradient(135deg, 
+        rgba(0, 245, 255, 0.3) 0%, 
+        rgba(0, 245, 255, 0.1) 100%);
+      border-color: var(--neon-cyan);
+      color: var(--neon-cyan);
+      animation: stepPulse 2s ease-in-out infinite, stepAura 8s linear infinite;
+      box-shadow: 
+        0 20px 50px rgba(0, 245, 255, 0.5),
+        0 0 40px var(--neon-cyan),
+        inset 0 2px 10px rgba(255, 255, 255, 0.2);
+      text-shadow: 0 0 15px currentColor;
+      transform: translateY(-10px) scale(1.05) rotateX(5deg);
     }
 
     .tower-step.correct {
       background: var(--success-gradient);
       border-color: var(--success-color);
       color: white;
-      animation: stepSuccess 0.8s var(--elastic-timing);
-      box-shadow: 0 0 40px rgba(17, 153, 142, 0.6);
+      animation: stepSuccess 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 
+        0 25px 60px rgba(17, 153, 142, 0.6),
+        0 0 50px var(--success-color),
+        inset 0 2px 15px rgba(255, 255, 255, 0.3);
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+      transform: scale(1.1) rotateX(0deg) rotateY(0deg);
     }
 
     .tower-step.correct::before {
-      opacity: 1;
+      opacity: 0;
     }
 
     .tower-step.falling {
-      animation: stepFall 1.5s ease-in forwards;
-      z-index: 1;
+      animation: stepFall 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+      z-index: 10;
     }
 
-    @keyframes towerFloat {
-      0%, 100% { transform: translateY(0) rotateX(0deg); }
-      50% { transform: translateY(-15px) rotateX(5deg); }
+    .tower-step.eliminated {
+      background: var(--danger-gradient);
+      border-color: var(--danger-color);
+      color: white;
+      animation: stepEliminate 1.5s ease-out forwards;
+      transform: scale(0.8) rotateX(90deg);
+      opacity: 0.3;
+    }
+
+    @keyframes stepPulse {
+      0%, 100% { 
+        box-shadow: 
+          0 20px 50px rgba(0, 245, 255, 0.3),
+          0 0 30px var(--neon-cyan);
+      }
+      50% { 
+        box-shadow: 
+          0 25px 60px rgba(0, 245, 255, 0.7),
+          0 0 60px var(--neon-cyan);
+      }
     }
 
     @keyframes stepSuccess {
-      0% { transform: scale(1); }
-      50% { 
-        transform: scale(1.2) rotateZ(10deg);
-        box-shadow: 0 0 50px rgba(17, 153, 142, 0.8);
+      0% { 
+        transform: scale(1.05) rotateX(5deg);
       }
-      100% { transform: scale(1) rotateZ(0deg); }
+      25% { 
+        transform: scale(1.3) rotateX(0deg) rotateY(15deg);
+        box-shadow: 
+          0 30px 80px rgba(17, 153, 142, 0.8),
+          0 0 80px var(--success-color);
+      }
+      50% { 
+        transform: scale(1.2) rotateX(-5deg) rotateY(-10deg);
+      }
+      75% { 
+        transform: scale(1.15) rotateX(3deg) rotateY(5deg);
+      }
+      100% { 
+        transform: scale(1.1) rotateX(0deg) rotateY(0deg);
+      }
     }
 
     @keyframes stepFall {
       0% { 
-        transform: translateY(0) rotateX(0deg) rotateZ(0deg);
+        transform: translateY(-10px) scale(1.05) rotateX(5deg) rotateZ(0deg);
         opacity: 1;
       }
+      20% {
+        transform: translateY(-20px) scale(1.1) rotateX(15deg) rotateZ(10deg);
+        opacity: 0.9;
+      }
       100% { 
-        transform: translateY(800px) rotateX(720deg) rotateZ(720deg);
+        transform: translateY(1000px) scale(0.3) rotateX(720deg) rotateZ(1080deg);
         opacity: 0;
       }
     }
 
-    /* لوحة التحكم */
+    @keyframes stepEliminate {
+      0% {
+        transform: scale(1) rotateX(0deg);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(0.9) rotateX(45deg);
+        opacity: 0.5;
+      }
+      100% {
+        transform: scale(0.8) rotateX(90deg);
+        opacity: 0.3;
+      }
+    }
+
+    @keyframes towerFloat {
+      0%, 100% { 
+        transform: translateY(0) rotateX(0deg) rotateY(0deg); 
+      }
+      25% { 
+        transform: translateY(-10px) rotateX(2deg) rotateY(3deg); 
+      }
+      50% { 
+        transform: translateY(-20px) rotateX(0deg) rotateY(-2deg); 
+      }
+      75% { 
+        transform: translateY(-10px) rotateX(-2deg) rotateY(1deg); 
+      }
+    }
+
+    /* ========================================
+       لوحة التحكم والتفاعل
+    ======================================== */
     .control-panel {
       background: linear-gradient(135deg, 
         rgba(255,255,255,0.15) 0%, 
@@ -603,6 +736,7 @@
       top: var(--spacing-lg);
     }
 
+    /* معلومات الطالب الحالي */
     .current-player {
       text-align: center;
       margin-bottom: var(--spacing-xl);
@@ -611,24 +745,45 @@
     }
 
     .player-avatar {
-      width: 100px;
-      height: 100px;
+      width: 120px;
+      height: 120px;
       border-radius: 50%;
       background: var(--success-gradient);
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 auto var(--spacing-md);
-      font-size: 2.5rem;
+      font-size: 3rem;
       color: white;
       font-weight: 800;
-      border: 4px solid rgba(255,255,255,0.3);
-      box-shadow: 0 0 40px rgba(17, 153, 142, 0.6);
+      border: 5px solid rgba(255,255,255,0.3);
+      box-shadow: 0 0 50px rgba(17, 153, 142, 0.6);
       animation: avatarPulse 3s ease-in-out infinite;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .player-avatar::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(from 0deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.2), 
+        transparent);
+      animation: avatarGlow 4s linear infinite;
+    }
+
+    @keyframes avatarGlow {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
     .player-name {
-      font-size: 1.8rem;
+      font-size: 2rem;
       font-weight: 700;
       background: var(--tower-gradient);
       background-clip: text;
@@ -636,96 +791,83 @@
       -webkit-text-fill-color: transparent;
       margin-bottom: var(--spacing-xs);
       font-family: 'Orbitron', 'Cairo', sans-serif;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
     }
 
     .player-status {
-      color: rgba(255,255,255,0.7);
-      font-size: 1.1rem;
+      color: rgba(255,255,255,0.8);
+      font-size: 1.2rem;
+      font-weight: 600;
     }
 
-    @keyframes avatarPulse {
+    /* رسائل التفاعل */
+    .interaction-message {
+      background: linear-gradient(135deg, 
+        rgba(0, 245, 255, 0.2) 0%, 
+        rgba(0, 245, 255, 0.05) 100%);
+      backdrop-filter: blur(15px);
+      border: 2px solid var(--neon-cyan);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-lg);
+      margin: var(--spacing-lg) 0;
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--neon-cyan);
+      animation: messagePulse 2s ease-in-out infinite;
+      box-shadow: 0 0 30px rgba(0, 245, 255, 0.3);
+      display: none;
+    }
+
+    .interaction-message.show {
+      display: block;
+      animation: messageSlideIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes messagePulse {
       0%, 100% { 
-        transform: scale(1);
-        box-shadow: 0 0 40px rgba(17, 153, 142, 0.6);
+        box-shadow: 0 0 20px rgba(0, 245, 255, 0.3);
+        border-color: var(--neon-cyan);
       }
       50% { 
-        transform: scale(1.05);
-        box-shadow: 0 0 60px rgba(17, 153, 142, 0.8);
+        box-shadow: 0 0 40px rgba(0, 245, 255, 0.6);
+        border-color: var(--neon-pink);
       }
     }
 
-    /* إحصائيات اللعبة */
-    .game-stats {
-      margin-bottom: var(--spacing-xl);
+    @keyframes messageSlideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
 
-    .stats-title {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--text-light);
-      margin-bottom: var(--spacing-md);
-      text-align: center;
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--spacing-sm);
-    }
-
-    .stat-item {
-      background: linear-gradient(135deg, 
-        rgba(255,255,255,0.1) 0%, 
-        rgba(255,255,255,0.02) 100%);
-      backdrop-filter: blur(10px);
-      padding: var(--spacing-md);
-      border-radius: var(--border-radius-small);
-      text-align: center;
-      border: 1px solid rgba(255,255,255,0.1);
-      transition: all var(--transition-normal);
-    }
-
-    .stat-item:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 25px rgba(255,255,255,0.1);
-    }
-
-    .stat-value {
-      font-size: 2rem;
-      font-weight: 800;
-      background: var(--tower-gradient);
-      background-clip: text;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      display: block;
-      font-family: 'Orbitron', 'Cairo', sans-serif;
-    }
-
-    .stat-label {
-      color: rgba(255,255,255,0.7);
-      font-size: 0.9rem;
-      margin-top: var(--spacing-xs);
-    }
-
-    /* أزرار التحكم */
+    /* أزرار التحكم المحدثة */
     .control-buttons {
       display: grid;
       gap: var(--spacing-sm);
+      margin-top: var(--spacing-lg);
     }
 
     .control-btn {
-      padding: 18px 25px;
+      padding: 20px 25px;
       border: none;
       border-radius: var(--border-radius);
-      font-size: 1.1rem;
-      font-weight: 600;
+      font-size: 1.2rem;
+      font-weight: 700;
       cursor: pointer;
       transition: all var(--elastic-timing);
       font-family: 'Cairo', sans-serif;
       position: relative;
       overflow: hidden;
       backdrop-filter: blur(10px);
-      border: 2px solid rgba(255,255,255,0.2);
+      border: 3px solid rgba(255,255,255,0.2);
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .control-btn::before {
@@ -737,46 +879,136 @@
       height: 100%;
       background: linear-gradient(90deg, 
         transparent, 
-        rgba(255,255,255,0.2), 
+        rgba(255,255,255,0.3), 
         transparent);
-      transition: left 0.5s ease;
+      transition: left 0.6s ease;
     }
 
     .control-btn:hover::before {
       left: 100%;
     }
 
-    .btn-primary {
+    .btn-success {
       background: var(--success-gradient);
       color: white;
-      box-shadow: 0 0 20px rgba(17, 153, 142, 0.4);
+      box-shadow: 0 0 25px rgba(17, 153, 142, 0.5);
+      border-color: var(--success-color);
     }
 
-    .btn-primary:hover {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 0 30px rgba(17, 153, 142, 0.6);
-    }
-
-    .btn-secondary {
-      background: var(--warning-gradient);
-      color: white;
-      box-shadow: 0 0 20px rgba(245, 87, 108, 0.4);
-    }
-
-    .btn-secondary:hover {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 0 30px rgba(245, 87, 108, 0.6);
+    .btn-success:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 0 40px rgba(17, 153, 142, 0.8);
     }
 
     .btn-danger {
       background: var(--danger-gradient);
       color: white;
-      box-shadow: 0 0 20px rgba(252, 70, 107, 0.4);
+      box-shadow: 0 0 25px rgba(252, 70, 107, 0.5);
+      border-color: var(--danger-color);
     }
 
     .btn-danger:hover {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 0 30px rgba(252, 70, 107, 0.6);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 0 40px rgba(252, 70, 107, 0.8);
+    }
+
+    .btn-primary {
+      background: var(--primary-gradient);
+      color: white;
+      box-shadow: 0 0 25px rgba(102, 126, 234, 0.5);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 0 40px rgba(102, 126, 234, 0.8);
+    }
+
+    .btn-secondary {
+      background: var(--warning-gradient);
+      color: white;
+      box-shadow: 0 0 25px rgba(245, 87, 108, 0.5);
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 0 40px rgba(245, 87, 108, 0.8);
+    }
+
+    /* نظام التصفيات */
+    .tournament-info {
+      background: linear-gradient(135deg, 
+        rgba(138, 43, 226, 0.2) 0%, 
+        rgba(138, 43, 226, 0.05) 100%);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(138, 43, 226, 0.3);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-lg);
+      margin-bottom: var(--spacing-lg);
+      text-align: center;
+    }
+
+    .tournament-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: linear-gradient(45deg, #8a2be2, #ff073a);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: var(--spacing-sm);
+      font-family: 'Orbitron', 'Cairo', sans-serif;
+    }
+
+    .tournament-round {
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.8);
+      font-weight: 600;
+    }
+
+    /* الطلاب المتبقون */
+    .remaining-students {
+      margin-top: var(--spacing-lg);
+    }
+
+    .remaining-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-light);
+      margin-bottom: var(--spacing-md);
+      text-align: center;
+    }
+
+    .remaining-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: var(--spacing-xs);
+    }
+
+    .remaining-student {
+      background: linear-gradient(135deg, 
+        rgba(255,255,255,0.15) 0%, 
+        rgba(255,255,255,0.05) 100%);
+      backdrop-filter: blur(10px);
+      padding: var(--spacing-sm);
+      border-radius: var(--border-radius-small);
+      text-align: center;
+      font-weight: 600;
+      color: white;
+      border: 2px solid rgba(255,255,255,0.1);
+      font-size: 0.9rem;
+      transition: all var(--transition-normal);
+    }
+
+    .remaining-student.active {
+      border-color: var(--neon-cyan);
+      color: var(--neon-cyan);
+      box-shadow: 0 0 15px rgba(0, 245, 255, 0.4);
+    }
+
+    .remaining-student.eliminated {
+      opacity: 0.3;
+      background: var(--danger-gradient);
+      border-color: var(--danger-color);
+      text-decoration: line-through;
     }
 
     /* ========================================
@@ -868,8 +1100,8 @@
   <div class="container">
     <!-- العنوان الرئيسي -->
     <div class="main-title">
-      <h1>🏰 برج الأسماء</h1>
-      <p>لعبة تعليمية ثلاثية الأبعاد - ابن برجك واحصل على الكنز!</p>
+      <h1>� برج الأسماء - مسابقة تنافسية</h1>
+      <p>مسابقة تفاعلية ذكية مع نظام تصفيات احترافي - اختبر معرفة طلابك!</p>
     </div>
 
     <!-- شاشة الإعداد -->
@@ -889,7 +1121,7 @@
           </div>
 
           <div class="form-group" id="studentCountSection" style="display: none;">
-            <label class="form-label">عدد الطلاب المشاركين:</label>
+            <label class="form-label">عدد المتسابقين:</label>
             <div class="student-count-grid">
               <button class="count-btn" data-count="3">3</button>
               <button class="count-btn" data-count="4">4</button>
@@ -899,6 +1131,8 @@
               <button class="count-btn" data-count="8">8</button>
               <button class="count-btn" data-count="10">10</button>
               <button class="count-btn" data-count="12">12</button>
+              <button class="count-btn" data-count="16">16</button>
+              <button class="count-btn" data-count="20">20</button>
             </div>
           </div>
 
@@ -925,44 +1159,39 @@
 
         <!-- لوحة التحكم -->
         <div class="control-panel">
+          <!-- معلومات البطولة -->
+          <div class="tournament-info">
+            <div class="tournament-title" id="tournamentTitle">بطولة المعرفة</div>
+            <div class="tournament-round" id="tournamentRound">الدور الأول</div>
+          </div>
+
+          <!-- الطالب الحالي -->
           <div class="current-player">
-            <div class="player-avatar" id="currentPlayerAvatar">؟</div>
+            <div class="player-avatar" id="currentPlayerAvatar">🎯</div>
             <div class="player-name" id="currentPlayerName">اختر الطلاب</div>
-            <div class="player-status">في انتظار البداية</div>
+            <div class="player-status" id="playerStatus">في انتظار البداية</div>
           </div>
 
-          <div class="game-stats">
-            <h3 class="stats-title">إحصائيات اللعبة</h3>
-            <div class="stats-grid">
-              <div class="stat-item">
-                <span class="stat-value" id="totalStepsDisplay">0</span>
-                <span class="stat-label">المحاولات</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-value" id="correctStepsDisplay">0</span>
-                <span class="stat-label">صحيحة</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-value" id="roundDisplay">1</span>
-                <span class="stat-label">الجولة</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-value" id="wrongStepsDisplay">0</span>
-                <span class="stat-label">خاطئة</span>
-              </div>
-            </div>
+          <!-- رسالة التفاعل -->
+          <div class="interaction-message" id="interactionMessage">
+            اسأل الطالب سؤالاً واختر النتيجة
           </div>
 
+          <!-- أزرار التحكم -->
           <div class="control-buttons">
-            <button class="control-btn btn-primary" id="nextPlayerBtn">
+            <button class="control-btn btn-success" id="correctBtn" style="display: none;">
+              <i class="fas fa-check"></i>
+              إجابة صحيحة
+            </button>
+            <button class="control-btn btn-danger" id="wrongBtn" style="display: none;">
+              <i class="fas fa-times"></i>
+              إجابة خاطئة
+            </button>
+            <button class="control-btn btn-primary" id="nextRoundBtn" style="display: none;">
               <i class="fas fa-arrow-right"></i>
-              اللاعب التالي
+              الدور التالي
             </button>
-            <button class="control-btn btn-secondary" id="skipTurnBtn">
-              <i class="fas fa-forward"></i>
-              تخطي الدور
-            </button>
-            <button class="control-btn btn-danger" id="restartBtn">
+            <button class="control-btn btn-secondary" id="restartBtn">
               <i class="fas fa-refresh"></i>
               إعادة تشغيل
             </button>
@@ -970,6 +1199,14 @@
               <i class="fas fa-home"></i>
               العودة للقائمة
             </button>
+          </div>
+
+          <!-- الطلاب المتبقون -->
+          <div class="remaining-students" id="remainingStudents">
+            <div class="remaining-title">الطلاب المتبقون</div>
+            <div class="remaining-grid" id="remainingGrid">
+              <!-- سيتم إضافة الطلاب هنا -->
+            </div>
           </div>
         </div>
       </div>
@@ -1038,23 +1275,19 @@
     }
 
     /* ========================================
-       مدير اللعبة الرئيسي
+       نظام مسابقة البرج التنافسية
     ======================================== */
-    class TowerGame {
+    class TowerCompetition {
       constructor() {
         this.audio = new AudioManager();
         this.students = {};
-        this.selectedStudents = [];
-        this.currentPlayerIndex = 0;
-        this.towerSteps = [];
-        this.gameState = 'setup'; // setup, playing, finished
-        this.stats = {
-          totalSteps: 0,
-          correctSteps: 0,
-          wrongSteps: 0,
-          round: 1,
-          timeStarted: null
-        };
+        this.remainingStudents = [];
+        this.eliminatedStudents = [];
+        this.currentStudentIndex = 0;
+        this.currentRound = 1;
+        this.gameState = 'setup'; // setup, playing, roundComplete, finished
+        this.tournamentStructure = this.calculateTournament();
+        this.totalRounds = 0;
         
         this.initElements();
         this.loadStudentData();
@@ -1069,17 +1302,26 @@
           studentCountSection: document.getElementById('studentCountSection'),
           studentsPreview: document.getElementById('studentsPreview'),
           startGameBtn: document.getElementById('startGameBtn'),
+          
+          // Game elements
+          tower: document.getElementById('tower'),
+          tournamentTitle: document.getElementById('tournamentTitle'),
+          tournamentRound: document.getElementById('tournamentRound'),
           currentPlayerName: document.getElementById('currentPlayerName'),
           currentPlayerAvatar: document.getElementById('currentPlayerAvatar'),
-          tower: document.getElementById('tower'),
-          totalStepsDisplay: document.getElementById('totalStepsDisplay'),
-          correctStepsDisplay: document.getElementById('correctStepsDisplay'),
-          wrongStepsDisplay: document.getElementById('wrongStepsDisplay'),
-          roundDisplay: document.getElementById('roundDisplay'),
-          nextPlayerBtn: document.getElementById('nextPlayerBtn'),
-          skipTurnBtn: document.getElementById('skipTurnBtn'),
+          playerStatus: document.getElementById('playerStatus'),
+          interactionMessage: document.getElementById('interactionMessage'),
+          
+          // Control buttons
+          correctBtn: document.getElementById('correctBtn'),
+          wrongBtn: document.getElementById('wrongBtn'),
+          nextRoundBtn: document.getElementById('nextRoundBtn'),
           restartBtn: document.getElementById('restartBtn'),
-          endGameBtn: document.getElementById('endGameBtn')
+          endGameBtn: document.getElementById('endGameBtn'),
+          
+          // Remaining students
+          remainingStudents: document.getElementById('remainingStudents'),
+          remainingGrid: document.getElementById('remainingGrid')
         };
       }
 
@@ -1105,6 +1347,17 @@
         });
       }
 
+      calculateTournament() {
+        // حساب بنية البطولة بناءً على عدد الطلاب
+        const tournaments = {
+          small: { min: 3, max: 8, name: 'بطولة مصغرة', rounds: ['النصف نهائي', 'النهائي'] },
+          medium: { min: 9, max: 16, name: 'بطولة متوسطة', rounds: ['ربع النهائي', 'النصف نهائي', 'النهائي'] },
+          large: { min: 17, max: 32, name: 'بطولة كبرى', rounds: ['دور الـ16', 'ربع النهائي', 'النصف نهائي', 'النهائي'] }
+        };
+        
+        return tournaments;
+      }
+
       setupEvents() {
         // اختيار الصف
         this.elements.classSelect.addEventListener('change', (e) => {
@@ -1124,30 +1377,32 @@
           });
         });
 
-        // بدء اللعبة
+        // بدء المسابقة
         this.elements.startGameBtn.addEventListener('click', () => {
-          this.startGame();
+          this.startCompetition();
           this.audio.play('game-start');
         });
 
-        // أزرار التحكم
-        this.elements.nextPlayerBtn?.addEventListener('click', () => {
-          this.nextPlayer();
-          this.audio.play('player-change');
+        // أزرار التحكم في المسابقة
+        this.elements.correctBtn?.addEventListener('click', () => {
+          this.handleAnswer(true);
         });
 
-        this.elements.skipTurnBtn?.addEventListener('click', () => {
-          this.nextPlayer();
-          this.audio.play('ui-click');
+        this.elements.wrongBtn?.addEventListener('click', () => {
+          this.handleAnswer(false);
+        });
+
+        this.elements.nextRoundBtn?.addEventListener('click', () => {
+          this.startNextRound();
         });
 
         this.elements.restartBtn?.addEventListener('click', () => {
-          this.restartGame();
+          this.restartCompetition();
           this.audio.play('ui-click');
         });
 
         this.elements.endGameBtn?.addEventListener('click', () => {
-          this.endGame();
+          this.endCompetition();
           this.audio.play('ui-click');
         });
 
@@ -1199,14 +1454,15 @@
 
         const classStudents = this.students[className];
         const shuffledStudents = [...classStudents].sort(() => Math.random() - 0.5);
-        this.selectedStudents = shuffledStudents.slice(0, count);
+        this.remainingStudents = shuffledStudents.slice(0, count);
 
         this.displayStudentPreview();
         this.updateStartButton();
+        this.updateTournamentInfo();
       }
 
       displayStudentPreview() {
-        if (this.selectedStudents.length === 0) {
+        if (this.remainingStudents.length === 0) {
           this.elements.studentsPreview.innerHTML = '';
           return;
         }
@@ -1215,10 +1471,10 @@
           <div class="setup-section">
             <h3 class="section-title">
               <i class="fas fa-users"></i>
-              الطلاب المشاركون (${this.selectedStudents.length})
+              المتسابقون (${this.remainingStudents.length})
             </h3>
             <div class="students-grid">
-              ${this.selectedStudents.map((student, index) => `
+              ${this.remainingStudents.map((student, index) => `
                 <div class="student-card" style="animation-delay: ${index * 0.1}s">
                   ${student}
                 </div>
@@ -1228,201 +1484,359 @@
         `;
       }
 
+      updateTournamentInfo() {
+        const count = this.remainingStudents.length;
+        let tournamentType = 'small';
+        
+        if (count >= this.tournamentStructure.large.min) {
+          tournamentType = 'large';
+        } else if (count >= this.tournamentStructure.medium.min) {
+          tournamentType = 'medium';
+        }
+        
+        const tournament = this.tournamentStructure[tournamentType];
+        this.totalRounds = tournament.rounds.length;
+        
+        // عرض معلومات البطولة في زر البداية
+        if (this.remainingStudents.length > 0) {
+          this.elements.startGameBtn.innerHTML = `
+            <i class="fas fa-trophy"></i>
+            ابدأ ${tournament.name} مع ${count} متسابق
+          `;
+        }
+      }
+
       updateStartButton() {
-        const canStart = this.selectedStudents.length > 0;
+        const canStart = this.remainingStudents.length > 0;
         this.elements.startGameBtn.disabled = !canStart;
         
-        if (canStart) {
+        if (!canStart) {
           this.elements.startGameBtn.innerHTML = `
-            <i class="fas fa-rocket"></i>
-            بدء اللعبة مع ${this.selectedStudents.length} طلاب
-          `;
-        } else {
-          this.elements.startGameBtn.innerHTML = `
-            <i class="fas fa-rocket"></i>
+            <i class="fas fa-users"></i>
             اختر الطلاب أولاً
           `;
         }
       }
 
-      startGame() {
-        if (this.selectedStudents.length === 0) return;
+      startCompetition() {
+        if (this.remainingStudents.length === 0) return;
 
         this.gameState = 'playing';
-        this.stats.timeStarted = Date.now();
-        this.currentPlayerIndex = 0;
+        this.currentStudentIndex = 0;
+        this.currentRound = 1;
+        this.eliminatedStudents = [];
         
-        // إخفاء شاشة الإعداد وإظهار شاشة اللعبة
+        // إخفاء شاشة الإعداد وإظهار شاشة المسابقة
         this.elements.setupScreen.style.display = 'none';
         this.elements.gameScreen.style.display = 'block';
         
         // إنشاء البرج وتحديث الواجهة
-        this.createTower();
-        this.updateCurrentPlayer();
-        this.updateStats();
+        this.createTowerWithStudents();
+        this.updateTournamentDisplay();
+        this.updateCurrentStudent();
+        this.updateRemainingStudents();
+        this.showInteractionMessage('اسأل الطالب سؤالاً واختر النتيجة');
       }
 
-      createTower() {
-        const stepCount = Math.min(10, this.selectedStudents.length + 3);
-        this.towerSteps = [];
+      createTowerWithStudents() {
         this.elements.tower.innerHTML = '';
-
-        for (let i = 0; i < stepCount; i++) {
+        
+        this.remainingStudents.forEach((student, index) => {
           const step = document.createElement('div');
           step.className = 'tower-step';
-          step.textContent = `المرحلة ${i + 1}`;
-          step.addEventListener('click', () => this.handleStepClick(i));
+          step.textContent = student;
+          step.dataset.studentIndex = index;
           
-          // تأثيرات الصوت
+          // إضافة تأثيرات التفاعل
           step.addEventListener('mouseenter', () => {
             this.audio.play('step-hover', { volume: 0.3 });
           });
           
           this.elements.tower.appendChild(step);
-          this.towerSteps.push({
-            element: step,
-            completed: false,
-            attempts: 0
-          });
+        });
+        
+        // تمييز الطالب الحالي
+        this.highlightCurrentStudent();
+      }
+
+      highlightCurrentStudent() {
+        // إزالة التمييز من جميع الدرجات
+        document.querySelectorAll('.tower-step').forEach(step => {
+          step.classList.remove('active');
+        });
+        
+        // تمييز الطالب الحالي
+        const currentStep = document.querySelector(`[data-student-index="${this.currentStudentIndex}"]`);
+        if (currentStep) {
+          currentStep.classList.add('active');
         }
       }
 
-      handleStepClick(stepIndex) {
-        if (this.gameState !== 'playing') return;
-
-        const step = this.towerSteps[stepIndex];
-        if (step.completed) return;
-
-        step.attempts++;
-        this.stats.totalSteps++;
-
-        // محاكاة النتيجة (60% نجاح)
-        const isCorrect = Math.random() > 0.4;
+      updateTournamentDisplay() {
+        const count = this.remainingStudents.length;
+        let tournamentType = 'small';
+        let roundName = 'الدور الأول';
         
-        if (isCorrect) {
-          this.handleCorrectStep(stepIndex);
-        } else {
-          this.handleIncorrectStep(stepIndex);
+        if (count >= this.tournamentStructure.large.min) {
+          tournamentType = 'large';
+        } else if (count >= this.tournamentStructure.medium.min) {
+          tournamentType = 'medium';
         }
-
-        this.updateStats();
-      }
-
-      handleCorrectStep(stepIndex) {
-        const step = this.towerSteps[stepIndex];
-        step.completed = true;
-        step.element.classList.add('correct');
-        step.element.textContent = `✅ ${this.selectedStudents[this.currentPlayerIndex]}`;
         
-        this.stats.correctSteps++;
-        this.audio.play('step-correct');
+        const tournament = this.tournamentStructure[tournamentType];
         
-        // تحقق من اكتمال البرج
-        if (this.checkTowerCompletion()) {
-          this.completeTower();
-        } else {
-          setTimeout(() => this.nextPlayer(), 1500);
+        // تحديد اسم الدور الحالي
+        if (this.remainingStudents.length <= 2) {
+          roundName = 'النهائي';
+        } else if (this.remainingStudents.length <= 4) {
+          roundName = 'النصف نهائي';
+        } else if (this.remainingStudents.length <= 8) {
+          roundName = 'ربع النهائي';
+        } else if (this.remainingStudents.length <= 16) {
+          roundName = 'دور الـ16';
         }
-      }
-
-      handleIncorrectStep(stepIndex) {
-        const step = this.towerSteps[stepIndex];
-        step.element.classList.add('falling');
         
-        this.stats.wrongSteps++;
-        this.audio.play('step-wrong');
+        this.elements.tournamentTitle.textContent = tournament.name;
+        this.elements.tournamentRound.textContent = roundName;
+      }
+
+      updateCurrentStudent() {
+        if (this.currentStudentIndex >= this.remainingStudents.length) {
+          this.currentStudentIndex = 0;
+        }
         
-        setTimeout(() => {
-          step.element.remove();
-          
-          // تحقق من الدرجات المتبقية
-          const remainingSteps = this.towerSteps.filter(s => 
-            !s.completed && s.element.parentNode
-          ).length;
-          
-          if (remainingSteps <= 1) {
-            this.gameState = 'finished';
-            setTimeout(() => {
-              alert('💥 انهار البرج! حاول مرة أخرى');
-              this.restartGame();
-            }, 500);
-          } else {
-            this.nextPlayer();
-          }
-        }, 1500);
-      }
-
-      nextPlayer() {
-        this.currentPlayerIndex = (this.currentPlayerIndex + 1) % this.selectedStudents.length;
-        this.updateCurrentPlayer();
-      }
-
-      updateCurrentPlayer() {
-        const currentStudent = this.selectedStudents[this.currentPlayerIndex];
+        const currentStudent = this.remainingStudents[this.currentStudentIndex];
         this.elements.currentPlayerName.textContent = currentStudent;
         this.elements.currentPlayerAvatar.textContent = currentStudent.charAt(0);
+        this.elements.playerStatus.textContent = `دور ${currentStudent}`;
+        
+        this.highlightCurrentStudent();
+        
+        // إظهار أزرار التحكم
+        this.elements.correctBtn.style.display = 'block';
+        this.elements.wrongBtn.style.display = 'block';
+        this.elements.nextRoundBtn.style.display = 'none';
       }
 
-      updateStats() {
-        this.elements.totalStepsDisplay.textContent = this.stats.totalSteps;
-        this.elements.correctStepsDisplay.textContent = this.stats.correctSteps;
-        this.elements.wrongStepsDisplay.textContent = this.stats.wrongSteps;
-        this.elements.roundDisplay.textContent = this.stats.round;
+      updateRemainingStudents() {
+        this.elements.remainingGrid.innerHTML = '';
+        
+        this.remainingStudents.forEach((student, index) => {
+          const studentElement = document.createElement('div');
+          studentElement.className = 'remaining-student';
+          studentElement.textContent = student;
+          
+          if (index === this.currentStudentIndex) {
+            studentElement.classList.add('active');
+          }
+          
+          this.elements.remainingGrid.appendChild(studentElement);
+        });
       }
 
-      checkTowerCompletion() {
-        return this.towerSteps.every(step => step.completed);
-      }
-
-      completeTower() {
-        this.gameState = 'finished';
-        this.audio.play('tower-complete');
+      showInteractionMessage(message) {
+        this.elements.interactionMessage.textContent = message;
+        this.elements.interactionMessage.classList.add('show');
         
         setTimeout(() => {
-          this.showResults();
-        }, 2000);
+          this.elements.interactionMessage.classList.remove('show');
+        }, 3000);
       }
 
-      showResults() {
-        const totalTime = this.stats.timeStarted ? 
-          Math.round((Date.now() - this.stats.timeStarted) / 1000) : 0;
+      handleAnswer(isCorrect) {
+        const currentStep = document.querySelector(`[data-student-index="${this.currentStudentIndex}"]`);
+        const currentStudent = this.remainingStudents[this.currentStudentIndex];
         
-        const successRate = Math.round(
-          (this.stats.correctSteps / Math.max(this.stats.totalSteps, 1)) * 100
-        );
+        if (isCorrect) {
+          // إجابة صحيحة - تأثيرات الاحتفال
+          this.celebrateCorrectAnswer(currentStep, currentStudent);
+          this.audio.play('step-correct');
+          
+          // الانتقال للطالب التالي
+          setTimeout(() => {
+            this.nextStudent();
+          }, 2000);
+          
+        } else {
+          // إجابة خاطئة - إقصاء الطالب
+          this.eliminateStudent(currentStep, currentStudent);
+          this.audio.play('step-wrong');
+          
+          setTimeout(() => {
+            this.removeEliminatedStudent();
+          }, 2500);
+        }
+        
+        // إخفاء أزرار التحكم مؤقتاً
+        this.elements.correctBtn.style.display = 'none';
+        this.elements.wrongBtn.style.display = 'none';
+      }
+
+      celebrateCorrectAnswer(stepElement, studentName) {
+        stepElement.classList.add('correct');
+        stepElement.innerHTML = `✅ ${studentName}`;
+        
+        this.showInteractionMessage(`أحسنت ${studentName}! إجابة رائعة! 🎉`);
+        
+        // تأثيرات بصرية إضافية
+        this.createCelebrationEffect(stepElement);
+      }
+
+      eliminateStudent(stepElement, studentName) {
+        stepElement.classList.add('falling');
+        
+        this.showInteractionMessage(`${studentName} خارج المسابقة 😔`);
+        
+        // إضافة للطلاب المقصيين
+        this.eliminatedStudents.push(studentName);
+      }
+
+      removeEliminatedStudent() {
+        // إزالة الطالب من القائمة
+        const eliminatedStudent = this.remainingStudents[this.currentStudentIndex];
+        this.remainingStudents.splice(this.currentStudentIndex, 1);
+        
+        // تحديث فهرس الطالب الحالي
+        if (this.currentStudentIndex >= this.remainingStudents.length) {
+          this.currentStudentIndex = 0;
+        }
+        
+        // إعادة إنشاء البرج
+        this.createTowerWithStudents();
+        
+        // التحقق من حالة المسابقة
+        this.checkCompetitionStatus();
+      }
+
+      nextStudent() {
+        this.currentStudentIndex = (this.currentStudentIndex + 1) % this.remainingStudents.length;
+        this.updateCurrentStudent();
+        this.updateRemainingStudents();
+        this.showInteractionMessage('اسأل الطالب سؤالاً واختر النتيجة');
+      }
+
+      checkCompetitionStatus() {
+        if (this.remainingStudents.length === 1) {
+          // لدينا فائز!
+          this.declareWinner();
+        } else if (this.remainingStudents.length === 0) {
+          // لا يوجد فائزين (حالة نادرة)
+          this.showInteractionMessage('انتهت المسابقة بدون فائز!');
+          setTimeout(() => this.restartCompetition(), 3000);
+        } else {
+          // استمرار المسابقة
+          this.updateCurrentStudent();
+          this.updateRemainingStudents();
+          this.updateTournamentDisplay();
+        }
+      }
+
+      declareWinner() {
+        const winner = this.remainingStudents[0];
+        this.gameState = 'finished';
+        
+        // تأثيرات الفوز
+        this.celebrateWinner(winner);
+        this.audio.play('tower-complete');
+        
+        // إخفاء أزرار التحكم
+        this.elements.correctBtn.style.display = 'none';
+        this.elements.wrongBtn.style.display = 'none';
+        
+        // عرض النتائج
+        setTimeout(() => {
+          this.showFinalResults(winner);
+        }, 3000);
+      }
+
+      celebrateWinner(winner) {
+        this.elements.currentPlayerName.textContent = winner;
+        this.elements.playerStatus.textContent = '🏆 البطل 🏆';
+        this.showInteractionMessage(`تهانينا ${winner}! أنت بطل المسابقة! 🎊🏆🎉`);
+        
+        // تأثيرات بصرية للفوز
+        const winnerStep = document.querySelector('.tower-step');
+        if (winnerStep) {
+          winnerStep.classList.add('correct');
+          winnerStep.innerHTML = `👑 ${winner} - البطل 👑`;
+          this.createCelebrationEffect(winnerStep);
+        }
+      }
+
+      createCelebrationEffect(element) {
+        // إنشاء تأثيرات الاحتفال
+        for (let i = 0; i < 10; i++) {
+          setTimeout(() => {
+            const particle = document.createElement('div');
+            particle.innerHTML = ['🎉', '✨', '🌟', '💫', '🎊'][Math.floor(Math.random() * 5)];
+            particle.style.position = 'absolute';
+            particle.style.fontSize = '2rem';
+            particle.style.pointerEvents = 'none';
+            particle.style.zIndex = '1000';
+            
+            const rect = element.getBoundingClientRect();
+            particle.style.left = rect.left + Math.random() * rect.width + 'px';
+            particle.style.top = rect.top + Math.random() * rect.height + 'px';
+            
+            document.body.appendChild(particle);
+            
+            // انيميشن الطيران
+            particle.animate([
+              { transform: 'translateY(0) scale(1)', opacity: 1 },
+              { transform: `translateY(-${Math.random() * 200 + 100}px) scale(0)`, opacity: 0 }
+            ], {
+              duration: 2000,
+              easing: 'ease-out'
+            }).onfinish = () => particle.remove();
+            
+          }, i * 100);
+        }
+      }
+
+      showFinalResults(winner) {
+        const totalParticipants = this.remainingStudents.length + this.eliminatedStudents.length;
         
         alert(`
-🏆 انتهت اللعبة! 🏆
+🏆 انتهت المسابقة! 🏆
 
-⏱️ الوقت المستغرق: ${totalTime} ثانية
-📊 إجمالي المحاولات: ${this.stats.totalSteps}
-✅ المحاولات الصحيحة: ${this.stats.correctSteps}
-❌ المحاولات الخاطئة: ${this.stats.wrongSteps}
-📈 نسبة النجاح: ${successRate}%
+👑 البطل: ${winner}
+📊 إجمالي المتسابقين: ${totalParticipants}
+🥉 الطلاب المقصيين: ${this.eliminatedStudents.length}
+📈 معدل النجاح: ${Math.round((1 / totalParticipants) * 100)}%
 
-شكراً لكم على المشاركة! 🎉
+${this.eliminatedStudents.length > 0 ? 
+  `🎭 المقصيين: ${this.eliminatedStudents.join(', ')}` : ''}
+
+شكراً لجميع المتسابقين! 🎉
         `);
       }
 
-      restartGame() {
+      startNextRound() {
+        this.currentRound++;
+        this.currentStudentIndex = 0;
+        this.createTowerWithStudents();
+        this.updateTournamentDisplay();
+        this.updateCurrentStudent();
+        this.updateRemainingStudents();
+        this.showInteractionMessage('بداية دور جديد! اسأل الطالب سؤالاً');
+        
+        this.elements.nextRoundBtn.style.display = 'none';
+      }
+
+      restartCompetition() {
         this.gameState = 'setup';
-        this.selectedStudents = [];
-        this.currentPlayerIndex = 0;
-        this.stats = {
-          totalSteps: 0,
-          correctSteps: 0,
-          wrongSteps: 0,
-          round: 1,
-          timeStarted: null
-        };
+        this.remainingStudents = [];
+        this.eliminatedStudents = [];
+        this.currentStudentIndex = 0;
+        this.currentRound = 1;
 
         this.elements.gameScreen.style.display = 'none';
         this.elements.setupScreen.style.display = 'block';
         this.clearStudentSelection();
       }
 
-      endGame() {
-        this.restartGame();
+      endCompetition() {
+        this.restartCompetition();
       }
 
       clearStudentSelection() {
@@ -1430,14 +1844,14 @@
         document.querySelectorAll('.count-btn').forEach(btn => {
           btn.classList.remove('selected');
         });
-        this.selectedStudents = [];
+        this.remainingStudents = [];
         this.updateStartButton();
       }
     }
 
-    // تشغيل اللعبة عند تحميل الصفحة
+    // تشغيل المسابقة عند تحميل الصفحة
     document.addEventListener('DOMContentLoaded', () => {
-      window.towerGame = new TowerGame();
+      window.towerCompetition = new TowerCompetition();
       
       // إضافة تأثيرات الجسيمات للاحتفال
       const style = document.createElement('style');
