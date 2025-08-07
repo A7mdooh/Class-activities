@@ -16,7 +16,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     
     <!-- الأنماط الموحدة -->
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css?v=clean">
     
     <style>
         /* ===== متغيرات CSS ===== */
@@ -809,6 +809,21 @@
                 transition-duration: 0.01ms !important;
             }
         }
+
+        /* إخفاء أي عناصر تحدي قديمة */
+        .challenge-header,
+        .intelligence-challenge,
+        .advanced-notification,
+        .floating-notification,
+        .competitive-progress-bar,
+        [class*="challenge"],
+        [class*="intelligence"],
+        [class*="notification"],
+        [class*="progress-bar"] {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+        }
     </style>
 </head>
 <body>
@@ -1273,6 +1288,26 @@
         // ===== تهيئة اللعبة =====
         document.addEventListener('DOMContentLoaded', function() {
             updateTimer();
+            
+            // إزالة أي عناصر قديمة قد تحتوي على نص التحدي
+            const challengeElements = document.querySelectorAll(
+                '.challenge-header, .intelligence-challenge, .advanced-notification, ' +
+                '.floating-notification, .competitive-progress-bar, [class*="challenge"], ' +
+                '[class*="intelligence"], [class*="notification"], [class*="progress-bar"]'
+            );
+            challengeElements.forEach(element => {
+                element.remove();
+            });
+            
+            // إزالة أي نص يحتوي على "تحدي الذكاء"
+            const allElements = document.querySelectorAll('*');
+            allElements.forEach(element => {
+                if (element.textContent && element.textContent.includes('تحدي الذكاء')) {
+                    element.style.display = 'none';
+                    console.warn('تم إخفاء عنصر يحتوي على نص قديم:', element);
+                }
+            });
+            
             console.log('💣 لعبة القنبلة المؤقتة جاهزة!');
             console.log('⌨️ اختصارات المفاتيح:');
             console.log('   Space: بدء/إبطال القنبلة');
@@ -1282,6 +1317,6 @@
     </script>
 
     <!-- Responsive Helper Script -->
-    <script src="../assets/js/responsive-helper.js"></script>
+    <script src="../assets/js/responsive-helper.js?v=clean"></script>
 </body>
 </html>
