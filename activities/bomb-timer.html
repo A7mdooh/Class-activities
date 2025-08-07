@@ -3064,6 +3064,12 @@
             box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
         }
         
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6); }
+            100% { transform: scale(1); box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4); }
+        }
+        
         @keyframes slideInLeft {
             0% { transform: translateX(-100%); opacity: 0; }
             100% { transform: translateX(0); opacity: 1; }
@@ -3746,8 +3752,16 @@
                     console.log('✅ تم إجبار إظهار النافذة');
                     
                     // تحميل البيانات إذا لم تكن محملة
-                    if (!gameSetup.studentData) {
-                        loadStudentData();
+                    if (!gameSetup.studentData || !gameSetup.studentData.classes) {
+                        console.log('📚 تحميل بيانات الطلاب...');
+                        loadStudentData().then(success => {
+                            if (success) {
+                                console.log('✅ تم تحميل البيانات بنجاح');
+                            }
+                        });
+                    } else {
+                        console.log('✅ البيانات محملة مسبقاً، عرض الصفوف...');
+                        loadClassOptions();
                     }
                     
                     // تشغيل صوت
@@ -3947,12 +3961,15 @@
                 }
                 
                 const data = await response.json();
-                console.log('✅ تم تحميل بيانات الطلاب:', data);
+                console.log('✅ تم تحميل بيانات الطلاب بنجاح:', data);
                 
                 // تحويل البيانات إلى هيكل الصفوف والطلاب
                 gameSetup.studentData = {
                     classes: []
                 };
+                
+                // تخزين البيانات الخام أيضاً
+                window.studentsData = data;
                 
                 // تعبئة قائمة الصفوف من البنية الجديدة
                 if (data && typeof data === 'object') {
@@ -3969,19 +3986,45 @@
                                 id: className,
                                 name: className,
                                 icon: "📚",
-                                students: students
+                                students: students,
+                                studentsCount: students.length
                             });
                         }
                     });
                 }
                 
-                loadClassOptions();
                 console.log(`✅ تم معالجة البيانات بنجاح: ${gameSetup.studentData.classes.length} صف`);
+                
+                // تحميل خيارات الصفوف فوراً
+                loadClassOptions();
+                
                 return true;
                 
             } catch (error) {
                 console.error('❌ خطأ في تحميل بيانات الطلاب:', error);
-                showToast('فشل في تحميل بيانات الطلاب. تحقق من وجود الملف.', 'error');
+                
+                // عرض رسالة خطأ وتوفير بيانات احتياطية
+                showToast('لا يمكن تحميل بيانات الطلاب. سيتم استخدام بيانات احتياطية.', 'warning');
+                
+                // بيانات احتياطية
+                gameSetup.studentData = {
+                    classes: [
+                        {
+                            id: 'backup_class',
+                            name: 'الصف الاحتياطي',
+                            icon: "📚",
+                            students: [
+                                { id: 'backup_1', name: 'أحمد الطالب', gender: 'male' },
+                                { id: 'backup_2', name: 'محمد الطالب', gender: 'male' },
+                                { id: 'backup_3', name: 'فاطمة الطالبة', gender: 'female' },
+                                { id: 'backup_4', name: 'عائشة الطالبة', gender: 'female' }
+                            ],
+                            studentsCount: 4
+                        }
+                    ]
+                };
+                
+                loadClassOptions();
                 return false;
             }
         }
@@ -4067,7 +4110,37 @@
                 methodSection.style.display = 'block';
             }
             
+            // التحقق من إمكانية عرض زر بدء اللعبة
+            checkSetupComplete();
+            
             showToast(`تم اختيار صف: ${classInfo.name}`, 'success');
+        }
+
+        // التحقق من اكتمال الإعدادات
+        function checkSetupComplete() {
+            const startBtn = document.getElementById('startGameBtn');
+            if (!startBtn) return;
+            
+            let isComplete = false;
+            
+            // التحقق من وجود صف واختيار طريقة
+            if (gameSetup.selectedClass && gameSetup.selectedMethod) {
+                if (gameSetup.selectedMethod === 'random') {
+                    // للاختيار العشوائي: مجرد وجود صف يكفي
+                    isComplete = true;
+                } else if (gameSetup.selectedMethod === 'manual') {
+                    // للاختيار الانتقائي: التحقق من وجود طلاب مختارين
+                    const selectedCards = document.querySelectorAll('.student-card.selected');
+                    isComplete = selectedCards.length > 0;
+                }
+            }
+            
+            if (isComplete) {
+                startBtn.style.display = 'inline-block';
+                startBtn.style.animation = 'pulse 2s infinite';
+            } else {
+                startBtn.style.display = 'none';
+            }
         }
 
         // اختيار طريقة الاختيار (محدث بنظام challenges-ultimate)
@@ -4101,11 +4174,37 @@
                 } else {
                     studentTitle.textContent = 'سيتم الاختيار عشوائياً';
                     searchBar.style.display = 'none';
-                    performRandomSelection();
+                    showRandomSelectionInfo();
                 }
             }
             
+            // التحقق من اكتمال الإعدادات
+            checkSetupComplete();
+            
             showToast(`طريقة الاختيار: ${method === 'manual' ? 'انتقائي' : 'عشوائي'}`, 'info');
+        }
+        
+        // عرض معلومات الاختيار العشوائي
+        function showRandomSelectionInfo() {
+            const grid = document.getElementById('studentGrid');
+            if (!grid || !gameSetup.selectedClass) return;
+
+            grid.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; background: linear-gradient(135deg, rgba(255,193,7,0.2), rgba(255,193,7,0.1)); border: 2px solid var(--warning-orange); border-radius: 15px;">
+                    <div style="font-size: 4rem; margin-bottom: 20px;">🎲</div>
+                    <h3 style="color: var(--warning-orange); margin: 0 0 15px 0;">الاختيار العشوائي جاهز!</h3>
+                    <p style="color: rgba(255,255,255,0.8); margin: 0; font-size: 1.1rem;">
+                        سيتم اختيار طالب عشوائياً من صف ${gameSetup.selectedClass.name}
+                        <br>
+                        (${gameSetup.selectedClass.students.length} طالب متاح)
+                    </p>
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+                        <div style="color: #ffd700; font-size: 0.9rem;">
+                            ✨ لا حاجة لاختيار طالب محدد - اضغط "ابدأ اللعبة" للمتابعة
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
         // عرض بطاقات الطلاب المتقدمة (مستوحاة من challenges-ultimate)
@@ -8898,6 +8997,161 @@
             showGameSetup();
         }
         
+        // بدء اللعبة من نافذة الإعدادات
+        function startGameFromSetup() {
+            finishSetupAndStartGame();
+        }
+        
+        // إعادة تعيين الإعدادات
+        function resetSetup() {
+            // إعادة تعيين البيانات
+            gameSetup.selectedClass = null;
+            gameSetup.selectedMethod = null;
+            gameSetup.selectedStudent = null;
+            
+            // إخفاء الأقسام
+            document.getElementById('selectionMethodSection').style.display = 'none';
+            document.getElementById('studentCardsSection').style.display = 'none';
+            document.getElementById('selectedClassInfo').style.display = 'none';
+            document.getElementById('selectedStudentInfo').style.display = 'none';
+            document.getElementById('startGameBtn').style.display = 'none';
+            
+            // إعادة تعيين بطاقات الصفوف
+            document.querySelectorAll('.class-option').forEach(card => {
+                card.style.borderColor = 'rgba(255,255,255,0.2)';
+                card.style.background = 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))';
+            });
+            
+            // إعادة تعيين بطاقات الطرق
+            document.querySelectorAll('.method-card').forEach(card => {
+                card.style.borderColor = 'rgba(255,255,255,0.2)';
+                card.style.background = 'linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.1))';
+            });
+            
+            showToast('تم إعادة تعيين الإعدادات', 'info');
+        }
+
+        // إنهاء عملية الإعداد وبدء اللعبة
+        function finishSetupAndStartGame() {
+            if (!gameSetup.selectedClass) {
+                alert('⚠️ يجب اختيار صف أولاً!');
+                return;
+            }
+            
+            if (!gameSetup.selectedMethod) {
+                alert('⚠️ يجب اختيار طريقة الاختيار!');
+                return;
+            }
+            
+            let selectedStudent = null;
+            
+            if (gameSetup.selectedMethod === 'manual') {
+                const selectedCards = document.querySelectorAll('.student-card.selected');
+                if (selectedCards.length === 0) {
+                    alert('⚠️ يجب اختيار طالب واحد على الأقل!');
+                    return;
+                }
+                
+                // اختيار الطالب الأول من المختارين
+                const studentId = selectedCards[0].dataset.studentId;
+                selectedStudent = gameSetup.selectedClass.students.find(s => s.id === studentId);
+                
+            } else if (gameSetup.selectedMethod === 'random') {
+                // اختيار عشوائي
+                const students = gameSetup.selectedClass.students;
+                selectedStudent = students[Math.floor(Math.random() * students.length)];
+            }
+            
+            if (!selectedStudent) {
+                alert('❌ خطأ في اختيار الطالب!');
+                return;
+            }
+            
+            // تحديث معلومات اللعبة
+            gameState.currentStudent = selectedStudent.name;
+            gameState.currentClass = gameSetup.selectedClass.name;
+            gameState.selectionMethod = gameSetup.selectedMethod;
+            
+            // تحديث واجهة اللعبة
+            updateGameInterface();
+            
+            // إغلاق نافذة الإعدادات
+            closeGameSetup();
+            
+            // إظهار رسالة ترحيب
+            showWelcomeMessage(selectedStudent);
+            
+            // تحديث العرض
+            updateDisplay();
+            
+            console.log('✅ تم إعداد اللعبة بنجاح:', {
+                student: selectedStudent.name,
+                class: gameSetup.selectedClass.name,
+                method: gameSetup.selectedMethod
+            });
+        }
+        
+        // تحديث واجهة اللعبة
+        function updateGameInterface() {
+            const currentStudentEl = document.getElementById('currentStudent');
+            const currentClassEl = document.getElementById('currentClass');
+            
+            if (currentStudentEl) {
+                currentStudentEl.textContent = gameState.currentStudent;
+            }
+            
+            if (currentClassEl) {
+                currentClassEl.textContent = gameState.currentClass;
+            }
+        }
+        
+        // إظهار رسالة ترحيب
+        function showWelcomeMessage(student) {
+            const welcomeDiv = document.createElement('div');
+            welcomeDiv.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, var(--oman-green), #4CAF50);
+                color: white;
+                padding: 30px;
+                border-radius: 20px;
+                text-align: center;
+                z-index: 10000;
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+                animation: popIn 0.6s ease-out;
+            `;
+            
+            const genderIcon = student.gender === 'female' ? '👧' : '👦';
+            
+            welcomeDiv.innerHTML = `
+                <div style="font-size: 3rem; margin-bottom: 15px;">${genderIcon}</div>
+                <h2 style="margin: 0 0 10px 0;">مرحباً ${student.name}!</h2>
+                <p style="margin: 0; opacity: 0.9;">استعد لتحدي إبطال المتفجرات 💣</p>
+                <div style="margin-top: 20px;">
+                    <div style="background: rgba(255,255,255,0.2); padding: 10px; border-radius: 10px; font-size: 0.9rem;">
+                        الصف: ${gameState.currentClass} | طريقة الاختيار: ${gameState.selectionMethod === 'manual' ? 'انتقائي' : 'عشوائي'}
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(welcomeDiv);
+            
+            // إزالة الرسالة بعد 4 ثوانٍ
+            setTimeout(() => {
+                welcomeDiv.style.animation = 'popOut 0.5s ease-in';
+                setTimeout(() => welcomeDiv.remove(), 500);
+            }, 4000);
+            
+            // تشغيل صوت ترحيب
+            try {
+                playGameSound('startapp');
+            } catch (error) {
+                console.log('⚠️ لا يمكن تشغيل صوت الترحيب');
+            }
+        }
+
         // إعادة تعيين تقدم اللعبة
         function resetGameProgress() {
             if (confirm('هل أنت متأكد من إعادة تعيين جميع البيانات؟ سيتم فقدان جميع النقاط والشارات!')) {
