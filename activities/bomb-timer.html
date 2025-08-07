@@ -13,6 +13,7 @@
     
     <!-- المكتبات الخارجية -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     
     <!-- ===== ملفات التصميم المتجاوب ===== -->
     <link rel="stylesheet" href="../assets/css/responsive.css">
@@ -207,6 +208,10 @@
 
         #soundBtn {
             left: 80px;
+        }
+
+        #teacherGuideBtn {
+            left: 145px;
         }
 
         /* رأس الصفحة المحسّن */
@@ -2362,6 +2367,377 @@
             outline: 3px solid rgba(220, 20, 60, 0.5);
             outline-offset: 2px;
         }
+
+        /* ===== التطويرات المتقدمة للقنبلة المؤقتة ===== */
+
+        /* 1. نظام الإشعارات التفاعلي المتقدم */
+        .advanced-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(45, 45, 45, 0.95) 100%);
+            border: 3px solid var(--oman-red);
+            border-radius: var(--border-radius-xl);
+            padding: 30px 40px;
+            color: var(--text-primary);
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            text-align: center;
+            z-index: 10000;
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-large), var(--shadow-glow-red);
+            min-width: 350px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .advanced-notification.success {
+            border-color: var(--oman-green);
+            box-shadow: var(--shadow-large), var(--shadow-glow-green);
+            background: linear-gradient(135deg, rgba(34, 139, 34, 0.2) 0%, rgba(50, 205, 50, 0.2) 100%);
+        }
+
+        .advanced-notification.warning {
+            border-color: var(--warning-orange);
+            box-shadow: var(--shadow-large), 0 0 24px rgba(255, 140, 0, 0.4);
+            background: linear-gradient(135deg, rgba(255, 140, 0, 0.2) 0%, rgba(255, 99, 71, 0.2) 100%);
+        }
+
+        .floating-notification {
+            position: fixed;
+            top: 100px;
+            right: 30px;
+            background: var(--surface-glass);
+            border: 2px solid var(--oman-red);
+            border-radius: var(--border-radius-large);
+            padding: 20px;
+            color: var(--text-primary);
+            font-weight: 600;
+            backdrop-filter: blur(16px);
+            box-shadow: var(--shadow-medium);
+            z-index: 9999;
+            max-width: 300px;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: var(--transition-normal);
+        }
+
+        .floating-notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* 2. نظام التحديات الذكية */
+        .intelligence-challenge {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.98) 0%, rgba(45, 45, 45, 0.98) 100%);
+            border: 4px solid var(--accent-gold);
+            border-radius: var(--border-radius-xl);
+            padding: 40px;
+            color: var(--text-primary);
+            text-align: center;
+            z-index: 10001;
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-large), var(--shadow-glow-gold);
+            max-width: 500px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .challenge-header {
+            font-size: var(--font-size-2xl);
+            font-weight: 800;
+            color: var(--accent-gold);
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .challenge-content {
+            font-size: var(--font-size-lg);
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .challenge-timer {
+            font-size: var(--font-size-3xl);
+            font-weight: 900;
+            color: var(--oman-red);
+            margin: 20px 0;
+            text-shadow: 0 0 15px rgba(220, 20, 60, 0.8);
+        }
+
+        /* 3. شريط التقدم التنافسي */
+        .competitive-progress-bar {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(26, 26, 26, 0.95);
+            border: 2px solid var(--oman-green);
+            border-radius: var(--border-radius-xl);
+            padding: 20px 30px;
+            backdrop-filter: blur(16px);
+            box-shadow: var(--shadow-medium);
+            z-index: 9998;
+            min-width: 400px;
+            opacity: 0;
+            transform: translateX(-50%) translateY(100%);
+            transition: var(--transition-normal);
+        }
+
+        .competitive-progress-bar.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .progress-title {
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            color: var(--oman-green);
+        }
+
+        .progress-stats {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        .progress-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            height: 12px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, var(--oman-green) 0%, var(--accent-gold) 100%);
+            height: 100%;
+            border-radius: 20px;
+            width: 0%;
+            transition: width 0.8s ease-out;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: progressShimmer 2s ease-in-out infinite;
+        }
+
+        @keyframes progressShimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* 4. نظام التأثيرات البصرية المحسن */
+        .visual-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9997;
+        }
+
+        .explosion-effect {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 0, 0, 0.8) 0%, transparent 70%);
+            border-radius: 50%;
+            opacity: 0;
+        }
+
+        .success-effect {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(34, 139, 34, 0.6) 0%, transparent 70%);
+            border-radius: 50%;
+            opacity: 0;
+        }
+
+        /* دليل المعلم المهني */
+        .teacher-guide-modal {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.98) 0%, rgba(45, 45, 45, 0.98) 100%);
+            border: 3px solid var(--oman-green);
+        }
+
+        .teacher-guide-modal .modal-content {
+            max-width: 1000px;
+            max-height: 90vh;
+        }
+
+        .guide-navigation {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .guide-nav-btn {
+            background: var(--surface-glass);
+            border: 2px solid var(--oman-green);
+            color: var(--oman-green);
+            padding: 12px 20px;
+            border-radius: var(--border-radius-medium);
+            cursor: pointer;
+            transition: var(--transition-normal);
+            font-weight: 600;
+            backdrop-filter: blur(8px);
+        }
+
+        .guide-nav-btn:hover {
+            background: var(--oman-green);
+            color: var(--oman-white);
+            transform: translateY(-2px);
+        }
+
+        .guide-nav-btn.active {
+            background: var(--oman-green);
+            color: var(--oman-white);
+        }
+
+        .guide-section-content {
+            display: none;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        .guide-section-content.active {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .guide-feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius-medium);
+            padding: 20px;
+            margin: 15px 0;
+            transition: var(--transition-normal);
+        }
+
+        .guide-feature-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .guide-step {
+            display: flex;
+            align-items: flex-start;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(34, 139, 34, 0.1);
+            border-radius: var(--border-radius-medium);
+            border-right: 4px solid var(--oman-green);
+        }
+
+        .guide-step-number {
+            background: var(--oman-green);
+            color: var(--oman-white);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-left: 15px;
+            flex-shrink: 0;
+        }
+
+        .guide-step-content {
+            flex: 1;
+        }
+
+        .guide-tip {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid var(--accent-gold);
+            border-radius: var(--border-radius-medium);
+            padding: 15px;
+            margin: 15px 0;
+            border-right: 4px solid var(--accent-gold);
+        }
+
+        .guide-warning {
+            background: rgba(255, 140, 0, 0.1);
+            border: 1px solid var(--warning-orange);
+            border-radius: var(--border-radius-medium);
+            padding: 15px;
+            margin: 15px 0;
+            border-right: 4px solid var(--warning-orange);
+        }
+
+        /* تحسينات للشاشات الصغيرة */
+        @media (max-width: 768px) {
+            .advanced-notification {
+                min-width: 280px;
+                padding: 20px 25px;
+                font-size: var(--font-size-lg);
+            }
+
+            .floating-notification {
+                right: 15px;
+                max-width: 250px;
+                padding: 15px;
+            }
+
+            .intelligence-challenge {
+                max-width: 90%;
+                padding: 30px 20px;
+            }
+
+            .competitive-progress-bar {
+                min-width: 300px;
+                padding: 15px 20px;
+                bottom: 20px;
+            }
+
+            .guide-navigation {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .guide-nav-btn {
+                width: 100%;
+                max-width: 300px;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -2381,6 +2757,9 @@
         </button>
         <button class="control-btn btn-responsive" id="soundBtn" title="الصوت">
             <i class="fas fa-volume-up"></i>
+        </button>
+        <button class="control-btn btn-responsive" id="teacherGuideBtn" title="دليل المعلم المتطور">
+            <i class="fas fa-chalkboard-teacher"></i>
         </button>
     </div>
 
@@ -2998,6 +3377,322 @@
                 <div style="text-align: center; margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px;">
                     <button class="btn btn-success" onclick="closeModal('guideModal')">✅ فهمت، دعني أبدأ!</button>
                     <button class="btn btn-info" onclick="showWelcomeInstructions()">🎯 عرض التعليمات التفاعلية</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== التطويرات المتقدمة للقنبلة المؤقتة ===== -->
+    
+    <!-- 1. نظام الإشعارات التفاعلي المتقدم -->
+    <div id="advancedNotification" class="advanced-notification">
+        <div id="notificationContent"></div>
+    </div>
+
+    <!-- الإشعارات العائمة -->
+    <div id="floatingNotification" class="floating-notification">
+        <div id="floatingContent"></div>
+    </div>
+
+    <!-- 2. نظام التحديات الذكية -->
+    <div id="intelligenceChallenge" class="intelligence-challenge">
+        <div class="challenge-header">🧠 تحدي الذكاء المتفجر!</div>
+        <div class="challenge-content" id="challengeContent"></div>
+        <div class="challenge-timer" id="challengeTimer">05</div>
+        <button class="oman-btn" onclick="acceptChallenge()">✅ أقبل التحدي</button>
+        <button class="oman-btn red" onclick="declineChallenge()">❌ تمرير</button>
+    </div>
+
+    <!-- 3. شريط التقدم التنافسي -->
+    <div id="competitiveProgress" class="competitive-progress-bar">
+        <div class="progress-header">
+            <div class="progress-title">🚀 تقدم خبير المتفجرات</div>
+            <div class="progress-stats" id="progressStats">0/5 قنابل مُبطلة</div>
+        </div>
+        <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-header">
+            <div class="progress-title">⏱️ الوقت المتبقي</div>
+            <div class="progress-stats" id="sessionTimeStats">جلسة جديدة</div>
+        </div>
+    </div>
+
+    <!-- 4. نظام التأثيرات البصرية -->
+    <div id="visualEffects" class="visual-effect">
+        <div id="explosionEffect" class="explosion-effect"></div>
+        <div id="successEffect" class="success-effect"></div>
+    </div>
+
+    <!-- 5. دليل المعلم المهني المتطور -->
+    <div id="teacherGuideModal" class="modal teacher-guide-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" onclick="closeModal('teacherGuideModal')">&times;</span>
+                <h2>👨‍🎓 دليل المعلم المهني - القنبلة المؤقتة</h2>
+            </div>
+            <div class="modal-body">
+                <!-- تنقل الدليل -->
+                <div class="guide-navigation">
+                    <button class="guide-nav-btn active" onclick="showGuideSection('overview')">🎯 نظرة عامة</button>
+                    <button class="guide-nav-btn" onclick="showGuideSection('features')">✨ الميزات المتقدمة</button>
+                    <button class="guide-nav-btn" onclick="showGuideSection('controls')">🎛️ أدوات التحكم</button>
+                    <button class="guide-nav-btn" onclick="showGuideSection('strategies')">📋 استراتيجيات التدريس</button>
+                    <button class="guide-nav-btn" onclick="showGuideSection('troubleshooting')">🔧 حل المشاكل</button>
+                    <button class="guide-nav-btn" onclick="showGuideSection('assessment')">📊 التقييم والمتابعة</button>
+                </div>
+
+                <!-- محتوى الدليل -->
+                <div id="guideOverviewSection" class="guide-section-content active">
+                    <h3>🎯 نظرة عامة على النشاط</h3>
+                    <div class="guide-feature-card">
+                        <h4>🎮 مفهوم اللعبة</h4>
+                        <p>لعبة القنبلة المؤقتة هي نشاط تعليمي تفاعلي يهدف إلى تحفيز التعلم من خلال الإثارة والتشويق. يواجه الطلاب تحدي الإجابة على الأسئلة قبل انتهاء الوقت وانفجار القنبلة الافتراضية.</p>
+                    </div>
+                    
+                    <div class="guide-feature-card">
+                        <h4>🎯 الأهداف التعليمية</h4>
+                        <ul>
+                            <li>تطوير مهارات التفكير السريع تحت الضغط</li>
+                            <li>تعزيز الاستيعاب والفهم للمواد الدراسية</li>
+                            <li>زيادة التفاعل والمشاركة في الصف</li>
+                            <li>بناء الثقة بالنفس والجرأة في الإجابة</li>
+                            <li>تحسين مهارات إدارة الوقت</li>
+                        </ul>
+                    </div>
+
+                    <div class="guide-feature-card">
+                        <h4>📚 المواد المناسبة</h4>
+                        <p>يمكن استخدام النشاط مع جميع المواد الدراسية: العلوم، الرياضيات، اللغة العربية، التاريخ، الجغرافيا، والمواد الأخرى.</p>
+                    </div>
+                </div>
+
+                <div id="guideFeaturesSection" class="guide-section-content">
+                    <h3>✨ الميزات المتقدمة الجديدة</h3>
+                    
+                    <div class="guide-feature-card">
+                        <h4>🔔 نظام الإشعارات التفاعلي</h4>
+                        <div class="guide-step">
+                            <div class="guide-step-number">1</div>
+                            <div class="guide-step-content">
+                                <strong>إشعارات محفزة:</strong> رسائل تشجيعية تظهر للطلاب أثناء اللعب
+                            </div>
+                        </div>
+                        <div class="guide-step">
+                            <div class="guide-step-number">2</div>
+                            <div class="guide-step-content">
+                                <strong>تنبيهات عائمة:</strong> معلومات مفيدة تظهر في الوقت المناسب
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="guide-feature-card">
+                        <h4>🧠 نظام التحديات الذكية</h4>
+                        <div class="guide-step">
+                            <div class="guide-step-number">1</div>
+                            <div class="guide-step-content">
+                                <strong>تحديات إضافية:</strong> أسئلة مكافأة تظهر بشكل عشوائي (20% من الوقت)
+                            </div>
+                        </div>
+                        <div class="guide-step">
+                            <div class="guide-step-number">2</div>
+                            <div class="guide-step-content">
+                                <strong>نقاط مضاعفة:</strong> فرصة لمضاعفة النقاط عند النجاح
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="guide-feature-card">
+                        <h4>🏆 شريط التقدم التنافسي</h4>
+                        <p>يعرض تقدم الطالب في الوقت الفعلي مع إحصائيات مفصلة عن الأداء والنقاط المكتسبة.</p>
+                    </div>
+
+                    <div class="guide-tip">
+                        <strong>💡 نصيحة:</strong> استخدم الميزات الجديدة تدريجياً لتعويد الطلاب عليها
+                    </div>
+                </div>
+
+                <div id="guideControlsSection" class="guide-section-content">
+                    <h3>🎛️ دليل أدوات التحكم المتقدمة</h3>
+                    
+                    <div class="guide-feature-card">
+                        <h4>⌨️ اختصارات لوحة المفاتيح الجديدة</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                            <div style="background: rgba(34, 139, 34, 0.1); padding: 10px; border-radius: 8px;">
+                                <strong>Ctrl + G:</strong> فتح دليل المعلم
+                            </div>
+                            <div style="background: rgba(255, 140, 0, 0.1); padding: 10px; border-radius: 8px;">
+                                <strong>Ctrl + N:</strong> إشعار تجريبي
+                            </div>
+                            <div style="background: rgba(255, 215, 0, 0.1); padding: 10px; border-radius: 8px;">
+                                <strong>Ctrl + C:</strong> تحدي تجريبي
+                            </div>
+                            <div style="background: rgba(220, 20, 60, 0.1); padding: 10px; border-radius: 8px;">
+                                <strong>Space:</strong> بدء/إيقاف القنبلة
+                            </div>
+                            <div style="background: rgba(34, 139, 34, 0.1); padding: 10px; border-radius: 8px;">
+                                <strong>Enter:</strong> إجابة صحيحة
+                            </div>
+                            <div style="background: rgba(220, 20, 60, 0.1); padding: 10px; border-radius: 8px;">
+                                <strong>Delete:</strong> إجابة خاطئة
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="guide-feature-card">
+                        <h4>🎚️ أزرار التحكم الرئيسية</h4>
+                        <div class="guide-step">
+                            <div class="guide-step-number">🚀</div>
+                            <div class="guide-step-content">
+                                <strong>بدء المهمة:</strong> يبدأ العداد التنازلي ويفعل القنبلة
+                            </div>
+                        </div>
+                        <div class="guide-step">
+                            <div class="guide-step-number">⏸️</div>
+                            <div class="guide-step-content">
+                                <strong>إيقاف مؤقت:</strong> يوقف العداد مؤقتاً (للطوارئ أو التوضيح)
+                            </div>
+                        </div>
+                        <div class="guide-step">
+                            <div class="guide-step-number">✅</div>
+                            <div class="guide-step-content">
+                                <strong>إجابة صحيحة:</strong> يبطل القنبلة ويمنح النقاط
+                            </div>
+                        </div>
+                        <div class="guide-step">
+                            <div class="guide-step-number">❌</div>
+                            <div class="guide-step-content">
+                                <strong>إجابة خاطئة:</strong> يسرع المؤقت (يخصم 10 ثوانِ)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="guideStrategiesSection" class="guide-section-content">
+                    <h3>📋 استراتيجيات التدريس المتقدمة</h3>
+                    
+                    <div class="guide-feature-card">
+                        <h4>🎭 تقنيات التشويق</h4>
+                        <div class="guide-step">
+                            <div class="guide-step-number">1</div>
+                            <div class="guide-step-content">
+                                <strong>التدرج في الصعوبة:</strong> ابدأ بأسئلة سهلة ثم ارفع المستوى تدريجياً
+                            </div>
+                        </div>
+                        <div class="guide-step">
+                            <div class="guide-step-number">2</div>
+                            <div class="guide-step-content">
+                                <strong>استخدام الأصوات:</strong> أضف تعليقات محمسة أثناء العد التنازلي
+                            </div>
+                        </div>
+                        <div class="guide-step">
+                            <div class="guide-step-number">3</div>
+                            <div class="guide-step-content">
+                                <strong>تنويع الأسئلة:</strong> امزج بين أسئلة المنهج والثقافة العامة
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="guide-feature-card">
+                        <h4>🏆 نظام المكافآت والتحفيز</h4>
+                        <ul>
+                            <li>🥇 منح نقاط إضافية للسرعة في الإجابة</li>
+                            <li>🎖️ تسجيل أفضل الأوقات والنتائج</li>
+                            <li>👏 الاحتفال بالنجاحات بحماس</li>
+                            <li>💪 تشجيع المحاولات حتى لو كانت خاطئة</li>
+                        </ul>
+                    </div>
+
+                    <div class="guide-warning">
+                        <strong>⚠️ تحذير مهم:</strong> تأكد من عدم زيادة التوتر عن الحد المطلوب. الهدف هو التحفيز وليس الضغط المفرط.
+                    </div>
+                </div>
+
+                <div id="guideTroubleshootingSection" class="guide-section-content">
+                    <h3>🔧 حل المشاكل الشائعة</h3>
+                    
+                    <div class="guide-feature-card">
+                        <h4>❓ مشاكل تقنية</h4>
+                        <div style="display: grid; gap: 15px;">
+                            <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 8px;">
+                                <strong>🔇 الصوت لا يعمل:</strong> تأكد من تفعيل الصوت في المتصفح والجهاز
+                            </div>
+                            <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 8px;">
+                                <strong>⏳ المؤقت يتوقف:</strong> أعد تحميل الصفحة واختبر المؤقت مرة أخرى
+                            </div>
+                            <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 8px;">
+                                <strong>📱 مشاكل الجوال:</strong> استخدم وضع ملء الشاشة لتجربة أفضل
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="guide-feature-card">
+                        <h4>👥 مشاكل الطلاب</h4>
+                        <div class="guide-step">
+                            <div class="guide-step-number">😰</div>
+                            <div class="guide-step-content">
+                                <strong>الطالب متوتر جداً:</strong> استخدم وضع الإيقاف المؤقت وهدئ الطالب
+                            </div>
+                        </div>
+                        <div class="guide-step">
+                            <div class="guide-step-number">❓</div>
+                            <div class="guide-step-content">
+                                <strong>الطالب لا يعرف الإجابة:</strong> أعط تلميحاً أو غيّر السؤال
+                            </div>
+                        </div>
+                        <div class="guide-step">
+                            <div class="guide-step-number">⏰</div>
+                            <div class="guide-step-content">
+                                <strong>الوقت قصير جداً:</strong> اضبط المدة في الإعدادات المخصصة
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="guideAssessmentSection" class="guide-section-content">
+                    <h3>📊 التقييم والمتابعة</h3>
+                    
+                    <div class="guide-feature-card">
+                        <h4>📈 مؤشرات الأداء</h4>
+                        <ul>
+                            <li>🏆 عدد القنابل المُبطلة مقابل المنفجرة</li>
+                            <li>⏱️ متوسط وقت الإجابة</li>
+                            <li>💯 مجموع النقاط المكتسبة</li>
+                            <li>📊 معدل النجاح العام</li>
+                        </ul>
+                    </div>
+
+                    <div class="guide-feature-card">
+                        <h4>📝 توثيق التقدم</h4>
+                        <div class="guide-step">
+                            <div class="guide-step-number">1</div>
+                            <div class="guide-step-content">
+                                <strong>سجل النتائج:</strong> احتفظ بسجل لنتائج كل طالب
+                            </div>
+                        </div>
+                        <div class="guide-step">
+                            <div class="guide-step-number">2</div>
+                            <div class="guide-step-content">
+                                <strong>تحليل الأداء:</strong> حدد نقاط القوة والضعف لكل طالب
+                            </div>
+                        </div>
+                        <div class="guide-step">
+                            <div class="guide-step-number">3</div>
+                            <div class="guide-step-content">
+                                <strong>خطط التحسين:</strong> ضع خطط فردية لتطوير أداء الطلاب
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="guide-tip">
+                        <strong>💡 نصيحة:</strong> استخدم الإحصائيات المدمجة في النظام لمتابعة تقدم الطلاب
+                    </div>
+                </div>
+
+                <!-- أزرار العمل -->
+                <div style="text-align: center; margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px;">
+                    <button class="oman-btn" onclick="closeModal('teacherGuideModal')">✅ فهمت، دعني أطبق!</button>
+                    <button class="oman-btn warning" onclick="showTestFeatures()">🧪 اختبار الميزات</button>
                 </div>
             </div>
         </div>
@@ -5423,7 +6118,623 @@
         // حفظ عند إغلاق الصفحة
         window.addEventListener('beforeunload', saveGameState);
 
+        // ===== التطويرات المتقدمة للقنبلة المؤقتة =====
+
+        // 1. نظام الإشعارات التفاعلي المتقدم
+        class AdvancedNotificationSystem {
+            constructor() {
+                this.notificationElement = document.getElementById('advancedNotification');
+                this.floatingElement = document.getElementById('floatingNotification');
+                this.motivationalMessages = [
+                    "🔥 أنت تحرق الطريق للنجاح!",
+                    "⚡ سرعة البرق في التفكير!",
+                    "🧠 عقل ذكي وقادر على المستحيل!",
+                    "🎯 تركيز رائع، استمر!",
+                    "💪 قوة خارقة في المعرفة!",
+                    "🌟 نجم متألق في سماء العلم!",
+                    "🚀 انطلاق نحو القمة!",
+                    "💎 أداء ماسي ومميز!"
+                ];
+                this.warningMessages = [
+                    "⚠️ انتبه! الوقت ينفد بسرعة!",
+                    "🔔 تركيز أكثر، النجاح قريب!",
+                    "⏰ فكر بسرعة، الفرصة ذهبية!",
+                    "💡 استخدم ذكاءك، يمكنك فعلها!"
+                ];
+            }
+
+            showAdvancedNotification(message, type = 'info', duration = 3000) {
+                const content = this.notificationElement.querySelector('#notificationContent');
+                content.innerHTML = `<i class="fas fa-bomb"></i> ${message}`;
+                
+                // تطبيق النوع
+                this.notificationElement.className = `advanced-notification ${type}`;
+                
+                // الرسوم المتحركة
+                gsap.set(this.notificationElement, { opacity: 0, scale: 0.5, rotate: -10 });
+                gsap.to(this.notificationElement, {
+                    opacity: 1,
+                    scale: 1,
+                    rotate: 0,
+                    duration: 0.5,
+                    ease: "back.out(1.7)"
+                });
+
+                // إخفاء تلقائي
+                setTimeout(() => {
+                    gsap.to(this.notificationElement, {
+                        opacity: 0,
+                        scale: 0.8,
+                        rotate: 5,
+                        duration: 0.3,
+                        ease: "power2.in"
+                    });
+                }, duration);
+
+                // تأثيرات صوتية
+                if (type === 'success') {
+                    this.playNotificationSound('success');
+                } else if (type === 'warning') {
+                    this.playNotificationSound('warning');
+                }
+            }
+
+            showFloatingNotification(message, duration = 4000) {
+                const content = this.floatingElement.querySelector('#floatingContent');
+                content.innerHTML = message;
+                
+                this.floatingElement.classList.add('show');
+                
+                setTimeout(() => {
+                    this.floatingElement.classList.remove('show');
+                }, duration);
+            }
+
+            showMotivationalMessage() {
+                const message = this.motivationalMessages[Math.floor(Math.random() * this.motivationalMessages.length)];
+                this.showAdvancedNotification(message, 'success', 2500);
+            }
+
+            showWarningMessage() {
+                const message = this.warningMessages[Math.floor(Math.random() * this.warningMessages.length)];
+                this.showAdvancedNotification(message, 'warning', 2000);
+            }
+
+            playNotificationSound(type) {
+                // تشغيل الصوت المناسب
+                if (type === 'success') {
+                    playGameSound('win.mp3');
+                } else if (type === 'warning') {
+                    playGameSound('Notification.mp3');
+                }
+            }
+        }
+
+        // 2. نظام التحديات الذكية
+        class IntelligenceChallengeSystem {
+            constructor() {
+                this.challengeElement = document.getElementById('intelligenceChallenge');
+                this.challengeTimer = 5;
+                this.timerInterval = null;
+                this.isActive = false;
+                this.challenges = [
+                    {
+                        text: "🧮 سؤال سريع: كم يساوي 7 × 8؟",
+                        type: "math",
+                        bonus: 50
+                    },
+                    {
+                        text: "🌍 أين تقع عُمان جغرافياً؟",
+                        type: "geography", 
+                        bonus: 75
+                    },
+                    {
+                        text: "📚 ما هو جمع كلمة 'كتاب'؟",
+                        type: "language",
+                        bonus: 60
+                    },
+                    {
+                        text: "🔬 ما هو الرمز الكيميائي للماء؟",
+                        type: "science",
+                        bonus: 80
+                    },
+                    {
+                        text: "🏛️ من هو مؤسس الدولة العُمانية الحديثة؟",
+                        type: "history",
+                        bonus: 100
+                    }
+                ];
+            }
+
+            shouldTriggerChallenge() {
+                // نسبة 20% لظهور التحدي بعد الإجابة الصحيحة
+                return Math.random() < 0.2;
+            }
+
+            showChallenge() {
+                if (this.isActive) return;
+                
+                const challenge = this.challenges[Math.floor(Math.random() * this.challenges.length)];
+                const content = this.challengeElement.querySelector('#challengeContent');
+                content.innerHTML = `${challenge.text}<br><div style="color: var(--accent-gold); margin-top: 15px;">🎁 مكافأة: ${challenge.bonus} نقطة إضافية!</div>`;
+                
+                this.isActive = true;
+                this.challengeTimer = 5;
+                this.updateChallengeTimer();
+                
+                // إظهار التحدي بالرسوم المتحركة
+                gsap.set(this.challengeElement, { opacity: 0, scale: 0.7, rotateY: -180 });
+                gsap.to(this.challengeElement, {
+                    opacity: 1,
+                    scale: 1,
+                    rotateY: 0,
+                    duration: 0.8,
+                    ease: "power3.out"
+                });
+
+                // بدء العداد التنازلي
+                this.timerInterval = setInterval(() => {
+                    this.challengeTimer--;
+                    this.updateChallengeTimer();
+                    
+                    if (this.challengeTimer <= 0) {
+                        this.declineChallenge();
+                    }
+                }, 1000);
+
+                // تشغيل صوت التحدي
+                playGameSound('ai-notification.mp3');
+            }
+
+            updateChallengeTimer() {
+                const timerElement = this.challengeElement.querySelector('#challengeTimer');
+                timerElement.textContent = this.challengeTimer.toString().padStart(2, '0');
+                
+                // تأثير بصري للوقت المتبقي
+                if (this.challengeTimer <= 2) {
+                    gsap.to(timerElement, {
+                        scale: 1.2,
+                        duration: 0.3,
+                        yoyo: true,
+                        repeat: 1,
+                        ease: "power2.inOut"
+                    });
+                }
+            }
+
+            acceptChallenge() {
+                if (!this.isActive) return;
+                
+                // منح النقاط الإضافية
+                const bonusPoints = 50 + (this.challengeTimer * 10);
+                gameState.totalScore += bonusPoints;
+                updateDisplay();
+                
+                this.hideChallenge();
+                
+                // إشعار النجاح
+                const notificationSystem = new AdvancedNotificationSystem();
+                notificationSystem.showAdvancedNotification(`🎉 تحدي ذكي! +${bonusPoints} نقطة`, 'success');
+                
+                // تأثيرات بصرية
+                this.triggerSuccessEffect();
+                
+                playGameSound('bonus-collect.mp3');
+            }
+
+            declineChallenge() {
+                if (!this.isActive) return;
+                this.hideChallenge();
+                
+                const notificationSystem = new AdvancedNotificationSystem();
+                notificationSystem.showFloatingNotification("💭 لا بأس، ستأتي فرصة أخرى!");
+            }
+
+            hideChallenge() {
+                if (this.timerInterval) {
+                    clearInterval(this.timerInterval);
+                    this.timerInterval = null;
+                }
+                
+                this.isActive = false;
+                
+                gsap.to(this.challengeElement, {
+                    opacity: 0,
+                    scale: 0.5,
+                    rotateY: 180,
+                    duration: 0.5,
+                    ease: "power2.in"
+                });
+            }
+
+            triggerSuccessEffect() {
+                // إنشاء تأثير بصري للنجاح
+                const effect = document.getElementById('successEffect');
+                gsap.fromTo(effect, 
+                    { opacity: 0, scale: 0 },
+                    { opacity: 0.8, scale: 3, duration: 0.8, ease: "power2.out", onComplete: () => {
+                        gsap.to(effect, { opacity: 0, duration: 0.3 });
+                    }}
+                );
+            }
+        }
+
+        // 3. نظام شريط التقدم التنافسي
+        class CompetitiveProgressSystem {
+            constructor() {
+                this.progressElement = document.getElementById('competitiveProgress');
+                this.progressFill = document.getElementById('progressFill');
+                this.progressStats = document.getElementById('progressStats');
+                this.sessionTimeStats = document.getElementById('sessionTimeStats');
+                this.sessionStartTime = Date.now();
+                this.totalBombs = 5;
+                this.defusedBombs = 0;
+                this.isVisible = false;
+            }
+
+            show() {
+                if (this.isVisible) return;
+                this.isVisible = true;
+                this.progressElement.classList.add('show');
+            }
+
+            hide() {
+                if (!this.isVisible) return;
+                this.isVisible = false;
+                this.progressElement.classList.remove('show');
+            }
+
+            updateProgress() {
+                const percentage = (this.defusedBombs / this.totalBombs) * 100;
+                
+                // تحديث شريط التقدم بالرسوم المتحركة
+                gsap.to(this.progressFill, {
+                    width: `${percentage}%`,
+                    duration: 0.8,
+                    ease: "power2.out"
+                });
+
+                // تحديث الإحصائيات
+                this.progressStats.textContent = `${this.defusedBombs}/${this.totalBombs} قنابل مُبطلة`;
+                
+                // تحديث وقت الجلسة
+                const sessionDuration = Math.floor((Date.now() - this.sessionStartTime) / 1000);
+                const minutes = Math.floor(sessionDuration / 60);
+                const seconds = sessionDuration % 60;
+                this.sessionTimeStats.textContent = `${minutes}:${seconds.toString().padStart(2, '0')} دقيقة`;
+
+                // تأثيرات خاصة عند الإنجاز
+                if (percentage === 100) {
+                    this.celebrateCompletion();
+                }
+            }
+
+            bombDefused() {
+                this.defusedBombs++;
+                this.updateProgress();
+                
+                // تأثير بصري للنجاح
+                gsap.fromTo(this.progressElement, 
+                    { scale: 1 },
+                    { scale: 1.05, duration: 0.3, yoyo: true, repeat: 1, ease: "power2.inOut" }
+                );
+            }
+
+            resetProgress() {
+                this.defusedBombs = 0;
+                this.sessionStartTime = Date.now();
+                this.updateProgress();
+            }
+
+            celebrateCompletion() {
+                // تأثيرات الاحتفال
+                gsap.to(this.progressFill, {
+                    background: "linear-gradient(90deg, #FFD700 0%, #FFA500 50%, #FFD700 100%)",
+                    duration: 0.5
+                });
+
+                // كونفيتي
+                if (typeof confetti !== 'undefined') {
+                    confetti({
+                        particleCount: 100,
+                        spread: 70,
+                        origin: { y: 0.8 }
+                    });
+                }
+            }
+        }
+
+        // 4. نظام دليل المعلم المتطور
+        class TeacherGuideSystem {
+            constructor() {
+                this.guideModal = document.getElementById('teacherGuideModal');
+                this.currentSection = 'overview';
+            }
+
+            openGuide() {
+                this.guideModal.style.display = 'block';
+                
+                // رسوم متحركة للفتح
+                gsap.fromTo(this.guideModal.querySelector('.modal-content'),
+                    { opacity: 0, y: -50, scale: 0.9 },
+                    { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power3.out" }
+                );
+            }
+
+            showSection(sectionName) {
+                // إخفاء جميع الأقسام
+                document.querySelectorAll('.guide-section-content').forEach(section => {
+                    section.classList.remove('active');
+                });
+
+                // إخفاء جميع أزرار التنقل
+                document.querySelectorAll('.guide-nav-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+
+                // إظهار القسم المطلوب
+                const targetSection = document.getElementById(`guide${sectionName.charAt(0).toUpperCase() + sectionName.slice(1)}Section`);
+                if (targetSection) {
+                    targetSection.classList.add('active');
+                }
+
+                // تفعيل زر التنقل المناسب
+                const targetBtn = document.querySelector(`[onclick="showGuideSection('${sectionName}')"]`);
+                if (targetBtn) {
+                    targetBtn.classList.add('active');
+                }
+
+                this.currentSection = sectionName;
+            }
+
+            showTestFeatures() {
+                closeModal('teacherGuideModal');
+                
+                // اختبار الإشعارات
+                setTimeout(() => {
+                    const notificationSystem = new AdvancedNotificationSystem();
+                    notificationSystem.showAdvancedNotification('🧪 اختبار نظام الإشعارات', 'info');
+                }, 500);
+
+                // اختبار التحدي
+                setTimeout(() => {
+                    const challengeSystem = new IntelligenceChallengeSystem();
+                    challengeSystem.showChallenge();
+                }, 3000);
+
+                // اختبار شريط التقدم
+                setTimeout(() => {
+                    const progressSystem = new CompetitiveProgressSystem();
+                    progressSystem.show();
+                    progressSystem.bombDefused();
+                }, 5000);
+            }
+        }
+
+        // 5. نظام التأثيرات البصرية المحسن
+        class VisualEffectsSystem {
+            constructor() {
+                this.explosionEffect = document.getElementById('explosionEffect');
+                this.successEffect = document.getElementById('successEffect');
+            }
+
+            triggerExplosion() {
+                gsap.fromTo(this.explosionEffect,
+                    { opacity: 0, scale: 0 },
+                    { 
+                        opacity: 1, 
+                        scale: 4, 
+                        duration: 0.8, 
+                        ease: "power2.out",
+                        onComplete: () => {
+                            gsap.to(this.explosionEffect, { opacity: 0, duration: 0.5 });
+                        }
+                    }
+                );
+
+                // اهتزاز الشاشة
+                gsap.to('body', {
+                    x: 5,
+                    duration: 0.1,
+                    repeat: 5,
+                    yoyo: true,
+                    ease: "power2.inOut",
+                    onComplete: () => {
+                        gsap.set('body', { x: 0 });
+                    }
+                });
+            }
+
+            triggerSuccess() {
+                gsap.fromTo(this.successEffect,
+                    { opacity: 0, scale: 0 },
+                    {
+                        opacity: 0.8,
+                        scale: 2.5,
+                        duration: 0.6,
+                        ease: "power2.out",
+                        onComplete: () => {
+                            gsap.to(this.successEffect, { opacity: 0, duration: 0.4 });
+                        }
+                    }
+                );
+            }
+        }
+
+        // تهيئة الأنظمة المتقدمة
+        let advancedNotificationSystem, intelligenceChallengeSystem, competitiveProgressSystem, teacherGuideSystem, visualEffectsSystem;
+
+        // تهيئة الأنظمة عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            // تهيئة جميع الأنظمة المتقدمة
+            advancedNotificationSystem = new AdvancedNotificationSystem();
+            intelligenceChallengeSystem = new IntelligenceChallengeSystem();
+            competitiveProgressSystem = new CompetitiveProgressSystem();
+            teacherGuideSystem = new TeacherGuideSystem();
+            visualEffectsSystem = new VisualEffectsSystem();
+
+            // إضافة مستمعات الأحداث للأزرار الجديدة
+            const teacherGuideBtn = document.getElementById('teacherGuideBtn');
+            if (teacherGuideBtn) {
+                teacherGuideBtn.addEventListener('click', () => teacherGuideSystem.openGuide());
+            }
+
+            // رسالة ترحيب متطورة
+            setTimeout(() => {
+                advancedNotificationSystem.showAdvancedNotification(
+                    '🚀 مرحباً بك في النسخة المتطورة من القنبلة المؤقتة!', 
+                    'success', 
+                    4000
+                );
+                
+                setTimeout(() => {
+                    advancedNotificationSystem.showFloatingNotification(
+                        '💡 اضغط على زر دليل المعلم لاكتشاف الميزات الجديدة!'
+                    );
+                }, 2000);
+            }, 1000);
+        });
+
+        // 6. اختصارات لوحة المفاتيح المتقدمة
+        document.addEventListener('keydown', function(e) {
+            // التحقق من الاختصارات الجديدة
+            if (e.ctrlKey && e.key === 'g') {
+                e.preventDefault();
+                if (teacherGuideSystem) {
+                    teacherGuideSystem.openGuide();
+                }
+            }
+            
+            // اختبار الإشعارات (Ctrl + N)
+            if (e.ctrlKey && e.key === 'n') {
+                e.preventDefault();
+                if (advancedNotificationSystem) {
+                    advancedNotificationSystem.showMotivationalMessage();
+                }
+            }
+            
+            // اختبار التحدي (Ctrl + C) 
+            if (e.ctrlKey && e.key === 'c') {
+                e.preventDefault();
+                if (intelligenceChallengeSystem) {
+                    intelligenceChallengeSystem.showChallenge();
+                }
+            }
+
+            // اختصارات اللعبة المحسنة
+            if (e.key === ' ') { // Space للبدء/الإيقاف
+                e.preventDefault();
+                if (typeof startBomb === 'function') {
+                    startBomb();
+                }
+            }
+            
+            if (e.key === 'Enter') { // Enter للإجابة الصحيحة
+                e.preventDefault();
+                if (typeof correctAnswer === 'function') {
+                    correctAnswer();
+                }
+            }
+            
+            if (e.key === 'Delete') { // Delete للإجابة الخاطئة
+                e.preventDefault();
+                if (typeof wrongAnswer === 'function') {
+                    wrongAnswer();
+                }
+            }
+        });
+
+        // وظائف مساعدة للنوافذ المنبثقة
+        window.showGuideSection = function(sectionName) {
+            if (teacherGuideSystem) {
+                teacherGuideSystem.showSection(sectionName);
+            }
+        };
+
+        window.showTestFeatures = function() {
+            if (teacherGuideSystem) {
+                teacherGuideSystem.showTestFeatures();
+            }
+        };
+
+        window.acceptChallenge = function() {
+            if (intelligenceChallengeSystem) {
+                intelligenceChallengeSystem.acceptChallenge();
+            }
+        };
+
+        window.declineChallenge = function() {
+            if (intelligenceChallengeSystem) {
+                intelligenceChallengeSystem.declineChallenge();
+            }
+        };
+
+        // تحديث الوظائف الموجودة لتتكامل مع الأنظمة الجديدة
+        const originalCorrectAnswer = window.correctAnswer;
+        window.correctAnswer = function() {
+            if (originalCorrectAnswer) {
+                originalCorrectAnswer();
+            }
+            
+            // تفعيل الأنظمة المتقدمة
+            if (competitiveProgressSystem) {
+                competitiveProgressSystem.show();
+                competitiveProgressSystem.bombDefused();
+            }
+            
+            if (advancedNotificationSystem) {
+                advancedNotificationSystem.showMotivationalMessage();
+            }
+            
+            if (intelligenceChallengeSystem && intelligenceChallengeSystem.shouldTriggerChallenge()) {
+                setTimeout(() => {
+                    intelligenceChallengeSystem.showChallenge();
+                }, 1500);
+            }
+            
+            if (visualEffectsSystem) {
+                visualEffectsSystem.triggerSuccess();
+            }
+        };
+
+        const originalWrongAnswer = window.wrongAnswer;
+        window.wrongAnswer = function() {
+            if (originalWrongAnswer) {
+                originalWrongAnswer();
+            }
+            
+            if (advancedNotificationSystem) {
+                advancedNotificationSystem.showWarningMessage();
+            }
+        };
+
+        // التكامل مع انفجار القنبلة
+        const originalBombExploded = window.bombExploded || function(){};
+        window.bombExploded = function() {
+            originalBombExploded();
+            
+            if (visualEffectsSystem) {
+                visualEffectsSystem.triggerExplosion();
+            }
+            
+            if (advancedNotificationSystem) {
+                advancedNotificationSystem.showAdvancedNotification(
+                    '💥 انفجرت القنبلة! لا تيأس، حاول مرة أخرى!', 
+                    'warning',
+                    3000
+                );
+            }
+        };
+
         console.log('💣 تم تحميل النظام المحسن للعبة القنبلة المؤقتة - نظام اختيار ذكي وسريع مع تحسينات متقدمة!');
+        console.log('🚀 التطويرات المتقدمة الجديدة:');
+        console.log('   🔔 نظام الإشعارات التفاعلي المتقدم');
+        console.log('   🧠 نظام التحديات الذكية');
+        console.log('   🏆 شريط التقدم التنافسي');
+        console.log('   🎨 نظام التأثيرات البصرية المحسن');
+        console.log('   ⌨️ اختصارات لوحة المفاتيح الجديدة');
+        console.log('   📚 دليل المعلم المهني المتطور');
+        console.log('✨ جميع الأنظمة جاهزة وتعمل بكفاءة عالية!');
     </script>
 
     <!-- Responsive Helper Script -->
