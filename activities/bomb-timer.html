@@ -3063,22 +3063,35 @@
         // تحميل بيانات الطلاب
         async function loadStudentsData() {
             try {
-                studentsData = await activityUtils.loadStudentData();
-                console.log('✅ تم تحميل بيانات الطلاب:', studentsData);
+                if (typeof ActivityUtils !== 'undefined' && activityUtils) {
+                    studentsData = await activityUtils.loadStudentData();
+                    console.log('✅ تم تحميل بيانات الطلاب:', studentsData);
+                } else {
+                    throw new Error('ActivityUtils غير متوفر');
+                }
             } catch (error) {
-                console.error('❌ خطأ في تحميل بيانات الطلاب:', error);
+                console.warn('⚠️ استخدام البيانات التجريبية:', error);
                 // بيانات تجريبية في حالة فشل التحميل
                 studentsData = {
                     "الصف السابع": ["أحمد محمد", "فاطمة سالم", "محمد عبدالله"],
                     "الصف الثامن": ["سارة أحمد", "عمر محمد", "ليلى سعيد"],
                     "الصف التاسع": ["خالد عمر", "نورا محمد", "يوسف سالم"]
                 };
+                console.log('📚 تم تحميل البيانات التجريبية:', studentsData);
             }
         }
 
         // تشغيل صوت اللعبة
         function playGameSound(soundFile) {
-            activityUtils.playSound(soundFile);
+            try {
+                if (typeof ActivityUtils !== 'undefined' && activityUtils) {
+                    activityUtils.playSound(soundFile);
+                } else {
+                    console.log('🔊 تشغيل صوت:', soundFile);
+                }
+            } catch (error) {
+                console.log('🔇 لا يمكن تشغيل الصوت:', soundFile, error);
+            }
         }
 
         // إيقاف جميع الأصوات
