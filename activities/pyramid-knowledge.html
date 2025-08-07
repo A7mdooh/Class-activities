@@ -1873,17 +1873,24 @@
       }
 
       showTurnNotification(playerName, level) {
+        if (!playerName) {
+          console.warn('اسم اللاعب غير محدد');
+          return;
+        }
+        
         const message = this.getRandomMessage('turn');
         const levelNames = [
           'التذكر', 'الفهم', 'التطبيق', 'التحليل', 'التقييم', 'الإبداع'
         ];
+        
+        const levelName = levelNames[level - 1] || 'غير محدد';
         
         this.createNotification(
           'turn',
           '🎯',
           `<div class="notification-player">${playerName}</div>
            <div>${message}</div>
-           <div style="font-size: 0.9rem; opacity: 0.8;">المستوى: ${levelNames[level - 1]}</div>`,
+           <div style="font-size: 0.9rem; opacity: 0.8;">المستوى: ${levelName}</div>`,
           6000
         );
 
@@ -1893,6 +1900,11 @@
       }
 
       showSuccessNotification(playerName) {
+        if (!playerName) {
+          console.warn('اسم اللاعب غير محدد');
+          return;
+        }
+        
         const message = this.getRandomMessage('success');
         this.createNotification(
           'success',
@@ -1906,6 +1918,11 @@
       }
 
       showEncouragementNotification(playerName) {
+        if (!playerName) {
+          console.warn('اسم اللاعب غير محدد');
+          return;
+        }
+        
         const message = this.getRandomMessage('encouragement');
         this.createNotification(
           'encouragement',
@@ -1918,17 +1935,24 @@
       }
 
       showLevelUpNotification(playerName, newLevel) {
+        if (!playerName) {
+          console.warn('اسم اللاعب غير محدد');
+          return;
+        }
+        
         const message = this.getRandomMessage('levelUp');
         const levelNames = [
           'التذكر', 'الفهم', 'التطبيق', 'التحليل', 'التقييم', 'الإبداع'
         ];
+        
+        const levelName = levelNames[newLevel - 1] || 'غير محدد';
         
         this.createNotification(
           'level-up',
           '🎊',
           `<div class="notification-player">${playerName}</div>
            <div>${message}</div>
-           <div style="font-size: 0.9rem; opacity: 0.8;">المستوى الجديد: ${levelNames[newLevel - 1]}</div>`,
+           <div style="font-size: 0.9rem; opacity: 0.8;">المستوى الجديد: ${levelName}</div>`,
           7000
         );
         this.playSound('levelUp');
@@ -1937,6 +1961,11 @@
       }
 
       showVictoryNotification(playerName) {
+        if (!playerName) {
+          console.warn('اسم اللاعب غير محدد');
+          return;
+        }
+        
         this.createNotification(
           'victory',
           '🏆',
@@ -1951,6 +1980,11 @@
       }
 
       showBrainChallenge(playerName, level) {
+        if (!playerName) {
+          console.warn('اسم اللاعب غير محدد');
+          return;
+        }
+        
         const levelNames = [
           'التذكر - تذكر المعلومات',
           'الفهم - اشرح بكلماتك',
@@ -1960,8 +1994,10 @@
           'الإبداع - ابتكر وأبدع'
         ];
 
+        const levelDescription = levelNames[level - 1] || 'مستوى غير محدد';
+
         document.getElementById('challengeText').textContent = `${playerName}، استعد للتحدي!`;
-        document.getElementById('challengeLevel').textContent = `المستوى ${level}: ${levelNames[level - 1]}`;
+        document.getElementById('challengeLevel').textContent = `المستوى ${level}: ${levelDescription}`;
         
         this.brainChallenge.classList.add('show');
         this.playSound('challenge');
@@ -2070,15 +2106,22 @@
       }
 
       updateCompetitionProgress(currentLevel, totalLevels, playerName) {
+        if (!playerName) {
+          console.warn('اسم اللاعب غير محدد');
+          return;
+        }
+        
         const progress = (currentLevel / totalLevels) * 100;
         const progressText = document.getElementById('progressText');
         const progressFill = document.getElementById('progressFill');
         
-        progressText.textContent = `${playerName} - المستوى ${currentLevel}/${totalLevels}`;
-        progressFill.style.width = progress + '%';
-        
-        if (this.competitionProgress.style.display === 'none') {
-          this.competitionProgress.style.display = 'flex';
+        if (progressText && progressFill) {
+          progressText.textContent = `${playerName} - المستوى ${currentLevel}/${totalLevels}`;
+          progressFill.style.width = progress + '%';
+          
+          if (this.competitionProgress.style.display === 'none') {
+            this.competitionProgress.style.display = 'flex';
+          }
         }
       }
 
@@ -2868,17 +2911,19 @@
           // إشعار بدء اللعبة للطالب الأول
           if (window.notificationSystem) {
             const firstPlayer = this.currentStudents[0];
-            notificationSystem.showTurnNotification(firstPlayer, 1);
-            
-            // إشعار ترحيبي للجميع
-            notificationSystem.createNotification(
-              'challenge',
-              '🏛️',
-              `<div><strong>🎉 مرحباً بكم في هرم المعرفة! 🎉</strong></div>
-               <div>ابنوا هرم المعرفة عبر المستويات الستة لبلوم!</div>
-               <div style="font-size: 0.9rem; opacity: 0.8;">من التذكر إلى الإبداع... رحلة التعلم تبدأ الآن!</div>`,
-              8000
-            );
+            if (firstPlayer) {
+              notificationSystem.showTurnNotification(firstPlayer, 1);
+              
+              // إشعار ترحيبي للجميع
+              notificationSystem.createNotification(
+                'challenge',
+                '🏛️',
+                `<div><strong>🎉 مرحباً بكم في هرم المعرفة! 🎉</strong></div>
+                 <div>ابنوا هرم المعرفة عبر المستويات الستة لبلوم!</div>
+                 <div style="font-size: 0.9rem; opacity: 0.8;">من التذكر إلى الإبداع... رحلة التعلم تبدأ الآن!</div>`,
+                8000
+              );
+            }
           }
         }, 3500); // انتظار انتهاء العد التنازلي
       }
@@ -2920,21 +2965,40 @@
       }
 
       updateCurrentPlayer() {
+        if (this.currentStudents.length === 0) {
+          return;
+        }
+        
         const currentPlayer = this.currentStudents[this.currentPlayerIndex];
+        if (!currentPlayer) {
+          return;
+        }
+        
         const playerData = this.playerPyramids.get(currentPlayer);
+        if (!playerData) {
+          return;
+        }
         
         this.elements.currentPlayerName.textContent = currentPlayer;
         this.elements.currentPlayerAvatar.textContent = currentPlayer.charAt(0);
         
         const levelInfo = this.bloomLevels[playerData.level];
-        this.elements.currentPlayerLevel.textContent = `المستوى ${playerData.level} - ${levelInfo.name}`;
+        if (levelInfo) {
+          this.elements.currentPlayerLevel.textContent = `المستوى ${playerData.level} - ${levelInfo.name}`;
+        }
         
         this.currentLevel = playerData.level;
         this.createPyramid();
       }
 
       getCurrentPlayerLevel() {
+        if (this.currentStudents.length === 0 || this.currentPlayerIndex < 0) {
+          return 1;
+        }
         const currentPlayer = this.currentStudents[this.currentPlayerIndex];
+        if (!currentPlayer) {
+          return 1;
+        }
         const playerData = this.playerPyramids.get(currentPlayer);
         return playerData ? playerData.level : 1;
       }
@@ -3038,19 +3102,22 @@
         this.updateQuestion();
         
         // إضافة إشعار تفاعلي للدور الجديد
-        if (window.notificationSystem) {
+        if (window.notificationSystem && this.currentStudents.length > 0) {
           const currentPlayer = this.currentStudents[this.currentPlayerIndex];
           const currentLevel = this.getCurrentPlayerLevel();
           
-          // إشعار الدور مع التحدي
-          notificationSystem.showTurnNotification(currentPlayer.name, currentLevel);
-          
-          // تحديث شريط التقدم التنافسي
-          notificationSystem.updateCompetitionProgress(
-            currentLevel, 
-            6, 
-            currentPlayer.name
-          );
+          // التأكد من وجود اللاعب قبل الإشعار
+          if (currentPlayer) {
+            // إشعار الدور مع التحدي
+            notificationSystem.showTurnNotification(currentPlayer, currentLevel);
+            
+            // تحديث شريط التقدم التنافسي
+            notificationSystem.updateCompetitionProgress(
+              currentLevel, 
+              6, 
+              currentPlayer
+            );
+          }
         }
       }
 
