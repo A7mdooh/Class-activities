@@ -3051,6 +3051,12 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('💣 تحميل لعبة القنبلة المؤقتة...');
             
+            // اختبار وجود وظيفة showGameSetup
+            console.log('🔧 اختبار الوظائف:');
+            console.log('   - showGameSetup:', typeof showGameSetup);
+            console.log('   - closeModal:', typeof closeModal);
+            console.log('   - setupModal element:', document.getElementById('setupModal') ? 'موجود' : 'غير موجود');
+            
             // تهيئة أزرار التحكم الموحدة
             // تهيئة اللعبة
             initializeGame();
@@ -3195,6 +3201,8 @@
 
         // عرض إعداد اللعبة
         function showGameSetup() {
+            console.log('🎮 بداية تنفيذ showGameSetup()');
+            
             playGameSound('click'); // صوت فتح النافذة
             setupStudentSelection(); // إعداد اختيار الطلاب
             updateSettingsPreview();
@@ -3219,7 +3227,25 @@
             if (speedupEnabled) speedupEnabled.addEventListener('change', updateSettingsPreview);
             if (speedBonusEnabled) speedBonusEnabled.addEventListener('change', updateSettingsPreview);
             
-            document.getElementById('setupModal').style.display = 'block';
+            const modal = document.getElementById('setupModal');
+            console.log('🔍 البحث عن modal:', modal ? 'موجود ✅' : 'غير موجود ❌');
+            
+            if (modal) {
+                modal.style.display = 'block';
+                console.log('✅ تم إظهار modal بنجاح');
+            } else {
+                console.error('❌ لم يتم العثور على modal');
+            }
+        }
+
+        // إغلاق نافذة إعدادات اللعبة
+        function closeGameSetup() {
+            console.log('🚪 إغلاق نافذة الإعدادات');
+            const modal = document.getElementById('setupModal');
+            if (modal) {
+                modal.style.display = 'none';
+                console.log('✅ تم إغلاق النافذة بنجاح');
+            }
         }
 
         // إعداد خيارات الصعوبة
@@ -5097,7 +5123,25 @@
 
         // إغلاق المودال (محدث للنظام الموحد)
         function closeModal(modalId) {
-            activityUtils.closeModal(modalId);
+            try {
+                if (typeof ActivityUtils !== 'undefined' && activityUtils) {
+                    activityUtils.closeModal(modalId);
+                } else {
+                    // fallback: إغلاق بدون ActivityUtils
+                    const modal = document.getElementById(modalId);
+                    if (modal) {
+                        modal.style.display = 'none';
+                        console.log('✅ تم إغلاق النافذة:', modalId);
+                    }
+                }
+            } catch (error) {
+                console.log('⚠️ خطأ في إغلاق النافذة:', error);
+                // إغلاق مباشر كخطة بديلة
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.style.display = 'none';
+                }
+            }
         }
 
         // وظائف محدثة للنظام الجديد
