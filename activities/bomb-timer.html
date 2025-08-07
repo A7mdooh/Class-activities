@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>💣 لعبة القنبلة المؤقتة - نشاط تعليمي تفاعلي</title>
+    <title>💣 مختبر إبطال المتفجرات التعليمي - أكاديمية الأبطال الصغار</title>
     
     <!-- الخطوط والأيقونات -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -909,6 +909,116 @@
             height: 100%;
             background-color: rgba(0,0,0,0.9) !important;
             backdrop-filter: blur(5px);
+        }
+        
+        /* رسوم متحركة محسنة للتعلم التفاعلي */
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-30px); }
+            60% { transform: translateY(-15px); }
+        }
+        
+        @keyframes popIn {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+        
+        @keyframes slideInRight {
+            0% { transform: translateX(100%); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOutRight {
+            0% { transform: translateX(0); opacity: 1; }
+            100% { transform: translateX(100%); opacity: 0; }
+        }
+        
+        @keyframes glowPulse {
+            0% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.6); }
+            100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
+        }
+        
+        /* شريط الخبرة والمستوى */
+        .experience-bar {
+            background: linear-gradient(90deg, #4ecdc4, #44a08d);
+            height: 10px;
+            border-radius: 5px;
+            transition: width 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .experience-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* تحسينات للشارات */
+        .badge-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .badge-item {
+            background: linear-gradient(135deg, #ffd700, #ffed4a);
+            color: #333;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(255, 215, 0, 0.3);
+            animation: glowPulse 2s infinite alternate;
+        }
+        
+        /* تأثيرات تفاعلية للأزرار */
+        .interactive-btn {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .interactive-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease;
+        }
+        
+        .interactive-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .interactive-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
         }
 
         .modal-content {
@@ -2906,6 +3016,64 @@
             from { opacity: 1; transform: translateY(0); }
             to { opacity: 0; transform: translateY(-20px); }
         }
+        /* ====================== */
+        /* تنسيقات أزرار المعلم والتقارير */
+        /* ====================== */
+        
+        .teacher-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .teacher-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .teacher-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            background: linear-gradient(135deg, #764ba2, #667eea);
+        }
+        
+        .teacher-btn:active {
+            transform: translateY(1px);
+        }
+        
+        .badge-item {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #333;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+        }
+        
+        @keyframes slideInLeft {
+            0% { transform: translateX(-100%); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOutLeft {
+            0% { transform: translateX(0); opacity: 1; }
+            100% { transform: translateX(-100%); opacity: 0; }
+        }
+        
     </style>
 </head>
 <body>
@@ -2953,8 +3121,29 @@
 
     <!-- رأس الصفحة -->
     <header>
-        <h1 class="heading-responsive"><i class="fas fa-bomb"></i> لعبة القنبلة المؤقتة <i class="fas fa-clock"></i></h1>
-        <p class="subtitle text-responsive">اختبر معرفتك وسرعة بديهتك قبل انتهاء الوقت!</p>
+        <div class="header-content">
+            <h1 class="heading-responsive">
+                <i class="fas fa-bomb"></i> 
+                مختبر إبطال المتفجرات التعليمي - أكاديمية الأبطال الصغار 
+                <i class="fas fa-graduation-cap"></i>
+            </h1>
+            <p class="subtitle text-responsive">اختبر معرفتك وسرعة بديهتك قبل انتهاء الوقت! 🎯</p>
+            
+            <div class="teacher-controls">
+                <button onclick="showStudentSelector()" class="teacher-btn" title="اختيار طالب جديد">
+                    👥 اختيار طالب
+                </button>
+                <button onclick="showPerformanceReport()" class="teacher-btn" title="عرض تقرير الأداء">
+                    📊 تقرير الأداء
+                </button>
+                <button onclick="showTeacherTip()" class="teacher-btn" title="عرض نصيحة تعليمية">
+                    💡 نصيحة
+                </button>
+                <button onclick="resetGameProgress()" class="teacher-btn" title="إعادة تعيين التقدم">
+                    🔄 إعادة تعيين
+                </button>
+            </div>
+        </div>
     </header>
 
     <!-- الحاوي الرئيسي -->
@@ -3535,37 +3724,51 @@
         function showGameSetup() {
             console.log('🎮 بداية تنفيذ showGameSetup()');
             
-            const modal = document.getElementById('setupModal');
-            console.log('🔍 البحث عن modal:', modal ? 'موجود ✅' : 'غير موجود ❌');
-            
-            if (modal) {
-                console.log('🔍 حالة modal الحالية:', modal.style.display);
-                modal.style.display = 'block';
-                modal.style.zIndex = '999999'; // التأكد من z-index عالي جداً
-                modal.style.position = 'fixed';
-                modal.style.top = '0';
-                modal.style.left = '0';
-                modal.style.width = '100%';
-                modal.style.height = '100%';
-                modal.style.backgroundColor = 'rgba(0,0,0,0.95)';
-                console.log('✅ تم تعيين جميع الخصائص للـ modal');
-                console.log('🔍 حالة modal بعد التغيير:', modal.style.display);
-                console.log('✅ تم إظهار modal بنجاح');
+            try {
+                const modal = document.getElementById('setupModal');
+                console.log('🔍 البحث عن modal:', modal ? 'موجود ✅' : 'غير موجود ❌');
                 
-                // تحميل البيانات إذا لم تكن محملة
-                if (!gameSetup.studentData) {
-                    loadStudentData();
+                if (modal) {
+                    console.log('🔍 حالة modal الحالية:', modal.style.display);
+                    
+                    // إجبار إظهار النافذة
+                    modal.style.cssText = `
+                        display: block !important;
+                        position: fixed !important;
+                        z-index: 999999 !important;
+                        left: 0 !important;
+                        top: 0 !important;
+                        width: 100% !important;
+                        height: 100% !important;
+                        background-color: rgba(0,0,0,0.95) !important;
+                    `;
+                    
+                    console.log('✅ تم إجبار إظهار النافذة');
+                    
+                    // تحميل البيانات إذا لم تكن محملة
+                    if (!gameSetup.studentData) {
+                        loadStudentData();
+                    }
+                    
+                    // تشغيل صوت
+                    try {
+                        playGameSound('click');
+                    } catch (error) {
+                        console.log('⚠️ خطأ في تشغيل الصوت:', error);
+                    }
+                    
+                    // إضافة رسالة تأكيد
+                    setTimeout(() => {
+                        console.log('✅ النافذة يجب أن تكون ظاهرة الآن');
+                    }, 100);
+                    
+                } else {
+                    console.error('❌ لم يتم العثور على modal');
+                    alert('خطأ: نافذة الإعدادات غير موجودة! تأكد من وجود عنصر بمعرف setupModal');
                 }
-                
-                // تشغيل صوت
-                try {
-                    playGameSound('click');
-                } catch (error) {
-                    console.log('⚠️ خطأ في تشغيل الصوت:', error);
-                }
-            } else {
-                console.error('❌ لم يتم العثور على modal');
-                alert('خطأ: نافذة الإعدادات غير موجودة! تأكد من وجود عنصر بمعرف setupModal');
+            } catch (error) {
+                console.error('❌ خطأ في showGameSetup:', error);
+                alert('حدث خطأ في عرض نافذة الإعدادات: ' + error.message);
             }
         }
         
@@ -3684,7 +3887,30 @@
             defusedBombs: 0,
             explodedBombs: 0,
             points: 0,
-            timer: null
+            timer: null,
+            
+            // نظام المستويات والشارات الجديد
+            level: 1,
+            experience: 0,
+            nextLevelExp: 100,
+            badges: [],
+            streak: 0,
+            maxStreak: 0,
+            quickDefuses: 0,
+            perfectRounds: 0,
+            
+            // إحصائيات متقدمة
+            totalPlayTime: 0,
+            averageTime: 0,
+            bestTime: null,
+            achievements: [],
+            
+            // نظام التحديات اليومية
+            dailyChallenges: {
+                defuse5Bombs: { completed: false, progress: 0, reward: 50 },
+                perfectStreak3: { completed: false, progress: 0, reward: 75 },
+                speedDefuse: { completed: false, progress: 0, reward: 100 }
+            }
         };
 
         // بيانات الطلاب والصفوف
@@ -4591,11 +4817,81 @@
 
         // إعدادات الصعوبة
         const difficultySettings = {
-            easy: { time: 60, name: 'مبتدئ', color: '#00cc00' },
-            medium: { time: 45, name: 'متوسط', color: '#ff6600' },
-            hard: { time: 30, name: 'متقدم', color: '#ff3300' },
-            expert: { time: 20, name: 'خبير', color: '#cc0000' }
+            easy: { time: 60, name: 'مبتدئ 🌱', color: '#00cc00', points: 50 },
+            medium: { time: 45, name: 'محترف 🎯', color: '#ff6600', points: 100 },
+            hard: { time: 30, name: 'خبير 🔥', color: '#ff3300', points: 150 },
+            expert: { time: 20, name: 'أسطورة ⚡', color: '#cc0000', points: 200 }
         };
+        
+        // نظام الشارات والإنجازات
+        const badgeSystem = {
+            firstDefuse: { 
+                name: '🏆 المفجر المبتدئ', 
+                description: 'أول قنبلة يتم إبطالها!', 
+                condition: () => gameState.defusedBombs >= 1 
+            },
+            speedDemon: { 
+                name: '⚡ شيطان السرعة', 
+                description: 'إبطال قنبلة في أقل من 5 ثوان!', 
+                condition: () => gameState.quickDefuses >= 1 
+            },
+            perfectionist: { 
+                name: '💎 المثالي', 
+                description: '5 قنابل متتالية بدون خطأ!', 
+                condition: () => gameState.maxStreak >= 5 
+            },
+            bombSquad: { 
+                name: '💣 فرقة المتفجرات', 
+                description: 'إبطال 10 قنابل بنجاح!', 
+                condition: () => gameState.defusedBombs >= 10 
+            },
+            lightningReflexes: { 
+                name: '🌩️ ردود فعل البرق', 
+                description: 'إبطال 3 قنابل سريعة متتالية!', 
+                condition: () => gameState.quickDefuses >= 3 
+            },
+            timeKeeper: { 
+                name: '⏰ حارس الوقت', 
+                description: 'اللعب لمدة 30 دقيقة!', 
+                condition: () => gameState.totalPlayTime >= 1800 
+            },
+            mastermind: { 
+                name: '🧠 العقل المدبر', 
+                description: 'الوصول للمستوى 5!', 
+                condition: () => gameState.level >= 5 
+            },
+            challenger: { 
+                name: '🎯 المتحدي', 
+                description: 'إكمال جميع التحديات اليومية!', 
+                condition: () => Object.values(gameState.dailyChallenges).every(c => c.completed) 
+            }
+        };
+        
+        // رسائل تحفيزية للمعلم
+        const teacherEncouragement = [
+            "🌟 ممتاز! استمر في هذا الأداء الرائع!",
+            "🎉 رائع جداً! أنت تتقدم بسرعة!",
+            "🔥 إبداع حقيقي! المعلم فخور بك!",
+            "⭐ أداء استثنائي! أنت نجم الصف!",
+            "🏆 مبروك! لقد حققت إنجازاً رائعاً!",
+            "💪 قوة وتركيز عاليين! واصل التميز!",
+            "🎯 دقة مذهلة! أنت خبير حقيقي!",
+            "🌈 إبداع ملهم! تجعل التعلم ممتعاً!",
+            "🚀 سرعة فائقة! أنت صاروخ المعرفة!",
+            "💎 أداء ماسي! أنت كنز الصف!"
+        ];
+        
+        // نصائح تعليمية من المعلم
+        const teacherTips = [
+            "💡 نصيحة: اقرأ السؤال بعناية قبل الإجابة",
+            "🧠 تذكر: التركيز أهم من السرعة أحياناً",
+            "⚡ سر: التنفس العميق يساعد على التركيز",
+            "🎯 مفتاح النجاح: الثقة بالنفس والهدوء",
+            "🌟 دائماً: تعلم من أخطائك لتصبح أفضل",
+            "🔑 الحل: فكر قبل أن تجيب، والوقت في صالحك",
+            "💪 قوتك: في قدرتك على التفكير السليم",
+            "🎪 المتعة: في التعلم والتحدي معاً!"
+        ];
 
         // تهيئة اللعبة عند التحميل
         document.addEventListener('DOMContentLoaded', function() {
@@ -4733,13 +5029,33 @@
             });
         }
 
-        // تحديث العرض
+        // تحديث العرض المحسن
         function updateDisplay() {
             document.getElementById('currentStudent').textContent = gameState.currentStudent || 'غير محدد';
             document.getElementById('currentClass').textContent = gameState.currentClass || 'غير محدد';
             document.getElementById('gamePoints').textContent = gameState.points;
             document.getElementById('defusedBombs').textContent = gameState.defusedBombs;
             document.getElementById('explodedBombs').textContent = gameState.explodedBombs;
+            
+            // عرض المستوى والخبرة
+            const levelDisplay = document.getElementById('playerLevel');
+            if (levelDisplay) {
+                levelDisplay.textContent = `المستوى ${gameState.level}`;
+            }
+            
+            const expDisplay = document.getElementById('playerExp');
+            if (expDisplay) {
+                const expPercentage = (gameState.experience / gameState.nextLevelExp) * 100;
+                expDisplay.style.width = `${expPercentage}%`;
+                expDisplay.textContent = `${gameState.experience}/${gameState.nextLevelExp}`;
+            }
+            
+            // عرض الشريط
+            const streakDisplay = document.getElementById('currentStreak');
+            if (streakDisplay) {
+                streakDisplay.textContent = `🔥 ${gameState.streak}`;
+                streakDisplay.style.color = gameState.streak >= 3 ? '#ff6b6b' : '#ffd700';
+            }
             
             // حساب معدل النجاح
             const total = gameState.defusedBombs + gameState.explodedBombs;
@@ -4751,8 +5067,60 @@
             const seconds = gameState.timeLeft % 60;
             document.getElementById('timerDisplay').textContent = 
                 `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+            // تحديث شريط التقدم للتحديات اليومية
+            updateDailyChallengesDisplay();
+        }
+        
+        // تحديث عرض التحديات اليومية
+        function updateDailyChallengesDisplay() {
+            const challengesContainer = document.getElementById('dailyChallengesContainer');
+            if (!challengesContainer) return;
             
-            // تحديث الشريط العلوي
+            let challengesHTML = '<h4 style="color: #ffd700; margin-bottom: 15px;">🎯 تحديات اليوم</h4>';
+            
+            Object.keys(gameState.dailyChallenges).forEach(key => {
+                const challenge = gameState.dailyChallenges[key];
+                const progress = Math.min(100, (challenge.progress / getRequiredProgress(key)) * 100);
+                const status = challenge.completed ? '✅' : '⏳';
+                
+                challengesHTML += `
+                    <div style="margin-bottom: 10px; padding: 10px; background: rgba(255,255,255,0.1); border-radius: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                            <span>${status} ${getChallengeDisplayName(key)}</span>
+                            <span style="color: #ffd700;">+${challenge.reward}</span>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.3); border-radius: 10px; height: 8px; overflow: hidden;">
+                            <div style="background: linear-gradient(90deg, #4ecdc4, #44a08d); height: 100%; width: ${progress}%; transition: width 0.3s ease;"></div>
+                        </div>
+                        <div style="font-size: 0.8rem; color: rgba(255,255,255,0.7); margin-top: 3px;">
+                            ${challenge.progress}/${getRequiredProgress(key)}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            challengesContainer.innerHTML = challengesHTML;
+        }
+        
+        // مساعد للحصول على التقدم المطلوب
+        function getRequiredProgress(challengeKey) {
+            const requirements = {
+                defuse5Bombs: 5,
+                perfectStreak3: 3,
+                speedDefuse: 2
+            };
+            return requirements[challengeKey] || 1;
+        }
+        
+        // مساعد للحصول على اسم التحدي
+        function getChallengeDisplayName(challengeKey) {
+            const names = {
+                defuse5Bombs: 'إبطال 5 قنابل',
+                perfectStreak3: 'شريط مثالي × 3',
+                speedDefuse: 'إبطال سريع × 2'
+            };
+            return names[challengeKey] || challengeKey;
         }
 
         // تحديث رسالة القنبلة
@@ -6681,12 +7049,16 @@
             }
         }
 
-        // إجابة صحيحة
+        // إجابة صحيحة محسنة مع نظام التحفيز
         function correctAnswer() {
             if (!gameState.isActive) {
                 alert('⚠️ لا توجد قنبلة نشطة!');
                 return;
             }
+            
+            // تسجيل وقت البداية للحساب
+            const defuseTime = difficultySettings[gameState.difficulty].time - gameState.timeLeft;
+            const isQuickDefuse = gameState.timeLeft > (difficultySettings[gameState.difficulty].time * 0.8);
             
             // تشغيل أصوات النجاح
             playGameSound('win.mp3');
@@ -6695,48 +7067,94 @@
             // إيقاف المؤقت
             clearInterval(gameState.timer);
             gameState.isActive = false;
+            gameState.streak++;
+            if (gameState.streak > gameState.maxStreak) {
+                gameState.maxStreak = gameState.streak;
+            }
+            
+            // تسجيل الإحصائيات
+            if (isQuickDefuse) {
+                gameState.quickDefuses++;
+            }
+            
+            if (!gameState.bestTime || defuseTime < gameState.bestTime) {
+                gameState.bestTime = defuseTime;
+                showAchievement("🏃‍♂️ رقم قياسي جديد!", `أفضل وقت: ${defuseTime} ثانية!`);
+            }
             
             // إيقاف حركة القنبلة
             stopBombAnimation();
             
-            // حساب النقاط باستخدام الإعدادات المخصصة
-            const basePoints = parseInt(document.getElementById('correctPoints')?.value || 100);
+            // حساب النقاط مع المكافآت الجديدة
+            const basePoints = difficultySettings[gameState.difficulty].points;
             const timeMultiplier = parseInt(document.getElementById('timeMultiplier')?.value || 10);
             const speedBonusEnabled = document.getElementById('speedBonusEnabled')?.checked ?? true;
             
-            // حساب مكافأة الوقت
-            const timeBonus = speedBonusEnabled ? gameState.timeLeft * timeMultiplier : 0;
-            const totalPoints = basePoints + timeBonus;
+            let totalPoints = basePoints;
+            let bonusDetails = [];
             
+            // مكافأة الوقت
+            if (speedBonusEnabled) {
+                const timeBonus = gameState.timeLeft * timeMultiplier;
+                totalPoints += timeBonus;
+                bonusDetails.push(`⚡ مكافأة الوقت: +${timeBonus}`);
+            }
+            
+            // مكافأة السرعة
+            if (isQuickDefuse) {
+                const speedBonus = Math.floor(basePoints * 0.5);
+                totalPoints += speedBonus;
+                bonusDetails.push(`🚀 مكافأة السرعة: +${speedBonus}`);
+            }
+            
+            // مكافأة الشريط
+            if (gameState.streak >= 3) {
+                const streakBonus = gameState.streak * 10;
+                totalPoints += streakBonus;
+                bonusDetails.push(`🔥 مكافأة التتالي: +${streakBonus}`);
+            }
+            
+            // إضافة النقاط والخبرة
             gameState.points += totalPoints;
+            gameState.experience += Math.floor(totalPoints / 2);
             gameState.defusedBombs++;
+            
+            // فحص ترقية المستوى
+            checkLevelUp();
+            
+            // فحص الشارات الجديدة
+            checkNewBadges();
+            
+            // تحديث التحديات اليومية
+            updateDailyChallenges();
             
             // تحديث العرض
             updateGameState('success', '✅ تم إبطال القنبلة بنجاح!');
             
-            // رسالة مفصلة للنقاط
-            let pointsMessage = `🎉 أحسنت ${gameState.currentStudent}!`;
-            if (speedBonusEnabled && timeBonus > 0) {
-                pointsMessage += `\n🏆 النقاط الأساسية: ${basePoints}`;
-                pointsMessage += `\n⚡ مكافأة السرعة: ${timeBonus} (${gameState.timeLeft} ثانية × ${timeMultiplier})`;
-                pointsMessage += `\n🎯 المجموع: ${totalPoints} نقطة`;
-            } else {
-                pointsMessage += `\n🏆 حصلت على ${totalPoints} نقطة`;
-            }
+            // رسالة تحفيزية من المعلم
+            const encouragement = teacherEncouragement[Math.floor(Math.random() * teacherEncouragement.length)];
+            let pointsMessage = `${encouragement}\n\n🎯 ${gameState.currentStudent}`;
+            pointsMessage += `\n🏆 النقاط الأساسية: ${basePoints}`;
+            bonusDetails.forEach(bonus => pointsMessage += `\n${bonus}`);
+            pointsMessage += `\n💎 المجموع: ${totalPoints} نقطة`;
+            pointsMessage += `\n⭐ المستوى: ${gameState.level} | 🔥 التتالي: ${gameState.streak}`;
             
             updateBombMessage(pointsMessage);
             
-            // تأثيرات النجاح
-            showSuccessEffect();
+            // تأثيرات النجاح المحسنة
+            showEnhancedSuccessEffect(totalPoints, bonusDetails);
             updateDisplay();
         }
 
-        // إجابة خاطئة
+        // إجابة خاطئة محسنة مع تشجيع المعلم
         function wrongAnswer() {
             if (!gameState.isActive) {
                 alert('⚠️ لا توجد قنبلة نشطة!');
                 return;
             }
+            
+            // كسر الشريط
+            gameState.streak = 0;
             
             // تشغيل صوت الخطأ
             playGameSound('countdown-beep.mp3');
@@ -6744,11 +7162,223 @@
             // تسريع المؤقت (خصم 10 ثوانِ)
             gameState.timeLeft = Math.max(0, gameState.timeLeft - 10);
             
-            updateBombMessage(`❌ إجابة خاطئة! القنبلة تسرع! ${gameState.currentStudent} حاول مرة أخرى!`);
+            // رسالة تشجيعية من المعلم
+            const randomTip = teacherTips[Math.floor(Math.random() * teacherTips.length)];
+            updateBombMessage(`🤔 لا بأس ${gameState.currentStudent}! الأخطاء جزء من التعلم\n${randomTip}\n⏰ تم خصم 10 ثوان - فكر وحاول مرة أخرى!`);
             
             // تأثيرات الخطأ
             showErrorEffect();
             updateDisplay();
+        }
+        
+        // فحص ترقية المستوى
+        function checkLevelUp() {
+            if (gameState.experience >= gameState.nextLevelExp) {
+                gameState.level++;
+                gameState.experience -= gameState.nextLevelExp;
+                gameState.nextLevelExp = Math.floor(gameState.nextLevelExp * 1.5);
+                
+                showLevelUpAnimation();
+                playGameSound('achievement-unlock.mp3');
+                
+                // مكافأة ترقية المستوى
+                const levelBonus = gameState.level * 50;
+                gameState.points += levelBonus;
+                
+                showAchievement(
+                    `🎉 ترقية المستوى!`, 
+                    `تهانينا! وصلت للمستوى ${gameState.level}\n🎁 مكافأة: ${levelBonus} نقطة!`
+                );
+            }
+        }
+        
+        // فحص الشارات الجديدة
+        function checkNewBadges() {
+            Object.keys(badgeSystem).forEach(badgeKey => {
+                const badge = badgeSystem[badgeKey];
+                if (!gameState.badges.includes(badgeKey) && badge.condition()) {
+                    gameState.badges.push(badgeKey);
+                    showBadgeUnlocked(badge);
+                    playGameSound('achievement-unlock.mp3');
+                }
+            });
+        }
+        
+        // تحديث التحديات اليومية
+        function updateDailyChallenges() {
+            // تحدي إبطال 5 قنابل
+            if (!gameState.dailyChallenges.defuse5Bombs.completed) {
+                gameState.dailyChallenges.defuse5Bombs.progress = gameState.defusedBombs;
+                if (gameState.defusedBombs >= 5) {
+                    completeDailyChallenge('defuse5Bombs');
+                }
+            }
+            
+            // تحدي الشريط المثالي
+            if (!gameState.dailyChallenges.perfectStreak3.completed) {
+                gameState.dailyChallenges.perfectStreak3.progress = gameState.maxStreak;
+                if (gameState.maxStreak >= 3) {
+                    completeDailyChallenge('perfectStreak3');
+                }
+            }
+            
+            // تحدي السرعة
+            if (!gameState.dailyChallenges.speedDefuse.completed) {
+                gameState.dailyChallenges.speedDefuse.progress = gameState.quickDefuses;
+                if (gameState.quickDefuses >= 2) {
+                    completeDailyChallenge('speedDefuse');
+                }
+            }
+        }
+        
+        // إكمال تحدي يومي
+        function completeDailyChallenge(challengeKey) {
+            const challenge = gameState.dailyChallenges[challengeKey];
+            challenge.completed = true;
+            gameState.points += challenge.reward;
+            
+            showAchievement(
+                "🏆 تحدي مكتمل!", 
+                `تهانينا! حصلت على ${challenge.reward} نقطة إضافية!`
+            );
+        }
+        
+        // عرض إنجاز جديد
+        function showAchievement(title, message) {
+            const achievementDiv = document.createElement('div');
+            achievementDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #ffd700, #ffed4a);
+                color: #333;
+                padding: 20px;
+                border-radius: 15px;
+                box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
+                z-index: 10000;
+                max-width: 300px;
+                animation: slideInRight 0.5s ease-out;
+                border: 3px solid #f39c12;
+            `;
+            
+            achievementDiv.innerHTML = `
+                <div style="text-align: center;">
+                    <h3 style="margin: 0 0 10px 0; color: #e67e22;">${title}</h3>
+                    <p style="margin: 0; font-weight: bold;">${message}</p>
+                </div>
+            `;
+            
+            document.body.appendChild(achievementDiv);
+            
+            setTimeout(() => {
+                achievementDiv.style.animation = 'slideOutRight 0.5s ease-in';
+                setTimeout(() => achievementDiv.remove(), 500);
+            }, 4000);
+        }
+        
+        // عرض شارة جديدة
+        function showBadgeUnlocked(badge) {
+            const badgeDiv = document.createElement('div');
+            badgeDiv.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, #8e44ad, #9b59b6);
+                color: white;
+                padding: 30px;
+                border-radius: 20px;
+                box-shadow: 0 15px 40px rgba(142, 68, 173, 0.6);
+                z-index: 10001;
+                text-align: center;
+                animation: popIn 0.8s ease-out;
+                max-width: 400px;
+            `;
+            
+            badgeDiv.innerHTML = `
+                <div style="font-size: 4rem; margin-bottom: 15px;">${badge.name.split(' ')[0]}</div>
+                <h2 style="margin: 0 0 15px 0; color: #ffd700;">شارة جديدة!</h2>
+                <h3 style="margin: 0 0 10px 0;">${badge.name}</h3>
+                <p style="margin: 0; opacity: 0.9;">${badge.description}</p>
+                <button onclick="this.parentElement.remove()" style="
+                    margin-top: 20px; 
+                    padding: 10px 20px; 
+                    background: #ffd700; 
+                    color: #333; 
+                    border: none; 
+                    border-radius: 25px; 
+                    cursor: pointer; 
+                    font-weight: bold;
+                ">رائع!</button>
+            `;
+            
+            document.body.appendChild(badgeDiv);
+        }
+        
+        // رسوم متحركة لترقية المستوى
+        function showLevelUpAnimation() {
+            const levelDiv = document.createElement('div');
+            levelDiv.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7);
+                background-size: 400% 400%;
+                animation: gradientShift 2s ease infinite;
+                z-index: 10002;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                text-align: center;
+            `;
+            
+            levelDiv.innerHTML = `
+                <div style="animation: bounce 1s infinite;">
+                    <div style="font-size: 6rem; margin-bottom: 20px;">🎉</div>
+                    <h1 style="font-size: 3rem; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+                        المستوى ${gameState.level}!
+                    </h1>
+                    <p style="font-size: 1.5rem; margin: 20px 0; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">
+                        تهانينا ${gameState.currentStudent}! 🌟
+                    </p>
+                </div>
+            `;
+            
+            document.body.appendChild(levelDiv);
+            
+            setTimeout(() => {
+                levelDiv.style.opacity = '0';
+                levelDiv.style.transition = 'opacity 1s ease-out';
+                setTimeout(() => levelDiv.remove(), 1000);
+            }, 3000);
+        }
+        
+        // تأثيرات النجاح المحسنة
+        function showEnhancedSuccessEffect(points, bonusDetails) {
+            // استخدام النظام الموحد إذا كان متوفراً
+            if (activityUtils) {
+                activityUtils.showSuccess({
+                    title: '💣 تم إبطال القنبلة!',
+                    message: `أحسنت! لقد نجحت في إبطال القنبلة بمهارة عالية`,
+                    points: points
+                });
+            }
+            
+            // تأثير الألعاب النارية
+            if (typeof confetti !== 'undefined') {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#ffd700', '#ff6b6b', '#4ecdc4', '#45b7d1']
+                });
+            }
+            
+            // عرض تأثير النقاط المتطايرة
+            showPointsAnimation(points);
         }
 
         // انفجار القنبلة
@@ -7887,7 +8517,407 @@
             }, 8000);
         }
 
-        console.log('💣 تم تحميل النظام المحسن للعبة القنبلة المؤقتة - نظام اختيار ذكي وسريع مع تحسينات متقدمة!');
+        // عرض نصيحة من المعلم
+        function showTeacherTip() {
+            const tip = teacherTips[Math.floor(Math.random() * teacherTips.length)];
+            
+            const tipDiv = document.createElement('div');
+            tipDiv.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 20px;
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                color: white;
+                padding: 20px;
+                border-radius: 15px;
+                max-width: 350px;
+                box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+                z-index: 10000;
+                animation: slideInLeft 0.5s ease-out;
+                border-left: 5px solid #ffd700;
+            `;
+            
+            tipDiv.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                    <div style="font-size: 2rem;">👨‍🏫</div>
+                    <h4 style="margin: 0; color: #ffd700;">نصيحة من المعلم</h4>
+                </div>
+                <p style="margin: 0; line-height: 1.4;">${tip}</p>
+                <button onclick="this.parentElement.remove()" style="
+                    margin-top: 15px; 
+                    padding: 8px 15px; 
+                    background: #ffd700; 
+                    color: #333; 
+                    border: none; 
+                    border-radius: 20px; 
+                    cursor: pointer; 
+                    font-weight: bold;
+                    float: right;
+                ">شكراً معلمي!</button>
+            `;
+            
+            document.body.appendChild(tipDiv);
+            
+            setTimeout(() => {
+                if (tipDiv.parentElement) {
+                    tipDiv.style.animation = 'slideOutLeft 0.5s ease-in';
+                    setTimeout(() => tipDiv.remove(), 500);
+                }
+            }, 8000);
+        }
+        
+        // عرض تقرير الأداء للمعلم
+        function showPerformanceReport() {
+            const report = generatePerformanceReport();
+            
+            const reportDiv = document.createElement('div');
+            reportDiv.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, #2c3e50, #34495e);
+                color: white;
+                padding: 30px;
+                border-radius: 20px;
+                max-width: 500px;
+                max-height: 80vh;
+                overflow-y: auto;
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+                z-index: 10001;
+                animation: popIn 0.8s ease-out;
+            `;
+            
+            reportDiv.innerHTML = `
+                <div style="text-align: center; margin-bottom: 25px;">
+                    <h2 style="margin: 0; color: #ffd700;">📊 تقرير أداء الطالب</h2>
+                    <p style="margin: 5px 0 0 0; opacity: 0.8;">${gameState.currentStudent}</p>
+                </div>
+                
+                ${report}
+                
+                <div style="text-align: center; margin-top: 25px;">
+                    <button onclick="this.parentElement.remove()" class="interactive-btn" style="
+                        padding: 12px 25px; 
+                        background: linear-gradient(135deg, #e74c3c, #c0392b); 
+                        color: white; 
+                        border: none; 
+                        border-radius: 25px; 
+                        cursor: pointer; 
+                        font-weight: bold;
+                        font-size: 1rem;
+                    ">إغلاق التقرير</button>
+                </div>
+            `;
+            
+            document.body.appendChild(reportDiv);
+        }
+        
+        // إنشاء تقرير الأداء
+        function generatePerformanceReport() {
+            const total = gameState.defusedBombs + gameState.explodedBombs;
+            const successRate = total > 0 ? Math.round((gameState.defusedBombs / total) * 100) : 0;
+            const averageTime = gameState.bestTime || 0;
+            
+            let performance = '';
+            if (successRate >= 80) performance = 'ممتاز 🌟';
+            else if (successRate >= 60) performance = 'جيد جداً 👍';
+            else if (successRate >= 40) performance = 'جيد 👌';
+            else performance = 'يحتاج تحسين 💪';
+            
+            let recommendations = '';
+            if (successRate < 60) {
+                recommendations = `
+                    <div style="background: rgba(52, 152, 219, 0.2); padding: 15px; border-radius: 10px; margin: 15px 0;">
+                        <h4 style="color: #3498db; margin: 0 0 10px 0;">🎯 توصيات للتحسين:</h4>
+                        <ul style="margin: 0; padding-right: 20px;">
+                            <li>خذ وقتك في قراءة السؤال بعناية</li>
+                            <li>مارس أكثر في المستوى السهل</li>
+                            <li>لا تتسرع في الإجابة</li>
+                        </ul>
+                    </div>
+                `;
+            } else {
+                recommendations = `
+                    <div style="background: rgba(46, 204, 113, 0.2); padding: 15px; border-radius: 10px; margin: 15px 0;">
+                        <h4 style="color: #2ecc71; margin: 0 0 10px 0;">🎉 تهانينا!</h4>
+                        <p style="margin: 0;">أداءك ممتاز! جرب المستوى الأصعب للمزيد من التحدي.</p>
+                    </div>
+                `;
+            }
+            
+            return `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; margin: 20px 0;">
+                    <div style="text-align: center; background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px;">
+                        <div style="font-size: 2rem; margin-bottom: 5px;">🏆</div>
+                        <div style="font-size: 1.5rem; font-weight: bold; color: #ffd700;">${gameState.points}</div>
+                        <div style="font-size: 0.9rem; opacity: 0.8;">النقاط</div>
+                    </div>
+                    
+                    <div style="text-align: center; background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px;">
+                        <div style="font-size: 2rem; margin-bottom: 5px;">📈</div>
+                        <div style="font-size: 1.5rem; font-weight: bold; color: #4ecdc4;">${successRate}%</div>
+                        <div style="font-size: 0.9rem; opacity: 0.8;">معدل النجاح</div>
+                    </div>
+                    
+                    <div style="text-align: center; background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px;">
+                        <div style="font-size: 2rem; margin-bottom: 5px;">⭐</div>
+                        <div style="font-size: 1.5rem; font-weight: bold; color: #ff6b6b;">${gameState.level}</div>
+                        <div style="font-size: 0.9rem; opacity: 0.8;">المستوى</div>
+                    </div>
+                    
+                    <div style="text-align: center; background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px;">
+                        <div style="font-size: 2rem; margin-bottom: 5px;">🔥</div>
+                        <div style="font-size: 1.5rem; font-weight: bold; color: #e67e22;">${gameState.maxStreak}</div>
+                        <div style="font-size: 0.9rem; opacity: 0.8;">أفضل شريط</div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin: 20px 0;">
+                    <h3 style="color: #ffd700; margin: 0;">التقييم العام: ${performance}</h3>
+                </div>
+                
+                <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px; margin: 15px 0;">
+                    <h4 style="color: #ffd700; margin: 0 0 10px 0;">🏅 الشارات المكتسبة:</h4>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        ${gameState.badges.length > 0 ? 
+                            gameState.badges.map(badge => 
+                                `<span class="badge-item">${badgeSystem[badge].name}</span>`
+                            ).join('') : 
+                            '<span style="opacity: 0.6;">لا توجد شارات بعد - واصل اللعب!</span>'
+                        }
+                    </div>
+                </div>
+                
+                ${recommendations}
+            `;
+        }
+        
+        @keyframes slideInLeft {
+            0% { transform: translateX(-100%); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOutLeft {
+            0% { transform: translateX(0); opacity: 1; }
+            100% { transform: translateX(-100%); opacity: 0; }
+        }
+        
+        // ===== دوال المعلم والتقارير =====
+        
+        // عرض نصيحة من المعلم
+        function showTeacherTip() {
+            const tip = teacherTips[Math.floor(Math.random() * teacherTips.length)];
+            
+            const tipDiv = document.createElement('div');
+            tipDiv.className = 'teacher-tip-notification';
+            tipDiv.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 20px;
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                color: white;
+                padding: 20px;
+                border-radius: 15px;
+                max-width: 350px;
+                box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+                z-index: 10000;
+                border-left: 5px solid #ffd700;
+                transform: translateX(-100%);
+                transition: transform 0.5s ease-out;
+            `;
+            
+            tipDiv.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                    <div style="font-size: 2rem;">👨‍🏫</div>
+                    <h4 style="margin: 0; color: #ffd700;">نصيحة من المعلم</h4>
+                </div>
+                <p style="margin: 0; line-height: 1.4;">${tip}</p>
+                <button onclick="this.parentElement.remove()" style="
+                    margin-top: 15px; 
+                    padding: 8px 15px; 
+                    background: #ffd700; 
+                    color: #333; 
+                    border: none; 
+                    border-radius: 20px; 
+                    cursor: pointer; 
+                    font-weight: bold;
+                    float: right;
+                ">شكراً معلمي!</button>
+            `;
+            
+            document.body.appendChild(tipDiv);
+            
+            // تأثير الدخول
+            setTimeout(() => {
+                tipDiv.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // الإزالة التلقائية
+            setTimeout(() => {
+                if (tipDiv.parentElement) {
+                    tipDiv.style.transform = 'translateX(-100%)';
+                    setTimeout(() => tipDiv.remove(), 500);
+                }
+            }, 8000);
+        }
+        
+        // عرض تقرير الأداء للمعلم
+        function showPerformanceReport() {
+            if (!gameState.currentStudent) {
+                alert('⚠️ يجب اختيار طالب أولاً لعرض التقرير');
+                return;
+            }
+            
+            const report = generatePerformanceReport();
+            
+            const reportDiv = document.createElement('div');
+            reportDiv.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, #2c3e50, #34495e);
+                color: white;
+                padding: 30px;
+                border-radius: 20px;
+                max-width: 500px;
+                max-height: 80vh;
+                overflow-y: auto;
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+                z-index: 10001;
+                animation: popIn 0.8s ease-out;
+            `;
+            
+            reportDiv.innerHTML = `
+                <div style="text-align: center; margin-bottom: 25px;">
+                    <h2 style="margin: 0; color: #ffd700;">📊 تقرير أداء الطالب</h2>
+                    <p style="margin: 5px 0 0 0; opacity: 0.8;">${gameState.currentStudent}</p>
+                </div>
+                
+                ${report}
+                
+                <div style="text-align: center; margin-top: 25px;">
+                    <button onclick="this.parentElement.remove()" style="
+                        padding: 12px 25px; 
+                        background: linear-gradient(135deg, #e74c3c, #c0392b); 
+                        color: white; 
+                        border: none; 
+                        border-radius: 25px; 
+                        cursor: pointer; 
+                        font-weight: bold;
+                        font-size: 1rem;
+                    ">إغلاق التقرير</button>
+                </div>
+            `;
+            
+            document.body.appendChild(reportDiv);
+        }
+        
+        // إنشاء تقرير الأداء
+        function generatePerformanceReport() {
+            const total = gameState.defusedBombs + gameState.explodedBombs;
+            const successRate = total > 0 ? Math.round((gameState.defusedBombs / total) * 100) : 0;
+            
+            let performance = '';
+            if (successRate >= 80) performance = 'ممتاز 🌟';
+            else if (successRate >= 60) performance = 'جيد جداً 👍';
+            else if (successRate >= 40) performance = 'جيد 👌';
+            else performance = 'يحتاج تحسين 💪';
+            
+            let recommendations = '';
+            if (successRate < 60) {
+                recommendations = `
+                    <div style="background: rgba(52, 152, 219, 0.2); padding: 15px; border-radius: 10px; margin: 15px 0;">
+                        <h4 style="color: #3498db; margin: 0 0 10px 0;">🎯 توصيات للتحسين:</h4>
+                        <ul style="margin: 0; padding-right: 20px;">
+                            <li>خذ وقتك في قراءة السؤال بعناية</li>
+                            <li>مارس أكثر في المستوى السهل</li>
+                            <li>لا تتسرع في الإجابة</li>
+                        </ul>
+                    </div>
+                `;
+            } else {
+                recommendations = `
+                    <div style="background: rgba(46, 204, 113, 0.2); padding: 15px; border-radius: 10px; margin: 15px 0;">
+                        <h4 style="color: #2ecc71; margin: 0 0 10px 0;">🎉 تهانينا!</h4>
+                        <p style="margin: 0;">أداءك ممتاز! جرب المستوى الأصعب للمزيد من التحدي.</p>
+                    </div>
+                `;
+            }
+            
+            return `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; margin: 20px 0;">
+                    <div style="text-align: center; background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px;">
+                        <div style="font-size: 2rem; margin-bottom: 5px;">🏆</div>
+                        <div style="font-size: 1.5rem; font-weight: bold; color: #ffd700;">${gameState.points}</div>
+                        <div style="font-size: 0.9rem; opacity: 0.8;">النقاط</div>
+                    </div>
+                    
+                    <div style="text-align: center; background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px;">
+                        <div style="font-size: 2rem; margin-bottom: 5px;">📈</div>
+                        <div style="font-size: 1.5rem; font-weight: bold; color: #4ecdc4;">${successRate}%</div>
+                        <div style="font-size: 0.9rem; opacity: 0.8;">معدل النجاح</div>
+                    </div>
+                    
+                    <div style="text-align: center; background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px;">
+                        <div style="font-size: 2rem; margin-bottom: 5px;">⭐</div>
+                        <div style="font-size: 1.5rem; font-weight: bold; color: #ff6b6b;">${gameState.level}</div>
+                        <div style="font-size: 0.9rem; opacity: 0.8;">المستوى</div>
+                    </div>
+                    
+                    <div style="text-align: center; background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px;">
+                        <div style="font-size: 2rem; margin-bottom: 5px;">🔥</div>
+                        <div style="font-size: 1.5rem; font-weight: bold; color: #e67e22;">${gameState.maxStreak}</div>
+                        <div style="font-size: 0.9rem; opacity: 0.8;">أفضل شريط</div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin: 20px 0;">
+                    <h3 style="color: #ffd700; margin: 0;">التقييم العام: ${performance}</h3>
+                </div>
+                
+                <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px; margin: 15px 0;">
+                    <h4 style="color: #ffd700; margin: 0 0 10px 0;">🏅 الشارات المكتسبة:</h4>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        ${gameState.badges.length > 0 ? 
+                            gameState.badges.map(badge => 
+                                `<span class="badge-item">${badgeSystem[badge].name}</span>`
+                            ).join('') : 
+                            '<span style="opacity: 0.6;">لا توجد شارات بعد - واصل اللعب!</span>'
+                        }
+                    </div>
+                </div>
+                
+                ${recommendations}
+            `;
+        }
+        
+        // إظهار اختيار الطالب (من أزرار المعلم)
+        function showStudentSelector() {
+            showGameSetup();
+        }
+        
+        // إعادة تعيين تقدم اللعبة
+        function resetGameProgress() {
+            if (confirm('هل أنت متأكد من إعادة تعيين جميع البيانات؟ سيتم فقدان جميع النقاط والشارات!')) {
+                gameState.level = 1;
+                gameState.experience = 0;
+                gameState.points = 0;
+                gameState.streakCount = 0;
+                gameState.maxStreak = 0;
+                gameState.badges = [];
+                gameState.achievements = [];
+                gameState.defusedBombs = 0;
+                gameState.explodedBombs = 0;
+                gameState.dailyChallenges = 0;
+                gameState.bestTime = 0;
+                
+                updateDisplay();
+                
+                alert('✅ تم إعادة تعيين البيانات بنجاح!');
+            }
+        }
         
         // ===== دوال اختبار إضافية =====
         
