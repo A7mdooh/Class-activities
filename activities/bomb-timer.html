@@ -1199,18 +1199,21 @@
             </div>
             
             <div class="control-section">
-                <h3 class="control-title">👥 إدارة الطلاب</h3>
-                <button class="btn btn-success" onclick="selectRandomStudent()">🎲 اختيار عشوائي</button>
-                <button class="btn" onclick="showStudentList()">📋 قائمة الطلاب</button>
-                <button class="btn btn-warning" onclick="addManualStudent()">➕ إضافة طالب</button>
-                <button class="btn btn-gold" onclick="showQuickSelection()">⚡ اختيار سريع</button>
+                <h3 class="control-title">👥 إدارة الطلاب الذكية</h3>
+                <button class="btn btn-success" onclick="selectRandomStudent()">🎲 اختيار ذكي</button>
+                <button class="btn btn-warning" onclick="selectStudentDramatic()">🎪 اختيار مثير</button>
+                <button class="btn btn-gold" onclick="selectByPerformance()">🏆 حسب الأداء</button>
+                <button class="btn" onclick="selectForMotivation()">💪 للتحفيز</button>
+                <button class="btn btn-success" onclick="selectFairly()">⚖️ اختيار عادل</button>
+                <button class="btn btn-warning" onclick="showStudentStats()">📊 إحصائيات الطلاب</button>
             </div>
             
             <div class="control-section">
-                <h3 class="control-title">⚙️ الإعدادات</h3>
+                <h3 class="control-title">⚙️ الإعدادات الذكية</h3>
                 <button class="btn" onclick="adjustTimer()">⏱️ ضبط المؤقت</button>
                 <button class="btn btn-success" onclick="changeDifficulty()">📊 مستوى الصعوبة</button>
-                <button class="btn btn-warning" onclick="manageSettings()">🔧 إعدادات متقدمة</button>
+                <button class="btn btn-warning" onclick="changeSelectionMethod()">🎯 طريقة الاختيار</button>
+                <button class="btn btn-gold" onclick="addSmartStudent()">➕ إضافة طالب</button>
             </div>
             
             <div class="control-section">
@@ -1287,14 +1290,24 @@
                     <li><strong>🏆 التقدم التنافسي:</strong> راقب تقدم الطلاب بصرياً</li>
                 </ul>
                 
-                <h3>🚀 الميزات الجديدة:</h3>
+                <h3>🚀 الميزات الثورية الجديدة:</h3>
                 <ul>
-                    <li><strong>🔔 نظام الإشعارات:</strong> تنبيهات تفاعلية ذكية</li>
-                    <li><strong>🧠 تحديات الذكاء:</strong> أسئلة سريعة ومتنوعة</li>
-                    <li><strong>🏆 شريط التقدم:</strong> متابعة بصرية للإنجازات</li>
-                    <li><strong>📊 إحصائيات متقدمة:</strong> تحليل شامل للأداء</li>
-                    <li><strong>⌨️ اختصارات المفاتيح:</strong> تحكم سريع ومرن</li>
+                    <li><strong>🧠 الذكاء الاصطناعي:</strong> نظام اختيار ذكي يراعي أداء كل طالب وحالة تحفيزه</li>
+                    <li><strong>🔊 النظام الصوتي التفاعلي:</strong> أكثر من 80 مؤثر صوتي لتجربة غامرة</li>
+                    <li><strong>� العروض المثيرة:</strong> اختيار درامي مع تأثيرات بصرية وصوتية مبهرة</li>
+                    <li><strong>📊 التحليل المتقدم:</strong> إحصائيات شاملة وتتبع عادل للطلاب</li>
+                    <li><strong>⚖️ العدالة الذكية:</strong> ضمان إعطاء الفرص بشكل متوازن</li>
+                    <li><strong>🎯 التخصيص المرن:</strong> إمكانية تعديل كل شيء حسب احتياجات الصف</li>
                 </ul>
+                
+                <h3>🎭 أنواع الاختيار المتوفرة:</h3>
+                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin: 10px 0;">
+                    <strong>🎲 الاختيار الذكي:</strong> يوازن بين العدالة والأداء والتحفيز<br>
+                    <strong>🎪 الاختيار المثير:</strong> عرض درامي مع أصوات وتأثيرات خاصة<br>
+                    <strong>🏆 حسب الأداء:</strong> يركز على مستوى أداء الطلاب<br>
+                    <strong>💪 للتحفيز:</strong> يعطي فرص أكبر للطلاب الذين يحتاجون دفعة<br>
+                    <strong>⚖️ الاختيار العادل:</strong> يضمن المساواة في الفرص
+                </div>
                 
                 <h3>⌨️ اختصارات لوحة المفاتيح:</h3>
                 <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin: 10px 0;">
@@ -1356,6 +1369,534 @@
         let progressSystem = null;
         let challengeSystem = null;
         let soundEnabled = true;
+        let audioManager = null;
+        let studentSelector = null;
+
+        // ===== النظام الصوتي الذكي والمتكامل =====
+        class SmartAudioManager {
+            constructor() {
+                this.audioPath = '../assets/media/sounds/kingdom-sounds/';
+                this.audioCache = new Map();
+                this.soundEnabled = true;
+                this.currentTheme = null;
+                this.masterVolume = 0.7;
+                this.soundCategories = {
+                    ui: ['button-hover.mp3', 'menu-open.mp3', 'cosmic-click.mp3', 'notification-pop.mp3'],
+                    game: ['timer-start.mp3', 'countdown-tick.mp3', 'time-warning.mp3', 'final-countdown.mp3'],
+                    success: ['achievement-unlock.mp3', 'battle-victory.mp3', 'royal-fanfare.mp3', 'epic-victory.mp3'],
+                    danger: ['thunder-rumble.mp3', 'lightning-strike.mp3', 'cosmic-explosion.mp3', 'war-drum.mp3'],
+                    magic: ['spell-cast.mp3', 'magic-sparkle.mp3', 'cosmic-portal.mp3', 'dimensional-shift.mp3'],
+                    wisdom: ['brain-activate.mp3', 'wisdom-chime.mp3', 'knowledge-unlock.mp3', 'great-idea.mp3'],
+                    selection: ['student-turn.mp3', 'character-intro.mp3', 'mystery-whisper.mp3', 'ancient-bell.mp3'],
+                    celebration: ['crowd-cheer.mp3', 'fireworks-burst.mp3', 'golden-confetti.mp3', 'ultimate-triumph.mp3']
+                };
+                
+                this.preloadEssentialSounds();
+            }
+
+            async preloadEssentialSounds() {
+                const essentialSounds = [
+                    'timer-start.mp3', 'countdown-tick.mp3', 'battle-victory.mp3', 
+                    'cosmic-explosion.mp3', 'student-turn.mp3', 'achievement-unlock.mp3',
+                    'button-hover.mp3', 'brain-activate.mp3', 'magic-sparkle.mp3'
+                ];
+
+                for (const sound of essentialSounds) {
+                    try {
+                        await this.preloadSound(sound);
+                    } catch (error) {
+                        console.log(`تعذر تحميل الصوت: ${sound}`);
+                    }
+                }
+            }
+
+            async preloadSound(filename) {
+                return new Promise((resolve, reject) => {
+                    const audio = new Audio();
+                    audio.volume = this.masterVolume;
+                    audio.addEventListener('canplaythrough', () => {
+                        this.audioCache.set(filename, audio);
+                        resolve(audio);
+                    });
+                    audio.addEventListener('error', reject);
+                    audio.src = this.audioPath + filename;
+                    audio.load();
+                });
+            }
+
+            async playSound(filename, category = 'ui', options = {}) {
+                if (!this.soundEnabled) return;
+
+                try {
+                    let audio;
+                    
+                    // إذا كان الصوت في الكاش
+                    if (this.audioCache.has(filename)) {
+                        audio = this.audioCache.get(filename).cloneNode();
+                    } else {
+                        // تحميل الصوت جديد
+                        audio = new Audio(this.audioPath + filename);
+                    }
+
+                    audio.volume = (options.volume || 1) * this.masterVolume;
+                    audio.playbackRate = options.speed || 1;
+                    
+                    if (options.loop) {
+                        audio.loop = true;
+                    }
+
+                    await audio.play();
+                    
+                    // إضافة تأثيرات إضافية حسب الفئة
+                    this.addSoundEffects(audio, category, options);
+                    
+                    return audio;
+                } catch (error) {
+                    console.log(`خطأ في تشغيل الصوت: ${filename}`, error);
+                }
+            }
+
+            addSoundEffects(audio, category, options) {
+                // تأثيرات إضافية حسب فئة الصوت
+                if (category === 'magic' && options.echo) {
+                    // إضافة تأثير الصدى للأصوات السحرية
+                    setTimeout(() => {
+                        const echo = audio.cloneNode();
+                        echo.volume = audio.volume * 0.3;
+                        echo.play().catch(() => {});
+                    }, 300);
+                }
+            }
+
+            playRandomFromCategory(category, options = {}) {
+                if (!this.soundCategories[category]) return;
+                
+                const sounds = this.soundCategories[category];
+                const randomSound = sounds[Math.floor(Math.random() * sounds.length)];
+                return this.playSound(randomSound, category, options);
+            }
+
+            playSequence(sounds, interval = 500) {
+                sounds.forEach((sound, index) => {
+                    setTimeout(() => {
+                        if (typeof sound === 'string') {
+                            this.playSound(sound);
+                        } else {
+                            this.playSound(sound.file, sound.category, sound.options);
+                        }
+                    }, index * interval);
+                });
+            }
+
+            fadeIn(audio, duration = 1000) {
+                if (!audio) return;
+                
+                audio.volume = 0;
+                const targetVolume = this.masterVolume;
+                const steps = 20;
+                const stepTime = duration / steps;
+                const volumeStep = targetVolume / steps;
+                
+                let currentStep = 0;
+                const fadeInterval = setInterval(() => {
+                    currentStep++;
+                    audio.volume = Math.min(volumeStep * currentStep, targetVolume);
+                    
+                    if (currentStep >= steps) {
+                        clearInterval(fadeInterval);
+                    }
+                }, stepTime);
+            }
+
+            fadeOut(audio, duration = 1000) {
+                if (!audio) return;
+                
+                const initialVolume = audio.volume;
+                const steps = 20;
+                const stepTime = duration / steps;
+                const volumeStep = initialVolume / steps;
+                
+                let currentStep = 0;
+                const fadeInterval = setInterval(() => {
+                    currentStep++;
+                    audio.volume = Math.max(initialVolume - (volumeStep * currentStep), 0);
+                    
+                    if (currentStep >= steps) {
+                        clearInterval(fadeInterval);
+                        audio.pause();
+                    }
+                }, stepTime);
+            }
+
+            setMasterVolume(volume) {
+                this.masterVolume = Math.max(0, Math.min(1, volume));
+            }
+
+            toggle() {
+                this.soundEnabled = !this.soundEnabled;
+                return this.soundEnabled;
+            }
+
+            playThemeAmbient(theme = 'castle') {
+                const ambientSounds = {
+                    castle: 'castle-atmosphere.mp3',
+                    forest: 'forest-ambient.mp3',
+                    ocean: 'ocean-waves.mp3',
+                    night: 'night-sounds.mp3'
+                };
+
+                if (this.currentTheme) {
+                    this.fadeOut(this.currentTheme, 2000);
+                }
+
+                if (ambientSounds[theme]) {
+                    this.playSound(ambientSounds[theme], 'ui', { 
+                        loop: true, 
+                        volume: 0.3 
+                    }).then(audio => {
+                        this.currentTheme = audio;
+                        this.fadeIn(audio, 2000);
+                    });
+                }
+            }
+        }
+
+        // ===== نظام اختيار الطلاب الذكي والإبداعي =====
+        class IntelligentStudentSelector {
+            constructor() {
+                this.students = [
+                    { name: 'أحمد محمد', performance: 85, lastSelected: 0, motivation: 'high', subject: 'رياضيات' },
+                    { name: 'فاطمة علي', performance: 92, lastSelected: 0, motivation: 'high', subject: 'علوم' },
+                    { name: 'محمد سالم', performance: 78, lastSelected: 0, motivation: 'medium', subject: 'تاريخ' },
+                    { name: 'عائشة حسن', performance: 88, lastSelected: 0, motivation: 'high', subject: 'لغة عربية' },
+                    { name: 'سالم أحمد', performance: 75, lastSelected: 0, motivation: 'medium', subject: 'جغرافيا' },
+                    { name: 'مريم محمد', performance: 90, lastSelected: 0, motivation: 'high', subject: 'فيزياء' },
+                    { name: 'علي حسن', performance: 82, lastSelected: 0, motivation: 'medium', subject: 'كيمياء' },
+                    { name: 'نور فاطمة', performance: 87, lastSelected: 0, motivation: 'high', subject: 'أحياء' },
+                    { name: 'حسن علي', performance: 79, lastSelected: 0, motivation: 'medium', subject: 'رياضيات' },
+                    { name: 'آمنة سالم', performance: 91, lastSelected: 0, motivation: 'high', subject: 'فنون' },
+                    { name: 'يوسف أحمد', performance: 84, lastSelected: 0, motivation: 'high', subject: 'تربية بدنية' },
+                    { name: 'زينب محمد', performance: 89, lastSelected: 0, motivation: 'high', subject: 'موسيقى' },
+                    { name: 'عبدالله سالم', performance: 76, lastSelected: 0, motivation: 'medium', subject: 'حاسوب' },
+                    { name: 'خديجة علي', performance: 93, lastSelected: 0, motivation: 'high', subject: 'لغة إنجليزية' },
+                    { name: 'إبراهيم حسن', performance: 81, lastSelected: 0, motivation: 'medium', subject: 'تربية إسلامية' }
+                ];
+                
+                this.selectionMethods = {
+                    random: 'الاختيار العشوائي التقليدي',
+                    smart: 'الاختيار الذكي المتوازن',
+                    performance: 'اختيار حسب الأداء',
+                    motivation: 'اختيار لتحفيز الطلاب',
+                    fairness: 'اختيار عادل متوازن',
+                    challenge: 'اختيار للتحدي',
+                    dramatic: 'اختيار مثير ودرامي'
+                };
+                
+                this.currentMethod = 'smart';
+                this.selectionHistory = [];
+                this.gameRound = 0;
+            }
+
+            // الاختيار الذكي الأساسي
+            selectStudent(method = null) {
+                method = method || this.currentMethod;
+                this.gameRound++;
+                
+                let selectedStudent;
+                let selectionProcess = {
+                    method: method,
+                    round: this.gameRound,
+                    timestamp: Date.now()
+                };
+
+                switch(method) {
+                    case 'smart':
+                        selectedStudent = this.smartSelection();
+                        break;
+                    case 'dramatic':
+                        selectedStudent = this.dramaticSelection();
+                        break;
+                    case 'performance':
+                        selectedStudent = this.performanceBasedSelection();
+                        break;
+                    case 'motivation':
+                        selectedStudent = this.motivationBasedSelection();
+                        break;
+                    case 'fairness':
+                        selectedStudent = this.fairnessBasedSelection();
+                        break;
+                    case 'challenge':
+                        selectedStudent = this.challengeBasedSelection();
+                        break;
+                    default:
+                        selectedStudent = this.randomSelection();
+                }
+
+                // تحديث إحصائيات الطالب
+                this.updateStudentStats(selectedStudent);
+                
+                // حفظ السجل
+                selectionProcess.selectedStudent = selectedStudent;
+                this.selectionHistory.push(selectionProcess);
+                
+                return selectedStudent;
+            }
+
+            // الاختيار الذكي المتوازن
+            smartSelection() {
+                // خوارزمية ذكية تأخذ في الاعتبار عدة عوامل
+                let candidates = this.students.map(student => {
+                    let score = 0;
+                    
+                    // عامل العدالة (كم مرة تم اختياره)
+                    const timesSelected = this.selectionHistory.filter(h => h.selectedStudent.name === student.name).length;
+                    score += Math.max(0, 10 - timesSelected * 2);
+                    
+                    // عامل التحفيز
+                    if (student.motivation === 'medium') score += 3;
+                    if (student.motivation === 'low') score += 5;
+                    
+                    // عامل الأداء (تحفيز الطلاب ذوي الأداء المتوسط)
+                    if (student.performance >= 70 && student.performance <= 85) score += 2;
+                    
+                    // عامل الوقت منذ آخر اختيار
+                    const roundsSinceSelected = this.gameRound - student.lastSelected;
+                    score += Math.min(roundsSinceSelected, 5);
+                    
+                    return { student, score };
+                });
+
+                // اختيار أفضل المرشحين
+                candidates.sort((a, b) => b.score - a.score);
+                const topCandidates = candidates.slice(0, 5);
+                
+                return topCandidates[Math.floor(Math.random() * topCandidates.length)].student;
+            }
+
+            // الاختيار المثير والدرامي
+            async dramaticSelection() {
+                // عرض مثير مع أصوات وتأثيرات
+                return new Promise((resolve) => {
+                    // بدء التشويق
+                    this.startDramaticSequence().then(() => {
+                        const selected = this.smartSelection();
+                        resolve(selected);
+                    });
+                });
+            }
+
+            async startDramaticSequence() {
+                // سيناريو مثير لاختيار الطالب
+                const sequences = [
+                    {
+                        message: '🎭 لحظة... الاختيار يتم...',
+                        sound: 'mystery-whisper.mp3',
+                        duration: 2000
+                    },
+                    {
+                        message: '⚡ طاقة الذكاء تتجمع...',
+                        sound: 'electric-charge.mp3',
+                        duration: 1500
+                    },
+                    {
+                        message: '🔮 الكريستال السحري يختار...',
+                        sound: 'spell-cast.mp3',
+                        duration: 2000
+                    },
+                    {
+                        message: '👑 والطالب المختار هو...',
+                        sound: 'royal-fanfare.mp3',
+                        duration: 1000
+                    }
+                ];
+
+                for (let i = 0; i < sequences.length; i++) {
+                    const seq = sequences[i];
+                    
+                    // عرض الرسالة
+                    if (notificationSystem) {
+                        notificationSystem.show({
+                            title: '🎪 عرض الاختيار المثير',
+                            message: seq.message,
+                            type: 'info',
+                            icon: '✨',
+                            duration: seq.duration
+                        });
+                    }
+                    
+                    // تشغيل الصوت
+                    if (audioManager) {
+                        audioManager.playSound(seq.sound, 'magic');
+                    }
+                    
+                    // انتظار
+                    await new Promise(resolve => setTimeout(resolve, seq.duration));
+                }
+            }
+
+            // اختيار حسب الأداء
+            performanceBasedSelection() {
+                // اختيار الطلاب بناءً على الأداء مع تنويع
+                const performanceGroups = {
+                    high: this.students.filter(s => s.performance >= 85),
+                    medium: this.students.filter(s => s.performance >= 75 && s.performance < 85),
+                    developing: this.students.filter(s => s.performance < 75)
+                };
+
+                // توزيع الفرص
+                const rand = Math.random();
+                let selectedGroup;
+                
+                if (rand < 0.4) selectedGroup = performanceGroups.high;
+                else if (rand < 0.8) selectedGroup = performanceGroups.medium;
+                else selectedGroup = performanceGroups.developing;
+
+                return selectedGroup[Math.floor(Math.random() * selectedGroup.length)];
+            }
+
+            // اختيار لتحفيز الطلاب
+            motivationBasedSelection() {
+                // إعطاء فرص أكبر للطلاب الذين يحتاجون تحفيز
+                const weights = this.students.map(student => {
+                    let weight = 1;
+                    if (student.motivation === 'medium') weight = 3;
+                    if (student.motivation === 'low') weight = 5;
+                    return weight;
+                });
+
+                return this.weightedRandomSelection(weights);
+            }
+
+            // اختيار عادل
+            fairnessBasedSelection() {
+                // اختيار الطلاب الذين لم يتم اختيارهم مؤخراً
+                const sortedByLastSelection = this.students
+                    .sort((a, b) => a.lastSelected - b.lastSelected);
+                
+                // أخذ أقل 5 طلاب تم اختيارهم
+                const leastSelected = sortedByLastSelection.slice(0, 5);
+                return leastSelected[Math.floor(Math.random() * leastSelected.length)];
+            }
+
+            // اختيار للتحدي
+            challengeBasedSelection() {
+                // اختيار بناءً على نوع التحدي المطلوب
+                const challengeTypes = ['easy', 'medium', 'hard'];
+                const currentChallenge = challengeTypes[Math.floor(Math.random() * challengeTypes.length)];
+                
+                let candidates;
+                switch(currentChallenge) {
+                    case 'easy':
+                        candidates = this.students.filter(s => s.performance >= 80);
+                        break;
+                    case 'medium':
+                        candidates = this.students.filter(s => s.performance >= 70 && s.performance < 90);
+                        break;
+                    case 'hard':
+                        candidates = this.students.filter(s => s.performance >= 85);
+                        break;
+                }
+
+                return candidates[Math.floor(Math.random() * candidates.length)];
+            }
+
+            // اختيار عشوائي تقليدي
+            randomSelection() {
+                return this.students[Math.floor(Math.random() * this.students.length)];
+            }
+
+            // اختيار مرجح
+            weightedRandomSelection(weights) {
+                const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
+                let random = Math.random() * totalWeight;
+                
+                for (let i = 0; i < this.students.length; i++) {
+                    random -= weights[i];
+                    if (random <= 0) {
+                        return this.students[i];
+                    }
+                }
+                
+                return this.students[0];
+            }
+
+            // تحديث إحصائيات الطالب
+            updateStudentStats(student) {
+                const studentIndex = this.students.findIndex(s => s.name === student.name);
+                if (studentIndex !== -1) {
+                    this.students[studentIndex].lastSelected = this.gameRound;
+                }
+            }
+
+            // عرض إحصائيات الاختيار
+            getSelectionStats() {
+                const stats = {
+                    totalSelections: this.selectionHistory.length,
+                    methodsUsed: {},
+                    studentFrequency: {},
+                    fairnessScore: 0
+                };
+
+                // إحصائيات الطرق
+                this.selectionHistory.forEach(selection => {
+                    stats.methodsUsed[selection.method] = (stats.methodsUsed[selection.method] || 0) + 1;
+                    stats.studentFrequency[selection.selectedStudent.name] = 
+                        (stats.studentFrequency[selection.selectedStudent.name] || 0) + 1;
+                });
+
+                // حساب درجة العدالة
+                const frequencies = Object.values(stats.studentFrequency);
+                const average = frequencies.reduce((sum, freq) => sum + freq, 0) / frequencies.length;
+                const variance = frequencies.reduce((sum, freq) => sum + Math.pow(freq - average, 2), 0) / frequencies.length;
+                stats.fairnessScore = Math.max(0, 100 - (variance * 10));
+
+                return stats;
+            }
+
+            // تغيير طريقة الاختيار
+            setSelectionMethod(method) {
+                if (this.selectionMethods[method]) {
+                    this.currentMethod = method;
+                    return true;
+                }
+                return false;
+            }
+
+            // إضافة طالب جديد
+            addStudent(name, performance = 75, motivation = 'medium', subject = 'عام') {
+                const newStudent = {
+                    name: name,
+                    performance: performance,
+                    lastSelected: 0,
+                    motivation: motivation,
+                    subject: subject
+                };
+                
+                this.students.push(newStudent);
+                return newStudent;
+            }
+
+            // حذف طالب
+            removeStudent(name) {
+                this.students = this.students.filter(s => s.name !== name);
+            }
+
+            // الحصول على معلومات طالب
+            getStudentInfo(name) {
+                const student = this.students.find(s => s.name === name);
+                if (!student) return null;
+
+                const timesSelected = this.selectionHistory.filter(h => h.selectedStudent.name === name).length;
+                const lastSelectionRound = student.lastSelected;
+                
+                return {
+                    ...student,
+                    timesSelected: timesSelected,
+                    lastSelectionRound: lastSelectionRound,
+                    roundsSinceSelected: this.gameRound - lastSelectionRound
+                };
+            }
+        }
 
         // ===== نظام الإشعارات التفاعلية المتقدم =====
         class AdvancedNotificationSystem {
@@ -1779,9 +2320,23 @@
                 clearInterval(currentTimer);
             }
             
+            // تشغيل صوت بداية العداد
+            if (audioManager) {
+                audioManager.playSound('timer-start.mp3', 'game');
+            }
+            
             currentTimer = setInterval(() => {
                 timeLeft--;
                 updateTimer();
+                
+                // أصوات التحذير
+                if (timeLeft === 10 && audioManager) {
+                    audioManager.playSound('time-warning.mp3', 'danger', { volume: 0.8 });
+                } else if (timeLeft === 5 && audioManager) {
+                    audioManager.playSound('final-countdown.mp3', 'danger');
+                } else if (timeLeft <= 3 && timeLeft > 0 && audioManager) {
+                    audioManager.playSound('countdown-tick.mp3', 'danger', { volume: 0.6 });
+                }
                 
                 if (timeLeft <= 0) {
                     explodeBomb();
@@ -1807,8 +2362,16 @@
             gameStats.explosions++;
             updateGameStatus('💥 انفجرت القنبلة! المحاولة القادمة ستكون أفضل!', 'state-explosion');
             
-            // تأثيرات بصرية
+            // تأثيرات بصرية وصوتية
             triggerExplosion();
+            
+            // تشغيل أصوات الانفجار
+            if (audioManager) {
+                audioManager.playSequence([
+                    { file: 'cosmic-explosion.mp3', category: 'danger', options: { volume: 0.8 } },
+                    { file: 'thunder-rumble.mp3', category: 'danger', options: { volume: 0.6 } }
+                ], 500);
+            }
             
             // إشعار الانفجار
             if (notificationSystem) {
@@ -1848,11 +2411,20 @@
             // تأثيرات النجاح
             triggerSuccess();
 
+            // تشغيل أصوات النجاح
+            if (audioManager) {
+                audioManager.playSequence([
+                    { file: 'achievement-unlock.mp3', category: 'success', options: { volume: 0.8 } },
+                    { file: 'royal-fanfare.mp3', category: 'celebration', options: { volume: 0.7 } },
+                    { file: 'crowd-cheer.mp3', category: 'celebration', options: { volume: 0.5 } }
+                ], 800);
+            }
+
             // إشعار النجاح
             if (notificationSystem) {
                 notificationSystem.show({
                     title: '✅ تم إبطال القنبلة!',
-                    message: `أحسنت! حصلت على ${pointsEarned} نقطة`,
+                    message: `أحسنت ${currentStudent ? currentStudent.name : 'الطالب'}! حصلت على ${pointsEarned} نقطة`,
                     type: 'success',
                     icon: '🏆',
                     duration: 5000
@@ -1875,20 +2447,150 @@
             }, 3000);
         }
 
-        // ===== وظائف اختيار الطلاب =====
-        function selectRandomStudent() {
-            // قائمة طلاب افتراضية - يمكن تخصيصها
-            const students = [
-                'أحمد محمد', 'فاطمة علي', 'محمد سالم', 'عائشة حسن', 'سالم أحمد',
-                'مريم محمد', 'علي حسن', 'نور فاطمة', 'حسن علي', 'آمنة سالم',
-                'يوسف أحمد', 'زينب محمد', 'عبدالله سالم', 'خديجة علي', 'إبراهيم حسن'
-            ];
+        // ===== وظائف اختيار الطلاب المحدثة =====
+        async function selectRandomStudent() {
+            if (!studentSelector) return;
+
+            // تشغيل صوت بداية الاختيار
+            if (audioManager) {
+                audioManager.playSound('student-turn.mp3', 'selection');
+            }
+
+            // اختيار الطالب باستخدام النظام الذكي
+            const selectedStudent = await studentSelector.selectStudent();
+            currentStudent = selectedStudent;
             
-            const randomIndex = Math.floor(Math.random() * students.length);
-            currentStudent = students[randomIndex];
-            document.getElementById('currentPlayerName').textContent = currentStudent;
-            document.getElementById('participantCount').textContent = students.length;
-            document.getElementById('attemptCount').textContent = gameStats.totalGames + 1;
+            // عرض معلومات الطالب
+            displayStudentInfo(selectedStudent);
+            
+            // تحديث الواجهة
+            updateStudentDisplay(selectedStudent);
+            
+            // بدء المؤقت
+            timeLeft = 30;
+            updateTimer();
+            startTimer();
+            
+            // تشغيل أصوات الإعلان
+            setTimeout(() => {
+                if (audioManager) {
+                    audioManager.playRandomFromCategory('celebration', { volume: 0.6 });
+                }
+            }, 1000);
+        }
+
+        function displayStudentInfo(student) {
+            const studentInfo = studentSelector.getStudentInfo(student.name);
+            
+            // عرض معلومات مفصلة في الإشعارات
+            if (notificationSystem) {
+                notificationSystem.show({
+                    title: '👨‍🎓 الطالب المختار',
+                    message: `🎯 ${student.name}
+📚 التخصص: ${student.subject}
+🏆 الأداء: ${student.performance}%
+🔥 التحفيز: ${getMotivationEmoji(student.motivation)}
+📊 مرات الاختيار: ${studentInfo.timesSelected}`,
+                    type: 'info',
+                    icon: '⭐',
+                    duration: 6000
+                });
+            }
+        }
+
+        function getMotivationEmoji(motivation) {
+            switch(motivation) {
+                case 'high': return '🔥 عالي';
+                case 'medium': return '📈 متوسط';
+                case 'low': return '💪 يحتاج تحفيز';
+                default: return '❓ غير محدد';
+            }
+        }
+
+        function updateStudentDisplay(student) {
+            document.getElementById('currentPlayerName').textContent = student.name;
+            document.getElementById('participantCount').textContent = studentSelector.students.length;
+            document.getElementById('attemptCount').textContent = studentSelector.gameRound;
+        }
+
+        // ===== وظائف الاختيار المتقدمة =====
+        async function selectStudentDramatic() {
+            if (!studentSelector) return;
+            
+            // تشغيل النظام المثير
+            const selected = await studentSelector.selectStudent('dramatic');
+            currentStudent = selected;
+            
+            // عرض النتيجة النهائية مع تأثيرات
+            setTimeout(() => {
+                displayStudentInfo(selected);
+                updateStudentDisplay(selected);
+                
+                // تأثيرات بصرية خاصة
+                if (typeof confetti !== 'undefined') {
+                    confetti({
+                        particleCount: 200,
+                        spread: 60,
+                        origin: { y: 0.6 },
+                        colors: ['#ffd700', '#ff6b35', '#32cd32', '#ff073a']
+                    });
+                }
+                
+                // بدء المؤقت
+                timeLeft = 30;
+                updateTimer();
+                startTimer();
+                
+            }, 7000); // بعد انتهاء العرض المثير
+        }
+
+        function selectByPerformance() {
+            if (!studentSelector) return;
+            
+            const selected = studentSelector.selectStudent('performance');
+            currentStudent = selected;
+            displayStudentInfo(selected);
+            updateStudentDisplay(selected);
+            
+            if (audioManager) {
+                audioManager.playSound('brain-activate.mp3', 'wisdom');
+            }
+            
+            // بدء المؤقت
+            timeLeft = 30;
+            updateTimer();
+            startTimer();
+        }
+
+        function selectForMotivation() {
+            if (!studentSelector) return;
+            
+            const selected = studentSelector.selectStudent('motivation');
+            currentStudent = selected;
+            displayStudentInfo(selected);
+            updateStudentDisplay(selected);
+            
+            if (audioManager) {
+                audioManager.playSound('energy-boost.mp3', 'magic');
+            }
+            
+            // بدء المؤقت
+            timeLeft = 30;
+            updateTimer();
+            startTimer();
+        }
+
+        function selectFairly() {
+            if (!studentSelector) return;
+            
+            const selected = studentSelector.selectStudent('fairness');
+            currentStudent = selected;
+            displayStudentInfo(selected);
+            updateStudentDisplay(selected);
+            
+            if (audioManager) {
+                audioManager.playSound('wisdom-chime.mp3', 'wisdom');
+            }
             
             // بدء المؤقت
             timeLeft = 30;
@@ -2113,31 +2815,161 @@
         }
 
         function toggleSound() {
-            // وظيفة التحكم في الصوت
-            const btn = document.getElementById('soundBtn');
-            if (btn.textContent === '🔊') {
-                btn.textContent = '🔇';
-                btn.title = 'تشغيل الصوت';
+            toggleSoundSystem();
+        }
+
+        // ===== الوظائف المساعدة المحدثة =====
+        function showStudentStats() {
+            if (!studentSelector) return;
+            
+            const stats = studentSelector.getSelectionStats();
+            const topStudents = Object.entries(stats.studentFrequency)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+            
+            let message = `� إحصائيات اختيار الطلاب:
+
+📈 إجمالي مرات الاختيار: ${stats.totalSelections}
+⚖️ درجة العدالة: ${stats.fairnessScore.toFixed(1)}%
+
+🏆 أكثر الطلاب اختياراً:`;
+
+            topStudents.forEach((student, index) => {
+                message += `\n${index + 1}. ${student[0]}: ${student[1]} مرة`;
+            });
+
+            message += `\n\n🎯 طرق الاختيار المستخدمة:`;
+            Object.entries(stats.methodsUsed).forEach(method => {
+                message += `\n• ${method[0]}: ${method[1]} مرة`;
+            });
+
+            if (notificationSystem) {
+                notificationSystem.show({
+                    title: '📊 إحصائيات الطلاب',
+                    message: message,
+                    type: 'info',
+                    icon: '📈',
+                    duration: 12000,
+                    autoHide: false
+                });
             } else {
-                btn.textContent = '🔊';
-                btn.title = 'إيقاف الصوت';
+                alert(message);
+            }
+            
+            // تشغيل صوت العرض
+            if (audioManager) {
+                audioManager.playSound('data-process.mp3', 'ui');
             }
         }
 
-        // ===== الوظائف المساعدة =====
-        function showStudentList() {
-            alert('📋 سيتم إضافة إدارة قائمة الطلاب قريباً');
-        }
-
-        function addManualStudent() {
+        function addSmartStudent() {
             const name = prompt('أدخل اسم الطالب:');
-            if (name && name.trim()) {
-                alert(`تمت إضافة الطالب: ${name.trim()}`);
+            if (!name || !name.trim()) return;
+            
+            const performance = parseInt(prompt('أدخل درجة الأداء (1-100):', '75')) || 75;
+            const motivationOptions = ['high', 'medium', 'low'];
+            const motivation = prompt('أدخل مستوى التحفيز (high/medium/low):', 'medium') || 'medium';
+            const subject = prompt('أدخل التخصص:', 'عام') || 'عام';
+            
+            if (studentSelector) {
+                const newStudent = studentSelector.addStudent(name.trim(), performance, motivation, subject);
+                
+                if (notificationSystem) {
+                    notificationSystem.show({
+                        title: '✅ تمت الإضافة!',
+                        message: `تم إضافة الطالب ${newStudent.name} بنجاح`,
+                        type: 'success',
+                        icon: '👨‍🎓',
+                        duration: 4000
+                    });
+                }
+                
+                if (audioManager) {
+                    audioManager.playSound('achievement-unlock.mp3', 'success');
+                }
             }
         }
 
-        function showQuickSelection() {
-            alert('⚡ سيتم إضافة الاختيار السريع قريباً');
+        function changeSelectionMethod() {
+            if (!studentSelector) return;
+            
+            const methods = Object.keys(studentSelector.selectionMethods);
+            const currentMethod = studentSelector.currentMethod;
+            
+            let methodsList = 'اختر طريقة الاختيار:\n\n';
+            methods.forEach((method, index) => {
+                const current = method === currentMethod ? ' (الحالية)' : '';
+                methodsList += `${index + 1}. ${studentSelector.selectionMethods[method]}${current}\n`;
+            });
+            
+            const choice = parseInt(prompt(methodsList + '\nأدخل رقم الطريقة:')) - 1;
+            
+            if (choice >= 0 && choice < methods.length) {
+                const selectedMethod = methods[choice];
+                studentSelector.setSelectionMethod(selectedMethod);
+                
+                if (notificationSystem) {
+                    notificationSystem.show({
+                        title: '⚙️ تم تغيير الطريقة',
+                        message: `تم تعيين طريقة: ${studentSelector.selectionMethods[selectedMethod]}`,
+                        type: 'info',
+                        icon: '🔧',
+                        duration: 4000
+                    });
+                }
+                
+                if (audioManager) {
+                    audioManager.playSound('setting-change.mp3', 'ui');
+                }
+            }
+        }
+
+        function toggleSoundSystem() {
+            if (audioManager) {
+                const enabled = audioManager.toggle();
+                const btn = document.getElementById('soundBtn');
+                
+                if (enabled) {
+                    btn.textContent = '🔊';
+                    btn.title = 'إيقاف الصوت';
+                    audioManager.playSound('ai-notification.mp3', 'ui');
+                } else {
+                    btn.textContent = '🔇';
+                    btn.title = 'تشغيل الصوت';
+                }
+                
+                if (notificationSystem) {
+                    notificationSystem.show({
+                        title: enabled ? '🔊 تم تشغيل الصوت' : '🔇 تم إيقاف الصوت',
+                        message: enabled ? 'النظام الصوتي نشط الآن' : 'تم إيقاف جميع الأصوات',
+                        type: 'info',
+                        icon: enabled ? '🎵' : '🔇',
+                        duration: 3000
+                    });
+                }
+            }
+        }
+
+        function showAdvancedSettings() {
+            if (notificationSystem) {
+                notificationSystem.show({
+                    title: '⚙️ الإعدادات المتقدمة',
+                    message: `🎯 نظام الاختيار الذكي: نشط
+🔊 النظام الصوتي: ${audioManager?.soundEnabled ? 'نشط' : 'متوقف'}
+🧠 تحديات الذكاء: متاحة
+📊 تتبع الإحصائيات: نشط
+🏆 شريط التقدم: متاح
+
+استخدم اختصارات لوحة المفاتيح للتحكم السريع!`,
+                    type: 'info',
+                    icon: '🔧',
+                    duration: 8000
+                });
+            }
+            
+            if (audioManager) {
+                audioManager.playSound('menu-open.mp3', 'ui');
+            }
         }
 
         function adjustTimer() {
@@ -2147,7 +2979,20 @@
                 if (time >= 10 && time <= 120) {
                     timeLeft = time;
                     updateTimer();
-                    alert(`تم تعديل الوقت إلى ${time} ثانية`);
+                    
+                    if (notificationSystem) {
+                        notificationSystem.show({
+                            title: '⏱️ تم تعديل المؤقت',
+                            message: `تم تعيين المؤقت إلى ${time} ثانية`,
+                            type: 'info',
+                            icon: '🕐',
+                            duration: 3000
+                        });
+                    }
+                    
+                    if (audioManager) {
+                        audioManager.playSound('setting-change.mp3', 'ui');
+                    }
                 } else {
                     alert('يجب أن يكون الوقت بين 10 و 120 ثانية');
                 }
@@ -2155,11 +3000,48 @@
         }
 
         function changeDifficulty() {
-            alert('📊 سيتم إضافة مستويات الصعوبة قريباً');
+            const difficulties = [
+                'سهل (45 ثانية)',
+                'متوسط (30 ثانية)',
+                'صعب (20 ثانية)',
+                'خبير (15 ثانية)'
+            ];
+            
+            const choice = parseInt(prompt('اختر مستوى الصعوبة:\n\n' + 
+                difficulties.map((d, i) => `${i + 1}. ${d}`).join('\n') +
+                '\n\nأدخل الرقم:')) - 1;
+            
+            let newTime;
+            let level;
+            
+            switch(choice) {
+                case 0: newTime = 45; level = 'سهل'; break;
+                case 1: newTime = 30; level = 'متوسط'; break;
+                case 2: newTime = 20; level = 'صعب'; break;
+                case 3: newTime = 15; level = 'خبير'; break;
+                default: return;
+            }
+            
+            timeLeft = newTime;
+            updateTimer();
+            
+            if (notificationSystem) {
+                notificationSystem.show({
+                    title: '� تم تغيير الصعوبة',
+                    message: `المستوى: ${level} (${newTime} ثانية)`,
+                    type: 'info',
+                    icon: '🎯',
+                    duration: 4000
+                });
+            }
+            
+            if (audioManager) {
+                audioManager.playSound('level-up.mp3', 'ui');
+            }
         }
 
         function manageSettings() {
-            alert('🔧 سيتم إضافة الإعدادات المتقدمة قريباً');
+            showAdvancedSettings();
         }
 
         function exportResults() {
@@ -2191,19 +3073,28 @@
             notificationSystem = new AdvancedNotificationSystem();
             progressSystem = new CompetitiveProgressSystem();
             challengeSystem = new IntelligenceChallengeSystem();
+            audioManager = new SmartAudioManager();
+            studentSelector = new IntelligentStudentSelector();
+            
+            // بدء الموضوع الصوتي
+            setTimeout(() => {
+                if (audioManager) {
+                    audioManager.playThemeAmbient('castle');
+                }
+            }, 2000);
             
             // إشعار ترحيب
             setTimeout(() => {
                 if (notificationSystem) {
                     notificationSystem.show({
-                        title: '🚀 مرحباً بك!',
-                        message: 'لعبة القنبلة المؤقتة جاهزة مع الميزات الجديدة!',
+                        title: '🚀 مرحباً بالنظام المتطور!',
+                        message: 'لعبة القنبلة المؤقتة مع الذكاء الاصطناعي والنظام الصوتي التفاعلي!',
                         type: 'success',
                         icon: '💣',
-                        duration: 5000
+                        duration: 6000
                     });
                 }
-            }, 1000);
+            }, 1500);
             
             // عرض اختصارات لوحة المفاتيح
             setTimeout(() => {
