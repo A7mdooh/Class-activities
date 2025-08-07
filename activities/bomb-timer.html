@@ -2329,6 +2329,12 @@
     </style>
 </head>
 <body>
+    <!-- زر اختبار مؤقت -->
+    <div style="position: fixed; top: 10px; left: 10px; z-index: 9999; background: red; color: white; padding: 10px; border-radius: 5px;">
+        <button onclick="showGameSetup()" style="background: green; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer;">🧪 اختبار الإعدادات</button>
+        <button onclick="alert('الأزرار تعمل!')" style="background: blue; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; margin-left: 5px;">✅ اختبار عام</button>
+    </div>
+
     <!-- نافذة التعليمات -->
     <div id="instructionsModal" class="modal">
         <div class="modal-content card-responsive">
@@ -3064,6 +3070,13 @@
             loadStudentsData();
             
             console.log('✅ تم تحميل اللعبة بنجاح!');
+            
+            // التأكد من أن الوظائف متاحة في النطاق العام
+            window.showGameSetup = showGameSetup;
+            window.closeGameSetup = closeGameSetup;
+            window.closeModal = closeModal;
+            
+            console.log('🌐 تم ربط الوظائف بالنطاق العام');
         });
 
         // تحميل بيانات الطلاب
@@ -3239,6 +3252,7 @@
 
         // عرض إعداد اللعبة
         function showGameSetup() {
+            alert('تم النقر على زر الإعدادات!'); // اختبار فوري
             console.log('🎮 بداية تنفيذ showGameSetup()');
             
             playGameSound('click'); // صوت فتح النافذة
