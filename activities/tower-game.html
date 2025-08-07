@@ -67,6 +67,276 @@
       position: relative;
     }
 
+    /* ========================================
+       شريط الايقونات العلوي الاحترافي
+    ======================================== */
+    .top-toolbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: linear-gradient(135deg, 
+        rgba(0, 0, 0, 0.8) 0%, 
+        rgba(0, 0, 0, 0.6) 50%, 
+        rgba(0, 0, 0, 0.8) 100%);
+      backdrop-filter: blur(25px);
+      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--spacing-lg);
+      z-index: 10000;
+      box-shadow: 
+        0 8px 30px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      animation: toolbarSlideDown 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    @keyframes toolbarSlideDown {
+      0% {
+        opacity: 0;
+        transform: translateY(-100%);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* شعار اللعبة */
+    .game-logo {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      font-family: 'Orbitron', 'Cairo', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: var(--tower-gradient);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      position: relative;
+    }
+
+    .game-logo::before {
+      content: '👑';
+      font-size: 2rem;
+      animation: logoFloat 3s ease-in-out infinite;
+      filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8));
+    }
+
+    .game-logo:hover {
+      transform: scale(1.05);
+      filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.8));
+    }
+
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-5px) rotate(10deg); }
+    }
+
+    /* مجموعة الايقونات */
+    .toolbar-icons {
+      display: flex;
+      gap: var(--spacing-sm);
+      align-items: center;
+    }
+
+    .toolbar-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.15) 0%, 
+        rgba(255, 255, 255, 0.05) 100%);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all var(--elastic-timing);
+      position: relative;
+      overflow: hidden;
+      font-size: 1.3rem;
+      color: var(--text-light);
+      box-shadow: 
+        0 5px 20px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    /* تأثير الهالة المتحركة */
+    .toolbar-icon::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(from 0deg, 
+        transparent, 
+        rgba(0, 245, 255, 0.3), 
+        transparent, 
+        rgba(255, 7, 58, 0.3), 
+        transparent);
+      opacity: 0;
+      transition: all 0.6s ease;
+      animation: iconAura 8s linear infinite;
+    }
+
+    @keyframes iconAura {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .toolbar-icon:hover {
+      transform: translateY(-3px) scale(1.1);
+      border-color: var(--neon-cyan);
+      color: var(--neon-cyan);
+      box-shadow: 
+        0 15px 40px rgba(0, 245, 255, 0.4),
+        0 0 30px var(--neon-cyan),
+        inset 0 2px 5px rgba(255, 255, 255, 0.3);
+      text-shadow: 0 0 15px currentColor;
+    }
+
+    .toolbar-icon:hover::before {
+      opacity: 1;
+    }
+
+    .toolbar-icon:active {
+      transform: translateY(-1px) scale(1.05);
+    }
+
+    /* ايقونة الرئيسية */
+    .home-icon {
+      background: linear-gradient(135deg, 
+        rgba(102, 126, 234, 0.3) 0%, 
+        rgba(118, 75, 162, 0.3) 100%);
+      border-color: rgba(102, 126, 234, 0.5);
+    }
+
+    .home-icon:hover {
+      border-color: rgba(102, 126, 234, 1);
+      color: rgba(102, 126, 234, 1);
+      box-shadow: 
+        0 15px 40px rgba(102, 126, 234, 0.5),
+        0 0 30px rgba(102, 126, 234, 1);
+    }
+
+    /* ايقونة الصوت */
+    .sound-icon {
+      background: linear-gradient(135deg, 
+        rgba(17, 153, 142, 0.3) 0%, 
+        rgba(56, 239, 125, 0.3) 100%);
+      border-color: rgba(17, 153, 142, 0.5);
+    }
+
+    .sound-icon:hover {
+      border-color: var(--success-color);
+      color: var(--success-color);
+      box-shadow: 
+        0 15px 40px rgba(17, 153, 142, 0.5),
+        0 0 30px var(--success-color);
+    }
+
+    .sound-icon.muted {
+      background: linear-gradient(135deg, 
+        rgba(252, 70, 107, 0.3) 0%, 
+        rgba(63, 94, 251, 0.3) 100%);
+      border-color: rgba(252, 70, 107, 0.5);
+      color: var(--danger-color);
+    }
+
+    .sound-icon.muted:hover {
+      border-color: var(--danger-color);
+      box-shadow: 
+        0 15px 40px rgba(252, 70, 107, 0.5),
+        0 0 30px var(--danger-color);
+    }
+
+    /* ايقونة ملئ الشاشة */
+    .fullscreen-icon {
+      background: linear-gradient(135deg, 
+        rgba(240, 147, 251, 0.3) 0%, 
+        rgba(245, 87, 108, 0.3) 100%);
+      border-color: rgba(240, 147, 251, 0.5);
+    }
+
+    .fullscreen-icon:hover {
+      border-color: var(--warning-color);
+      color: var(--warning-color);
+      box-shadow: 
+        0 15px 40px rgba(245, 87, 108, 0.5),
+        0 0 30px var(--warning-color);
+    }
+
+    /* تأثير النقر */
+    .toolbar-icon::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: radial-gradient(circle, rgba(255,255,255,0.6) 0%, transparent 70%);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: all 0.3s ease;
+      opacity: 0;
+    }
+
+    .toolbar-icon:active::after {
+      width: 60px;
+      height: 60px;
+      opacity: 1;
+      transition: all 0.1s ease;
+    }
+
+    /* تلميحات الأدوات */
+    .toolbar-icon[data-tooltip] {
+      position: relative;
+    }
+
+    .toolbar-icon[data-tooltip]:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      white-space: nowrap;
+      z-index: 10001;
+      animation: tooltipFadeIn 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+      font-family: 'Cairo', sans-serif;
+    }
+
+    @keyframes tooltipFadeIn {
+      0% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+
+    /* إضافة margin-top للمحتوى لتجنب التداخل مع الشريط العلوي */
+    .container {
+      margin-top: 70px;
+    }
+
     /* خلفية الفضاء المتحركة */
     body::before {
       content: '';
@@ -1053,6 +1323,7 @@
     @media (max-width: 768px) {
       .container {
         padding: var(--spacing-md);
+        margin-top: 70px;
       }
 
       .main-title h1 {
@@ -1076,6 +1347,34 @@
       .stats-grid {
         grid-template-columns: 1fr;
       }
+
+      /* تحسين شريط الأدوات للجوال */
+      .top-toolbar {
+        padding: 0 var(--spacing-md);
+        height: 60px;
+      }
+
+      .game-logo {
+        font-size: 1.2rem;
+      }
+
+      .game-logo::before {
+        font-size: 1.5rem;
+      }
+
+      .toolbar-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.1rem;
+      }
+
+      .toolbar-icons {
+        gap: var(--spacing-xs);
+      }
+
+      .container {
+        margin-top: 60px;
+      }
     }
 
     @media (max-width: 480px) {
@@ -1092,11 +1391,90 @@
       .treasure {
         font-size: 3rem;
       }
+
+      /* شريط أدوات مصغر للشاشات الصغيرة جداً */
+      .top-toolbar {
+        padding: 0 var(--spacing-sm);
+        height: 55px;
+      }
+
+      .game-logo {
+        font-size: 1rem;
+      }
+
+      .game-logo span {
+        display: none;
+      }
+
+      .game-logo::before {
+        font-size: 1.3rem;
+      }
+
+      .toolbar-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+      }
+
+      .container {
+        margin-top: 55px;
+      }
+
+      /* إخفاء التلميحات في الشاشات الصغيرة */
+      .toolbar-icon[data-tooltip]:hover::after {
+        display: none;
+      }
+    }
+
+    /* تأثيرات إضافية للشريط العلوي */
+    @keyframes toolbarPulse {
+      0%, 100% {
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+      }
+      50% {
+        box-shadow: 0 8px 40px rgba(0, 245, 255, 0.2);
+      }
+    }
+
+    .top-toolbar.game-active {
+      animation: toolbarPulse 4s ease-in-out infinite;
+    }
+
+    /* تأثيرات للطوارئ - إذا فشل التحميل */
+    .toolbar-icon.loading {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .toolbar-icon.error {
+      border-color: var(--danger-color);
+      color: var(--danger-color);
     }
   </style>
 </head>
 
 <body>
+  <!-- شريط الايقونات العلوي الاحترافي -->
+  <div class="top-toolbar">
+    <div class="game-logo" id="gameLogo">
+      <span>برج الأسماء</span>
+    </div>
+    
+    <div class="toolbar-icons">
+      <div class="toolbar-icon home-icon" id="homeIcon" data-tooltip="العودة للرئيسية">
+        <i class="fas fa-home"></i>
+      </div>
+      
+      <div class="toolbar-icon sound-icon" id="soundIcon" data-tooltip="تشغيل/إيقاف الصوت">
+        <i class="fas fa-volume-up"></i>
+      </div>
+      
+      <div class="toolbar-icon fullscreen-icon" id="fullscreenIcon" data-tooltip="ملئ الشاشة">
+        <i class="fas fa-expand"></i>
+      </div>
+    </div>
+  </div>
+
   <div class="container">
     <!-- العنوان الرئيسي -->
     <div class="main-title">
@@ -1215,7 +1593,7 @@
 
   <script>
     /* ========================================
-       نظام الصوت الذكي
+       نظام الصوت الذكي المحدث
     ======================================== */
     class AudioManager {
       constructor() {
@@ -1234,7 +1612,11 @@
           'game-start': 'adventure-theme.mp3',
           'tower-complete': 'battle-victory.mp3',
           'step-hover': 'crystal-bonus.mp3',
-          'player-change': 'character-intro.mp3'
+          'player-change': 'character-intro.mp3',
+          'toolbar-click': 'ai-beep.mp3',
+          'sound-toggle': 'ai-notification.mp3',
+          'home-click': 'panel-slide.mp3',
+          'fullscreen-toggle': 'cosmic-portal.mp3'
         };
 
         for (const [key, filename] of Object.entries(soundFiles)) {
@@ -1272,14 +1654,275 @@
         this.enabled = !this.enabled;
         return this.enabled;
       }
+
+      isEnabled() {
+        return this.enabled;
+      }
     }
 
+    /* ========================================
+       إدارة شريط الأدوات العلوي
+    ======================================== */
+    class ToolbarManager {
+      constructor(audioManager) {
+        this.audio = audioManager;
+        this.isFullscreen = false;
+        this.initElements();
+        this.setupEvents();
+        this.setupFullscreenListener();
+      }
+
+      initElements() {
+        this.elements = {
+          gameLogo: document.getElementById('gameLogo'),
+          homeIcon: document.getElementById('homeIcon'),
+          soundIcon: document.getElementById('soundIcon'),
+          fullscreenIcon: document.getElementById('fullscreenIcon')
+        };
+      }
+
+      setupEvents() {
+        // ايقونة الرئيسية
+        this.elements.homeIcon?.addEventListener('click', () => {
+          this.handleHomeClick();
+        });
+
+        // ايقونة الصوت
+        this.elements.soundIcon?.addEventListener('click', () => {
+          this.handleSoundToggle();
+        });
+
+        // ايقونة ملئ الشاشة
+        this.elements.fullscreenIcon?.addEventListener('click', () => {
+          this.handleFullscreenToggle();
+        });
+
+        // شعار اللعبة
+        this.elements.gameLogo?.addEventListener('click', () => {
+          this.handleLogoClick();
+        });
+
+        // تأثيرات الصوت عند التمرير
+        Object.values(this.elements).forEach(element => {
+          element?.addEventListener('mouseenter', () => {
+            this.audio.play('ui-hover', { volume: 0.3 });
+          });
+        });
+      }
+
+      handleHomeClick() {
+        this.audio.play('home-click');
+        
+        // تأثير بصري
+        this.animateClick(this.elements.homeIcon);
+        
+        // عرض تأكيد العودة للرئيسية
+        const confirmed = confirm('هل تريد العودة إلى الصفحة الرئيسية؟\nسيتم فقدان تقدمك الحالي في اللعبة.');
+        
+        if (confirmed) {
+          // إضافة تأثير انتقال سلس
+          document.body.style.transition = 'opacity 0.5s ease';
+          document.body.style.opacity = '0';
+          
+          setTimeout(() => {
+            window.location.href = '../index.html';
+          }, 500);
+        }
+      }
+
+      handleSoundToggle() {
+        const isEnabled = this.audio.toggle();
+        this.updateSoundIcon(isEnabled);
+        
+        // تشغيل صوت التأكيد إذا كان الصوت مفعل
+        if (isEnabled) {
+          this.audio.play('sound-toggle');
+        }
+        
+        // تأثير بصري
+        this.animateClick(this.elements.soundIcon);
+        
+        // إظهار رسالة تأكيد
+        this.showNotification(isEnabled ? 'تم تفعيل الصوت 🔊' : 'تم كتم الصوت 🔇');
+      }
+
+      handleFullscreenToggle() {
+        this.audio.play('fullscreen-toggle');
+        this.animateClick(this.elements.fullscreenIcon);
+        
+        if (!this.isFullscreen) {
+          this.enterFullscreen();
+        } else {
+          this.exitFullscreen();
+        }
+      }
+
+      handleLogoClick() {
+        this.audio.play('toolbar-click');
+        
+        // تأثير دوران للشعار
+        this.elements.gameLogo.style.transform = 'scale(1.1) rotate(360deg)';
+        setTimeout(() => {
+          this.elements.gameLogo.style.transform = '';
+        }, 600);
+        
+        // عرض معلومات اللعبة
+        this.showGameInfo();
+      }
+
+      updateSoundIcon(isEnabled) {
+        const icon = this.elements.soundIcon.querySelector('i');
+        const element = this.elements.soundIcon;
+        
+        if (isEnabled) {
+          icon.className = 'fas fa-volume-up';
+          element.classList.remove('muted');
+          element.setAttribute('data-tooltip', 'كتم الصوت');
+        } else {
+          icon.className = 'fas fa-volume-mute';
+          element.classList.add('muted');
+          element.setAttribute('data-tooltip', 'تفعيل الصوت');
+        }
+      }
+
+      updateFullscreenIcon() {
+        const icon = this.elements.fullscreenIcon.querySelector('i');
+        const element = this.elements.fullscreenIcon;
+        
+        if (this.isFullscreen) {
+          icon.className = 'fas fa-compress';
+          element.setAttribute('data-tooltip', 'إغلاق ملئ الشاشة');
+        } else {
+          icon.className = 'fas fa-expand';
+          element.setAttribute('data-tooltip', 'ملئ الشاشة');
+        }
+      }
+
+      enterFullscreen() {
+        try {
+          const element = document.documentElement;
+          if (element.requestFullscreen) {
+            element.requestFullscreen();
+          } else if (element.webkitRequestFullscreen) {
+            element.webkitRequestFullscreen();
+          } else if (element.msRequestFullscreen) {
+            element.msRequestFullscreen();
+          }
+        } catch (error) {
+          console.log('Fullscreen not supported');
+          this.showNotification('ملئ الشاشة غير مدعوم في هذا المتصفح');
+        }
+      }
+
+      exitFullscreen() {
+        try {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+          } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+          }
+        } catch (error) {
+          console.log('Exit fullscreen error');
+        }
+      }
+
+      setupFullscreenListener() {
+        const fullscreenEvents = [
+          'fullscreenchange',
+          'webkitfullscreenchange',
+          'mozfullscreenchange',
+          'MSFullscreenChange'
+        ];
+
+        fullscreenEvents.forEach(eventName => {
+          document.addEventListener(eventName, () => {
+            this.isFullscreen = !!(
+              document.fullscreenElement ||
+              document.webkitFullscreenElement ||
+              document.mozFullScreenElement ||
+              document.msFullscreenElement
+            );
+            this.updateFullscreenIcon();
+          });
+        });
+      }
+
+      animateClick(element) {
+        element.style.transform = 'scale(0.95)';
+        element.style.transition = 'transform 0.1s ease';
+        
+        setTimeout(() => {
+          element.style.transform = '';
+          setTimeout(() => {
+            element.style.transition = '';
+          }, 200);
+        }, 100);
+      }
+
+      showNotification(message) {
+        // إنشاء إشعار مؤقت
+        const notification = document.createElement('div');
+        notification.className = 'toolbar-notification';
+        notification.textContent = message;
+        notification.style.cssText = `
+          position: fixed;
+          top: 90px;
+          right: 30px;
+          background: linear-gradient(135deg, rgba(0, 245, 255, 0.9) 0%, rgba(255, 7, 58, 0.9) 100%);
+          color: white;
+          padding: 15px 25px;
+          border-radius: 25px;
+          font-weight: 600;
+          font-size: 1rem;
+          z-index: 10001;
+          transform: translateX(300px);
+          transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // انيميشن الظهور
+        setTimeout(() => {
+          notification.style.transform = 'translateX(0)';
+        }, 100);
+        
+        // إزالة الإشعار بعد 3 ثواني
+        setTimeout(() => {
+          notification.style.transform = 'translateX(300px)';
+          setTimeout(() => {
+            notification.remove();
+          }, 300);
+        }, 3000);
+      }
+
+      showGameInfo() {
+        const info = `
+🏆 برج الأسماء - مسابقة تنافسية احترافية 🏆
+
+📋 نوع اللعبة: مسابقة ذكية تفاعلية
+🎯 الهدف: الوصول لقمة البرج والفوز باللقب
+🏅 نظام التصفيات: بطولة احترافية
+🎮 التحكم: أسئلة وأجوبة تفاعلية
+
+🔧 المطور: نظام تعليمي متقدم
+📅 الإصدار: 2025
+        `;
+        
+        alert(info);
+      }
+    }
     /* ========================================
        نظام مسابقة البرج التنافسية
     ======================================== */
     class TowerCompetition {
       constructor() {
         this.audio = new AudioManager();
+        this.toolbar = new ToolbarManager(this.audio);
         this.students = {};
         this.remainingStudents = [];
         this.eliminatedStudents = [];
@@ -1292,6 +1935,7 @@
         this.initElements();
         this.loadStudentData();
         this.setupEvents();
+        this.initToolbarIntegration();
       }
 
       initElements() {
@@ -1530,6 +2174,9 @@
         this.elements.setupScreen.style.display = 'none';
         this.elements.gameScreen.style.display = 'block';
         
+        // تحديث شريط الأدوات
+        this.updateToolbarForGameState();
+        
         // إنشاء البرج وتحديث الواجهة
         this.createTowerWithStudents();
         this.updateTournamentDisplay();
@@ -1739,6 +2386,9 @@
         this.celebrateWinner(winner);
         this.audio.play('tower-complete');
         
+        // تحديث شريط الأدوات
+        this.updateToolbarForGameState();
+        
         // إخفاء أزرار التحكم
         this.elements.correctBtn.style.display = 'none';
         this.elements.wrongBtn.style.display = 'none';
@@ -1833,6 +2483,9 @@ ${this.eliminatedStudents.length > 0 ?
         this.elements.gameScreen.style.display = 'none';
         this.elements.setupScreen.style.display = 'block';
         this.clearStudentSelection();
+        
+        // تحديث شريط الأدوات
+        this.updateToolbarForGameState();
       }
 
       endCompetition() {
@@ -1847,11 +2500,75 @@ ${this.eliminatedStudents.length > 0 ?
         this.remainingStudents = [];
         this.updateStartButton();
       }
+
+      initToolbarIntegration() {
+        // ربط شريط الأدوات بحالة اللعبة
+        this.updateToolbarForGameState();
+        
+        // تحديث حالة الصوت في الواجهة
+        setTimeout(() => {
+          this.toolbar.updateSoundIcon(this.audio.isEnabled());
+        }, 1000);
+      }
+
+      updateToolbarForGameState() {
+        // تحديث شريط الأدوات بناءً على حالة اللعبة
+        const toolbar = document.querySelector('.top-toolbar');
+        
+        if (this.gameState === 'playing') {
+          toolbar.style.background = `linear-gradient(135deg, 
+            rgba(0, 245, 255, 0.2) 0%, 
+            rgba(0, 0, 0, 0.8) 50%, 
+            rgba(255, 7, 58, 0.2) 100%)`;
+        } else if (this.gameState === 'finished') {
+          toolbar.style.background = `linear-gradient(135deg, 
+            rgba(255, 215, 0, 0.3) 0%, 
+            rgba(0, 0, 0, 0.8) 50%, 
+            rgba(255, 215, 0, 0.3) 100%)`;
+        } else {
+          toolbar.style.background = `linear-gradient(135deg, 
+            rgba(0, 0, 0, 0.8) 0%, 
+            rgba(0, 0, 0, 0.6) 50%, 
+            rgba(0, 0, 0, 0.8) 100%)`;
+        }
+      }
     }
 
     // تشغيل المسابقة عند تحميل الصفحة
     document.addEventListener('DOMContentLoaded', () => {
       window.towerCompetition = new TowerCompetition();
+      
+      // إضافة تأثير بدء التطبيق
+      const toolbar = document.querySelector('.top-toolbar');
+      setTimeout(() => {
+        toolbar?.classList.add('loaded');
+      }, 1000);
+      
+      // إضافة keyboard shortcuts
+      document.addEventListener('keydown', (e) => {
+        // ESC للخروج من ملئ الشاشة
+        if (e.key === 'Escape' && window.towerCompetition.toolbar.isFullscreen) {
+          window.towerCompetition.toolbar.exitFullscreen();
+        }
+        
+        // F11 لملئ الشاشة
+        if (e.key === 'F11') {
+          e.preventDefault();
+          window.towerCompetition.toolbar.handleFullscreenToggle();
+        }
+        
+        // M لكتم/تفعيل الصوت
+        if (e.key === 'm' || e.key === 'M') {
+          window.towerCompetition.toolbar.handleSoundToggle();
+        }
+        
+        // H للعودة للرئيسية
+        if (e.key === 'h' || e.key === 'H') {
+          if (e.ctrlKey) {
+            window.towerCompetition.toolbar.handleHomeClick();
+          }
+        }
+      });
       
       // إضافة تأثيرات الجسيمات للاحتفال
       const style = document.createElement('style');
@@ -1866,8 +2583,36 @@ ${this.eliminatedStudents.length > 0 ?
             opacity: 0;
           }
         }
+        
+        .toolbar-icon.success {
+          animation: successPulse 0.6s ease-out;
+        }
+        
+        @keyframes successPulse {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.2); }
+          100% { transform: scale(1); }
+        }
+        
+        .top-toolbar.loaded {
+          box-shadow: 
+            0 8px 30px rgba(0, 0, 0, 0.5),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1),
+            0 0 50px rgba(0, 245, 255, 0.1);
+        }
       `;
       document.head.appendChild(style);
+      
+      // Welcome message
+      console.log(`
+🏆 برج الأسماء - مسابقة تنافسية احترافية 🏆
+🎮 تم تحميل اللعبة بنجاح!
+⌨️  اختصارات لوحة المفاتيح:
+   • F11: ملئ الشاشة
+   • M: كتم/تفعيل الصوت  
+   • Ctrl+H: العودة للرئيسية
+   • ESC: إغلاق ملئ الشاشة
+      `);
     });
   </script>
 </body>
