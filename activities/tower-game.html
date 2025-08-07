@@ -2293,10 +2293,10 @@
           <div class="manual-selection-interface" id="manualSelectionInterface">
             <div class="selection-header">
               <div class="selection-counter" id="selectionCounter">
-                تم اختيار <span id="selectedCount">0</span> من <span id="targetCount">0</span> طالب
+                اختر عدد المتسابقين أولاً، ثم اختر الطلاب
               </div>
               <div class="selection-info">
-                اختر الطلاب المشاركين في المسابقة بالنقر على البطاقات
+                حدد عدد المتسابقين من الأزرار أعلاه، ثم اختر الطلاب المشاركين بالنقر على البطاقات
               </div>
             </div>
 
@@ -3377,8 +3377,10 @@
             break;
             
           case 'manual':
+            // إظهار بطاقات جميع الطلاب مباشرة
             this.elements.studentCountSection.style.display = 'block';
             this.updateStudentCountButtons(this.allClassStudents.length);
+            this.showManualSelectionInterface();
             break;
             
           case 'all':
@@ -3388,6 +3390,16 @@
             this.updateTournamentInfo();
             break;
         }
+      }
+
+      showManualSelectionInterface() {
+        // إظهار واجهة الاختيار اليدوي مع جميع الطلاب
+        this.selectedStudents.clear();
+        this.targetStudentCount = 0; // سيتم تحديده عند اختيار العدد
+        this.elements.manualSelectionInterface.classList.add('show');
+        this.updateSelectionCounter();
+        this.createStudentSelectionCards();
+        this.updateStartButton();
       }
 
       updateStudentCountButtons(maxStudents) {
@@ -3416,9 +3428,29 @@
             this.showRandomStudentSelection(count);
             break;
           case 'manual':
-            this.showManualStudentSelection(count);
+            // في الاختيار اليدوي، فقط نحديث العدد المطلوب والعداد
+            this.updateSelectionCounter();
+            this.updateStartButton();
+            // إذا كان عدد المختارين يتجاوز العدد الجديد، نقلل الاختيارات
+            if (this.selectedStudents.size > count) {
+              this.adjustSelectionToTarget(count);
+            }
             break;
         }
+      }
+
+      adjustSelectionToTarget(targetCount) {
+        // تقليل عدد المختارين إلى العدد المطلوب
+        const selectedArray = Array.from(this.selectedStudents);
+        this.selectedStudents.clear();
+        
+        // الاحتفاظ بأول عدد مطلوب من الطلاب المختارين
+        for (let i = 0; i < Math.min(targetCount, selectedArray.length); i++) {
+          this.selectedStudents.add(selectedArray[i]);
+        }
+        
+        // تحديث الواجهة
+        this.updateSelectionUI();
       }
 
       showRandomStudentSelection(count) {
@@ -3468,8 +3500,14 @@
           cardElement.classList.remove('selected');
           this.audio.play('ui-click', { volume: 0.7 });
         } else {
-          // إضافة للاختيار إذا لم نصل للحد الأقصى
-          if (this.selectedStudents.size < this.targetStudentCount) {
+          // التحقق من إمكانية الإضافة
+          if (this.targetStudentCount === 0) {
+            // إذا لم يتم تحديد العدد المطلوب، يمكن اختيار أي عدد
+            this.selectedStudents.add(studentName);
+            cardElement.classList.add('selected');
+            this.audio.play('step-correct', { volume: 0.5 });
+          } else if (this.selectedStudents.size < this.targetStudentCount) {
+            // إضافة للاختيار إذا لم نصل للحد الأقصى
             this.selectedStudents.add(studentName);
             cardElement.classList.add('selected');
             this.audio.play('step-correct', { volume: 0.5 });
@@ -3488,16 +3526,32 @@
       updateSelectionCounter() {
         if (this.elements.selectedCount && this.elements.targetCount) {
           this.elements.selectedCount.textContent = this.selectedStudents.size;
-          this.elements.targetCount.textContent = this.targetStudentCount;
           
-          // تغيير لون العداد حسب الحالة
-          const counter = this.elements.selectionCounter;
-          if (this.selectedStudents.size === this.targetStudentCount) {
-            counter.style.background = 'var(--success-gradient)';
-          } else if (this.selectedStudents.size > this.targetStudentCount * 0.7) {
-            counter.style.background = 'var(--warning-gradient)';
+          if (this.targetStudentCount > 0) {
+            this.elements.targetCount.textContent = this.targetStudentCount;
+            
+            // تغيير لون العداد حسب الحالة
+            const counter = this.elements.selectionCounter;
+            if (this.selectedStudents.size === this.targetStudentCount) {
+              counter.style.background = 'var(--success-gradient)';
+            } else if (this.selectedStudents.size > this.targetStudentCount * 0.7) {
+              counter.style.background = 'var(--warning-gradient)';
+            } else {
+              counter.style.background = 'var(--primary-gradient)';
+            }
           } else {
+            // إذا لم يتم تحديد العدد المطلوب بعد
+            this.elements.targetCount.textContent = '؟';
+            const counter = this.elements.selectionCounter;
             counter.style.background = 'var(--primary-gradient)';
+            
+            // تحديث النص لتوضيح أنه يجب اختيار العدد أولاً
+            const counterElement = this.elements.selectionCounter;
+            if (this.selectedStudents.size === 0) {
+              counterElement.innerHTML = 'اختر عدد المتسابقين أولاً، ثم اختر الطلاب';
+            } else {
+              counterElement.innerHTML = `تم اختيار <span id="selectedCount">${this.selectedStudents.size}</span> طالب - حدد العدد المطلوب`;
+            }
           }
         }
       }
@@ -3553,6 +3607,20 @@
       }
 
       randomSelectStudents() {
+        if (this.targetStudentCount === 0) {
+          // إذا لم يتم تحديد العدد، اختر عدد عشوائي بين 3 و 8
+          const minCount = Math.min(3, this.allClassStudents.length);
+          const maxCount = Math.min(8, this.allClassStudents.length);
+          this.targetStudentCount = Math.floor(Math.random() * (maxCount - minCount + 1)) + minCount;
+          
+          // تحديد زر العدد المناسب
+          const countBtn = document.querySelector(`[data-count="${this.targetStudentCount}"]`);
+          if (countBtn) {
+            document.querySelectorAll('.count-btn').forEach(btn => btn.classList.remove('selected'));
+            countBtn.classList.add('selected');
+          }
+        }
+        
         this.selectedStudents.clear();
         const shuffled = [...this.allClassStudents].sort(() => Math.random() - 0.5);
         const selected = shuffled.slice(0, this.targetStudentCount);
@@ -3642,7 +3710,10 @@
             canStart = this.remainingStudents.length > 0;
             break;
           case 'manual':
-            canStart = this.selectedStudents.size === this.targetStudentCount;
+            // يمكن البدء إذا تم اختيار طلاب وتحديد العدد المطلوب وكان العدد مطابق
+            canStart = this.selectedStudents.size > 0 && 
+                      this.targetStudentCount > 0 && 
+                      this.selectedStudents.size === this.targetStudentCount;
             break;
         }
         
@@ -3667,11 +3738,30 @@
           `;
         } else {
           if (this.selectionMode === 'manual') {
-            const remaining = this.targetStudentCount - this.selectedStudents.size;
-            this.elements.startGameBtn.innerHTML = `
-              <i class="fas fa-users"></i>
-              اختر ${remaining} طالب إضافي
-            `;
+            if (this.targetStudentCount === 0) {
+              this.elements.startGameBtn.innerHTML = `
+                <i class="fas fa-number"></i>
+                حدد عدد المتسابقين أولاً
+              `;
+            } else if (this.selectedStudents.size === 0) {
+              this.elements.startGameBtn.innerHTML = `
+                <i class="fas fa-users"></i>
+                اختر ${this.targetStudentCount} طالب
+              `;
+            } else {
+              const remaining = this.targetStudentCount - this.selectedStudents.size;
+              if (remaining > 0) {
+                this.elements.startGameBtn.innerHTML = `
+                  <i class="fas fa-user-plus"></i>
+                  اختر ${remaining} طالب إضافي
+                `;
+              } else {
+                this.elements.startGameBtn.innerHTML = `
+                  <i class="fas fa-check"></i>
+                  جاهز للبدء
+                `;
+              }
+            }
           } else {
             this.elements.startGameBtn.innerHTML = `
               <i class="fas fa-users"></i>
