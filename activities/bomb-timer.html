@@ -991,6 +991,711 @@
             transform: translateY(-2px);
         }
 
+        /* ===== تحسينات الواجهة الاحترافية ===== */
+        .control-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: var(--border-radius-large);
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .bomb-display {
+            position: relative;
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .timer-circle {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 0 auto;
+        }
+
+        .bomb-visual {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 80px;
+            animation: bombPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes bombPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .sparks {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 30px;
+            animation: sparkle 1.5s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.5; transform: translateX(-50%) rotate(0deg); }
+            50% { opacity: 1; transform: translateX(-50%) rotate(180deg); }
+        }
+
+        .timer-text {
+            position: absolute;
+            top: 70%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--accent-gold);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        /* ===== أزرار التحكم المحسنة ===== */
+        .game-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .control-btn {
+            background: linear-gradient(135deg, var(--surface-elevated) 0%, rgba(255, 255, 255, 0.1) 100%);
+            border: 2px solid transparent;
+            border-radius: var(--border-radius-medium);
+            padding: 20px;
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .control-btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .control-btn:hover:before {
+            left: 100%;
+        }
+
+        .control-btn:hover {
+            border-color: var(--accent-gold);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .control-btn.primary {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+
+        .control-btn.primary:hover {
+            box-shadow: 0 10px 25px rgba(40, 167, 69, 0.4);
+        }
+
+        .control-btn.danger {
+            background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+        }
+
+        .control-btn.danger:hover {
+            box-shadow: 0 10px 25px rgba(220, 53, 69, 0.4);
+        }
+
+        .control-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .control-btn:disabled:hover {
+            border-color: transparent;
+            box-shadow: none;
+        }
+
+        /* ===== منطقة المعلومات ===== */
+        .game-info {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: var(--border-radius-medium);
+            padding: 25px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .student-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-gold);
+            margin: 10px 0;
+        }
+
+        .game-status {
+            font-size: 1.2rem;
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: var(--border-radius-small);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ===== إعدادات الوقت ===== */
+        .timer-settings {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .timer-settings label {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .timer-settings input {
+            background: var(--surface-elevated);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: var(--border-radius-small);
+            color: var(--text-primary);
+            padding: 10px 15px;
+            font-size: 1.1rem;
+            width: 80px;
+            text-align: center;
+        }
+
+        .timer-settings input:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        /* ===== نظام الإشعارات ===== */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--surface-elevated);
+            border: 2px solid var(--accent-gold);
+            border-radius: var(--border-radius-medium);
+            padding: 15px 20px;
+            color: var(--text-primary);
+            font-weight: 600;
+            z-index: 10000;
+            animation: slideInRight 0.3s ease;
+        }
+
+        .notification.success {
+            border-color: #28a745;
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+
+        .notification.danger {
+            border-color: #dc3545;
+            background: linear-gradient(135deg, #dc3545, #fd7e14);
+        }
+
+        .notification.warning {
+            border-color: #ffc107;
+            background: linear-gradient(135deg, #ffc107, #fd7e14);
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* ===== تأثيرات إضافية ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.9); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes glow {
+            0%, 100% { 
+                text-shadow: 0 0 5px currentColor, 0 0 10px currentColor; 
+            }
+            50% { 
+                text-shadow: 0 0 20px currentColor, 0 0 30px currentColor, 0 0 40px currentColor; 
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        /* ===== شريط التقدم الدائري المحسن ===== */
+        .circular-progress {
+            position: relative;
+            width: 300px;
+            height: 300px;
+        }
+
+        .progress-ring {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring circle {
+            fill: none;
+            stroke-width: 8;
+            r: 110;
+            cx: 150;
+            cy: 150;
+        }
+
+        .progress-ring .background {
+            stroke: rgba(255, 255, 255, 0.2);
+        }
+
+        .progress-ring .progress {
+            stroke: var(--accent-gold);
+            stroke-dasharray: 692;
+            stroke-dashoffset: 692;
+            transition: stroke-dashoffset 0.5s ease, stroke 0.3s ease;
+            stroke-linecap: round;
+        }
+
+        /* ===== تأثيرات التحويم للعناصر التفاعلية ===== */
+        .interactive-element {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .interactive-element:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ===== تأثيرات الألوان الديناميكية ===== */
+        .dynamic-color {
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+
+        .success-state {
+            color: #28a745 !important;
+            border-color: #28a745 !important;
+        }
+
+        .warning-state {
+            color: #ffc107 !important;
+            border-color: #ffc107 !important;
+        }
+
+        .danger-state {
+            color: #dc3545 !important;
+            border-color: #dc3545 !important;
+        }
+
+        /* ===== تحسينات الأداء ===== */
+        * {
+            will-change: auto;
+        }
+
+        .animated-element {
+            backface-visibility: hidden;
+            perspective: 1000px;
+        }
+
+        /* ===== استجابة للشاشات الصغيرة ===== */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .game-title h1 {
+                font-size: 2rem;
+            }
+
+            .timer-circle {
+                width: 250px;
+                height: 250px;
+            }
+
+            .bomb-visual {
+                font-size: 60px;
+            }
+
+            .timer-text {
+                font-size: 2.5rem;
+            }
+
+            .game-controls {
+                grid-template-columns: 1fr;
+            }
+
+            .timer-settings {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+        .modern-header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border-bottom: 3px solid var(--accent-gold);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .game-title h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .game-title .icon {
+            margin-left: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        .game-subtitle {
+            margin: 5px 0 0 0;
+            color: var(--accent-gold);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .settings-icon {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--accent-gold);
+            color: var(--accent-gold);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .settings-icon:hover {
+            background: var(--accent-gold);
+            color: #1e3c72;
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        .game-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        .main-display {
+            background: linear-gradient(135deg, rgba(30, 60, 114, 0.1) 0%, rgba(42, 82, 152, 0.1) 100%);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .student-display {
+            margin-bottom: 40px;
+        }
+
+        .student-name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .student-class {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .bomb-timer-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 60px;
+            margin: 40px 0;
+        }
+
+        .bomb-visual {
+            position: relative;
+        }
+
+        .bomb-body {
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, #2c2c2c 0%, #1a1a1a 100%);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 
+                0 0 20px rgba(220, 20, 60, 0.5),
+                inset 0 0 20px rgba(0, 0, 0, 0.5);
+            animation: bombPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes bombPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .bomb-fuse {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 30px;
+            background: linear-gradient(to bottom, #8B4513 0%, #654321 100%);
+            border-radius: 2px;
+        }
+
+        .bomb-sparks {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 10px;
+            background: radial-gradient(circle, #FFD700 0%, #FF6B35 100%);
+            border-radius: 50%;
+            animation: sparkle 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes sparkle {
+            0% { opacity: 0.3; transform: translateX(-50%) scale(0.8); }
+            100% { opacity: 1; transform: translateX(-50%) scale(1.2); }
+        }
+
+        .timer-circle {
+            position: relative;
+            width: 240px;
+            height: 240px;
+        }
+
+        .timer-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .timer-track {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.1);
+            stroke-width: 8;
+        }
+
+        .timer-progress {
+            fill: none;
+            stroke: var(--accent-gold);
+            stroke-width: 8;
+            stroke-linecap: round;
+            stroke-dasharray: 692;
+            stroke-dashoffset: 0;
+            transition: stroke-dashoffset 1s linear;
+        }
+
+        .timer-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .game-status {
+            margin-top: 30px;
+        }
+
+        .status-text {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+
+        .status-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .status-dots span {
+            width: 12px;
+            height: 12px;
+            background: var(--accent-gold);
+            border-radius: 50%;
+            animation: dotPulse 1.5s ease-in-out infinite;
+        }
+
+        .status-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .status-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes dotPulse {
+            0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+            40% { opacity: 1; transform: scale(1); }
+        }
+
+        .control-panel {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .control-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .control-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 20px;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .control-btn i {
+            font-size: 1.5rem;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .control-btn.primary {
+            border-color: #007bff;
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.2) 0%, rgba(0, 86, 179, 0.2) 100%);
+        }
+
+        .control-btn.primary:hover {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        }
+
+        .control-btn.secondary {
+            border-color: #6c757d;
+            background: linear-gradient(135deg, rgba(108, 117, 125, 0.2) 0%, rgba(73, 80, 87, 0.2) 100%);
+        }
+
+        .control-btn.secondary:hover {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+        }
+
+        .control-btn.success {
+            border-color: #28a745;
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.2) 0%, rgba(25, 135, 84, 0.2) 100%);
+        }
+
+        .control-btn.success:hover {
+            background: linear-gradient(135deg, #28a745 0%, #198754 100%);
+        }
+
+        .control-btn.danger {
+            border-color: #dc3545;
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.2) 0%, rgba(176, 42, 55, 0.2) 100%);
+        }
+
+        .control-btn.danger:hover {
+            background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%);
+        }
+
+        .control-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* التصميم المتجاوب */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .game-title h1 {
+                font-size: 2rem;
+            }
+
+            .bomb-timer-section {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .timer-circle {
+                width: 180px;
+                height: 180px;
+            }
+
+            .timer-text {
+                font-size: 2.5rem;
+            }
+
+            .control-group {
+                grid-template-columns: 1fr;
+            }
+        }
+
         /* ===== التصميم المتجاوب ===== */
         @media (max-width: 1024px) {
             .main-container {
@@ -1369,132 +2074,209 @@
             z-index: 7778;
             backdrop-filter: blur(10px);
         }
+
+        /* ===== النوافذ المبسطة ===== */
+        .simple-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .simple-modal .modal-content {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border-radius: 15px;
+            padding: 0;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--accent-gold);
+        }
+
+        .simple-modal .modal-header {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .simple-modal .modal-header h3 {
+            margin: 0;
+            color: var(--accent-gold);
+            font-size: 1.5rem;
+        }
+
+        .simple-modal .close {
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .simple-modal .close:hover {
+            color: var(--accent-gold);
+            transform: scale(1.2);
+        }
+
+        .class-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            padding: 20px;
+        }
+
+        .class-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .class-btn:hover {
+            border-color: var(--accent-gold);
+            background: var(--accent-gold);
+            color: #1e3c72;
+            transform: translateY(-2px);
+        }
+
+        .settings-content {
+            padding: 20px;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .setting-item label {
+            font-weight: 600;
+            color: var(--accent-gold);
+        }
+
+        .setting-item select,
+        .setting-item input[type="range"] {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .toggle-btn {
+            background: var(--accent-gold);
+            border: none;
+            color: #1e3c72;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .toggle-btn.off {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
     </style>
 </head>
 <body>
-    <!-- أزرار التحكم -->
-    <button id="homeBtn" class="control-btn" onclick="goHome()" title="الصفحة الرئيسية">🏠</button>
-    <button id="refreshBtn" class="control-btn" onclick="location.reload()" title="تحديث الصفحة">🔄</button>
-    <button id="instructionsBtn" class="control-btn" onclick="showInstructions()" title="التعليمات">❓</button>
-    <button id="fullscreenBtn" class="control-btn" onclick="toggleFullscreen()" title="شاشة كاملة">⛶</button>
-    <button id="soundBtn" class="control-btn" onclick="toggleSound()" title="الصوت">🔊</button>
-    <button id="teacherGuideBtn" class="control-btn" onclick="showTeacherGuide()" title="دليل المعلم">👨‍🏫</button>
-
-    <!-- نظام الإشعارات التفاعلية المتقدم -->
+    <!-- نظام الإشعارات -->
     <div id="advancedNotificationSystem" class="advanced-notification-system"></div>
 
-    <!-- شريط التقدم التنافسي -->
-    <div id="competitiveProgressBar" class="competitive-progress-bar" style="display: none;">
-        <div id="progressFill" class="progress-fill"></div>
-    </div>
-    <div id="progressLabel" class="progress-label" style="display: none;">التقدم: 0%</div>
-
-    <!-- تحدي الذكاء التفاعلي -->
-    <div id="intelligenceChallenge" class="intelligence-challenge">
-        <div class="challenge-container">
-            <div class="challenge-header">🧠 تحدي الذكاء المتفجر!</div>
-            <div id="challengeQuestion" class="challenge-question">
-                سؤال صعب يتطلب تفكيراً سريعاً...
+    <!-- رأس الصفحة الجديد -->
+    <header class="modern-header">
+        <div class="header-content">
+            <div class="game-title">
+                <h1><span class="icon">💣</span>لعبة القنبلة الذكية</h1>
+                <p class="game-subtitle">تحدي الوقت والذكاء</p>
             </div>
-            <div id="challengeTimer" class="challenge-timer">10</div>
-            <div class="challenge-actions">
-                <button class="btn btn-success" onclick="challengeSuccess()">✅ إجابة صحيحة</button>
-                <button class="btn" onclick="challengeSkip()">⏭️ تخطي</button>
-                <button class="btn btn-warning" onclick="challengeFail()">❌ إجابة خاطئة</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- رأس الصفحة -->
-    <header>
-        <h1>💣 لعبة القنبلة المؤقتة</h1>
-        <p class="subtitle">نشاط تعليمي تفاعلي مثير ومشوق</p>
-        <div class="header-controls">
-            <button class="settings-btn" onclick="toggleAudioSettings()" title="إعدادات النظام الصوتي">
-                <i class="fas fa-volume-up"></i>
+            <button class="settings-icon" onclick="toggleSettings()" title="الإعدادات">
+                <i class="fas fa-cog"></i>
             </button>
         </div>
     </header>
 
-    <!-- الحاوي الرئيسي -->
-    <div class="main-container">
-        <!-- القسم الأيسر - معلومات اللعبة -->
-        <div class="game-info">
-            <div class="info-card">
-                <div class="info-label">الطالب الحالي</div>
-                <div class="info-value" id="currentPlayerName">لم يتم الاختيار</div>
+    <!-- الحاوي الرئيسي المحدث -->
+    <div class="game-container">
+        <!-- منطقة العرض الرئيسية -->
+        <div class="main-display">
+            <!-- شاشة الطالب المختار -->
+            <div class="student-display">
+                <div class="student-name" id="studentName">اختر صفاً لبدء اللعبة</div>
+                <div class="student-class" id="studentClass"></div>
             </div>
             
-            <div class="info-card">
-                <div class="info-label">الوقت المتبقي</div>
-                <div class="info-value" id="timeRemaining">--:--</div>
-            </div>
-            
-            <div class="info-card">
-                <div class="info-label">النقاط المكتسبة</div>
-                <div class="info-value" id="pointsEarned">0</div>
-            </div>
-            
-            <div class="info-card">
-                <div class="info-label">عدد المشاركين</div>
-                <div class="info-value" id="participantCount">0</div>
-            </div>
-            
-            <div class="info-card">
-                <div class="info-label">المحاولات</div>
-                <div class="info-value" id="attemptCount">0</div>
-            </div>
-        </div>
-
-        <!-- القسم المركزي - منطقة القنبلة -->
-        <div class="bomb-area">
-            <div class="bomb-container">
-                <div class="bomb">
-                    <div class="fuse"></div>
+            <!-- القنبلة والمؤقت -->
+            <div class="bomb-timer-section">
+                <div class="bomb-visual">
+                    <div class="bomb-body">
+                        <div class="bomb-fuse"></div>
+                        <div class="bomb-sparks"></div>
+                    </div>
+                </div>
+                
+                <div class="timer-circle">
+                    <div class="timer-text" id="timerText">30</div>
+                    <svg class="timer-svg">
+                        <circle class="timer-track" cx="120" cy="120" r="110"></circle>
+                        <circle class="timer-progress" cx="120" cy="120" r="110" id="timerProgress"></circle>
+                    </svg>
                 </div>
             </div>
             
-            <div class="timer-display">
-                <div class="timer-text" id="timerDisplay">30:00</div>
-            </div>
-            
-            <div class="game-state" id="gameStatus">
-                ⏳ في انتظار بدء اللعبة...
-            </div>
-        </div>
-
-        <!-- القسم الأيمن - أدوات المعلم -->
-        <div class="teacher-controls">
-            <div class="control-section">
-                <h3 class="control-title">📚 إعداد اللعبة</h3>
-                <button class="btn btn-success" onclick="showClassSelection()">📋 اختيار الصف</button>
-                <button class="btn btn-warning" onclick="showPlayerSelectionMethod()">🎯 طريقة الاختيار</button>
-                <button class="btn btn-gold" onclick="selectRandomStudent()" id="selectPlayerBtn" disabled>🎲 اختيار العب</button>
-                <div class="game-ready-indicator" id="gameReadyIndicator" style="display: none;">
-                    <i class="fas fa-check-circle"></i> اللعبة جاهزة للبدء!
+            <!-- حالة اللعبة -->
+            <div class="game-status">
+                <div class="status-text" id="gameStatusText">في انتظار بدء اللعبة</div>
+                <div class="status-dots">
+                    <span></span><span></span><span></span>
                 </div>
             </div>
-            
-            <div class="control-section">
-                <h3 class="control-title">🎮 التحكم في اللعبة</h3>
-                <button class="btn btn-success" onclick="startGame()">▶️ بدء اللعبة</button>
-                <button class="btn" onclick="pauseGame()">⏸️ إيقاف مؤقت</button>
-                <button class="btn btn-warning" onclick="resetGame()">🔄 إعادة تعيين</button>
-                <button class="btn btn-gold" onclick="stopGame()">⏹️ إنهاء اللعبة</button>
-            </div>
-            
-            <div class="control-section">
-                <h3 class="control-title">🧠 تحديات الذكاء</h3>
-                <button class="btn btn-success" onclick="startIntelligenceChallenge()">⚡ تحدي سريع</button>
-                <button class="btn btn-warning" onclick="startAdvancedChallenge()">🎯 تحدي متقدم</button>
-                <button class="btn btn-gold" onclick="defuseBomb()">💣 إبطال القنبلة</button>
-            </div>
-            
-            <div class="control-section">
-                <h3 class="control-title">📊 الإحصائيات</h3>
-                <button class="btn btn-gold" onclick="showStatistics()">📈 عرض الإحصائيات</button>
-                <button class="btn" onclick="exportResults()">📤 تصدير النتائج</button>
-                <button class="btn btn-success" onclick="generateReport()">📋 تقرير مفصل</button>
+        </div>
+        
+        <!-- لوحة التحكم -->
+        <div class="control-panel">
+            <div class="control-group">
+                <button class="control-btn primary" id="classBtn" onclick="showClassSelection()">
+                    <i class="fas fa-school"></i>
+                    <span>اختيار الصف</span>
+                </button>
+                <button class="control-btn secondary" id="playBtn" onclick="startNewGame()" disabled>
+                    <i class="fas fa-play"></i>
+                    <span>بدء اللعبة</span>
+                </button>
+                <button class="control-btn success" id="defuseBtn" onclick="defuseBomb()" disabled>
+                    <i class="fas fa-shield-alt"></i>
+                    <span>إبطال القنبلة</span>
+                </button>
+                <button class="control-btn danger" id="resetBtn" onclick="resetGame()">
+                    <i class="fas fa-redo"></i>
+                    <span>إعادة تعيين</span>
+                </button>
             </div>
         </div>
     </div>
@@ -1750,604 +2532,436 @@
     </div>
 
     <script>
-        // ===== متغيرات اللعبة =====
+        // ===== متغيرات اللعبة المبسطة =====
         let gameActive = false;
-        let currentTimer = null;
+        let currentTimer;
         let timeLeft = 30;
-        let currentStudent = null;
-        let gameStats = {
-            totalGames: 0,
-            successfulDefuses: 0,
-            explosions: 0,
-            totalPoints: 0,
-            challengesCompleted: 0,
-            perfectRounds: 0
-        };
-
-        // ===== متغيرات النظم المتقدمة =====
-        let notificationSystem = null;
-        let progressSystem = null;
-        let challengeSystem = null;
-        let soundEnabled = true;
-        let audioManager = null;
-        let studentSelector = null;
-
-        // ===== متغيرات النظام الجديد =====
         let selectedClass = null;
-        let selectionMethod = 'random';
-        let gameReady = false;
+        let currentStudent = '';
+        let notificationSystem;
 
-        // ===== النظام الصوتي الذكي والمتكامل =====
-        class SmartAudioManager {
-            constructor() {
-                this.audioPath = '../assets/media/sounds/kingdom-sounds/';
-                this.audioCache = new Map();
-                this.soundEnabled = true;
-                this.currentTheme = null;
-                this.masterVolume = 0.7;
-                this.soundCategories = {
-                    ui: ['button-hover.mp3', 'menu-open.mp3', 'cosmic-click.mp3', 'notification-pop.mp3'],
-                    game: ['timer-start.mp3', 'countdown-tick.mp3', 'time-warning.mp3', 'final-countdown.mp3'],
-                    success: ['achievement-unlock.mp3', 'battle-victory.mp3', 'royal-fanfare.mp3', 'epic-victory.mp3'],
-                    danger: ['thunder-rumble.mp3', 'lightning-strike.mp3', 'cosmic-explosion.mp3', 'war-drum.mp3'],
-                    magic: ['spell-cast.mp3', 'magic-sparkle.mp3', 'cosmic-portal.mp3', 'dimensional-shift.mp3'],
-                    wisdom: ['brain-activate.mp3', 'wisdom-chime.mp3', 'knowledge-unlock.mp3', 'great-idea.mp3'],
-                    selection: ['student-turn.mp3', 'character-intro.mp3', 'mystery-whisper.mp3', 'ancient-bell.mp3'],
-                    celebration: ['crowd-cheer.mp3', 'fireworks-burst.mp3', 'golden-confetti.mp3', 'ultimate-triumph.mp3']
-                };
+        // إعداد نظام الإشعارات المبسط
+        class SimpleNotificationSystem {
+            show(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
                 
-                this.preloadEssentialSounds();
-            }
-
-            async preloadEssentialSounds() {
-                const essentialSounds = [
-                    'timer-start.mp3', 'countdown-tick.mp3', 'battle-victory.mp3', 
-                    'cosmic-explosion.mp3', 'student-turn.mp3', 'achievement-unlock.mp3',
-                    'button-hover.mp3', 'brain-activate.mp3', 'magic-sparkle.mp3'
-                ];
-
-                for (const sound of essentialSounds) {
-                    try {
-                        await this.preloadSound(sound);
-                    } catch (error) {
-                        console.log(`تعذر تحميل الصوت: ${sound}`);
-                    }
-                }
-            }
-
-            async preloadSound(filename) {
-                return new Promise((resolve, reject) => {
-                    const audio = new Audio();
-                    audio.volume = this.masterVolume;
-                    audio.addEventListener('canplaythrough', () => {
-                        this.audioCache.set(filename, audio);
-                        resolve(audio);
-                    });
-                    audio.addEventListener('error', reject);
-                    audio.src = this.audioPath + filename;
-                    audio.load();
-                });
-            }
-
-            async playSound(filename, category = 'ui', options = {}) {
-                if (!this.soundEnabled) return;
-
-                try {
-                    let audio;
-                    
-                    // إذا كان الصوت في الكاش
-                    if (this.audioCache.has(filename)) {
-                        audio = this.audioCache.get(filename).cloneNode();
-                    } else {
-                        // تحميل الصوت جديد
-                        audio = new Audio(this.audioPath + filename);
-                    }
-
-                    audio.volume = (options.volume || 1) * this.masterVolume;
-                    audio.playbackRate = options.speed || 1;
-                    
-                    if (options.loop) {
-                        audio.loop = true;
-                    }
-
-                    await audio.play();
-                    
-                    // إضافة تأثيرات إضافية حسب الفئة
-                    this.addSoundEffects(audio, category, options);
-                    
-                    return audio;
-                } catch (error) {
-                    console.log(`خطأ في تشغيل الصوت: ${filename}`, error);
-                }
-            }
-
-            addSoundEffects(audio, category, options) {
-                // تأثيرات إضافية حسب فئة الصوت
-                if (category === 'magic' && options.echo) {
-                    // إضافة تأثير الصدى للأصوات السحرية
-                    setTimeout(() => {
-                        const echo = audio.cloneNode();
-                        echo.volume = audio.volume * 0.3;
-                        echo.play().catch(() => {});
-                    }, 300);
-                }
-            }
-
-            playRandomFromCategory(category, options = {}) {
-                if (!this.soundCategories[category]) return;
+                // إضافة للصفحة
+                document.body.appendChild(notification);
                 
-                const sounds = this.soundCategories[category];
-                const randomSound = sounds[Math.floor(Math.random() * sounds.length)];
-                return this.playSound(randomSound, category, options);
-            }
-
-            playSequence(sounds, interval = 500) {
-                sounds.forEach((sound, index) => {
-                    setTimeout(() => {
-                        if (typeof sound === 'string') {
-                            this.playSound(sound);
-                        } else {
-                            this.playSound(sound.file, sound.category, sound.options);
-                        }
-                    }, index * interval);
-                });
-            }
-
-            fadeIn(audio, duration = 1000) {
-                if (!audio) return;
-                
-                audio.volume = 0;
-                const targetVolume = this.masterVolume;
-                const steps = 20;
-                const stepTime = duration / steps;
-                const volumeStep = targetVolume / steps;
-                
-                let currentStep = 0;
-                const fadeInterval = setInterval(() => {
-                    currentStep++;
-                    audio.volume = Math.min(volumeStep * currentStep, targetVolume);
-                    
-                    if (currentStep >= steps) {
-                        clearInterval(fadeInterval);
-                    }
-                }, stepTime);
-            }
-
-            fadeOut(audio, duration = 1000) {
-                if (!audio) return;
-                
-                const initialVolume = audio.volume;
-                const steps = 20;
-                const stepTime = duration / steps;
-                const volumeStep = initialVolume / steps;
-                
-                let currentStep = 0;
-                const fadeInterval = setInterval(() => {
-                    currentStep++;
-                    audio.volume = Math.max(initialVolume - (volumeStep * currentStep), 0);
-                    
-                    if (currentStep >= steps) {
-                        clearInterval(fadeInterval);
-                        audio.pause();
-                    }
-                }, stepTime);
-            }
-
-            setMasterVolume(volume) {
-                this.masterVolume = Math.max(0, Math.min(1, volume));
-            }
-
-            toggle() {
-                this.soundEnabled = !this.soundEnabled;
-                return this.soundEnabled;
-            }
-
-            playThemeAmbient(theme = 'castle') {
-                const ambientSounds = {
-                    castle: 'castle-atmosphere.mp3',
-                    forest: 'forest-ambient.mp3',
-                    ocean: 'ocean-waves.mp3',
-                    night: 'night-sounds.mp3'
-                };
-
-                if (this.currentTheme) {
-                    this.fadeOut(this.currentTheme, 2000);
-                }
-
-                if (ambientSounds[theme]) {
-                    this.playSound(ambientSounds[theme], 'ui', { 
-                        loop: true, 
-                        volume: 0.3 
-                    }).then(audio => {
-                        this.currentTheme = audio;
-                        this.fadeIn(audio, 2000);
-                    });
-                }
+                // إخفاء تلقائي
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
             }
         }
 
-        // ===== نظام اختيار الطلاب الذكي والإبداعي =====
-        class IntelligentStudentSelector {
-            constructor() {
-                this.students = [
-                    { name: 'أحمد محمد', performance: 85, lastSelected: 0, motivation: 'high', subject: 'رياضيات' },
-                    { name: 'فاطمة علي', performance: 92, lastSelected: 0, motivation: 'high', subject: 'علوم' },
-                    { name: 'محمد سالم', performance: 78, lastSelected: 0, motivation: 'medium', subject: 'تاريخ' },
-                    { name: 'عائشة حسن', performance: 88, lastSelected: 0, motivation: 'high', subject: 'لغة عربية' },
-                    { name: 'سالم أحمد', performance: 75, lastSelected: 0, motivation: 'medium', subject: 'جغرافيا' },
-                    { name: 'مريم محمد', performance: 90, lastSelected: 0, motivation: 'high', subject: 'فيزياء' },
-                    { name: 'علي حسن', performance: 82, lastSelected: 0, motivation: 'medium', subject: 'كيمياء' },
-                    { name: 'نور فاطمة', performance: 87, lastSelected: 0, motivation: 'high', subject: 'أحياء' },
-                    { name: 'حسن علي', performance: 79, lastSelected: 0, motivation: 'medium', subject: 'رياضيات' },
-                    { name: 'آمنة سالم', performance: 91, lastSelected: 0, motivation: 'high', subject: 'فنون' },
-                    { name: 'يوسف أحمد', performance: 84, lastSelected: 0, motivation: 'high', subject: 'تربية بدنية' },
-                    { name: 'زينب محمد', performance: 89, lastSelected: 0, motivation: 'high', subject: 'موسيقى' },
-                    { name: 'عبدالله سالم', performance: 76, lastSelected: 0, motivation: 'medium', subject: 'حاسوب' },
-                    { name: 'خديجة علي', performance: 93, lastSelected: 0, motivation: 'high', subject: 'لغة إنجليزية' },
-                    { name: 'إبراهيم حسن', performance: 81, lastSelected: 0, motivation: 'medium', subject: 'تربية إسلامية' }
-                ];
+        // دوال اللعبة الأساسية المحسنة
+        function showClassSelection() {
+            const modal = document.getElementById('classModal');
+            modal.style.display = 'block';
+            modal.style.animation = 'fadeIn 0.3s ease';
+        }
+
+        function closeClassModal() {
+            const modal = document.getElementById('classModal');
+            modal.style.animation = 'fadeOut 0.3s ease';
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+        }
+
+        function selectClass(className) {
+            selectedClass = className;
+            document.getElementById('selectedClass').textContent = className;
+            closeClassModal();
+            
+            document.getElementById('playBtn').disabled = false;
+            notificationSystem.show('تم اختيار الصف: ' + className, 'success');
+            
+            // تأثير بصري لتأكيد الاختيار
+            const selectedClassElement = document.getElementById('selectedClass');
+            selectedClassElement.style.animation = 'pulse 0.5s ease';
+        }
+
+        function selectRandomStudent() {
+            const students = [
+                'أحمد محمد العلي', 'فاطمة سالم أحمد', 'محمد عبدالله سالم', 'عائشة حسن علي', 
+                'سالم أحمد محمد', 'مريم علي حسن', 'علي محمد سالم', 'نور الهدى فاطمة', 
+                'حسن سالم أحمد', 'آمنة محمد علي', 'يوسف أحمد حسن', 'زينب علي سالم',
+                'عبدالله سالم محمد', 'خديجة أحمد علي', 'إبراهيم حسن سالم', 'ليلى محمد أحمد'
+            ];
+            
+            // إضافة تأثير تشويق
+            let animationCount = 0;
+            const animationInterval = setInterval(() => {
+                currentStudent = students[Math.floor(Math.random() * students.length)];
+                document.getElementById('studentName').textContent = currentStudent;
+                animationCount++;
                 
-                this.selectionMethods = {
-                    random: 'الاختيار العشوائي التقليدي',
-                    smart: 'الاختيار الذكي المتوازن',
-                    performance: 'اختيار حسب الأداء',
-                    motivation: 'اختيار لتحفيز الطلاب',
-                    fairness: 'اختيار عادل متوازن',
-                    challenge: 'اختيار للتحدي',
-                    dramatic: 'اختيار مثير ودرامي'
-                };
-                
-                this.currentMethod = 'smart';
-                this.selectionHistory = [];
-                this.gameRound = 0;
+                if (animationCount >= 10) {
+                    clearInterval(animationInterval);
+                    // الاختيار النهائي
+                    currentStudent = students[Math.floor(Math.random() * students.length)];
+                    document.getElementById('studentName').textContent = currentStudent;
+                    
+                    // تأثيرات بصرية
+                    const studentElement = document.getElementById('studentName');
+                    studentElement.style.animation = 'glow 1s ease';
+                    setTimeout(() => {
+                        studentElement.style.animation = '';
+                    }, 1000);
+                }
+            }, 100);
+            
+            return currentStudent;
+        }
+
+        function startNewGame() {
+            if (!selectedClass) {
+                notificationSystem.show('يرجى اختيار الصف أولاً', 'warning');
+                showClassSelection();
+                return;
             }
 
-            // الاختيار الذكي الأساسي
-            selectStudent(method = null) {
-                method = method || this.currentMethod;
-                this.gameRound++;
-                
-                let selectedStudent;
-                let selectionProcess = {
-                    method: method,
-                    round: this.gameRound,
-                    timestamp: Date.now()
-                };
+            // اختيار طالب عشوائي مع تأثيرات
+            selectRandomStudent();
+            
+            // بدء اللعبة
+            gameActive = true;
+            timeLeft = parseInt(document.getElementById('timerDuration').value);
+            
+            document.getElementById('timerText').textContent = timeLeft;
+            document.getElementById('gameStatusText').textContent = 'اللعبة نشطة - أجب لإبطال القنبلة!';
+            document.getElementById('playBtn').disabled = true;
+            document.getElementById('defuseBtn').disabled = false;
+            
+            // تأثيرات بصرية لبداية اللعبة
+            const bombVisual = document.querySelector('.bomb-visual');
+            bombVisual.style.animation = 'bombPulse 1s ease-in-out infinite';
+            
+            startTimer();
+            notificationSystem.show('بدأت اللعبة! الطالب: ' + currentStudent, 'info');
+        }
 
-                switch(method) {
-                    case 'smart':
-                        selectedStudent = this.smartSelection();
-                        break;
-                    case 'dramatic':
-                        selectedStudent = this.dramaticSelection();
-                        break;
-                    case 'performance':
-                        selectedStudent = this.performanceBasedSelection();
-                        break;
-                    case 'motivation':
-                        selectedStudent = this.motivationBasedSelection();
-                        break;
-                    case 'fairness':
-                        selectedStudent = this.fairnessBasedSelection();
-                        break;
-                    case 'challenge':
-                        selectedStudent = this.challengeBasedSelection();
-                        break;
-                    default:
-                        selectedStudent = this.randomSelection();
+        function startTimer() {
+            updateTimerProgress();
+            
+            currentTimer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timerText').textContent = timeLeft;
+                updateTimerProgress();
+                
+                // تأثيرات التحذير
+                if (timeLeft === 10) {
+                    notificationSystem.show('⚠️ 10 ثوانٍ متبقية!', 'warning');
+                    document.querySelector('.bomb-visual').style.animation = 'bombPulse 0.5s ease-in-out infinite';
+                } else if (timeLeft === 5) {
+                    notificationSystem.show('⚠️ 5 ثوانٍ متبقية!', 'danger');
+                    document.querySelector('.bomb-visual').style.animation = 'bombPulse 0.3s ease-in-out infinite';
+                } else if (timeLeft <= 3) {
+                    document.querySelector('.timer-text').style.color = '#dc3545';
+                    document.querySelector('.timer-text').style.animation = 'pulse 0.5s infinite';
                 }
 
-                // تحديث إحصائيات الطالب
-                this.updateStudentStats(selectedStudent);
+                if (timeLeft <= 0) {
+                    explodeBomb();
+                }
+            }, 1000);
+        }
+
+        // تحديث شريط التقدم مع تأثيرات
+        function updateTimerProgress() {
+            const totalTime = parseInt(document.getElementById('timerDuration').value);
+            const progress = (timeLeft / totalTime) * 692;
+            const progressElement = document.getElementById('timerProgress');
+            
+            progressElement.style.strokeDashoffset = 692 - progress;
+            
+            // تغيير اللون حسب الوقت المتبقي
+            if (timeLeft <= 5) {
+                progressElement.style.stroke = '#dc3545';
+            } else if (timeLeft <= 10) {
+                progressElement.style.stroke = '#ffc107';
+            } else {
+                progressElement.style.stroke = 'var(--accent-gold)';
+            }
+        }
+
+        // إبطال القنبلة مع تأثيرات احتفالية
+        function defuseBomb() {
+            if (!gameActive) return;
+            
+            gameActive = false;
+            clearInterval(currentTimer);
+            
+            document.getElementById('gameStatusText').textContent = 'تم إبطال القنبلة! إجابة ممتازة!';
+            document.getElementById('playBtn').disabled = false;
+            document.getElementById('defuseBtn').disabled = true;
+            
+            // تأثيرات النجاح
+            document.querySelector('.timer-progress').style.stroke = '#28a745';
+            document.querySelector('.bomb-visual').style.animation = 'none';
+            document.querySelector('.timer-text').style.color = '#28a745';
+            document.querySelector('.timer-text').style.animation = 'glow 2s ease';
+            
+            notificationSystem.show(`ممتاز ${currentStudent}! تم إبطال القنبلة بنجاح!`, 'success');
+            
+            // كونفيتي احتفالي
+            if (typeof confetti !== 'undefined') {
+                confetti({
+                    particleCount: 150,
+                    spread: 80,
+                    origin: { y: 0.6 },
+                    colors: ['#28a745', '#ffc107', '#17a2b8']
+                });
+                
+                // موجة ثانية من الكونفيتي
+                setTimeout(() => {
+                    confetti({
+                        particleCount: 100,
+                        spread: 120,
+                        origin: { y: 0.7 },
+                        colors: ['#fd7e14', '#dc3545', '#6f42c1']
+                    });
+                }, 500);
+            }
+        }
+
+        // انفجار القنبلة مع تأثيرات درامية
+        function explodeBomb() {
+            gameActive = false;
+            clearInterval(currentTimer);
+            
+            document.getElementById('gameStatusText').textContent = '💥 انفجرت القنبلة! حاول مرة أخرى';
+            document.getElementById('playBtn').disabled = false;
+            document.getElementById('defuseBtn').disabled = true;
+            
+            // تأثيرات الانفجار
+            document.querySelector('.timer-progress').style.stroke = '#dc3545';
+            document.querySelector('.bomb-visual').style.animation = 'none';
+            document.querySelector('.bomb-visual').textContent = '💥';
+            document.querySelector('.timer-text').style.color = '#dc3545';
+            
+            notificationSystem.show(`انتهى الوقت! لا بأس ${currentStudent}، حاول مرة أخرى`, 'danger');
+            
+            // تأثير اهتزاز للشاشة
+            document.body.style.animation = 'shake 0.5s ease-in-out';
+            setTimeout(() => {
+                document.body.style.animation = '';
+                document.querySelector('.bomb-visual').textContent = '💣';
+            }, 500);
+        }
+
+        // إضافة المزيد من التأثيرات والتحسينات
+        
+        // إعادة تعيين اللعبة مع تأثيرات
+        function resetGame() {
+            gameActive = false;
+            if (currentTimer) clearInterval(currentTimer);
+            
+            timeLeft = parseInt(document.getElementById('timerDuration').value);
+            document.getElementById('timerText').textContent = timeLeft;
+            document.getElementById('gameStatusText').textContent = 'في انتظار بدء اللعبة';
+            
+            if (selectedClass) {
+                document.getElementById('studentName').textContent = 'اضغط "بدء اللعبة" لاختيار طالب';
+                document.getElementById('playBtn').disabled = false;
+            } else {
+                document.getElementById('studentName').textContent = 'اختر صفاً لبدء اللعبة';
+                document.getElementById('playBtn').disabled = true;
+            }
+            
+            document.getElementById('defuseBtn').disabled = true;
+            
+            // إعادة تعيين التأثيرات البصرية
+            document.querySelector('.timer-progress').style.stroke = 'var(--accent-gold)';
+            document.querySelector('.bomb-visual').style.animation = 'bombPulse 2s ease-in-out infinite';
+            document.querySelector('.bomb-visual').textContent = '💣';
+            document.querySelector('.timer-text').style.color = 'var(--accent-gold)';
+            document.querySelector('.timer-text').style.animation = '';
+            
+            updateTimerProgress();
+            notificationSystem.show('تم إعادة تعيين اللعبة', 'info');
+        }
+
+        // إعدادات الصوت والتحكم
+        function toggleSettings() {
+            const modal = document.getElementById('settingsModal');
+            if (modal.style.display === 'block') {
+                modal.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                }, 300);
+            } else {
+                modal.style.display = 'block';
+                modal.style.animation = 'fadeIn 0.3s ease';
+            }
+        }
+
+        function closeSettingsModal() {
+            const modal = document.getElementById('settingsModal');
+            modal.style.animation = 'fadeOut 0.3s ease';
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+        }
+
+        // دالة لإضافة تأثيرات الأزرار
+        function addButtonEffects() {
+            document.querySelectorAll('.control-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    // تأثير النقر
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+
+                button.addEventListener('mouseenter', function() {
+                    // تأثير التحويم
+                    this.style.boxShadow = '0 15px 35px rgba(0, 0, 0, 0.4)';
+                });
+
+                button.addEventListener('mouseleave', function() {
+                    // إزالة تأثير التحويم
+                    this.style.boxShadow = '';
+                });
+            });
+        }
+
+        // إضافة تأثيرات الاهتزاز
+        function addShakeEffect(element, duration = 500) {
+            element.style.animation = `shake ${duration}ms ease-in-out`;
+            setTimeout(() => {
+                element.style.animation = '';
+            }, duration);
+        }
+
+        // إضافة تأثيرات التوهج
+        function addGlowEffect(element, duration = 1000) {
+            element.style.animation = `glow ${duration}ms ease-in-out`;
+            setTimeout(() => {
+                element.style.animation = '';
+            }, duration);
+        }
+
+        // دالة لتحديث الوقت في الوقت الفعلي
+        function updateTimerDisplay() {
+            const input = document.getElementById('timerDuration');
+            const newTime = parseInt(input.value);
+            
+            if (!gameActive) {
+                timeLeft = newTime;
+                document.getElementById('timerText').textContent = timeLeft;
+                updateTimerProgress();
+            }
+        }
+
+        // دالة لإضافة اختصارات لوحة المفاتيح المتقدمة
+        function setupAdvancedKeyboardShortcuts() {
+            document.addEventListener('keydown', function(event) {
+                // منع التشغيل إذا كان المستخدم يكتب في حقل نص
+                if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
+                    return;
+                }
+
+                switch(event.code) {
+                    case 'Space':
+                        event.preventDefault();
+                        if (gameActive) {
+                            defuseBomb();
+                        } else if (selectedClass) {
+                            startNewGame();
+                        }
+                        break;
+                    
+                    case 'Enter':
+                        event.preventDefault();
+                        if (!gameActive && selectedClass) {
+                            startNewGame();
+                        }
+                        break;
+                    
+                    case 'Escape':
+                        event.preventDefault();
+                        resetGame();
+                        break;
+                    
+                    case 'KeyC':
+                        if (event.ctrlKey) {
+                            event.preventDefault();
+                            showClassSelection();
+                        }
+                        break;
+                    
+                    case 'KeyS':
+                        if (event.ctrlKey) {
+                            event.preventDefault();
+                            toggleSettings();
+                        }
+                        break;
+                    
+                    case 'KeyR':
+                        if (event.ctrlKey) {
+                            event.preventDefault();
+                            resetGame();
+                        }
+                        break;
+                }
+            });
+        }
+
+        // إغلاق النوافذ عند النقر خارجها
+        window.onclick = function(event) {
+            const classModal = document.getElementById('classModal');
+            const settingsModal = document.getElementById('settingsModal');
+            
+            if (event.target === classModal) {
+                closeClassModal();
+            }
+            if (event.target === settingsModal) {
+                closeSettingsModal();
+            }
+        }
+
+        // تهيئة اللعبة مع جميع التحسينات
+        document.addEventListener('DOMContentLoaded', function() {
+            notificationSystem = new SimpleNotificationSystem();
+            
+            // إعداد تأثيرات الأزرار
+            addButtonEffects();
+            
+            // إعداد اختصارات لوحة المفاتيح المتقدمة
+            setupAdvancedKeyboardShortcuts();
+            
+            // ربط تحديث الوقت بحقل الإدخال
+            document.getElementById('timerDuration').addEventListener('input', updateTimerDisplay);
+            
+            // إعداد اللعبة
+            resetGame();
+            
+            // رسالة ترحيب
+            setTimeout(() => {
+                notificationSystem.show('🎮 مرحباً بك في لعبة القنبلة المؤقتة الاحترافية!', 'info');
+            }, 1000);
+            
+            console.log('🎮 لعبة القنبلة الذكية جاهزة بتصميم احترافي!');
+            console.log('⌨️ اختصارات المفاتيح:');
+            console.log('   Space: بدء/إبطال القنبلة');
+            console.log('   Enter: بدء لعبة جديدة');
+            console.log('   Escape: إعادة تعيين');
+            console.log('   Ctrl+C: اختيار الصف');
+            console.log('   Ctrl+S: الإعدادات');
+            console.log('   Ctrl+R: إعادة تعيين');
+        });
                 
                 // حفظ السجل
                 selectionProcess.selectedStudent = selectedStudent;
-                this.selectionHistory.push(selectionProcess);
-                
-                return selectedStudent;
-            }
-
-            // الاختيار الذكي المتوازن
-            smartSelection() {
-                // خوارزمية ذكية تأخذ في الاعتبار عدة عوامل
-                let candidates = this.students.map(student => {
-                    let score = 0;
-                    
-                    // عامل العدالة (كم مرة تم اختياره)
-                    const timesSelected = this.selectionHistory.filter(h => h.selectedStudent.name === student.name).length;
-                    score += Math.max(0, 10 - timesSelected * 2);
-                    
-                    // عامل التحفيز
-                    if (student.motivation === 'medium') score += 3;
-                    if (student.motivation === 'low') score += 5;
-                    
-                    // عامل الأداء (تحفيز الطلاب ذوي الأداء المتوسط)
-                    if (student.performance >= 70 && student.performance <= 85) score += 2;
-                    
-                    // عامل الوقت منذ آخر اختيار
-                    const roundsSinceSelected = this.gameRound - student.lastSelected;
-                    score += Math.min(roundsSinceSelected, 5);
-                    
-                    return { student, score };
-                });
-
-                // اختيار أفضل المرشحين
-                candidates.sort((a, b) => b.score - a.score);
-                const topCandidates = candidates.slice(0, 5);
-                
-                return topCandidates[Math.floor(Math.random() * topCandidates.length)].student;
-            }
-
-            // الاختيار المثير والدرامي
-            async dramaticSelection() {
-                // عرض مثير مع أصوات وتأثيرات
-                return new Promise((resolve) => {
-                    // بدء التشويق
-                    this.startDramaticSequence().then(() => {
-                        const selected = this.smartSelection();
-                        resolve(selected);
-                    });
-                });
-            }
-
-            async startDramaticSequence() {
-                // سيناريو مثير لاختيار الطالب
-                const sequences = [
-                    {
-                        message: '🎭 لحظة... الاختيار يتم...',
-                        sound: 'mystery-whisper.mp3',
-                        duration: 2000
-                    },
-                    {
-                        message: '⚡ طاقة الذكاء تتجمع...',
-                        sound: 'electric-charge.mp3',
-                        duration: 1500
-                    },
-                    {
-                        message: '🔮 الكريستال السحري يختار...',
-                        sound: 'spell-cast.mp3',
-                        duration: 2000
-                    },
-                    {
-                        message: '👑 والطالب المختار هو...',
-                        sound: 'royal-fanfare.mp3',
-                        duration: 1000
-                    }
-                ];
-
-                for (let i = 0; i < sequences.length; i++) {
-                    const seq = sequences[i];
-                    
-                    // عرض الرسالة
-                    if (notificationSystem) {
-                        notificationSystem.show({
-                            title: '🎪 عرض الاختيار المثير',
-                            message: seq.message,
-                            type: 'info',
-                            icon: '✨',
-                            duration: seq.duration
-                        });
-                    }
-                    
-                    // تشغيل الصوت
-                    if (audioManager) {
-                        audioManager.playSound(seq.sound, 'magic');
-                    }
-                    
-                    // انتظار
-                    await new Promise(resolve => setTimeout(resolve, seq.duration));
-                }
-            }
-
-            // اختيار حسب الأداء
-            performanceBasedSelection() {
-                // اختيار الطلاب بناءً على الأداء مع تنويع
-                const performanceGroups = {
-                    high: this.students.filter(s => s.performance >= 85),
-                    medium: this.students.filter(s => s.performance >= 75 && s.performance < 85),
-                    developing: this.students.filter(s => s.performance < 75)
-                };
-
-                // توزيع الفرص
-                const rand = Math.random();
-                let selectedGroup;
-                
-                if (rand < 0.4) selectedGroup = performanceGroups.high;
-                else if (rand < 0.8) selectedGroup = performanceGroups.medium;
-                else selectedGroup = performanceGroups.developing;
-
-                return selectedGroup[Math.floor(Math.random() * selectedGroup.length)];
-            }
-
-            // اختيار لتحفيز الطلاب
-            motivationBasedSelection() {
-                // إعطاء فرص أكبر للطلاب الذين يحتاجون تحفيز
-                const weights = this.students.map(student => {
-                    let weight = 1;
-                    if (student.motivation === 'medium') weight = 3;
-                    if (student.motivation === 'low') weight = 5;
-                    return weight;
-                });
-
-                return this.weightedRandomSelection(weights);
-            }
-
-            // اختيار عادل
-            fairnessBasedSelection() {
-                // اختيار الطلاب الذين لم يتم اختيارهم مؤخراً
-                const sortedByLastSelection = this.students
-                    .sort((a, b) => a.lastSelected - b.lastSelected);
-                
-                // أخذ أقل 5 طلاب تم اختيارهم
-                const leastSelected = sortedByLastSelection.slice(0, 5);
-                return leastSelected[Math.floor(Math.random() * leastSelected.length)];
-            }
-
-            // اختيار للتحدي
-            challengeBasedSelection() {
-                // اختيار بناءً على نوع التحدي المطلوب
-                const challengeTypes = ['easy', 'medium', 'hard'];
-                const currentChallenge = challengeTypes[Math.floor(Math.random() * challengeTypes.length)];
-                
-                let candidates;
-                switch(currentChallenge) {
-                    case 'easy':
-                        candidates = this.students.filter(s => s.performance >= 80);
-                        break;
-                    case 'medium':
-                        candidates = this.students.filter(s => s.performance >= 70 && s.performance < 90);
-                        break;
-                    case 'hard':
-                        candidates = this.students.filter(s => s.performance >= 85);
-                        break;
-                }
-
-                return candidates[Math.floor(Math.random() * candidates.length)];
-            }
-
-            // اختيار عشوائي تقليدي
-            randomSelection() {
-                return this.students[Math.floor(Math.random() * this.students.length)];
-            }
-
-            // اختيار مرجح
-            weightedRandomSelection(weights) {
-                const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
-                let random = Math.random() * totalWeight;
-                
-                for (let i = 0; i < this.students.length; i++) {
-                    random -= weights[i];
-                    if (random <= 0) {
-                        return this.students[i];
-                    }
-                }
-                
-                return this.students[0];
-            }
-
-            // تحديث إحصائيات الطالب
-            updateStudentStats(student) {
-                const studentIndex = this.students.findIndex(s => s.name === student.name);
-                if (studentIndex !== -1) {
-                    this.students[studentIndex].lastSelected = this.gameRound;
-                }
-            }
-
-            // عرض إحصائيات الاختيار
-            getSelectionStats() {
-                const stats = {
-                    totalSelections: this.selectionHistory.length,
-                    methodsUsed: {},
-                    studentFrequency: {},
-                    fairnessScore: 0
-                };
-
-                // إحصائيات الطرق
-                this.selectionHistory.forEach(selection => {
-                    stats.methodsUsed[selection.method] = (stats.methodsUsed[selection.method] || 0) + 1;
-                    stats.studentFrequency[selection.selectedStudent.name] = 
-                        (stats.studentFrequency[selection.selectedStudent.name] || 0) + 1;
-                });
-
-                // حساب درجة العدالة
-                const frequencies = Object.values(stats.studentFrequency);
-                const average = frequencies.reduce((sum, freq) => sum + freq, 0) / frequencies.length;
-                const variance = frequencies.reduce((sum, freq) => sum + Math.pow(freq - average, 2), 0) / frequencies.length;
-                stats.fairnessScore = Math.max(0, 100 - (variance * 10));
-
-                return stats;
-            }
-
-            // تغيير طريقة الاختيار
-            setSelectionMethod(method) {
-                if (this.selectionMethods[method]) {
-                    this.currentMethod = method;
-                    return true;
-                }
-                return false;
-            }
-
-            // إضافة طالب جديد
-            addStudent(name, performance = 75, motivation = 'medium', subject = 'عام') {
-                const newStudent = {
-                    name: name,
-                    performance: performance,
-                    lastSelected: 0,
-                    motivation: motivation,
-                    subject: subject
-                };
-                
-                this.students.push(newStudent);
-                return newStudent;
-            }
-
-            // حذف طالب
-            removeStudent(name) {
-                this.students = this.students.filter(s => s.name !== name);
-            }
-
-            // الحصول على معلومات طالب
-            getStudentInfo(name) {
-                const student = this.students.find(s => s.name === name);
-                if (!student) return null;
-
-                const timesSelected = this.selectionHistory.filter(h => h.selectedStudent.name === name).length;
-                const lastSelectionRound = student.lastSelected;
-                
-                return {
-                    ...student,
-                    timesSelected: timesSelected,
-                    lastSelectionRound: lastSelectionRound,
-                    roundsSinceSelected: this.gameRound - lastSelectionRound
-                };
-            }
-        }
-
-        // ===== نظام الإشعارات التفاعلية المتقدم =====
-        class AdvancedNotificationSystem {
-            constructor() {
-                this.container = document.getElementById('advancedNotificationSystem');
-                this.notifications = [];
-                this.maxNotifications = 5;
-            }
-
-            show(options) {
-                const notification = this.createNotification(options);
-                this.notifications.push(notification);
-                this.container.appendChild(notification);
-
-                // إظهار الإشعار
-                setTimeout(() => {
-                    notification.classList.add('show');
-                }, 100);
-
-                // إخفاء الإشعار تلقائياً
-                if (options.autoHide !== false) {
-                    const duration = options.duration || 5000;
-                    this.startProgressBar(notification, duration);
-                    
-                    setTimeout(() => {
-                        this.hide(notification);
-                    }, duration);
-                }
-
-                // إزالة الإشعارات الزائدة
-                if (this.notifications.length > this.maxNotifications) {
-                    const oldest = this.notifications.shift();
-                    this.hide(oldest);
-                }
-
-                return notification;
-            }
-
-            createNotification(options) {
-                const notification = document.createElement('div');
-                notification.className = `notification-item ${options.type || 'info'}`;
-                
-                notification.innerHTML = `
-                    <div class="notification-header">
-                        <span class="notification-icon">${options.icon || '🔔'}</span>
-                        <span class="notification-title">${options.title || 'إشعار'}</span>
+    </script>
+</body>
+</html>
                         <button class="notification-close" onclick="notificationSystem.hide(this.parentElement.parentElement)">×</button>
                     </div>
                     <div class="notification-content">${options.message || ''}</div>
@@ -3733,5 +4347,264 @@
 
     <!-- Responsive Helper Script -->
     <script src="../assets/js/responsive-helper.js?v=clean"></script>
+    <!-- نافذة اختيار الصف المبسطة -->
+    <div id="classModal" class="simple-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📚 اختيار الصف</h3>
+                <span class="close" onclick="closeClassModal()">&times;</span>
+            </div>
+            <div class="class-grid">
+                <button class="class-btn" onclick="selectClass('الأول الثانوي')">الأول الثانوي</button>
+                <button class="class-btn" onclick="selectClass('الثاني الثانوي')">الثاني الثانوي</button>
+                <button class="class-btn" onclick="selectClass('الثالث الثانوي')">الثالث الثانوي</button>
+                <button class="class-btn" onclick="selectClass('الصف السابع')">الصف السابع</button>
+                <button class="class-btn" onclick="selectClass('الصف الثامن')">الصف الثامن</button>
+                <button class="class-btn" onclick="selectClass('الصف التاسع')">الصف التاسع</button>
+                <button class="class-btn" onclick="selectClass('الصف العاشر')">الصف العاشر</button>
+                <button class="class-btn" onclick="selectClass('الصف الحادي عشر')">الصف الحادي عشر</button>
+                <button class="class-btn" onclick="selectClass('الصف الثاني عشر')">الصف الثاني عشر</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة الإعدادات المبسطة -->
+    <div id="settingsModal" class="simple-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>⚙️ الإعدادات</h3>
+                <span class="close" onclick="closeSettingsModal()">&times;</span>
+            </div>
+            <div class="settings-content">
+                <div class="setting-item">
+                    <label>⏱️ مدة اللعبة (ثواني)</label>
+                    <select id="timerDuration" onchange="updateTimerDuration()">
+                        <option value="15">15 ثانية</option>
+                        <option value="30" selected>30 ثانية</option>
+                        <option value="45">45 ثانية</option>
+                        <option value="60">60 ثانية</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <label>🔊 الصوت</label>
+                    <button id="soundToggle" class="toggle-btn" onclick="toggleGameSound()">تشغيل</button>
+                </div>
+                <div class="setting-item">
+                    <label>🎵 مستوى الصوت</label>
+                    <input type="range" id="volumeSlider" min="0" max="100" value="70" onchange="updateVolume()">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+        // اختيار صف
+        function selectClass(className) {
+            selectedClass = className;
+            document.getElementById('studentClass').textContent = className;
+            document.getElementById('studentName').textContent = 'اضغط "بدء اللعبة" لاختيار طالب';
+            document.getElementById('playBtn').disabled = false;
+            document.getElementById('playBtn').classList.add('primary');
+            closeClassModal();
+            
+            notificationSystem.show('تم اختيار ' + className, 'success');
+        }
+
+        // عرض نافذة الإعدادات
+        function toggleSettings() {
+            document.getElementById('settingsModal').style.display = 'flex';
+        }
+
+        // إغلاق نافذة الإعدادات
+        function closeSettingsModal() {
+            document.getElementById('settingsModal').style.display = 'none';
+        }
+
+        // تحديث مدة المؤقت
+        function updateTimerDuration() {
+            const duration = document.getElementById('timerDuration').value;
+            timeLeft = parseInt(duration);
+            document.getElementById('timerText').textContent = timeLeft;
+            updateTimerProgress();
+        }
+
+        // تبديل الصوت
+        function toggleGameSound() {
+            soundEnabled = !soundEnabled;
+            const btn = document.getElementById('soundToggle');
+            btn.textContent = soundEnabled ? 'تشغيل' : 'إيقاف';
+            btn.classList.toggle('off', !soundEnabled);
+        }
+
+        // تحديث مستوى الصوت
+        function updateVolume() {
+            gameVolume = document.getElementById('volumeSlider').value / 100;
+        }
+
+        // بدء لعبة جديدة
+        function startNewGame() {
+            if (!selectedClass) {
+                showClassSelection();
+                return;
+            }
+
+            // إختيار طالب عشوائي
+            const studentNames = [
+                'أحمد محمد', 'فاطمة علي', 'عمر خالد', 'نور الهدى', 'يوسف أحمد',
+                'مريم سالم', 'محمد عبدالله', 'عائشة حسن', 'خالد محمود', 'زينب عمر',
+                'سعد إبراهيم', 'هناء محمد', 'عبدالرحمن علي', 'رقية أحمد', 'طارق سعيد'
+            ];
+            
+            currentStudent = studentNames[Math.floor(Math.random() * studentNames.length)];
+            document.getElementById('studentName').textContent = currentStudent;
+            document.getElementById('gameStatusText').textContent = 'اللعبة نشطة - اطرح السؤال!';
+            
+            // تفعيل أزرار اللعبة
+            document.getElementById('playBtn').disabled = true;
+            document.getElementById('defuseBtn').disabled = false;
+            
+            // بدء المؤقت
+            gameActive = true;
+            startTimer();
+            
+            notificationSystem.show('تم اختيار ' + currentStudent + ' من ' + selectedClass, 'info');
+        }
+
+        // بدء المؤقت
+        function startTimer() {
+            if (currentTimer) clearInterval(currentTimer);
+            
+            currentTimer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timerText').textContent = timeLeft;
+                updateTimerProgress();
+                
+                if (timeLeft <= 5) {
+                    // تأثيرات الخطر
+                    document.querySelector('.timer-progress').style.stroke = '#ff0000';
+                    document.querySelector('.bomb-body').style.animation = 'bombPulse 0.5s ease-in-out infinite';
+                }
+                
+                if (timeLeft <= 0) {
+                    explodeBomb();
+                }
+            }, 1000);
+        }
+
+        // تحديث شريط التقدم
+        function updateTimerProgress() {
+            const totalTime = parseInt(document.getElementById('timerDuration').value);
+            const progress = (timeLeft / totalTime) * 692;
+            document.getElementById('timerProgress').style.strokeDashoffset = 692 - progress;
+        }
+
+        // إبطال القنبلة
+        function defuseBomb() {
+            if (!gameActive) return;
+            
+            gameActive = false;
+            clearInterval(currentTimer);
+            
+            document.getElementById('gameStatusText').textContent = 'تم إبطال القنبلة! إجابة ممتازة!';
+            document.getElementById('playBtn').disabled = false;
+            document.getElementById('defuseBtn').disabled = true;
+            
+            // تأثيرات النجاح
+            document.querySelector('.timer-progress').style.stroke = '#28a745';
+            document.querySelector('.bomb-body').style.animation = 'none';
+            
+            notificationSystem.show('ممتاز! تم إبطال القنبلة بنجاح!', 'success');
+            
+            // كونفيتي
+            if (typeof confetti !== 'undefined') {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+        }
+
+        // انفجار القنبلة
+        function explodeBomb() {
+            gameActive = false;
+            clearInterval(currentTimer);
+            
+            document.getElementById('gameStatusText').textContent = '💥 انفجرت القنبلة! حاول مرة أخرى';
+            document.getElementById('playBtn').disabled = false;
+            document.getElementById('defuseBtn').disabled = true;
+            
+            // تأثيرات الانفجار
+            document.querySelector('.timer-progress').style.stroke = '#dc3545';
+            document.querySelector('.bomb-body').style.animation = 'none';
+            
+            notificationSystem.show('انتهى الوقت! انفجرت القنبلة', 'danger');
+        }
+
+        // إعادة تعيين اللعبة
+        function resetGame() {
+            gameActive = false;
+            if (currentTimer) clearInterval(currentTimer);
+            
+            timeLeft = parseInt(document.getElementById('timerDuration').value);
+            document.getElementById('timerText').textContent = timeLeft;
+            document.getElementById('gameStatusText').textContent = 'في انتظار بدء اللعبة';
+            
+            if (selectedClass) {
+                document.getElementById('studentName').textContent = 'اضغط "بدء اللعبة" لاختيار طالب';
+                document.getElementById('playBtn').disabled = false;
+            } else {
+                document.getElementById('studentName').textContent = 'اختر صفاً لبدء اللعبة';
+                document.getElementById('playBtn').disabled = true;
+            }
+            
+            document.getElementById('defuseBtn').disabled = true;
+            
+            // إعادة تعيين التأثيرات
+            document.querySelector('.timer-progress').style.stroke = 'var(--accent-gold)';
+            document.querySelector('.bomb-body').style.animation = 'bombPulse 2s ease-in-out infinite';
+            updateTimerProgress();
+        }
+
+        // إغلاق النوافذ عند الضغط خارجها
+        window.onclick = function(event) {
+            const classModal = document.getElementById('classModal');
+            const settingsModal = document.getElementById('settingsModal');
+            
+            if (event.target === classModal) {
+                closeClassModal();
+            }
+            if (event.target === settingsModal) {
+                closeSettingsModal();
+            }
+        }
+
+        // اختصارات لوحة المفاتيح
+        document.addEventListener('keydown', function(event) {
+            if (event.code === 'Space') {
+                event.preventDefault();
+                if (gameActive) {
+                    defuseBomb();
+                } else if (selectedClass) {
+                    startNewGame();
+                }
+            } else if (event.code === 'Escape') {
+                resetGame();
+            } else if (event.code === 'KeyC' && event.ctrlKey) {
+                event.preventDefault();
+                showClassSelection();
+            } else if (event.code === 'KeyS' && event.ctrlKey) {
+                event.preventDefault();
+                toggleSettings();
+            }
+        });
+
+        // تهيئة اللعبة
+        document.addEventListener('DOMContentLoaded', function() {
+            resetGame();
+            console.log('🎮 لعبة القنبلة الذكية جاهزة!');
+        });
+    </script>
 </body>
 </html>
