@@ -14,15 +14,6 @@
     <!-- المكتبات الخارجية -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     
-    <!-- اختبار تحميل JavaScript -->
-    <script>
-        console.log('🔧 اختبار تحميل JavaScript - بداية');
-        window.testFunction = function() {
-            alert('JavaScript يعمل بشكل صحيح!');
-        };
-        console.log('🔧 اختبار تحميل JavaScript - انتهاء');
-    </script>
-    
     <!-- ===== ملفات التصميم المتجاوب ===== -->
     <link rel="stylesheet" href="../assets/css/responsive.css">
     
@@ -2338,13 +2329,6 @@
     </style>
 </head>
 <body>
-    <!-- زر اختبار مؤقت -->
-    <div style="position: fixed; top: 10px; left: 10px; z-index: 9999; background: red; color: white; padding: 10px; border-radius: 5px;">
-        <button onclick="showGameSetup()" style="background: green; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer;">🧪 اختبار الإعدادات</button>
-        <button onclick="alert('الأزرار تعمل!')" style="background: blue; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; margin-left: 5px;">✅ اختبار عام</button>
-        <button onclick="testFunction()" style="background: orange; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; margin-left: 5px;">🚀 اختبار JS</button>
-    </div>
-
     <!-- نافذة التعليمات -->
     <div id="instructionsModal" class="modal">
         <div class="modal-content card-responsive">
@@ -3044,8 +3028,10 @@
         
         // تعريف الوظائف الأساسية في البداية
         function showGameSetup() {
-            alert('تم النقر على زر الإعدادات! الدالة تعمل الآن.');
             console.log('🎮 بداية تنفيذ showGameSetup()');
+            
+            // إخفاء رسالة الاختبار الآن
+            // alert('تم النقر على زر الإعدادات! الدالة تعمل الآن.');
             
             const modal = document.getElementById('setupModal');
             console.log('🔍 البحث عن modal:', modal ? 'موجود ✅' : 'غير موجود ❌');
@@ -3053,9 +3039,20 @@
             if (modal) {
                 modal.style.display = 'block';
                 console.log('✅ تم إظهار modal بنجاح');
+                
+                // تشغيل الوظائف المساعدة
+                try {
+                    playGameSound('click');
+                    setupStudentSelection();
+                    updateSettingsPreview();
+                    setupDifficultyOptions();
+                    setupFormEventListeners();
+                } catch (error) {
+                    console.log('⚠️ خطأ في تنفيذ الوظائف المساعدة:', error);
+                }
             } else {
                 console.error('❌ لم يتم العثور على modal');
-                alert('خطأ: نافذة الإعدادات غير موجودة!');
+                alert('خطأ: نافذة الإعدادات غير موجودة! تأكد من وجود عنصر بمعرف setupModal');
             }
         }
         
@@ -3086,6 +3083,40 @@
         window.closeModal = closeModal;
         
         console.log('🌐 تم ربط الوظائف الأساسية بالنطاق العام');
+        
+        // الوظائف المساعدة الأساسية
+        function playGameSound(soundFile) {
+            try {
+                console.log('🔊 محاولة تشغيل صوت:', soundFile);
+                const audio = new Audio(`../assets/media/sounds/${soundFile}`);
+                audio.volume = 0.7;
+                audio.play().catch(error => {
+                    console.log('⚠️ فشل في تشغيل الصوت:', soundFile, error);
+                });
+            } catch (error) {
+                console.log('🔇 خطأ في تشغيل الصوت:', soundFile, error);
+            }
+        }
+        
+        function setupFormEventListeners() {
+            console.log('📝 إعداد مستمعي أحداث النموذج');
+            // سيتم تطوير هذه الدالة لاحقاً
+        }
+        
+        function updateSettingsPreview() {
+            console.log('🔄 تحديث معاينة الإعدادات');
+            // سيتم تطوير هذه الدالة لاحقاً
+        }
+        
+        function setupDifficultyOptions() {
+            console.log('⚙️ إعداد خيارات الصعوبة');
+            // سيتم تطوير هذه الدالة لاحقاً
+        }
+        
+        function setupStudentSelection() {
+            console.log('👥 إعداد اختيار الطلاب');
+            // سيتم تطوير هذه الدالة لاحقاً
+        }
 
         console.log('🚀 تم تحويل نشاط القنبلة المؤقتة إلى النظام الموحد بنجاح!');
 
