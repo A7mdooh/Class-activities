@@ -3069,59 +3069,97 @@
         // تحميل بيانات الطلاب
         async function loadStudentsData() {
             try {
-                if (typeof ActivityUtils !== 'undefined' && activityUtils) {
-                    studentsData = await activityUtils.loadStudentData();
-                    console.log('✅ تم تحميل بيانات الطلاب:', studentsData);
-                } else {
-                    throw new Error('ActivityUtils غير متوفر');
+                console.log('📚 جاري تحميل بيانات الطلاب...');
+                const response = await fetch('../data/studentData.json');
+                
+                if (!response.ok) {
+                    throw new Error('فشل في تحميل بيانات الطلاب');
                 }
+                
+                studentsData = await response.json();
+                console.log('✅ تم تحميل بيانات الطلاب من الملف الخارجي:', studentsData);
+                console.log(`📊 عدد الصفوف المتاحة: ${Object.keys(studentsData).length}`);
+                
             } catch (error) {
-                console.warn('⚠️ استخدام البيانات التجريبية:', error);
-                // بيانات تجريبية في حالة فشل التحميل
-                studentsData = {
-                    "الصف السابع": ["أحمد محمد", "فاطمة سالم", "محمد عبدالله"],
-                    "الصف الثامن": ["سارة أحمد", "عمر محمد", "ليلى سعيد"],
-                    "الصف التاسع": ["خالد عمر", "نورا محمد", "يوسف سالم"]
-                };
-                console.log('📚 تم تحميل البيانات التجريبية:', studentsData);
+                console.error('❌ خطأ في تحميل بيانات الطلاب:', error);
+                console.log('⚠️ تعذر تحميل ملف البيانات - تأكد من وجود ../data/studentData.json');
+                
+                // إيقاف اللعبة إذا لم تتوفر البيانات
+                studentsData = null;
+                
+                // إظهار رسالة خطأ للمستخدم
+                const errorMessage = document.createElement('div');
+                errorMessage.innerHTML = `
+                    <div style="
+                        position: fixed; 
+                        top: 50%; 
+                        left: 50%; 
+                        transform: translate(-50%, -50%);
+                        background: #f44336;
+                        color: white;
+                        padding: 20px;
+                        border-radius: 10px;
+                        z-index: 10000;
+                        text-align: center;
+                        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                    ">
+                        <h3>❌ خطأ في تحميل البيانات</h3>
+                        <p>لا يمكن العثور على ملف بيانات الطلاب</p>
+                        <p>المسار المطلوب: ../data/studentData.json</p>
+                        <button onclick="this.parentElement.remove()" style="
+                            background: white;
+                            color: #f44336;
+                            border: none;
+                            padding: 10px 20px;
+                            border-radius: 5px;
+                            margin-top: 10px;
+                            cursor: pointer;
+                        ">إغلاق</button>
+                    </div>
+                `;
+                document.body.appendChild(errorMessage);
             }
         }
 
         // تشغيل صوت اللعبة
         function playGameSound(soundFile) {
             try {
-                if (typeof ActivityUtils !== 'undefined' && activityUtils) {
-                    activityUtils.playSound(soundFile);
-                } else {
-                    console.log('🔊 تشغيل صوت:', soundFile);
-                }
-            } catch (error) {
-                console.log('🔇 لا يمكن تشغيل الصوت:', soundFile, error);
-            }
-        }
-
-        // إيقاف جميع الأصوات
-        function stopAllSounds() {
-            activityUtils.stopAllSounds();
-            
-            try {
-                gameSounds[soundFile].currentTime = 0; // إعادة تعيين الوقت
-                gameSounds[soundFile].play().catch(error => {
-                    console.log('تحذير: لم يتم تشغيل الصوت:', error);
+                console.log('🔊 محاولة تشغيل صوت:', soundFile);
+                
+                // إنشاء عنصر الصوت وتشغيله مباشرة
+                const audio = new Audio(`../assets/media/sounds/${soundFile}`);
+                audio.volume = 0.7; // تحديد مستوى الصوت
+                
+                audio.play().then(() => {
+                    console.log('✅ تم تشغيل الصوت بنجاح:', soundFile);
+                }).catch(error => {
+                    console.log('⚠️ فشل في تشغيل الصوت:', soundFile, error);
                 });
+                
             } catch (error) {
-                console.log('خطأ في تشغيل الصوت:', error);
+                console.log('🔇 خطأ في تشغيل الصوت:', soundFile, error);
             }
         }
 
         // إيقاف جميع الأصوات
+        // إيقاف جميع الأصوات
         function stopAllSounds() {
-            Object.values(gameSounds).forEach(audio => {
-                if (audio) {
-                    audio.pause();
-                    audio.currentTime = 0;
-                }
-            });
+            try {
+                console.log('🔇 إيقاف جميع الأصوات');
+                
+                // إيقاف جميع عناصر الصوت في الصفحة
+                const audioElements = document.querySelectorAll('audio');
+                audioElements.forEach(audio => {
+                    if (audio) {
+                        audio.pause();
+                        audio.currentTime = 0;
+                    }
+                });
+                
+                console.log('✅ تم إيقاف جميع الأصوات');
+            } catch (error) {
+                console.log('⚠️ خطأ في إيقاف الأصوات:', error);
+            }
         }
 
         // تهيئة اللعبة عند التحميل - النسخة القديمة (محذوفة)
@@ -3285,6 +3323,16 @@
             setupSelectedStudent = null;
             setupSelectionMethod = 'manual';
             
+            // التحقق من وجود البيانات
+            if (!studentsData) {
+                console.error('❌ لا توجد بيانات طلاب متاحة');
+                const classSelection = document.getElementById('setupClassSelection');
+                if (classSelection) {
+                    classSelection.innerHTML = '<p style="color: red; text-align: center;">❌ لا توجد بيانات طلاب متاحة<br>تأكد من وجود ملف ../data/studentData.json</p>';
+                }
+                return;
+            }
+            
             loadSetupClassSelection();
             setupSelectionMethods();
         }
@@ -3292,7 +3340,17 @@
         // تحميل الصفوف في الإعدادات
         function loadSetupClassSelection() {
             const classSelection = document.getElementById('setupClassSelection');
+            if (!classSelection) {
+                console.error('❌ عنصر setupClassSelection غير موجود');
+                return;
+            }
+            
             classSelection.innerHTML = '';
+            
+            if (!studentsData || Object.keys(studentsData).length === 0) {
+                classSelection.innerHTML = '<p style="color: red; text-align: center;">❌ لا توجد صفوف متاحة</p>';
+                return;
+            }
             
             Object.keys(studentsData).forEach(className => {
                 const classButton = document.createElement('button');
@@ -3302,10 +3360,17 @@
                 classButton.onclick = () => selectSetupClass(className);
                 classSelection.appendChild(classButton);
             });
+            
+            console.log(`✅ تم تحميل ${Object.keys(studentsData).length} صف في واجهة الإعدادات`);
         }
 
         // اختيار صف في الإعدادات
         function selectSetupClass(className) {
+            if (!studentsData || !studentsData[className]) {
+                console.error('❌ الصف المحدد غير متوفر:', className);
+                return;
+            }
+            
             setupSelectedClass = className;
             
             // تحديث مظهر الأزرار
@@ -3315,12 +3380,23 @@
             event.target.className = 'btn btn-success';
             
             // إظهار طرق الاختيار
-            document.getElementById('studentSelectionMethod').style.display = 'block';
+            const selectionMethodDiv = document.getElementById('studentSelectionMethod');
+            if (selectionMethodDiv) {
+                selectionMethodDiv.style.display = 'block';
+            }
             
             // إخفاء قائمة الطلاب ومعلومات الاختيار
-            document.getElementById('setupStudentList').style.display = 'none';
-            document.getElementById('setupSelectionInfo').style.display = 'none';
+            const studentListDiv = document.getElementById('setupStudentList');
+            if (studentListDiv) {
+                studentListDiv.style.display = 'none';
+            }
             
+            const selectionInfoDiv = document.getElementById('setupSelectionInfo');
+            if (selectionInfoDiv) {
+                selectionInfoDiv.style.display = 'none';
+            }
+            
+            console.log(`✅ تم اختيار الصف: ${className} (${studentsData[className].length} طالب)`);
             updateSettingsPreview();
         }
 
