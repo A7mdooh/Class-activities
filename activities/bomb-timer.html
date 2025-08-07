@@ -2869,6 +2869,33 @@
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
         
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
@@ -3056,179 +3083,100 @@
         </div>
     </div>
 
-    <!-- نافذة إعداد اللعبة -->
-    <!-- نافذة إعدادات اللعبة الاحترافية -->
+    <!-- نافذة إعداد اللعبة المبسطة -->
     <div id="setupModal" class="modal responsive-modal">
-        <div class="modal-content" style="max-width: 1200px; margin: 20px auto; background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); border: 3px solid var(--oman-red); border-radius: 20px; box-shadow: 0 20px 60px rgba(255,0,0,0.3);">
+        <div class="modal-content" style="max-width: 800px; margin: 20px auto; background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); border: 3px solid var(--oman-red); border-radius: 20px; box-shadow: 0 20px 60px rgba(255,0,0,0.3);">
             
-            <!-- رأس النافذة المحسن -->
-            <div class="modal-header" style="background: linear-gradient(135deg, var(--oman-red) 0%, #c41e3a 100%); border-radius: 17px 17px 0 0; padding: 25px; position: relative; overflow: hidden;">
-                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2220%22 cy=%2220%22 r=%222%22 fill=%22rgba(255,255,255,0.1)%22/><circle cx=%2280%22 cy=%2240%22 r=%221.5%22 fill=%22rgba(255,255,255,0.1)%22/><circle cx=%2240%22 cy=%2280%22 r=%221%22 fill=%22rgba(255,255,255,0.1)%22/></svg>'); opacity: 0.3;"></div>
+            <!-- رأس النافذة -->
+            <div class="modal-header" style="background: linear-gradient(135deg, var(--oman-red) 0%, #c41e3a 100%); border-radius: 17px 17px 0 0; padding: 25px; position: relative;">
                 <span class="close" onclick="closeModal('setupModal')" style="position: absolute; top: 15px; right: 20px; font-size: 2rem; color: white; cursor: pointer; z-index: 10; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">&times;</span>
                 
-                <div style="text-align: center; position: relative; z-index: 5;">
-                    <div style="font-size: 3rem; margin-bottom: 10px; animation: pulse 2s infinite;">💣</div>
-                    <h2 style="color: white; margin: 0; font-size: 1.8rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">⚙️ إعداد لعبة القنبلة المؤقتة</h2>
-                    <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 1rem;">نظام ذكي لإدارة اللعبة وتخصيص التجربة</p>
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; margin-bottom: 10px;">💣</div>
+                    <h2 style="color: white; margin: 0; font-size: 1.8rem;">⚙️ إعداد لعبة القنبلة المؤقتة</h2>
+                    <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 1rem;">اختر الصف وطريقة الاختيار وابدأ اللعبة</p>
                 </div>
             </div>
 
             <!-- جسم النافذة -->
-            <div class="modal-body" style="padding: 30px; max-height: 70vh; overflow-y: auto;">
+            <div class="modal-body" style="padding: 30px;">
                 
-                <!-- شريط التقدم العلوي -->
-                <div style="margin-bottom: 30px;">
-                    <div class="setup-progress" style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                        <div class="progress-step active" data-step="1">
-                            <div class="step-icon">👥</div>
-                            <div class="step-text">اختيار الطلاب</div>
-                        </div>
-                        <div class="progress-step" data-step="2">
-                            <div class="step-icon">⚙️</div>
-                            <div class="step-text">إعدادات اللعبة</div>
-                        </div>
-                        <div class="progress-step" data-step="3">
-                            <div class="step-icon">🎯</div>
-                            <div class="step-text">معاينة ومراجعة</div>
-                        </div>
+                <!-- الخطوة 1: اختيار الصف -->
+                <div class="setup-section" style="margin-bottom: 30px;">
+                    <h3 style="color: var(--oman-red); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                        <span style="background: var(--oman-red); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem;">1</span>
+                        📚 اختر الصف الدراسي
+                    </h3>
+                    
+                    <div id="classSelection" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <!-- سيتم تعبئة الصفوف هنا -->
                     </div>
-                    <div class="progress-bar" style="height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; overflow: hidden;">
-                        <div class="progress-fill" style="height: 100%; background: linear-gradient(90deg, var(--oman-red), var(--gold)); width: 33%; transition: width 0.5s ease; border-radius: 2px;"></div>
+                    
+                    <!-- عرض معلومات الصف المختار -->
+                    <div id="selectedClassInfo" style="display: none; margin-top: 15px; padding: 15px; background: rgba(0,204,0,0.1); border: 2px solid var(--safe-green); border-radius: 10px; text-align: center;">
+                        <div id="classInfoText" style="color: var(--safe-green); font-weight: bold;"></div>
                     </div>
                 </div>
 
-                <!-- الخطوة 1: اختيار الطلاب الذكي -->
-                <div id="setup-step-1" class="setup-step active">
-                    <div class="step-header" style="text-align: center; margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, rgba(0,121,107,0.2), rgba(255,87,34,0.2)); border-radius: 15px; border: 2px solid rgba(255,215,0,0.3);">
-                        <h3 style="color: var(--gold); margin: 0; font-size: 1.5rem;">👨‍🎓 نظام اختيار الطلاب الذكي</h3>
-                        <p style="color: rgba(255,255,255,0.8); margin: 10px 0 0 0;">اختر الصف والطالب بطريقة تفاعلية ومتطورة</p>
-                    </div>
-
-                    <!-- قسم اختيار الصف -->
-                    <div class="class-selection-section" style="margin-bottom: 30px;">
-                        <h4 style="color: var(--oman-red); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
-                            <span style="background: var(--oman-red); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;">1</span>
-                            📚 اختر الصف الدراسي
-                        </h4>
-                        
-                        <div id="setupClassSelection" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
-                            <!-- سيتم تعبئة الصفوف هنا -->
+                <!-- الخطوة 2: طريقة الاختيار -->
+                <div id="selectionMethodSection" class="setup-section" style="display: none; margin-bottom: 30px;">
+                    <h3 style="color: var(--warning-orange); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                        <span style="background: var(--warning-orange); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem;">2</span>
+                        🎯 طريقة اختيار الطالب
+                    </h3>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="method-card" data-method="manual" onclick="selectMethod('manual')" style="padding: 20px; background: linear-gradient(135deg, rgba(0,204,0,0.2), rgba(0,204,0,0.1)); border: 2px solid var(--safe-green); border-radius: 15px; cursor: pointer; transition: all 0.3s ease; text-align: center;">
+                            <div style="font-size: 3rem; margin-bottom: 10px;">👆</div>
+                            <h4 style="color: var(--safe-green); margin: 0 0 10px 0;">اختيار انتقائي</h4>
+                            <p style="color: rgba(255,255,255,0.8); margin: 0; font-size: 0.9rem;">اختر طالباً محدداً بنفسك</p>
                         </div>
                         
-                        <!-- إحصائيات الصف المختار -->
-                        <div id="classStatsPanel" style="display: none; margin-top: 20px; padding: 20px; background: linear-gradient(135deg, rgba(0,204,0,0.1), rgba(0,204,0,0.2)); border: 2px solid var(--safe-green); border-radius: 12px;">
-                            <h5 style="color: var(--safe-green); margin-bottom: 15px;">📊 إحصائيات الصف</h5>
-                            <div id="classStatsContent" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
-                                <!-- سيتم تعبئة الإحصائيات هنا -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- قسم طريقة الاختيار -->
-                    <div id="selectionMethodSection" style="display: none; margin-bottom: 30px;">
-                        <h4 style="color: var(--warning-orange); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
-                            <span style="background: var(--warning-orange); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;">2</span>
-                            🎯 طريقة اختيار الطالب
-                        </h4>
-                        
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
-                            <div class="selection-method-card" data-method="manual" style="padding: 25px; background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.1)); border: 2px solid rgba(255,255,255,0.2); border-radius: 15px; cursor: pointer; transition: all 0.3s ease; text-align: center;">
-                                <div style="font-size: 3rem; margin-bottom: 15px;">👆</div>
-                                <h5 style="color: var(--safe-green); margin-bottom: 10px;">اختيار يدوي دقيق</h5>
-                                <p style="color: rgba(255,255,255,0.8); margin-bottom: 15px;">اختر طالباً محدداً من بطاقات الطلاب التفاعلية</p>
-                                <div class="method-features" style="font-size: 0.9rem; color: rgba(255,255,255,0.7);">
-                                    <div>✓ بحث ذكي بالاسم</div>
-                                    <div>✓ فلترة متقدمة</div>
-                                    <div>✓ معاينة تفاعلية</div>
-                                </div>
-                            </div>
-                            
-                            <div class="selection-method-card" data-method="random" style="padding: 25px; background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.1)); border: 2px solid rgba(255,255,255,0.2); border-radius: 15px; cursor: pointer; transition: all 0.3s ease; text-align: center;">
-                                <div style="font-size: 3rem; margin-bottom: 15px;">🎲</div>
-                                <h5 style="color: var(--warning-orange); margin-bottom: 10px;">اختيار عشوائي ذكي</h5>
-                                <p style="color: rgba(255,255,255,0.8); margin-bottom: 15px;">اختيار عشوائي مع تأثيرات بصرية مثيرة</p>
-                                <div class="method-features" style="font-size: 0.9rem; color: rgba(255,255,255,0.7);">
-                                    <div>✓ توزيع عادل</div>
-                                    <div>✓ رسوم متحركة</div>
-                                    <div>✓ مفاجآت تفاعلية</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- قسم بطاقات الطلاب الذكية -->
-                    <div id="smartStudentCards" style="display: none; margin-bottom: 30px;">
-                        <h4 style="color: var(--safe-green); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
-                            <span style="background: var(--safe-green); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;">3</span>
-                            👥 بطاقات الطلاب التفاعلية
-                        </h4>
-                        
-                        <!-- شريط البحث والفلترة المتقدم -->
-                        <div class="search-filter-bar" style="margin-bottom: 25px; padding: 20px; background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.1)); border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);">
-                            <div style="display: grid; grid-template-columns: 1fr auto auto; gap: 15px; align-items: center;">
-                                <div style="position: relative;">
-                                    <input type="text" id="setupStudentSearch" placeholder="🔍 ابحث عن الطالب (اكتب أي جزء من الاسم)..." 
-                                           style="width: 100%; padding: 12px 45px 12px 15px; border-radius: 25px; border: 2px solid var(--oman-red); background: rgba(0,0,0,0.3); color: white; font-family: 'Cairo', sans-serif; font-size: 1rem;">
-                                    <div style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--oman-red); font-size: 1.2rem;">🔍</div>
-                                </div>
-                                <button class="filter-btn" onclick="shuffleStudents()" style="padding: 12px 20px; background: linear-gradient(135deg, var(--warning-orange), #ff8c00); border: none; border-radius: 25px; color: white; cursor: pointer; transition: all 0.3s ease;">
-                                    🔀 خلط البطاقات
-                                </button>
-                                <button class="filter-btn" onclick="resetStudentFilter()" style="padding: 12px 20px; background: linear-gradient(135deg, var(--safe-green), #28a745); border: none; border-radius: 25px; color: white; cursor: pointer; transition: all 0.3s ease;">
-                                    🔄 إعادة تعيين
-                                </button>
-                            </div>
-                            
-                            <!-- إحصائيات البحث -->
-                            <div id="searchStats" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.9rem; color: rgba(255,255,255,0.7); text-align: center;">
-                                <span id="searchResultsCount">جاري التحميل...</span>
-                            </div>
-                        </div>
-                        
-                        <!-- شبكة بطاقات الطلاب الذكية -->
-                        <div id="setupStudentGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; max-height: 400px; overflow-y: auto; padding: 10px;">
-                            <!-- سيتم تعبئة بطاقات الطلاب هنا -->
-                        </div>
-                    </div>
-
-                    <!-- معلومات الاختيار النهائي -->
-                    <div id="finalSelectionInfo" style="display: none; margin-top: 25px; padding: 25px; background: linear-gradient(135deg, rgba(0,204,0,0.2), rgba(0,204,0,0.1)); border: 2px solid var(--safe-green); border-radius: 15px; text-align: center;">
-                        <h5 style="color: var(--safe-green); margin-bottom: 15px;">✅ تم الاختيار بنجاح</h5>
-                        <div id="finalSelectionDetails" style="font-size: 1.1rem; color: white;">
-                            <!-- سيتم تعبئة تفاصيل الاختيار هنا -->
+                        <div class="method-card" data-method="random" onclick="selectMethod('random')" style="padding: 20px; background: linear-gradient(135deg, rgba(255,193,7,0.2), rgba(255,193,7,0.1)); border: 2px solid var(--warning-orange); border-radius: 15px; cursor: pointer; transition: all 0.3s ease; text-align: center;">
+                            <div style="font-size: 3rem; margin-bottom: 10px;">🎲</div>
+                            <h4 style="color: var(--warning-orange); margin: 0 0 10px 0;">اختيار عشوائي</h4>
+                            <p style="color: rgba(255,255,255,0.8); margin: 0; font-size: 0.9rem;">اختيار عشوائي دون تكرار</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- أزرار التنقل والإجراءات -->
-                <div class="modal-actions" style="margin-top: 30px; padding-top: 20px; border-top: 2px solid rgba(255,255,255,0.1); text-align: center;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
-                        <button id="prevStepBtn" style="display: none; padding: 12px 25px; background: linear-gradient(135deg, #6c757d, #5a6268); border: none; border-radius: 25px; color: white; cursor: pointer; transition: all 0.3s ease;">
-                            ← السابق
+                <!-- الخطوة 3: بطاقات الطلاب -->
+                <div id="studentCardsSection" class="setup-section" style="display: none; margin-bottom: 30px;">
+                    <h3 style="color: var(--safe-green); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                        <span style="background: var(--safe-green); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem;">3</span>
+                        👥 <span id="studentSectionTitle">اختر الطالب</span>
+                    </h3>
+                    
+                    <!-- بحث الطلاب (للاختيار الانتقائي فقط) -->
+                    <div id="studentSearchBar" style="display: none; margin-bottom: 20px;">
+                        <input type="text" id="studentSearch" placeholder="🔍 ابحث عن الطالب..." 
+                               style="width: 100%; padding: 12px; border-radius: 25px; border: 2px solid var(--oman-red); background: rgba(0,0,0,0.3); color: white; font-family: 'Cairo', sans-serif; font-size: 1rem;">
+                    </div>
+                    
+                    <!-- شبكة بطاقات الطلاب -->
+                    <div id="studentGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; max-height: 300px; overflow-y: auto; padding: 10px;">
+                        <!-- سيتم تعبئة بطاقات الطلاب هنا -->
+                    </div>
+                    
+                    <!-- معلومات الطالب المختار -->
+                    <div id="selectedStudentInfo" style="display: none; margin-top: 15px; padding: 15px; background: rgba(255,193,7,0.1); border: 2px solid var(--warning-orange); border-radius: 10px; text-align: center;">
+                        <div id="studentInfoText" style="color: var(--warning-orange); font-weight: bold;"></div>
+                    </div>
+                </div>
+
+                <!-- أزرار التحكم -->
+                <div style="text-align: center; margin-top: 30px; border-top: 2px solid rgba(255,255,255,0.1); padding-top: 20px;">
+                    <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                        <button onclick="resetSetup()" style="padding: 12px 25px; background: linear-gradient(135deg, #6c757d, #5a6268); border: none; border-radius: 25px; color: white; cursor: pointer; transition: all 0.3s ease;">
+                            🔄 إعادة البداية
                         </button>
                         
-                        <div style="flex: 1; text-align: center; display: flex; gap: 15px; justify-content: center;">
-                            <!-- أزرار التشخيص والتحكم -->
-                            <button onclick="debugGameSetup()" style="padding: 10px 20px; background: linear-gradient(135deg, #6f42c1, #5a32a3); border: none; border-radius: 20px; color: white; cursor: pointer; transition: all 0.3s ease; font-size: 0.9rem;">
-                                🔍 تشخيص
-                            </button>
-                            
-                            <button onclick="previewGameSetup()" style="padding: 12px 25px; background: linear-gradient(135deg, var(--warning-orange), #e65100); border: none; border-radius: 25px; color: white; cursor: pointer; transition: all 0.3s ease;">
-                                👁️ معاينة
-                            </button>
-                            
-                            <button onclick="resetGameSetup()" style="padding: 12px 25px; background: linear-gradient(135deg, #6c757d, #5a6268); border: none; border-radius: 25px; color: white; cursor: pointer; transition: all 0.3s ease;">
-                                🔄 إعادة تعيين
-                            </button>
-                            
-                            <!-- زر بدء اللعبة الرئيسي -->
-                            <button onclick="startGameFromSetup()" style="padding: 15px 40px; background: linear-gradient(135deg, var(--safe-green), #388e3c); border: none; border-radius: 25px; color: white; cursor: pointer; transition: all 0.3s ease; font-size: 1.1rem; font-weight: bold; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);">
-                                🚀 ابدأ اللعبة
-                            </button>
-                        </div>
+                        <button id="startGameBtn" onclick="startGameFromSetup()" style="display: none; padding: 15px 40px; background: linear-gradient(135deg, var(--safe-green), #388e3c); border: none; border-radius: 25px; color: white; cursor: pointer; transition: all 0.3s ease; font-size: 1.1rem; font-weight: bold; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);">
+                            🚀 ابدأ اللعبة
+                        </button>
                         
                         <button onclick="closeModal('setupModal')" style="padding: 12px 25px; background: linear-gradient(135deg, #dc3545, #c82333); border: none; border-radius: 25px; color: white; cursor: pointer; transition: all 0.3s ease;">
-                            إلغاء ✕
+                            ❌ إلغاء
                         </button>
                     </div>
                 </div>
@@ -3587,9 +3535,6 @@
         function showGameSetup() {
             console.log('🎮 بداية تنفيذ showGameSetup()');
             
-            // إخفاء رسالة الاختبار الآن
-            // alert('تم النقر على زر الإعدادات! الدالة تعمل الآن.');
-            
             const modal = document.getElementById('setupModal');
             console.log('🔍 البحث عن modal:', modal ? 'موجود ✅' : 'غير موجود ❌');
             
@@ -3597,15 +3542,16 @@
                 modal.style.display = 'block';
                 console.log('✅ تم إظهار modal بنجاح');
                 
-                // تشغيل الوظائف المساعدة
+                // تحميل البيانات إذا لم تكن محملة
+                if (!gameSetup.studentData) {
+                    loadStudentData();
+                }
+                
+                // تشغيل صوت
                 try {
                     playGameSound('click');
-                    setupStudentSelection();
-                    updateSettingsPreview();
-                    setupDifficultyOptions();
-                    setupFormEventListeners();
                 } catch (error) {
-                    console.log('⚠️ خطأ في تنفيذ الوظائف المساعدة:', error);
+                    console.log('⚠️ خطأ في تشغيل الصوت:', error);
                 }
             } else {
                 console.error('❌ لم يتم العثور على modal');
@@ -3632,6 +3578,45 @@
             } catch (error) {
                 console.log('⚠️ خطأ في إغلاق النافذة:', error);
             }
+        }
+
+        // دالة إظهار الرسائل التوضيحية
+        function showToast(message, type = 'info', duration = 3000) {
+            const colors = {
+                success: '#4CAF50',
+                error: '#f44336',
+                warning: '#ff9800',
+                info: '#2196F3'
+            };
+
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${colors[type] || colors.info};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                z-index: 10000;
+                font-family: 'Cairo', sans-serif;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+                animation: slideInRight 0.3s ease-out;
+                max-width: 300px;
+                word-wrap: break-word;
+            `;
+            toast.textContent = message;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOutRight 0.3s ease-in';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 300);
+            }, duration);
         }
         
         // ربط الوظائف بالنطاق العام فوراً
@@ -3701,6 +3686,396 @@
         let setupSelectedStudent = null;
         let setupSelectionMethod = 'manual';
 
+        // متغيرات اللعبة الأساسية
+        let studentName = '';
+        let studentId = null;
+        let selectedClassData = null;
+
+        // متغيرات الإعداد المبسطة الجديدة
+        let gameSetup = {
+            selectedClass: null,
+            selectedMethod: null,
+            selectedStudent: null,
+            studentData: null,
+            usedStudents: [] // لتتبع الطلاب المستخدمين في الاختيار العشوائي
+        };
+
+        // تحميل بيانات الطلاب المبسط
+        async function loadStudentData() {
+            try {
+                const response = await fetch('../data/studentData.json');
+                if (!response.ok) throw new Error('فشل في تحميل البيانات');
+                
+                const data = await response.json();
+                gameSetup.studentData = data;
+                loadClassOptions();
+                console.log('✅ تم تحميل البيانات بنجاح');
+                return true;
+            } catch (error) {
+                console.error('❌ خطأ في تحميل البيانات:', error);
+                // استخدام بيانات احتياطية
+                gameSetup.studentData = {
+                    classes: [
+                        {
+                            id: "class1",
+                            name: "الصف الأول",
+                            icon: "📚",
+                            students: [
+                                {id: 1, name: "أحمد محمد", gender: "male"},
+                                {id: 2, name: "فاطمة أحمد", gender: "female"},
+                                {id: 3, name: "خالد سعيد", gender: "male"},
+                                {id: 4, name: "مريم علي", gender: "female"}
+                            ]
+                        }
+                    ]
+                };
+                loadClassOptions();
+                showToast('تم استخدام بيانات احتياطية', 'warning');
+                return false;
+            }
+        }
+
+        // تحميل خيارات الصفوف
+        function loadClassOptions() {
+            const container = document.getElementById('classSelection');
+            if (!container) return;
+
+            container.innerHTML = '';
+            
+            gameSetup.studentData.classes.forEach(classInfo => {
+                const classCard = document.createElement('div');
+                classCard.className = 'class-option';
+                classCard.style.cssText = `
+                    padding: 20px;
+                    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+                    border: 2px solid rgba(255,255,255,0.2);
+                    border-radius: 12px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    text-align: center;
+                `;
+                
+                classCard.innerHTML = `
+                    <div style="font-size: 2.5rem; margin-bottom: 10px;">${classInfo.icon || '📚'}</div>
+                    <h4 style="color: white; margin: 0 0 8px 0;">${classInfo.name}</h4>
+                    <div style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">
+                        👥 ${classInfo.students.length} طالب
+                    </div>
+                `;
+                
+                classCard.addEventListener('click', () => selectClass(classInfo));
+                container.appendChild(classCard);
+            });
+        }
+
+        // اختيار الصف
+        function selectClass(classInfo) {
+            gameSetup.selectedClass = classInfo;
+            
+            // تحديث التصميم
+            document.querySelectorAll('.class-option').forEach(card => {
+                card.style.borderColor = 'rgba(255,255,255,0.2)';
+                card.style.background = 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))';
+            });
+            
+            event.target.closest('.class-option').style.borderColor = 'var(--safe-green)';
+            event.target.closest('.class-option').style.background = 'linear-gradient(135deg, rgba(76, 175, 80, 0.3), rgba(76, 175, 80, 0.1))';
+            
+            // عرض معلومات الصف
+            const classInfoEl = document.getElementById('selectedClassInfo');
+            const classText = document.getElementById('classInfoText');
+            if (classInfoEl && classText) {
+                classText.textContent = `تم اختيار: ${classInfo.name} (${classInfo.students.length} طالب)`;
+                classInfoEl.style.display = 'block';
+            }
+            
+            // إظهار قسم طريقة الاختيار
+            const methodSection = document.getElementById('selectionMethodSection');
+            if (methodSection) {
+                methodSection.style.display = 'block';
+            }
+            
+            showToast(`تم اختيار صف: ${classInfo.name}`, 'success');
+        }
+
+        // اختيار طريقة الاختيار
+        function selectMethod(method) {
+            gameSetup.selectedMethod = method;
+            
+            // تحديث التصميم
+            document.querySelectorAll('.method-card').forEach(card => {
+                card.style.borderColor = card.dataset.method === method ? 
+                    (method === 'manual' ? 'var(--safe-green)' : 'var(--warning-orange)') : 
+                    'rgba(255,255,255,0.2)';
+                card.style.background = card.dataset.method === method ?
+                    (method === 'manual' ? 
+                        'linear-gradient(135deg, rgba(0,204,0,0.3), rgba(0,204,0,0.1))' :
+                        'linear-gradient(135deg, rgba(255,193,7,0.3), rgba(255,193,7,0.1))'
+                    ) : 'linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.1))';
+            });
+            
+            // إظهار قسم الطلاب
+            const studentSection = document.getElementById('studentCardsSection');
+            const studentTitle = document.getElementById('studentSectionTitle');
+            const searchBar = document.getElementById('studentSearchBar');
+            
+            if (studentSection) {
+                studentSection.style.display = 'block';
+                
+                if (method === 'manual') {
+                    studentTitle.textContent = 'اختر الطالب';
+                    searchBar.style.display = 'block';
+                    displayStudentCards();
+                } else {
+                    studentTitle.textContent = 'سيتم الاختيار عشوائياً';
+                    searchBar.style.display = 'none';
+                    performRandomSelection();
+                }
+            }
+            
+            showToast(`طريقة الاختيار: ${method === 'manual' ? 'انتقائي' : 'عشوائي'}`, 'info');
+        }
+
+        // عرض بطاقات الطلاب (للاختيار الانتقائي)
+        function displayStudentCards() {
+            const grid = document.getElementById('studentGrid');
+            if (!grid || !gameSetup.selectedClass) return;
+
+            grid.innerHTML = '';
+            
+            gameSetup.selectedClass.students.forEach(student => {
+                const isUsed = gameSetup.usedStudents.includes(student.id);
+                
+                const studentCard = document.createElement('div');
+                studentCard.className = 'student-card';
+                studentCard.style.cssText = `
+                    padding: 15px;
+                    background: ${isUsed ? 
+                        'linear-gradient(135deg, rgba(108,117,125,0.3), rgba(108,117,125,0.1))' :
+                        'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))'
+                    };
+                    border: 2px solid ${isUsed ? 'rgba(108,117,125,0.5)' : 'rgba(255,255,255,0.2)'};
+                    border-radius: 12px;
+                    cursor: ${isUsed ? 'not-allowed' : 'pointer'};
+                    transition: all 0.3s ease;
+                    text-align: center;
+                    opacity: ${isUsed ? '0.6' : '1'};
+                `;
+                
+                studentCard.innerHTML = `
+                    <div style="font-size: 2rem; margin-bottom: 8px;">
+                        ${student.gender === 'male' ? '👨‍🎓' : '👩‍🎓'}
+                    </div>
+                    <h5 style="color: white; margin: 0 0 5px 0;">${student.name}</h5>
+                    <div style="color: rgba(255,255,255,0.7); font-size: 0.8rem;">
+                        رقم: ${student.id}
+                    </div>
+                    ${isUsed ? '<div style="color: var(--danger-red); font-size: 0.7rem; margin-top: 5px;">✅ تم اختياره مسبقاً</div>' : ''}
+                `;
+                
+                if (!isUsed) {
+                    studentCard.addEventListener('click', () => selectStudent(student));
+                    studentCard.addEventListener('mouseenter', () => {
+                        studentCard.style.borderColor = 'var(--safe-green)';
+                        studentCard.style.background = 'linear-gradient(135deg, rgba(76, 175, 80, 0.3), rgba(76, 175, 80, 0.1))';
+                    });
+                    studentCard.addEventListener('mouseleave', () => {
+                        if (!studentCard.classList.contains('selected')) {
+                            studentCard.style.borderColor = 'rgba(255,255,255,0.2)';
+                            studentCard.style.background = 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))';
+                        }
+                    });
+                }
+                
+                grid.appendChild(studentCard);
+            });
+            
+            // إعداد البحث
+            const searchInput = document.getElementById('studentSearch');
+            if (searchInput) {
+                searchInput.addEventListener('input', filterStudents);
+            }
+        }
+
+        // اختيار طالب (للاختيار الانتقائي)
+        function selectStudent(student) {
+            gameSetup.selectedStudent = student;
+            
+            // تحديث التصميم
+            document.querySelectorAll('.student-card').forEach(card => {
+                card.classList.remove('selected');
+                card.style.borderColor = 'rgba(255,255,255,0.2)';
+                card.style.background = 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))';
+            });
+            
+            event.target.closest('.student-card').classList.add('selected');
+            event.target.closest('.student-card').style.borderColor = 'var(--warning-orange)';
+            event.target.closest('.student-card').style.background = 'linear-gradient(135deg, rgba(255, 193, 7, 0.3), rgba(255, 193, 7, 0.1))';
+            
+            showSelectedStudentInfo(student);
+            showStartButton();
+            showToast(`تم اختيار: ${student.name}`, 'success');
+        }
+
+        // الاختيار العشوائي
+        function performRandomSelection() {
+            if (!gameSetup.selectedClass) return;
+            
+            // فلترة الطلاب غير المستخدمين
+            const availableStudents = gameSetup.selectedClass.students.filter(
+                student => !gameSetup.usedStudents.includes(student.id)
+            );
+            
+            if (availableStudents.length === 0) {
+                showToast('جميع الطلاب تم اختيارهم مسبقاً. سيتم إعادة تعيين القائمة.', 'warning');
+                gameSetup.usedStudents = [];
+                return performRandomSelection();
+            }
+            
+            // عرض تأثير الاختيار العشوائي
+            showRandomAnimation(availableStudents);
+        }
+
+        // عرض تأثير الاختيار العشوائي
+        function showRandomAnimation(availableStudents) {
+            const grid = document.getElementById('studentGrid');
+            if (!grid) return;
+            
+            grid.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                    <div style="font-size: 4rem; margin-bottom: 20px; animation: spin 1s linear infinite;">🎲</div>
+                    <h3 style="color: white; margin-bottom: 20px;">جاري الاختيار العشوائي...</h3>
+                    <div id="randomName" style="font-size: 2rem; color: var(--warning-orange); margin-bottom: 20px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                        <!-- سيتم عرض الأسماء هنا -->
+                    </div>
+                    <div style="color: rgba(255,255,255,0.7);">
+                        الطلاب المتاحون: ${availableStudents.length}
+                    </div>
+                </div>
+            `;
+            
+            // تأثير تناوب الأسماء
+            const nameDisplay = document.getElementById('randomName');
+            let currentIndex = 0;
+            let iterations = 0;
+            const maxIterations = 20;
+            
+            const interval = setInterval(() => {
+                nameDisplay.textContent = availableStudents[currentIndex].name;
+                currentIndex = (currentIndex + 1) % availableStudents.length;
+                iterations++;
+                
+                if (iterations >= maxIterations) {
+                    clearInterval(interval);
+                    
+                    // اختيار الطالب النهائي
+                    const selectedStudent = availableStudents[Math.floor(Math.random() * availableStudents.length)];
+                    nameDisplay.textContent = selectedStudent.name;
+                    nameDisplay.style.color = 'var(--safe-green)';
+                    
+                    // إضافة الطالب للقائمة المستخدمة
+                    gameSetup.usedStudents.push(selectedStudent.id);
+                    gameSetup.selectedStudent = selectedStudent;
+                    
+                    setTimeout(() => {
+                        showSelectedStudentInfo(selectedStudent);
+                        showStartButton();
+                        showToast(`تم اختيار: ${selectedStudent.name}`, 'success');
+                    }, 1500);
+                }
+            }, 100);
+        }
+
+        // عرض معلومات الطالب المختار
+        function showSelectedStudentInfo(student) {
+            const studentInfo = document.getElementById('selectedStudentInfo');
+            const studentText = document.getElementById('studentInfoText');
+            
+            if (studentInfo && studentText) {
+                studentText.innerHTML = `
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                        <span style="font-size: 1.5rem;">${student.gender === 'male' ? '👨‍🎓' : '👩‍🎓'}</span>
+                        <span>الطالب المختار: ${student.name}</span>
+                        <span style="font-size: 0.9rem; color: rgba(255,255,255,0.8);">(رقم: ${student.id})</span>
+                    </div>
+                `;
+                studentInfo.style.display = 'block';
+            }
+        }
+
+        // إظهار زر البداية
+        function showStartButton() {
+            const startBtn = document.getElementById('startGameBtn');
+            if (startBtn) {
+                startBtn.style.display = 'inline-block';
+                startBtn.style.animation = 'pulse 2s infinite';
+            }
+        }
+
+        // فلترة الطلاب (للبحث)
+        function filterStudents() {
+            const searchTerm = document.getElementById('studentSearch').value.trim().toLowerCase();
+            const allCards = document.querySelectorAll('.student-card');
+            
+            allCards.forEach(card => {
+                const studentName = card.querySelector('h5').textContent.toLowerCase();
+                if (studentName.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // إعادة تعيين الإعداد
+        function resetSetup() {
+            gameSetup.selectedClass = null;
+            gameSetup.selectedMethod = null;
+            gameSetup.selectedStudent = null;
+            
+            // إخفاء الأقسام
+            document.getElementById('selectedClassInfo').style.display = 'none';
+            document.getElementById('selectionMethodSection').style.display = 'none';
+            document.getElementById('studentCardsSection').style.display = 'none';
+            document.getElementById('selectedStudentInfo').style.display = 'none';
+            document.getElementById('startGameBtn').style.display = 'none';
+            
+            // إعادة تعيين التصميم
+            document.querySelectorAll('.class-option, .method-card, .student-card').forEach(card => {
+                card.classList.remove('selected');
+                card.style.borderColor = 'rgba(255,255,255,0.2)';
+                card.style.background = 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))';
+            });
+            
+            showToast('تم إعادة تعيين الإعدادات', 'info');
+        }
+
+        // بدء اللعبة مع الإعدادات المحددة
+        function startGameFromSetup() {
+            if (!gameSetup.selectedClass || !gameSetup.selectedStudent) {
+                showToast('يرجى إكمال جميع الإعدادات أولاً', 'error');
+                return;
+            }
+
+            // تعيين بيانات الطالب المختار
+            studentName = gameSetup.selectedStudent.name;
+            studentId = gameSetup.selectedStudent.id;
+            selectedClassData = gameSetup.selectedClass;
+
+            // إضافة الطالب للقائمة المستخدمة إذا لم يكن موجوداً
+            if (!gameSetup.usedStudents.includes(gameSetup.selectedStudent.id)) {
+                gameSetup.usedStudents.push(gameSetup.selectedStudent.id);
+            }
+
+            // إغلاق نافذة الإعدادات
+            closeModal('setupModal');
+
+            // بدء اللعبة
+            startGame();
+
+            showToast(`بدأت اللعبة مع الطالب: ${studentName}`, 'success');
+        }
+
         // إعدادات الصعوبة
         const difficultySettings = {
             easy: { time: 60, name: 'مبتدئ', color: '#00cc00' },
@@ -3723,7 +4098,9 @@
             // تهيئة اللعبة
             initializeGame();
             setupEventListeners();
-            loadStudentsData();
+            
+            // تحميل البيانات بالنظام الجديد
+            loadStudentData();
             
             console.log('✅ تم تحميل اللعبة بنجاح!');
             
