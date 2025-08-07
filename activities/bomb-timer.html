@@ -3052,8 +3052,6 @@
             console.log('💣 تحميل لعبة القنبلة المؤقتة...');
             
             // تهيئة أزرار التحكم الموحدة
-            initializeUnifiedControls();
-            
             // تهيئة اللعبة
             initializeGame();
             setupEventListeners();
@@ -3185,8 +3183,29 @@
         // عرض إعداد اللعبة
         function showGameSetup() {
             playGameSound('click'); // صوت فتح النافذة
+            setupStudentSelection(); // إعداد اختيار الطلاب
             updateSettingsPreview();
             setupDifficultyOptions();
+            
+            // إعداد مستمعي الأحداث للمدخلات
+            const customTime = document.getElementById('customTime');
+            const totalBombs = document.getElementById('totalBombs');
+            const correctPoints = document.getElementById('correctPoints');
+            const timeMultiplier = document.getElementById('timeMultiplier');
+            const speedupTime = document.getElementById('speedupTime');
+            const soundEnabled = document.getElementById('soundEnabled');
+            const speedupEnabled = document.getElementById('speedupEnabled');
+            const speedBonusEnabled = document.getElementById('speedBonusEnabled');
+            
+            if (customTime) customTime.addEventListener('input', updateSettingsPreview);
+            if (totalBombs) totalBombs.addEventListener('input', updateSettingsPreview);
+            if (correctPoints) correctPoints.addEventListener('input', updateSettingsPreview);
+            if (timeMultiplier) timeMultiplier.addEventListener('input', updateSettingsPreview);
+            if (speedupTime) speedupTime.addEventListener('input', updateSettingsPreview);
+            if (soundEnabled) soundEnabled.addEventListener('change', updateSettingsPreview);
+            if (speedupEnabled) speedupEnabled.addEventListener('change', updateSettingsPreview);
+            if (speedBonusEnabled) speedBonusEnabled.addEventListener('change', updateSettingsPreview);
+            
             document.getElementById('setupModal').style.display = 'block';
         }
 
@@ -3218,19 +3237,6 @@
             
             // تحديد الصعوبة الحالية
             document.querySelector(`[data-difficulty="${gameState.difficulty}"]`).classList.add('selected');
-            
-            // إعداد اختيار الطلاب
-            setupStudentSelection();
-            
-            // إعداد مستمعي الأحداث للمدخلات
-            document.getElementById('customTime').addEventListener('input', updateSettingsPreview);
-            document.getElementById('totalBombs').addEventListener('input', updateSettingsPreview);
-            document.getElementById('correctPoints').addEventListener('input', updateSettingsPreview);
-            document.getElementById('timeMultiplier').addEventListener('input', updateSettingsPreview);
-            document.getElementById('speedupTime').addEventListener('input', updateSettingsPreview);
-            document.getElementById('soundEnabled').addEventListener('change', updateSettingsPreview);
-            document.getElementById('speedupEnabled').addEventListener('change', updateSettingsPreview);
-            document.getElementById('speedBonusEnabled').addEventListener('change', updateSettingsPreview);
         }
 
         // إعداد اختيار الطلاب في نافذة الإعدادات
