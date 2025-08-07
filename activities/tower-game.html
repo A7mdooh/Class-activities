@@ -904,6 +904,123 @@
       margin-top: var(--spacing-md);
     }
 
+    /* ========================================
+       بطاقات طرق اختيار المتسابقين
+    ======================================== */
+    .selection-mode-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-md);
+    }
+
+    .mode-card {
+      background: linear-gradient(135deg, 
+        rgba(255,255,255,0.15) 0%, 
+        rgba(255,255,255,0.05) 100%);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(255,255,255,0.2);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-lg);
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--elastic-timing);
+      position: relative;
+      overflow: hidden;
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-sm);
+    }
+
+    .mode-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(from 0deg, 
+        transparent, 
+        rgba(0, 245, 255, 0.1), 
+        transparent, 
+        rgba(255, 7, 58, 0.1), 
+        transparent);
+      opacity: 0;
+      transition: all 0.6s ease;
+      animation: cardAura 10s linear infinite;
+    }
+
+    .mode-card:hover {
+      transform: translateY(-8px) scale(1.05);
+      border-color: var(--neon-cyan);
+      box-shadow: 0 20px 50px rgba(0, 245, 255, 0.3);
+    }
+
+    .mode-card:hover::before {
+      opacity: 1;
+    }
+
+    .mode-card.selected {
+      background: linear-gradient(135deg, 
+        rgba(0, 245, 255, 0.3) 0%, 
+        rgba(0, 245, 255, 0.1) 100%);
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 40px rgba(0, 245, 255, 0.5);
+      transform: scale(1.05);
+    }
+
+    .mode-card.selected::before {
+      opacity: 1;
+    }
+
+    .mode-icon {
+      font-size: 3rem;
+      margin-bottom: var(--spacing-sm);
+      animation: iconFloat 3s ease-in-out infinite;
+    }
+
+    .mode-card:hover .mode-icon {
+      animation: iconBounce 0.6s ease-out;
+    }
+
+    @keyframes iconFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    @keyframes iconBounce {
+      0%, 20%, 60%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-10px); }
+      80% { transform: translateY(-5px); }
+    }
+
+    .mode-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-light);
+      margin-bottom: var(--spacing-xs);
+      font-family: 'Orbitron', 'Cairo', sans-serif;
+    }
+
+    .mode-description {
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    .mode-card.selected .mode-title {
+      color: var(--neon-cyan);
+      text-shadow: 0 0 15px currentColor;
+    }
+
+    .mode-card.selected .mode-description {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
     .count-btn {
       padding: 18px 15px;
       border: 2px solid var(--neon-cyan);
@@ -1021,6 +1138,241 @@
         opacity: 1;
         transform: scale(1) rotateZ(0deg);
       }
+    }
+
+    /* ========================================
+       واجهة الاختيار اليدوي للطلاب
+    ======================================== */
+    .manual-selection-interface {
+      display: none;
+      margin-top: var(--spacing-lg);
+      animation: slideInUp 1s var(--elastic-timing);
+    }
+
+    .manual-selection-interface.show {
+      display: block;
+    }
+
+    .selection-header {
+      text-align: center;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .selection-counter {
+      background: var(--primary-gradient);
+      color: white;
+      padding: 15px 25px;
+      border-radius: 25px;
+      display: inline-block;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: var(--spacing-md);
+      box-shadow: 0 0 25px rgba(102, 126, 234, 0.5);
+      animation: counterPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes counterPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .selection-info {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1.1rem;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .all-students-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: var(--spacing-md);
+      max-height: 400px;
+      overflow-y: auto;
+      padding: var(--spacing-md);
+      background: linear-gradient(135deg, 
+        rgba(255,255,255,0.1) 0%, 
+        rgba(255,255,255,0.02) 100%);
+      backdrop-filter: blur(15px);
+      border-radius: var(--border-radius);
+      border: 1px solid rgba(255,255,255,0.1);
+      scrollbar-width: thin;
+      scrollbar-color: var(--neon-cyan) transparent;
+    }
+
+    .all-students-grid::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .all-students-grid::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+
+    .all-students-grid::-webkit-scrollbar-thumb {
+      background: var(--neon-cyan);
+      border-radius: 4px;
+    }
+
+    .student-selection-card {
+      background: linear-gradient(135deg, 
+        rgba(255,255,255,0.15) 0%, 
+        rgba(255,255,255,0.05) 100%);
+      backdrop-filter: blur(10px);
+      padding: var(--spacing-lg);
+      border-radius: var(--border-radius-small);
+      text-align: center;
+      font-weight: 600;
+      color: white;
+      border: 2px solid rgba(255,255,255,0.1);
+      cursor: pointer;
+      transition: all var(--elastic-timing);
+      position: relative;
+      overflow: hidden;
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-xs);
+    }
+
+    .student-selection-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, 
+        rgba(0, 245, 255, 0.2) 0%, 
+        transparent 70%);
+      opacity: 0;
+      transition: all 0.6s ease;
+      transform: scale(0);
+    }
+
+    .student-selection-card:hover {
+      transform: translateY(-5px) scale(1.05);
+      border-color: var(--neon-cyan);
+      box-shadow: 0 15px 40px rgba(0, 245, 255, 0.3);
+    }
+
+    .student-selection-card:hover::before {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .student-selection-card.selected {
+      background: var(--success-gradient);
+      border-color: var(--success-color);
+      color: white;
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(17, 153, 142, 0.6);
+      animation: selectedPulse 2s ease-in-out infinite;
+    }
+
+    .student-selection-card.selected::after {
+      content: '✓';
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: white;
+      color: var(--success-color);
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      font-weight: 800;
+      animation: checkmarkAppear 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes selectedPulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(17, 153, 142, 0.4); }
+      50% { box-shadow: 0 0 40px rgba(17, 153, 142, 0.8); }
+    }
+
+    @keyframes checkmarkAppear {
+      0% {
+        opacity: 0;
+        transform: scale(0) rotate(-180deg);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+      }
+    }
+
+    .student-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .student-number {
+      font-size: 0.9rem;
+      opacity: 0.7;
+      font-family: 'Orbitron', 'Cairo', sans-serif;
+    }
+
+    /* أزرار التحكم في الاختيار */
+    .selection-controls {
+      display: flex;
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-lg);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .selection-control-btn {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 25px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--elastic-timing);
+      font-family: 'Cairo', sans-serif;
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+      min-width: 120px;
+      justify-content: center;
+    }
+
+    .btn-select-all {
+      background: var(--primary-gradient);
+      color: white;
+      box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-select-all:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 25px rgba(102, 126, 234, 0.6);
+    }
+
+    .btn-clear-all {
+      background: var(--danger-gradient);
+      color: white;
+      box-shadow: 0 0 20px rgba(252, 70, 107, 0.4);
+    }
+
+    .btn-clear-all:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 25px rgba(252, 70, 107, 0.6);
+    }
+
+    .btn-random-select {
+      background: var(--warning-gradient);
+      color: white;
+      box-shadow: 0 0 20px rgba(245, 87, 108, 0.4);
+    }
+
+    .btn-random-select:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 25px rgba(245, 87, 108, 0.6);
     }
 
     /* زر البداية */
@@ -1781,6 +2133,47 @@
       }
     }
 
+    /* تأثيرات إضافية للاختيار اليدوي */
+    @keyframes messageShake {
+      0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+      25% { transform: translate(-50%, -50%) rotate(-2deg); }
+      75% { transform: translate(-50%, -50%) rotate(2deg); }
+    }
+
+    .selection-limit-message {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--danger-gradient);
+      color: white;
+      padding: 15px 25px;
+      border-radius: 25px;
+      font-weight: 700;
+      z-index: 10003;
+      animation: messageShake 0.6s ease-out;
+      box-shadow: 0 10px 30px rgba(252, 70, 107, 0.5);
+    }
+
+    /* تحسينات للتمرير في شبكة الطلاب */
+    .all-students-grid::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .all-students-grid::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+
+    .all-students-grid::-webkit-scrollbar-thumb {
+      background: linear-gradient(45deg, var(--neon-cyan), var(--neon-pink));
+      border-radius: 4px;
+    }
+
+    .all-students-grid::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(45deg, var(--neon-pink), var(--neon-cyan));
+    }
+
     /* تأثيرات إضافية للشريط العلوي */
     @keyframes toolbarPulse {
       0%, 100% {
@@ -1857,6 +2250,27 @@
             </select>
           </div>
 
+          <div class="form-group" id="selectionModeSection" style="display: none;">
+            <label class="form-label">طريقة اختيار المتسابقين:</label>
+            <div class="selection-mode-grid">
+              <div class="mode-card" data-mode="random">
+                <div class="mode-icon">🎲</div>
+                <div class="mode-title">اختيار عشوائي</div>
+                <div class="mode-description">اختيار طلاب بشكل عشوائي من الصف</div>
+              </div>
+              <div class="mode-card" data-mode="manual">
+                <div class="mode-icon">👆</div>
+                <div class="mode-title">اختيار يدوي</div>
+                <div class="mode-description">اختيار طلاب معينين بواسطة المعلم</div>
+              </div>
+              <div class="mode-card" data-mode="all">
+                <div class="mode-icon">👥</div>
+                <div class="mode-title">الصف كاملاً</div>
+                <div class="mode-description">جميع طلاب الصف يشاركون</div>
+              </div>
+            </div>
+          </div>
+
           <div class="form-group" id="studentCountSection" style="display: none;">
             <label class="form-label">عدد المتسابقين:</label>
             <div class="student-count-grid">
@@ -1874,6 +2288,37 @@
           </div>
 
           <div class="students-preview" id="studentsPreview"></div>
+
+          <!-- واجهة الاختيار اليدوي -->
+          <div class="manual-selection-interface" id="manualSelectionInterface">
+            <div class="selection-header">
+              <div class="selection-counter" id="selectionCounter">
+                تم اختيار <span id="selectedCount">0</span> من <span id="targetCount">0</span> طالب
+              </div>
+              <div class="selection-info">
+                اختر الطلاب المشاركين في المسابقة بالنقر على البطاقات
+              </div>
+            </div>
+
+            <div class="selection-controls">
+              <button class="selection-control-btn btn-select-all" id="selectAllBtn">
+                <i class="fas fa-check-double"></i>
+                اختيار الكل
+              </button>
+              <button class="selection-control-btn btn-clear-all" id="clearAllBtn">
+                <i class="fas fa-times"></i>
+                إلغاء الكل
+              </button>
+              <button class="selection-control-btn btn-random-select" id="randomSelectBtn">
+                <i class="fas fa-dice"></i>
+                اختيار عشوائي
+              </button>
+            </div>
+
+            <div class="all-students-grid" id="allStudentsGrid">
+              <!-- سيتم إضافة بطاقات الطلاب هنا -->
+            </div>
+          </div>
 
           <button class="start-btn" id="startGameBtn" disabled>
             <i class="fas fa-rocket"></i>
@@ -2710,13 +3155,14 @@
       }
     }
     /* ========================================
-       نظام مسابقة البرج التنافسية
+       نظام مسابقة البرج التنافسية المحدث
     ======================================== */
     class TowerCompetition {
       constructor() {
         this.audio = new AudioManager();
         this.toolbar = new ToolbarManager(this.audio);
         this.students = {};
+        this.allClassStudents = [];
         this.remainingStudents = [];
         this.eliminatedStudents = [];
         this.currentStudentIndex = 0;
@@ -2724,6 +3170,9 @@
         this.gameState = 'setup'; // setup, playing, roundComplete, finished
         this.tournamentStructure = this.calculateTournament();
         this.totalRounds = 0;
+        this.selectionMode = 'random'; // random, manual, all
+        this.targetStudentCount = 0;
+        this.selectedStudents = new Set();
         
         this.initElements();
         this.loadStudentData();
@@ -2736,8 +3185,17 @@
           setupScreen: document.getElementById('setupScreen'),
           gameScreen: document.getElementById('gameScreen'),
           classSelect: document.getElementById('classSelect'),
+          selectionModeSection: document.getElementById('selectionModeSection'),
           studentCountSection: document.getElementById('studentCountSection'),
           studentsPreview: document.getElementById('studentsPreview'),
+          manualSelectionInterface: document.getElementById('manualSelectionInterface'),
+          allStudentsGrid: document.getElementById('allStudentsGrid'),
+          selectionCounter: document.getElementById('selectionCounter'),
+          selectedCount: document.getElementById('selectedCount'),
+          targetCount: document.getElementById('targetCount'),
+          selectAllBtn: document.getElementById('selectAllBtn'),
+          clearAllBtn: document.getElementById('clearAllBtn'),
+          randomSelectBtn: document.getElementById('randomSelectBtn'),
           startGameBtn: document.getElementById('startGameBtn'),
           
           // Game elements
@@ -2802,6 +3260,18 @@
           this.audio.play('ui-click');
         });
 
+        // بطاقات طرق الاختيار
+        document.querySelectorAll('.mode-card').forEach(card => {
+          card.addEventListener('click', (e) => {
+            this.selectMode(card.dataset.mode);
+            this.audio.play('ui-click');
+          });
+
+          card.addEventListener('mouseenter', () => {
+            this.audio.play('ui-hover', { volume: 0.3 });
+          });
+        });
+
         // أزرار عدد الطلاب
         document.querySelectorAll('.count-btn').forEach(btn => {
           btn.addEventListener('click', (e) => {
@@ -2812,6 +3282,22 @@
           btn.addEventListener('mouseenter', () => {
             this.audio.play('ui-hover', { volume: 0.3 });
           });
+        });
+
+        // أزرار التحكم في الاختيار اليدوي
+        this.elements.selectAllBtn?.addEventListener('click', () => {
+          this.selectAllStudents();
+          this.audio.play('ui-click');
+        });
+
+        this.elements.clearAllBtn?.addEventListener('click', () => {
+          this.clearAllStudents();
+          this.audio.play('ui-click');
+        });
+
+        this.elements.randomSelectBtn?.addEventListener('click', () => {
+          this.randomSelectStudents();
+          this.audio.play('ui-click');
         });
 
         // بدء المسابقة
@@ -2844,7 +3330,7 @@
         });
 
         // تأثيرات الصوت للأزرار
-        document.querySelectorAll('.control-btn, .start-btn, .count-btn').forEach(btn => {
+        document.querySelectorAll('.control-btn, .start-btn, .count-btn, .selection-control-btn').forEach(btn => {
           btn.addEventListener('mouseenter', () => {
             this.audio.play('ui-hover', { volume: 0.2 });
           });
@@ -2853,14 +3339,55 @@
 
       onClassSelect(className) {
         if (!className || !this.students[className]) {
+          this.elements.selectionModeSection.style.display = 'none';
           this.elements.studentCountSection.style.display = 'none';
           this.clearStudentSelection();
           return;
         }
 
-        this.elements.studentCountSection.style.display = 'block';
-        this.updateStudentCountButtons(this.students[className].length);
+        this.allClassStudents = this.students[className];
+        this.elements.selectionModeSection.style.display = 'block';
         this.clearStudentSelection();
+      }
+
+      selectMode(mode) {
+        // إزالة التحديد السابق
+        document.querySelectorAll('.mode-card').forEach(card => {
+          card.classList.remove('selected');
+        });
+
+        // تحديد البطاقة الحالية
+        const selectedCard = document.querySelector(`[data-mode="${mode}"]`);
+        selectedCard?.classList.add('selected');
+
+        this.selectionMode = mode;
+        this.handleModeChange(mode);
+      }
+
+      handleModeChange(mode) {
+        // إخفاء جميع الواجهات أولاً
+        this.elements.studentCountSection.style.display = 'none';
+        this.elements.manualSelectionInterface.classList.remove('show');
+        this.clearStudentSelection();
+
+        switch (mode) {
+          case 'random':
+            this.elements.studentCountSection.style.display = 'block';
+            this.updateStudentCountButtons(this.allClassStudents.length);
+            break;
+            
+          case 'manual':
+            this.elements.studentCountSection.style.display = 'block';
+            this.updateStudentCountButtons(this.allClassStudents.length);
+            break;
+            
+          case 'all':
+            this.remainingStudents = [...this.allClassStudents];
+            this.displayStudentPreview();
+            this.updateStartButton();
+            this.updateTournamentInfo();
+            break;
+        }
       }
 
       updateStudentCountButtons(maxStudents) {
@@ -2881,20 +3408,182 @@
         const selectedBtn = document.querySelector(`[data-count="${count}"]`);
         selectedBtn?.classList.add('selected');
 
-        // عرض الطلاب
-        this.showStudentSelection(count);
+        this.targetStudentCount = count;
+
+        // عرض الطلاب حسب طريقة الاختيار
+        switch (this.selectionMode) {
+          case 'random':
+            this.showRandomStudentSelection(count);
+            break;
+          case 'manual':
+            this.showManualStudentSelection(count);
+            break;
+        }
       }
 
-      showStudentSelection(count) {
-        const className = this.elements.classSelect.value;
-        if (!className || !this.students[className]) return;
-
-        const classStudents = this.students[className];
-        const shuffledStudents = [...classStudents].sort(() => Math.random() - 0.5);
+      showRandomStudentSelection(count) {
+        const shuffledStudents = [...this.allClassStudents].sort(() => Math.random() - 0.5);
         this.remainingStudents = shuffledStudents.slice(0, count);
-
         this.displayStudentPreview();
         this.updateStartButton();
+        this.updateTournamentInfo();
+      }
+
+      showManualStudentSelection(count) {
+        this.selectedStudents.clear();
+        this.elements.manualSelectionInterface.classList.add('show');
+        this.updateSelectionCounter();
+        this.createStudentSelectionCards();
+        this.updateStartButton();
+      }
+
+      createStudentSelectionCards() {
+        this.elements.allStudentsGrid.innerHTML = '';
+        
+        this.allClassStudents.forEach((student, index) => {
+          const card = document.createElement('div');
+          card.className = 'student-selection-card';
+          card.dataset.studentName = student;
+          card.innerHTML = `
+            <div class="student-name">${student}</div>
+            <div class="student-number">#${index + 1}</div>
+          `;
+          
+          card.addEventListener('click', () => {
+            this.toggleStudentSelection(student, card);
+          });
+
+          card.addEventListener('mouseenter', () => {
+            this.audio.play('step-hover', { volume: 0.2 });
+          });
+          
+          this.elements.allStudentsGrid.appendChild(card);
+        });
+      }
+
+      toggleStudentSelection(studentName, cardElement) {
+        if (this.selectedStudents.has(studentName)) {
+          // إلغاء الاختيار
+          this.selectedStudents.delete(studentName);
+          cardElement.classList.remove('selected');
+          this.audio.play('ui-click', { volume: 0.7 });
+        } else {
+          // إضافة للاختيار إذا لم نصل للحد الأقصى
+          if (this.selectedStudents.size < this.targetStudentCount) {
+            this.selectedStudents.add(studentName);
+            cardElement.classList.add('selected');
+            this.audio.play('step-correct', { volume: 0.5 });
+          } else {
+            // عرض تنبيه إذا تم الوصول للحد الأقصى
+            this.audio.play('step-wrong', { volume: 0.3 });
+            this.showSelectionLimitMessage();
+          }
+        }
+        
+        this.updateSelectionCounter();
+        this.updateStartButton();
+        this.updateStudentPreviewFromSelection();
+      }
+
+      updateSelectionCounter() {
+        if (this.elements.selectedCount && this.elements.targetCount) {
+          this.elements.selectedCount.textContent = this.selectedStudents.size;
+          this.elements.targetCount.textContent = this.targetStudentCount;
+          
+          // تغيير لون العداد حسب الحالة
+          const counter = this.elements.selectionCounter;
+          if (this.selectedStudents.size === this.targetStudentCount) {
+            counter.style.background = 'var(--success-gradient)';
+          } else if (this.selectedStudents.size > this.targetStudentCount * 0.7) {
+            counter.style.background = 'var(--warning-gradient)';
+          } else {
+            counter.style.background = 'var(--primary-gradient)';
+          }
+        }
+      }
+
+      showSelectionLimitMessage() {
+        const message = document.createElement('div');
+        message.className = 'selection-limit-message';
+        message.textContent = `تم الوصول للحد الأقصى (${this.targetStudentCount} طلاب)`;
+        message.style.cssText = `
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: var(--danger-gradient);
+          color: white;
+          padding: 15px 25px;
+          border-radius: 25px;
+          font-weight: 700;
+          z-index: 10003;
+          animation: messageShake 0.6s ease-out;
+          box-shadow: 0 10px 30px rgba(252, 70, 107, 0.5);
+        `;
+        
+        document.body.appendChild(message);
+        
+        // إزالة الرسالة بعد ثانيتين
+        setTimeout(() => {
+          message.remove();
+        }, 2000);
+      }
+
+      selectAllStudents() {
+        if (this.allClassStudents.length <= this.targetStudentCount) {
+          // اختيار جميع الطلاب إذا كان عددهم أقل من أو يساوي المطلوب
+          this.selectedStudents.clear();
+          this.allClassStudents.forEach(student => {
+            this.selectedStudents.add(student);
+          });
+        } else {
+          // اختيار عشوائي للعدد المطلوب
+          this.randomSelectStudents();
+          return;
+        }
+        
+        this.updateSelectionUI();
+        this.audio.play('ui-click');
+      }
+
+      clearAllStudents() {
+        this.selectedStudents.clear();
+        this.updateSelectionUI();
+        this.audio.play('ui-click');
+      }
+
+      randomSelectStudents() {
+        this.selectedStudents.clear();
+        const shuffled = [...this.allClassStudents].sort(() => Math.random() - 0.5);
+        const selected = shuffled.slice(0, this.targetStudentCount);
+        
+        selected.forEach(student => {
+          this.selectedStudents.add(student);
+        });
+        
+        this.updateSelectionUI();
+        this.audio.play('ui-click');
+      }
+
+      updateSelectionUI() {
+        // تحديث بطاقات الطلاب
+        document.querySelectorAll('.student-selection-card').forEach(card => {
+          const studentName = card.dataset.studentName;
+          if (this.selectedStudents.has(studentName)) {
+            card.classList.add('selected');
+          } else {
+            card.classList.remove('selected');
+          }
+        });
+        
+        this.updateSelectionCounter();
+        this.updateStartButton();
+        this.updateStudentPreviewFromSelection();
+      }
+
+      updateStudentPreviewFromSelection() {
+        this.remainingStudents = Array.from(this.selectedStudents);
+        this.displayStudentPreview();
         this.updateTournamentInfo();
       }
 
@@ -2944,18 +3633,60 @@
       }
 
       updateStartButton() {
-        const canStart = this.remainingStudents.length > 0;
+        let canStart = false;
+        let buttonText = '';
+        
+        switch (this.selectionMode) {
+          case 'random':
+          case 'all':
+            canStart = this.remainingStudents.length > 0;
+            break;
+          case 'manual':
+            canStart = this.selectedStudents.size === this.targetStudentCount;
+            break;
+        }
+        
         this.elements.startGameBtn.disabled = !canStart;
         
-        if (!canStart) {
+        if (canStart) {
+          const count = this.selectionMode === 'manual' 
+            ? this.selectedStudents.size 
+            : this.remainingStudents.length;
+          
+          let tournamentType = 'small';
+          if (count >= this.tournamentStructure.large.min) {
+            tournamentType = 'large';
+          } else if (count >= this.tournamentStructure.medium.min) {
+            tournamentType = 'medium';
+          }
+          
+          const tournament = this.tournamentStructure[tournamentType];
           this.elements.startGameBtn.innerHTML = `
-            <i class="fas fa-users"></i>
-            اختر الطلاب أولاً
+            <i class="fas fa-trophy"></i>
+            ابدأ ${tournament.name} مع ${count} متسابق
           `;
+        } else {
+          if (this.selectionMode === 'manual') {
+            const remaining = this.targetStudentCount - this.selectedStudents.size;
+            this.elements.startGameBtn.innerHTML = `
+              <i class="fas fa-users"></i>
+              اختر ${remaining} طالب إضافي
+            `;
+          } else {
+            this.elements.startGameBtn.innerHTML = `
+              <i class="fas fa-users"></i>
+              اختر الطلاب أولاً
+            `;
+          }
         }
       }
 
       startCompetition() {
+        // تحضير قائمة المتسابقين حسب طريقة الاختيار
+        if (this.selectionMode === 'manual') {
+          this.remainingStudents = Array.from(this.selectedStudents);
+        }
+        
         if (this.remainingStudents.length === 0) return;
 
         this.gameState = 'playing';
@@ -3287,10 +4018,17 @@ ${this.eliminatedStudents.length > 0 ?
 
       clearStudentSelection() {
         this.elements.studentsPreview.innerHTML = '';
+        this.elements.manualSelectionInterface.classList.remove('show');
         document.querySelectorAll('.count-btn').forEach(btn => {
           btn.classList.remove('selected');
         });
+        document.querySelectorAll('.mode-card').forEach(card => {
+          card.classList.remove('selected');
+        });
         this.remainingStudents = [];
+        this.selectedStudents.clear();
+        this.targetStudentCount = 0;
+        this.selectionMode = 'random';
         this.updateStartButton();
       }
 
