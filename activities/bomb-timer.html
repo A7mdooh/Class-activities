@@ -810,19 +810,287 @@
             }
         }
 
-        /* إخفاء أي عناصر تحدي قديمة */
-        .challenge-header,
-        .intelligence-challenge,
-        .advanced-notification,
-        .floating-notification,
-        .competitive-progress-bar,
-        [class*="challenge"],
-        [class*="intelligence"],
-        [class*="notification"],
-        [class*="progress-bar"] {
-            display: none !important;
-            visibility: hidden !important;
-            opacity: 0 !important;
+        /* ===== نظام الإشعارات التفاعلية المتقدم ===== */
+        .advanced-notification-system {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 9999;
+            max-width: 400px;
+            pointer-events: none;
+        }
+
+        .notification-item {
+            background: linear-gradient(135deg, 
+                rgba(26, 26, 26, 0.95) 0%, 
+                rgba(45, 45, 45, 0.95) 100%);
+            border: 2px solid var(--oman-red);
+            border-radius: var(--border-radius-large);
+            padding: 20px;
+            margin-bottom: 15px;
+            backdrop-filter: blur(20px);
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.5),
+                0 0 40px rgba(220, 20, 60, 0.3);
+            transform: translateX(450px);
+            opacity: 0;
+            transition: all var(--transition-slow);
+            pointer-events: auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notification-item.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .notification-item.success {
+            border-color: var(--oman-green);
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.5),
+                0 0 40px rgba(34, 139, 34, 0.3);
+        }
+
+        .notification-item.warning {
+            border-color: var(--warning-orange);
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.5),
+                0 0 40px rgba(255, 140, 0, 0.3);
+        }
+
+        .notification-item.info {
+            border-color: var(--explosive-yellow);
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.5),
+                0 0 40px rgba(255, 215, 0, 0.3);
+        }
+
+        .notification-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .notification-icon {
+            font-size: 1.5rem;
+            margin-left: 12px;
+        }
+
+        .notification-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        .notification-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 4px;
+            border-radius: 50%;
+            transition: var(--transition-fast);
+        }
+
+        .notification-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .notification-content {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .notification-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: var(--oman-red);
+            transition: width linear;
+            border-radius: 0 0 var(--border-radius-large) var(--border-radius-large);
+        }
+
+        .notification-item.success .notification-progress {
+            background: var(--oman-green);
+        }
+
+        .notification-item.warning .notification-progress {
+            background: var(--warning-orange);
+        }
+
+        .notification-item.info .notification-progress {
+            background: var(--explosive-yellow);
+        }
+
+        /* ===== تحدي الذكاء التفاعلي ===== */
+        .intelligence-challenge {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 8888;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: challengeAppear 0.5s ease-out;
+        }
+
+        .intelligence-challenge.active {
+            display: flex;
+        }
+
+        @keyframes challengeAppear {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .challenge-container {
+            background: linear-gradient(135deg, 
+                rgba(26, 26, 26, 0.98) 0%, 
+                rgba(45, 45, 45, 0.98) 100%);
+            border: 3px solid var(--explosive-yellow);
+            border-radius: var(--border-radius-xl);
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.8),
+                0 0 100px rgba(255, 215, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .challenge-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+            animation: rotate 8s linear infinite;
+            z-index: -1;
+        }
+
+        .challenge-header {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--explosive-yellow);
+            margin-bottom: 25px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+            animation: challengeGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes challengeGlow {
+            from {
+                text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+            }
+            to {
+                text-shadow: 0 0 30px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.4);
+            }
+        }
+
+        .challenge-question {
+            font-size: 1.3rem;
+            color: var(--text-primary);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .challenge-timer {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--oman-red);
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 20px rgba(220, 20, 60, 0.8);
+            animation: challengeTimerPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes challengeTimerPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .challenge-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        /* ===== شريط التقدم التنافسي ===== */
+        .competitive-progress-bar {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 7777;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, 
+                var(--oman-red) 0%, 
+                var(--warning-orange) 50%, 
+                var(--oman-green) 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.3), 
+                transparent);
+            animation: progressShine 2s ease-in-out infinite;
+        }
+
+        @keyframes progressShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-label {
+            position: fixed;
+            top: 82px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: var(--text-primary);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            z-index: 7778;
+            backdrop-filter: blur(10px);
         }
     </style>
 </head>
@@ -834,6 +1102,31 @@
     <button id="fullscreenBtn" class="control-btn" onclick="toggleFullscreen()" title="شاشة كاملة">⛶</button>
     <button id="soundBtn" class="control-btn" onclick="toggleSound()" title="الصوت">🔊</button>
     <button id="teacherGuideBtn" class="control-btn" onclick="showTeacherGuide()" title="دليل المعلم">👨‍🏫</button>
+
+    <!-- نظام الإشعارات التفاعلية المتقدم -->
+    <div id="advancedNotificationSystem" class="advanced-notification-system"></div>
+
+    <!-- شريط التقدم التنافسي -->
+    <div id="competitiveProgressBar" class="competitive-progress-bar" style="display: none;">
+        <div id="progressFill" class="progress-fill"></div>
+    </div>
+    <div id="progressLabel" class="progress-label" style="display: none;">التقدم: 0%</div>
+
+    <!-- تحدي الذكاء التفاعلي -->
+    <div id="intelligenceChallenge" class="intelligence-challenge">
+        <div class="challenge-container">
+            <div class="challenge-header">🧠 تحدي الذكاء المتفجر!</div>
+            <div id="challengeQuestion" class="challenge-question">
+                سؤال صعب يتطلب تفكيراً سريعاً...
+            </div>
+            <div id="challengeTimer" class="challenge-timer">10</div>
+            <div class="challenge-actions">
+                <button class="btn btn-success" onclick="challengeSuccess()">✅ إجابة صحيحة</button>
+                <button class="btn" onclick="challengeSkip()">⏭️ تخطي</button>
+                <button class="btn btn-warning" onclick="challengeFail()">❌ إجابة خاطئة</button>
+            </div>
+        </div>
+    </div>
 
     <!-- رأس الصفحة -->
     <header>
@@ -899,6 +1192,13 @@
             </div>
             
             <div class="control-section">
+                <h3 class="control-title">🧠 تحديات الذكاء</h3>
+                <button class="btn btn-success" onclick="startIntelligenceChallenge()">⚡ تحدي سريع</button>
+                <button class="btn btn-warning" onclick="startAdvancedChallenge()">🎯 تحدي متقدم</button>
+                <button class="btn btn-gold" onclick="defuseBomb()">💣 إبطال القنبلة</button>
+            </div>
+            
+            <div class="control-section">
                 <h3 class="control-title">👥 إدارة الطلاب</h3>
                 <button class="btn btn-success" onclick="selectRandomStudent()">🎲 اختيار عشوائي</button>
                 <button class="btn" onclick="showStudentList()">📋 قائمة الطلاب</button>
@@ -938,10 +1238,21 @@
                     <li>اضغط على "بدء اللعبة" أو "اختيار عشوائي"</li>
                     <li>سيتم اختيار طالب عشوائياً وعرض اسمه</li>
                     <li>اطرح السؤال على الطالب المختار</li>
-                    <li>راقب العداد التنازلي</li>
-                    <li>إذا أجاب الطالب بشكل صحيح، اضغط "إيقاف القنبلة" قبل انتهاء الوقت</li>
+                    <li>راقب العداد التنازلي وشريط التقدم</li>
+                    <li>استخدم "تحديات الذكاء" لإضافة المزيد من الإثارة</li>
+                    <li>إذا أجاب الطالب بشكل صحيح، اضغط "إبطال القنبلة" قبل انتهاء الوقت</li>
                     <li>إذا لم يجب أو أجاب خطأ، ستنفجر القنبلة عند انتهاء الوقت</li>
+                    <li>تابع التقدم والإحصائيات من خلال الإشعارات</li>
                 </ol>
+                
+                <h3>🚀 الميزات الجديدة:</h3>
+                <ul>
+                    <li><strong>🧠 تحديات الذكاء:</strong> أسئلة سريعة إضافية لزيادة النقاط</li>
+                    <li><strong>🏆 شريط التقدم:</strong> متابعة بصرية لإنجازات اللعبة</li>
+                    <li><strong>🔔 الإشعارات الذكية:</strong> تنبيهات تفاعلية ومعلومات مفيدة</li>
+                    <li><strong>📊 إحصائيات متقدمة:</strong> تحليل شامل للأداء والتقدم</li>
+                    <li><strong>⌨️ اختصارات سريعة:</strong> تحكم أسرع باستخدام لوحة المفاتيح</li>
+                </ul>
                 
                 <h3>⚙️ نصائح للمعلم:</h3>
                 <ul>
@@ -972,7 +1283,38 @@
                     <li><strong>🔍 التقييم التكويني:</strong> اختبر فهم الطلاب للمفاهيم الجديدة</li>
                     <li><strong>🎪 كسر الجليد:</strong> ابدأ الحصة بجو مرح ونشط</li>
                     <li><strong>⚡ تنشيط الذهن:</strong> استخدمها بين الفقرات لإعادة التركيز</li>
+                    <li><strong>🧠 تحديات الذكاء:</strong> أضف تحديات سريعة لزيادة التفاعل</li>
+                    <li><strong>🏆 التقدم التنافسي:</strong> راقب تقدم الطلاب بصرياً</li>
                 </ul>
+                
+                <h3>🚀 الميزات الجديدة:</h3>
+                <ul>
+                    <li><strong>🔔 نظام الإشعارات:</strong> تنبيهات تفاعلية ذكية</li>
+                    <li><strong>🧠 تحديات الذكاء:</strong> أسئلة سريعة ومتنوعة</li>
+                    <li><strong>🏆 شريط التقدم:</strong> متابعة بصرية للإنجازات</li>
+                    <li><strong>📊 إحصائيات متقدمة:</strong> تحليل شامل للأداء</li>
+                    <li><strong>⌨️ اختصارات المفاتيح:</strong> تحكم سريع ومرن</li>
+                </ul>
+                
+                <h3>⌨️ اختصارات لوحة المفاتيح:</h3>
+                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin: 10px 0;">
+                    <strong>الأساسية:</strong><br>
+                    • Space: بدء/إبطال القنبلة<br>
+                    • Enter: اختيار طالب جديد<br>
+                    • Escape: إعادة تعيين<br>
+                    • P: إيقاف مؤقت<br>
+                    • F: ملء الشاشة<br>
+                    • M: تبديل الصوت<br><br>
+                    
+                    <strong>المتقدمة:</strong><br>
+                    • Ctrl+C: تحدي ذكاء عشوائي<br>
+                    • Ctrl+Q: تحدي متقدم<br>
+                    • Ctrl+S: عرض الإحصائيات<br>
+                    • Ctrl+N: مسح الإشعارات<br>
+                    • Ctrl+1-5: تعيين مؤقت سريع<br>
+                    • H: عرض التعليمات<br>
+                    • G: دليل المعلم
+                </div>
                 
                 <h3>🏆 نظام النقاط والتحفيز:</h3>
                 <ul>
@@ -1004,8 +1346,321 @@
             totalGames: 0,
             successfulDefuses: 0,
             explosions: 0,
-            totalPoints: 0
+            totalPoints: 0,
+            challengesCompleted: 0,
+            perfectRounds: 0
         };
+
+        // ===== متغيرات النظم المتقدمة =====
+        let notificationSystem = null;
+        let progressSystem = null;
+        let challengeSystem = null;
+        let soundEnabled = true;
+
+        // ===== نظام الإشعارات التفاعلية المتقدم =====
+        class AdvancedNotificationSystem {
+            constructor() {
+                this.container = document.getElementById('advancedNotificationSystem');
+                this.notifications = [];
+                this.maxNotifications = 5;
+            }
+
+            show(options) {
+                const notification = this.createNotification(options);
+                this.notifications.push(notification);
+                this.container.appendChild(notification);
+
+                // إظهار الإشعار
+                setTimeout(() => {
+                    notification.classList.add('show');
+                }, 100);
+
+                // إخفاء الإشعار تلقائياً
+                if (options.autoHide !== false) {
+                    const duration = options.duration || 5000;
+                    this.startProgressBar(notification, duration);
+                    
+                    setTimeout(() => {
+                        this.hide(notification);
+                    }, duration);
+                }
+
+                // إزالة الإشعارات الزائدة
+                if (this.notifications.length > this.maxNotifications) {
+                    const oldest = this.notifications.shift();
+                    this.hide(oldest);
+                }
+
+                return notification;
+            }
+
+            createNotification(options) {
+                const notification = document.createElement('div');
+                notification.className = `notification-item ${options.type || 'info'}`;
+                
+                notification.innerHTML = `
+                    <div class="notification-header">
+                        <span class="notification-icon">${options.icon || '🔔'}</span>
+                        <span class="notification-title">${options.title || 'إشعار'}</span>
+                        <button class="notification-close" onclick="notificationSystem.hide(this.parentElement.parentElement)">×</button>
+                    </div>
+                    <div class="notification-content">${options.message || ''}</div>
+                    <div class="notification-progress" style="width: 100%"></div>
+                `;
+
+                return notification;
+            }
+
+            startProgressBar(notification, duration) {
+                const progressBar = notification.querySelector('.notification-progress');
+                if (progressBar) {
+                    progressBar.style.transition = `width ${duration}ms linear`;
+                    setTimeout(() => {
+                        progressBar.style.width = '0%';
+                    }, 100);
+                }
+            }
+
+            hide(notification) {
+                if (notification && notification.parentElement) {
+                    notification.style.transform = 'translateX(450px)';
+                    notification.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        if (notification.parentElement) {
+                            notification.remove();
+                        }
+                        const index = this.notifications.indexOf(notification);
+                        if (index > -1) {
+                            this.notifications.splice(index, 1);
+                        }
+                    }, 500);
+                }
+            }
+
+            clear() {
+                this.notifications.forEach(notification => this.hide(notification));
+                this.notifications = [];
+            }
+        }
+
+        // ===== نظام التقدم التنافسي =====
+        class CompetitiveProgressSystem {
+            constructor() {
+                this.progressBar = document.getElementById('competitiveProgressBar');
+                this.progressFill = document.getElementById('progressFill');
+                this.progressLabel = document.getElementById('progressLabel');
+                this.currentProgress = 0;
+                this.maxProgress = 100;
+            }
+
+            show() {
+                this.progressBar.style.display = 'block';
+                this.progressLabel.style.display = 'block';
+            }
+
+            hide() {
+                this.progressBar.style.display = 'none';
+                this.progressLabel.style.display = 'none';
+            }
+
+            updateProgress(progress, label = null) {
+                this.currentProgress = Math.min(Math.max(progress, 0), 100);
+                this.progressFill.style.width = `${this.currentProgress}%`;
+                
+                if (label) {
+                    this.progressLabel.textContent = label;
+                } else {
+                    this.progressLabel.textContent = `التقدم: ${Math.round(this.currentProgress)}%`;
+                }
+
+                // تأثيرات بصرية عند الوصول لنقاط معينة
+                if (this.currentProgress >= 100) {
+                    this.triggerCompletion();
+                } else if (this.currentProgress >= 75) {
+                    this.progressFill.style.filter = 'brightness(1.2) saturate(1.3)';
+                } else {
+                    this.progressFill.style.filter = 'none';
+                }
+            }
+
+            triggerCompletion() {
+                // تأثير انتهاء التقدم
+                this.progressFill.style.background = 'linear-gradient(90deg, #00ff00, #32cd32, #228b22)';
+                this.progressLabel.textContent = '🏆 مكتمل!';
+                
+                setTimeout(() => {
+                    this.reset();
+                }, 2000);
+            }
+
+            reset() {
+                this.currentProgress = 0;
+                this.progressFill.style.width = '0%';
+                this.progressFill.style.background = 'linear-gradient(90deg, var(--oman-red) 0%, var(--warning-orange) 50%, var(--oman-green) 100%)';
+                this.progressLabel.textContent = 'التقدم: 0%';
+                this.progressFill.style.filter = 'none';
+            }
+        }
+
+        // ===== نظام تحدي الذكاء التفاعلي =====
+        class IntelligenceChallengeSystem {
+            constructor() {
+                this.challengeModal = document.getElementById('intelligenceChallenge');
+                this.questionElement = document.getElementById('challengeQuestion');
+                this.timerElement = document.getElementById('challengeTimer');
+                this.challengeTimer = null;
+                this.challengeTimeLeft = 10;
+                this.currentChallenge = null;
+                
+                this.challenges = [
+                    {
+                        question: "ما هو جذر العدد 144؟",
+                        type: "math",
+                        difficulty: "easy"
+                    },
+                    {
+                        question: "أكمل النمط: 2, 4, 8, 16, ___",
+                        type: "pattern",
+                        difficulty: "medium"
+                    },
+                    {
+                        question: "كم عدد أيام السنة الكبيسة؟",
+                        type: "knowledge",
+                        difficulty: "easy"
+                    },
+                    {
+                        question: "ما هو العدد الذي يأتي بعد 97 في العد؟",
+                        type: "math",
+                        difficulty: "easy"
+                    },
+                    {
+                        question: "أيهما أكبر: 3/4 أم 0.8؟",
+                        type: "math",
+                        difficulty: "medium"
+                    }
+                ];
+            }
+
+            startChallenge(difficulty = 'random') {
+                if (this.challengeTimer) {
+                    clearInterval(this.challengeTimer);
+                }
+
+                // اختيار تحدي عشوائي
+                let filteredChallenges = this.challenges;
+                if (difficulty !== 'random') {
+                    filteredChallenges = this.challenges.filter(c => c.difficulty === difficulty);
+                }
+                
+                this.currentChallenge = filteredChallenges[Math.floor(Math.random() * filteredChallenges.length)];
+                this.questionElement.textContent = this.currentChallenge.question;
+                
+                // إعداد المؤقت
+                this.challengeTimeLeft = difficulty === 'advanced' ? 15 : 10;
+                this.timerElement.textContent = this.challengeTimeLeft;
+                
+                // إظهار التحدي
+                this.challengeModal.classList.add('active');
+                
+                // بدء العد التنازلي
+                this.challengeTimer = setInterval(() => {
+                    this.challengeTimeLeft--;
+                    this.timerElement.textContent = this.challengeTimeLeft;
+                    
+                    if (this.challengeTimeLeft <= 0) {
+                        this.challengeFail();
+                    }
+                }, 1000);
+
+                // إشعار بدء التحدي
+                if (notificationSystem) {
+                    notificationSystem.show({
+                        title: '🧠 تحدي الذكاء',
+                        message: 'تحدي جديد! أجب بسرعة قبل انتهاء الوقت',
+                        type: 'info',
+                        icon: '⚡',
+                        duration: 3000
+                    });
+                }
+            }
+
+            endChallenge() {
+                if (this.challengeTimer) {
+                    clearInterval(this.challengeTimer);
+                    this.challengeTimer = null;
+                }
+                this.challengeModal.classList.remove('active');
+            }
+
+            challengeSuccess() {
+                this.endChallenge();
+                gameStats.challengesCompleted++;
+                gameStats.totalPoints += 150;
+                
+                // تحديث التقدم
+                if (progressSystem) {
+                    const newProgress = (gameStats.challengesCompleted * 20) % 100;
+                    progressSystem.updateProgress(newProgress, `تحديات مكتملة: ${gameStats.challengesCompleted}`);
+                }
+
+                // إشعار نجاح
+                if (notificationSystem) {
+                    notificationSystem.show({
+                        title: '✅ إجابة صحيحة!',
+                        message: 'أحسنت! حصلت على 150 نقطة إضافية',
+                        type: 'success',
+                        icon: '🏆',
+                        duration: 4000
+                    });
+                }
+
+                // تأثيرات النجاح
+                this.triggerSuccessEffects();
+            }
+
+            challengeFail() {
+                this.endChallenge();
+                
+                // إشعار فشل
+                if (notificationSystem) {
+                    notificationSystem.show({
+                        title: '❌ إجابة خاطئة',
+                        message: 'لا بأس، المحاولة القادمة ستكون أفضل!',
+                        type: 'warning',
+                        icon: '💪',
+                        duration: 4000
+                    });
+                }
+            }
+
+            challengeSkip() {
+                this.endChallenge();
+                
+                // إشعار تخطي
+                if (notificationSystem) {
+                    notificationSystem.show({
+                        title: '⏭️ تم التخطي',
+                        message: 'يمكنك المحاولة مرة أخرى لاحقاً',
+                        type: 'info',
+                        icon: '🔄',
+                        duration: 3000
+                    });
+                }
+            }
+
+            triggerSuccessEffects() {
+                // تأثيرات بصرية للنجاح
+                if (typeof confetti !== 'undefined') {
+                    confetti({
+                        particleCount: 100,
+                        spread: 70,
+                        origin: { y: 0.6 },
+                        colors: ['#ffd700', '#ff6b35', '#32cd32']
+                    });
+                }
+            }
+        }
 
         // ===== وظائف التحكم الأساسية =====
         function startGame() {
@@ -1014,6 +1669,23 @@
                 updateGameStatus('🎯 اللعبة نشطة - انتظار الإجابة...', 'state-active');
                 gameActive = true;
                 gameStats.totalGames++;
+                
+                // إظهار شريط التقدم
+                if (progressSystem) {
+                    progressSystem.show();
+                    progressSystem.updateProgress(0, 'بدء اللعبة...');
+                }
+
+                // إشعار بدء اللعبة
+                if (notificationSystem) {
+                    notificationSystem.show({
+                        title: '🎮 بدء اللعبة',
+                        message: `تم اختيار ${currentStudent} - حظاً موفقاً!`,
+                        type: 'info',
+                        icon: '🚀',
+                        duration: 4000
+                    });
+                }
             }
         }
 
@@ -1022,6 +1694,17 @@
                 clearInterval(currentTimer);
                 currentTimer = null;
                 updateGameStatus('⏸️ اللعبة متوقفة مؤقتاً', 'state-waiting');
+                
+                // إشعار الإيقاف المؤقت
+                if (notificationSystem) {
+                    notificationSystem.show({
+                        title: '⏸️ إيقاف مؤقت',
+                        message: 'تم إيقاف اللعبة مؤقتاً',
+                        type: 'warning',
+                        icon: '⏱️',
+                        duration: 3000
+                    });
+                }
             }
         }
 
@@ -1035,11 +1718,59 @@
             updateTimer();
             updateGameStatus('⏳ في انتظار بدء اللعبة...', 'state-waiting');
             document.getElementById('currentPlayerName').textContent = 'لم يتم الاختيار';
+            
+            // إخفاء شريط التقدم
+            if (progressSystem) {
+                progressSystem.hide();
+                progressSystem.reset();
+            }
+
+            // إشعار إعادة التعيين
+            if (notificationSystem) {
+                notificationSystem.show({
+                    title: '🔄 إعادة تعيين',
+                    message: 'تم إعادة تعيين اللعبة بنجاح',
+                    type: 'info',
+                    icon: '✨',
+                    duration: 3000
+                });
+            }
         }
 
         function stopGame() {
             resetGame();
-            showStatistics();
+            showAdvancedStatistics();
+        }
+
+        // ===== وظائف النظم الجديدة =====
+        function startIntelligenceChallenge() {
+            if (challengeSystem) {
+                challengeSystem.startChallenge('easy');
+            }
+        }
+
+        function startAdvancedChallenge() {
+            if (challengeSystem) {
+                challengeSystem.startChallenge('advanced');
+            }
+        }
+
+        function challengeSuccess() {
+            if (challengeSystem) {
+                challengeSystem.challengeSuccess();
+            }
+        }
+
+        function challengeFail() {
+            if (challengeSystem) {
+                challengeSystem.challengeFail();
+            }
+        }
+
+        function challengeSkip() {
+            if (challengeSystem) {
+                challengeSystem.challengeSkip();
+            }
         }
 
         // ===== وظائف المؤقت =====
@@ -1079,6 +1810,22 @@
             // تأثيرات بصرية
             triggerExplosion();
             
+            // إشعار الانفجار
+            if (notificationSystem) {
+                notificationSystem.show({
+                    title: '💥 انفجار!',
+                    message: 'انفجرت القنبلة! لا تقلق، يمكنك المحاولة مرة أخرى',
+                    type: 'warning',
+                    icon: '💣',
+                    duration: 5000
+                });
+            }
+
+            // تحديث شريط التقدم
+            if (progressSystem) {
+                progressSystem.updateProgress(0, 'انفجار - إعادة المحاولة');
+            }
+            
             setTimeout(() => {
                 resetGame();
             }, 3000);
@@ -1100,9 +1847,31 @@
             
             // تأثيرات النجاح
             triggerSuccess();
-            
+
+            // إشعار النجاح
+            if (notificationSystem) {
+                notificationSystem.show({
+                    title: '✅ تم إبطال القنبلة!',
+                    message: `أحسنت! حصلت على ${pointsEarned} نقطة`,
+                    type: 'success',
+                    icon: '🏆',
+                    duration: 5000
+                });
+            }
+
+            // تحديث شريط التقدم
+            if (progressSystem) {
+                const newProgress = (gameStats.successfulDefuses * 25) % 100;
+                progressSystem.updateProgress(newProgress, `قنابل مبطلة: ${gameStats.successfulDefuses}`);
+            }
+
+            // فرصة لتحدي ذكاء إضافي
             setTimeout(() => {
-                resetGame();
+                if (Math.random() > 0.5 && challengeSystem) {
+                    challengeSystem.startChallenge('easy');
+                } else {
+                    resetGame();
+                }
             }, 3000);
         }
 
@@ -1146,17 +1915,161 @@
             document.getElementById(modalId).style.display = 'none';
         }
 
-        function showStatistics() {
+        function showAdvancedStatistics() {
             const successRate = gameStats.totalGames > 0 ? 
                 ((gameStats.successfulDefuses / gameStats.totalGames) * 100).toFixed(1) : 0;
+            const challengeRate = gameStats.totalGames > 0 ? 
+                ((gameStats.challengesCompleted / gameStats.totalGames) * 100).toFixed(1) : 0;
             
-            alert(`📊 إحصائيات اللعبة:
+            const statsMessage = `📊 إحصائيات اللعبة المتقدمة:
             
 🎮 إجمالي الألعاب: ${gameStats.totalGames}
 ✅ القنابل المبطلة: ${gameStats.successfulDefuses}
 💥 الانفجارات: ${gameStats.explosions}
-🏆 إجمالي النقاط: ${gameStats.totalPoints}
-📈 معدل النجاح: ${successRate}%`);
+🧠 تحديات الذكاء: ${gameStats.challengesCompleted}
+🏆 الجولات المثالية: ${gameStats.perfectRounds}
+💯 إجمالي النقاط: ${gameStats.totalPoints}
+📈 معدل النجاح: ${successRate}%
+🎯 معدل التحديات: ${challengeRate}%
+
+🏅 التقييم: ${getPerformanceGrade(successRate)}`;
+
+            // إظهار في إشعار متقدم
+            if (notificationSystem) {
+                notificationSystem.show({
+                    title: '📊 إحصائيات متقدمة',
+                    message: statsMessage,
+                    type: 'info',
+                    icon: '📈',
+                    duration: 10000,
+                    autoHide: false
+                });
+            } else {
+                alert(statsMessage);
+            }
+        }
+
+        function getPerformanceGrade(successRate) {
+            if (successRate >= 90) return '🌟 ممتاز';
+            if (successRate >= 75) return '🏆 جيد جداً';
+            if (successRate >= 60) return '👍 جيد';
+            if (successRate >= 40) return '📈 مقبول';
+            return '💪 يحتاج تحسين';
+        }
+
+        // ===== اختصارات لوحة المفاتيح المتقدمة =====
+        document.addEventListener('keydown', function(event) {
+            // منع التداخل مع حقول الإدخال
+            if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
+                return;
+            }
+
+            switch(event.code) {
+                case 'Space':
+                    event.preventDefault();
+                    if (gameActive) {
+                        defuseBomb();
+                    } else {
+                        startGame();
+                    }
+                    break;
+                    
+                case 'Enter':
+                    event.preventDefault();
+                    selectRandomStudent();
+                    break;
+                    
+                case 'Escape':
+                    event.preventDefault();
+                    resetGame();
+                    break;
+                    
+                case 'KeyP':
+                    event.preventDefault();
+                    pauseGame();
+                    break;
+                    
+                case 'KeyC':
+                    if (event.ctrlKey) {
+                        event.preventDefault();
+                        if (challengeSystem) {
+                            challengeSystem.startChallenge('random');
+                        }
+                    }
+                    break;
+                    
+                case 'KeyS':
+                    if (event.ctrlKey) {
+                        event.preventDefault();
+                        showAdvancedStatistics();
+                    }
+                    break;
+                    
+                case 'KeyN':
+                    if (event.ctrlKey) {
+                        event.preventDefault();
+                        if (notificationSystem) {
+                            notificationSystem.clear();
+                        }
+                    }
+                    break;
+                    
+                case 'KeyQ':
+                    if (event.ctrlKey) {
+                        event.preventDefault();
+                        if (challengeSystem) {
+                            challengeSystem.startChallenge('advanced');
+                        }
+                    }
+                    break;
+                    
+                case 'KeyF':
+                    event.preventDefault();
+                    toggleFullscreen();
+                    break;
+                    
+                case 'KeyM':
+                    event.preventDefault();
+                    toggleSound();
+                    break;
+                    
+                case 'KeyH':
+                    event.preventDefault();
+                    showInstructions();
+                    break;
+                    
+                case 'KeyG':
+                    event.preventDefault();
+                    showTeacherGuide();
+                    break;
+                    
+                case 'Digit1':
+                case 'Digit2':
+                case 'Digit3':
+                case 'Digit4':
+                case 'Digit5':
+                    if (event.ctrlKey) {
+                        event.preventDefault();
+                        const time = parseInt(event.code.replace('Digit', '')) * 10;
+                        setCustomTimer(time);
+                    }
+                    break;
+            }
+        });
+
+        function setCustomTimer(seconds) {
+            timeLeft = seconds;
+            updateTimer();
+            
+            if (notificationSystem) {
+                notificationSystem.show({
+                    title: '⏱️ تعديل المؤقت',
+                    message: `تم تعيين المؤقت إلى ${seconds} ثانية`,
+                    type: 'info',
+                    icon: '🕐',
+                    duration: 3000
+                });
+            }
         }
 
         // ===== التأثيرات البصرية =====
@@ -1257,23 +2170,8 @@
             alert('📋 سيتم إضافة التقارير المفصلة قريباً');
         }
 
-        // ===== اختصارات لوحة المفاتيح =====
-        document.addEventListener('keydown', function(event) {
-            if (event.code === 'Space') {
-                event.preventDefault();
-                if (gameActive) {
-                    defuseBomb();
-                } else {
-                    startGame();
-                }
-            } else if (event.code === 'Enter') {
-                event.preventDefault();
-                selectRandomStudent();
-            } else if (event.code === 'Escape') {
-                event.preventDefault();
-                resetGame();
-            }
-        });
+        // ===== اختصارات لوحة المفاتيح المتقدمة =====
+        // (تم نقلها إلى الأعلى مع الميزات الجديدة)
 
         // ===== إغلاق النوافذ المنبثقة بالنقر خارجها =====
         window.onclick = function(event) {
@@ -1289,30 +2187,60 @@
         document.addEventListener('DOMContentLoaded', function() {
             updateTimer();
             
+            // تهيئة النظم المتقدمة
+            notificationSystem = new AdvancedNotificationSystem();
+            progressSystem = new CompetitiveProgressSystem();
+            challengeSystem = new IntelligenceChallengeSystem();
+            
+            // إشعار ترحيب
+            setTimeout(() => {
+                if (notificationSystem) {
+                    notificationSystem.show({
+                        title: '🚀 مرحباً بك!',
+                        message: 'لعبة القنبلة المؤقتة جاهزة مع الميزات الجديدة!',
+                        type: 'success',
+                        icon: '💣',
+                        duration: 5000
+                    });
+                }
+            }, 1000);
+            
+            // عرض اختصارات لوحة المفاتيح
+            setTimeout(() => {
+                if (notificationSystem) {
+                    notificationSystem.show({
+                        title: '⌨️ نصيحة سريعة',
+                        message: 'استخدم مفتاح المسافة لبدء/إيقاف اللعبة، أو اضغط H للمساعدة',
+                        type: 'info',
+                        icon: '💡',
+                        duration: 6000
+                    });
+                }
+            }, 3000);
+            
             // إزالة أي عناصر قديمة قد تحتوي على نص التحدي
             const challengeElements = document.querySelectorAll(
-                '.challenge-header, .intelligence-challenge, .advanced-notification, ' +
-                '.floating-notification, .competitive-progress-bar, [class*="challenge"], ' +
-                '[class*="intelligence"], [class*="notification"], [class*="progress-bar"]'
+                '.old-challenge-header, .old-intelligence-challenge, .old-advanced-notification, ' +
+                '.old-floating-notification, .old-competitive-progress-bar'
             );
             challengeElements.forEach(element => {
                 element.remove();
             });
             
-            // إزالة أي نص يحتوي على "تحدي الذكاء"
-            const allElements = document.querySelectorAll('*');
-            allElements.forEach(element => {
-                if (element.textContent && element.textContent.includes('تحدي الذكاء')) {
-                    element.style.display = 'none';
-                    console.warn('تم إخفاء عنصر يحتوي على نص قديم:', element);
-                }
-            });
-            
-            console.log('💣 لعبة القنبلة المؤقتة جاهزة!');
-            console.log('⌨️ اختصارات المفاتيح:');
+            console.log('💣 لعبة القنبلة المؤقتة المتطورة جاهزة!');
+            console.log('🚀 الميزات الجديدة:');
+            console.log('   🔔 نظام الإشعارات التفاعلية');
+            console.log('   🧠 تحديات الذكاء المتفجرة');
+            console.log('   🏆 شريط التقدم التنافسي');
+            console.log('   � إحصائيات متقدمة');
+            console.log('⌨️ اختصارات المفاتيح الجديدة:');
             console.log('   Space: بدء/إبطال القنبلة');
             console.log('   Enter: اختيار طالب جديد');
             console.log('   Escape: إعادة تعيين');
+            console.log('   Ctrl+C: تحدي ذكاء عشوائي');
+            console.log('   Ctrl+Q: تحدي متقدم');
+            console.log('   Ctrl+S: إحصائيات متقدمة');
+            console.log('   H: التعليمات | G: دليل المعلم');
         });
     </script>
 
