@@ -259,6 +259,35 @@
         0 0 30px var(--danger-color);
     }
 
+    /* ايقونة الإعدادات */
+    .settings-icon {
+      background: linear-gradient(135deg, 
+        rgba(138, 43, 226, 0.3) 0%, 
+        rgba(75, 0, 130, 0.3) 100%);
+      border-color: rgba(138, 43, 226, 0.5);
+    }
+
+    .settings-icon:hover {
+      border-color: rgba(138, 43, 226, 1);
+      color: rgba(138, 43, 226, 1);
+      box-shadow: 
+        0 15px 40px rgba(138, 43, 226, 0.5),
+        0 0 30px rgba(138, 43, 226, 1);
+    }
+
+    .settings-icon i {
+      animation: settingsRotate 3s linear infinite;
+    }
+
+    .settings-icon:hover i {
+      animation: settingsRotate 0.5s linear infinite;
+    }
+
+    @keyframes settingsRotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
     /* ايقونة ملئ الشاشة */
     .fullscreen-icon {
       background: linear-gradient(135deg, 
@@ -335,6 +364,332 @@
     /* إضافة margin-top للمحتوى لتجنب التداخل مع الشريط العلوي */
     .container {
       margin-top: 70px;
+    }
+
+    /* ========================================
+       نافذة إعدادات الصوت المتقدمة
+    ======================================== */
+    .sound-settings-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10002;
+      animation: modalFadeIn 0.3s ease;
+    }
+
+    .sound-settings-modal.show {
+      display: flex;
+    }
+
+    @keyframes modalFadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    .sound-settings-panel {
+      background: linear-gradient(135deg, 
+        rgba(30, 30, 60, 0.95) 0%, 
+        rgba(20, 20, 40, 0.95) 100%);
+      backdrop-filter: blur(25px);
+      border: 2px solid rgba(138, 43, 226, 0.5);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-xl);
+      width: 90%;
+      max-width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 
+        0 30px 80px rgba(0, 0, 0, 0.7),
+        0 0 50px rgba(138, 43, 226, 0.3);
+      animation: panelSlideIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      position: relative;
+    }
+
+    @keyframes panelSlideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .settings-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--spacing-lg);
+      padding-bottom: var(--spacing-md);
+      border-bottom: 2px solid rgba(138, 43, 226, 0.3);
+    }
+
+    .settings-title {
+      font-family: 'Orbitron', 'Cairo', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(45deg, #8a2be2, #ff073a);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+
+    .settings-close {
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 50%;
+      background: linear-gradient(135deg, 
+        rgba(252, 70, 107, 0.3) 0%, 
+        rgba(63, 94, 251, 0.3) 100%);
+      color: var(--danger-color);
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .settings-close:hover {
+      background: var(--danger-gradient);
+      color: white;
+      transform: scale(1.1);
+    }
+
+    /* مجموعات الإعدادات */
+    .settings-group {
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .settings-group-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-light);
+      margin-bottom: var(--spacing-md);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+
+    .settings-group-title i {
+      color: var(--neon-cyan);
+    }
+
+    /* شريط التمرير للصوت */
+    .volume-control {
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .volume-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-sm);
+      font-weight: 600;
+      color: var(--text-light);
+    }
+
+    .volume-value {
+      background: var(--success-gradient);
+      color: white;
+      padding: 5px 12px;
+      border-radius: 15px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      min-width: 50px;
+      text-align: center;
+    }
+
+    .volume-slider {
+      width: 100%;
+      height: 8px;
+      border-radius: 5px;
+      background: linear-gradient(90deg, 
+        rgba(255,255,255,0.1) 0%, 
+        rgba(255,255,255,0.3) 100%);
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      position: relative;
+    }
+
+    .volume-slider::-webkit-slider-thumb {
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--success-gradient);
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(17, 153, 142, 0.6);
+      transition: all var(--transition-normal);
+    }
+
+    .volume-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+      box-shadow: 0 0 25px rgba(17, 153, 142, 0.8);
+    }
+
+    .volume-slider::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--success-gradient);
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 0 15px rgba(17, 153, 142, 0.6);
+    }
+
+    /* مفاتيح تبديل الأصوات */
+    .sound-toggles {
+      display: grid;
+      gap: var(--spacing-md);
+    }
+
+    .sound-toggle-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--spacing-md);
+      background: linear-gradient(135deg, 
+        rgba(255,255,255,0.1) 0%, 
+        rgba(255,255,255,0.05) 100%);
+      border-radius: var(--border-radius-small);
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: all var(--transition-normal);
+    }
+
+    .sound-toggle-item:hover {
+      background: linear-gradient(135deg, 
+        rgba(0, 245, 255, 0.1) 0%, 
+        rgba(0, 245, 255, 0.05) 100%);
+      border-color: rgba(0, 245, 255, 0.3);
+    }
+
+    .sound-toggle-info {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+
+    .sound-toggle-icon {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      background: var(--primary-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1rem;
+    }
+
+    .sound-toggle-details h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-light);
+      margin-bottom: 2px;
+    }
+
+    .sound-toggle-details p {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* مفتاح التبديل */
+    .toggle-switch {
+      position: relative;
+      width: 60px;
+      height: 30px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 15px;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .toggle-switch.active {
+      background: var(--success-gradient);
+      border-color: var(--success-color);
+      box-shadow: 0 0 20px rgba(17, 153, 142, 0.4);
+    }
+
+    .toggle-switch::before {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 22px;
+      height: 22px;
+      background: white;
+      border-radius: 50%;
+      transition: all var(--elastic-timing);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .toggle-switch.active::before {
+      transform: translateX(30px);
+      background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+    }
+
+    /* أزرار الإجراءات */
+    .settings-actions {
+      display: flex;
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-xl);
+      padding-top: var(--spacing-md);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .settings-btn {
+      flex: 1;
+      padding: 15px 20px;
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all var(--elastic-timing);
+      font-family: 'Cairo', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .settings-btn.primary {
+      background: var(--success-gradient);
+      color: white;
+      box-shadow: 0 0 20px rgba(17, 153, 142, 0.4);
+    }
+
+    .settings-btn.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 30px rgba(17, 153, 142, 0.6);
+    }
+
+    .settings-btn.secondary {
+      background: linear-gradient(135deg, 
+        rgba(255,255,255,0.1) 0%, 
+        rgba(255,255,255,0.05) 100%);
+      color: var(--text-light);
+      border: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .settings-btn.secondary:hover {
+      background: linear-gradient(135deg, 
+        rgba(255,255,255,0.2) 0%, 
+        rgba(255,255,255,0.1) 100%);
+      border-color: rgba(255,255,255,0.4);
     }
 
     /* خلفية الفضاء المتحركة */
@@ -1469,6 +1824,10 @@
         <i class="fas fa-volume-up"></i>
       </div>
       
+      <div class="toolbar-icon settings-icon" id="settingsIcon" data-tooltip="إعدادات الصوت">
+        <i class="fas fa-cog"></i>
+      </div>
+      
       <div class="toolbar-icon fullscreen-icon" id="fullscreenIcon" data-tooltip="ملئ الشاشة">
         <i class="fas fa-expand"></i>
       </div>
@@ -1591,6 +1950,110 @@
     </div>
   </div>
 
+  <!-- نافذة إعدادات الصوت المتقدمة -->
+  <div class="sound-settings-modal" id="soundSettingsModal">
+    <div class="sound-settings-panel">
+      <div class="settings-header">
+        <div class="settings-title">
+          <i class="fas fa-sliders-h"></i>
+          إعدادات الصوت
+        </div>
+        <button class="settings-close" id="settingsCloseBtn">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <!-- التحكم في مستوى الصوت العام -->
+      <div class="settings-group">
+        <div class="settings-group-title">
+          <i class="fas fa-volume-up"></i>
+          مستوى الصوت العام
+        </div>
+        <div class="volume-control">
+          <div class="volume-label">
+            <span>مستوى الصوت:</span>
+            <span class="volume-value" id="volumeValue">70%</span>
+          </div>
+          <input type="range" class="volume-slider" id="masterVolumeSlider" 
+                 min="0" max="100" value="70">
+        </div>
+      </div>
+
+      <!-- تفعيل/إلغاء الأصوات المختلفة -->
+      <div class="settings-group">
+        <div class="settings-group-title">
+          <i class="fas fa-music"></i>
+          أنواع الأصوات
+        </div>
+        <div class="sound-toggles">
+          <div class="sound-toggle-item">
+            <div class="sound-toggle-info">
+              <div class="sound-toggle-icon">
+                <i class="fas fa-mouse-pointer"></i>
+              </div>
+              <div class="sound-toggle-details">
+                <h4>أصوات الواجهة</h4>
+                <p>النقر والتمرير والأزرار</p>
+              </div>
+            </div>
+            <div class="toggle-switch active" data-sound="ui"></div>
+          </div>
+
+          <div class="sound-toggle-item">
+            <div class="sound-toggle-info">
+              <div class="sound-toggle-icon">
+                <i class="fas fa-gamepad"></i>
+              </div>
+              <div class="sound-toggle-details">
+                <h4>أصوات اللعبة</h4>
+                <p>الإجابات الصحيحة والخاطئة</p>
+              </div>
+            </div>
+            <div class="toggle-switch active" data-sound="game"></div>
+          </div>
+
+          <div class="sound-toggle-item">
+            <div class="sound-toggle-info">
+              <div class="sound-toggle-icon">
+                <i class="fas fa-trophy"></i>
+              </div>
+              <div class="sound-toggle-details">
+                <h4>أصوات الانتصار</h4>
+                <p>الفوز والإنجازات</p>
+              </div>
+            </div>
+            <div class="toggle-switch active" data-sound="victory"></div>
+          </div>
+
+          <div class="sound-toggle-item">
+            <div class="sound-toggle-info">
+              <div class="sound-toggle-icon">
+                <i class="fas fa-bell"></i>
+              </div>
+              <div class="sound-toggle-details">
+                <h4>أصوات التنبيهات</h4>
+                <p>الإشعارات والتحذيرات</p>
+              </div>
+            </div>
+            <div class="toggle-switch active" data-sound="notifications"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- أزرار الإجراءات -->
+      <div class="settings-actions">
+        <button class="settings-btn secondary" id="resetSettingsBtn">
+          <i class="fas fa-undo"></i>
+          إعادة تعيين
+        </button>
+        <button class="settings-btn primary" id="saveSettingsBtn">
+          <i class="fas fa-save"></i>
+          حفظ الإعدادات
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
     /* ========================================
        نظام الصوت الذكي المحدث
@@ -1600,32 +2063,49 @@
         this.sounds = {};
         this.volume = 0.7;
         this.enabled = true;
+        this.soundCategories = {
+          ui: { enabled: true, volume: 1.0 },
+          game: { enabled: true, volume: 1.0 },
+          victory: { enabled: true, volume: 1.0 },
+          notifications: { enabled: true, volume: 1.0 }
+        };
+        this.loadSettings();
         this.init();
       }
 
       async init() {
         const soundFiles = {
-          'ui-click': 'cosmic-click.mp3',
-          'ui-hover': 'button-hover.mp3',
-          'step-correct': 'bonus-collect.mp3',
-          'step-wrong': 'cosmic-explosion.mp3',
-          'game-start': 'adventure-theme.mp3',
-          'tower-complete': 'battle-victory.mp3',
-          'step-hover': 'crystal-bonus.mp3',
-          'player-change': 'character-intro.mp3',
-          'toolbar-click': 'ai-beep.mp3',
-          'sound-toggle': 'ai-notification.mp3',
-          'home-click': 'panel-slide.mp3',
-          'fullscreen-toggle': 'cosmic-portal.mp3'
+          // UI Sounds
+          'ui-click': { file: 'cosmic-click.mp3', category: 'ui' },
+          'ui-hover': { file: 'button-hover.mp3', category: 'ui' },
+          'toolbar-click': { file: 'ai-beep.mp3', category: 'ui' },
+          'home-click': { file: 'panel-slide.mp3', category: 'ui' },
+          
+          // Game Sounds
+          'step-correct': { file: 'bonus-collect.mp3', category: 'game' },
+          'step-wrong': { file: 'cosmic-explosion.mp3', category: 'game' },
+          'step-hover': { file: 'crystal-bonus.mp3', category: 'game' },
+          'player-change': { file: 'character-intro.mp3', category: 'game' },
+          'game-start': { file: 'adventure-theme.mp3', category: 'game' },
+          
+          // Victory Sounds
+          'tower-complete': { file: 'battle-victory.mp3', category: 'victory' },
+          'achievement': { file: 'perfect-score.mp3', category: 'victory' },
+          
+          // Notification Sounds
+          'sound-toggle': { file: 'ai-notification.mp3', category: 'notifications' },
+          'fullscreen-toggle': { file: 'cosmic-portal.mp3', category: 'notifications' },
+          'settings-open': { file: 'book-open.mp3', category: 'notifications' },
+          'settings-close': { file: 'book-close.mp3', category: 'notifications' }
         };
 
-        for (const [key, filename] of Object.entries(soundFiles)) {
+        for (const [key, soundData] of Object.entries(soundFiles)) {
           try {
-            const audio = new Audio(`../assets/media/sounds/kingdom-sounds/${filename}`);
+            const audio = new Audio(`../assets/media/sounds/kingdom-sounds/${soundData.file}`);
             audio.volume = this.volume;
-            this.sounds[key] = audio;
+            this.sounds[key] = { audio, category: soundData.category };
           } catch (error) {
-            console.log(`Failed to load sound: ${filename}`);
+            console.log(`Failed to load sound: ${soundData.file}`);
           }
         }
       }
@@ -1633,10 +2113,21 @@
       play(soundKey, options = {}) {
         if (!this.enabled || !this.sounds[soundKey]) return;
         
+        const soundData = this.sounds[soundKey];
+        const category = soundData.category;
+        
+        // تحقق من تفعيل فئة الصوت
+        if (!this.soundCategories[category]?.enabled) return;
+        
         try {
-          const sound = this.sounds[soundKey];
+          const sound = soundData.audio;
           sound.currentTime = 0;
-          sound.volume = (options.volume || 1) * this.volume;
+          
+          // حساب مستوى الصوت النهائي
+          const categoryVolume = this.soundCategories[category]?.volume || 1.0;
+          const finalVolume = (options.volume || 1) * this.volume * categoryVolume;
+          
+          sound.volume = Math.max(0, Math.min(1, finalVolume));
           sound.play().catch(() => {});
         } catch (error) {
           console.log('Sound play error:', error);
@@ -1645,21 +2136,308 @@
 
       setVolume(volume) {
         this.volume = Math.max(0, Math.min(1, volume));
-        Object.values(this.sounds).forEach(sound => {
-          sound.volume = this.volume;
+        Object.values(this.sounds).forEach(soundData => {
+          soundData.audio.volume = this.volume;
         });
+        this.saveSettings();
+      }
+
+      setCategoryEnabled(category, enabled) {
+        if (this.soundCategories[category]) {
+          this.soundCategories[category].enabled = enabled;
+          this.saveSettings();
+        }
+      }
+
+      setCategoryVolume(category, volume) {
+        if (this.soundCategories[category]) {
+          this.soundCategories[category].volume = Math.max(0, Math.min(1, volume));
+          this.saveSettings();
+        }
+      }
+
+      isCategoryEnabled(category) {
+        return this.soundCategories[category]?.enabled || false;
       }
 
       toggle() {
         this.enabled = !this.enabled;
+        this.saveSettings();
         return this.enabled;
       }
 
       isEnabled() {
         return this.enabled;
       }
+
+      getVolume() {
+        return this.volume;
+      }
+
+      resetSettings() {
+        this.volume = 0.7;
+        this.enabled = true;
+        this.soundCategories = {
+          ui: { enabled: true, volume: 1.0 },
+          game: { enabled: true, volume: 1.0 },
+          victory: { enabled: true, volume: 1.0 },
+          notifications: { enabled: true, volume: 1.0 }
+        };
+        this.saveSettings();
+      }
+
+      saveSettings() {
+        const settings = {
+          volume: this.volume,
+          enabled: this.enabled,
+          categories: this.soundCategories
+        };
+        localStorage.setItem('towerGame_audioSettings', JSON.stringify(settings));
+      }
+
+      loadSettings() {
+        try {
+          const saved = localStorage.getItem('towerGame_audioSettings');
+          if (saved) {
+            const settings = JSON.parse(saved);
+            this.volume = settings.volume || 0.7;
+            this.enabled = settings.enabled !== undefined ? settings.enabled : true;
+            this.soundCategories = { ...this.soundCategories, ...settings.categories };
+          }
+        } catch (error) {
+          console.log('Error loading audio settings:', error);
+        }
+      }
     }
 
+    /* ========================================
+       إدارة نافذة إعدادات الصوت
+    ======================================== */
+    class SoundSettingsManager {
+      constructor(audioManager) {
+        this.audio = audioManager;
+        this.initElements();
+        this.setupEvents();
+        this.loadSettings();
+      }
+
+      initElements() {
+        this.elements = {
+          modal: document.getElementById('soundSettingsModal'),
+          closeBtn: document.getElementById('settingsCloseBtn'),
+          volumeSlider: document.getElementById('masterVolumeSlider'),
+          volumeValue: document.getElementById('volumeValue'),
+          saveBtn: document.getElementById('saveSettingsBtn'),
+          resetBtn: document.getElementById('resetSettingsBtn'),
+          toggleSwitches: document.querySelectorAll('.toggle-switch')
+        };
+      }
+
+      setupEvents() {
+        // إغلاق النافذة
+        this.elements.closeBtn?.addEventListener('click', () => {
+          this.closeModal();
+        });
+
+        // إغلاق عند النقر خارج النافذة
+        this.elements.modal?.addEventListener('click', (e) => {
+          if (e.target === this.elements.modal) {
+            this.closeModal();
+          }
+        });
+
+        // شريط تمرير الصوت
+        this.elements.volumeSlider?.addEventListener('input', (e) => {
+          const volume = parseInt(e.target.value) / 100;
+          this.updateVolumeDisplay(parseInt(e.target.value));
+          this.audio.setVolume(volume);
+          
+          // تشغيل صوت تجريبي
+          this.audio.play('ui-click', { volume: 0.5 });
+        });
+
+        // مفاتيح التبديل
+        this.elements.toggleSwitches?.forEach(toggle => {
+          toggle.addEventListener('click', () => {
+            this.toggleSoundCategory(toggle);
+          });
+        });
+
+        // حفظ الإعدادات
+        this.elements.saveBtn?.addEventListener('click', () => {
+          this.saveSettings();
+        });
+
+        // إعادة تعيين الإعدادات
+        this.elements.resetBtn?.addEventListener('click', () => {
+          this.resetSettings();
+        });
+
+        // ESC للإغلاق
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && this.isOpen()) {
+            this.closeModal();
+          }
+        });
+      }
+
+      openModal() {
+        this.elements.modal?.classList.add('show');
+        this.loadSettings();
+        this.audio.play('settings-open');
+        
+        // تركيز على النافذة
+        setTimeout(() => {
+          this.elements.volumeSlider?.focus();
+        }, 300);
+      }
+
+      closeModal() {
+        this.elements.modal?.classList.remove('show');
+        this.audio.play('settings-close');
+      }
+
+      isOpen() {
+        return this.elements.modal?.classList.contains('show');
+      }
+
+      loadSettings() {
+        // تحديث شريط الصوت
+        const volume = Math.round(this.audio.getVolume() * 100);
+        if (this.elements.volumeSlider) {
+          this.elements.volumeSlider.value = volume;
+        }
+        this.updateVolumeDisplay(volume);
+
+        // تحديث مفاتيح التبديل
+        this.elements.toggleSwitches?.forEach(toggle => {
+          const category = toggle.dataset.sound;
+          const isEnabled = this.audio.isCategoryEnabled(category);
+          toggle.classList.toggle('active', isEnabled);
+        });
+      }
+
+      updateVolumeDisplay(volume) {
+        if (this.elements.volumeValue) {
+          this.elements.volumeValue.textContent = `${volume}%`;
+          
+          // تغيير لون المؤشر حسب المستوى
+          if (volume === 0) {
+            this.elements.volumeValue.style.background = 'var(--danger-gradient)';
+          } else if (volume < 30) {
+            this.elements.volumeValue.style.background = 'var(--warning-gradient)';
+          } else {
+            this.elements.volumeValue.style.background = 'var(--success-gradient)';
+          }
+        }
+
+        // تحديث شريط التمرير بصرياً
+        if (this.elements.volumeSlider) {
+          const percentage = volume;
+          this.elements.volumeSlider.style.background = `linear-gradient(90deg, 
+            var(--success-color) 0%, 
+            var(--success-color) ${percentage}%, 
+            rgba(255,255,255,0.1) ${percentage}%, 
+            rgba(255,255,255,0.1) 100%)`;
+        }
+      }
+
+      toggleSoundCategory(toggleElement) {
+        const category = toggleElement.dataset.sound;
+        const isCurrentlyActive = toggleElement.classList.contains('active');
+        
+        // تبديل الحالة
+        toggleElement.classList.toggle('active');
+        const newState = !isCurrentlyActive;
+        
+        // تحديث إعدادات الصوت
+        this.audio.setCategoryEnabled(category, newState);
+        
+        // تشغيل صوت تأكيد
+        if (newState) {
+          this.audio.play('ui-click');
+        }
+        
+        // تأثير بصري
+        this.animateToggle(toggleElement, newState);
+      }
+
+      animateToggle(toggleElement, isActive) {
+        toggleElement.style.transform = 'scale(0.95)';
+        
+        setTimeout(() => {
+          toggleElement.style.transform = 'scale(1)';
+          
+          if (isActive) {
+            // تأثير النجاح
+            toggleElement.style.boxShadow = '0 0 20px rgba(17, 153, 142, 0.6)';
+            setTimeout(() => {
+              toggleElement.style.boxShadow = '';
+            }, 1000);
+          }
+        }, 100);
+      }
+
+      saveSettings() {
+        this.audio.play('ui-click');
+        
+        // إظهار تأكيد الحفظ
+        this.showSaveConfirmation();
+        
+        // إغلاق النافذة بعد ثانيتين
+        setTimeout(() => {
+          this.closeModal();
+        }, 1500);
+      }
+
+      resetSettings() {
+        // تأكيد الإعادة تعيين
+        const confirmed = confirm('هل تريد إعادة تعيين جميع إعدادات الصوت إلى القيم الافتراضية؟');
+        
+        if (confirmed) {
+          this.audio.resetSettings();
+          this.loadSettings();
+          this.audio.play('ui-click');
+          
+          // إظهار رسالة تأكيد
+          this.showResetConfirmation();
+        }
+      }
+
+      showSaveConfirmation() {
+        const saveBtn = this.elements.saveBtn;
+        const originalText = saveBtn?.innerHTML;
+        
+        if (saveBtn) {
+          saveBtn.innerHTML = '<i class="fas fa-check"></i> تم الحفظ';
+          saveBtn.style.background = 'var(--success-gradient)';
+          saveBtn.disabled = true;
+          
+          setTimeout(() => {
+            saveBtn.innerHTML = originalText;
+            saveBtn.style.background = '';
+            saveBtn.disabled = false;
+          }, 1500);
+        }
+      }
+
+      showResetConfirmation() {
+        const resetBtn = this.elements.resetBtn;
+        const originalText = resetBtn?.innerHTML;
+        
+        if (resetBtn) {
+          resetBtn.innerHTML = '<i class="fas fa-check"></i> تم التعيين';
+          resetBtn.style.background = 'var(--warning-gradient)';
+          resetBtn.disabled = true;
+          
+          setTimeout(() => {
+            resetBtn.innerHTML = originalText;
+            resetBtn.style.background = '';
+            resetBtn.disabled = false;
+          }, 1500);
+        }
+      }
+    }
     /* ========================================
        إدارة شريط الأدوات العلوي
     ======================================== */
@@ -1667,6 +2445,7 @@
       constructor(audioManager) {
         this.audio = audioManager;
         this.isFullscreen = false;
+        this.soundSettings = new SoundSettingsManager(audioManager);
         this.initElements();
         this.setupEvents();
         this.setupFullscreenListener();
@@ -1677,6 +2456,7 @@
           gameLogo: document.getElementById('gameLogo'),
           homeIcon: document.getElementById('homeIcon'),
           soundIcon: document.getElementById('soundIcon'),
+          settingsIcon: document.getElementById('settingsIcon'),
           fullscreenIcon: document.getElementById('fullscreenIcon')
         };
       }
@@ -1690,6 +2470,11 @@
         // ايقونة الصوت
         this.elements.soundIcon?.addEventListener('click', () => {
           this.handleSoundToggle();
+        });
+
+        // ايقونة الإعدادات
+        this.elements.settingsIcon?.addEventListener('click', () => {
+          this.handleSettingsClick();
         });
 
         // ايقونة ملئ الشاشة
@@ -1708,6 +2493,14 @@
             this.audio.play('ui-hover', { volume: 0.3 });
           });
         });
+      }
+
+      handleSettingsClick() {
+        this.audio.play('toolbar-click');
+        this.animateClick(this.elements.settingsIcon);
+        
+        // فتح نافذة الإعدادات
+        this.soundSettings.openModal();
       }
 
       handleHomeClick() {
@@ -2562,6 +3355,14 @@ ${this.eliminatedStudents.length > 0 ?
           window.towerCompetition.toolbar.handleSoundToggle();
         }
         
+        // S لفتح الإعدادات
+        if (e.key === 's' || e.key === 'S') {
+          if (e.ctrlKey) {
+            e.preventDefault();
+            window.towerCompetition.toolbar.handleSettingsClick();
+          }
+        }
+        
         // H للعودة للرئيسية
         if (e.key === 'h' || e.key === 'H') {
           if (e.ctrlKey) {
@@ -2610,8 +3411,9 @@ ${this.eliminatedStudents.length > 0 ?
 ⌨️  اختصارات لوحة المفاتيح:
    • F11: ملئ الشاشة
    • M: كتم/تفعيل الصوت  
+   • Ctrl+S: فتح إعدادات الصوت
    • Ctrl+H: العودة للرئيسية
-   • ESC: إغلاق ملئ الشاشة
+   • ESC: إغلاق ملئ الشاشة أو النوافذ
       `);
     });
   </script>
