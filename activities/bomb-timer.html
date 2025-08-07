@@ -248,60 +248,7 @@
             }
         }
 
-        /* أزرار التحكم المحسنة */
-        .control-btn {
-            position: fixed;
-            top: 15px;
-            font-size: 20px;
-            background: var(--surface-glass);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            color: var(--text-primary);
-            cursor: pointer;
-            transition: var(--transition-normal);
-            padding: 12px;
-            z-index: 2147483647;
-            border-radius: 50%;
-            backdrop-filter: blur(16px);
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: var(--shadow-medium);
-            font-weight: 600;
-        }
-        
-        .control-btn:hover {
-            transform: translateY(-3px) scale(1.1);
-            background: var(--gradient-danger);
-            color: var(--oman-white);
-            border-color: var(--oman-red);
-            box-shadow: var(--shadow-glow-red);
-        }
-
-        .control-btn:active {
-            transform: translateY(-1px) scale(1.05);
-        }
-        
-        #homeBtn {
-            right: 15px;
-        }
-        
-        #refreshBtn {
-            right: 80px;
-        }
-        
-        #instructionsBtn {
-            right: 145px;
-        }
-        
-        #fullscreenBtn {
-            left: 15px;
-        }
-
-        #soundBtn {
-            left: 80px;
-        }
+        /* إعدادات ألوان المتغيرات */
 
         /* رأس الصفحة المحسّن */
         header {
@@ -1417,12 +1364,6 @@
                 order: 1;
                 margin-bottom: 20px;
             }
-            
-            .control-btn {
-                font-size: 20px;
-                width: 45px;
-                height: 45px;
-            }
         }
         
         /* أجهزة لوحية متوسطة */
@@ -1477,24 +1418,10 @@
                 font-size: 0.9rem;
                 min-width: 100px;
             }
-            
-            .control-btn {
-                top: 15px;
-                font-size: 18px;
-                width: 42px;
-                height: 42px;
-            }
-            
-            #homeBtn {
-                right: 15px;
             }
             
             #gameGuideBtn {
                 right: 70px;
-            }
-            
-            #fullscreenBtn {
-                left: 15px;
             }
         }
         
@@ -1602,26 +1529,6 @@
                 font-size: 1.1rem;
             }
             
-            .control-btn {
-                top: 12px;
-                font-size: 16px;
-                width: 38px;
-                height: 38px;
-                padding: 8px;
-            }
-            
-            #homeBtn {
-                right: 12px;
-            }
-            
-            #gameGuideBtn {
-                right: 58px;
-            }
-            
-            #fullscreenBtn {
-                left: 12px;
-            }
-            
             /* تحسينات النوافذ المنبثقة للجوال */
             .modal-content {
                 width: 95%;
@@ -1682,20 +1589,10 @@
                 min-width: 80px;
             }
             
-            .control-btn {
-                width: 35px;
-                height: 35px;
-                font-size: 14px;
-            }
-            
-            #gameGuideBtn {
-                right: 52px;
-            }
         }
         
         /* تحسينات الطباعة */
         @media print {
-            .control-btn,
             .teacher-controls,
             .modal {
                 display: none !important;
@@ -1731,10 +1628,6 @@
         @media (prefers-contrast: high) {
             .bomb-area {
                 border-width: 4px;
-            }
-            
-            .control-btn {
-                border-width: 3px;
             }
             
             .btn {
@@ -1900,12 +1793,6 @@
                 gap: 8px;
             }
 
-            .control-btn {
-                width: 45px;
-                height: 45px;
-                font-size: 1rem;
-            }
-
             .game-header {
                 padding: 20px 15px;
                 margin-bottom: 20px;
@@ -2012,13 +1899,6 @@
                 right: 8px;
                 gap: 6px;
             }
-
-            .control-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 0.9rem;
-            }
-
             .game-header {
                 padding: 15px 10px;
                 margin-bottom: 15px;
@@ -2179,12 +2059,6 @@
                 top: 6px;
                 right: 6px;
                 gap: 4px;
-            }
-
-            .control-btn {
-                width: 36px;
-                height: 36px;
-                font-size: 0.8rem;
             }
 
             .game-header {
@@ -2348,20 +2222,17 @@
 
         /* تحسينات إضافية للمس */
         @media (hover: none) and (pointer: coarse) {
-            .control-btn,
             .btn,
             .student-card {
                 min-height: 44px;
                 min-width: 44px;
             }
 
-            .control-btn:hover,
             .btn:hover,
             .student-card:hover {
                 transform: none;
             }
 
-            .control-btn:active,
             .btn:active {
                 transform: scale(0.95);
                 transition: transform 0.1s ease;
@@ -2451,7 +2322,6 @@
 
         /* تحسين التركيز */
         .btn:focus,
-        .control-btn:focus,
         .student-card:focus {
             outline: 3px solid rgba(220, 20, 60, 0.5);
             outline-offset: 2px;
@@ -2459,25 +2329,6 @@
     </style>
 </head>
 <body>
-    <!-- أزرار التحكم الموحدة -->
-    <div class="control-buttons">
-        <button class="control-btn btn-responsive" id="homeBtn" title="العودة للصفحة الرئيسية">
-            <i class="fas fa-home"></i>
-        </button>
-        <button class="control-btn btn-responsive" id="refreshBtn" title="إعادة تشغيل اللعبة">
-            <i class="fas fa-redo"></i>
-        </button>
-        <button class="control-btn btn-responsive" id="instructionsBtn" title="التعليمات">
-            <i class="fas fa-question-circle"></i>
-        </button>
-        <button class="control-btn btn-responsive" id="fullscreenBtn" title="ملء الشاشة">
-            <i class="fas fa-expand"></i>
-        </button>
-        <button class="control-btn btn-responsive" id="soundBtn" title="الصوت">
-            <i class="fas fa-volume-up"></i>
-        </button>
-    </div>
-
     <!-- نافذة التعليمات -->
     <div id="instructionsModal" class="modal">
         <div class="modal-content card-responsive">
@@ -3210,49 +3061,6 @@
             
             console.log('✅ تم تحميل اللعبة بنجاح!');
         });
-
-        // تهيئة أزرار التحكم الموحدة
-        function initializeUnifiedControls() {
-            console.log('🔧 بدء تهيئة أزرار التحكم...');
-            
-            // أزرار الشريط السفلي القديم
-            // زر العودة للصفحة الرئيسية
-            const homeBtn = document.getElementById('homeBtn');
-            if (homeBtn) {
-                homeBtn.addEventListener('click', () => {
-                    console.log('🏠 نقر على زر العودة للرئيسية');
-                    if (typeof activityUtils !== 'undefined' && activityUtils.goHome) {
-                        activityUtils.goHome();
-                    } else {
-                        window.location.href = '../index.html';
-                    }
-                });
-            }
-
-            // زر إعادة التشغيل
-            document.getElementById('refreshBtn').addEventListener('click', () => {
-                if (confirm('هل تريد إعادة تشغيل اللعبة؟ سيتم فقدان التقدم الحالي.')) {
-                    location.reload();
-                }
-            });
-
-            // زر التعليمات
-            document.getElementById('instructionsBtn').addEventListener('click', () => {
-                activityUtils.openModal('instructionsModal');
-            });
-
-            // زر ملء الشاشة
-            document.getElementById('fullscreenBtn').addEventListener('click', () => {
-                activityUtils.toggleFullscreen();
-            });
-
-            // زر الصوت
-            document.getElementById('soundBtn').addEventListener('click', () => {
-                activityUtils.toggleSound();
-            });
-
-            console.log('✅ تم الانتهاء من تهيئة جميع أزرار التحكم');
-        }
 
         // تحميل بيانات الطلاب
         async function loadStudentsData() {
@@ -5470,13 +5278,13 @@
         
         // إضافة مؤشرات بصرية للتركيز
         document.addEventListener('focusin', function(e) {
-            if (e.target.matches('button, .btn, .control-btn, input, select')) {
+            if (e.target.matches('button, .btn, input, select')) {
                 e.target.setAttribute('data-focused', 'true');
             }
         });
         
         document.addEventListener('focusout', function(e) {
-            if (e.target.matches('button, .btn, .control-btn, input, select')) {
+            if (e.target.matches('button, .btn, input, select')) {
                 e.target.removeAttribute('data-focused');
             }
         });
