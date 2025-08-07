@@ -2247,17 +2247,45 @@
       backdrop-filter: blur(25px);
       border: 3px solid rgba(255, 215, 0, 0.5);
       border-radius: 30px;
-      padding: var(--spacing-xl);
-      max-width: 600px;
+      padding: var(--spacing-md);
+      max-width: 500px;
+      max-height: 85vh;
       width: 90%;
       text-align: center;
       position: relative;
-      overflow: hidden;
+      overflow-y: auto;
+      overflow-x: hidden;
       box-shadow: 
         0 30px 80px rgba(0, 0, 0, 0.5),
         0 0 100px rgba(255, 215, 0, 0.3),
         inset 0 2px 20px rgba(255, 255, 255, 0.2);
       animation: victoryContentSlideUp 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s both;
+    }
+
+    /* زر الإغلاق */
+    .victory-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 35px;
+      height: 35px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      z-index: 10;
+    }
+
+    .victory-close:hover {
+      background: rgba(255, 0, 0, 0.3);
+      transform: scale(1.1);
     }
 
     @keyframes victoryContentSlideUp {
@@ -2297,7 +2325,7 @@
     /* عنوان الفوز */
     .victory-title {
       font-family: 'Orbitron', 'Cairo', sans-serif;
-      font-size: 3.5rem;
+      font-size: 2.8rem;
       font-weight: 900;
       background: linear-gradient(45deg, 
         #ffd700 0%, 
@@ -2309,7 +2337,7 @@
       background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: var(--spacing-lg);
+      margin-bottom: var(--spacing-sm);
       animation: 
         victoryTitleGlow 3s ease-in-out infinite alternate,
         gradientFlow 4s ease-in-out infinite;
@@ -2335,8 +2363,8 @@
 
     /* أيقونة التاج */
     .victory-crown {
-      font-size: 5rem;
-      margin-bottom: var(--spacing-lg);
+      font-size: 3.5rem;
+      margin-bottom: var(--spacing-sm);
       animation: 
         crownFloat 3s ease-in-out infinite,
         crownRotate 8s linear infinite;
@@ -2401,10 +2429,10 @@
 
     /* اسم الفائز */
     .winner-name {
-      font-size: 2.5rem;
+      font-size: 2rem;
       font-weight: 800;
       color: white;
-      margin-bottom: var(--spacing-md);
+      margin-bottom: var(--spacing-sm);
       text-shadow: 
         0 0 20px rgba(255, 215, 0, 0.8),
         0 0 40px rgba(255, 215, 0, 0.6),
@@ -2436,8 +2464,8 @@
         rgba(0, 0, 0, 0.1) 100%);
       backdrop-filter: blur(10px);
       border-radius: 20px;
-      padding: var(--spacing-lg);
-      margin: var(--spacing-lg) 0;
+      padding: var(--spacing-md);
+      margin: var(--spacing-md) 0;
       border: 2px solid rgba(255, 255, 255, 0.2);
       animation: statsSlideIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1s both;
     }
@@ -2488,7 +2516,7 @@
     }
 
     .stat-value {
-      font-size: 2rem;
+      font-size: 1.5rem;
       font-weight: 800;
       color: var(--neon-cyan);
       font-family: 'Orbitron', 'Cairo', sans-serif;
@@ -2498,7 +2526,7 @@
     }
 
     .stat-label {
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       color: rgba(255, 255, 255, 0.8);
       font-weight: 600;
     }
@@ -2506,10 +2534,10 @@
     /* أزرار الإجراءات النهائية */
     .victory-actions {
       display: flex;
-      gap: var(--spacing-md);
+      gap: var(--spacing-sm);
       justify-content: center;
       flex-wrap: wrap;
-      margin-top: var(--spacing-xl);
+      margin-top: var(--spacing-md);
       animation: actionsSlideUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 2s both;
     }
 
@@ -2525,10 +2553,10 @@
     }
 
     .victory-btn {
-      padding: 18px 30px;
+      padding: 12px 20px;
       border: none;
-      border-radius: 25px;
-      font-size: 1.2rem;
+      border-radius: 20px;
+      font-size: 1rem;
       font-weight: 700;
       cursor: pointer;
       transition: all var(--elastic-timing);
@@ -2537,9 +2565,9 @@
       overflow: hidden;
       text-transform: uppercase;
       letter-spacing: 1px;
-      min-width: 160px;
+      min-width: 140px;
       backdrop-filter: blur(10px);
-      border: 3px solid rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.2);
     }
 
     .victory-btn::before {
@@ -2644,56 +2672,138 @@
     @media (max-width: 768px) {
       .victory-content {
         max-width: 95%;
-        padding: var(--spacing-lg);
+        max-height: 90vh;
+        padding: var(--spacing-sm);
       }
 
       .victory-title {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
       }
 
       .victory-crown {
-        font-size: 3.5rem;
+        font-size: 2.8rem;
       }
 
       .winner-name {
-        font-size: 2rem;
+        font-size: 1.6rem;
       }
 
       .stats-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-sm);
+      }
+
+      .stat-value {
+        font-size: 1.2rem;
+      }
+
+      .stat-label {
+        font-size: 0.7rem;
       }
 
       .victory-actions {
         flex-direction: column;
         align-items: center;
+        gap: var(--spacing-xs);
       }
 
       .victory-btn {
         width: 100%;
-        max-width: 250px;
+        max-width: 200px;
+        padding: 10px 16px;
+        font-size: 0.9rem;
+        min-width: auto;
       }
     }
 
     @media (max-width: 480px) {
+      .victory-content {
+        max-height: 95vh;
+        padding: var(--spacing-xs);
+      }
+
       .victory-title {
-        font-size: 2rem;
+        font-size: 1.8rem;
       }
 
       .victory-crown {
-        font-size: 3rem;
+        font-size: 2.2rem;
       }
 
       .winner-name {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
       }
 
       .stat-value {
-        font-size: 1.5rem;
+        font-size: 1rem;
       }
 
       .stat-label {
+        font-size: 0.65rem;
+      }
+
+      .victory-btn {
+        padding: 8px 12px;
         font-size: 0.8rem;
       }
+    }
+
+    @media (max-height: 600px) {
+      .victory-content {
+        max-height: 95vh;
+        padding: var(--spacing-xs);
+      }
+
+      .victory-crown {
+        font-size: 2rem;
+        margin-bottom: 0;
+      }
+
+      .victory-title {
+        font-size: 1.8rem;
+        margin-bottom: var(--spacing-xs);
+      }
+
+      .winner-name {
+        font-size: 1.3rem;
+        margin-bottom: var(--spacing-xs);
+      }
+
+      .victory-stats {
+        padding: var(--spacing-sm);
+        margin: var(--spacing-sm) 0;
+      }
+
+      .stats-grid {
+        gap: var(--spacing-xs);
+      }
+
+      .stat-value {
+        font-size: 1rem;
+      }
+
+      .victory-actions {
+        margin-top: var(--spacing-sm);
+      }
+    }
+
+    /* تحسين التمرير */
+    .victory-content::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .victory-content::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+    }
+
+    .victory-content::-webkit-scrollbar-thumb {
+      background: rgba(255, 215, 0, 0.5);
+      border-radius: 3px;
+    }
+
+    .victory-content::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 215, 0, 0.8);
     }
 
     /* تحسينات إضافية للانيميشن */
@@ -4850,6 +4960,10 @@
     <div class="celebration-background"></div>
     
     <div class="victory-content">
+      <button class="victory-close" onclick="victoryManager.hideVictoryScreen()">
+        <i class="fas fa-times"></i>
+      </button>
+      
       <div class="victory-crown">👑</div>
       
       <h1 class="victory-title" id="victory-title">تهانينا!</h1>
@@ -4895,6 +5009,7 @@
         this.victoryScreen = document.getElementById('victory-screen');
         this.fireworksActive = false;
         this.confettiActive = false;
+        this.setupCloseHandlers();
       }
 
       // عرض شاشة الفوز مع الاحتفالات
@@ -4927,6 +5042,22 @@
       hideVictoryScreen() {
         this.victoryScreen.classList.remove('show');
         this.stopCelebrations();
+      }
+
+      // إضافة إمكانية الإغلاق بالنقر خارج المحتوى
+      setupCloseHandlers() {
+        this.victoryScreen.addEventListener('click', (e) => {
+          if (e.target === this.victoryScreen) {
+            this.hideVictoryScreen();
+          }
+        });
+
+        // إغلاق بمفتاح ESC
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && this.victoryScreen.classList.contains('show')) {
+            this.hideVictoryScreen();
+          }
+        });
       }
 
       // تشغيل صوت الفوز
