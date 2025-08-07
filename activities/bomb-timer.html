@@ -3207,9 +3207,23 @@
                             ← السابق
                         </button>
                         
-                        <div style="flex: 1; text-align: center;">
-                            <button id="nextStepBtn" onclick="nextSetupStep()" style="padding: 15px 40px; background: linear-gradient(135deg, var(--oman-red), #c41e3a); border: none; border-radius: 25px; color: white; cursor: pointer; transition: all 0.3s ease; font-size: 1.1rem; font-weight: bold;">
-                                التالي ←
+                        <div style="flex: 1; text-align: center; display: flex; gap: 15px; justify-content: center;">
+                            <!-- أزرار التشخيص والتحكم -->
+                            <button onclick="debugGameSetup()" style="padding: 10px 20px; background: linear-gradient(135deg, #6f42c1, #5a32a3); border: none; border-radius: 20px; color: white; cursor: pointer; transition: all 0.3s ease; font-size: 0.9rem;">
+                                🔍 تشخيص
+                            </button>
+                            
+                            <button onclick="previewGameSetup()" style="padding: 12px 25px; background: linear-gradient(135deg, var(--warning-orange), #e65100); border: none; border-radius: 25px; color: white; cursor: pointer; transition: all 0.3s ease;">
+                                👁️ معاينة
+                            </button>
+                            
+                            <button onclick="resetGameSetup()" style="padding: 12px 25px; background: linear-gradient(135deg, #6c757d, #5a6268); border: none; border-radius: 25px; color: white; cursor: pointer; transition: all 0.3s ease;">
+                                🔄 إعادة تعيين
+                            </button>
+                            
+                            <!-- زر بدء اللعبة الرئيسي -->
+                            <button onclick="startGameFromSetup()" style="padding: 15px 40px; background: linear-gradient(135deg, var(--safe-green), #388e3c); border: none; border-radius: 25px; color: white; cursor: pointer; transition: all 0.3s ease; font-size: 1.1rem; font-weight: bold; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);">
+                                🚀 ابدأ اللعبة
                             </button>
                         </div>
                         
@@ -3936,12 +3950,17 @@
             setupSelectedStudent = null;
             setupSelectionMethod = 'manual';
             
+            console.log('🔄 تم إعادة تعيين المتغيرات');
+            console.log('📊 فحص البيانات المتوفرة:', studentsData);
+            
             // التحقق من وجود البيانات
             if (!studentsData) {
                 console.error('❌ لا توجد بيانات طلاب متاحة');
                 showDataError();
                 return;
             }
+            
+            console.log('✅ البيانات متوفرة، عدد الصفوف:', Object.keys(studentsData).length);
             
             // تحميل بطاقات الصفوف الذكية
             loadSmartClassCards();
@@ -3951,6 +3970,8 @@
 
         // تحميل بطاقات الصفوف الذكية
         function loadSmartClassCards() {
+            console.log('📚 بداية تحميل بطاقات الصفوف الذكية');
+            
             const classSelection = document.getElementById('setupClassSelection');
             if (!classSelection) {
                 console.error('❌ عنصر setupClassSelection غير موجود');
@@ -3960,6 +3981,7 @@
             classSelection.innerHTML = '';
             
             if (!studentsData || Object.keys(studentsData).length === 0) {
+                console.log('❌ لا توجد بيانات صفوف');
                 classSelection.innerHTML = `
                     <div style="grid-column: 1 / -1; text-align: center; color: #ff6b6b; padding: 40px;">
                         <div style="font-size: 3rem; margin-bottom: 15px;">📭</div>
@@ -3970,14 +3992,21 @@
                 return;
             }
             
+            console.log('✅ بدء إنشاء بطاقات الصفوف...');
+            
             // إنشاء بطاقات الصفوف
             Object.keys(studentsData).forEach((className, index) => {
                 const students = studentsData[className];
                 const studentCount = students.length;
                 
+                console.log(`📋 إنشاء بطاقة للصف: ${className} (${studentCount} طالب)`);
+                
                 const classCard = document.createElement('div');
                 classCard.className = 'class-card';
-                classCard.onclick = () => selectSmartClass(className, classCard);
+                classCard.onclick = () => {
+                    console.log(`🖱️ تم النقر على بطاقة الصف: ${className}`);
+                    selectSmartClass(className, classCard);
+                };
                 
                 classCard.innerHTML = `
                     <div class="class-icon">📚</div>
@@ -3994,8 +4023,12 @@
 
         // اختيار صف ذكي
         function selectSmartClass(className, cardElement) {
+            console.log('🎯 محاولة اختيار الصف:', className);
+            console.log('📊 البيانات المتوفرة:', studentsData);
+            
             if (!studentsData || !studentsData[className]) {
                 console.error('❌ الصف المحدد غير متوفر:', className);
+                alert(`❌ الصف "${className}" غير متوفر في البيانات!`);
                 return;
             }
             
@@ -4003,6 +4036,7 @@
             playGameSound('select.mp3');
             
             setupSelectedClass = className;
+            console.log('✅ تم تعيين setupSelectedClass إلى:', setupSelectedClass);
             
             // تحديث مظهر البطاقات
             document.querySelectorAll('.class-card').forEach(card => {
@@ -4062,25 +4096,52 @@
 
         // إظهار طرق الاختيار
         function showSelectionMethods() {
+            console.log('🎯 إظهار طرق الاختيار...');
+            
             const methodSection = document.getElementById('selectionMethodSection');
-            if (!methodSection) return;
+            if (!methodSection) {
+                console.error('❌ عنصر selectionMethodSection غير موجود');
+                return;
+            }
             
             methodSection.style.display = 'block';
             methodSection.style.animation = 'fadeIn 0.5s ease';
             
-            // إعداد أحداث النقر لطرق الاختيار
+            // إعداد أحداث النقر لطرق الاختيار مع تسجيل مفصل
             const methodCards = document.querySelectorAll('.selection-method-card');
-            methodCards.forEach(card => {
-                card.onclick = () => selectMethod(card.getAttribute('data-method'), card);
+            console.log(`🔗 تم العثور على ${methodCards.length} بطاقة طريقة اختيار`);
+            
+            methodCards.forEach((card, index) => {
+                const method = card.getAttribute('data-method');
+                console.log(`🎯 إعداد حدث النقر للبطاقة ${index + 1}: ${method}`);
+                
+                // إزالة الأحداث السابقة
+                card.onclick = null;
+                
+                // إضافة حدث النقر الجديد
+                card.onclick = function() {
+                    console.log(`🖱️ تم النقر على طريقة: ${method}`);
+                    selectMethod(method, card);
+                };
+                
+                // إضافة تأثيرات بصرية إضافية
+                card.addEventListener('mouseenter', function() {
+                    console.log(`🎯 تمرير الماوس على: ${method}`);
+                });
             });
+            
+            console.log('✅ تم إعداد طرق الاختيار بنجاح');
         }
 
         // اختيار طريقة
         function selectMethod(method, cardElement) {
+            console.log(`🎲 بداية اختيار الطريقة: ${method}`);
+            
             // تشغيل صوت الاختيار
             playGameSound('click.mp3');
             
             setupSelectionMethod = method;
+            console.log(`✅ تم تعيين setupSelectionMethod إلى: ${setupSelectionMethod}`);
             
             // تحديث مظهر البطاقات
             document.querySelectorAll('.selection-method-card').forEach(card => {
@@ -4089,9 +4150,11 @@
             cardElement.classList.add('selected');
             
             if (method === 'manual') {
+                console.log('👆 اختيار يدوي - إظهار بطاقات الطلاب');
                 // إظهار بطاقات الطلاب للاختيار اليدوي
                 showSmartStudentCards();
             } else {
+                console.log('🎲 اختيار عشوائي - إخفاء بطاقات الطلاب');
                 // إخفاء بطاقات الطلاب للاختيار العشوائي
                 hideSmartStudentCards();
                 // إظهار معلومات الاختيار العشوائي
@@ -4101,7 +4164,7 @@
             // تحديث شريط التقدم
             updateProgressBar(2);
             
-            console.log(`🎯 تم اختيار طريقة: ${method}`);
+            console.log(`🎯 تم اختيار طريقة: ${method} بنجاح`);
         }
 
         // إظهار بطاقات الطلاب الذكية
@@ -4291,23 +4354,41 @@
 
         // إظهار معلومات الاختيار العشوائي
         function showRandomSelectionInfo() {
+            console.log('🎲 إظهار معلومات الاختيار العشوائي');
+            
             const finalInfo = document.getElementById('finalSelectionInfo');
             const finalDetails = document.getElementById('finalSelectionDetails');
             
-            if (!finalInfo || !finalDetails) return;
+            if (!finalInfo || !finalDetails) {
+                console.error('❌ عناصر معلومات الاختيار النهائي غير موجودة');
+                return;
+            }
+            
+            const studentCount = studentsData[setupSelectedClass] ? studentsData[setupSelectedClass].length : 0;
             
             finalDetails.innerHTML = `
                 <div style="font-size: 2rem; margin-bottom: 15px;">🎲</div>
                 <div><strong>طريقة الاختيار:</strong> عشوائي ذكي</div>
                 <div><strong>الصف:</strong> ${setupSelectedClass}</div>
-                <div><strong>عدد الطلاب:</strong> ${studentsData[setupSelectedClass].length}</div>
+                <div><strong>عدد الطلاب:</strong> ${studentCount}</div>
                 <div style="margin-top: 15px; font-size: 0.9rem; color: rgba(255,255,255,0.7);">
                     سيتم اختيار طالب عشوائي مع رسوم متحركة مثيرة
+                </div>
+                
+                <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                    <button onclick="testRandomSelection()" style="padding: 8px 16px; background: var(--warning-orange); color: white; border: none; border-radius: 15px; cursor: pointer; font-size: 0.9rem;">
+                        🎯 اختبار عشوائي
+                    </button>
+                    <button onclick="showRandomPreview()" style="padding: 8px 16px; background: var(--oman-blue); color: white; border: none; border-radius: 15px; cursor: pointer; font-size: 0.9rem;">
+                        👁️ معاينة سريعة
+                    </button>
                 </div>
             `;
             
             finalInfo.style.display = 'block';
             finalInfo.style.animation = 'fadeIn 0.5s ease';
+            
+            console.log('✅ تم إظهار معلومات الاختيار العشوائي');
         }
 
         // إظهار معلومات الاختيار النهائي
@@ -6506,11 +6587,117 @@
 
         // ===== دوال النافذة الاحترافية الإضافية =====
         
+        // دالة تشخيص سريع لحل المشاكل
+        function debugGameSetup() {
+            console.log('🔧 بداية التشخيص السريع...');
+            
+            // جمع المعلومات التشخيصية
+            const debugInfo = {
+                setupSelectedClass: setupSelectedClass,
+                setupSelectedStudent: setupSelectedStudent,
+                setupSelectionMethod: setupSelectionMethod,
+                studentsDataAvailable: !!studentsData,
+                studentsDataKeys: studentsData ? Object.keys(studentsData) : [],
+                studentsDataLength: studentsData ? Object.keys(studentsData).length : 0,
+                currentTime: new Date().toLocaleString(),
+                browserInfo: navigator.userAgent,
+                currentStudentData: setupSelectedClass ? studentsData[setupSelectedClass] : null
+            };
+            
+            console.table(debugInfo);
+            
+            // إنشاء تقرير تشخيصي بصري
+            const debugReport = `
+                <div style="background: linear-gradient(135deg, #6f42c1, #5a32a3); padding: 25px; border-radius: 15px; color: white; max-height: 400px; overflow-y: auto;">
+                    <h3 style="color: #ffd700; margin-bottom: 20px; text-align: center;">🔧 تقرير التشخيص السريع</h3>
+                    
+                    <div style="display: grid; gap: 15px;">
+                        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
+                            <strong>📝 حالة المتغيرات:</strong>
+                            <div style="margin-top: 10px; font-family: monospace; font-size: 0.9rem;">
+                                • الصف المختار: <span style="color: ${setupSelectedClass ? '#4CAF50' : '#f44336'};">${setupSelectedClass || 'غير محدد'}</span><br>
+                                • الطالب المختار: <span style="color: ${setupSelectedStudent ? '#4CAF50' : '#f44336'};">${setupSelectedStudent || 'غير محدد'}</span><br>
+                                • طريقة الاختيار: <span style="color: #FFD700;">${setupSelectionMethod}</span>
+                            </div>
+                        </div>
+                        
+                        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
+                            <strong>📊 حالة البيانات:</strong>
+                            <div style="margin-top: 10px; font-family: monospace; font-size: 0.9rem;">
+                                • ملف البيانات: <span style="color: ${studentsData ? '#4CAF50' : '#f44336'};">${studentsData ? 'متوفر' : 'غير متوفر'}</span><br>
+                                • عدد الصفوف: <span style="color: #FFD700;">${debugInfo.studentsDataLength}</span><br>
+                                • الصفوف المتاحة: ${debugInfo.studentsDataKeys.join(', ') || 'لا توجد'}
+                            </div>
+                        </div>
+                        
+                        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
+                            <strong>🎯 حالة الصف المختار:</strong>
+                            <div style="margin-top: 10px; font-family: monospace; font-size: 0.9rem;">
+                                ${setupSelectedClass ? 
+                                    `• عدد الطلاب: <span style="color: #4CAF50;">${debugInfo.currentStudentData ? debugInfo.currentStudentData.length : 0}</span><br>
+                                     • أمثلة على الأسماء: ${debugInfo.currentStudentData ? debugInfo.currentStudentData.slice(0, 3).join(', ') : 'لا توجد'}` :
+                                    '• لم يتم اختيار صف بعد'
+                                }
+                            </div>
+                        </div>
+                        
+                        ${debugInfo.studentsDataLength === 0 ? `
+                            <div style="background: rgba(244,67,54,0.2); border: 2px solid #f44336; padding: 15px; border-radius: 10px;">
+                                <strong style="color: #f44336;">⚠️ مشكلة محتملة:</strong>
+                                <div style="margin-top: 10px;">
+                                    لا توجد بيانات طلاب. تأكد من وجود ملف <code>../data/studentData.json</code>
+                                </div>
+                            </div>
+                        ` : ''}
+                        
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button onclick="this.parentElement.parentElement.parentElement.remove(); console.log('🔧 تم إغلاق تقرير التشخيص');" 
+                                    style="padding: 10px 25px; background: #fff; color: #6f42c1; border: none; border-radius: 20px; cursor: pointer; font-weight: bold;">
+                                حسناً، فهمت
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // إظهار التقرير في مكان مناسب
+            const finalInfo = document.getElementById('finalSelectionInfo');
+            if (finalInfo) {
+                finalInfo.innerHTML = debugReport;
+                finalInfo.style.display = 'block';
+                finalInfo.style.animation = 'fadeIn 0.5s ease';
+            } else {
+                // إنشاء نافذة تشخيص منفصلة
+                const debugDiv = document.createElement('div');
+                debugDiv.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    z-index: 10001;
+                    max-width: 600px;
+                    width: 90%;
+                `;
+                debugDiv.innerHTML = debugReport;
+                document.body.appendChild(debugDiv);
+            }
+            
+            console.log('✅ تم عرض تقرير التشخيص');
+        }
+        
         // بدء اللعبة من النافذة الاحترافية
         function startGameFromSetup() {
+            console.log('🚀 محاولة بدء اللعبة...');
+            console.log('📝 حالة المتغيرات:');
+            console.log('  - setupSelectedClass:', setupSelectedClass);
+            console.log('  - setupSelectedStudent:', setupSelectedStudent);
+            console.log('  - setupSelectionMethod:', setupSelectionMethod);
+            console.log('  - studentsData:', studentsData);
+            
             // التحقق من صحة الإعدادات
             const validation = validateGameSetup();
             if (!validation.isValid) {
+                console.error('❌ فشل التحقق من صحة الإعدادات:', validation.errors);
                 showValidationErrors(validation.errors);
                 return;
             }
@@ -6522,11 +6709,14 @@
                 const students = studentsData[setupSelectedClass];
                 selectedStudent = students[Math.floor(Math.random() * students.length)];
                 
+                console.log('🎲 تم الاختيار العشوائي:', selectedStudent);
+                
                 // إظهار رسوم متحركة للاختيار العشوائي
                 showRandomSelectionAnimation(selectedStudent);
             } else {
                 // اختيار يدوي
                 selectedStudent = setupSelectedStudent;
+                console.log('🎯 الاختيار اليدوي:', selectedStudent);
                 startGameDirectly(selectedStudent);
             }
         }
@@ -6737,26 +6927,41 @@
 
         // التحقق من صحة الإعدادات
         function validateGameSetup() {
+            console.log('🔍 بداية التحقق من صحة الإعدادات...');
             const errors = [];
             
+            console.log('📊 فحص المتغيرات:');
+            console.log('  - setupSelectedClass:', setupSelectedClass);
+            console.log('  - setupSelectionMethod:', setupSelectionMethod);
+            console.log('  - setupSelectedStudent:', setupSelectedStudent);
+            console.log('  - studentsData:', studentsData);
+            
             if (!setupSelectedClass) {
+                console.log('❌ لم يتم اختيار صف');
                 errors.push('لم يتم اختيار صف');
             }
             
             if (setupSelectionMethod === 'manual' && !setupSelectedStudent) {
+                console.log('❌ لم يتم اختيار طالب للطريقة اليدوية');
                 errors.push('لم يتم اختيار طالب للطريقة اليدوية');
             }
             
             if (!studentsData || !studentsData[setupSelectedClass]) {
+                console.log('❌ بيانات الصف غير متوفرة');
                 errors.push('بيانات الصف غير متوفرة');
             }
             
             if (studentsData[setupSelectedClass] && studentsData[setupSelectedClass].length === 0) {
+                console.log('❌ الصف المحدد لا يحتوي على طلاب');
                 errors.push('الصف المحدد لا يحتوي على طلاب');
             }
             
+            const isValid = errors.length === 0;
+            console.log('✅ نتيجة التحقق:', isValid ? 'صحيح' : 'يحتوي على أخطاء');
+            console.log('📋 الأخطاء:', errors);
+            
             return {
-                isValid: errors.length === 0,
+                isValid: isValid,
                 errors: errors
             };
         }
@@ -6822,6 +7027,86 @@
         }
 
         console.log('💣 تم تحميل النظام المحسن للعبة القنبلة المؤقتة - نظام اختيار ذكي وسريع مع تحسينات متقدمة!');
+        
+        // ===== دوال اختبار إضافية =====
+        
+        // اختبار الاختيار العشوائي
+        function testRandomSelection() {
+            console.log('🎯 اختبار الاختيار العشوائي...');
+            
+            if (!setupSelectedClass || !studentsData[setupSelectedClass]) {
+                alert('⚠️ لا يمكن الاختبار - لا توجد بيانات صف صحيحة');
+                return;
+            }
+            
+            const students = studentsData[setupSelectedClass];
+            const randomStudent = students[Math.floor(Math.random() * students.length)];
+            
+            // إظهار نتيجة الاختبار
+            const testResult = `
+                <div style="background: linear-gradient(135deg, var(--warning-orange), #f57c00); padding: 20px; border-radius: 15px; text-align: center; color: white; margin-top: 15px;">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">🎯</div>
+                    <h4>نتيجة الاختبار العشوائي</h4>
+                    <div style="font-size: 1.3rem; background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px; margin: 15px 0;">
+                        ${randomStudent}
+                    </div>
+                    <div style="font-size: 0.9rem; opacity: 0.8;">
+                        هذا مجرد اختبار - لن يؤثر على اللعبة الفعلية
+                    </div>
+                </div>
+            `;
+            
+            const finalDetails = document.getElementById('finalSelectionDetails');
+            if (finalDetails) {
+                finalDetails.innerHTML = testResult;
+            }
+            
+            // تشغيل صوت الاختبار
+            playGameSound('select.mp3');
+            
+            console.log(`🎯 نتيجة الاختبار العشوائي: ${randomStudent}`);
+        }
+        
+        // معاينة سريعة للاختيار العشوائي
+        function showRandomPreview() {
+            console.log('👁️ معاينة سريعة للاختيار العشوائي...');
+            
+            if (!setupSelectedClass || !studentsData[setupSelectedClass]) {
+                alert('⚠️ لا يمكن المعاينة - لا توجد بيانات صف صحيحة');
+                return;
+            }
+            
+            const students = studentsData[setupSelectedClass];
+            
+            // إظهار معاينة الطلاب
+            const preview = `
+                <div style="background: linear-gradient(135deg, var(--oman-blue), #1976d2); padding: 20px; border-radius: 15px; text-align: center; color: white; margin-top: 15px;">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">👁️</div>
+                    <h4>معاينة الطلاب المتاحين</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 15px 0; max-height: 200px; overflow-y: auto;">
+                        ${students.slice(0, 12).map(student => `
+                            <div style="background: rgba(255,255,255,0.2); padding: 8px; border-radius: 8px; font-size: 0.9rem;">
+                                ${student}
+                            </div>
+                        `).join('')}
+                        ${students.length > 12 ? `<div style="background: rgba(255,255,255,0.1); padding: 8px; border-radius: 8px; font-size: 0.9rem;">و ${students.length - 12} آخرين...</div>` : ''}
+                    </div>
+                    <div style="font-size: 0.9rem; opacity: 0.8;">
+                        إجمالي: ${students.length} طالب متاح للاختيار العشوائي
+                    </div>
+                </div>
+            `;
+            
+            const finalDetails = document.getElementById('finalSelectionDetails');
+            if (finalDetails) {
+                finalDetails.innerHTML = preview;
+            }
+            
+            // تشغيل صوت المعاينة
+            playGameSound('reveal.mp3');
+            
+            console.log(`👁️ تم عرض معاينة ${students.length} طالب`);
+        }
     </script>
 
     <!-- Responsive Helper Script -->
