@@ -907,6 +907,395 @@
       font-size: 0.9rem;
     }
 
+    /* ========================================
+       نظام الإشعارات التفاعلية
+    ======================================== */
+    .notification-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+    }
+
+    .notification {
+      min-width: 300px;
+      max-width: 400px;
+      padding: var(--spacing-md);
+      border-radius: var(--border-radius-lg);
+      color: white;
+      font-weight: 600;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      transform: translateX(100%) scale(0.8);
+      opacity: 0;
+      transition: all 0.5s var(--elastic-timing);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .notification.show {
+      transform: translateX(0) scale(1);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .notification.hide {
+      transform: translateX(100%) scale(0.8);
+      opacity: 0;
+    }
+
+    /* أنواع الإشعارات */
+    .notification.success {
+      background: linear-gradient(135deg, #4ade80, #22c55e);
+      border-color: #86efac;
+    }
+
+    .notification.turn {
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      border-color: #fcd34d;
+      animation: turnPulse 2s ease-in-out infinite;
+    }
+
+    .notification.challenge {
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+      border-color: #c4b5fd;
+    }
+
+    .notification.level-up {
+      background: linear-gradient(135deg, #06b6d4, #0891b2);
+      border-color: #67e8f9;
+    }
+
+    .notification.victory {
+      background: linear-gradient(135deg, #f59e0b, #dc2626);
+      border-color: #fbbf24;
+      animation: victoryGlow 1.5s ease-in-out infinite alternate;
+    }
+
+    .notification.encouragement {
+      background: linear-gradient(135deg, #ec4899, #be185d);
+      border-color: #f9a8d4;
+    }
+
+    @keyframes turnPulse {
+      0%, 100% { 
+        transform: translateX(0) scale(1);
+        box-shadow: 0 10px 30px rgba(251, 191, 36, 0.3);
+      }
+      50% { 
+        transform: translateX(0) scale(1.05);
+        box-shadow: 0 15px 40px rgba(251, 191, 36, 0.6);
+      }
+    }
+
+    @keyframes victoryGlow {
+      0% { 
+        box-shadow: 0 10px 30px rgba(245, 158, 11, 0.5);
+      }
+      100% { 
+        box-shadow: 0 20px 50px rgba(245, 158, 11, 0.8);
+      }
+    }
+
+    .notification-icon {
+      display: inline-block;
+      margin-right: var(--spacing-sm);
+      font-size: 1.2rem;
+      animation: iconBounce 0.6s ease-out;
+    }
+
+    @keyframes iconBounce {
+      0% { transform: scale(0) rotate(0deg); }
+      50% { transform: scale(1.3) rotate(180deg); }
+      100% { transform: scale(1) rotate(360deg); }
+    }
+
+    .notification-text {
+      flex: 1;
+      line-height: 1.4;
+    }
+
+    .notification-player {
+      font-weight: 800;
+      font-size: 1.1rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    /* تأثير الجسيمات للإشعارات */
+    .notification::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.2), 
+        transparent);
+      animation: shimmer 2s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    /* ========================================
+       إشعارات تحدي الذكاء
+    ======================================== */
+    .brain-challenge-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: linear-gradient(135deg, 
+        rgba(139, 92, 246, 0.95) 0%, 
+        rgba(124, 58, 237, 0.95) 100%);
+      backdrop-filter: blur(20px);
+      border: 3px solid #c4b5fd;
+      border-radius: 20px;
+      padding: var(--spacing-xl);
+      text-align: center;
+      color: white;
+      z-index: 15000;
+      box-shadow: 0 20px 60px rgba(139, 92, 246, 0.4);
+      opacity: 0;
+      transition: all 0.6s var(--elastic-timing);
+    }
+
+    .brain-challenge-popup.show {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+
+    .brain-icon {
+      font-size: 4rem;
+      margin-bottom: var(--spacing-md);
+      animation: brainPulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes brainPulse {
+      0%, 100% { 
+        transform: scale(1) rotateY(0deg);
+        filter: hue-rotate(0deg);
+      }
+      50% { 
+        transform: scale(1.2) rotateY(180deg);
+        filter: hue-rotate(60deg);
+      }
+    }
+
+    .challenge-text {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: var(--spacing-lg);
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .challenge-level {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    /* ========================================
+       مؤثرات الجسيمات
+    ======================================== */
+    .particles-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5000;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: #ffd700;
+      border-radius: 50%;
+      opacity: 0;
+      animation: particleFall 3s linear infinite;
+    }
+
+    @keyframes particleFall {
+      0% {
+        opacity: 1;
+        transform: translateY(-100vh) rotate(0deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(100vh) rotate(360deg);
+      }
+    }
+
+    /* ========================================
+       شريط التقدم التنافسي
+    ======================================== */
+    .competition-progress {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        rgba(255, 255, 255, 0.05) 100%);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      border-radius: 15px;
+      padding: var(--spacing-md);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      z-index: 8000;
+      min-width: 300px;
+    }
+
+    .progress-icon {
+      font-size: 1.5rem;
+      color: var(--gold-color);
+      animation: progressPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes progressPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    .progress-text {
+      flex: 1;
+      color: white;
+      font-weight: 600;
+    }
+
+    .progress-bar {
+      width: 100px;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ffd700, #ff6b35);
+      width: 0%;
+      transition: width 0.8s ease-out;
+      position: relative;
+    }
+
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.3), 
+        transparent);
+      animation: progressShine 2s ease-in-out infinite;
+    }
+
+    @keyframes progressShine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    /* ========================================
+       العد التنازلي والإضافات التفاعلية
+    ======================================== */
+    @keyframes countdownPulse {
+      0%, 100% { 
+        transform: scale(1);
+        filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
+      }
+      50% { 
+        transform: scale(1.2);
+        filter: drop-shadow(0 0 40px rgba(255, 215, 0, 1));
+      }
+    }
+
+    /* أنيميشن للأيقونات المتحركة */
+    @keyframes iconFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .floating-icon {
+      animation: iconFloat 2s ease-in-out infinite;
+    }
+
+    /* تأثيرات النقر للأزرار */
+    .interactive-btn {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .interactive-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .interactive-btn:active::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    /* تأثيرات خاصة للفوز */
+    .victory-fireworks {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 25000;
+    }
+
+    .firework {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: #ffd700;
+      border-radius: 50%;
+      animation: fireworkExplode 2s ease-out infinite;
+    }
+
+    @keyframes fireworkExplode {
+      0% {
+        transform: scale(0);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(3);
+        opacity: 0.8;
+      }
+      100% {
+        transform: scale(6);
+        opacity: 0;
+      }
+    }
+
     .settings-group {
       margin-bottom: var(--spacing-lg);
     }
@@ -1075,6 +1464,28 @@
 </head>
 
 <body>
+  <!-- نظام الإشعارات التفاعلية -->
+  <div class="notification-container" id="notificationContainer"></div>
+
+  <!-- مؤثرات الجسيمات -->
+  <div class="particles-container" id="particlesContainer"></div>
+
+  <!-- إشعار تحدي الذكاء -->
+  <div class="brain-challenge-popup" id="brainChallengePopup">
+    <div class="brain-icon">🧠</div>
+    <div class="challenge-text" id="challengeText">تحدي الذكاء!</div>
+    <div class="challenge-level" id="challengeLevel">المستوى الأول - التذكر</div>
+  </div>
+
+  <!-- شريط التقدم التنافسي -->
+  <div class="competition-progress" id="competitionProgress" style="display: none;">
+    <div class="progress-icon">🏆</div>
+    <div class="progress-text" id="progressText">التقدم في الهرم</div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+
   <!-- شريط الأدوات العلوي -->
   <div class="top-toolbar">
     <div class="game-logo" id="gameLogo">
@@ -1199,7 +1610,7 @@
 
       <!-- زر البداية -->
       <div class="setup-section">
-        <button class="start-btn" id="startGameBtn" disabled>
+        <button class="start-btn interactive-btn" id="startGameBtn" disabled>
           <i class="fas fa-play"></i>
           ابدأ المسابقة
         </button>
@@ -1210,6 +1621,7 @@
     <div class="game-screen" id="gameScreen">
       <!-- معلومات اللاعب الحالي -->
       <div class="current-player-info">
+        <div class="floating-icon">🎯</div>
         <div class="player-avatar" id="currentPlayerAvatar">أ</div>
         <div class="player-name" id="currentPlayerName">اسم الطالب</div>
         <div class="player-level" id="currentPlayerLevel">المستوى الأول - التذكر</div>
@@ -1411,6 +1823,322 @@
   </div>
 
   <script>
+    /* ========================================
+       نظام الإشعارات التفاعلية المتقدم
+    ======================================== */
+    class NotificationSystem {
+      constructor() {
+        this.container = document.getElementById('notificationContainer');
+        this.particlesContainer = document.getElementById('particlesContainer');
+        this.brainChallenge = document.getElementById('brainChallengePopup');
+        this.competitionProgress = document.getElementById('competitionProgress');
+        this.notifications = [];
+        this.sounds = {
+          turnAlert: '../assets/media/sounds/achievement-unlock.mp3',
+          success: '../assets/media/sounds/win.mp3',
+          challenge: '../assets/media/sounds/brain-activate.mp3',
+          levelUp: '../assets/media/sounds/level-complete.mp3',
+          victory: '../assets/media/sounds/victory-fanfare.mp3'
+        };
+        this.motivationalMessages = {
+          turn: [
+            "🔥 حان دورك لتتألق!",
+            "⚡ أظهر قوة عقلك!",
+            "🌟 الآن وقت الإبداع!",
+            "💎 فرصتك للتميز!",
+            "🚀 ابدأ رحلة المعرفة!"
+          ],
+          success: [
+            "🎉 رائع! إجابة صحيحة!",
+            "✨ ممتاز! استمر في التقدم!",
+            "🏆 أحسنت! كتلة جديدة في الهرم!",
+            "💪 قوي! تقدم للأمام!",
+            "🌟 بطل! إجابة مذهلة!"
+          ],
+          encouragement: [
+            "💪 لا تستسلم! المحاولة التالية ستكون أفضل!",
+            "🌈 كل خطأ يقربك من النجاح!",
+            "🔥 أنت قريب من الإجابة الصحيحة!",
+            "⭐ تعلم من الأخطاء وانطلق!",
+            "🎯 ركز أكثر واستمر في المحاولة!"
+          ],
+          levelUp: [
+            "🎊 مبروك! وصلت لمستوى جديد!",
+            "🏔️ صعدت درجة في هرم المعرفة!",
+            "🎖️ تطورت لمستوى أعلى!",
+            "🌟 إنجاز رائع! مستوى متقدم!",
+            "🚀 انتقلت لمرحلة جديدة!"
+          ]
+        };
+      }
+
+      showTurnNotification(playerName, level) {
+        const message = this.getRandomMessage('turn');
+        const levelNames = [
+          'التذكر', 'الفهم', 'التطبيق', 'التحليل', 'التقييم', 'الإبداع'
+        ];
+        
+        this.createNotification(
+          'turn',
+          '🎯',
+          `<div class="notification-player">${playerName}</div>
+           <div>${message}</div>
+           <div style="font-size: 0.9rem; opacity: 0.8;">المستوى: ${levelNames[level - 1]}</div>`,
+          6000
+        );
+
+        this.showBrainChallenge(playerName, level);
+        this.playSound('turnAlert');
+        this.createParticles('#fbbf24', 15);
+      }
+
+      showSuccessNotification(playerName) {
+        const message = this.getRandomMessage('success');
+        this.createNotification(
+          'success',
+          '✅',
+          `<div class="notification-player">${playerName}</div>
+           <div>${message}</div>`,
+          4000
+        );
+        this.playSound('success');
+        this.createParticles('#4ade80', 20);
+      }
+
+      showEncouragementNotification(playerName) {
+        const message = this.getRandomMessage('encouragement');
+        this.createNotification(
+          'encouragement',
+          '💪',
+          `<div class="notification-player">${playerName}</div>
+           <div>${message}</div>`,
+          5000
+        );
+        this.createParticles('#ec4899', 10);
+      }
+
+      showLevelUpNotification(playerName, newLevel) {
+        const message = this.getRandomMessage('levelUp');
+        const levelNames = [
+          'التذكر', 'الفهم', 'التطبيق', 'التحليل', 'التقييم', 'الإبداع'
+        ];
+        
+        this.createNotification(
+          'level-up',
+          '🎊',
+          `<div class="notification-player">${playerName}</div>
+           <div>${message}</div>
+           <div style="font-size: 0.9rem; opacity: 0.8;">المستوى الجديد: ${levelNames[newLevel - 1]}</div>`,
+          7000
+        );
+        this.playSound('levelUp');
+        this.createParticles('#06b6d4', 30);
+        this.showLevelUpCelebration();
+      }
+
+      showVictoryNotification(playerName) {
+        this.createNotification(
+          'victory',
+          '🏆',
+          `<div class="notification-player">${playerName}</div>
+           <div>🎉 مبروك! أكملت هرم المعرفة! 🎉</div>
+           <div style="font-size: 0.9rem; opacity: 0.8;">بطل المعرفة الجديد!</div>`,
+          10000
+        );
+        this.playSound('victory');
+        this.createParticles('#f59e0b', 50);
+        this.showVictoryCelebration();
+      }
+
+      showBrainChallenge(playerName, level) {
+        const levelNames = [
+          'التذكر - تذكر المعلومات',
+          'الفهم - اشرح بكلماتك',
+          'التطبيق - طبق ما تعلمت',
+          'التحليل - حلل وقارن',
+          'التقييم - قيّم واحكم',
+          'الإبداع - ابتكر وأبدع'
+        ];
+
+        document.getElementById('challengeText').textContent = `${playerName}، استعد للتحدي!`;
+        document.getElementById('challengeLevel').textContent = `المستوى ${level}: ${levelNames[level - 1]}`;
+        
+        this.brainChallenge.classList.add('show');
+        this.playSound('challenge');
+        
+        setTimeout(() => {
+          this.brainChallenge.classList.remove('show');
+        }, 4000);
+      }
+
+      createNotification(type, icon, text, duration = 5000) {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.innerHTML = `
+          <div class="notification-icon">${icon}</div>
+          <div class="notification-text">${text}</div>
+        `;
+
+        this.container.appendChild(notification);
+        this.notifications.push(notification);
+
+        // إظهار الإشعار
+        setTimeout(() => {
+          notification.classList.add('show');
+        }, 100);
+
+        // إخفاء الإشعار
+        setTimeout(() => {
+          notification.classList.add('hide');
+          setTimeout(() => {
+            if (notification.parentNode) {
+              notification.parentNode.removeChild(notification);
+            }
+            this.notifications = this.notifications.filter(n => n !== notification);
+          }, 500);
+        }, duration);
+      }
+
+      createParticles(color, count) {
+        for (let i = 0; i < count; i++) {
+          setTimeout(() => {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.background = color;
+            particle.style.animationDelay = Math.random() * 2 + 's';
+            particle.style.animationDuration = (2 + Math.random() * 2) + 's';
+            
+            this.particlesContainer.appendChild(particle);
+            
+            setTimeout(() => {
+              if (particle.parentNode) {
+                particle.parentNode.removeChild(particle);
+              }
+            }, 5000);
+          }, i * 100);
+        }
+      }
+
+      showLevelUpCelebration() {
+        // تأثير خاص لصعود المستوى
+        for (let i = 0; i < 5; i++) {
+          setTimeout(() => {
+            this.createParticles('#ffd700', 8);
+          }, i * 200);
+        }
+      }
+
+      showVictoryCelebration() {
+        // تأثير النصر الكبير
+        const colors = ['#ffd700', '#ff6b35', '#4ade80', '#8b5cf6', '#06b6d4'];
+        for (let i = 0; i < 10; i++) {
+          setTimeout(() => {
+            const color = colors[i % colors.length];
+            this.createParticles(color, 12);
+          }, i * 300);
+        }
+
+        // إضافة ألعاب نارية
+        this.createFireworks();
+      }
+
+      createFireworks() {
+        const fireworksContainer = document.createElement('div');
+        fireworksContainer.className = 'victory-fireworks';
+        document.body.appendChild(fireworksContainer);
+
+        for (let i = 0; i < 20; i++) {
+          setTimeout(() => {
+            const firework = document.createElement('div');
+            firework.className = 'firework';
+            firework.style.left = Math.random() * 100 + '%';
+            firework.style.top = Math.random() * 100 + '%';
+            firework.style.background = ['#ffd700', '#ff6b35', '#4ade80', '#8b5cf6'][Math.floor(Math.random() * 4)];
+            firework.style.animationDelay = Math.random() * 2 + 's';
+            
+            fireworksContainer.appendChild(firework);
+          }, i * 200);
+        }
+
+        // إزالة الألعاب النارية بعد انتهاء العرض
+        setTimeout(() => {
+          if (fireworksContainer.parentNode) {
+            fireworksContainer.parentNode.removeChild(fireworksContainer);
+          }
+        }, 8000);
+      }
+
+      updateCompetitionProgress(currentLevel, totalLevels, playerName) {
+        const progress = (currentLevel / totalLevels) * 100;
+        const progressText = document.getElementById('progressText');
+        const progressFill = document.getElementById('progressFill');
+        
+        progressText.textContent = `${playerName} - المستوى ${currentLevel}/${totalLevels}`;
+        progressFill.style.width = progress + '%';
+        
+        if (this.competitionProgress.style.display === 'none') {
+          this.competitionProgress.style.display = 'flex';
+        }
+      }
+
+      playSound(soundType) {
+        if (window.audioManager && this.sounds[soundType]) {
+          // استخدام AudioManager الموجود
+          const audio = new Audio(this.sounds[soundType]);
+          audio.volume = 0.6;
+          audio.play().catch(e => console.log('Sound play failed:', e));
+        }
+      }
+
+      getRandomMessage(type) {
+        const messages = this.motivationalMessages[type];
+        return messages[Math.floor(Math.random() * messages.length)];
+      }
+
+      showChallengeCountdown(seconds = 3) {
+        const countdown = document.createElement('div');
+        countdown.style.cssText = `
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-size: 5rem;
+          font-weight: 900;
+          color: #ffd700;
+          z-index: 20000;
+          text-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+          animation: countdownPulse 1s ease-in-out infinite;
+        `;
+        document.body.appendChild(countdown);
+
+        let count = seconds;
+        countdown.textContent = count;
+
+        const interval = setInterval(() => {
+          count--;
+          if (count > 0) {
+            countdown.textContent = count;
+          } else {
+            countdown.textContent = 'ابدأ!';
+            setTimeout(() => {
+              document.body.removeChild(countdown);
+            }, 500);
+            clearInterval(interval);
+          }
+        }, 1000);
+      }
+
+      clearAllNotifications() {
+        this.notifications.forEach(notification => {
+          if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+          }
+        });
+        this.notifications = [];
+      }
+    }
+
     /* ========================================
        نظام الصوت الذكي المحدث
     ======================================== */
@@ -2107,29 +2835,52 @@
       startGame() {
         if (this.currentStudents.length === 0) return;
 
-        this.gameState = 'playing';
-        this.currentPlayerIndex = 0;
-        this.currentLevel = 1;
-        
-        // تهيئة أهرام اللاعبين
-        this.playerPyramids.clear();
-        this.currentStudents.forEach(student => {
-          this.playerPyramids.set(student, {
-            level: 1,
-            completed: false,
-            blocks: []
-          });
-        });
+        // عد تنازلي قبل بدء اللعبة
+        if (window.notificationSystem) {
+          notificationSystem.showChallengeCountdown(3);
+        }
 
-        // إخفاء شاشة الإعداد وإظهار شاشة اللعبة
-        this.elements.setupScreen.style.display = 'none';
-        this.elements.gameScreen.style.display = 'block';
-        
-        // إنشاء الهرم وتحديث الواجهة
-        this.createPyramid();
-        this.updateCurrentPlayer();
-        this.updateBloomLevels();
-        this.updateQuestion();
+        setTimeout(() => {
+          this.gameState = 'playing';
+          this.currentPlayerIndex = 0;
+          this.currentLevel = 1;
+          
+          // تهيئة أهرام اللاعبين
+          this.playerPyramids.clear();
+          this.currentStudents.forEach(student => {
+            this.playerPyramids.set(student, {
+              level: 1,
+              completed: false,
+              blocks: []
+            });
+          });
+
+          // إخفاء شاشة الإعداد وإظهار شاشة اللعبة
+          this.elements.setupScreen.style.display = 'none';
+          this.elements.gameScreen.style.display = 'block';
+          
+          // إنشاء الهرم وتحديث الواجهة
+          this.createPyramid();
+          this.updateCurrentPlayer();
+          this.updateBloomLevels();
+          this.updateQuestion();
+
+          // إشعار بدء اللعبة للطالب الأول
+          if (window.notificationSystem) {
+            const firstPlayer = this.currentStudents[0];
+            notificationSystem.showTurnNotification(firstPlayer, 1);
+            
+            // إشعار ترحيبي للجميع
+            notificationSystem.createNotification(
+              'challenge',
+              '🏛️',
+              `<div><strong>🎉 مرحباً بكم في هرم المعرفة! 🎉</strong></div>
+               <div>ابنوا هرم المعرفة عبر المستويات الستة لبلوم!</div>
+               <div style="font-size: 0.9rem; opacity: 0.8;">من التذكر إلى الإبداع... رحلة التعلم تبدأ الآن!</div>`,
+              8000
+            );
+          }
+        }, 3500); // انتظار انتهاء العد التنازلي
       }
 
       createPyramid() {
@@ -2182,6 +2933,12 @@
         this.createPyramid();
       }
 
+      getCurrentPlayerLevel() {
+        const currentPlayer = this.currentStudents[this.currentPlayerIndex];
+        const playerData = this.playerPyramids.get(currentPlayer);
+        return playerData ? playerData.level : 1;
+      }
+
       updateBloomLevels() {
         document.querySelectorAll('.bloom-level').forEach(level => {
           level.classList.remove('active');
@@ -2222,10 +2979,21 @@
       handleCorrectAnswer(player, playerData) {
         this.audio.play('step-correct', 'game');
         
+        // إشعار النجاح
+        if (window.notificationSystem) {
+          notificationSystem.showSuccessNotification(player);
+        }
+        
         // ترقية اللاعب للمستوى التالي
         if (playerData.level < this.maxLevel) {
+          const oldLevel = playerData.level;
           playerData.level++;
           this.audio.play('level-up', 'game');
+          
+          // إشعار صعود المستوى
+          if (window.notificationSystem) {
+            notificationSystem.showLevelUpNotification(player, playerData.level);
+          }
           
           // إضافة تأثيرات بصرية
           this.showSuccessMessage(`${player} انتقل للمستوى ${playerData.level}!`);
@@ -2250,6 +3018,12 @@
 
       handleWrongAnswer(player, playerData) {
         this.audio.play('step-wrong', 'game');
+        
+        // إشعار التشجيع
+        if (window.notificationSystem) {
+          notificationSystem.showEncouragementNotification(player);
+        }
+        
         this.showErrorMessage(`${player} يحتاج لمحاولة أخرى في نفس المستوى`);
         
         setTimeout(() => {
@@ -2262,11 +3036,32 @@
         this.updateCurrentPlayer();
         this.updateBloomLevels();
         this.updateQuestion();
+        
+        // إضافة إشعار تفاعلي للدور الجديد
+        if (window.notificationSystem) {
+          const currentPlayer = this.currentStudents[this.currentPlayerIndex];
+          const currentLevel = this.getCurrentPlayerLevel();
+          
+          // إشعار الدور مع التحدي
+          notificationSystem.showTurnNotification(currentPlayer.name, currentLevel);
+          
+          // تحديث شريط التقدم التنافسي
+          notificationSystem.updateCompetitionProgress(
+            currentLevel, 
+            6, 
+            currentPlayer.name
+          );
+        }
       }
 
       declareWinner(winner) {
         this.gameState = 'finished';
         this.audio.play('pyramid-complete', 'game');
+        
+        // إشعار النصر الكبير
+        if (window.notificationSystem) {
+          notificationSystem.showVictoryNotification(winner);
+        }
         
         setTimeout(() => {
           this.audio.play('celebration', 'celebration');
@@ -2393,6 +3188,7 @@
     let towerCompetition;
     let victoryManager;
     let soundSettings;
+    let notificationSystem;
 
     // دوال الأزرار
     function playAgain() {
@@ -2424,9 +3220,11 @@
       towerCompetition = new PyramidKnowledgeGame();
       victoryManager = new VictoryManager();
       soundSettings = new SoundSettingsManager(towerCompetition.audio);
+      notificationSystem = new NotificationSystem();
       
-      // جعل إدارة الإعدادات متاحة عالمياً
+      // جعل الأنظمة متاحة عالمياً
       window.soundSettings = soundSettings;
+      window.notificationSystem = notificationSystem;
       
       // تهيئة الصوت
       await towerCompetition.audio.init();
