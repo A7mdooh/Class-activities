@@ -1,0 +1,1934 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>هرم المعرفة - لعبة تعليمية تفاعلية</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;800;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  
+  <style>
+    /* ========================================
+       متغيرات CSS الأساسية
+    ======================================== */
+    :root {
+      --primary-color: #667eea;
+      --secondary-color: #764ba2;
+      --success-color: #11998e;
+      --warning-color: #f093fb;
+      --danger-color: #fc466b;
+      --neon-cyan: #00f5ff;
+      --neon-pink: #ff073a;
+      --gold-color: #ffd700;
+      
+      --primary-gradient: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      --success-gradient: linear-gradient(135deg, var(--success-color), #38ef7d);
+      --warning-gradient: linear-gradient(135deg, var(--warning-color), #4facfe);
+      --danger-gradient: linear-gradient(135deg, var(--danger-color), #3f5efb);
+      --neon-gradient: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink));
+      --gold-gradient: linear-gradient(135deg, #ffd700, #ff6b35);
+      
+      --border-radius: 15px;
+      --border-radius-lg: 25px;
+      --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      --box-shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.4);
+      
+      --spacing-xs: 0.5rem;
+      --spacing-sm: 1rem;
+      --spacing-md: 1.5rem;
+      --spacing-lg: 2rem;
+      --spacing-xl: 3rem;
+      
+      --elastic-timing: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      --smooth-timing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    /* إعدادات أساسية */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(135deg, 
+        #0c0c0c 0%, 
+        #1a1a2e 25%, 
+        #16213e 50%, 
+        #1a1a2e 75%, 
+        #0c0c0c 100%);
+      background-attachment: fixed;
+      color: white;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* ========================================
+       شريط الأدوات العلوي
+    ======================================== */
+    .top-toolbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: linear-gradient(135deg, 
+        rgba(0, 0, 0, 0.8) 0%, 
+        rgba(0, 0, 0, 0.6) 50%, 
+        rgba(0, 0, 0, 0.8) 100%);
+      backdrop-filter: blur(20px);
+      border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--spacing-lg);
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+
+    .game-logo {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--gold-color);
+      cursor: pointer;
+      transition: all 0.3s var(--elastic-timing);
+    }
+
+    .game-logo:hover {
+      transform: scale(1.05);
+      filter: drop-shadow(0 0 20px var(--gold-color));
+    }
+
+    .game-logo::before {
+      content: '🏛️';
+      font-size: 2rem;
+      animation: logoFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-5px) rotate(5deg); }
+    }
+
+    .toolbar-icons {
+      display: flex;
+      gap: var(--spacing-sm);
+    }
+
+    .toolbar-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        rgba(255, 255, 255, 0.05) 100%);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s var(--elastic-timing);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .toolbar-icon:hover {
+      transform: translateY(-5px) scale(1.1);
+      border-color: var(--gold-color);
+      box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+    }
+
+    .toolbar-icon i {
+      font-size: 1.2rem;
+      color: white;
+      transition: all 0.3s ease;
+    }
+
+    .toolbar-icon:hover i {
+      color: var(--gold-color);
+      transform: scale(1.2);
+    }
+
+    /* ========================================
+       الحاوية الرئيسية
+    ======================================== */
+    .container {
+      margin-top: 70px;
+      padding: var(--spacing-lg);
+      min-height: calc(100vh - 70px);
+    }
+
+    .main-title {
+      text-align: center;
+      margin-bottom: var(--spacing-xl);
+      animation: titleGlow 2s ease-in-out infinite alternate;
+    }
+
+    .main-title h1 {
+      font-family: 'Orbitron', 'Cairo', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 900;
+      background: linear-gradient(45deg, #ffd700, #ff6b35, #00f5ff, #ffd700);
+      background-size: 300% 300%;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientFlow 3s ease-in-out infinite;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .main-title p {
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.8);
+      font-weight: 600;
+    }
+
+    @keyframes titleGlow {
+      0% { filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5)); }
+      100% { filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.8)); }
+    }
+
+    @keyframes gradientFlow {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    /* ========================================
+       شاشة الإعداد
+    ======================================== */
+    .setup-screen {
+      display: block;
+      animation: fadeInUp 1s var(--smooth-timing);
+    }
+
+    .game-screen {
+      display: none;
+      animation: fadeInUp 1s var(--smooth-timing);
+    }
+
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .setup-section {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        rgba(255, 255, 255, 0.05) 100%);
+      backdrop-filter: blur(20px);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: var(--border-radius-lg);
+      padding: var(--spacing-xl);
+      margin-bottom: var(--spacing-lg);
+      box-shadow: var(--box-shadow);
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: var(--spacing-lg);
+      text-align: center;
+      color: var(--gold-color);
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    }
+
+    .class-select {
+      width: 100%;
+      padding: var(--spacing-md);
+      border-radius: var(--border-radius);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      background: rgba(0, 0, 0, 0.3);
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: var(--spacing-lg);
+      transition: all 0.3s ease;
+    }
+
+    .class-select:focus {
+      outline: none;
+      border-color: var(--gold-color);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    }
+
+    /* ========================================
+       بطاقات وضع الاختيار
+    ======================================== */
+    .mode-selection {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .mode-card {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        rgba(255, 255, 255, 0.05) 100%);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: var(--border-radius-lg);
+      padding: var(--spacing-lg);
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s var(--elastic-timing);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mode-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      border-color: var(--gold-color);
+      box-shadow: 0 15px 40px rgba(255, 215, 0, 0.3);
+    }
+
+    .mode-card.selected {
+      border-color: var(--gold-color);
+      background: linear-gradient(135deg, 
+        rgba(255, 215, 0, 0.2) 0%, 
+        rgba(255, 107, 53, 0.2) 100%);
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+    }
+
+    .mode-icon {
+      font-size: 3rem;
+      margin-bottom: var(--spacing-md);
+      color: var(--gold-color);
+    }
+
+    .mode-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: var(--spacing-sm);
+      color: white;
+    }
+
+    .mode-description {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.5;
+    }
+
+    /* ========================================
+       أزرار عدد الطلاب
+    ======================================== */
+    .student-count-section {
+      display: none;
+      text-align: center;
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .count-buttons {
+      display: flex;
+      justify-content: center;
+      gap: var(--spacing-md);
+      flex-wrap: wrap;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .count-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        rgba(255, 255, 255, 0.05) 100%);
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.3s var(--elastic-timing);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .count-btn:hover {
+      transform: scale(1.2);
+      border-color: var(--gold-color);
+      background: var(--gold-gradient);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    }
+
+    .count-btn.selected {
+      border-color: var(--gold-color);
+      background: var(--gold-gradient);
+      transform: scale(1.1);
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.7);
+    }
+
+    /* ========================================
+       الهرم التفاعلي
+    ======================================== */
+    .pyramid-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 500px;
+      margin: var(--spacing-xl) 0;
+    }
+
+    .pyramid {
+      position: relative;
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pyramid-level {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 5px;
+    }
+
+    .pyramid-block {
+      width: 60px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-align: center;
+      transition: all 0.3s var(--elastic-timing);
+      position: relative;
+      overflow: hidden;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    /* مستويات الهرم بألوان مختلفة */
+    .pyramid-block.level-1 { /* التذكر */
+      background: linear-gradient(135deg, #ff9a9e, #fecfef);
+      color: #333;
+    }
+
+    .pyramid-block.level-2 { /* الفهم */
+      background: linear-gradient(135deg, #a8edea, #fed6e3);
+      color: #333;
+    }
+
+    .pyramid-block.level-3 { /* التطبيق */
+      background: linear-gradient(135deg, #ffecd2, #fcb69f);
+      color: #333;
+    }
+
+    .pyramid-block.level-4 { /* التحليل */
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+    }
+
+    .pyramid-block.level-5 { /* التقييم */
+      background: linear-gradient(135deg, #f093fb, #f5576c);
+      color: white;
+    }
+
+    .pyramid-block.level-6 { /* الإبداع */
+      background: linear-gradient(135deg, #ffd700, #ff6b35);
+      color: white;
+    }
+
+    .pyramid-block.active {
+      animation: blockPulse 1.5s ease-in-out infinite;
+      box-shadow: 0 0 20px currentColor;
+      transform: scale(1.1);
+    }
+
+    .pyramid-block.completed {
+      animation: blockGlow 2s ease-in-out infinite alternate;
+      box-shadow: 0 0 30px currentColor;
+    }
+
+    @keyframes blockPulse {
+      0%, 100% { transform: scale(1.1); }
+      50% { transform: scale(1.2); }
+    }
+
+    @keyframes blockGlow {
+      0% { box-shadow: 0 0 20px currentColor; }
+      100% { box-shadow: 0 0 40px currentColor; }
+    }
+
+    /* ========================================
+       مستويات بلوم
+    ======================================== */
+    .bloom-levels {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .bloom-level {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        rgba(255, 255, 255, 0.05) 100%);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-md);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .bloom-level.active {
+      border-color: var(--gold-color);
+      background: linear-gradient(135deg, 
+        rgba(255, 215, 0, 0.2) 0%, 
+        rgba(255, 107, 53, 0.2) 100%);
+      transform: scale(1.05);
+      box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+    }
+
+    .level-number {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--gold-color);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .level-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: var(--spacing-xs);
+      color: white;
+    }
+
+    .level-description {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.4;
+    }
+
+    /* ========================================
+       منطقة الأسئلة
+    ======================================== */
+    .question-area {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.15) 0%, 
+        rgba(255, 255, 255, 0.05) 100%);
+      backdrop-filter: blur(20px);
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      border-radius: var(--border-radius-lg);
+      padding: var(--spacing-xl);
+      margin-bottom: var(--spacing-lg);
+      text-align: center;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .current-question {
+      font-size: 1.4rem;
+      font-weight: 600;
+      line-height: 1.6;
+      margin-bottom: var(--spacing-lg);
+      color: white;
+    }
+
+    .question-level-indicator {
+      font-size: 1rem;
+      color: var(--gold-color);
+      font-weight: 700;
+      margin-bottom: var(--spacing-md);
+    }
+
+    /* ========================================
+       أزرار التحكم
+    ======================================== */
+    .control-buttons {
+      display: flex;
+      justify-content: center;
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .control-btn {
+      padding: var(--spacing-md) var(--spacing-xl);
+      border: none;
+      border-radius: var(--border-radius-lg);
+      font-size: 1.2rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s var(--elastic-timing);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: relative;
+      overflow: hidden;
+      min-width: 150px;
+    }
+
+    .btn-correct {
+      background: var(--success-gradient);
+      color: white;
+      border: 3px solid rgba(17, 153, 142, 0.5);
+    }
+
+    .btn-correct:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 15px 40px rgba(17, 153, 142, 0.5);
+      border-color: rgba(17, 153, 142, 1);
+    }
+
+    .btn-wrong {
+      background: var(--danger-gradient);
+      color: white;
+      border: 3px solid rgba(252, 70, 107, 0.5);
+    }
+
+    .btn-wrong:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 15px 40px rgba(252, 70, 107, 0.5);
+      border-color: rgba(252, 70, 107, 1);
+    }
+
+    .start-btn {
+      background: var(--gold-gradient);
+      color: white;
+      border: 3px solid rgba(255, 215, 0, 0.5);
+      padding: var(--spacing-lg) var(--spacing-xl);
+      font-size: 1.3rem;
+      border-radius: var(--border-radius-lg);
+      cursor: pointer;
+      transition: all 0.3s var(--elastic-timing);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      margin: 0 auto;
+    }
+
+    .start-btn:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 15px 40px rgba(255, 215, 0, 0.5);
+      border-color: rgba(255, 215, 0, 1);
+    }
+
+    .start-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ========================================
+       معلومات اللاعب الحالي
+    ======================================== */
+    .current-player-info {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        rgba(255, 255, 255, 0.05) 100%);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      border-radius: var(--border-radius-lg);
+      padding: var(--spacing-lg);
+      text-align: center;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .player-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--gold-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 900;
+      color: white;
+      margin: 0 auto var(--spacing-md);
+      border: 4px solid rgba(255, 215, 0, 0.5);
+      animation: avatarGlow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes avatarGlow {
+      0% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+      100% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.8); }
+    }
+
+    .player-name {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: white;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .player-level {
+      font-size: 1.1rem;
+      color: var(--gold-color);
+      font-weight: 600;
+    }
+
+    /* ========================================
+       الشاشة النهائية
+    ======================================== */
+    .victory-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, 
+        rgba(0, 0, 20, 0.95) 0%, 
+        rgba(20, 0, 40, 0.95) 25%,
+        rgba(40, 0, 60, 0.95) 50%,
+        rgba(20, 0, 40, 0.95) 75%,
+        rgba(0, 0, 20, 0.95) 100%);
+      backdrop-filter: blur(20px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 20000;
+      animation: victoryScreenFadeIn 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .victory-screen.show {
+      display: flex;
+    }
+
+    .victory-content {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.25) 0%, 
+        rgba(255, 255, 255, 0.1) 50%,
+        rgba(255, 255, 255, 0.25) 100%);
+      backdrop-filter: blur(25px);
+      border: 3px solid rgba(255, 215, 0, 0.5);
+      border-radius: 30px;
+      padding: var(--spacing-lg);
+      max-width: 500px;
+      max-height: 85vh;
+      width: 90%;
+      text-align: center;
+      position: relative;
+      overflow-y: auto;
+    }
+
+    .victory-crown {
+      font-size: 4rem;
+      margin-bottom: var(--spacing-md);
+      animation: crownFloat 3s ease-in-out infinite;
+    }
+
+    .victory-title {
+      font-family: 'Orbitron', 'Cairo', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 900;
+      background: var(--gold-gradient);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .winner-name {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: white;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .victory-actions {
+      display: flex;
+      gap: var(--spacing-md);
+      justify-content: center;
+      margin-top: var(--spacing-lg);
+    }
+
+    .victory-btn {
+      padding: 15px 25px;
+      border: none;
+      border-radius: 20px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s var(--elastic-timing);
+      min-width: 140px;
+    }
+
+    .btn-play-again {
+      background: var(--success-gradient);
+      color: white;
+    }
+
+    .btn-home {
+      background: var(--primary-gradient);
+      color: white;
+    }
+
+    .victory-btn:hover {
+      transform: translateY(-3px) scale(1.05);
+    }
+
+    /* ========================================
+       الاستجابة للشاشات الصغيرة
+    ======================================== */
+    @media (max-width: 768px) {
+      .main-title h1 {
+        font-size: 2.5rem;
+      }
+
+      .mode-selection {
+        grid-template-columns: 1fr;
+      }
+
+      .bloom-levels {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .control-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .pyramid-block {
+        width: 50px;
+        height: 35px;
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: var(--spacing-sm);
+      }
+
+      .main-title h1 {
+        font-size: 2rem;
+      }
+
+      .bloom-levels {
+        grid-template-columns: 1fr;
+      }
+
+      .victory-actions {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- شريط الأدوات العلوي -->
+  <div class="top-toolbar">
+    <div class="game-logo" id="gameLogo">
+      هرم المعرفة
+    </div>
+    
+    <div class="toolbar-icons">
+      <div class="toolbar-icon" id="homeIcon" data-tooltip="الصفحة الرئيسية">
+        <i class="fas fa-home"></i>
+      </div>
+      <div class="toolbar-icon" id="soundIcon" data-tooltip="كتم الصوت">
+        <i class="fas fa-volume-up"></i>
+      </div>
+      <div class="toolbar-icon" id="settingsIcon" data-tooltip="إعدادات الصوت">
+        <i class="fas fa-cog"></i>
+      </div>
+      <div class="toolbar-icon" id="fullscreenIcon" data-tooltip="ملئ الشاشة">
+        <i class="fas fa-expand"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- العنوان الرئيسي -->
+    <div class="main-title">
+      <h1>هرم المعرفة</h1>
+      <p>لعبة تعليمية تفاعلية مبنية على تصنيف بلوم للتفكير العليا</p>
+    </div>
+
+    <!-- شاشة الإعداد -->
+    <div class="setup-screen" id="setupScreen">
+      <!-- اختيار الصف -->
+      <div class="setup-section">
+        <h3 class="section-title">
+          <i class="fas fa-graduation-cap"></i>
+          اختر الصف الدراسي
+        </h3>
+        <select class="class-select" id="classSelect">
+          <option value="">اختر الصف</option>
+        </select>
+      </div>
+
+      <!-- طرق الاختيار -->
+      <div class="setup-section" id="selectionModeSection" style="display: none;">
+        <h3 class="section-title">
+          <i class="fas fa-users"></i>
+          طريقة اختيار المتسابقين
+        </h3>
+        <div class="mode-selection">
+          <div class="mode-card" data-mode="individual" onclick="towerCompetition.selectMode('individual')">
+            <div class="mode-icon">👤</div>
+            <div class="mode-title">فردي</div>
+            <div class="mode-description">كل طالب يبني هرمه الخاص</div>
+          </div>
+          <div class="mode-card" data-mode="teams" onclick="towerCompetition.selectMode('teams')">
+            <div class="mode-icon">👥</div>
+            <div class="mode-title">جماعي</div>
+            <div class="mode-description">المجموعات تتنافس في بناء الهرم</div>
+          </div>
+          <div class="mode-card" data-mode="class" onclick="towerCompetition.selectMode('class')">
+            <div class="mode-icon">🏫</div>
+            <div class="mode-title">الصف كاملاً</div>
+            <div class="mode-description">جميع الطلاب يشاركون معاً</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- عدد المتسابقين -->
+      <div class="setup-section student-count-section" id="studentCountSection">
+        <h3 class="section-title">
+          <i class="fas fa-hashtag"></i>
+          عدد المتسابقين
+        </h3>
+        <div class="count-buttons">
+          <button class="count-btn" data-count="3" onclick="towerCompetition.selectStudentCount(3)">3</button>
+          <button class="count-btn" data-count="4" onclick="towerCompetition.selectStudentCount(4)">4</button>
+          <button class="count-btn" data-count="5" onclick="towerCompetition.selectStudentCount(5)">5</button>
+          <button class="count-btn" data-count="6" onclick="towerCompetition.selectStudentCount(6)">6</button>
+          <button class="count-btn" data-count="8" onclick="towerCompetition.selectStudentCount(8)">8</button>
+          <button class="count-btn" data-count="10" onclick="towerCompetition.selectStudentCount(10)">10</button>
+        </div>
+      </div>
+
+      <!-- زر البداية -->
+      <div class="setup-section">
+        <button class="start-btn" id="startGameBtn" disabled>
+          <i class="fas fa-play"></i>
+          ابدأ المسابقة
+        </button>
+      </div>
+    </div>
+
+    <!-- شاشة اللعبة -->
+    <div class="game-screen" id="gameScreen">
+      <!-- معلومات اللاعب الحالي -->
+      <div class="current-player-info">
+        <div class="player-avatar" id="currentPlayerAvatar">أ</div>
+        <div class="player-name" id="currentPlayerName">اسم الطالب</div>
+        <div class="player-level" id="currentPlayerLevel">المستوى الأول - التذكر</div>
+      </div>
+
+      <!-- مستويات بلوم -->
+      <div class="bloom-levels">
+        <div class="bloom-level" data-level="1">
+          <div class="level-number">1</div>
+          <div class="level-name">التذكر</div>
+          <div class="level-description">استدعاء المعلومات والحقائق</div>
+        </div>
+        <div class="bloom-level" data-level="2">
+          <div class="level-number">2</div>
+          <div class="level-name">الفهم</div>
+          <div class="level-description">شرح المعنى والأفكار</div>
+        </div>
+        <div class="bloom-level" data-level="3">
+          <div class="level-number">3</div>
+          <div class="level-name">التطبيق</div>
+          <div class="level-description">استخدام المعرفة في مواقف جديدة</div>
+        </div>
+        <div class="bloom-level" data-level="4">
+          <div class="level-number">4</div>
+          <div class="level-name">التحليل</div>
+          <div class="level-description">تفكيك المعلومات وفهم العلاقات</div>
+        </div>
+        <div class="bloom-level" data-level="5">
+          <div class="level-number">5</div>
+          <div class="level-name">التقييم</div>
+          <div class="level-description">إصدار أحكام مبررة</div>
+        </div>
+        <div class="bloom-level" data-level="6">
+          <div class="level-number">6</div>
+          <div class="level-name">الإبداع</div>
+          <div class="level-description">إنتاج أفكار وحلول جديدة</div>
+        </div>
+      </div>
+
+      <!-- الهرم التفاعلي -->
+      <div class="pyramid-container">
+        <div class="pyramid" id="pyramid">
+          <!-- سيتم إنشاء الهرم ديناميكياً -->
+        </div>
+      </div>
+
+      <!-- منطقة الأسئلة -->
+      <div class="question-area">
+        <div class="question-level-indicator" id="questionLevelIndicator">
+          المستوى الأول - التذكر
+        </div>
+        <div class="current-question" id="currentQuestion">
+          اسأل الطالب سؤالاً مناسباً لمستوى التذكر
+        </div>
+      </div>
+
+      <!-- أزرار التحكم -->
+      <div class="control-buttons">
+        <button class="control-btn btn-correct" id="correctBtn">
+          <i class="fas fa-check"></i> إجابة صحيحة
+        </button>
+        <button class="control-btn btn-wrong" id="wrongBtn">
+          <i class="fas fa-times"></i> إجابة خاطئة
+        </button>
+      </div>
+
+      <!-- أزرار إضافية -->
+      <div class="control-buttons">
+        <button class="control-btn" style="background: var(--warning-gradient);" onclick="restartGame()">
+          <i class="fas fa-redo"></i> إعادة تشغيل
+        </button>
+        <button class="control-btn" style="background: var(--danger-gradient);" onclick="endGame()">
+          <i class="fas fa-stop"></i> إنهاء المسابقة
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- الشاشة النهائية -->
+  <div id="victory-screen" class="victory-screen">
+    <div class="victory-content">
+      <div class="victory-crown">🏛️</div>
+      <h1 class="victory-title">تهانينا!</h1>
+      <div class="winner-name" id="winner-name">بطل المعرفة</div>
+      <div class="victory-actions">
+        <button class="victory-btn btn-play-again" onclick="playAgain()">
+          <i class="fas fa-redo"></i> العب من جديد
+        </button>
+        <button class="victory-btn btn-home" onclick="goToHome()">
+          <i class="fas fa-home"></i> الصفحة الرئيسية
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ========================================
+       نظام الصوت الذكي المحدث
+    ======================================== */
+    class AudioManager {
+      constructor() {
+        this.sounds = {};
+        this.enabled = true;
+        this.volume = 0.7;
+        this.categories = {
+          'ui': { enabled: true, volume: 0.6 },
+          'game': { enabled: true, volume: 0.8 },
+          'celebration': { enabled: true, volume: 0.9 }
+        };
+        this.loadSettings();
+      }
+
+      async init() {
+        // تحميل الأصوات المطلوبة
+        const soundFiles = {
+          'ui-click': '../assets/media/sounds/Click.mp3',
+          'ui-hover': '../assets/media/sounds/select.mp3',
+          'step-correct': '../assets/media/sounds/win.mp3',
+          'step-wrong': '../assets/media/sounds/wrong_answer.mp3',
+          'level-up': '../assets/media/sounds/achievement-unlock.mp3',
+          'pyramid-complete': '../assets/media/sounds/battle-victory.mp3',
+          'game-start': '../assets/media/sounds/startapp.mp3',
+          'celebration': '../assets/media/sounds/crowd-cheer.mp3'
+        };
+
+        for (const [key, url] of Object.entries(soundFiles)) {
+          try {
+            const audio = new Audio(url);
+            audio.preload = 'auto';
+            this.sounds[key] = audio;
+          } catch (error) {
+            console.log(`Could not load sound: ${key}`);
+          }
+        }
+      }
+
+      play(soundKey, category = 'ui', options = {}) {
+        if (!this.enabled || !this.sounds[soundKey]) return;
+        
+        const categoryConfig = this.categories[category];
+        if (!categoryConfig || !categoryConfig.enabled) return;
+
+        try {
+          const sound = this.sounds[soundKey].cloneNode();
+          sound.volume = (options.volume || 1) * this.volume * categoryConfig.volume;
+          sound.play().catch(() => {});
+        } catch (error) {
+          console.log(`Sound play error: ${soundKey}`);
+        }
+      }
+
+      toggle() {
+        this.enabled = !this.enabled;
+        this.saveSettings();
+        return this.enabled;
+      }
+
+      setVolume(volume) {
+        this.volume = Math.max(0, Math.min(1, volume));
+        this.saveSettings();
+      }
+
+      isEnabled() {
+        return this.enabled;
+      }
+
+      saveSettings() {
+        try {
+          localStorage.setItem('pyramidAudioSettings', JSON.stringify({
+            enabled: this.enabled,
+            volume: this.volume,
+            categories: this.categories
+          }));
+        } catch (error) {
+          console.log('Could not save audio settings');
+        }
+      }
+
+      loadSettings() {
+        try {
+          const settings = JSON.parse(localStorage.getItem('pyramidAudioSettings') || '{}');
+          this.enabled = settings.enabled !== undefined ? settings.enabled : true;
+          this.volume = settings.volume || 0.7;
+          if (settings.categories) {
+            Object.assign(this.categories, settings.categories);
+          }
+        } catch (error) {
+          console.log('Could not load audio settings');
+        }
+      }
+    }
+
+    /* ========================================
+       إدارة شريط الأدوات العلوي
+    ======================================== */
+    class ToolbarManager {
+      constructor(audioManager) {
+        this.audio = audioManager;
+        this.isFullscreen = false;
+        this.initElements();
+        this.setupEvents();
+        this.setupFullscreenListener();
+      }
+
+      initElements() {
+        this.elements = {
+          gameLogo: document.getElementById('gameLogo'),
+          homeIcon: document.getElementById('homeIcon'),
+          soundIcon: document.getElementById('soundIcon'),
+          settingsIcon: document.getElementById('settingsIcon'),
+          fullscreenIcon: document.getElementById('fullscreenIcon')
+        };
+      }
+
+      setupEvents() {
+        this.elements.homeIcon?.addEventListener('click', () => {
+          this.handleHomeClick();
+        });
+
+        this.elements.soundIcon?.addEventListener('click', () => {
+          this.handleSoundToggle();
+        });
+
+        this.elements.fullscreenIcon?.addEventListener('click', () => {
+          this.handleFullscreenToggle();
+        });
+
+        this.elements.gameLogo?.addEventListener('click', () => {
+          this.handleLogoClick();
+        });
+
+        // تأثيرات الصوت عند التمرير
+        Object.values(this.elements).forEach(element => {
+          element?.addEventListener('mouseenter', () => {
+            this.audio.play('ui-hover', 'ui', { volume: 0.3 });
+          });
+        });
+      }
+
+      handleHomeClick() {
+        this.audio.play('ui-click');
+        this.animateClick(this.elements.homeIcon);
+        
+        const confirmed = confirm('هل تريد العودة إلى الصفحة الرئيسية؟\nسيتم فقدان تقدمك الحالي في اللعبة.');
+        
+        if (confirmed) {
+          setTimeout(() => {
+            window.location.href = '../main.html';
+          }, 300);
+        }
+      }
+
+      handleSoundToggle() {
+        const isEnabled = this.audio.toggle();
+        this.updateSoundIcon(isEnabled);
+        
+        if (isEnabled) {
+          this.audio.play('ui-click');
+        }
+        
+        this.animateClick(this.elements.soundIcon);
+        this.showNotification(isEnabled ? 'تم تفعيل الصوت 🔊' : 'تم كتم الصوت 🔇');
+      }
+
+      handleFullscreenToggle() {
+        this.audio.play('ui-click');
+        this.animateClick(this.elements.fullscreenIcon);
+        
+        if (!this.isFullscreen) {
+          this.enterFullscreen();
+        } else {
+          this.exitFullscreen();
+        }
+      }
+
+      handleLogoClick() {
+        this.audio.play('ui-click');
+        
+        this.elements.gameLogo.style.transform = 'scale(1.1) rotate(360deg)';
+        setTimeout(() => {
+          this.elements.gameLogo.style.transform = '';
+        }, 600);
+        
+        this.showGameInfo();
+      }
+
+      updateSoundIcon(isEnabled) {
+        const icon = this.elements.soundIcon.querySelector('i');
+        const element = this.elements.soundIcon;
+        
+        if (isEnabled) {
+          icon.className = 'fas fa-volume-up';
+          element.setAttribute('data-tooltip', 'كتم الصوت');
+        } else {
+          icon.className = 'fas fa-volume-mute';
+          element.setAttribute('data-tooltip', 'تفعيل الصوت');
+        }
+      }
+
+      enterFullscreen() {
+        try {
+          if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen();
+          }
+        } catch (error) {
+          console.log('Fullscreen not supported');
+        }
+      }
+
+      exitFullscreen() {
+        try {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          }
+        } catch (error) {
+          console.log('Exit fullscreen error');
+        }
+      }
+
+      setupFullscreenListener() {
+        const fullscreenEvents = [
+          'fullscreenchange',
+          'webkitfullscreenchange',
+          'mozfullscreenchange',
+          'MSFullscreenChange'
+        ];
+
+        fullscreenEvents.forEach(eventName => {
+          document.addEventListener(eventName, () => {
+            this.isFullscreen = !!(document.fullscreenElement || 
+                                 document.webkitFullscreenElement || 
+                                 document.mozFullScreenElement || 
+                                 document.msFullscreenElement);
+            this.updateFullscreenIcon();
+          });
+        });
+      }
+
+      updateFullscreenIcon() {
+        const icon = this.elements.fullscreenIcon.querySelector('i');
+        const element = this.elements.fullscreenIcon;
+        
+        if (this.isFullscreen) {
+          icon.className = 'fas fa-compress';
+          element.setAttribute('data-tooltip', 'إغلاق ملئ الشاشة');
+        } else {
+          icon.className = 'fas fa-expand';
+          element.setAttribute('data-tooltip', 'ملئ الشاشة');
+        }
+      }
+
+      animateClick(element) {
+        element.style.transform = 'scale(0.95)';
+        element.style.transition = 'transform 0.1s ease';
+        
+        setTimeout(() => {
+          element.style.transform = '';
+          setTimeout(() => {
+            element.style.transition = '';
+          }, 200);
+        }, 100);
+      }
+
+      showNotification(message) {
+        const notification = document.createElement('div');
+        notification.className = 'toolbar-notification';
+        notification.textContent = message;
+        notification.style.cssText = `
+          position: fixed;
+          top: 90px;
+          right: 20px;
+          background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(20, 20, 40, 0.9));
+          color: white;
+          padding: 15px 25px;
+          border-radius: 25px;
+          font-weight: 700;
+          z-index: 10001;
+          transform: translateX(300px);
+          transition: transform 0.3s ease;
+          border: 2px solid rgba(255, 215, 0, 0.3);
+          backdrop-filter: blur(10px);
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+          notification.style.transform = 'translateX(0)';
+        }, 100);
+        
+        setTimeout(() => {
+          notification.style.transform = 'translateX(300px)';
+          setTimeout(() => {
+            if (notification.parentNode) {
+              notification.remove();
+            }
+          }, 300);
+        }, 3000);
+      }
+
+      showGameInfo() {
+        const info = `
+🏛️ هرم المعرفة - لعبة تعليمية تفاعلية 🏛️
+
+📚 المفهوم: مبنية على تصنيف بلوم للتفكير العليا
+🎯 الهدف: بناء الهرم من خلال إتقان مستويات التفكير الستة
+🏆 النظام: كل مستوى يتطلب مهارات تفكير أعلى
+🧠 المستويات: التذكر → الفهم → التطبيق → التحليل → التقييم → الإبداع
+
+🔧 المطور: نظام تعليمي متقدم
+📅 الإصدار: 2025
+        `;
+        
+        alert(info);
+      }
+    }
+
+    /* ========================================
+       نظام مسابقة هرم المعرفة
+    ======================================== */
+    class PyramidKnowledgeGame {
+      constructor() {
+        this.audio = new AudioManager();
+        this.toolbar = new ToolbarManager(this.audio);
+        this.students = {};
+        this.currentStudents = [];
+        this.currentPlayerIndex = 0;
+        this.currentLevel = 1;
+        this.gameMode = 'individual'; // individual, teams, class
+        this.gameState = 'setup'; // setup, playing, finished
+        this.playerPyramids = new Map(); // Map لتتبع تقدم كل لاعب
+        this.maxLevel = 6;
+        
+        // مستويات بلوم مع أوصافها
+        this.bloomLevels = {
+          1: { name: 'التذكر', description: 'استدعاء المعلومات والحقائق', questions: 'أسئلة مباشرة (تعريفات، مصطلحات)' },
+          2: { name: 'الفهم', description: 'شرح المعنى والأفكار', questions: 'شرح معنى أو إعادة صياغة' },
+          3: { name: 'التطبيق', description: 'استخدام المعرفة في مواقف جديدة', questions: 'حل مسألة أو تنفيذ فكرة' },
+          4: { name: 'التحليل', description: 'تفكيك المعلومات وفهم العلاقات', questions: 'تفسير أو مقارنة' },
+          5: { name: 'التقييم', description: 'إصدار أحكام مبررة', questions: 'اختيار أفضل حل وتبريره' },
+          6: { name: 'الإبداع', description: 'إنتاج أفكار وحلول جديدة', questions: 'اقتراح حل جديد أو فكرة مبتكرة' }
+        };
+        
+        this.initElements();
+        this.loadStudentData();
+        this.setupEvents();
+      }
+
+      initElements() {
+        this.elements = {
+          setupScreen: document.getElementById('setupScreen'),
+          gameScreen: document.getElementById('gameScreen'),
+          classSelect: document.getElementById('classSelect'),
+          selectionModeSection: document.getElementById('selectionModeSection'),
+          studentCountSection: document.getElementById('studentCountSection'),
+          startGameBtn: document.getElementById('startGameBtn'),
+          
+          // Game elements
+          pyramid: document.getElementById('pyramid'),
+          currentPlayerAvatar: document.getElementById('currentPlayerAvatar'),
+          currentPlayerName: document.getElementById('currentPlayerName'),
+          currentPlayerLevel: document.getElementById('currentPlayerLevel'),
+          questionLevelIndicator: document.getElementById('questionLevelIndicator'),
+          currentQuestion: document.getElementById('currentQuestion'),
+          correctBtn: document.getElementById('correctBtn'),
+          wrongBtn: document.getElementById('wrongBtn')
+        };
+      }
+
+      async loadStudentData() {
+        try {
+          const response = await fetch('../data/studentData.json');
+          this.students = await response.json();
+          this.populateClassSelect();
+        } catch (error) {
+          console.error('Error loading student data:', error);
+          // استخدام بيانات تجريبية
+          this.students = {
+            'الصف الأول': ['أحمد محمد', 'فاطمة علي', 'محمد أحمد', 'عائشة سالم'],
+            'الصف الثاني': ['علي حسن', 'مريم عبدالله', 'يوسف محمد', 'زينب أحمد'],
+            'الصف الثالث': ['سارة علي', 'حسن محمد', 'نورا سالم', 'عمر عبدالله']
+          };
+          this.populateClassSelect();
+        }
+      }
+
+      populateClassSelect() {
+        this.elements.classSelect.innerHTML = '<option value="">اختر الصف</option>';
+        
+        Object.keys(this.students).forEach(className => {
+          const option = document.createElement('option');
+          option.value = className;
+          option.textContent = className;
+          this.elements.classSelect.appendChild(option);
+        });
+      }
+
+      setupEvents() {
+        // اختيار الصف
+        this.elements.classSelect.addEventListener('change', (e) => {
+          this.onClassSelect(e.target.value);
+          this.audio.play('ui-click');
+        });
+
+        // بدء المسابقة
+        this.elements.startGameBtn.addEventListener('click', () => {
+          this.startGame();
+          this.audio.play('game-start', 'game');
+        });
+
+        // أزرار التحكم
+        this.elements.correctBtn?.addEventListener('click', () => {
+          this.handleAnswer(true);
+        });
+
+        this.elements.wrongBtn?.addEventListener('click', () => {
+          this.handleAnswer(false);
+        });
+
+        // تأثيرات الصوت للأزرار
+        document.querySelectorAll('.control-btn, .start-btn, .count-btn, .mode-card').forEach(btn => {
+          btn.addEventListener('mouseenter', () => {
+            this.audio.play('ui-hover', 'ui', { volume: 0.2 });
+          });
+        });
+      }
+
+      onClassSelect(className) {
+        if (!className || !this.students[className]) {
+          this.elements.selectionModeSection.style.display = 'none';
+          this.elements.studentCountSection.style.display = 'none';
+          this.updateStartButton();
+          return;
+        }
+
+        this.currentStudents = [...this.students[className]];
+        this.elements.selectionModeSection.style.display = 'block';
+        this.updateStartButton();
+      }
+
+      selectMode(mode) {
+        // إزالة التحديد السابق
+        document.querySelectorAll('.mode-card').forEach(card => {
+          card.classList.remove('selected');
+        });
+
+        // تحديد البطاقة الحالية
+        const selectedCard = document.querySelector(`[data-mode="${mode}"]`);
+        selectedCard?.classList.add('selected');
+
+        this.gameMode = mode;
+        this.handleModeChange(mode);
+        this.audio.play('ui-click');
+      }
+
+      handleModeChange(mode) {
+        switch (mode) {
+          case 'individual':
+            this.elements.studentCountSection.style.display = 'block';
+            break;
+          case 'teams':
+            this.elements.studentCountSection.style.display = 'block';
+            break;
+          case 'class':
+            this.elements.studentCountSection.style.display = 'none';
+            this.currentStudents = [...this.students[this.elements.classSelect.value] || []];
+            break;
+        }
+        this.updateStartButton();
+      }
+
+      selectStudentCount(count) {
+        // إزالة التحديد السابق
+        document.querySelectorAll('.count-btn').forEach(btn => {
+          btn.classList.remove('selected');
+        });
+
+        // تحديد الزر الحالي
+        const selectedBtn = document.querySelector(`[data-count="${count}"]`);
+        selectedBtn?.classList.add('selected');
+
+        // اختيار عشوائي للطلاب
+        const allStudents = this.students[this.elements.classSelect.value] || [];
+        const shuffled = [...allStudents].sort(() => Math.random() - 0.5);
+        this.currentStudents = shuffled.slice(0, count);
+        
+        this.updateStartButton();
+        this.audio.play('ui-click');
+      }
+
+      updateStartButton() {
+        const canStart = this.currentStudents.length > 0;
+        this.elements.startGameBtn.disabled = !canStart;
+        
+        if (canStart) {
+          const modeText = {
+            'individual': 'فردي',
+            'teams': 'جماعي',
+            'class': 'صف كامل'
+          };
+          
+          this.elements.startGameBtn.innerHTML = `
+            <i class="fas fa-play"></i>
+            ابدأ المسابقة ${modeText[this.gameMode]} (${this.currentStudents.length} متسابق)
+          `;
+        } else {
+          this.elements.startGameBtn.innerHTML = `
+            <i class="fas fa-play"></i>
+            ابدأ المسابقة
+          `;
+        }
+      }
+
+      startGame() {
+        if (this.currentStudents.length === 0) return;
+
+        this.gameState = 'playing';
+        this.currentPlayerIndex = 0;
+        this.currentLevel = 1;
+        
+        // تهيئة أهرام اللاعبين
+        this.playerPyramids.clear();
+        this.currentStudents.forEach(student => {
+          this.playerPyramids.set(student, {
+            level: 1,
+            completed: false,
+            blocks: []
+          });
+        });
+
+        // إخفاء شاشة الإعداد وإظهار شاشة اللعبة
+        this.elements.setupScreen.style.display = 'none';
+        this.elements.gameScreen.style.display = 'block';
+        
+        // إنشاء الهرم وتحديث الواجهة
+        this.createPyramid();
+        this.updateCurrentPlayer();
+        this.updateBloomLevels();
+        this.updateQuestion();
+      }
+
+      createPyramid() {
+        this.elements.pyramid.innerHTML = '';
+        
+        // إنشاء 6 مستويات (من الأسفل للأعلى)
+        for (let level = 6; level >= 1; level--) {
+          const pyramidLevel = document.createElement('div');
+          pyramidLevel.className = 'pyramid-level';
+          pyramidLevel.dataset.level = level;
+          
+          // عدد البلوكات في كل مستوى (الأسفل أكثر)
+          const blocksCount = 7 - level;
+          
+          for (let i = 0; i < blocksCount; i++) {
+            const block = document.createElement('div');
+            block.className = `pyramid-block level-${level}`;
+            block.dataset.level = level;
+            block.dataset.blockIndex = i;
+            
+            // محتوى البلوك
+            if (level === this.currentLevel) {
+              block.classList.add('active');
+              block.textContent = this.bloomLevels[level].name;
+            } else if (level < this.currentLevel) {
+              block.classList.add('completed');
+              block.textContent = '✓';
+            } else {
+              block.textContent = this.bloomLevels[level].name;
+            }
+            
+            pyramidLevel.appendChild(block);
+          }
+          
+          this.elements.pyramid.appendChild(pyramidLevel);
+        }
+      }
+
+      updateCurrentPlayer() {
+        const currentPlayer = this.currentStudents[this.currentPlayerIndex];
+        const playerData = this.playerPyramids.get(currentPlayer);
+        
+        this.elements.currentPlayerName.textContent = currentPlayer;
+        this.elements.currentPlayerAvatar.textContent = currentPlayer.charAt(0);
+        
+        const levelInfo = this.bloomLevels[playerData.level];
+        this.elements.currentPlayerLevel.textContent = `المستوى ${playerData.level} - ${levelInfo.name}`;
+        
+        this.currentLevel = playerData.level;
+        this.createPyramid();
+      }
+
+      updateBloomLevels() {
+        document.querySelectorAll('.bloom-level').forEach(level => {
+          level.classList.remove('active');
+        });
+        
+        const currentBloomLevel = document.querySelector(`[data-level="${this.currentLevel}"]`);
+        if (currentBloomLevel) {
+          currentBloomLevel.classList.add('active');
+        }
+      }
+
+      updateQuestion() {
+        const levelInfo = this.bloomLevels[this.currentLevel];
+        this.elements.questionLevelIndicator.textContent = `المستوى ${this.currentLevel} - ${levelInfo.name}`;
+        this.elements.currentQuestion.textContent = `اسأل الطالب سؤالاً مناسباً لمستوى ${levelInfo.name}: ${levelInfo.questions}`;
+      }
+
+      handleAnswer(isCorrect) {
+        const currentPlayer = this.currentStudents[this.currentPlayerIndex];
+        const playerData = this.playerPyramids.get(currentPlayer);
+        
+        if (isCorrect) {
+          this.handleCorrectAnswer(currentPlayer, playerData);
+        } else {
+          this.handleWrongAnswer(currentPlayer, playerData);
+        }
+        
+        // إخفاء أزرار التحكم مؤقتاً
+        this.elements.correctBtn.style.display = 'none';
+        this.elements.wrongBtn.style.display = 'none';
+        
+        setTimeout(() => {
+          this.elements.correctBtn.style.display = 'block';
+          this.elements.wrongBtn.style.display = 'block';
+        }, 2000);
+      }
+
+      handleCorrectAnswer(player, playerData) {
+        this.audio.play('step-correct', 'game');
+        
+        // ترقية اللاعب للمستوى التالي
+        if (playerData.level < this.maxLevel) {
+          playerData.level++;
+          this.audio.play('level-up', 'game');
+          
+          // إضافة تأثيرات بصرية
+          this.showSuccessMessage(`${player} انتقل للمستوى ${playerData.level}!`);
+          
+          // التحقق من إتمام الهرم
+          if (playerData.level > this.maxLevel) {
+            playerData.completed = true;
+            this.declareWinner(player);
+            return;
+          }
+        } else {
+          // إتمام الهرم!
+          playerData.completed = true;
+          this.declareWinner(player);
+          return;
+        }
+        
+        setTimeout(() => {
+          this.nextPlayer();
+        }, 2000);
+      }
+
+      handleWrongAnswer(player, playerData) {
+        this.audio.play('step-wrong', 'game');
+        this.showErrorMessage(`${player} يحتاج لمحاولة أخرى في نفس المستوى`);
+        
+        setTimeout(() => {
+          this.nextPlayer();
+        }, 2000);
+      }
+
+      nextPlayer() {
+        this.currentPlayerIndex = (this.currentPlayerIndex + 1) % this.currentStudents.length;
+        this.updateCurrentPlayer();
+        this.updateBloomLevels();
+        this.updateQuestion();
+      }
+
+      declareWinner(winner) {
+        this.gameState = 'finished';
+        this.audio.play('pyramid-complete', 'game');
+        
+        setTimeout(() => {
+          this.audio.play('celebration', 'celebration');
+        }, 1000);
+        
+        this.showVictoryScreen(winner);
+      }
+
+      showSuccessMessage(message) {
+        const messageElement = document.createElement('div');
+        messageElement.className = 'game-message success';
+        messageElement.textContent = message;
+        messageElement.style.cssText = `
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: linear-gradient(135deg, #11998e, #38ef7d);
+          color: white;
+          padding: 20px 30px;
+          border-radius: 20px;
+          font-size: 1.2rem;
+          font-weight: 700;
+          z-index: 10002;
+          animation: messageAnimation 2s ease-out;
+          box-shadow: 0 10px 30px rgba(17, 153, 142, 0.5);
+        `;
+        
+        document.body.appendChild(messageElement);
+        
+        setTimeout(() => {
+          if (messageElement.parentNode) {
+            messageElement.remove();
+          }
+        }, 2000);
+      }
+
+      showErrorMessage(message) {
+        const messageElement = document.createElement('div');
+        messageElement.className = 'game-message error';
+        messageElement.textContent = message;
+        messageElement.style.cssText = `
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: linear-gradient(135deg, #fc466b, #3f5efb);
+          color: white;
+          padding: 20px 30px;
+          border-radius: 20px;
+          font-size: 1.2rem;
+          font-weight: 700;
+          z-index: 10002;
+          animation: messageAnimation 2s ease-out;
+          box-shadow: 0 10px 30px rgba(252, 70, 107, 0.5);
+        `;
+        
+        document.body.appendChild(messageElement);
+        
+        setTimeout(() => {
+          if (messageElement.parentNode) {
+            messageElement.remove();
+          }
+        }, 2000);
+      }
+
+      showVictoryScreen(winner) {
+        const victoryScreen = document.getElementById('victory-screen');
+        const winnerName = document.getElementById('winner-name');
+        
+        winnerName.textContent = `${winner} - بطل المعرفة!`;
+        victoryScreen.classList.add('show');
+      }
+
+      resetGame() {
+        this.gameState = 'setup';
+        this.currentStudents = [];
+        this.playerPyramids.clear();
+        this.currentPlayerIndex = 0;
+        this.currentLevel = 1;
+        
+        this.elements.gameScreen.style.display = 'none';
+        this.elements.setupScreen.style.display = 'block';
+        
+        // إعادة تعيين التحديدات
+        document.querySelectorAll('.mode-card').forEach(card => {
+          card.classList.remove('selected');
+        });
+        document.querySelectorAll('.count-btn').forEach(btn => {
+          btn.classList.remove('selected');
+        });
+        
+        this.updateStartButton();
+      }
+    }
+
+    // إنشاء مدير الشاشة النهائية
+    class VictoryManager {
+      constructor() {
+        this.victoryScreen = document.getElementById('victory-screen');
+        this.setupCloseHandlers();
+      }
+
+      setupCloseHandlers() {
+        this.victoryScreen.addEventListener('click', (e) => {
+          if (e.target === this.victoryScreen) {
+            this.hideVictoryScreen();
+          }
+        });
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && this.victoryScreen.classList.contains('show')) {
+            this.hideVictoryScreen();
+          }
+        });
+      }
+
+      hideVictoryScreen() {
+        this.victoryScreen.classList.remove('show');
+      }
+    }
+
+    // متغيرات عامة
+    let towerCompetition;
+    let victoryManager;
+
+    // دوال الأزرار
+    function playAgain() {
+      victoryManager.hideVictoryScreen();
+      towerCompetition.resetGame();
+    }
+
+    function goToHome() {
+      victoryManager.hideVictoryScreen();
+      setTimeout(() => {
+        window.location.href = '../main.html';
+      }, 300);
+    }
+
+    function restartGame() {
+      if (confirm('هل تريد إعادة تشغيل المسابقة؟\nسيتم فقدان التقدم الحالي.')) {
+        towerCompetition.resetGame();
+      }
+    }
+
+    function endGame() {
+      if (confirm('هل تريد إنهاء المسابقة؟\nسيتم العودة لشاشة الإعداد.')) {
+        towerCompetition.resetGame();
+      }
+    }
+
+    // تشغيل اللعبة عند تحميل الصفحة
+    document.addEventListener('DOMContentLoaded', async () => {
+      towerCompetition = new PyramidKnowledgeGame();
+      victoryManager = new VictoryManager();
+      
+      // تهيئة الصوت
+      await towerCompetition.audio.init();
+      
+      // إضافة اختصارات لوحة المفاتيح
+      document.addEventListener('keydown', (e) => {
+        // ESC للخروج من ملئ الشاشة
+        if (e.key === 'Escape' && towerCompetition.toolbar.isFullscreen) {
+          towerCompetition.toolbar.exitFullscreen();
+        }
+        
+        // F11 لملئ الشاشة
+        if (e.key === 'F11') {
+          e.preventDefault();
+          towerCompetition.toolbar.handleFullscreenToggle();
+        }
+        
+        // M لكتم/تفعيل الصوت
+        if (e.key === 'm' || e.key === 'M') {
+          towerCompetition.toolbar.handleSoundToggle();
+        }
+      });
+      
+      // إضافة أنيميشن CSS
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes messageAnimation {
+          0% {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.5);
+          }
+          20% {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.1);
+          }
+          100% {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+          }
+        }
+        
+        @keyframes crownFloat {
+          0%, 100% { transform: translateY(0) rotate(0deg); }
+          33% { transform: translateY(-10px) rotate(5deg); }
+          66% { transform: translateY(-5px) rotate(-3deg); }
+        }
+        
+        @keyframes victoryScreenFadeIn {
+          0% {
+            opacity: 0;
+            backdrop-filter: blur(0px);
+          }
+          100% {
+            opacity: 1;
+            backdrop-filter: blur(20px);
+          }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      console.log(`
+🏛️ هرم المعرفة - لعبة تعليمية تفاعلية 🏛️
+🎮 مبنية على تصنيف بلوم للتفكير العليا
+🎯 تم تحميل اللعبة بنجاح!
+⌨️  اختصارات لوحة المفاتيح:
+   • F11: ملئ الشاشة
+   • M: كتم/تفعيل الصوت  
+   • ESC: إغلاق النوافذ
+
+🧠 مستويات بلوم:
+   1. التذكر - استدعاء المعلومات
+   2. الفهم - شرح المعاني
+   3. التطبيق - استخدام المعرفة
+   4. التحليل - تفكيك المعلومات
+   5. التقييم - إصدار أحكام
+   6. الإبداع - إنتاج أفكار جديدة
+      `);
+    });
+  </script>
+</body>
+</html>
