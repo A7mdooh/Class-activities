@@ -14,6 +14,15 @@
     <!-- المكتبات الخارجية -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     
+    <!-- اختبار تحميل JavaScript -->
+    <script>
+        console.log('🔧 اختبار تحميل JavaScript - بداية');
+        window.testFunction = function() {
+            alert('JavaScript يعمل بشكل صحيح!');
+        };
+        console.log('🔧 اختبار تحميل JavaScript - انتهاء');
+    </script>
+    
     <!-- ===== ملفات التصميم المتجاوب ===== -->
     <link rel="stylesheet" href="../assets/css/responsive.css">
     
@@ -2333,6 +2342,7 @@
     <div style="position: fixed; top: 10px; left: 10px; z-index: 9999; background: red; color: white; padding: 10px; border-radius: 5px;">
         <button onclick="showGameSetup()" style="background: green; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer;">🧪 اختبار الإعدادات</button>
         <button onclick="alert('الأزرار تعمل!')" style="background: blue; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; margin-left: 5px;">✅ اختبار عام</button>
+        <button onclick="testFunction()" style="background: orange; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; margin-left: 5px;">🚀 اختبار JS</button>
     </div>
 
     <!-- نافذة التعليمات -->
@@ -3016,8 +3026,66 @@
     </div>
 
     <script>
-        // تهيئة النشاط باستخدام ActivityUtils
-        const activityUtils = new ActivityUtils('bomb-timer');
+        console.log('🎮 بداية تحميل سكريبت لعبة القنبلة المؤقتة...');
+        
+        // تهيئة النشاط (مع التحقق من وجود ActivityUtils)
+        let activityUtils = null;
+        try {
+            if (typeof ActivityUtils !== 'undefined') {
+                activityUtils = new ActivityUtils('bomb-timer');
+                console.log('✅ تم تهيئة ActivityUtils بنجاح');
+            } else {
+                console.log('⚠️ ActivityUtils غير متوفر - العمل بدون ActivityUtils');
+            }
+        } catch (error) {
+            console.log('⚠️ خطأ في تهيئة ActivityUtils:', error);
+            activityUtils = null;
+        }
+        
+        // تعريف الوظائف الأساسية في البداية
+        function showGameSetup() {
+            alert('تم النقر على زر الإعدادات! الدالة تعمل الآن.');
+            console.log('🎮 بداية تنفيذ showGameSetup()');
+            
+            const modal = document.getElementById('setupModal');
+            console.log('🔍 البحث عن modal:', modal ? 'موجود ✅' : 'غير موجود ❌');
+            
+            if (modal) {
+                modal.style.display = 'block';
+                console.log('✅ تم إظهار modal بنجاح');
+            } else {
+                console.error('❌ لم يتم العثور على modal');
+                alert('خطأ: نافذة الإعدادات غير موجودة!');
+            }
+        }
+        
+        function closeGameSetup() {
+            console.log('🚪 إغلاق نافذة الإعدادات');
+            const modal = document.getElementById('setupModal');
+            if (modal) {
+                modal.style.display = 'none';
+                console.log('✅ تم إغلاق النافذة بنجاح');
+            }
+        }
+        
+        function closeModal(modalId) {
+            try {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.style.display = 'none';
+                    console.log('✅ تم إغلاق النافذة:', modalId);
+                }
+            } catch (error) {
+                console.log('⚠️ خطأ في إغلاق النافذة:', error);
+            }
+        }
+        
+        // ربط الوظائف بالنطاق العام فوراً
+        window.showGameSetup = showGameSetup;
+        window.closeGameSetup = closeGameSetup; 
+        window.closeModal = closeModal;
+        
+        console.log('🌐 تم ربط الوظائف الأساسية بالنطاق العام');
 
         console.log('🚀 تم تحويل نشاط القنبلة المؤقتة إلى النظام الموحد بنجاح!');
 
@@ -3250,55 +3318,10 @@
             gameStateElement.textContent = message;
         }
 
-        // عرض إعداد اللعبة
-        function showGameSetup() {
-            alert('تم النقر على زر الإعدادات!'); // اختبار فوري
-            console.log('🎮 بداية تنفيذ showGameSetup()');
-            
-            playGameSound('click'); // صوت فتح النافذة
-            setupStudentSelection(); // إعداد اختيار الطلاب
-            updateSettingsPreview();
-            setupDifficultyOptions();
-            
-            // إعداد مستمعي الأحداث للمدخلات
-            const customTime = document.getElementById('customTime');
-            const totalBombs = document.getElementById('totalBombs');
-            const correctPoints = document.getElementById('correctPoints');
-            const timeMultiplier = document.getElementById('timeMultiplier');
-            const speedupTime = document.getElementById('speedupTime');
-            const soundEnabled = document.getElementById('soundEnabled');
-            const speedupEnabled = document.getElementById('speedupEnabled');
-            const speedBonusEnabled = document.getElementById('speedBonusEnabled');
-            
-            if (customTime) customTime.addEventListener('input', updateSettingsPreview);
-            if (totalBombs) totalBombs.addEventListener('input', updateSettingsPreview);
-            if (correctPoints) correctPoints.addEventListener('input', updateSettingsPreview);
-            if (timeMultiplier) timeMultiplier.addEventListener('input', updateSettingsPreview);
-            if (speedupTime) speedupTime.addEventListener('input', updateSettingsPreview);
-            if (soundEnabled) soundEnabled.addEventListener('change', updateSettingsPreview);
-            if (speedupEnabled) speedupEnabled.addEventListener('change', updateSettingsPreview);
-            if (speedBonusEnabled) speedBonusEnabled.addEventListener('change', updateSettingsPreview);
-            
-            const modal = document.getElementById('setupModal');
-            console.log('🔍 البحث عن modal:', modal ? 'موجود ✅' : 'غير موجود ❌');
-            
-            if (modal) {
-                modal.style.display = 'block';
-                console.log('✅ تم إظهار modal بنجاح');
-            } else {
-                console.error('❌ لم يتم العثور على modal');
-            }
-        }
+        // ===== تم نقل showGameSetup إلى أعلى الملف =====
 
         // إغلاق نافذة إعدادات اللعبة
-        function closeGameSetup() {
-            console.log('🚪 إغلاق نافذة الإعدادات');
-            const modal = document.getElementById('setupModal');
-            if (modal) {
-                modal.style.display = 'none';
-                console.log('✅ تم إغلاق النافذة بنجاح');
-            }
-        }
+        // ===== تم نقل closeGameSetup إلى أعلى الملف =====
 
         // إعداد خيارات الصعوبة
         function setupDifficultyOptions() {
