@@ -110,8 +110,27 @@
 			<div class="step-title">1️⃣ اختر الصف</div>
 			<div class="class-grid" id="classGrid"></div>
 			<div class="step-title" id="studentStepTitle" style="display:none;">2️⃣ اختر الطلاب المشاركين</div>
+			<!-- شريط تحكم احترافي لاختيار الطلاب -->
+			<div id="studentControlBar" style="display:none;margin-bottom:10px;align-items:center;gap:12px;justify-content:space-between;background:#23243a;border-radius:12px;padding:10px 18px 10px 18px;box-shadow:0 2px 8px #0004;">
+				<div style="display:flex;gap:10px;align-items:center;">
+					<label style="font-weight:700;color:#ffd700;">طريقة الاختيار:</label>
+					<select id="selectionMethod" style="padding:4px 10px;border-radius:6px;font-size:1rem;">
+						<option value="manual">يدوي</option>
+						<option value="random">عشوائي</option>
+					</select>
+					<button id="selectAllBtn" style="margin-right:10px;padding:4px 14px;border-radius:6px;background:#22c55e;color:#fff;font-weight:700;border:none;cursor:pointer;">تحديد الكل</button>
+					<button id="clearAllBtn" style="padding:4px 14px;border-radius:6px;background:#ef4444;color:#fff;font-weight:700;border:none;cursor:pointer;">إلغاء الكل</button>
+				</div>
+				<div style="flex:1;max-width:320px;">
+					<div style="background:#1a1a2e;border-radius:8px;height:18px;position:relative;overflow:hidden;">
+						<div id="studentProgressBar" style="height:100%;width:0%;background:linear-gradient(90deg,#ffd700,#22c55e);transition:width .3s;"></div>
+						<span id="studentProgressText" style="position:absolute;left:50%;top:0;transform:translateX(-50%);color:#ffd700;font-size:0.95rem;font-weight:700;line-height:18px;"></span>
+					</div>
+				</div>
+			</div>
 			<div class="students-grid" id="studentsGrid" style="display:none;"></div>
 			<button class="start-btn" id="startBtn" style="display:none;">ابدأ التحدي 💥</button>
+			<div class="notif-bar" id="notifBarStudent" style="display:none;position:static;margin:10px auto 0 auto;"><span id="notifMsgStudent"></span></div>
 		</div>
 		<!-- شاشة اللعبة -->
 		<div id="gameScreen" style="display:none">
@@ -448,7 +467,9 @@
 			card.classList.add('selected');
 			document.getElementById('studentStepTitle').style.display = '';
 			document.getElementById('studentsGrid').style.display = '';
+			document.getElementById('studentControlBar').style.display = 'flex';
 			buildStudentsGrid();
+			updateStudentProgress();
 		}
 		function buildStudentsGrid() {
 			const grid = document.getElementById('studentsGrid');
@@ -459,18 +480,94 @@
 				btn.className = 'student-card';
 				btn.textContent = '👤 '+name;
 				btn.onclick = ()=>{
-					if(selectedStudents.includes(name)){
-						selectedStudents = selectedStudents.filter(x=>x!==name);
-						btn.classList.remove('selected');
-					} else {
-						selectedStudents.push(name);
-						btn.classList.add('selected');
+					if(selectionMethod==='manual'){
+						if(selectedStudents.includes(name)){
+							selectedStudents = selectedStudents.filter(x=>x!==name);
+							btn.classList.remove('selected');
+							showStudentNotif('تم إلغاء تحديد '+name,'warn');
+						} else {
+							selectedStudents.push(name);
+							btn.classList.add('selected');
+							showStudentNotif('تم تحديد '+name,'success');
+						}
+						updateStudentProgress();
+						document.getElementById('startBtn').style.display = selectedStudents.length>0?'':'none';
 					}
-					document.getElementById('startBtn').style.display = selectedStudents.length>0?'':'none';
 				};
 				grid.appendChild(btn);
 			});
 			document.getElementById('startBtn').style.display = 'none';
+			updateStudentProgress();
+// تحديث شريط التقدم وعدد الطلاب المحددين
+function updateStudentProgress() {
+	const total = (studentsData[selectedClass]||[]).length;
+	const sel = selectedStudents.length;
+	const bar = document.getElementById('studentProgressBar');
+	const txt = document.getElementById('studentProgressText');
+	if(bar) bar.style.width = total>0 ? (sel/total*100)+'%' : '0%';
+	if(txt) txt.textContent = `${sel} / ${total}`;
+}
+
+// إشعار احترافي لاختيار الطلاب
+function showStudentNotif(msg, type='info', sec=1.2) {
+	const bar = document.getElementById('notifBarStudent');
+	const msgSpan = document.getElementById('notifMsgStudent');
+	msgSpan.textContent = msg;
+	bar.style.display = 'flex';
+	bar.style.background = type==='success' ? '#22c55e' : (type==='warn' ? '#ef4444' : '#23243aee');
+	bar.style.color = '#fff';
+	setTimeout(()=>bar.style.display='none', sec*1000);
+}
+
+// تحكم في طريقة الاختيار
+document.addEventListener('DOMContentLoaded',()=>{
+	const methodSel = document.getElementById('selectionMethod');
+	if(methodSel){
+		methodSel.onchange = function(){
+			selectionMethod = this.value;
+			if(selectionMethod==='random'){
+				// اختيار عشوائي لعدد محدد من الطلاب (مثلاً 5)
+				const all = studentsData[selectedClass]||[];
+				const count = Math.min(5, all.length);
+				selectedStudents = [];
+				while(selectedStudents.length<count){
+					const idx = Math.floor(Math.random()*all.length);
+					const name = all[idx];
+					if(!selectedStudents.includes(name)) selectedStudents.push(name);
+				}
+				buildStudentsGrid();
+				showStudentNotif('تم اختيار الطلاب عشوائياً','success');
+			} else {
+				selectedStudents = [];
+				buildStudentsGrid();
+			}
+			updateStudentProgress();
+			document.getElementById('startBtn').style.display = selectedStudents.length>0?'':'none';
+		};
+	}
+	// زر تحديد الكل
+	const selectAllBtn = document.getElementById('selectAllBtn');
+	if(selectAllBtn){
+		selectAllBtn.onclick = function(){
+			selectedStudents = (studentsData[selectedClass]||[]).slice();
+			buildStudentsGrid();
+			showStudentNotif('تم تحديد جميع الطلاب','success');
+			updateStudentProgress();
+			document.getElementById('startBtn').style.display = selectedStudents.length>0?'':'none';
+		};
+	}
+	// زر إلغاء الكل
+	const clearAllBtn = document.getElementById('clearAllBtn');
+	if(clearAllBtn){
+		clearAllBtn.onclick = function(){
+			selectedStudents = [];
+			buildStudentsGrid();
+			showStudentNotif('تم إلغاء تحديد الجميع','warn');
+			updateStudentProgress();
+			document.getElementById('startBtn').style.display = 'none';
+		};
+	}
+});
 		}
 		document.getElementById('startBtn').onclick = function() {
 			if(selectedStudents.length < 1){ alert('اختر الطلاب المشاركين أولاً'); return; }
