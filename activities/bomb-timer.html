@@ -1329,108 +1329,126 @@
     });
 
     // تحميل بيانات الصفوف من ملف JSON
-    function loadClasses() {
-      fetch('data/studentData.json')
-        .then(r => r.json())
-        .then(data => {
-          allClasses = data;
-          const classSelect = document.getElementById('classSelect');
-          classSelect.innerHTML = '<option value="">— اختر الصف —</option>';
-          Object.keys(data).forEach(className => {
-            const opt = document.createElement('option');
-            opt.value = className;
-            opt.textContent = className;
-            classSelect.appendChild(opt);
-          });
-          classSelect.onchange = function() {
-            const studentSelect = document.getElementById('studentSelect');
-            const studentSelectWrapper = document.getElementById('studentSelectWrapper');
-            if(this.value) {
-              gameState.currentClass = this.value;
-              students = allClasses[this.value] || [];
-              updateGameInfo();
-              // بناء قائمة الطلاب المنسدلة
-              studentSelect.innerHTML = '<option value="">— اختر الطالب —</option>';
-              students.forEach(name => {
-                const opt = document.createElement('option');
-                opt.value = name;
-                opt.textContent = name;
-                studentSelect.appendChild(opt);
-              });
-              studentSelectWrapper.style.display = '';
-              studentSelect.value = '';
-              currentExpert = null;
-              gameState.currentStudent = '—';
-              updateExpertDisplay();
-              // إعادة تعيين العشوائي عند تغيير الصف
-              randomStudentPool = [...students];
-              // إعادة تفعيل زر العشوائي
-              const randomBtn = document.getElementById('randomStudentBtn');
-              if(randomBtn) {
-                randomBtn.disabled = false;
-                randomBtn.innerHTML = '<i class="fa-solid fa-shuffle"></i> اختيار عشوائي';
-                randomBtn.onclick = function(){
-                  if(!students || students.length === 0){
-                    document.getElementById('bombMessage').textContent = 'يرجى اختيار الصف أولاً.';
-                    return;
-                  }
-                  if(randomStudentPool.length === 0){
-                    // إعادة ملء القائمة إذا انتهت
-                    randomStudentPool = [...students];
-                  }
-                  // اختيار عشوائي بدون تكرار
-                  const idx = Math.floor(Math.random() * randomStudentPool.length);
-                  const selected = randomStudentPool.splice(idx, 1)[0];
-                  // تعيين الطالب كخبير وتحديث العرض
-                  currentExpert = selected;
-                  gameState.currentStudent = selected;
-                  updateExpertDisplay();
-                  updateGameInfo();
-                  playGameSound('../assets/media/sounds/kingdom-sounds/character-intro.mp3',0.7);
-                  showNotification(`تم اختيار ${selected} كخبير الجولة!`, 'success');
-                  animateTimerHighlight();
-                  showEvaluationBox(selected);
-                };
-              }
-              randomStudentMode = false;
-            } else {
-              gameState.currentClass = '—';
-              students = [];
-              updateGameInfo();
-              studentSelect.innerHTML = '<option value="">— اختر الطالب —</option>';
-              studentSelectWrapper.style.display = 'none';
-              currentExpert = null;
-              gameState.currentStudent = '—';
-              updateExpertDisplay();
-              randomStudentPool = [];
-              // إعادة تفعيل زر العشوائي
-              const randomBtn = document.getElementById('randomStudentBtn');
-              if(randomBtn) {
-                randomBtn.disabled = false;
-                randomBtn.innerHTML = '<i class="fa-solid fa-shuffle"></i> اختيار عشوائي';
-              }
-              randomStudentMode = false;
-            }
-          };
-          // حدث اختيار الطالب
-          document.getElementById('studentSelect').onchange = function() {
-            if(this.value) {
-              currentExpert = this.value;
-              gameState.currentStudent = this.value;
-              updateExpertDisplay();
-              updateGameInfo();
-            } else {
-              currentExpert = null;
-              gameState.currentStudent = '—';
-              updateExpertDisplay();
-              updateGameInfo();
-            }
-          };
-        })
-        .catch(() => {
-          document.getElementById('classSelect').innerHTML = '<option>تعذر تحميل الصفوف</option>';
-          showNotification('تعذر تحميل بيانات الصفوف. تحقق من الاتصال أو الملف','error');
+    async function loadClasses() {
+      try {
+        const response = await fetch('data/studentData.json');
+        if (!response.ok) throw new Error('فشل في تحميل بيانات الصفوف');
+        allClasses = await response.json();
+        populateClassSelect();
+      } catch (error) {
+        // بيانات تجريبية في حال الفشل
+        allClasses = {
+          "الصف الخامس الأساسي (1)": ["أحمد محمد السيابي", "فاطمة سعيد البلوشي", "عبدالله خالد الحارثي"],
+          "الصف الخامس الأساسي (2)": ["محمد علي اليحيائي", "عائشة سالم الحبسي", "يوسف أحمد الكندي"]
+        };
+        populateClassSelect();
+        showNotification('⚠️ تم استخدام بيانات تجريبية - تأكد من وجود ملف البيانات', 'warning');
+      }
+    }
+
+    function populateClassSelect() {
+      const classSelect = document.getElementById('classSelect');
+      if (!classSelect) return;
+      classSelect.innerHTML = '<option value="">— اختر الصف —</option>';
+      Object.keys(allClasses).forEach(className => {
+        const opt = document.createElement('option');
+        opt.value = className;
+        opt.textContent = className;
+        classSelect.appendChild(opt);
+      });
+      classSelect.onchange = handleClassChange;
+    }
+
+    function handleClassChange() {
+      const studentSelect = document.getElementById('studentSelect');
+      const studentSelectWrapper = document.getElementById('studentSelectWrapper');
+      if(this.value) {
+        gameState.currentClass = this.value;
+        students = allClasses[this.value] || [];
+        updateGameInfo();
+        // بناء قائمة الطلاب المنسدلة
+        studentSelect.innerHTML = '<option value="">— اختر الطالب —</option>';
+        students.forEach(name => {
+          const opt = document.createElement('option');
+          opt.value = name;
+          opt.textContent = name;
+          studentSelect.appendChild(opt);
         });
+        studentSelectWrapper.style.display = '';
+        studentSelect.value = '';
+        currentExpert = null;
+        gameState.currentStudent = '—';
+        updateExpertDisplay();
+        // إعادة تعيين العشوائي عند تغيير الصف
+        randomStudentPool = [...students];
+        // إعادة تفعيل زر العشوائي
+        const randomBtn = document.getElementById('randomStudentBtn');
+        if(randomBtn) {
+          randomBtn.disabled = false;
+          randomBtn.innerHTML = '<i class="fa-solid fa-shuffle"></i> اختيار عشوائي';
+          randomBtn.onclick = function(){
+            if(!students || students.length === 0){
+              document.getElementById('bombMessage').textContent = 'يرجى اختيار الصف أولاً.';
+              return;
+            }
+            if(randomStudentPool.length === 0){
+              // إعادة ملء القائمة إذا انتهت
+              randomStudentPool = [...students];
+            }
+            // اختيار عشوائي بدون تكرار
+            const idx = Math.floor(Math.random() * randomStudentPool.length);
+            const selected = randomStudentPool.splice(idx, 1)[0];
+            // تعيين الطالب كخبير وتحديث العرض
+            currentExpert = selected;
+            gameState.currentStudent = selected;
+            updateExpertDisplay();
+            updateGameInfo();
+            playGameSound('../assets/media/sounds/kingdom-sounds/character-intro.mp3',0.7);
+            showNotification(`تم اختيار ${selected} كخبير الجولة!`, 'success');
+            animateTimerHighlight();
+            showEvaluationBox(selected);
+          };
+        }
+        randomStudentMode = false;
+      } else {
+        gameState.currentClass = '—';
+        students = [];
+        updateGameInfo();
+        studentSelect.innerHTML = '<option value="">— اختر الطالب —</option>';
+        studentSelectWrapper.style.display = 'none';
+        currentExpert = null;
+        gameState.currentStudent = '—';
+        updateExpertDisplay();
+        randomStudentPool = [];
+        // إعادة تفعيل زر العشوائي
+        const randomBtn = document.getElementById('randomStudentBtn');
+        if(randomBtn) {
+          randomBtn.disabled = false;
+          randomBtn.innerHTML = '<i class="fa-solid fa-shuffle"></i> اختيار عشوائي';
+        }
+        randomStudentMode = false;
+      }
+    }
+
+    // حدث اختيار الطالب
+    document.addEventListener('DOMContentLoaded', function() {
+      const studentSelect = document.getElementById('studentSelect');
+      if(studentSelect) {
+        studentSelect.onchange = function() {
+          if(this.value) {
+            currentExpert = this.value;
+            gameState.currentStudent = this.value;
+            updateExpertDisplay();
+            updateGameInfo();
+          } else {
+            currentExpert = null;
+            gameState.currentStudent = '—';
+            updateExpertDisplay();
+            updateGameInfo();
+          }
+        };
+      }
+    });
             const studentSelect = document.getElementById('studentSelect');
             const studentSelectWrapper = document.getElementById('studentSelectWrapper');
             if(this.value) {
@@ -1503,20 +1521,7 @@
               randomStudentMode = false;
             }
           };
-          // حدث اختيار الطالب
-          document.getElementById('studentSelect').onchange = function() {
-            if(this.value) {
-              currentExpert = this.value;
-              gameState.currentStudent = this.value;
-              updateExpertDisplay();
-              updateGameInfo();
-            } else {
-              currentExpert = null;
-              gameState.currentStudent = '—';
-              updateExpertDisplay();
-              updateGameInfo();
-            }
-          };
+          // ...existing code...
   // ...existing code...
     // ========== Toolbar Logic ==========
     function setupToolbar() {
