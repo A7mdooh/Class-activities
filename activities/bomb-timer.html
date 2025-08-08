@@ -1,331 +1,422 @@
-<!-- القنبلة الذكية | تجربة متكاملة واحترافية جداً -->
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>القنبلة الذكية – تجربة صفية</title>
+  <style>
+    :root{--bg:#0f1224;--panel:#121737;--card:#171d43;--muted:#90a4c3;--text:#e9ecff;--accent:#6ea0ff;--green:#22c55e;--red:#ef4444;--yellow:#eab308}
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:radial-gradient(1200px 600px at 50% -10%,#1d2450,transparent),var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cairo,Helvetica,Arial,sans-serif}
+    header{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid #242a53;background:#0f1330;position:sticky;top:0;z-index:5}
+    .title{font-weight:800;letter-spacing:.4px}
+    .tabbar{margin-inline-start:auto;display:flex;gap:8px}
+    .tab{background:#111834;border:1px solid #232a59;color:#cfe3ff;padding:8px 12px;border-radius:999px;cursor:pointer}
+    .tab.active{background:#223169;color:#fff;border-color:#2c4599}
+    .container{display:grid;grid-template-columns:280px 1fr 320px;gap:12px;padding:14px}
+    .panel{background:var(--panel);border:1px solid #273064;border-radius:16px;padding:14px;min-height:200px}
+    .panel h3{margin:0 0 10px;font-size:1rem;color:#cfe3ff}
+    .row{display:flex;gap:8px;align-items:center}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+    .card-item{background:var(--card);border:1px solid #2a3159;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:6px;align-items:center;cursor:pointer}
+    .card-item.active{outline:2px solid var(--accent)}
+    .chip{display:inline-flex;align-items:center;gap:6px;background:#10173a;border:1px solid #2a3463;border-radius:999px;padding:6px 10px}
+    .btn{background:#1a2250;border:1px solid #2b3b8a;color:#eaf; padding:8px 12px;border-radius:10px;cursor:pointer}
+    .btn.warn{background:#3b1c1c;border-color:#7d2a2a}
+    .btn.success{background:#18391f;border-color:#2e6b3a}
+    .btn:disabled{opacity:.55;cursor:not-allowed}
+    select,input{background:#111834;color:#e9ecff;border:1px solid #2a3159;border-radius:10px;padding:8px 10px}
+    label{font-size:.92rem;color:#c9d6ff}
+    small, .muted{color:var(--muted)}
 
-  </script>
-</body>
-</html>
-      document.getElementById('countdown').textContent = timeLeft > 0 ? timeLeft : '—';
-      const fill = document.getElementById('heatFill');
-      fill.style.width = ((1-(timeLeft/totalTime))*100)+'%';
+    /* المسرح */
+    #stage{position:relative;background:linear-gradient(180deg,#0f1437 0%,#0e1029 100%);border:1px solid #273064;border-radius:16px;padding:16px;min-height:400px;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:flex-start}
+    #bombVisual{position:relative;width:180px;height:180px;border-radius:999px;background:#1b243f;border:2px solid #2d3d7a;display:grid;place-items:center;box-shadow:0 0 0 6px rgba(110,160,255,.08) inset}
+    #bombVisual.yellow{background:#312f1a}
+    #bombVisual.red{background:#3a1618}
+    #countdown{font-weight:900;font-size:52px}
+    #countdown.mega{font-size:76px}
+    #countdown.danger{color:#ffb3b3}
+    #heat{width:100%;height:8px;background:#0f1432;border:1px solid #2a3159;border-radius:999px;overflow:hidden}
+    #heatFill{height:100%;width:0%;background:linear-gradient(90deg,#22c55e,#eab308,#ef4444)}
+    #flash{position:absolute;inset:0;background:radial-gradient(600px 250px at 50% 40%,rgba(255,255,255,0.65),transparent);opacity:0;pointer-events:none;transition:opacity .25s}
+    #flash.show{opacity:1;animation:flash .4s ease}
+    @keyframes flash{0%{opacity:.95}100%{opacity:0}}
+    .shake-soft{animation:shake .4s linear infinite}
+    .shake-hard{animation:shake .15s linear 6}
+    @keyframes shake{0%{transform:translateX(0)}25%{transform:translateX(-3px)}50%{transform:translateX(3px)}75%{transform:translateX(-3px)}100%{transform:translateX(0)}}
+
+    /* النتائج */
+    #results{position:absolute;inset:0;background:rgba(10,14,36,.72);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center}
+    #results.show{display:flex}
+    .results-card{background:#0f1639;border:1px solid #2a3a8a;border-radius:18px;padding:18px;min-width:280px;max-width:92vw;text-align:center}
+    .badge{background:#223169;color:#fff;border:1px solid #3453b2;padding:6px 12px;border-radius:999px;margin:0 4px;display:inline-block}
+
+    #confetti i{position:absolute;top:-10px;width:8px;height:12px;animation:fall 2.6s linear forwards}
+    @keyframes fall{to{transform:translateY(120vh) rotate(360deg);opacity:.85}}
+
+    .kpis{display:flex;gap:10px}
+    .kpi{background:#0f1636;border:1px solid #273064;border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;min-width:90px;align-items:center}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title">💣 القنبلة الذكية — نسخة مصححة</div>
+    <div class="tabbar" id="topTabs">
+      <button id="teacherTab" class="tab active" aria-pressed="true">وضع المعلّم</button>
+      <button id="studentTab" class="tab" aria-pressed="false">وضع الطلاب</button>
+    </div>
+  </header>
+
+  <main class="container" id="viewsRoot">
+    <!-- الإعدادات -->
+    <aside class="panel" id="settings">
+      <h3>الإعدادات</h3>
+      <div class="row" style="justify-content:space-between">
+        <label for="difficulty">درجة الصعوبة</label>
+        <select id="difficulty">
+          <option value="Easy">سهل</option>
+          <option value="Medium" selected>متوسط</option>
+          <option value="Hard">صعب</option>
+          <option value="Custom">مخصّص</option>
+        </select>
+      </div>
+      <div class="row" style="justify-content:space-between;margin-top:8px">
+        <label for="duration">المدة الكلية (ث)</label>
+        <input id="duration" type="number" min="10" max="300" value="35" />
+      </div>
+      <div class="row" style="justify-content:space-between;margin-top:8px">
+        <label for="perPlayer">لكل طالب (ث)</label>
+        <input id="perPlayer" type="number" min="5" max="60" value="15" />
+      </div>
+      <div class="row" style="justify-content:space-between;margin-top:8px">
+        <label for="perRound">عدد الطلاب لكل جولة</label>
+        <input id="perRound" type="number" min="1" max="8" value="3" />
+      </div>
+      <div class="row" style="justify-content:space-between;margin-top:8px">
+        <label for="soundOn">الصوتيات</label>
+        <input id="soundOn" type="checkbox" checked />
+      </div>
+      <div class="row" style="justify-content:space-between;margin-top:8px">
+        <label for="allowSurprises">مفاجآت الوقت</label>
+        <input id="allowSurprises" type="checkbox" checked />
+      </div>
+      <div class="row" style="justify-content:space-between;margin-top:8px">
+        <label class="muted" for="fairPick">اختيار عادل</label>
+        <input id="fairPick" type="checkbox" />
+      </div>
+      <hr style="border:0;border-top:1px solid #273064;margin:12px 0" />
+      <div class="row" style="justify-content:space-between">
+        <label for="phase">المرحلة</label>
+        <select id="phase">
+          <option value="selectClass">اختيار الصف</option>
+          <option value="selectStudents" selected>اختيار الطلاب</option>
+          <option value="stage">المسرح</option>
+        </select>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+        <button id="startBtn" class="btn">بدء التحدي ▶️</button>
+        <button id="pauseBtn" class="btn" disabled>إيقاف مؤقت ⏸</button>
+        <button id="add5Btn" class="btn" disabled>+5 ثوانٍ</button>
+        <button id="successBtn" class="btn success" disabled>نجاح ✅</button>
+        <button id="failBtn" class="btn warn" disabled>فشل ❌</button>
+      </div>
+      <div style="margin-top:12px" class="kpis">
+        <div class="kpi"><small>الجولات</small><b id="kRounds">0</b></div>
+        <div class="kpi"><small>نجاحات</small><b id="kWins">0</b></div>
+        <div class="kpi"><small>فشل</small><b id="kFails">0</b></div>
+      </div>
+    </aside>
+
+    <!-- الوسط: المشاهد الثلاثة -->
+    <section class="panel" id="mid">
+      <!-- اختيار الصف -->
+      <div id="sectionClass">
+        <h3>اختر الصف</h3>
+        <div class="grid" id="classGrid"></div>
+      </div>
+
+      <!-- اختيار الطلاب -->
+      <div id="sectionStudents">
+        <h3>اختر الطلاب (الحد <b id="limitSpan">3</b>)</h3>
+        <div style="margin:8px 0;display:flex;gap:6px;flex-wrap:wrap" id="selectedChips"></div>
+        <div class="grid" id="studentsGrid"></div>
+      </div>
+
+      <!-- المسرح -->
+      <div id="sectionStage" hidden>
+        <div id="stage">
+          <div id="bombVisual" class="">
+            <div id="countdown">جاهز؟</div>
+          </div>
+          <div id="heat" aria-label="مؤشر السخونة"><div id="heatFill"></div></div>
+          <div id="turnStatus" class="muted">لا جولة نشطة</div>
+          <div id="flash"></div>
+          <div id="confetti"></div>
+          <div id="results" role="dialog" aria-modal="true">
+            <div class="results-card">
+              <div style="font-size:44px" id="resultIcon">⏹️</div>
+              <h3 id="resultTitle" style="margin:6px 0 8px">تم الإيقاف</h3>
+              <div id="resultText" class="muted" style="margin-bottom:8px">إنهاء مبكر للجولة.</div>
+              <div id="resultBadges" style="margin:6px 0"></div>
+              <div style="margin-top:10px"><button class="btn" id="closeResults">متابعة</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- يمين: الدور والسجل -->
+    <aside class="panel">
+      <h3>الأدوار</h3>
+      <div id="turnList" class="col"></div>
+      <hr style="border:0;border-top:1px solid #273064;margin:12px 0" />
+      <h3>السجل</h3>
+      <div id="log" class="muted" style="font-size:.92rem;min-height:80px"></div>
+    </aside>
+  </main>
+
+  <script>
+  /* ===================== بيانات تجريبية بدلاً من fetch ===================== */
+  const DATA = {
+    classes: [
+      { id:"A1", name:"الصف A1", icon:"🏫"},
+      { id:"B2", name:"الصف B2", icon:"🏫"}
+    ],
+    students: {
+      A1: [
+        { id:"s1", name:"ليان", avatar:"👧"},
+        { id:"s2", name:"عمر", avatar:"🧒"},
+        { id:"s3", name:"سارة", avatar:"👧"},
+        { id:"s4", name:"خالد", avatar:"👦"}
+      ],
+      B2: [
+        { id:"s5", name:"نورة", avatar:"👧"},
+        { id:"s6", name:"زياد", avatar:"👦"},
+        { id:"s7", name:"هند", avatar:"👧"},
+        { id:"s8", name:"مازن", avatar:"👦"}
+      ]
     }
-    function endGame(success) {
-      state = success ? 'SUCCESS' : 'FAIL';
-      if (success) {
-        showNotif2('🎉 نجاح! أحسنت!');
-        confettiBlast();
-        playSound('win');
-        showResults('SUCCESS');
-      } else {
-        showNotif2('💥 انفجرت القنبلة!');
-        doFlash();
-        playSound('fail');
-        showResults('FAIL');
-      }
-      document.getElementById('bombVisual').classList.remove('yellow','red','shake');
-      document.getElementById('countdown').classList.remove('mega','danger');
+  };
+
+  function loadData(){ buildClassGrid(); }
+
+  /* ===================== المراجع ===================== */
+  const viewsRoot = document.getElementById('viewsRoot');
+  const teacherTab = document.getElementById('teacherTab');
+  const studentTab = document.getElementById('studentTab');
+
+  const sectionClass    = document.getElementById('sectionClass');
+  const sectionStudents = document.getElementById('sectionStudents');
+  const sectionStage    = document.getElementById('sectionStage');
+
+  const classGrid    = document.getElementById('classGrid');
+  const studentsGrid = document.getElementById('studentsGrid');
+  const selectedChips= document.getElementById('selectedChips');
+  const limitSpan    = document.getElementById('limitSpan');
+
+  const elDifficulty = document.getElementById('difficulty');
+  const elDuration   = document.getElementById('duration');
+  const elPerPlayer  = document.getElementById('perPlayer');
+  const elPerRound   = document.getElementById('perRound');
+  const elSoundOn    = document.getElementById('soundOn');
+  const elAllowSur   = document.getElementById('allowSurprises');
+  const elFairPick   = document.getElementById('fairPick');
+  const phaseSelect  = document.getElementById('phase');
+
+  const startBtn   = document.getElementById('startBtn');
+  const pauseBtn   = document.getElementById('pauseBtn');
+  const add5Btn    = document.getElementById('add5Btn');
+  const successBtn = document.getElementById('successBtn');
+  const failBtn    = document.getElementById('failBtn');
+
+  const countdownEl = document.getElementById('countdown');
+  const heatFill    = document.getElementById('heatFill');
+  const bombVisual  = document.getElementById('bombVisual');
+  const flash       = document.getElementById('flash');
+  const resultsEl   = document.getElementById('results');
+  const resultIcon  = document.getElementById('resultIcon');
+  const resultTitle = document.getElementById('resultTitle');
+  const resultText  = document.getElementById('resultText');
+  const resultBadges= document.getElementById('resultBadges');
+  const closeResults= document.getElementById('closeResults');
+  const confettiBox = document.getElementById('confetti');
+
+  const turnList   = document.getElementById('turnList');
+  const turnStatus = document.getElementById('turnStatus');
+  const logEl      = document.getElementById('log');
+
+  /* ===================== حالات وصعوبات ===================== */
+  const Difficulty = {
+    Easy:    { duration: 60, pace: "slow",  surpriseProb: 0.05, effects:{ shake:false, flashAtEnd:true } },
+    Medium:  { duration: 35, pace: "mid",   surpriseProb: 0.08, effects:{ shake:true,  flashAtEnd:true } },
+    Hard:    { duration: 20, pace: "fast",  surpriseProb: 0.12, effects:{ shake:true,  flashAtEnd:true } },
+    Custom:  { duration: 45, pace: "mid",   surpriseProb: 0.10, effects:{ shake:true,  flashAtEnd:true } }
+  };
+
+  const Bus = (()=>{ const m=new Map(); return { on:(e,h)=>m.set(e,(m.get(e)||[]).concat(h)), emit:(e,p)=> (m.get(e)||[]).forEach(h=>h(p)) }})();
+  const GameState = (()=>{ let s="IDLE"; const T={ IDLE:["ARMING"], ARMING:["RUNNING","IDLE"], RUNNING:["PAUSED","SUCCESS","FAIL","RESULTS"], PAUSED:["RUNNING","RESULTS"], SUCCESS:["RESULTS"], FAIL:["RESULTS"], RESULTS:["IDLE","ARMING"] }; return { get:()=>s, to:(n)=>{ if((T[s]||[]).includes(n)){ s=n; Bus.emit("state",s);} } }})();
+
+  /* ===================== صوتيات خفيفة ===================== */
+  const Sound = (() => {
+    let ctx=null, enabled=true; function ensure(){ if(!ctx) ctx=new (window.AudioContext||window.webkitAudioContext)(); }
+    function beep(freq=880,ms=80,type="sine",gain=0.035){ if(!enabled) return; ensure(); const o=ctx.createOscillator(), g=ctx.createGain(); o.type=type; o.frequency.value=freq; g.gain.value=gain; o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime+ms/1000);} 
+    return {
+      enable(v){enabled=!!v; if(enabled) ensure();}, resume(){ if(ctx && ctx.state==="suspended") ctx.resume(); },
+      tickSlow:()=>beep(680,28,"square",.03), tickFast:()=>beep(900,24,"square",.035), heart:()=>{beep(120,60,"sine",.06); setTimeout(()=>beep(120,60,"sine",.06),120);}, alarm:()=>beep(1100,130,"sawtooth",.05), success:()=>{beep(660,120,"triangle",.05); setTimeout(()=>beep(880,140,"triangle",.05),150);}, boom:()=>{beep(80,200,"sawtooth",.08); setTimeout(()=>beep(50,260,"sawtooth",.08),120);} }
+  })();
+
+  /* ===================== مؤقّت rAF ===================== */
+  function createTimer(totalMs){
+    let left=totalMs, id=null, last=performance.now(); const marks=new Set();
+    function tick(now){ left -= now-last; last=now; Bus.emit("timer:tick",{left,seconds:Math.ceil(left/1000), total: totalMs}); const s=Math.ceil(left/1000); const half=Math.ceil(totalMs/2000);
+      if(!marks.has("half") && s===half){ marks.add("half"); Bus.emit("timer:flag","half"); }
+      if(!marks.has("last10") && s===10){ marks.add("last10"); Bus.emit("timer:flag","last10"); }
+      if(s<=3){ Bus.emit("timer:flag","last3"); }
+      if(left<=0){ cancelAnimationFrame(id); id=null; Bus.emit("timer:end"); return; }
+      id=requestAnimationFrame(tick);
     }
-    // تحكم المعلم أثناء الجولة
-    document.getElementById('pauseBtn').onclick = ()=>{
-      if(state==='RUNNING'){ clearInterval(timer); state='PAUSED'; showNotif2('⏸️ تم الإيقاف المؤقت','info',2); }
-      else if(state==='PAUSED'){ startGame(); showNotif2('▶️ استئناف','info',1); }
-    };
-    document.getElementById('add5Btn').onclick = ()=>{ timeLeft+=5; showNotif2('⏫ +5 ثوانٍ!','success',1); updateBombVisual(); playSound('bonus'); };
-    document.getElementById('successBtn').onclick = ()=>{ clearInterval(timer); endGame(true); };
-    document.getElementById('failBtn').onclick = ()=>{ clearInterval(timer); endGame(false); };
-    // اختصارات متقدمة
-    window.addEventListener('keydown',e=>{
-      if(state==='RUNNING'){
-        if(e.key===' '){ document.getElementById('pauseBtn').click(); }
-        if(e.key==='Enter'){ document.getElementById('successBtn').click(); }
-        if(e.key==='Escape'){ document.getElementById('failBtn').click(); }
-        if(e.key==='ArrowUp'){ document.getElementById('add5Btn').click(); }
-      } else if(state==='PAUSED' && e.key===' '){ document.getElementById('pauseBtn').click(); }
+    return { start(){ last=performance.now(); id=requestAnimationFrame(tick); Bus.emit("timer:start",{totalMs}); }, pause(){ if(id){ cancelAnimationFrame(id); id=null; Bus.emit("timer:pause",{left}); } }, resume(){ if(!id){ last=performance.now(); id=requestAnimationFrame(tick); Bus.emit("timer:resume",{left}); } }, add(ms){ left+=ms; Bus.emit("timer:add",{left,ms}); }, get left(){return left;} }
+  }
+
+  /* ===================== أدوات واجهة ===================== */
+  function log(msg){ const t=new Date().toLocaleTimeString(); logEl.innerHTML = `<div>[${t}] ${msg}</div>` + logEl.innerHTML; }
+  function setStartEnabled(v){ startBtn.disabled=!v; }
+  function setControls(running){ pauseBtn.disabled=add5Btn.disabled=successBtn.disabled=failBtn.disabled=!running; }
+  function toast(text){ const t=document.createElement('div'); t.style.cssText="position:absolute;top:16px;left:50%;transform:translateX(-50%);background:#111834;border:1px solid #2a3159;color:#eaf;padding:8px 12px;border-radius:999px;z-index:9"; t.textContent=text; document.getElementById('stage').appendChild(t); setTimeout(()=>t.remove(), 1400); }
+  function doFlash(){ flash.classList.remove("show"); void flash.offsetWidth; flash.classList.add("show"); }
+  function boom(){ document.getElementById('stage').classList.add("shake-hard"); doFlash(); Sound.boom(); setTimeout(()=>document.getElementById('stage').classList.remove("shake-hard"),600); }
+  function confetti(){ const box=document.getElementById('confetti'); box.innerHTML=""; for(let i=0;i<120;i++){ const p=document.createElement("i"); p.style.cssText=`left:${Math.random()*100}%`; p.style.background=`hsla(${Math.floor(Math.random()*360)},90%,60%,.95)`; box.appendChild(p);} setTimeout(()=>box.innerHTML="",3000); }
+
+  /* ===================== بيانات جلسة ===================== */
+  let SELECTED_CLASS = null;
+  let ALL_STUDENTS = {}; // by classId
+  let CURRENT_SELECTED = []; // [{id,name,avatar}]
+  let TURN_INDEX = 0;
+  let GLOBAL_TIMER = null; let TURN_TIMER = null;
+
+  const Stats = (()=> { const key="bomb-pro-stats"; const store=JSON.parse(localStorage.getItem(key) || '{"session":{"total":0,"success":0,"fail":0},"students":{}}'); function save(){ localStorage.setItem(key, JSON.stringify(store)); }
+    function recordRound(res){ store.session.total++; if(res.outcome==="SUCCESS") store.session.success++; else if(res.outcome==="FAIL") store.session.fail++; res.selectedStudents.forEach(s=>{ const st=store.students[s.id] || (store.students[s.id]={ name:s.name, points:0, rounds:0, success:0 }); st.rounds++; if(res.outcome==="SUCCESS"){ st.success++; st.points += res.pointsAwarded[s.id]||0; } }); save(); updateKPIs(); updateStudentPanels(); }
+    function k(){ return store.session; } function getStudent(id){ return store.students[id]; } return { recordRound, k, getStudent } })();
+  function updateKPIs(){ const k=Stats.k(); document.getElementById('kRounds').textContent=k.total; document.getElementById('kWins').textContent=k.success; document.getElementById('kFails').textContent=k.fail; }
+
+  /* ===================== بناء الواجهات: صفوف وطلاب ===================== */
+  function buildClassGrid(){
+    classGrid.innerHTML = '';
+    if(!Array.isArray(DATA.classes) || DATA.classes.length===0){
+      const emp = document.createElement('div'); emp.className='card-item'; emp.innerHTML='<small>لا توجد صفوف في البيانات.</small>'; classGrid.appendChild(emp); return;
+    }
+    DATA.classes.forEach(c=>{
+      const it = document.createElement('button');
+      it.className = 'card-item';
+      it.setAttribute('role','listitem');
+      const icon = document.createElement('div'); icon.style.fontSize='26px'; icon.textContent = c.icon || '🏫';
+      const name = document.createElement('div'); name.style.fontWeight='700'; name.textContent = c.name || c.id;
+      it.append(icon, name);
+      it.onclick = ()=> selectClass(c.id);
+      classGrid.appendChild(it);
     });
-    // شاشة النتائج
-    function showResults(type) {
-      document.getElementById('gameScreen').style.display = 'none';
-      document.getElementById('resultsScreen').style.display = 'block';
-      let icon = '', title = '', text = '', badges = '';
-      if(type==='SUCCESS'){
-        icon = '🎉';
-        title = 'ممتاز!';
-        text = 'تمت المهمة بنجاح.';
-        badges = '<span style="background:#22c55e;color:#fff;padding:8px 18px;border-radius:999px;margin:0 4px;font-weight:700;">🏅 سريع الرد</span>';
-      } else if(type==='FAIL'){
-        icon = '💥';
-        title = 'انفجرت القنبلة!';
-        text = 'حاولوا مرة أخرى.';
-      } else {
-        icon = '⏹️';
-        title = 'انتهت الجولات';
-        text = 'تم إنهاء جميع الجولات.';
-      }
-      document.getElementById('resultIcon').textContent = icon;
-      document.getElementById('resultTitle').textContent = title;
-      document.getElementById('resultText').textContent = text;
-      document.getElementById('resultBadges').innerHTML = badges;
-    }
-    document.getElementById('closeResults').onclick = ()=>{
-      if(CURRENT_SELECTED.length > 0){
-        ROUND_INDEX++;
-        document.getElementById('resultsScreen').style.display = 'none';
-        document.getElementById('gameScreen').style.display = 'block';
-        nextRound();
-      } else {
-        // إعادة التحدي
-        document.getElementById('resultsScreen').style.display = 'none';
-        document.getElementById('setupScreen').style.display = 'block';
-        // إعادة تعيين
-        CURRENT_SELECTED = [];
-        buildStudentsGrid();
-      }
-    };
+  }
+  function selectClass(id){
+    SELECTED_CLASS = id;
+    ALL_STUDENTS = DATA.students || {};
+    sectionClass.hidden = true;
+    sectionStudents.hidden = false;
+    sectionStage.hidden = true;
+    phaseSelect.value = 'selectStudents';
+    buildStudentsGrid();
+    log(`اختيار الصف: ${id}`);
+  }
+  function buildStudentsGrid(){ const arr = [...(ALL_STUDENTS[SELECTED_CLASS]||[])]; studentsGrid.innerHTML=""; arr.forEach(s=>{ const b=document.createElement('button'); b.className='card-item'; b.setAttribute('role','listitem'); b.onclick=()=> toggleStudent(s,b); const label=document.createElement('div'); label.style.fontWeight='700'; label.textContent=s.name; const emo=document.createElement('div'); emo.style.fontSize='22px'; emo.textContent=s.avatar||'👤'; b.appendChild(emo); b.appendChild(label); studentsGrid.appendChild(b); }); updateSelectedChips(); updateStartButton(); }
+  function toggleStudent(s,btn){ const idx = CURRENT_SELECTED.findIndex(x=>x.id===s.id); const limit = Number(elPerRound.value||1); if(idx>=0){ CURRENT_SELECTED.splice(idx,1); btn.classList.remove('active'); } else { if(CURRENT_SELECTED.length>=limit){ toast(`الحد ${limit} طلاب.`); return; } CURRENT_SELECTED.push({...s}); btn.classList.add('active'); } updateSelectedChips(); updateStartButton(); }
+  function updateSelectedChips(){ selectedChips.innerHTML=""; CURRENT_SELECTED.forEach(s=>{ const chip=document.createElement('div'); chip.className='chip'; const i=document.createElement('i'); i.textContent=s.avatar||'👤'; const b=document.createElement('b'); b.textContent=s.name; chip.append(i,b); selectedChips.appendChild(chip); }); limitSpan.textContent=String(elPerRound.value||1); buildTurnList(); }
+  function buildTurnList(){ turnList.innerHTML=""; if(CURRENT_SELECTED.length===0){ turnList.innerHTML='<small>لا مشاركين بعد.</small>'; return; } CURRENT_SELECTED.forEach((s,idx)=>{ const t=document.createElement('div'); t.className='row'; t.innerHTML = `<div class="chip" style="flex:none"><i>${s.avatar||'👤'}</i><b>${s.name}</b></div><div style="font-size:.9rem;color:var(--muted)">${idx===TURN_INDEX? '🎯 الدور الحالي' : '… بانتظار الدور'}</div>`; turnList.appendChild(t); }); }
+
+  /* ===================== تبديل المراحل يدويًا (للمعاينة) ===================== */
+  phaseSelect.addEventListener('change',()=>{ const ph=phaseSelect.value; sectionClass.hidden = ph!=='selectClass'; sectionStudents.hidden = ph!=='selectStudents'; sectionStage.hidden = ph!=='stage'; refreshPhase(); });
+
+  /* ===================== بدء التحدي ===================== */
+  function updateStartButton(){ startBtn.disabled = CURRENT_SELECTED.length===0; }
+  function startChallenge(){ if(CURRENT_SELECTED.length===0){ alert('اختر الطلاب أولاً'); return; } Sound.resume(); setStartEnabled(false); setControls(true);
+    // تهيئة مشهد القنبلة
+    sectionClass.hidden=true; sectionStudents.hidden=true; sectionStage.hidden=false; phaseSelect.value='stage';
+    // إعدادات
+    const d = Difficulty[elDifficulty.value] || Difficulty.Medium; if(elDifficulty.value!=="Custom") elDuration.value=d.duration; const total = Number(elDuration.value||d.duration)*1000; const per = Number(elPerPlayer.value||15)*1000; const allowSur = elAllowSur.checked; const pace=d.pace; 
+    // تسليح
+    GameState.to('ARMING'); countdownEl.textContent='جاهز؟'; bombVisual.classList.remove('yellow','red','shake-soft','shake-hard');
+    setTimeout(()=>{ GameState.to('RUNNING'); startGlobal(total, per, { allowSur, pace, surpriseProb:d.surpriseProb }); }, 1200);
+  }
+
+  function startGlobal(totalMs, perPlayerMs, options){
+    GLOBAL_TIMER = createTimer(totalMs);
+    let paceTimer=null; function setPace(mode){ if(paceTimer) clearInterval(paceTimer); if(mode==='slow') paceTimer=setInterval(Sound.tickSlow,1000); if(mode==='mid') paceTimer=setInterval(Sound.tickFast,700); if(mode==='fast') paceTimer=setInterval(Sound.tickFast,450); }
+    setPace(options.pace);
+    if(options.allowSur && Math.random() < (options.surpriseProb||0.08)) setTimeout(()=>{ GLOBAL_TIMER.add(5000); toast('🎁 مفاجأة +5s'); }, 3000 + Math.random()*4000);
+
+    attachTeacherControls(GLOBAL_TIMER, declareSuccess, declareFail);
+    TURN_INDEX = 0; startTurn(perPlayerMs);
+
+    Bus.on('timer:tick', ({left,seconds,total})=>{ countdownEl.textContent=seconds; const p=Math.max(0, Math.min(1, 1-(left/total))); heatFill.style.width=(p*100)+'%'; if(p>.5 && p<.8) bombVisual.classList.add('yellow'); if(p>=.8) bombVisual.classList.add('red'); turnStatus.textContent = `الوقت المتبقي للجولة: ${seconds}s`; });
+    Bus.on('timer:flag', tag=>{ if(tag==='half') log('✳️ نصف الوقت'); if(tag==='last10'){ bombVisual.classList.add('shake-soft'); toast('⚠️ آخر 10 ثوانٍ'); } if(tag==='last3'){ countdownEl.classList.add('mega','danger'); Sound.alarm(); } });
+    Bus.on('timer:end', ()=>{ boom(); declareFail(); });
+    GLOBAL_TIMER.start();
+
+    function declareSuccess(){ if(GameState.get()!=='RUNNING' && GameState.get()!=='PAUSED') return; GLOBAL_TIMER.pause(); GameState.to('SUCCESS'); showResults({ outcome:'SUCCESS', selectedStudents: CURRENT_SELECTED }); }
+    function declareFail(){ if(GameState.get()!=='RUNNING' && GameState.get()!=='PAUSED') return; GLOBAL_TIMER.pause(); GameState.to('FAIL'); boom(); showResults({ outcome:'FAIL', selectedStudents: CURRENT_SELECTED }); }
+  }
+
+  function startTurn(perMs){ updateTurnUI(); if(TURN_TIMER) TURN_TIMER.pause(); TURN_TIMER=null; let left=perMs; const s = CURRENT_SELECTED[TURN_INDEX]; turnStatus.textContent=`🎯 دور ${s.name} — ${Math.ceil(left/1000)}s`;
+    const id = setInterval(()=>{ left-=1000; updateTurnUI(); if(left<=0){ clearInterval(id); nextTurn(perMs); } },1000);
+    const hb = setInterval(()=> Sound.heart(), 2000);
+    TURN_TIMER = { pause(){ clearInterval(id); clearInterval(hb); }, resume(){} };
+  }
+  function nextTurn(perMs){ TURN_INDEX++; if(TURN_INDEX>=CURRENT_SELECTED.length){ toast('انتهت الأدوار — أعلن النتيجة'); return; } startTurn(perMs); }
+  function updateTurnUI(){ buildTurnList(); if(CURRENT_SELECTED.length===0) return; const s = CURRENT_SELECTED[TURN_INDEX]||CURRENT_SELECTED.at(-1); const secs = Math.max(0, Number(elPerPlayer.value||15)); turnStatus.textContent=`🎯 الدور الحالي: ${s.name} — ${secs}s لكل لاعب`; }
+
+  /* ===================== نتائج ===================== */
+  function showResults({ outcome, selectedStudents }){ const award = (outcome==='SUCCESS') ? 10 : 0; const result = { roundId: crypto.randomUUID(), selectedStudents, outcome, pointsAwarded:Object.fromEntries(selectedStudents.map(s=>[s.id, award])) };
+    Stats.recordRound(result);
+    if(outcome==='SUCCESS'){ resultIcon.textContent='🎉'; resultTitle.textContent='ممتاز!'; resultText.textContent='تمت المهمة بنجاح.'; confetti(); Sound.success(); resultBadges.innerHTML='<span class="badge">🏅 سريع الرد</span><span class="badge">💬 إجابة واثقة</span>'; }
+    else if(outcome==='FAIL'){ resultIcon.textContent='💥'; resultTitle.textContent='انفجرت القنبلة!'; resultText.textContent='حاولوا مرة أخرى.'; }
+    else { resultIcon.textContent='⏹️'; resultTitle.textContent='تم الإيقاف'; resultText.textContent='إنهاء مبكر للجولة.'; }
+    resultsEl.classList.add('show');
+  }
+  closeResults.onclick = ()=>{ resultsEl.classList.remove('show'); setStartEnabled(true); setControls(false); countdownEl.classList.remove('mega','danger'); };
+
+  /* ===================== تحكّم المعلم أثناء الجولة ===================== */
+  function attachTeacherControls(timer, onSuccess, onFail){ pauseBtn.onclick = ()=>{ if(GameState.get()==='RUNNING'){ timer.pause(); pauseBtn.textContent='استئناف ▶️'; GameState.to('PAUSED'); log('PAUSED'); } else if(GameState.get()==='PAUSED'){ timer.resume(); pauseBtn.textContent='إيقاف مؤقت ⏸'; GameState.to('RUNNING'); log('RESUMED'); } };
+    add5Btn.onclick = ()=> timer.add(5000);
+    successBtn.onclick = ()=> onSuccess();
+    failBtn.onclick    = ()=> onFail();
+  }
+
+  /* ===================== تبويب المعلم/الطلاب في نفس الصفحة ===================== */
+  teacherTab.addEventListener('click',()=>{ teacherTab.classList.add('active'); teacherTab.setAttribute('aria-pressed','true'); studentTab.classList.remove('active'); studentTab.setAttribute('aria-pressed','false'); viewsRoot.classList.add('teacher-view'); viewsRoot.classList.remove('student-view'); });
+  studentTab.addEventListener('click',()=>{ studentTab.classList.add('active'); studentTab.setAttribute('aria-pressed','true'); teacherTab.classList.remove('active'); teacherTab.setAttribute('aria-pressed','false'); viewsRoot.classList.add('student-view'); viewsRoot.classList.remove('teacher-view'); });
+
+  /* ===================== تفاعلات الإعدادات ===================== */
+  elDifficulty.addEventListener('change',()=>{ const d=Difficulty[elDifficulty.value]; if(elDifficulty.value!=="Custom") elDuration.value=d.duration; });
+  elSoundOn.addEventListener('change',()=> Sound.enable(elSoundOn.checked) );
+  elPerRound.addEventListener('change',()=>{ if(CURRENT_SELECTED.length>Number(elPerRound.value||1)){ CURRENT_SELECTED.length = Number(elPerRound.value||1); buildStudentsGrid(); } updateSelectedChips(); updateStartButton(); });
+
+  /* ===================== Hotkeys ===================== */
+  window.addEventListener('keydown',(e)=>{ if(GameState.get()==='RUNNING'){ if(e.key===' '){ e.preventDefault(); pauseBtn.click(); } if(e.key==='Enter'){ e.preventDefault(); successBtn.click(); } if(e.key==='Escape'){ e.preventDefault(); failBtn.click(); } if(e.key==='ArrowUp'){ e.preventDefault(); add5Btn.click(); } } else if(GameState.get()==='PAUSED' && e.key===' '){ e.preventDefault(); pauseBtn.click(); } });
+
+  /* ===================== تفعيل/تعطيل الأزرار حسب المرحلة ===================== */
+  function refreshPhase(){ const ph=phaseSelect.value; startBtn.disabled = (CURRENT_SELECTED.length===0) || ph!=='selectStudents'; pauseBtn.disabled=add5Btn.disabled=successBtn.disabled=failBtn.disabled = (ph!=='stage'); }
+  phaseSelect.addEventListener('change', refreshPhase);
+
+  /* ===================== ربط زر البدء ===================== */
+  startBtn.addEventListener('click', startChallenge);
+
+  /* ===================== تحديث لوحات الطلاب (يمين) ===================== */
+  function updateStudentPanels(){ /* لاحقًا يمكن عرض الإحصاءات لكل طالب */ }
+
+  /* ===================== تشغيل أولي ===================== */
+  loadData();
+  updateKPIs();
+  refreshPhase();
   </script>
-</body>
-</html>
-  }catch(err){
-    console.error('فشل جلب البيانات', err);
-    const holder = document.getElementById('classGrid');
-    holder.innerHTML = '';
-    const box = document.createElement('div');
-    box.className = 'tile';
-    box.innerHTML = '<b>تعذر تحميل البيانات</b><br><small>تحقق من المسار data/studentData.json ثم أعد المحاولة.</small>';
-    const retry = document.createElement('button');
-    retry.className = 'btn warn';
-    retry.textContent = 'إعادة المحاولة';
-    retry.onclick = loadData;
-    holder.appendChild(box);
-    holder.appendChild(retry);
-  }
-}
-
-/* ===================== المراجع ===================== */
-const viewsRoot = document.getElementById('viewsRoot');
-const teacherTab = document.getElementById('teacherTab');
-const studentTab = document.getElementById('studentTab');
-
-const sectionClass    = document.getElementById('sectionClass');
-const sectionStudents = document.getElementById('sectionStudents');
-const sectionStage    = document.getElementById('sectionStage');
-
-const classGrid    = document.getElementById('classGrid');
-const studentsGrid = document.getElementById('studentsGrid');
-const selectedChips= document.getElementById('selectedChips');
-const limitSpan    = document.getElementById('limitSpan');
-
-const elDifficulty = document.getElementById('difficulty');
-const elDuration   = document.getElementById('duration');
-const elPerPlayer  = document.getElementById('perPlayer');
-const elPerRound   = document.getElementById('perRound');
-const elSoundOn    = document.getElementById('soundOn');
-const elAllowSur   = document.getElementById('allowSurprises');
-const elFairPick   = document.getElementById('fairPick');
-const phaseSelect  = document.getElementById('phase');
-
-const startBtn   = document.getElementById('startBtn');
-const pauseBtn   = document.getElementById('pauseBtn');
-const add5Btn    = document.getElementById('add5Btn');
-const successBtn = document.getElementById('successBtn');
-const failBtn    = document.getElementById('failBtn');
-
-const countdownEl = document.getElementById('countdown');
-const heatFill    = document.getElementById('heatFill');
-const bomb        = document.getElementById('bomb');
-const flash       = document.getElementById('flash');
-const resultsEl   = document.getElementById('results');
-const resultIcon  = document.getElementById('resultIcon');
-const resultTitle = document.getElementById('resultTitle');
-const resultText  = document.getElementById('resultText');
-const resultBadges= document.getElementById('resultBadges');
-const closeResults= document.getElementById('closeResults');
-const confettiBox = document.getElementById('confetti');
-
-const turnList   = document.getElementById('turnList');
-const turnStatus = document.getElementById('turnStatus');
-const logEl      = document.getElementById('log');
-
-/* ===================== حالات وصعوبات ===================== */
-const Difficulty = {
-  Easy:    { duration: 60, pace: "slow",  surpriseProb: 0.05, effects:{ shake:false, flashAtEnd:true } },
-  Medium:  { duration: 35, pace: "mid",   surpriseProb: 0.08, effects:{ shake:true,  flashAtEnd:true } },
-  Hard:    { duration: 20, pace: "fast",  surpriseProb: 0.12, effects:{ shake:true,  flashAtEnd:true } },
-  Custom:  { duration: 45, pace: "mid",   surpriseProb: 0.10, effects:{ shake:true,  flashAtEnd:true } }
-};
-
-const Bus = (()=>{ const m=new Map(); return { on:(e,h)=>m.set(e,(m.get(e)||[]).concat(h)), emit:(e,p)=> (m.get(e)||[]).forEach(h=>h(p)) }})();
-const GameState = (()=>{ let s="IDLE"; const T={ IDLE:["ARMING"], ARMING:["RUNNING","IDLE"], RUNNING:["PAUSED","SUCCESS","FAIL","RESULTS"], PAUSED:["RUNNING","RESULTS"], SUCCESS:["RESULTS"], FAIL:["RESULTS"], RESULTS:["IDLE","ARMING"] }; return { get:()=>s, to:(n)=>{ if((T[s]||[]).includes(n)){ s=n; Bus.emit("state",s);} } }})();
-
-/* ===================== صوتيات خفيفة ===================== */
-const Sound = (() => {
-  let ctx=null, enabled=true; function ensure(){ if(!ctx) ctx=new (window.AudioContext||window.webkitAudioContext)(); }
-  function beep(freq=880,ms=80,type="sine",gain=0.035){ if(!enabled) return; ensure(); const o=ctx.createOscillator(), g=ctx.createGain(); o.type=type; o.frequency.value=freq; g.gain.value=gain; o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime+ms/1000);} 
-  return {
-    enable(v){enabled=!!v; if(enabled) ensure();}, resume(){ if(ctx && ctx.state==="suspended") ctx.resume(); },
-    tickSlow:()=>beep(680,28,"square",.03), tickFast:()=>beep(900,24,"square",.035), heart:()=>{beep(120,60,"sine",.06); setTimeout(()=>beep(120,60,"sine",.06),120);}, alarm:()=>beep(1100,130,"sawtooth",.05), success:()=>{beep(660,120,"triangle",.05); setTimeout(()=>beep(880,140,"triangle",.05),150);}, boom:()=>{beep(80,200,"sawtooth",.08); setTimeout(()=>beep(50,260,"sawtooth",.08),120);} }
-})();
-
-/* ===================== مؤقّت rAF ===================== */
-function createTimer(totalMs){
-  let left=totalMs, id=null, last=performance.now(); const marks=new Set();
-  function tick(now){ left -= now-last; last=now; Bus.emit("timer:tick",{left,seconds:Math.ceil(left/1000), total: totalMs}); const s=Math.ceil(left/1000); const half=Math.ceil(totalMs/2000);
-    if(!marks.has("half") && s===half){ marks.add("half"); Bus.emit("timer:flag","half"); }
-    if(!marks.has("last10") && s===10){ marks.add("last10"); Bus.emit("timer:flag","last10"); }
-    if(s<=3){ Bus.emit("timer:flag","last3"); }
-    if(left<=0){ cancelAnimationFrame(id); id=null; Bus.emit("timer:end"); return; }
-    id=requestAnimationFrame(tick);
-  }
-  return { start(){ last=performance.now(); id=requestAnimationFrame(tick); Bus.emit("timer:start",{totalMs}); }, pause(){ if(id){ cancelAnimationFrame(id); id=null; Bus.emit("timer:pause",{left}); } }, resume(){ if(!id){ last=performance.now(); id=requestAnimationFrame(tick); Bus.emit("timer:resume",{left}); } }, add(ms){ left+=ms; Bus.emit("timer:add",{left,ms}); }, get left(){return left;} }
-}
-
-/* ===================== أدوات واجهة ===================== */
-function log(msg){ const t=new Date().toLocaleTimeString(); logEl.innerHTML = `<div>[${t}] ${msg}</div>` + logEl.innerHTML; }
-function setStartEnabled(v){ startBtn.disabled=!v; }
-function setControls(running){ pauseBtn.disabled=add5Btn.disabled=successBtn.disabled=failBtn.disabled=!running; }
-function toast(text){ const t=document.createElement('div'); t.style.cssText="position:absolute;top:16px;left:50%;transform:translateX(-50%);background:#111834;border:1px solid #2a3159;color:#eaf;padding:8px 12px;border-radius:999px;z-index:9"; t.textContent=text; document.getElementById('stage').appendChild(t); setTimeout(()=>t.remove(), 1400); }
-function doFlash(){ flash.classList.remove("show"); void flash.offsetWidth; flash.classList.add("show"); }
-function boom(){ document.getElementById('stage').classList.add("shake-hard"); doFlash(); Sound.boom(); setTimeout(()=>document.getElementById('stage').classList.remove("shake-hard"),600); }
-function confetti(){ const box=document.getElementById('confetti'); box.innerHTML=""; for(let i=0;i<120;i++){ const p=document.createElement("i"); p.style.cssText=`position:absolute;top:-10px;width:8px;height:12px;background:hsla(${Math.floor(Math.random()*360)},90%,60%,.95);transform:rotate(${Math.floor(Math.random()*360)}deg);animation:fall ${2+Math.random()*1.8}s linear forwards;left:${Math.random()*100}%`; box.appendChild(p);} setTimeout(()=>box.innerHTML="",3000); }
-
-/* ===================== بيانات جلسة ===================== */
-let SELECTED_CLASS = null;
-let ALL_STUDENTS = {}; // by classId
-let CURRENT_SELECTED = []; // [{id,name,avatar}]
-let TURN_INDEX = 0;
-let GLOBAL_TIMER = null; let TURN_TIMER = null;
-
-const Stats = (()=> { const key="bomb-pro-stats"; const store=JSON.parse(localStorage.getItem(key) || '{"session":{"total":0,"success":0,"fail":0},"students":{}}'); function save(){ localStorage.setItem(key, JSON.stringify(store)); }
-  function recordRound(res){ store.session.total++; if(res.outcome==="SUCCESS") store.session.success++; else if(res.outcome==="FAIL") store.session.fail++; res.selectedStudents.forEach(s=>{ const st=store.students[s.id] || (store.students[s.id]={ name:s.name, points:0, rounds:0, success:0 }); st.rounds++; if(res.outcome==="SUCCESS"){ st.success++; st.points += res.pointsAwarded[s.id]||0; } }); save(); updateKPIs(); updateStudentPanels(); }
-  function k(){ return store.session; } function getStudent(id){ return store.students[id]; } return { recordRound, k, getStudent } })();
-function updateKPIs(){ const k=Stats.k(); document.getElementById('kRounds').textContent=k.total; document.getElementById('kWins').textContent=k.success; document.getElementById('kFails').textContent=k.fail; }
-
-/* ===================== بناء الواجهات: صفوف وطلاب ===================== */
-function buildClassGrid(){
-  classGrid.innerHTML = '';
-  if(!Array.isArray(DATA.classes) || DATA.classes.length===0){
-    const emp = document.createElement('div'); emp.className='tile'; emp.innerHTML='<small>لا توجد صفوف في البيانات.</small>'; classGrid.appendChild(emp); return;
-  }
-  DATA.classes.forEach(c=>{
-    const it = document.createElement('button');
-    it.className = 'card-item';
-    it.setAttribute('role','listitem');
-    const icon = document.createElement('div'); icon.style.fontSize='26px'; icon.textContent = c.icon || '🏫';
-    const name = document.createElement('div'); name.style.fontWeight='700'; name.textContent = c.name || c.id;
-    it.append(icon, name);
-    it.onclick = ()=> selectClass(c.id);
-    classGrid.appendChild(it);
-  });
-}</div><div style="font-weight:700">${c.name}</div>`; it.onclick=()=> selectClass(c.id); classGrid.appendChild(it); }); }
-function selectClass(id){
-  SELECTED_CLASS = id;
-  ALL_STUDENTS = DATA.students || {};
-  sectionClass.hidden = true;
-  sectionStudents.hidden = false;
-  sectionStage.hidden = true;
-  phaseSelect.value = 'selectStudents';
-  buildStudentsGrid();
-  log(`اختيار الصف: ${id}`);
-}`); }
-function buildStudentsGrid(){ const arr = [...(ALL_STUDENTS[SELECTED_CLASS]||[])]; studentsGrid.innerHTML=""; arr.forEach(s=>{ const b=document.createElement('button'); b.className='card-item'; b.setAttribute('role','listitem'); b.onclick=()=> toggleStudent(s,b); const label=document.createElement('div'); label.style.fontWeight='700'; label.textContent=s.name; const emo=document.createElement('div'); emo.style.fontSize='22px'; emo.textContent=s.avatar||'👤'; b.appendChild(emo); b.appendChild(label); studentsGrid.appendChild(b); }); updateSelectedChips(); updateStartButton(); }
-function toggleStudent(s,btn){ const idx = CURRENT_SELECTED.findIndex(x=>x.id===s.id); const limit = Number(elPerRound.value||1); if(idx>=0){ CURRENT_SELECTED.splice(idx,1); btn.classList.remove('active'); } else { if(CURRENT_SELECTED.length>=limit){ toast(`الحد ${limit} طلاب.`); return; } CURRENT_SELECTED.push({...s}); btn.classList.add('active'); } updateSelectedChips(); updateStartButton(); }
-function updateSelectedChips(){ selectedChips.innerHTML=""; CURRENT_SELECTED.forEach(s=>{ const chip=document.createElement('div'); chip.className='chip'; const i=document.createElement('i'); i.textContent=s.avatar||'👤'; const b=document.createElement('b'); b.textContent=s.name; chip.append(i,b); selectedChips.appendChild(chip); }); limitSpan.textContent=String(elPerRound.value||1); buildTurnList(); }
-function buildTurnList(){ turnList.innerHTML=""; if(CURRENT_SELECTED.length===0){ turnList.innerHTML='<small>لا مشاركين بعد.</small>'; return; } CURRENT_SELECTED.forEach((s,idx)=>{ const t=document.createElement('div'); t.className='row'; t.innerHTML = `<div class="chip" style="flex:none"><i>${s.avatar||'👤'}</i><b>${s.name}</b></div><div style="font-size:.9rem;color:var(--muted)">${idx===TURN_INDEX? '🎯 الدور الحالي' : '… بانتظار الدور'}</div>`; turnList.appendChild(t); }); }
-
-/* ===================== تبديل المراحل يدويًا (للمعاينة) ===================== */
-phaseSelect.addEventListener('change',()=>{ const ph=phaseSelect.value; sectionClass.hidden = ph!=='selectClass'; sectionStudents.hidden = ph!=='selectStudents'; sectionStage.hidden = ph!=='stage'; });
-
-/* ===================== بدء التحدي ===================== */
-function updateStartButton(){ startBtn.disabled = CURRENT_SELECTED.length===0; }
-function startChallenge(){ if(CURRENT_SELECTED.length===0){ alert('اختر الطلاب أولاً'); return; } Sound.resume(); setStartEnabled(false); setControls(true);
-  // تهيئة مشهد القنبلة
-  sectionClass.hidden=true; sectionStudents.hidden=true; sectionStage.hidden=false; phaseSelect.value='stage';
-  // إعدادات
-  const d = Difficulty[elDifficulty.value] || Difficulty.Medium; if(elDifficulty.value!=="Custom") elDuration.value=d.duration; const total = Number(elDuration.value||d.duration)*1000; const per = Number(elPerPlayer.value||15)*1000; const allowSur = elAllowSur.checked; const pace=d.pace; 
-  // ARming
-  GameState.to('ARMING'); countdownEl.textContent='جاهز؟'; bomb.classList.remove('yellow','red','shake-soft','shake-hard');
-  setTimeout(()=>{
-    // RUNNING
-    GameState.to('RUNNING');
-    startGlobal(total, per, { allowSur, pace, surpriseProb:d.surpriseProb });
-  }, 1500);
-}
-
-function startGlobal(totalMs, perPlayerMs, options){
-  // مؤقّت كلي
-  GLOBAL_TIMER = createTimer(totalMs);
-  let paceTimer=null; function setPace(mode){ if(paceTimer) clearInterval(paceTimer); if(mode==='slow') paceTimer=setInterval(Sound.tickSlow,1000); if(mode==='mid') paceTimer=setInterval(Sound.tickFast,700); if(mode==='fast') paceTimer=setInterval(Sound.tickFast,450); }
-  setPace(options.pace);
-  // مفاجأة
-  if(options.allowSur && Math.random() < (options.surpriseProb||0.08)) setTimeout(()=>{ GLOBAL_TIMER.add(5000); toast('🎁 مفاجأة +5s'); }, 4000 + Math.random()*5000);
-
-  attachTeacherControls(GLOBAL_TIMER, declareSuccess, declareFail);
-  TURN_INDEX = 0; startTurn(perPlayerMs);
-
-  Bus.on('timer:tick', ({left,seconds,total})=>{ countdownEl.textContent=seconds; const p=Math.max(0, Math.min(1, 1-(left/total))); heatFill.style.width=(p*100)+'%'; if(p>.5 && p<.8) bomb.classList.add('yellow'); if(p>=.8) bomb.classList.add('red'); turnStatus.textContent = `الوقت المتبقي للجولة: ${seconds}s`;
-  });
-  Bus.on('timer:flag', tag=>{ if(tag==='half') log('✳️ نصف الوقت'); if(tag==='last10'){ bomb.classList.add('shake-soft'); toast('⚠️ آخر 10 ثوانٍ'); } if(tag==='last3'){ countdownEl.classList.add('mega','danger'); Sound.alarm(); } });
-  Bus.on('timer:end', ()=>{ boom(); declareFail(); });
-  GLOBAL_TIMER.start();
-
-  function declareSuccess(){ if(GameState.get()!=='RUNNING' && GameState.get()!=='PAUSED') return; GLOBAL_TIMER.pause(); GameState.to('SUCCESS'); showResults({ outcome:'SUCCESS', selectedStudents: CURRENT_SELECTED }); }
-  function declareFail(){ if(GameState.get()!=='RUNNING' && GameState.get()!=='PAUSED') return; GLOBAL_TIMER.pause(); GameState.to('FAIL'); boom(); showResults({ outcome:'FAIL', selectedStudents: CURRENT_SELECTED }); }
-}
-
-function startTurn(perMs){ updateTurnUI(); TURN_TIMER && TURN_TIMER.pause(); TURN_TIMER=null; let left=perMs; const s = CURRENT_SELECTED[TURN_INDEX]; turnStatus.textContent=`🎯 دور ${s.name} — ${Math.ceil(left/1000)}s`;
-  const id = setInterval(()=>{ left-=1000; updateTurnUI(); if(left<=0){ clearInterval(id); nextTurn(perMs); }
-  },1000);
-  // خفّة: نبضة قلب خفيفة مع كل ثانية
-  const hb = setInterval(()=> Sound.heart(), 2000);
-  TURN_TIMER = { pause(){ clearInterval(id); clearInterval(hb); }, resume(){ /* مبسّطة: لا حاجة الآن */ } };
-}
-function nextTurn(perMs){ TURN_INDEX++; if(TURN_INDEX>=CURRENT_SELECTED.length){ // انتهت الأدوار — المعلم يقرر نجاحًا أو يستمر حتى نهاية الوقت
-  toast('انتهت الأدوار — أعلن النتيجة'); return; } startTurn(perMs); }
-function updateTurnUI(){ buildTurnList(); const s = CURRENT_SELECTED[TURN_INDEX]; const secs = Math.max(0, Number(elPerPlayer.value||15)); turnStatus.textContent=`🎯 الدور الحالي: ${s.name} — ${secs}s لكل لاعب`; }
-
-/* ===================== نتائج ===================== */
-function showResults({ outcome, selectedStudents }){ const award = (outcome==='SUCCESS') ? 10 : 0; const result = { roundId: crypto.randomUUID(), selectedStudents, outcome, pointsAwarded:Object.fromEntries(selectedStudents.map(s=>[s.id, award])) };
-  Stats.recordRound(result);
-  if(outcome==='SUCCESS'){ resultIcon.textContent='🎉'; resultTitle.textContent='ممتاز!'; resultText.textContent='تمت المهمة بنجاح.'; confetti(); Sound.success(); resultBadges.innerHTML='<span class="badge">🏅 سريع الرد</span><span class="badge">💬 إجابة واثقة</span>'; }
-  else if(outcome==='FAIL'){ resultIcon.textContent='💥'; resultTitle.textContent='انفجرت القنبلة!'; resultText.textContent='حاولوا مرة أخرى.'; }
-  else { resultIcon.textContent='⏹️'; resultTitle.textContent='تم الإيقاف'; resultText.textContent='إنهاء مبكر للجولة.'; }
-  resultsEl.classList.add('show');
-}
-closeResults.onclick = ()=>{ resultsEl.classList.remove('show'); setStartEnabled(true); setControls(false); countdownEl.classList.remove('mega','danger','warn'); };
-
-/* ===================== تحكّم المعلم أثناء الجولة ===================== */
-function attachTeacherControls(timer, onSuccess, onFail){ pauseBtn.onclick = ()=>{ if(GameState.get()==='RUNNING'){ timer.pause(); pauseBtn.textContent='استئناف ▶️'; GameState.to('PAUSED'); log('PAUSED'); } else if(GameState.get()==='PAUSED'){ timer.resume(); pauseBtn.textContent='إيقاف مؤقت ⏸'; GameState.to('RUNNING'); log('RESUMED'); } };
-  add5Btn.onclick = ()=> timer.add(5000);
-  successBtn.onclick = ()=> onSuccess();
-  failBtn.onclick    = ()=> onFail();
-}
-
-/* ===================== تبويب المعلم/الطلاب في نفس الصفحة ===================== */
-teacherTab.addEventListener('click',()=>{ teacherTab.classList.add('active'); teacherTab.setAttribute('aria-pressed','true'); studentTab.classList.remove('active'); studentTab.setAttribute('aria-pressed','false'); viewsRoot.classList.add('teacher-view'); viewsRoot.classList.remove('student-view'); });
-studentTab.addEventListener('click',()=>{ studentTab.classList.add('active'); studentTab.setAttribute('aria-pressed','true'); teacherTab.classList.remove('active'); teacherTab.setAttribute('aria-pressed','false'); viewsRoot.classList.add('student-view'); viewsRoot.classList.remove('teacher-view'); });
-
-/* ===================== تفاعلات الإعدادات ===================== */
-elDifficulty.addEventListener('change',()=>{ const d=Difficulty[elDifficulty.value]; if(elDifficulty.value!=="Custom") elDuration.value=d.duration; });
-elSoundOn.addEventListener('change',()=> Sound.enable(elSoundOn.checked) );
-elPerRound.addEventListener('change',()=>{ if(CURRENT_SELECTED.length>Number(elPerRound.value||1)){ CURRENT_SELECTED.length = Number(elPerRound.value||1); buildStudentsGrid(); } updateSelectedChips(); updateStartButton(); });
-
-/* ===================== Hotkeys ===================== */
-window.addEventListener('keydown',(e)=>{ if(e.key===' '){ e.preventDefault(); pauseBtn.click(); } if(e.key==='Enter'){ e.preventDefault(); successBtn.click(); } if(e.key==='Escape'){ e.preventDefault(); failBtn.click(); } if(e.key==='ArrowUp'){ e.preventDefault(); add5Btn.click(); } });
-
-/* ===================== تفعيل/تعطيل الأزرار حسب المرحلة ===================== */
-function refreshPhase(){ const ph=phaseSelect.value; startBtn.disabled = (CURRENT_SELECTED.length===0) || ph!=='selectStudents'; pauseBtn.disabled=add5Btn.disabled=successBtn.disabled=failBtn.disabled = (ph!=='stage'); }
-phaseSelect.addEventListener('change', refreshPhase);
-
-/* ===================== ربط زر البدء ===================== */
-startBtn.addEventListener('click', startChallenge);
-
-/* ===================== تحديث لوحات الطلاب (يمين) ===================== */
-function updateStudentPanels(){ CURRENT_SELECTED.forEach(s=>{ /* يمكن لاحقًا عرض نقاط/نجاحات من Stats.getStudent(s.id) */ }); }
-
-/* ===================== تشغيل أولي ===================== */
-loadData();
-updateKPIs();
-refreshPhase();
-</script>
 </body>
 </html>
