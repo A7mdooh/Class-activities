@@ -57,6 +57,48 @@
 <body>
 	<div class="top-toolbar">
 		<div class="game-logo"><i class="fa-solid fa-bomb"></i> القنبلة الذكية</div>
+		<div style="display:flex;gap:10px;align-items:center;">
+			<button id="statsBtn" style="background:none;border:none;color:#ffd700;font-size:1.7rem;cursor:pointer;outline:none;" title="إحصائيات"><i class="fa-solid fa-chart-bar"></i></button>
+			<button id="instructionsBtn" style="background:none;border:none;color:#ffd700;font-size:1.7rem;cursor:pointer;outline:none;" title="تعليمات"><i class="fa-solid fa-circle-question"></i></button>
+			<button id="refreshBtn" style="background:none;border:none;color:#ffd700;font-size:1.7rem;cursor:pointer;outline:none;" title="إعادة تعيين"><i class="fa-solid fa-rotate-right"></i></button>
+			<button id="fullscreenBtn" style="background:none;border:none;color:#ffd700;font-size:1.7rem;cursor:pointer;outline:none;" title="ملء الشاشة"><i class="fa-solid fa-expand"></i></button>
+			<button id="soundBtn" style="background:none;border:none;color:#ffd700;font-size:1.7rem;cursor:pointer;outline:none;" title="الصوت"><i class="fa-solid fa-volume-up"></i></button>
+			<button id="settingsBtn" style="background:none;border:none;color:#ffd700;font-size:2rem;cursor:pointer;outline:none;" title="الإعدادات"><i class="fa-solid fa-gear"></i></button>
+		</div>
+
+		<!-- نافذة الإحصائيات -->
+		<div id="statsModal" class="modal" style="display:none;position:fixed;z-index:4000;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;">
+			<div class="modal-content" style="background:#23243a;color:#fff;max-width:500px;width:95vw;margin:60px auto;border-radius:18px;box-shadow:0 8px 32px #000a;padding:0;overflow:hidden;">
+				<div class="modal-header" style="display:flex;align-items:center;justify-content:space-between;padding:18px 24px 12px 24px;background:#1a1a2e;border-bottom:1px solid #ffd70033;">
+					<h2 style="margin:0;font-size:1.3rem;color:#ffd700;font-weight:900;">📊 إحصائيات اللعبة</h2>
+					<span id="closeStats" style="font-size:2rem;cursor:pointer;color:#ffd700;">&times;</span>
+				</div>
+				<div class="modal-body" style="padding:24px;max-height:70vh;overflow-y:auto;">
+					<div style="margin-bottom:18px;">💯 <b>النقاط:</b> <span id="statsPoints">0</span></div>
+					<div style="margin-bottom:18px;">✅ <b>القنابل المفككة:</b> <span id="statsDefused">0</span></div>
+					<div style="margin-bottom:18px;">💥 <b>القنابل المنفجرة:</b> <span id="statsExploded">0</span></div>
+					<div style="margin-bottom:18px;">📈 <b>معدل النجاح:</b> <span id="statsSuccessRate">0%</span></div>
+				</div>
+			</div>
+		</div>
+
+		<!-- نافذة التعليمات -->
+		<div id="instructionsModal" class="modal" style="display:none;position:fixed;z-index:4000;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;">
+			<div class="modal-content" style="background:#23243a;color:#fff;max-width:500px;width:95vw;margin:60px auto;border-radius:18px;box-shadow:0 8px 32px #000a;padding:0;overflow:hidden;">
+				<div class="modal-header" style="display:flex;align-items:center;justify-content:space-between;padding:18px 24px 12px 24px;background:#1a1a2e;border-bottom:1px solid #ffd70033;">
+					<h2 style="margin:0;font-size:1.3rem;color:#ffd700;font-weight:900;">📖 تعليمات اللعبة</h2>
+					<span id="closeInstructions" style="font-size:2rem;cursor:pointer;color:#ffd700;">&times;</span>
+				</div>
+				<div class="modal-body" style="padding:24px;max-height:70vh;overflow-y:auto;">
+					<ul style="font-size:1.1rem;line-height:2;">
+						<li>اختر الصف والطلاب المشاركين ثم ابدأ التحدي.</li>
+						<li>أجب بسرعة قبل انفجار القنبلة!</li>
+						<li>استخدم أزرار التحكم أثناء اللعب (إيقاف مؤقت، إضافة وقت، نجاح، انفجار).</li>
+						<li>يمكنك تخصيص الإعدادات من زر ⚙️.</li>
+					</ul>
+				</div>
+			</div>
+		</div>
 	</div>
 	<div class="container">
 		<div class="main-title">
@@ -102,6 +144,59 @@
 			<div id="resultBadges" style="margin-bottom:18px;"></div>
 			<button id="closeResults" style="padding:12px 32px;border-radius:10px;background:#ffd700;color:#23243a;font-weight:900;font-size:1.2rem;">جولة جديدة</button>
 		</div>
+
+		<!-- نافذة الإعدادات المتقدمة -->
+		<div id="settingsModal" class="modal" style="display:none;position:fixed;z-index:3000;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.7);backdrop-filter:blur(2px);align-items:center;justify-content:center;">
+			<div class="modal-content" style="background:#23243a;color:#fff;max-width:600px;width:95vw;margin:60px auto;border-radius:18px;box-shadow:0 8px 32px #000a;padding:0;overflow:hidden;">
+				<div class="modal-header" style="display:flex;align-items:center;justify-content:space-between;padding:18px 24px 12px 24px;background:#1a1a2e;border-bottom:1px solid #ffd70033;">
+					<h2 style="margin:0;font-size:1.5rem;color:#ffd700;font-weight:900;">⚙️ إعدادات اللعبة المتقدمة</h2>
+					<span id="closeSettings" style="font-size:2rem;cursor:pointer;color:#ffd700;">&times;</span>
+				</div>
+				<div class="modal-body" style="padding:24px;max-height:70vh;overflow-y:auto;">
+					<!-- إعدادات الصعوبة -->
+					<div style="margin-bottom:18px;">
+						<h3 style="color:#ffd700;margin-bottom:10px;">💣 مستوى الصعوبة</h3>
+						<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;">
+							<div class="difficulty-option" data-difficulty="easy" style="background:#23243a;border-radius:10px;padding:10px;cursor:pointer;text-align:center;border:2px solid #00cc00;color:#00cc00;">🟢 مبتدئ<br><small>60 ثانية</small></div>
+							<div class="difficulty-option" data-difficulty="medium" style="background:#23243a;border-radius:10px;padding:10px;cursor:pointer;text-align:center;border:2px solid #ff6600;color:#ff6600;">🟡 متوسط<br><small>45 ثانية</small></div>
+							<div class="difficulty-option" data-difficulty="hard" style="background:#23243a;border-radius:10px;padding:10px;cursor:pointer;text-align:center;border:2px solid #ff3300;color:#ff3300;">🟠 متقدم<br><small>30 ثانية</small></div>
+							<div class="difficulty-option" data-difficulty="expert" style="background:#23243a;border-radius:10px;padding:10px;cursor:pointer;text-align:center;border:2px solid #cc0000;color:#cc0000;">🔴 خبير<br><small>20 ثانية</small></div>
+						</div>
+					</div>
+					<!-- إعدادات مخصصة -->
+					<div style="margin-bottom:18px;">
+						<h3 style="color:#22c55e;margin-bottom:10px;">🎛️ إعدادات مخصصة</h3>
+						<div style="display:grid;gap:10px;">
+							<label>⏰ وقت مخصص (ثواني): <input type="number" id="customTime" min="10" max="300" value="45" style="width:80px;"></label>
+							<label>🎯 عدد القنابل في الجولة: <input type="number" id="totalBombs" min="1" max="20" value="5" style="width:60px;"></label>
+							<label>🔊 تشغيل الأصوات: <input type="checkbox" id="soundEnabled" checked></label>
+							<label>⚡ تسريع القنبلة عند الخطأ: <input type="checkbox" id="speedupEnabled" checked></label>
+							<label>⏳ وقت التسريع (ثواني): <input type="number" id="speedupTime" min="5" max="30" value="10" style="width:60px;"></label>
+						</div>
+					</div>
+					<!-- إعدادات النقاط -->
+					<div style="margin-bottom:18px;">
+						<h3 style="color:#ffd700;margin-bottom:10px;">🏆 نظام النقاط</h3>
+						<div style="display:grid;gap:10px;">
+							<label>💯 نقاط الإجابة الصحيحة: <input type="number" id="correctPoints" min="10" max="500" value="100" style="width:60px;"></label>
+							<label>⚡ مضاعف نقاط الوقت: <input type="number" id="timeMultiplier" min="1" max="50" value="10" style="width:60px;"></label>
+							<label>🎁 مكافآت إضافية للسرعة: <input type="checkbox" id="speedBonusEnabled" checked></label>
+						</div>
+					</div>
+					<!-- معاينة الإعدادات -->
+					<div style="margin-bottom:18px;">
+						<h3 style="color:#22c55e;margin-bottom:10px;">👁️ معاينة الإعدادات</h3>
+						<div id="settingsPreview" style="background:#1a1a2e;border-radius:10px;padding:12px;"></div>
+					</div>
+					<!-- أزرار الحفظ -->
+					<div style="text-align:center;margin-top:18px;">
+						<button id="saveSettingsBtn" style="padding:10px 28px;border-radius:8px;background:#22c55e;color:#fff;font-weight:900;font-size:1.1rem;margin-left:8px;">💾 حفظ الإعدادات</button>
+						<button id="resetDefaultsBtn" style="padding:10px 18px;border-radius:8px;background:#ffd700;color:#23243a;font-weight:700;font-size:1.1rem;margin-left:8px;">🔄 إعادة افتراضية</button>
+						<button id="presetSettingsBtn" style="padding:10px 18px;border-radius:8px;background:#ff9800;color:#fff;font-weight:700;font-size:1.1rem;">📋 إعدادات جاهزة</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 	<!-- الأصوات -->
 	<audio id="successSound" src="../assets/media/sounds/win.mp3"></audio>
@@ -111,40 +206,232 @@
 	<audio id="confettiSound" src="../assets/media/sounds/kingdom-sounds/cosmic-explosion.mp3"></audio>
 	<audio id="bonusSound" src="../assets/media/sounds/kingdom-sounds/bonus-collect.mp3"></audio>
 	<script>
-		// ========== جلب بيانات الصفوف والطلاب من data/studentData.json ==========
-		let classData = [];
-		let studentData = {};
+		// ========== منطق اللعبة المتقدم المستورد من 2.html ==========
+
+		// ========== منطق نافذة الإعدادات المتقدمة ==========
+		function updateSettingsPreview() {
+			const customTime = document.getElementById('customTime')?.value || 45;
+			const totalBombs = document.getElementById('totalBombs')?.value || 5;
+			const correctPoints = document.getElementById('correctPoints')?.value || 100;
+			const timeMultiplier = document.getElementById('timeMultiplier')?.value || 10;
+			const speedupTime = document.getElementById('speedupTime')?.value || 10;
+			const soundEnabled = document.getElementById('soundEnabled')?.checked ?? true;
+			const speedupEnabled = document.getElementById('speedupEnabled')?.checked ?? true;
+			const speedBonusEnabled = document.getElementById('speedBonusEnabled')?.checked ?? true;
+			const difficultyName = difficultySettings[gameState.difficulty]?.name || 'متوسط';
+			document.getElementById('settingsPreview').innerHTML = `
+				<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;">
+					<div><b>الصعوبة:</b> ${difficultyName}</div>
+					<div><b>الوقت:</b> ${customTime} ثانية</div>
+					<div><b>القنابل:</b> ${totalBombs}</div>
+					<div><b>النقاط:</b> ${correctPoints} + (${timeMultiplier} × كل ثانية متبقية)</div>
+					<div><b>تسريع:</b> ${speedupEnabled ? speedupTime+' ثانية' : 'معطل'}</div>
+					<div><b>الصوت:</b> ${soundEnabled ? 'تشغيل' : 'إيقاف'}</div>
+					<div><b>مكافأة السرعة:</b> ${speedBonusEnabled ? 'نعم' : 'لا'}</div>
+				</div>
+			`;
+		}
+
+		function saveSettings() {
+			const settings = {
+				difficulty: gameState.difficulty,
+				customTime: parseInt(document.getElementById('customTime').value),
+				totalBombs: parseInt(document.getElementById('totalBombs').value),
+				correctPoints: parseInt(document.getElementById('correctPoints').value),
+				timeMultiplier: parseInt(document.getElementById('timeMultiplier').value),
+				speedupTime: parseInt(document.getElementById('speedupTime').value),
+				soundEnabled: document.getElementById('soundEnabled').checked,
+				speedupEnabled: document.getElementById('speedupEnabled').checked,
+				speedBonusEnabled: document.getElementById('speedBonusEnabled').checked
+			};
+			// تطبيق الإعدادات
+			gameState.totalBombs = settings.totalBombs;
+			gameState.difficulty = settings.difficulty;
+			// تحديث إعدادات الصعوبة المخصصة
+			difficultySettings.custom = { time: settings.customTime, name: 'مخصص', color: '#6c757d' };
+			localStorage.setItem('bombGameSettings', JSON.stringify(settings));
+			updateSettingsPreview();
+			showNotif2('✅ تم حفظ الإعدادات!','success',2);
+			document.getElementById('settingsModal').style.display = 'none';
+		}
+
+		function resetDefaults() {
+			gameState.difficulty = 'medium';
+			document.getElementById('customTime').value = 45;
+			document.getElementById('totalBombs').value = 5;
+			document.getElementById('correctPoints').value = 100;
+			document.getElementById('timeMultiplier').value = 10;
+			document.getElementById('speedupTime').value = 10;
+			document.getElementById('soundEnabled').checked = true;
+			document.getElementById('speedupEnabled').checked = true;
+			document.getElementById('speedBonusEnabled').checked = true;
+			document.querySelectorAll('.difficulty-option').forEach(opt=>opt.classList.remove('selected'));
+			document.querySelector('[data-difficulty="medium"]').classList.add('selected');
+			updateSettingsPreview();
+			showNotif2('✅ تمت إعادة الإعدادات للقيم الافتراضية','success',2);
+		}
+
+		function loadPresetSettings() {
+			const presets = {
+				beginner: { name: '🟢 إعدادات المبتدئين', difficulty: 'easy', customTime: 60, totalBombs: 3, correctPoints: 50, timeMultiplier: 5, speedupTime: 5, speedupEnabled: false },
+				standard: { name: '🟡 إعدادات قياسية', difficulty: 'medium', customTime: 45, totalBombs: 5, correctPoints: 100, timeMultiplier: 10, speedupTime: 10, speedupEnabled: true },
+				expert: { name: '🔴 إعدادات الخبراء', difficulty: 'expert', customTime: 20, totalBombs: 10, correctPoints: 200, timeMultiplier: 20, speedupTime: 15, speedupEnabled: true }
+			};
+			let options = 'اختر الإعدادات المطلوبة:\n\n';
+			Object.keys(presets).forEach((key, idx)=>{ options += `${idx+1}. ${presets[key].name}\n`; });
+			const choice = prompt(options+'\nأدخل رقم الاختيار (1-3):');
+			if(choice && choice>=1 && choice<=3){
+				const presetKeys = Object.keys(presets);
+				const selectedPreset = presets[presetKeys[choice-1]];
+				gameState.difficulty = selectedPreset.difficulty;
+				document.getElementById('customTime').value = selectedPreset.customTime;
+				document.getElementById('totalBombs').value = selectedPreset.totalBombs;
+				document.getElementById('correctPoints').value = selectedPreset.correctPoints;
+				document.getElementById('timeMultiplier').value = selectedPreset.timeMultiplier;
+				document.getElementById('speedupTime').value = selectedPreset.speedupTime;
+				document.getElementById('speedupEnabled').checked = selectedPreset.speedupEnabled;
+				document.querySelectorAll('.difficulty-option').forEach(opt=>opt.classList.remove('selected'));
+				document.querySelector(`[data-difficulty="${selectedPreset.difficulty}"]`).classList.add('selected');
+				updateSettingsPreview();
+				showNotif2(`✅ تم تحميل ${selectedPreset.name} بنجاح!`,'success',2);
+			}
+		}
+
+		function loadSavedSettings() {
+			try {
+				const savedSettings = localStorage.getItem('bombGameSettings');
+				if(savedSettings){
+					const settings = JSON.parse(savedSettings);
+					gameState.difficulty = settings.difficulty || 'medium';
+					gameState.totalBombs = settings.totalBombs || 5;
+					if(document.getElementById('correctPoints')) document.getElementById('correctPoints').value = settings.correctPoints || 100;
+					if(document.getElementById('timeMultiplier')) document.getElementById('timeMultiplier').value = settings.timeMultiplier || 10;
+					if(document.getElementById('speedupTime')) document.getElementById('speedupTime').value = settings.speedupTime || 10;
+					if(document.getElementById('customTime')) document.getElementById('customTime').value = settings.customTime || 45;
+					if(document.getElementById('totalBombs')) document.getElementById('totalBombs').value = settings.totalBombs || 5;
+					if(document.getElementById('soundEnabled')) document.getElementById('soundEnabled').checked = settings.soundEnabled !== false;
+					if(document.getElementById('speedupEnabled')) document.getElementById('speedupEnabled').checked = settings.speedupEnabled !== false;
+					if(document.getElementById('speedBonusEnabled')) document.getElementById('speedBonusEnabled').checked = settings.speedBonusEnabled !== false;
+				}
+			}catch(e){console.log('ℹ️ لا توجد إعدادات محفوظة، سيتم استخدام الافتراضية');}
+		}
+
+		// تفعيل نافذة الإعدادات وزرها
+		window.addEventListener('DOMContentLoaded',()=>{
+			// ربط أزرار الشريط العلوي
+			document.getElementById('statsBtn').onclick = function() {
+				document.getElementById('statsPoints').textContent = gameState.points;
+				document.getElementById('statsDefused').textContent = gameState.defusedBombs;
+				document.getElementById('statsExploded').textContent = gameState.explodedBombs;
+				const total = gameState.defusedBombs + gameState.explodedBombs;
+				document.getElementById('statsSuccessRate').textContent = total>0 ? Math.round((gameState.defusedBombs/total)*100)+'%' : '0%';
+				document.getElementById('statsModal').style.display = 'flex';
+			};
+			document.getElementById('closeStats').onclick = function() {
+				document.getElementById('statsModal').style.display = 'none';
+			};
+			document.getElementById('instructionsBtn').onclick = function() {
+				document.getElementById('instructionsModal').style.display = 'flex';
+			};
+			document.getElementById('closeInstructions').onclick = function() {
+				document.getElementById('instructionsModal').style.display = 'none';
+			};
+			document.getElementById('refreshBtn').onclick = function() {
+				if(confirm('هل تريد إعادة تعيين اللعبة؟ سيتم فقدان التقدم الحالي.')) location.reload();
+			};
+			document.getElementById('fullscreenBtn').onclick = function() {
+				if (!document.fullscreenElement) {
+					document.documentElement.requestFullscreen();
+				} else {
+					document.exitFullscreen();
+				}
+			};
+			let soundOn = true;
+			document.getElementById('soundBtn').onclick = function() {
+				soundOn = !soundOn;
+				[...document.querySelectorAll('audio')].forEach(a=>a.muted = !soundOn);
+				this.innerHTML = soundOn ? '<i class="fa-solid fa-volume-up"></i>' : '<i class="fa-solid fa-volume-xmark"></i>';
+				showNotif2(soundOn?'🔊 تم تفعيل الصوت':'🔇 تم كتم الصوت','info',1.5);
+			};
+			const settingsBtn = document.getElementById('settingsBtn');
+			const settingsModal = document.getElementById('settingsModal');
+			const closeSettings = document.getElementById('closeSettings');
+			const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+			const resetDefaultsBtn = document.getElementById('resetDefaultsBtn');
+			const presetSettingsBtn = document.getElementById('presetSettingsBtn');
+			settingsBtn.onclick = ()=>{ settingsModal.style.display = 'flex'; updateSettingsPreview(); loadSavedSettings(); document.querySelectorAll('.difficulty-option').forEach(opt=>opt.classList.remove('selected')); document.querySelector(`[data-difficulty="${gameState.difficulty}"]`).classList.add('selected'); };
+			closeSettings.onclick = ()=>{ settingsModal.style.display = 'none'; };
+			saveSettingsBtn.onclick = saveSettings;
+			resetDefaultsBtn.onclick = resetDefaults;
+			presetSettingsBtn.onclick = loadPresetSettings;
+			document.querySelectorAll('.difficulty-option').forEach(opt=>{
+				opt.onclick = function(){
+					document.querySelectorAll('.difficulty-option').forEach(o=>o.classList.remove('selected'));
+					this.classList.add('selected');
+					gameState.difficulty = this.getAttribute('data-difficulty');
+					const t = {easy:60,medium:45,hard:30,expert:20};
+					if(document.getElementById('customTime')) document.getElementById('customTime').value = t[gameState.difficulty]||45;
+					updateSettingsPreview();
+				};
+			});
+			['customTime','totalBombs','correctPoints','timeMultiplier','speedupTime'].forEach(id=>{
+				const el = document.getElementById(id);
+				if(el) el.addEventListener('input', updateSettingsPreview);
+			});
+			['soundEnabled','speedupEnabled','speedBonusEnabled'].forEach(id=>{
+				const el = document.getElementById(id);
+				if(el) el.addEventListener('change', updateSettingsPreview);
+			});
+		});
+
+		let gameState = {
+			isActive: false,
+			isPaused: false,
+			timeLeft: 0,
+			currentStudent: null,
+			currentClass: null,
+			difficulty: 'medium', // easy, medium, hard, expert
+			totalBombs: 5,
+			defusedBombs: 0,
+			explodedBombs: 0,
+			points: 0,
+			timer: null
+		};
+		let studentsData = {};
 		let selectedClass = null;
 		let selectedStudents = [];
 		let roundStudents = [];
 		let roundIndex = 0;
-		let timer = null, timeLeft = 35, totalTime = 35, state = 'IDLE';
-		// جلب البيانات
+		let selectionMethod = 'manual'; // manual أو random
+		const difficultySettings = {
+			easy: { time: 60, name: 'مبتدئ', color: '#00cc00' },
+			medium: { time: 45, name: 'متوسط', color: '#ff6600' },
+			hard: { time: 30, name: 'متقدم', color: '#ff3300' },
+			expert: { time: 20, name: 'خبير', color: '#cc0000' }
+		};
+		// جلب بيانات الطلاب
 		fetch('../data/studentData.json').then(r=>r.json()).then(data=>{
-			classData = data.classes;
-			studentData = data.students;
+			studentsData = data.students;
 			buildClassGrid();
 		}).catch(()=>{
 			document.getElementById('classGrid').innerHTML = '<div style="color:#ff4757;font-weight:700">تعذر تحميل بيانات الصفوف/الطلاب</div>';
 		});
-		// بناء واجهة اختيار الصف
 		function buildClassGrid() {
 			const grid = document.getElementById('classGrid');
 			grid.innerHTML = '';
-			classData.forEach(c=>{
+			// استخدم أسماء الصفوف من studentsData
+			Object.keys(studentsData).forEach(className=>{
 				const card = document.createElement('div');
 				card.className = 'class-card';
-				card.textContent = c.name;
-				card.onclick = ()=> selectClass(c.id, card);
+				card.textContent = className;
+				card.onclick = ()=> selectClass(className, card);
 				grid.appendChild(card);
 			});
 		}
-		function selectClass(classId, card) {
-			selectedClass = classId;
-			// تمييز الكارد
+		function selectClass(className, card) {
+			selectedClass = className;
 			document.querySelectorAll('.class-card').forEach(c=>c.classList.remove('selected'));
 			card.classList.add('selected');
-			// إظهار اختيار الطلاب
 			document.getElementById('studentStepTitle').style.display = '';
 			document.getElementById('studentsGrid').style.display = '';
 			buildStudentsGrid();
@@ -153,16 +440,16 @@
 			const grid = document.getElementById('studentsGrid');
 			grid.innerHTML = '';
 			selectedStudents = [];
-			(studentData[selectedClass]||[]).forEach(s=>{
+			(studentsData[selectedClass]||[]).forEach(name=>{
 				const btn = document.createElement('div');
 				btn.className = 'student-card';
-				btn.textContent = (s.avatar||'👤')+' '+s.name;
+				btn.textContent = '👤 '+name;
 				btn.onclick = ()=>{
-					if(selectedStudents.includes(s)){
-						selectedStudents = selectedStudents.filter(x=>x!==s);
+					if(selectedStudents.includes(name)){
+						selectedStudents = selectedStudents.filter(x=>x!==name);
 						btn.classList.remove('selected');
 					} else {
-						selectedStudents.push(s);
+						selectedStudents.push(name);
 						btn.classList.add('selected');
 					}
 					document.getElementById('startBtn').style.display = selectedStudents.length>0?'':'none';
@@ -171,21 +458,22 @@
 			});
 			document.getElementById('startBtn').style.display = 'none';
 		}
-		// بدء اللعبة
 		document.getElementById('startBtn').onclick = function() {
 			if(selectedStudents.length < 1){ alert('اختر الطلاب المشاركين أولاً'); return; }
 			document.getElementById('setupScreen').style.display = 'none';
 			document.getElementById('gameScreen').style.display = 'block';
 			document.getElementById('resultsScreen').style.display = 'none';
 			roundIndex = 0;
+			gameState.defusedBombs = 0;
+			gameState.explodedBombs = 0;
+			gameState.points = 0;
 			nextRound();
 		};
-		// ========== منطق لعبة القنبلة الذكية ==========
 		function nextRound() {
 			if(selectedStudents.length === 0){ showResults('END'); return; }
 			roundStudents = selectedStudents.slice(0, 3); // 3 طلاب في كل جولة
 			selectedStudents = selectedStudents.slice(3);
-			document.getElementById('selectedChips').innerHTML = roundStudents.map(s=>`<div class='chip' style='background:#ffd70022;color:#ffd700;padding:8px 14px;border-radius:999px;margin:0 4px;font-weight:700;'>${s.avatar||'👤'} ${s.name}</div>`).join('');
+			document.getElementById('selectedChips').innerHTML = roundStudents.map(name=>`<div class='chip' style='background:#ffd70022;color:#ffd700;padding:8px 14px;border-radius:999px;margin:0 4px;font-weight:700;'>👤 ${name}</div>`).join('');
 			document.getElementById('turnStatus').textContent = `جولة ${roundIndex+1} — ${roundStudents.length} مشاركين`;
 			startGame();
 		}
@@ -207,56 +495,59 @@
 			setTimeout(()=>flash.style.opacity=0, 350);
 		}
 		function startGame() {
-			state = 'RUNNING';
-			timeLeft = 35;
-			totalTime = 35;
+			gameState.isActive = true;
+			gameState.isPaused = false;
+			gameState.timeLeft = difficultySettings[gameState.difficulty].time;
 			updateBombVisual();
-			if(timer) clearInterval(timer);
-			timer = setInterval(()=>{
-				timeLeft--;
+			if(gameState.timer) clearInterval(gameState.timer);
+			gameState.timer = setInterval(()=>{
+				gameState.timeLeft--;
 				updateBombVisual();
-				if (timeLeft === 10) { showNotif2('⚠️ آخر 10 ثوانٍ!','warn',2); playSound('notifSound'); document.getElementById('bombVisual').classList.add('yellow'); }
-				if (timeLeft === 3) { showNotif2('🚨 اقترب الانفجار!','danger',2); playSound('failSound'); document.getElementById('bombVisual').classList.add('red','shake'); document.getElementById('countdown').classList.add('mega','danger'); doFlash(); }
-				if (timeLeft <= 0) { clearInterval(timer); endGame(false); }
-				else if (timeLeft < 10) playSound('tickSound');
+				if (gameState.timeLeft === 10) { showNotif2('⚠️ آخر 10 ثوانٍ!','warn',2); playSound('notifSound'); document.getElementById('bombVisual').classList.add('yellow'); }
+				if (gameState.timeLeft === 3) { showNotif2('🚨 اقترب الانفجار!','danger',2); playSound('failSound'); document.getElementById('bombVisual').classList.add('red','shake'); document.getElementById('countdown').classList.add('mega','danger'); doFlash(); }
+				if (gameState.timeLeft <= 0) { clearInterval(gameState.timer); endGame(false); }
+				else if (gameState.timeLeft < 10) playSound('tickSound');
 				else playSound('tickSound');
 			},1000);
 		}
 		function updateBombVisual() {
-			document.getElementById('countdown').textContent = timeLeft > 0 ? timeLeft : '—';
+			document.getElementById('countdown').textContent = gameState.timeLeft > 0 ? gameState.timeLeft : '—';
 			const fill = document.getElementById('heatFill');
-			fill.style.width = ((1-(timeLeft/totalTime))*100)+'%';
+			fill.style.width = ((1-(gameState.timeLeft/difficultySettings[gameState.difficulty].time))*100)+'%';
 		}
 		function endGame(success) {
-			state = success ? 'SUCCESS' : 'FAIL';
+			gameState.isActive = false;
 			if (success) {
 				showNotif2('🎉 نجاح! أحسنت!');
 				confettiBlast();
 				playSound('successSound');
+				gameState.defusedBombs++;
+				gameState.points += 10;
 				showResults('SUCCESS');
 			} else {
 				showNotif2('💥 انفجرت القنبلة!');
 				doFlash();
 				playSound('failSound');
+				gameState.explodedBombs++;
 				showResults('FAIL');
 			}
 			document.getElementById('bombVisual').classList.remove('yellow','red','shake');
 			document.getElementById('countdown').classList.remove('mega','danger');
 		}
 		document.getElementById('pauseBtn').onclick = ()=>{
-			if(state==='RUNNING'){ clearInterval(timer); state='PAUSED'; showNotif2('⏸️ تم الإيقاف المؤقت','info',2); }
-			else if(state==='PAUSED'){ startGame(); showNotif2('▶️ استئناف','info',1); }
+			if(gameState.isActive && !gameState.isPaused){ clearInterval(gameState.timer); gameState.isPaused = true; showNotif2('⏸️ تم الإيقاف المؤقت','info',2); }
+			else if(gameState.isPaused){ startGame(); showNotif2('▶️ استئناف','info',1); }
 		};
-		document.getElementById('add5Btn').onclick = ()=>{ timeLeft+=5; showNotif2('⏫ +5 ثوانٍ!','success',1); updateBombVisual(); playSound('bonusSound'); };
-		document.getElementById('successBtn').onclick = ()=>{ clearInterval(timer); endGame(true); };
-		document.getElementById('failBtn').onclick = ()=>{ clearInterval(timer); endGame(false); };
+		document.getElementById('add5Btn').onclick = ()=>{ gameState.timeLeft+=5; showNotif2('⏫ +5 ثوانٍ!','success',1); updateBombVisual(); playSound('bonusSound'); };
+		document.getElementById('successBtn').onclick = ()=>{ clearInterval(gameState.timer); endGame(true); };
+		document.getElementById('failBtn').onclick = ()=>{ clearInterval(gameState.timer); endGame(false); };
 		window.addEventListener('keydown',e=>{
-			if(state==='RUNNING'){
+			if(gameState.isActive && !gameState.isPaused){
 				if(e.key===' '){ document.getElementById('pauseBtn').click(); }
 				if(e.key==='Enter'){ document.getElementById('successBtn').click(); }
 				if(e.key==='Escape'){ document.getElementById('failBtn').click(); }
 				if(e.key==='ArrowUp'){ document.getElementById('add5Btn').click(); }
-			} else if(state==='PAUSED' && e.key===' '){ document.getElementById('pauseBtn').click(); }
+			} else if(gameState.isPaused && e.key===' '){ document.getElementById('pauseBtn').click(); }
 		});
 		function showResults(type) {
 			document.getElementById('gameScreen').style.display = 'none';
@@ -288,10 +579,8 @@
 				document.getElementById('gameScreen').style.display = 'block';
 				nextRound();
 			} else {
-				// إعادة التحدي
 				document.getElementById('resultsScreen').style.display = 'none';
 				document.getElementById('setupScreen').style.display = 'block';
-				// إعادة تعيين
 				selectedClass = null;
 				selectedStudents = [];
 				buildClassGrid();
