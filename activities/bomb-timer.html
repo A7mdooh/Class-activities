@@ -243,6 +243,11 @@
     <div class="step-title">1️⃣ اختر الصف</div>
     <div class="class-grid" id="classGrid"></div>
     <div class="step-title" id="studentStepTitle" style="display:none;">2️⃣ اختر الطلاب المشاركين</div>
+    <div class="students-controls" id="studentsControls" style="display:none; text-align:center; margin-bottom:1rem;">
+      <button class="start-btn" id="selectAllBtn" style="background:#00e676; color:#232526; font-size:1rem; padding:0.5rem 1.5rem; margin:0 0.5rem;">✅ اختيار الكل</button>
+      <button class="start-btn" id="clearAllBtn" style="background:#ff4757; color:#fff; font-size:1rem; padding:0.5rem 1.5rem; margin:0 0.5rem;">❌ إلغاء الكل</button>
+      <button class="start-btn" id="randomBtn" style="background:#ffd700; color:#232526; font-size:1rem; padding:0.5rem 1.5rem; margin:0 0.5rem;">🎲 اختيار عشوائي</button>
+    </div>
     <div class="students-grid" id="studentsGrid" style="display:none;"></div>
     <button class="start-btn" id="startBtn" style="display:none;">ابدأ التحدي 💥</button>
     <div class="bomb-area" id="bombArea" style="display:none;">
@@ -256,22 +261,22 @@
   <audio id="failSound" src="../assets/media/sounds/wrong_answer.mp3"></audio>
   <audio id="tickSound" src="../assets/media/sounds/countdown-beep.mp3"></audio>
   <script>
-    // بيانات تجريبية (يمكن استبدالها بجلب من ملف JSON)
-    const demoData = {
-      "الصف الخامس أ": ["أحمد محمد", "فاطمة علي", "سالم خالد", "مريم سعيد", "يوسف حمد"],
-      "الصف الخامس ب": ["سارة خالد", "علي حسن", "نورة سالم", "عمر عبدالله", "زينب أحمد"],
-      "الصف السادس": ["خالد سالم", "هدى سليمان", "طارق فيصل", "مها علي", "سعيد ناصر"]
-    };
     let studentData = {};
     let selectedClass = null;
     let selectedStudents = [];
     let timer = null;
     let timeLeft = 30;
-    // تحميل البيانات (محلي أو من ملف)
+    // تحميل بيانات الطلاب الحقيقية من ملف JSON
     function loadData() {
-      // هنا يمكن استبدال demoData بجلب من ملف JSON
-      studentData = demoData;
-      buildClassGrid();
+      fetch('../data/studentData.json')
+        .then(res => res.json())
+        .then(data => {
+          studentData = data;
+          buildClassGrid();
+        })
+        .catch(e => {
+          alert('تعذر تحميل بيانات الطلاب!');
+        });
     }
     function buildClassGrid() {
       const grid = document.getElementById('classGrid');
@@ -290,20 +295,23 @@
       document.querySelectorAll('.class-card').forEach(c => c.classList.remove('selected'));
       card.classList.add('selected');
       document.getElementById('studentStepTitle').style.display = '';
+      document.getElementById('studentsControls').style.display = '';
       buildStudentsGrid();
     }
     function buildStudentsGrid() {
       const grid = document.getElementById('studentsGrid');
       grid.innerHTML = '';
       grid.style.display = '';
+      if (!studentData[selectedClass]) return;
       studentData[selectedClass].forEach(name => {
         const card = document.createElement('div');
         card.className = 'student-card';
         card.innerHTML = `<div style="font-size:2rem;">👤</div><div>${name}</div>`;
         card.onclick = () => toggleStudent(card, name);
+        if (selectedStudents.includes(name)) card.classList.add('selected');
         grid.appendChild(card);
       });
-      document.getElementById('startBtn').style.display = 'none';
+      document.getElementById('startBtn').style.display = selectedStudents.length > 0 ? '' : 'none';
     }
     function toggleStudent(card, name) {
       if (selectedStudents.includes(name)) {
@@ -315,6 +323,29 @@
       }
       document.getElementById('startBtn').style.display = selectedStudents.length > 0 ? '' : 'none';
     }
+
+    // أزرار التحكم في اختيار الطلاب
+    document.getElementById('selectAllBtn').onclick = function() {
+      if (!studentData[selectedClass]) return;
+      selectedStudents = [...studentData[selectedClass]];
+      buildStudentsGrid();
+    };
+    document.getElementById('clearAllBtn').onclick = function() {
+      selectedStudents = [];
+      buildStudentsGrid();
+    };
+    document.getElementById('randomBtn').onclick = function() {
+      if (!studentData[selectedClass]) return;
+      const arr = [...studentData[selectedClass]];
+      const count = Math.max(1, Math.floor(Math.random() * arr.length));
+      selectedStudents = [];
+      while (selectedStudents.length < count) {
+        const idx = Math.floor(Math.random() * arr.length);
+        const name = arr[idx];
+        if (!selectedStudents.includes(name)) selectedStudents.push(name);
+      }
+      buildStudentsGrid();
+    };
     document.getElementById('startBtn').onclick = startChallenge;
     function startChallenge() {
       document.getElementById('mainContainer').scrollIntoView({behavior:'smooth'});
