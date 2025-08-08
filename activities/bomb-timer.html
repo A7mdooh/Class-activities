@@ -354,9 +354,28 @@
     <div class="class-grid" id="classGrid"></div>
     <div class="step-title" id="studentStepTitle" style="display:none;">2️⃣ اختر الطلاب المشاركين</div>
     <div class="students-controls" id="studentsControls" style="display:none; text-align:center; margin-bottom:1rem;">
-      <button class="start-btn" id="selectAllBtn" style="background:#00e676; color:#232526; font-size:1rem; padding:0.5rem 1.5rem; margin:0 0.5rem;">✅ اختيار الكل</button>
-      <button class="start-btn" id="clearAllBtn" style="background:#ff4757; color:#fff; font-size:1rem; padding:0.5rem 1.5rem; margin:0 0.5rem;">❌ إلغاء الكل</button>
-      <button class="start-btn" id="randomBtn" style="background:#ffd700; color:#232526; font-size:1rem; padding:0.5rem 1.5rem; margin:0 0.5rem;">🎲 اختيار عشوائي</button>
+  <button class="bomb-btn bomb-btn-green" id="selectAllBtn"><i class="fa fa-users"></i> اختيار الكل</button>
+  <button class="bomb-btn bomb-btn-red" id="clearAllBtn"><i class="fa fa-user-slash"></i> إلغاء الكل</button>
+  <button class="bomb-btn bomb-btn-gold" id="randomBtn"><i class="fa fa-random"></i> عشوائي</button>
+  <button class="bomb-btn bomb-btn-blue" id="countBtn"><i class="fa fa-hashtag"></i> عدد محدد</button>
+    /* أزرار اختيار المشاركين الاحترافية */
+    .bomb-btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 1.05rem; font-weight: 800; border: none; outline: none;
+      border-radius: 30px; padding: 0.7rem 1.7rem; margin: 0 0.3rem 0.7rem 0;
+      cursor: pointer; box-shadow: 0 2px 12px #0002;
+      transition: background 0.2s, color 0.2s, transform 0.15s;
+      letter-spacing: 1px;
+      background: #232526; color: #ffd700;
+      position: relative;
+    }
+    .bomb-btn i { font-size: 1.2rem; }
+    .bomb-btn-green { background: linear-gradient(90deg,#00e676 60%,#ffd700 100%); color: #232526; }
+    .bomb-btn-red { background: linear-gradient(90deg,#ff4757 60%,#ffd700 100%); color: #fff; }
+    .bomb-btn-gold { background: linear-gradient(90deg,#ffd700 60%,#ff4757 100%); color: #232526; }
+    .bomb-btn-blue { background: linear-gradient(90deg,#00cfff 60%,#ffd700 100%); color: #232526; }
+    .bomb-btn:hover { transform: scale(1.07); box-shadow: 0 4px 18px #ffd70044; }
+    .bomb-btn:active { filter: brightness(0.95); }
     </div>
     <div class="students-grid" id="studentsGrid" style="display:none;"></div>
     <button class="start-btn" id="startBtn" style="display:none;">ابدأ التحدي 💥</button>
@@ -371,6 +390,23 @@
   <audio id="failSound" src="../assets/media/sounds/wrong_answer.mp3"></audio>
   <audio id="tickSound" src="../assets/media/sounds/countdown-beep.mp3"></audio>
   <script>
+    // اختيار عدد محدد من الطلاب
+    document.getElementById('countBtn').onclick = function() {
+      if (!studentData[selectedClass]) return;
+      const total = studentData[selectedClass].length;
+      let count = prompt('كم عدد الطلاب المطلوب اختيارهم؟ (1 - ' + total + ')', Math.min(3,total));
+      count = parseInt(count);
+      if (isNaN(count) || count < 1 || count > total) return showNotif('❗ رقم غير صحيح');
+      const arr = [...studentData[selectedClass]];
+      selectedStudents = [];
+      while (selectedStudents.length < count) {
+        const idx = Math.floor(Math.random() * arr.length);
+        const name = arr[idx];
+        if (!selectedStudents.includes(name)) selectedStudents.push(name);
+      }
+      buildStudentsGrid();
+      showNotif('🎯 تم اختيار ' + count + ' طالب');
+    };
     // إشعارات ومؤثرات صوتية وبصرية
     function showNotif(msg) {
       const bar = document.getElementById('notifBar');
