@@ -561,9 +561,9 @@
         </div>
       </div>
       <div class="control-section">
-        <label style="font-weight:700;color:#FFD700;display:flex;align-items:center;gap:8px;">
-          <input type="checkbox" id="randomStudentCheckbox" style="width:20px;height:20px;accent-color:#FFD700;"> اختيار عشوائي
-        </label>
+        <button class="oman-btn gold" id="randomStudentBtn" type="button" style="width:100%;margin-top:2px;">
+          <i class="fa-solid fa-shuffle"></i> اختيار عشوائي
+        </button>
       </div>
       <div class="control-section">
         <button class="oman-btn" id="startBtn"><i class="fa-solid fa-play"></i> بدء المؤقت</button>
@@ -664,7 +664,7 @@
       setupGuideTabs();
       loadClasses();
       setupTimerDurationSelect();
-      setupRandomStudentCheckbox();
+      setupRandomStudentBtn();
     });
 
     // تحميل بيانات الصفوف من ملف JSON
@@ -703,6 +703,15 @@
               updateExpertDisplay();
               // إعادة تعيين العشوائي عند تغيير الصف
               randomStudentPool = [...students];
+              
+              // إعادة تفعيل زر العشوائي
+              const randomBtn = document.getElementById('randomStudentBtn');
+              if(randomBtn) {
+                randomBtn.disabled = false;
+                randomBtn.innerHTML = '<i class="fa-solid fa-shuffle"></i> اختيار عشوائي';
+              }
+              randomStudentMode = false;
+              
             } else {
               gameState.currentClass = '—';
               students = [];
@@ -713,6 +722,14 @@
               gameState.currentStudent = '—';
               updateExpertDisplay();
               randomStudentPool = [];
+              
+              // إعادة تفعيل زر العشوائي
+              const randomBtn = document.getElementById('randomStudentBtn');
+              if(randomBtn) {
+                randomBtn.disabled = false;
+                randomBtn.innerHTML = '<i class="fa-solid fa-shuffle"></i> اختيار عشوائي';
+              }
+              randomStudentMode = false;
             }
           };
           // حدث اختيار الطالب
@@ -870,6 +887,14 @@
       // إذا كان العشوائي مفعل، اختر طالب جديد تلقائياً
       if(randomStudentMode) {
         pickRandomStudent();
+      }
+      // إعادة تفعيل زر العشوائي
+      const randomBtn = document.getElementById('randomStudentBtn');
+      if(randomBtn) {
+        randomBtn.disabled = false;
+        randomBtn.innerHTML = '<i class="fa-solid fa-shuffle"></i> اختيار عشوائي';
+        randomStudentMode = false;
+        document.getElementById('studentSelect').disabled = false;
       }
     }
     // ========== Defuse Logic ==========
