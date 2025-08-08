@@ -1336,7 +1336,13 @@
           allClasses = data;
           const classSelect = document.getElementById('classSelect');
           classSelect.innerHTML = '<option value="">— اختر الصف —</option>';
-          Object.keys(data).forEach(className => {
+          const classNames = Object.keys(data);
+          if (!classNames.length) {
+            showNotification('لا توجد صفوف متاحة في البيانات','error');
+            classSelect.innerHTML = '<option value="">لا توجد صفوف</option>';
+            return;
+          }
+          classNames.forEach(className => {
             const opt = document.createElement('option');
             opt.value = className;
             opt.textContent = className;
@@ -1432,6 +1438,7 @@
         })
         .catch(() => {
           document.getElementById('classSelect').innerHTML = '<option>تعذر تحميل الصفوف</option>';
+          showNotification('تعذر تحميل بيانات الصفوف. تحقق من الاتصال أو الملف','error');
         });
     }
     // ========== Toolbar Logic ==========
