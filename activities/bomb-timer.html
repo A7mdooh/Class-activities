@@ -656,7 +656,7 @@
       let customTimerDuration = 60;
       let randomStudentMode = false;
       let randomStudentPool = [];
-    // ========== DOMContentLoaded ==========
+    // ========== DOMContentLoaded ========== 
     document.addEventListener('DOMContentLoaded', () => {
       setupToolbar();
       initializeGame();
@@ -664,7 +664,15 @@
       setupGuideTabs();
       loadClasses();
       setupTimerDurationSelect();
-  // ...existing code...
+      // تحديث customTimerDuration عند تغيير القائمة
+      const timerSelect = document.getElementById('timerDurationSelect');
+      if(timerSelect) {
+        timerSelect.addEventListener('change', function() {
+          customTimerDuration = parseInt(this.value, 10) || 60;
+        });
+        // تعيين القيمة الافتراضية عند التحميل
+        customTimerDuration = parseInt(timerSelect.value, 10) || 60;
+      }
     });
 
     // تحميل بيانات الصفوف من ملف JSON
@@ -969,10 +977,16 @@ document.head.appendChild(evalBoxStyle);
         document.getElementById('bombMessage').textContent = 'يرجى اختيار الطالب الخبير أولاً.';
         return;
       }
+      // استخدم دائمًا القيمة المختارة من القائمة
+      const timerSelect = document.getElementById('timerDurationSelect');
+      let selectedDuration = 60;
+      if(timerSelect) {
+        selectedDuration = parseInt(timerSelect.value, 10) || 60;
+      }
+      customTimerDuration = selectedDuration;
       gameState.isActive = true;
       gameState.isPaused = false;
-      // استخدم مدة المؤقت المخصصة إذا تم اختيارها
-      gameState.timeLeft = customTimerDuration || difficultySettings[gameState.difficulty].time;
+      gameState.timeLeft = customTimerDuration;
       setGameState('active', '⏳ المؤقت يعمل — أسرعوا!');
       updateTimerDisplay(gameState.timeLeft);
       document.getElementById('bombMessage').textContent = '';
