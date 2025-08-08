@@ -452,6 +452,14 @@
     <div class="bomb-area" id="bombArea" style="display:none;">
       <div class="bomb">💣</div>
       <div class="timer" id="timerDisplay">00:30</div>
+      <!-- لوحة تحكم المعلم -->
+      <div id="teacherPanel" style="display:none; margin-top:1.2rem; text-align:center;">
+        <button class="bomb-btn bomb-btn-green" id="resumeBtn"><i class="fa fa-play"></i> استئناف</button>
+        <button class="bomb-btn bomb-btn-red" id="pauseBtn"><i class="fa fa-pause"></i> إيقاف مؤقت</button>
+        <button class="bomb-btn bomb-btn-blue" id="addTimeBtn"><i class="fa fa-plus"></i> +5 ثوانٍ</button>
+        <button class="bomb-btn bomb-btn-gold" id="successBtn"><i class="fa fa-check"></i> نجاح</button>
+        <button class="bomb-btn bomb-btn-red" id="failBtn"><i class="fa fa-bomb"></i> فشل</button>
+      </div>
     </div>
     <div class="success-msg" id="successMsg" style="display:none;"></div>
     <div class="explosion" id="explosionMsg" style="display:none;"></div>
@@ -624,93 +632,194 @@
   showNotif('🎲 تم اختيار طلاب عشوائيين');
     };
     document.getElementById('startBtn').onclick = startChallenge;
+
+    // --- منطق FSM أساسي (قابل للتوسعة لاحقًا) ---
+    const FSM_STATES = {
+      IDLE: 'idle',
+      ARMING: 'arming',
+      RUNNING: 'running',
+      SUCCESS: 'success',
+      FAIL: 'fail',
+      RESULTS: 'results',
+      PAUSED: 'paused'
+    };
+    let fsmState = FSM_STATES.IDLE;
+    function setFSMState(state) {
+      fsmState = state;
+      document.body.setAttribute('data-fsm', state);
+      // إظهار/إخفاء لوحة تحكم المعلم حسب الحالة
+      const panel = document.getElementById('teacherPanel');
+      if (!panel) return;
+      if (state === FSM_STATES.RUNNING || state === FSM_STATES.PAUSED) {
+        panel.style.display = '';
+        document.getElementById('pauseBtn').style.display = state === FSM_STATES.RUNNING ? '' : 'none';
+        document.getElementById('resumeBtn').style.display = state === FSM_STATES.PAUSED ? '' : 'none';
+      } else {
+        panel.style.display = 'none';
+      }
+    }
+
+    // --- مؤقّت rAF متقدم ---
+    let timerRAF = null;
+    let timerStart = 0;
+    let timerPausedAt = 0;
+    let timerDuration = 30;
+    let timerOnEnd = null;
+    function startTimer(duration, onEnd) {
+      timerDuration = duration;
+      timeLeft = duration;
+      timerStart = performance.now();
+      timerOnEnd = onEnd;
+      setFSMState(FSM_STATES.RUNNING);
+      tickRAF();
+    }
+    function tickRAF(now) {
+      if (fsmState !== FSM_STATES.RUNNING) return;
+      if (!timerStart) timerStart = now || performance.now();
+      const elapsed = ((now || performance.now()) - timerStart) / 1000;
+      timeLeft = Math.max(0, Math.ceil(timerDuration - elapsed));
+      updateTimer();
+      updateBombVisual(timeLeft, timerDuration);
+      if (timeLeft > 0) {
+        timerRAF = requestAnimationFrame(tickRAF);
+      } else {
+        setFSMState(FSM_STATES.FAIL);
+        if (timerOnEnd) timerOnEnd();
+      }
+    }
+    function pauseTimer() {
+      if (fsmState !== FSM_STATES.RUNNING) return;
+      setFSMState(FSM_STATES.PAUSED);
+      timerPausedAt = performance.now();
+      if (timerRAF) cancelAnimationFrame(timerRAF);
+    }
+    function resumeTimer() {
+      if (fsmState !== FSM_STATES.PAUSED) return;
+      setFSMState(FSM_STATES.RUNNING);
+      // عدّل نقطة البداية حسب مدة التوقف
+      timerStart += performance.now() - timerPausedAt;
+      tickRAF();
+    }
+    function addTime(sec) {
+      timerDuration += sec;
+      updateTimer();
+    }
+
+    // --- تحديث المؤقت والمؤثرات ---
+    function updateBombVisual(timeLeft, total) {
+      const bomb = document.querySelector('.bomb');
+      const timerDisplay = document.getElementById('timerDisplay');
+      // مؤثرات القنبلة
+      if (timeLeft > total/2) {
+        bomb.className = 'bomb bomb-small';
+        timerDisplay.className = 'timer';
+      } else if (timeLeft > 10) {
+        bomb.className = 'bomb bomb-mid';
+        timerDisplay.className = 'timer';
+      } else if (timeLeft > 3) {
+        bomb.className = 'bomb bomb-large bomb-shake';
+        timerDisplay.className = 'timer timer-red timer-shake';
+      } else if (timeLeft > 0) {
+        bomb.className = 'bomb bomb-large bomb-shake';
+        timerDisplay.className = 'timer timer-big';
+      }
+      // اهتزاز الشاشة آخر 5 ثوانٍ
+      if (timeLeft <= 5 && timeLeft > 0) {
+        const shakeLevel = (6 - timeLeft) * 2;
+        document.body.style.transform = `translate(${Math.random()*shakeLevel-Math.random()*shakeLevel}px,${Math.random()*shakeLevel-Math.random()*shakeLevel}px)`;
+      } else {
+        document.body.style.transform = '';
+      }
+      // الأصوات
+      if (timeLeft > 10) {
+        playTick();
+      } else if (timeLeft > 3) {
+        document.getElementById('tickFastSound').currentTime = 0;
+        document.getElementById('tickFastSound').play();
+      } else if (timeLeft > 0) {
+        document.getElementById('alarmSound').currentTime = 0;
+        document.getElementById('alarmSound').play();
+      }
+    }
+
+    // --- بدء التحدي: إخفاء بطاقات الطلاب ولوحة التحكم ---
     function startChallenge() {
       showNotif('🚀 بدأ التحدي!');
+      setFSMState(FSM_STATES.ARMING);
       document.getElementById('mainContainer').scrollIntoView({behavior:'smooth'});
       document.getElementById('bombArea').style.display = '';
       document.getElementById('successMsg').style.display = 'none';
       document.getElementById('explosionMsg').style.display = 'none';
-      // مؤثرات القنبلة
+      document.getElementById('studentsGrid').style.display = 'none';
+      document.getElementById('studentsControls').style.display = 'none';
+      document.getElementById('studentStepTitle').style.display = 'none';
+      // إعادة المؤثرات
       const bomb = document.querySelector('.bomb');
       const timerDisplay = document.getElementById('timerDisplay');
-      let flashDiv = null, explosionDiv = null;
-      // إعادة الحالة الافتراضية
       bomb.className = 'bomb bomb-small';
       timerDisplay.className = 'timer';
       document.body.classList.remove('shake');
       if (document.querySelector('.screen-flash')) document.querySelector('.screen-flash').remove();
       if (document.querySelector('.explosion-effect')) document.querySelector('.explosion-effect').remove();
-      // الأصوات
-      let alarmPlaying = false;
-      timeLeft = 30;
-      updateTimer();
-      let shakeLevel = 0;
-      let interval = setInterval(() => {
-        timeLeft--;
-        // مؤثرات القنبلة
-        if (timeLeft > 15) {
-          bomb.className = 'bomb bomb-small';
-        } else if (timeLeft > 10) {
-          bomb.className = 'bomb bomb-mid';
-        } else if (timeLeft > 0) {
-          bomb.className = 'bomb bomb-large bomb-shake';
-        }
-        // مؤقت ديناميكي
-        if (timeLeft > 10) {
-          timerDisplay.className = 'timer';
-        } else if (timeLeft > 3) {
-          timerDisplay.className = 'timer timer-red timer-shake';
-        } else if (timeLeft > 0) {
-          timerDisplay.className = 'timer timer-big';
-        }
-        // اهتزاز الشاشة تدريجي آخر 5 ثوانٍ
-        if (timeLeft <= 5 && timeLeft > 0) {
-          shakeLevel = (6 - timeLeft) * 2;
-          document.body.style.transform = `translate(${Math.random()*shakeLevel-Math.random()*shakeLevel}px,${Math.random()*shakeLevel-Math.random()*shakeLevel}px)`;
-        } else {
-          document.body.style.transform = '';
-        }
-        // الأصوات
-        if (timeLeft > 10) {
-          playTick();
-        } else if (timeLeft > 3) {
-          document.getElementById('tickFastSound').currentTime = 0;
-          document.getElementById('tickFastSound').play();
-        } else if (timeLeft > 0) {
-          if (!alarmPlaying) {
-            document.getElementById('alarmSound').currentTime = 0;
-            document.getElementById('alarmSound').play();
-            alarmPlaying = true;
-          }
-        }
-        updateTimer();
-        if (timeLeft === 0) {
-          clearInterval(interval);
-          document.body.style.transform = '';
-          if (alarmPlaying) document.getElementById('alarmSound').pause();
-          // فلاش الشاشة
-          flashDiv = document.createElement('div');
-          flashDiv.className = 'screen-flash';
-          document.body.appendChild(flashDiv);
-          setTimeout(()=>{ if(flashDiv) flashDiv.remove(); }, 600);
-          // شرارات ودخان
-          explosionDiv = document.createElement('div');
-          explosionDiv.className = 'explosion-effect';
-          document.body.appendChild(explosionDiv);
-          // اهتزاز قوي
-          document.body.classList.add('shake');
-          // نص ضخم
-          document.getElementById('explosionMsg').textContent = '💥 انفجرت القنبلة!';
-          document.getElementById('explosionMsg').style.display = '';
-          document.getElementById('failSound').play();
-          confetti({particleCount: 80, spread: 70, origin: { y: 0.7 }, colors: ['#ff4757','#ffd700']});
-          setTimeout(()=>{
-            document.body.classList.remove('shake');
-            if (explosionDiv) explosionDiv.remove();
-          }, 1500);
-        }
-      }, 1000);
+      // بدء المؤقت المتقدم
+      startTimer(30, onTimerEnd);
     }
+
+    // --- نهاية المؤقت: فشل افتراضي (نجاح/فشل يدوي لاحقًا) ---
+    function onTimerEnd() {
+      document.body.style.transform = '';
+      // فلاش الشاشة
+      let flashDiv = document.createElement('div');
+      flashDiv.className = 'screen-flash';
+      document.body.appendChild(flashDiv);
+      setTimeout(()=>{ if(flashDiv) flashDiv.remove(); }, 600);
+      // شرارات ودخان
+      let explosionDiv = document.createElement('div');
+      explosionDiv.className = 'explosion-effect';
+      document.body.appendChild(explosionDiv);
+      document.body.classList.add('shake');
+      document.getElementById('explosionMsg').textContent = '💥 انفجرت القنبلة!';
+      document.getElementById('explosionMsg').style.display = '';
+      document.getElementById('failSound').play();
+      confetti({particleCount: 80, spread: 70, origin: { y: 0.7 }, colors: ['#ff4757','#ffd700']});
+      setTimeout(()=>{
+        document.body.classList.remove('shake');
+        if (explosionDiv) explosionDiv.remove();
+        setFSMState(FSM_STATES.RESULTS);
+      }, 1500);
+    }
+
+    // --- لوحة تحكم المعلم ---
+    document.getElementById('pauseBtn').onclick = pauseTimer;
+    document.getElementById('resumeBtn').onclick = resumeTimer;
+    document.getElementById('addTimeBtn').onclick = function() { addTime(5); showNotif('⏱️ +5 ثوانٍ!'); };
+    document.getElementById('successBtn').onclick = function() {
+      setFSMState(FSM_STATES.SUCCESS);
+      document.body.style.transform = '';
+      document.getElementById('successMsg').textContent = '🎉 نجاح! أحسنت!';
+      document.getElementById('successMsg').style.display = '';
+      document.getElementById('successSound').play();
+      confetti({particleCount: 120, spread: 90, origin: { y: 0.7 }, colors: ['#00e676','#ffd700']});
+      if (timerRAF) cancelAnimationFrame(timerRAF);
+      setTimeout(()=>setFSMState(FSM_STATES.RESULTS), 1500);
+    };
+    document.getElementById('failBtn').onclick = function() {
+      setFSMState(FSM_STATES.FAIL);
+      onTimerEnd();
+      if (timerRAF) cancelAnimationFrame(timerRAF);
+    };
+
+    // --- مفاتيح اختصار متقدمة ---
+    document.addEventListener('keydown', function(e) {
+      if (fsmState === FSM_STATES.RUNNING) {
+        if (e.code === 'Space') { pauseTimer(); e.preventDefault(); }
+        if (e.key === 'ArrowUp') { addTime(5); showNotif('⏱️ +5 ثوانٍ!'); e.preventDefault(); }
+        if (e.key === 'Enter') { document.getElementById('successBtn').click(); e.preventDefault(); }
+        if (e.key === 'Escape') { document.getElementById('failBtn').click(); e.preventDefault(); }
+      } else if (fsmState === FSM_STATES.PAUSED) {
+        if (e.code === 'Space') { resumeTimer(); e.preventDefault(); }
+      }
+    });
     function updateTimer() {
       document.getElementById('timerDisplay').textContent = `00:${String(timeLeft).padStart(2,'0')}`;
     }
