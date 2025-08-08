@@ -8241,9 +8241,19 @@
         const originalSelectMethod = selectMethod;
         selectMethod = function(method) {
             gameSetup.selectedMethod = method;
-            // ...باقي منطق اختيار الطريقة...
+            // إخفاء قسم طرق الاختيار
             document.getElementById('selectionMethodSection').style.display = 'none';
-            document.getElementById('studentCardsSection').style.display = 'block';
+            // إظهار قسم بطاقات الطلاب فقط إذا كانت الطريقة يدوية
+            if (method === 'manual') {
+                document.getElementById('studentCardsSection').style.display = 'block';
+                if (typeof displayAdvancedStudentCards === 'function') {
+                    displayAdvancedStudentCards();
+                } else if (typeof displayStudentCards === 'function') {
+                    displayStudentCards();
+                }
+            } else {
+                document.getElementById('studentCardsSection').style.display = 'none';
+            }
             document.getElementById('startGameBtn').style.display = 'none';
             if (typeof originalSelectMethod === 'function') originalSelectMethod(method);
         }
