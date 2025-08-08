@@ -733,7 +733,7 @@
                     randomBtn.disabled = true;
                     randomBtn.innerHTML = '<i class="fa-solid fa-shuffle"></i> انتهت القائمة';
                   }
-// ========== مربع التقييم ========== 
+// ========== مربع التقييم (تحت المؤقت) ========== 
 function showEvaluationBox(studentName) {
   // إزالة أي مربع تقييم سابق
   let oldBox = document.getElementById('evaluationBox');
@@ -750,8 +750,18 @@ function showEvaluationBox(studentName) {
       <button id="evalClose" class="eval-btn close">إغلاق</button>
     </div>
   `;
-  // إضافة المربع فوق كل شيء
-  document.body.appendChild(box);
+  // إضافة المربع تحت المؤقت
+  const timerDisplay = document.getElementById('timerDisplay');
+  if(timerDisplay && timerDisplay.parentElement && timerDisplay.parentElement.parentElement) {
+    // bomb-area > timer-display, so insert after timer-display
+    const bombArea = timerDisplay.parentElement.parentElement;
+    // إزالة أي مربع تقييم سابق في bomb-area
+    const prevEval = bombArea.querySelector('#evaluationBox');
+    if(prevEval) prevEval.remove();
+    timerDisplay.parentElement.insertAdjacentElement('afterend', box);
+  } else {
+    document.body.appendChild(box);
+  }
   // زر صحيحة
   document.getElementById('evalCorrect').onclick = function(){
     defuseBomb();
@@ -759,7 +769,6 @@ function showEvaluationBox(studentName) {
   };
   // زر خاطئة
   document.getElementById('evalWrong').onclick = function(){
-    // تفجير القنبلة يدويًا
     if(gameState.timer) clearInterval(gameState.timer);
     gameState.isActive = false;
     gameState.explodedBombs++;
@@ -775,12 +784,16 @@ function showEvaluationBox(studentName) {
   };
 }
 
-// ========== أنماط النيون لمربع التقييم ========== 
+// ========== أنماط النيون لمربع التقييم (تحت المؤقت) ========== 
 const evalBoxStyle = document.createElement('style');
 evalBoxStyle.innerHTML = `
 #evaluationBox {
-  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-  background: rgba(0,0,0,0.55); z-index: 99999; display: flex; align-items: center; justify-content: center;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 12px;
+  margin-bottom: 8px;
   animation: fadeInEval 0.3s;
 }
 @keyframes fadeInEval { from { opacity: 0; } to { opacity: 1; } }
