@@ -561,6 +561,11 @@
         </div>
       </div>
       <div class="control-section">
+        <label style="font-weight:700;color:#FFD700;display:flex;align-items:center;gap:8px;">
+          <input type="checkbox" id="randomStudentCheckbox" style="width:20px;height:20px;accent-color:#FFD700;"> اختيار عشوائي
+        </label>
+      </div>
+      <div class="control-section">
         <button class="oman-btn" id="startBtn"><i class="fa-solid fa-play"></i> بدء المؤقت</button>
         <button class="oman-btn gold" id="pauseBtn"><i class="fa-solid fa-pause"></i> إيقاف مؤقت</button>
         <button class="oman-btn red" id="resetBtn"><i class="fa-solid fa-rotate-right"></i> إعادة ضبط</button>
@@ -649,6 +654,8 @@
       let allClasses = {};
       let currentExpert = null;
       let customTimerDuration = 60;
+      let randomStudentMode = false;
+      let randomStudentPool = [];
     // ========== DOMContentLoaded ==========
     document.addEventListener('DOMContentLoaded', () => {
       setupToolbar();
@@ -657,6 +664,7 @@
       setupGuideTabs();
       loadClasses();
       setupTimerDurationSelect();
+      setupRandomStudentCheckbox();
     });
 
     // تحميل بيانات الصفوف من ملف JSON
@@ -693,6 +701,8 @@
               currentExpert = null;
               gameState.currentStudent = '—';
               updateExpertDisplay();
+              // إعادة تعيين العشوائي عند تغيير الصف
+              randomStudentPool = [...students];
             } else {
               gameState.currentClass = '—';
               students = [];
@@ -702,6 +712,7 @@
               currentExpert = null;
               gameState.currentStudent = '—';
               updateExpertDisplay();
+              randomStudentPool = [];
             }
           };
           // حدث اختيار الطالب
@@ -856,6 +867,10 @@
       updateExpertDisplay();
       updateGameInfo();
       document.getElementById('bombMessage').textContent = 'ابدأ جولة جديدة باختيار طالب جديد.';
+      // إذا كان العشوائي مفعل، اختر طالب جديد تلقائياً
+      if(randomStudentMode) {
+        pickRandomStudent();
+      }
     }
     // ========== Defuse Logic ==========
     function defuseBomb() {
