@@ -564,6 +564,7 @@
         <button class="oman-btn gold" id="randomStudentBtn" type="button" style="width:100%;margin-top:2px;">
           <i class="fa-solid fa-shuffle"></i> اختيار عشوائي
         </button>
+        <div id="randomStudentInfo" style="margin-top:10px;"></div>
       </div>
       <div class="control-section">
         <button class="oman-btn" id="startBtn"><i class="fa-solid fa-play"></i> بدء المؤقت</button>
@@ -711,7 +712,7 @@
                 randomBtn.innerHTML = '<i class="fa-solid fa-shuffle"></i> اختيار عشوائي';
               }
               randomStudentMode = false;
-              
++              showRandomStudentInfo('');
             } else {
               gameState.currentClass = '—';
               students = [];
@@ -730,6 +731,7 @@
                 randomBtn.innerHTML = '<i class="fa-solid fa-shuffle"></i> اختيار عشوائي';
               }
               randomStudentMode = false;
++              showRandomStudentInfo('');
             }
           };
           // حدث اختيار الطالب
@@ -895,6 +897,7 @@
         randomBtn.innerHTML = '<i class="fa-solid fa-shuffle"></i> اختيار عشوائي';
         randomStudentMode = false;
         document.getElementById('studentSelect').disabled = false;
++        showRandomStudentInfo('');
       }
     }
     // ========== Defuse Logic ==========
@@ -966,6 +969,35 @@
       document.querySelectorAll('.toolbar-btn, .oman-btn, .info-card').forEach(el => {
         el.onmouseover = null;
       });
+    }
+    function pickRandomStudent() {
+      if(!Array.isArray(randomStudentPool) || randomStudentPool.length === 0) {
+        // إعادة ملء المسبح إذا انتهى
+        randomStudentPool = [...students];
+      }
+      if(randomStudentPool.length === 0) return;
+      // اختيار عشوائي بدون تكرار
+      const idx = Math.floor(Math.random() * randomStudentPool.length);
+      const selected = randomStudentPool.splice(idx, 1)[0];
+      currentExpert = selected;
+      gameState.currentStudent = selected;
+      updateExpertDisplay();
+      updateGameInfo();
++      showRandomStudentInfo(selected);
+    }
++
++  // عرض بيانات الطالب العشوائي
++  function showRandomStudentInfo(name) {
++    var infoDiv = document.getElementById('randomStudentInfo');
++    if (!name || !gameState.currentClass || name === '—') {
++      infoDiv.innerHTML = '';
++      return;
++    }
++    infoDiv.innerHTML =
++      '<div style="background:rgba(35,36,58,0.85);border:2px solid #FFD70055;border-radius:12px;padding:14px 10px;color:#FFD700;font-weight:900;box-shadow:0 2px 8px #FFD70022;display:flex;flex-direction:column;align-items:center;gap:6px;">' +
++        '<div style="font-size:1.2rem;"><i class="fa-solid fa-user"></i> الطالب المختار: <span style="color:#fff;">' + name + '</span></div>' +
++        '<div style="font-size:1.1rem;"><i class="fa-solid fa-users"></i> الصف: <span style="color:#fff;">' + gameState.currentClass + '</span></div>' +
++      '</div>';
     }
   </script>
 </body>
