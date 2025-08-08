@@ -12,6 +12,75 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
+    /* مؤثرات القنبلة */
+    .bomb {
+      transition: all 0.5s cubic-bezier(.4,0,.2,1), box-shadow 0.3s, background 0.3s;
+    }
+    .bomb.bomb-small {
+      width: 90px; height: 90px; font-size: 2.2rem;
+      background: radial-gradient(circle at 30% 30%, #444 0%, #222 60%, #111 100%);
+      border-color: #ffd700;
+    }
+    .bomb.bomb-mid {
+      width: 120px; height: 120px; font-size: 3.5rem;
+      background: radial-gradient(circle at 30% 30%, #ffd700 0%, #ffec80 60%, #ffb300 100%);
+      border-color: #ffd700;
+      box-shadow: 0 0 60px #ffd70099, 0 0 80px #ffd70044;
+    }
+    .bomb.bomb-large {
+      width: 150px; height: 150px; font-size: 4.5rem;
+      background: radial-gradient(circle at 30% 30%, #ff4757 0%, #ffb300 60%, #ffd700 100%);
+      border-color: #ff4757;
+      box-shadow: 0 0 80px #ff4757cc, 0 0 120px #ffd70088;
+    }
+    .bomb.bomb-shake {
+      animation: bombShake 0.2s infinite;
+    }
+    @keyframes bombShake {
+      0% { transform: translate(0,0) rotate(-2deg); }
+      25% { transform: translate(2px,2px) rotate(2deg); }
+      50% { transform: translate(-2px,-2px) rotate(-2deg); }
+      75% { transform: translate(2px,-2px) rotate(2deg); }
+      100% { transform: translate(0,0) rotate(-2deg); }
+    }
+    /* مؤقت ديناميكي */
+    .timer.timer-red { color: #ff4757 !important; animation: timerPulseRed 0.7s infinite alternate; }
+    @keyframes timerPulseRed { 0%{color:#ff4757;} 100%{color:#fff;} }
+    .timer.timer-shake { animation: timerShake 0.2s infinite, timerPulseRed 0.7s infinite alternate; }
+    @keyframes timerShake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      50% { transform: translateX(4px); }
+      75% { transform: translateX(-4px); }
+      100% { transform: translateX(0); }
+    }
+    .timer.timer-big {
+      font-size: 4rem !important;
+      color: #fff;
+      text-shadow: 0 0 24px #ff4757, 0 0 40px #fff;
+      animation: timerFlash 0.4s alternate infinite, timerShake 0.2s infinite;
+      position: fixed; left: 50%; top: 50%; transform: translate(-50%,-50%); z-index: 4000;
+      background: rgba(0,0,0,0.7); padding: 1.2rem 2.5rem; border-radius: 30px;
+      box-shadow: 0 0 60px #fff8;
+    }
+    @keyframes timerFlash { 0%{opacity:1;} 100%{opacity:0.5;} }
+    /* فلاش الشاشة */
+    .screen-flash {
+      position: fixed; left:0; top:0; width:100vw; height:100vh; background:#fff; opacity:0.85; z-index:5000;
+      animation: flashFade 0.5s forwards;
+      pointer-events: none;
+    }
+    @keyframes flashFade { from{opacity:0.85;} to{opacity:0;} }
+    /* شرارات ودخان */
+    .explosion-effect {
+      position: fixed; left:50%; top:50%; transform:translate(-50%,-50%); z-index:6000;
+      pointer-events:none;
+      width:180px; height:180px;
+      background: url('../assets/media/images/firework.gif') center/contain no-repeat;
+      opacity:0.95;
+      animation: explosionFade 1.2s forwards;
+    }
+    @keyframes explosionFade { from{opacity:0.95;} to{opacity:0;} }
     /* شريط الأدوات العلوي */
     .top-toolbar {
       position: fixed;
@@ -390,6 +459,8 @@
   <audio id="successSound" src="../assets/media/sounds/win.mp3"></audio>
   <audio id="failSound" src="../assets/media/sounds/wrong_answer.mp3"></audio>
   <audio id="tickSound" src="../assets/media/sounds/countdown-beep.mp3"></audio>
+  <audio id="tickFastSound" src="../assets/media/sounds/Notification.mp3"></audio>
+  <audio id="alarmSound" src="../assets/media/sounds/long-beep.mp3"></audio>
   <script>
     // اختيار عدد محدد من الطلاب
     document.getElementById('countBtn').onclick = function() {
@@ -554,20 +625,89 @@
     };
     document.getElementById('startBtn').onclick = startChallenge;
     function startChallenge() {
-  showNotif('🚀 بدأ التحدي!');
+      showNotif('🚀 بدأ التحدي!');
       document.getElementById('mainContainer').scrollIntoView({behavior:'smooth'});
       document.getElementById('bombArea').style.display = '';
       document.getElementById('successMsg').style.display = 'none';
       document.getElementById('explosionMsg').style.display = 'none';
+      // مؤثرات القنبلة
+      const bomb = document.querySelector('.bomb');
+      const timerDisplay = document.getElementById('timerDisplay');
+      let flashDiv = null, explosionDiv = null;
+      // إعادة الحالة الافتراضية
+      bomb.className = 'bomb bomb-small';
+      timerDisplay.className = 'timer';
+      document.body.classList.remove('shake');
+      if (document.querySelector('.screen-flash')) document.querySelector('.screen-flash').remove();
+      if (document.querySelector('.explosion-effect')) document.querySelector('.explosion-effect').remove();
+      // الأصوات
+      let alarmPlaying = false;
       timeLeft = 30;
       updateTimer();
-      timer = setInterval(() => {
+      let shakeLevel = 0;
+      let interval = setInterval(() => {
         timeLeft--;
-        playTick();
+        // مؤثرات القنبلة
+        if (timeLeft > 15) {
+          bomb.className = 'bomb bomb-small';
+        } else if (timeLeft > 10) {
+          bomb.className = 'bomb bomb-mid';
+        } else if (timeLeft > 0) {
+          bomb.className = 'bomb bomb-large bomb-shake';
+        }
+        // مؤقت ديناميكي
+        if (timeLeft > 10) {
+          timerDisplay.className = 'timer';
+        } else if (timeLeft > 3) {
+          timerDisplay.className = 'timer timer-red timer-shake';
+        } else if (timeLeft > 0) {
+          timerDisplay.className = 'timer timer-big';
+        }
+        // اهتزاز الشاشة تدريجي آخر 5 ثوانٍ
+        if (timeLeft <= 5 && timeLeft > 0) {
+          shakeLevel = (6 - timeLeft) * 2;
+          document.body.style.transform = `translate(${Math.random()*shakeLevel-Math.random()*shakeLevel}px,${Math.random()*shakeLevel-Math.random()*shakeLevel}px)`;
+        } else {
+          document.body.style.transform = '';
+        }
+        // الأصوات
+        if (timeLeft > 10) {
+          playTick();
+        } else if (timeLeft > 3) {
+          document.getElementById('tickFastSound').currentTime = 0;
+          document.getElementById('tickFastSound').play();
+        } else if (timeLeft > 0) {
+          if (!alarmPlaying) {
+            document.getElementById('alarmSound').currentTime = 0;
+            document.getElementById('alarmSound').play();
+            alarmPlaying = true;
+          }
+        }
         updateTimer();
         if (timeLeft === 0) {
-          clearInterval(timer);
-          showExplosion();
+          clearInterval(interval);
+          document.body.style.transform = '';
+          if (alarmPlaying) document.getElementById('alarmSound').pause();
+          // فلاش الشاشة
+          flashDiv = document.createElement('div');
+          flashDiv.className = 'screen-flash';
+          document.body.appendChild(flashDiv);
+          setTimeout(()=>{ if(flashDiv) flashDiv.remove(); }, 600);
+          // شرارات ودخان
+          explosionDiv = document.createElement('div');
+          explosionDiv.className = 'explosion-effect';
+          document.body.appendChild(explosionDiv);
+          // اهتزاز قوي
+          document.body.classList.add('shake');
+          // نص ضخم
+          document.getElementById('explosionMsg').textContent = '💥 انفجرت القنبلة!';
+          document.getElementById('explosionMsg').style.display = '';
+          document.getElementById('failSound').play();
+          confetti({particleCount: 80, spread: 70, origin: { y: 0.7 }, colors: ['#ff4757','#ffd700']});
+          setTimeout(()=>{
+            document.body.classList.remove('shake');
+            if (explosionDiv) explosionDiv.remove();
+          }, 1500);
         }
       }, 1000);
     }
