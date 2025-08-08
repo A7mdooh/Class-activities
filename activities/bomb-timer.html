@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+  <!-- أيقونات وأصوات إضافية -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <audio id="notifSound" src="../assets/media/sounds/Notification.mp3"></audio>
+  <audio id="progressSound" src="../assets/media/sounds/win.mp3"></audio>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>💣 القنبلة الذكية | تحدي الصف التفاعلي</title>
@@ -8,6 +12,78 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
+    /* شريط الأدوات العلوي */
+    .top-toolbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 60px;
+      background: linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(40,40,40,0.7) 100%);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; z-index: 1000;
+      box-shadow: 0 4px 24px #0008;
+      border-bottom: 2px solid #ffd70044;
+      animation: toolbarSlideDown 0.8s cubic-bezier(.4,0,.2,1);
+    }
+    @keyframes toolbarSlideDown {
+      from { opacity: 0; transform: translateY(-100%); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .toolbar-icons { display: flex; gap: 1.2rem; align-items: center; }
+    .toolbar-icon {
+      font-size: 1.7rem; color: #ffd700; background: none; border: none; cursor: pointer;
+      transition: color 0.2s, transform 0.2s;
+      position: relative;
+    }
+    .toolbar-icon:hover { color: #00e676; transform: scale(1.15); }
+    .toolbar-icon:active { color: #ff4757; }
+    .toolbar-icon .fa { pointer-events: none; }
+    .toolbar-icon-badge {
+      position: absolute; top: -8px; right: -8px; background: #ff4757; color: #fff;
+      border-radius: 50%; font-size: 0.7rem; padding: 2px 6px; font-weight: bold;
+      box-shadow: 0 2px 8px #0006;
+    }
+    /* إشعارات */
+    .notif-bar {
+      position: fixed; top: 70px; right: 2rem; min-width: 220px; max-width: 350px;
+      background: #232526ee; color: #ffd700; border-radius: 12px; box-shadow: 0 4px 24px #0008;
+      padding: 1rem 1.5rem; font-size: 1.1rem; z-index: 2000;
+      display: none; align-items: center; gap: 0.7rem;
+      animation: notifFadeIn 0.5s;
+    }
+    @keyframes notifFadeIn { from { opacity: 0; right: 0; } to { opacity: 1; right: 2rem; } }
+    .notif-bar.active { display: flex; }
+    /* شريط التقدم */
+    .progress-bar-wrap {
+      width: 100%; max-width: 400px; margin: 1.5rem auto 0 auto; background: #222b; border-radius: 20px;
+      box-shadow: 0 2px 12px #ffd70022; overflow: hidden; height: 22px; position: relative;
+    }
+    .progress-bar {
+      height: 100%; background: linear-gradient(90deg, #ffd700, #00e676, #ff4757);
+      width: 0%; border-radius: 20px; transition: width 0.7s cubic-bezier(.4,0,.2,1);
+      box-shadow: 0 0 16px #ffd70088;
+    }
+    .progress-label {
+      position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+      color: #232526; font-weight: bold; font-size: 1rem; letter-spacing: 1px;
+      text-shadow: 0 2px 8px #fff8;
+    }
+    /* نافذة دليل المعلم */
+    .guide-modal {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #181a1bcc;
+      display: flex; align-items: center; justify-content: center; z-index: 3000; display: none;
+    }
+    .guide-modal.active { display: flex; }
+    .guide-content {
+      background: #fff; color: #232526; border-radius: 18px; max-width: 500px; width: 95%;
+      padding: 2.5rem 2rem; box-shadow: 0 8px 40px #0006; text-align: right; position: relative;
+      font-family: 'Cairo', sans-serif;
+    }
+    .guide-content h2 { color: #ffd700; font-size: 2rem; margin-bottom: 1rem; }
+    .guide-content ul { margin: 1rem 0 0 0; padding: 0 1.2rem; }
+    .guide-content li { margin-bottom: 0.7rem; font-size: 1.1rem; }
+    .guide-close {
+      position: absolute; left: 1.2rem; top: 1.2rem; background: none; border: none; font-size: 1.5rem; color: #ff4757; cursor: pointer;
+    }
     :root {
       --main-gradient: linear-gradient(135deg, #232526 0%, #414345 100%);
       --accent: #ffd700;
@@ -235,6 +311,40 @@
   </style>
 </head>
 <body>
+  <!-- شريط الأدوات العلوي -->
+  <div class="top-toolbar">
+    <div class="game-logo" style="font-size:1.5rem; font-weight:900; color:#ffd700; display:flex; align-items:center; gap:0.7rem;">
+      <span>💣</span> القنبلة الذكية
+    </div>
+    <div class="toolbar-icons">
+      <button class="toolbar-icon" id="notifBtn" title="الإشعارات"><i class="fa fa-bell"></i></button>
+      <button class="toolbar-icon" id="progressBtn" title="شريط التقدم"><i class="fa fa-trophy"></i></button>
+      <button class="toolbar-icon sound-icon" id="soundBtn" title="الصوت"><i class="fa fa-volume-up"></i></button>
+      <button class="toolbar-icon" id="guideBtn" title="دليل المعلم"><i class="fa fa-book"></i></button>
+      <button class="toolbar-icon" id="settingsBtn" title="الإعدادات"><i class="fa fa-gear"></i></button>
+    </div>
+  </div>
+  <!-- إشعار عائم -->
+  <div class="notif-bar" id="notifBar"><i class="fa fa-bell"></i> <span id="notifMsg">تم تفعيل النظام!</span></div>
+  <!-- نافذة دليل المعلم -->
+  <div class="guide-modal" id="guideModal">
+    <div class="guide-content">
+      <button class="guide-close" id="closeGuide">&times;</button>
+      <h2>📚 دليل المعلم الاحترافي</h2>
+      <ul>
+        <li>ابدأ باختيار الصف ثم الطلاب المشاركين.</li>
+        <li>استخدم شريط الأدوات العلوي للوصول السريع للإشعارات، التقدم، الصوت، والدليل.</li>
+        <li>اختصارات لوحة المفاتيح:<br> <b>Ctrl+Enter</b> بدء التحدي، <b>Ctrl+A</b> اختيار الكل، <b>Ctrl+R</b> اختيار عشوائي، <b>Ctrl+H</b> إظهار/إخفاء الدليل.</li>
+        <li>شريط التقدم يظهر نسبة الطلاب المختارين.</li>
+        <li>النظام الصوتي والمرئي يمنح تجربة تفاعلية.</li>
+      </ul>
+    </div>
+  </div>
+  <!-- شريط التقدم -->
+  <div class="progress-bar-wrap" id="progressWrap" style="display:none;">
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="progress-label" id="progressLabel"></div>
+  </div>
   <div class="creative-header">
     <h1>💣 القنبلة الذكية</h1>
     <p>تحدي صف تفاعلي مع مؤثرات متقدمة</p>
@@ -261,6 +371,58 @@
   <audio id="failSound" src="../assets/media/sounds/wrong_answer.mp3"></audio>
   <audio id="tickSound" src="../assets/media/sounds/countdown-beep.mp3"></audio>
   <script>
+    // إشعارات ومؤثرات صوتية وبصرية
+    function showNotif(msg) {
+      const bar = document.getElementById('notifBar');
+      document.getElementById('notifMsg').textContent = msg;
+      bar.classList.add('active');
+      document.getElementById('notifSound').play();
+      setTimeout(()=>bar.classList.remove('active'), 2500);
+    }
+    // شريط التقدم
+    function updateProgressBar() {
+      const wrap = document.getElementById('progressWrap');
+      const bar = document.getElementById('progressBar');
+      const label = document.getElementById('progressLabel');
+      if (!studentData[selectedClass]) { wrap.style.display='none'; return; }
+      const total = studentData[selectedClass].length;
+      const sel = selectedStudents.length;
+      const percent = total ? Math.round((sel/total)*100) : 0;
+      bar.style.width = percent+'%';
+      label.textContent = `${sel} / ${total} طالب`;
+      wrap.style.display = '';
+      if (percent === 100 && total>0) document.getElementById('progressSound').play();
+    }
+    // اختصارات لوحة المفاتيح
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && e.key === 'Enter') { document.getElementById('startBtn').click(); e.preventDefault(); }
+      if (e.ctrlKey && (e.key === 'a' || e.key === 'A')) { document.getElementById('selectAllBtn').click(); e.preventDefault(); }
+      if (e.ctrlKey && (e.key === 'r' || e.key === 'R')) { document.getElementById('randomBtn').click(); e.preventDefault(); }
+      if (e.ctrlKey && (e.key === 'h' || e.key === 'H')) { document.getElementById('guideBtn').click(); e.preventDefault(); }
+    });
+    // أزرار الأدوات العلوية
+    document.getElementById('notifBtn').onclick = ()=>showNotif('🔔 هذا إشعار تجريبي!');
+    document.getElementById('progressBtn').onclick = ()=>{ updateProgressBar(); showNotif('🏆 شريط التقدم محدث!'); };
+    let soundOn = true;
+    document.getElementById('soundBtn').onclick = function() {
+      soundOn = !soundOn;
+      document.getElementById('soundBtn').innerHTML = soundOn ? '<i class="fa fa-volume-up"></i>' : '<i class="fa fa-volume-mute"></i>';
+      document.getElementById('successSound').muted = !soundOn;
+      document.getElementById('failSound').muted = !soundOn;
+      document.getElementById('tickSound').muted = !soundOn;
+      document.getElementById('notifSound').muted = !soundOn;
+      document.getElementById('progressSound').muted = !soundOn;
+      showNotif(soundOn ? '🎵 تم تفعيل الصوت' : '🔇 تم كتم الصوت');
+    };
+    document.getElementById('guideBtn').onclick = function() {
+      document.getElementById('guideModal').classList.add('active');
+    };
+    document.getElementById('closeGuide').onclick = function() {
+      document.getElementById('guideModal').classList.remove('active');
+    };
+    document.getElementById('settingsBtn').onclick = function() {
+      showNotif('⚙️ إعدادات قادمة قريباً!');
+    };
     let studentData = {};
     let selectedClass = null;
     let selectedStudents = [];
@@ -311,7 +473,8 @@
         if (selectedStudents.includes(name)) card.classList.add('selected');
         grid.appendChild(card);
       });
-      document.getElementById('startBtn').style.display = selectedStudents.length > 0 ? '' : 'none';
+  document.getElementById('startBtn').style.display = selectedStudents.length > 0 ? '' : 'none';
+  updateProgressBar();
     }
     function toggleStudent(card, name) {
       if (selectedStudents.includes(name)) {
@@ -321,18 +484,21 @@
         selectedStudents.push(name);
         card.classList.add('selected');
       }
-      document.getElementById('startBtn').style.display = selectedStudents.length > 0 ? '' : 'none';
+  document.getElementById('startBtn').style.display = selectedStudents.length > 0 ? '' : 'none';
+  updateProgressBar();
     }
 
     // أزرار التحكم في اختيار الطلاب
     document.getElementById('selectAllBtn').onclick = function() {
       if (!studentData[selectedClass]) return;
       selectedStudents = [...studentData[selectedClass]];
-      buildStudentsGrid();
+  buildStudentsGrid();
+  showNotif('✅ تم اختيار جميع الطلاب');
     };
     document.getElementById('clearAllBtn').onclick = function() {
       selectedStudents = [];
-      buildStudentsGrid();
+  buildStudentsGrid();
+  showNotif('❌ تم إلغاء تحديد الجميع');
     };
     document.getElementById('randomBtn').onclick = function() {
       if (!studentData[selectedClass]) return;
@@ -344,10 +510,12 @@
         const name = arr[idx];
         if (!selectedStudents.includes(name)) selectedStudents.push(name);
       }
-      buildStudentsGrid();
+  buildStudentsGrid();
+  showNotif('🎲 تم اختيار طلاب عشوائيين');
     };
     document.getElementById('startBtn').onclick = startChallenge;
     function startChallenge() {
+  showNotif('🚀 بدأ التحدي!');
       document.getElementById('mainContainer').scrollIntoView({behavior:'smooth'});
       document.getElementById('bombArea').style.display = '';
       document.getElementById('successMsg').style.display = 'none';
