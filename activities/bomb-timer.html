@@ -3081,6 +3081,101 @@
         }
         
     </style>
+
+        <style>
+        /* ===== أزرار القنبلة المتقدمة ===== */
+        .setup-footer-btns {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .bomb-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 36px;
+            font-size: 1.1rem;
+            font-family: 'Cairo', sans-serif;
+            font-weight: bold;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.25), 0 1.5px 4px rgba(0,0,0,0.12);
+            background: linear-gradient(135deg, #232526 0%, #414345 100%);
+            color: #fff;
+            position: relative;
+            transition: transform 0.18s, box-shadow 0.18s, background 0.3s;
+            overflow: hidden;
+            outline: none;
+            z-index: 1;
+            min-width: 160px;
+        }
+        .bomb-btn .bomb-emoji {
+            font-size: 1.6rem;
+            filter: drop-shadow(0 2px 4px #0008);
+            animation: bombShake 1.2s infinite linear alternate;
+        }
+        .bomb-btn .btn-text {
+            flex: 1;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        .bomb-btn-green {
+            background: linear-gradient(135deg, #00c853 0%, #43e97b 100%);
+            color: #fff;
+            box-shadow: 0 6px 24px rgba(0,200,83,0.18), 0 1.5px 4px rgba(0,0,0,0.12);
+        }
+        .bomb-btn-red {
+            background: linear-gradient(135deg, #c41e3a 0%, #ff1744 100%);
+            color: #fff;
+            box-shadow: 0 6px 24px rgba(255,23,68,0.18), 0 1.5px 4px rgba(0,0,0,0.12);
+        }
+        .bomb-btn-grey {
+            background: linear-gradient(135deg, #757575 0%, #bdbdbd 100%);
+            color: #fff;
+            box-shadow: 0 6px 24px rgba(117,117,117,0.18), 0 1.5px 4px rgba(0,0,0,0.12);
+        }
+        .bomb-btn:hover, .bomb-btn:focus {
+            transform: scale(1.06) rotate(-2deg);
+            box-shadow: 0 10px 32px rgba(0,0,0,0.28), 0 2px 8px rgba(0,0,0,0.16);
+            filter: brightness(1.08);
+        }
+        .bomb-btn-green:hover, .bomb-btn-green:focus {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        .bomb-btn-red:hover, .bomb-btn-red:focus {
+            background: linear-gradient(135deg, #ff1744 0%, #c41e3a 100%);
+        }
+        .bomb-btn-grey:hover, .bomb-btn-grey:focus {
+            background: linear-gradient(135deg, #bdbdbd 0%, #757575 100%);
+        }
+        @keyframes bombShake {
+            0% { transform: rotate(-8deg) scale(1.1); }
+            20% { transform: rotate(6deg) scale(1.05); }
+            40% { transform: rotate(-4deg) scale(1.1); }
+            60% { transform: rotate(4deg) scale(1.05); }
+            80% { transform: rotate(-2deg) scale(1.1); }
+            100% { transform: rotate(0deg) scale(1.1); }
+        }
+        .bomb-btn:active {
+            transform: scale(0.97) rotate(1deg);
+            filter: brightness(0.95);
+        }
+        @media (max-width: 600px) {
+            .setup-footer-btns {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .bomb-btn {
+                width: 100%;
+                min-width: unset;
+                font-size: 1rem;
+                padding: 14px 0;
+            }
+        }
+        </style>
 </head>
 <body>
     <!-- نافذة التعليمات -->
@@ -3361,19 +3456,20 @@
 
                 <!-- أزرار التحكم -->
                 <div style="text-align: center; margin-top: 30px; border-top: 2px solid rgba(255,255,255,0.1); padding-top: 20px;">
-                    <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
-                        <button onclick="resetSetup()" style="padding: 12px 25px; background: linear-gradient(135deg, #6c757d, #5a6268); border: none; border-radius: 25px; color: white; cursor: pointer; transition: all 0.3s ease;">
-                            🔄 إعادة البداية
-                        </button>
-                        
-                        <button id="startGameBtn" onclick="startGameFromSetup()" style="display: none; padding: 15px 40px; background: linear-gradient(135deg, var(--safe-green), #388e3c); border: none; border-radius: 25px; color: white; cursor: pointer; transition: all 0.3s ease; font-size: 1.1rem; font-weight: bold; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);">
-                            🚀 ابدأ اللعبة
-                        </button>
-                        
-                        <button onclick="closeModal('setupModal')" style="padding: 12px 25px; background: linear-gradient(135deg, #dc3545, #c82333); border: none; border-radius: 25px; color: white; cursor: pointer; transition: all 0.3s ease;">
-                            ❌ إلغاء
-                        </button>
-                    </div>
+                        <div class="setup-footer-btns">
+                            <button onclick="resetSetup()" class="bomb-btn bomb-btn-grey">
+                                <span class="bomb-emoji">💣</span>
+                                <span class="btn-text">إعادة البداية</span>
+                            </button>
+                            <button id="startGameBtn" onclick="startGameFromSetup()" class="bomb-btn bomb-btn-green" style="display: none;">
+                                <span class="bomb-emoji">🚀</span>
+                                <span class="btn-text">ابدأ اللعبة</span>
+                            </button>
+                            <button onclick="closeModal('setupModal')" class="bomb-btn bomb-btn-red">
+                                <span class="bomb-emoji">🧨</span>
+                                <span class="btn-text">إلغاء</span>
+                            </button>
+                        </div>
                 </div>
             </div>
         </div>
