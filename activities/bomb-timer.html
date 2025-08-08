@@ -1,35 +1,75 @@
 <!DOCTYPE html>
 
-        // ===== منطق مملكة التحديات: جلب البيانات وبناء الصفوف والطلاب =====
-        let studentData = {};
-        let selectedStudentsList = [];
+        // متغيرات اللعبة الأساسية
+        let studentsData = {};
+        let selectedClass = null;
+        let selectedStudent = null;
+        let selectionMethod = 'manual'; // manual أو random
+        let setupSelectedClass = null;
+        let setupSelectedStudent = null;
+        let setupSelectionMethod = 'manual';
 
+        // متغيرات الإعداد المبسطة الجديدة
+        let gameSetup = {
+            selectedClass: null,
+            selectedMethod: null,
+            selectedStudent: null,
+            studentData: null,
+            usedStudents: [] // لتتبع الطلاب المستخدمين في الاختيار العشوائي
+        };
+
+        // تحميل بيانات الطلاب (يدعم جميع الأشكال)
         async function loadStudentData() {
             try {
                 const response = await fetch('./data/studentData.json');
+                let data;
                 if (response.ok) {
-                    studentData = await response.json();
-                    console.log('✅ تم تحميل بيانات الطلاب بنجاح:', Object.keys(studentData));
+                    data = await response.json();
                 } else {
-                    throw new Error('فشل تحميل البيانات');
+                    throw new Error('فشل في تحميل البيانات');
+                }
+                // تحويل البيانات إلى مصفوفة صفوف داخل gameSetup.studentData.classes
+                let classes = [];
+                if (Array.isArray(data.classes)) {
+                    classes = data.classes;
+                } else if (Array.isArray(data)) {
+                    classes = data;
+                } else if (typeof data === 'object' && data !== null) {
+                    classes = Object.keys(data).map(className => ({
+                        id: className,
+                        name: className,
+                        students: data[className].map((student, idx) =>
+                            typeof student === 'object' ? student : { id: `${className}_${idx+1}`, name: student }
+                        )
+                    }));
+                }
+                gameSetup.studentData = { classes };
+                window.studentsData = data;
+                if (classes.length > 0) {
+                    loadClassOptions();
+                } else {
+                    showToast('لا توجد بيانات صفوف متاحة في الملف.', 'error');
                 }
             } catch (error) {
-                console.warn('⚠️ استخدام البيانات الاحتياطية:', error);
-                studentData = {
-                    "خامس 1": ["أحمد محمد السيابي", "فاطمة علي الحارثي", "عبدالله سالم الجابري"],
-                    "خامس 2": ["سارة حسن اليحيائي", "محمد عمر الحديدي", "نور الدين المسافر"]
+                console.error('❌ خطأ في تحميل بيانات الطلاب:', error);
+                showToast('لا يمكن تحميل بيانات الطلاب. سيتم استخدام بيانات احتياطية.', 'warning');
+                // بيانات احتياطية افتراضية
+                gameSetup.studentData = {
+                    classes: [
+                        { id: '1A', name: 'الصف 1A', students: [ {id:'1A_1', name:'طالب 1'}, {id:'1A_2', name:'طالب 2'} ] },
+                        { id: '2B', name: 'الصف 2B', students: [ {id:'2B_1', name:'طالب 3'}, {id:'2B_2', name:'طالب 4'} ] }
+                    ]
                 };
-                console.log('📚 تم تحميل البيانات الاحتياطية:', Object.keys(studentData));
+                loadClassOptions();
             }
-            loadClassSelection();
         }
 
-        function loadClassSelection() {
+        // بناء بطاقات الصفوف
+        function loadClassOptions() {
             const container = document.getElementById('classSelection');
             if (!container) return;
             container.innerHTML = '';
-            const classNames = Object.keys(studentData);
-            if (classNames.length === 0) {
+            if (!gameSetup.studentData || !gameSetup.studentData.classes || gameSetup.studentData.classes.length === 0) {
                 container.innerHTML = '<div style="color: var(--danger-red); text-align: center; padding: 20px;">❌ لا توجد بيانات صفوف متاحة</div>';
                 return;
             }
@@ -37,41 +77,39 @@
             document.getElementById('selectionMethodSection').style.display = 'none';
             document.getElementById('studentCardsSection').style.display = 'none';
             document.getElementById('startGameBtn').style.display = 'none';
-            classNames.forEach(className => {
+            gameSetup.studentData.classes.forEach(classInfo => {
                 const classCard = document.createElement('div');
                 classCard.className = 'class-option';
                 classCard.style.cssText = `text-align:center; border:2px solid var(--oman-red); border-radius:12px; padding:18px 10px; margin:10px; background:rgba(255,255,255,0.08); cursor:pointer; font-size:1.1rem; font-weight:bold; transition:0.2s;`;
-                classCard.innerHTML = `<div style="font-size:2rem;">🏫</div><div>${className}</div><div style="font-size:0.9rem; color:var(--safe-green);">${studentData[className].length} طالب</div>`;
+                classCard.innerHTML = `<div style="font-size:2rem;">🏫</div><div>${classInfo.name}</div><div style="font-size:0.9rem; color:var(--safe-green);">${classInfo.students.length} طالب</div>`;
                 classCard.addEventListener('click', function() {
-                    selectClass(className);
+                    selectClass(classInfo);
                 });
                 container.appendChild(classCard);
             });
         }
 
-        function selectClass(className) {
-            // تمييز البطاقة المختارة
+        // عند اختيار الصف
+        function selectClass(classInfo) {
+            gameSetup.selectedClass = classInfo;
             document.querySelectorAll('.class-option').forEach(card => {
                 card.style.borderColor = 'rgba(255,255,255,0.2)';
                 card.style.background = 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))';
-                if (card.textContent.includes(className)) {
+                if (card.textContent.includes(classInfo.name)) {
                     card.style.borderColor = 'var(--safe-green)';
                     card.style.background = 'linear-gradient(135deg, rgba(76, 175, 80, 0.3), rgba(76, 175, 80, 0.1))';
                 }
             });
-            // إظهار قسم اختيار الطريقة
             document.getElementById('selectionMethodSection').style.display = 'block';
             document.getElementById('studentCardsSection').style.display = 'none';
             document.getElementById('startGameBtn').style.display = 'none';
-            // حفظ الصف المختار
-            window.selectedClass = className;
         }
 
-        // عند اختيار الطريقة اليدوية، عرض بطاقات الطلاب
+        // عند اختيار الطريقة اليدوية
         function selectMethod(method) {
-            window.selectionMethod = method;
+            gameSetup.selectedMethod = method;
             if (method === 'manual') {
-                loadStudentSelection(window.selectedClass);
+                displayAdvancedStudentCards();
                 document.getElementById('studentCardsSection').style.display = 'block';
             } else {
                 document.getElementById('studentCardsSection').style.display = 'none';
@@ -79,55 +117,52 @@
             document.getElementById('startGameBtn').style.display = 'none';
         }
 
-        function loadStudentSelection(className) {
-            const studentsGrid = document.getElementById('studentGrid');
-            if (!studentsGrid) return;
-            studentsGrid.innerHTML = '';
-            selectedStudentsList = [];
-            const students = studentData[className] || [];
-            if (students.length === 0) {
-                studentsGrid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: #ff6b6b; padding: 2rem;"><div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div><h3>لا توجد بيانات طلاب لهذا الصف</h3><p>تحقق من ملف البيانات</p></div>`;
-                return;
-            }
-            students.forEach((studentName, index) => {
+        // بناء بطاقات الطلاب (نفس دالة displayAdvancedStudentCards)
+        function displayAdvancedStudentCards() {
+            const grid = document.getElementById('studentGrid');
+            if (!grid || !gameSetup.selectedClass) return;
+            grid.innerHTML = '';
+            if (!gameSetup.selectedStudents) gameSetup.selectedStudents = [];
+            gameSetup.selectedClass.students.forEach((student, index) => {
+                const isSelected = gameSetup.selectedStudents.includes(student.name);
                 const studentCard = document.createElement('div');
-                studentCard.className = 'student-card';
-                studentCard.dataset.studentName = studentName;
+                studentCard.className = 'student-card-advanced';
+                studentCard.dataset.studentName = student.name;
+                studentCard.dataset.studentId = student.id;
                 studentCard.dataset.studentIndex = index;
-                studentCard.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    toggleStudentSelection(this, studentName);
+                studentCard.style.cssText = `position:relative;`;
+                studentCard.innerHTML = `<div class="selection-indicator">${isSelected ? '✓' : '○'}</div><div class="student-name">${student.name}</div>`;
+                studentCard.addEventListener('click', function() {
+                    toggleStudentSelection(this, student);
                 });
-                studentCard.innerHTML = `<div class="selection-indicator">○</div><div class="student-name">${studentName}</div>`;
-                studentsGrid.appendChild(studentCard);
+                grid.appendChild(studentCard);
             });
+            updateSelectedStudentsCount();
         }
 
-        function toggleStudentSelection(cardElement, studentName) {
-            if (!cardElement || !studentName) return;
-            const isSelected = cardElement.classList.contains('selected');
-            const selectionIndicator = cardElement.querySelector('.selection-indicator');
-            if (!selectionIndicator) return;
+        // تبديل اختيار الطالب
+        function toggleStudentSelection(cardElement, student) {
+            if (!gameSetup.selectedStudents) gameSetup.selectedStudents = [];
+            const isSelected = gameSetup.selectedStudents.includes(student.name);
+            const indicator = cardElement.querySelector('.selection-indicator');
             if (isSelected) {
+                gameSetup.selectedStudents = gameSetup.selectedStudents.filter(name => name !== student.name);
                 cardElement.classList.remove('selected');
-                selectionIndicator.textContent = '○';
-                selectedStudentsList = selectedStudentsList.filter(name => name !== studentName);
+                indicator.textContent = '○';
             } else {
+                gameSetup.selectedStudents.push(student.name);
                 cardElement.classList.add('selected');
-                selectionIndicator.textContent = '✓';
-                selectedStudentsList.push(studentName);
+                indicator.textContent = '✓';
             }
-            updateSelectedCount();
+            updateSelectedStudentsCount();
         }
 
-        function updateSelectedCount() {
+        // تحديث عداد الطلاب المختارين وزر البدء
+        function updateSelectedStudentsCount() {
             const countElement = document.getElementById('selectedStudentsCount');
-            if (countElement) {
-                countElement.textContent = selectedStudentsList.length;
-            }
-            // إظهار زر البدء فقط إذا تم اختيار طالب واحد على الأقل
-            if (selectedStudentsList.length > 0) {
+            const selectedCount = gameSetup.selectedStudents ? gameSetup.selectedStudents.length : 0;
+            if (countElement) countElement.textContent = selectedCount;
+            if (selectedCount > 0) {
                 document.getElementById('startGameBtn').style.display = 'inline-block';
             } else {
                 document.getElementById('startGameBtn').style.display = 'none';
