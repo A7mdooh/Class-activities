@@ -826,8 +826,10 @@
     // تحديث عرض الخبير الحالي
     function updateExpertDisplay() {
       const el = document.getElementById('currentExpertDisplay');
-      if(currentExpert) {
-        el.innerHTML = `<span style='color:#FFD700;font-weight:900;'>الخبير الحالي:</span> ${currentExpert}`;
+      // إذا تم اختيار الطالب من القائمة فقط
+      const studentSelect = document.getElementById('studentSelect');
+      if(studentSelect && studentSelect.value && studentSelect.value !== '—') {
+        el.innerHTML = `<span style='color:#FFD700;font-weight:900;'>الخبير الحالي:</span> ${studentSelect.value}`;
       } else {
         el.textContent = 'اختر الطالب الخبير للجولة.';
       }
