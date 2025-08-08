@@ -721,8 +721,12 @@
                   // اختيار عشوائي بدون تكرار
                   const idx = Math.floor(Math.random() * randomStudentPool.length);
                   const selected = randomStudentPool.splice(idx, 1)[0];
-                  // عرض اسم الطالب المختار
-                  document.getElementById('bombMessage').textContent = `🎲 تم اختيار: ${selected}`;
+                  // تعيين الطالب كخبير وتحديث العرض
+                  currentExpert = selected;
+                  gameState.currentStudent = selected;
+                  updateExpertDisplay();
+                  updateGameInfo();
+                  document.getElementById('bombMessage').textContent = `🎲 تم تعيين الخبير: ${selected}`;
                   // تعطيل الزر إذا انتهت القائمة
                   if(randomStudentPool.length === 0){
                     randomBtn.disabled = true;
