@@ -400,6 +400,65 @@
     }
     .guide-content { display: none; }
     .guide-content.active { display: block; }
+    /* Modern Select Dropdowns */
+    .modern-select-wrapper {
+      position: relative;
+      width: 100%;
+      margin-top: 8px;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+    }
+    .modern-select {
+      width: 100%;
+      padding: 12px 44px 12px 16px;
+      border-radius: 12px;
+      border: 2px solid #FFD70055;
+      background: rgba(35,36,58,0.85);
+      color: #FFD700;
+      font-size: 1.13rem;
+      font-family: 'Cairo', system-ui, sans-serif;
+      font-weight: 700;
+      appearance: none;
+      outline: none;
+      box-shadow: 0 2px 8px #FFD70022;
+      transition: border 0.18s, box-shadow 0.18s, background 0.18s;
+      cursor: pointer;
+    }
+    .modern-select:focus {
+      border-color: #FFD700;
+      box-shadow: 0 0 0 3px #FFD70055;
+      background: #23243aee;
+    }
+    .modern-select:hover {
+      border-color: #FFD700;
+      background: #23243aee;
+    }
+    .modern-select-arrow {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: #FFD700;
+      font-size: 1.2rem;
+      z-index: 2;
+      transition: color 0.18s;
+    }
+    .modern-select:focus ~ .modern-select-arrow,
+    .modern-select:hover ~ .modern-select-arrow {
+      color: #DC143C;
+    }
+    .modern-select option {
+      background: #23243a;
+      color: #FFD700;
+      font-weight: 700;
+      font-size: 1.08rem;
+    }
+    /* Hide default arrow for select */
+    .modern-select::-ms-expand { display: none; }
+    .modern-select::-webkit-select-placeholder { color: #FFD70099; }
+    .modern-select:disabled { background: #23243a55; color: #FFD70077; cursor: not-allowed; }
     /* Responsive & Touch */
     @media (max-width: 700px) {
       .main-content { grid-template-columns: 1fr; padding: 12px 2px; }
@@ -465,17 +524,23 @@
       <h3>🎛️ لوحة المعلم</h3>
       <div class="control-section">
         <label for="classSelect" style="font-weight:700;color:#FFD700;">اختر الصف:</label>
-        <select id="classSelect" style="width:100%;margin-top:8px;padding:8px 12px;border-radius:8px;font-size:1.1rem;">
-          <option value="">— اختر الصف —</option>
-        </select>
+        <div class="modern-select-wrapper">
+          <select id="classSelect" class="modern-select">
+            <option value="">— اختر الصف —</option>
+          </select>
+          <span class="modern-select-arrow"><i class="fa-solid fa-chevron-down"></i></span>
+        </div>
       </div>
       <div class="control-section">
           <div>مركز القيادة:</div>
           <div id="expertSelectionArea">
             <label for="studentSelect" style="font-weight:700;color:#FFD700;">اختر الطالب:</label>
-            <select id="studentSelect" style="width:100%;margin-top:8px;padding:8px 12px;border-radius:8px;font-size:1.1rem;display:none;">
-              <option value="">— اختر الطالب —</option>
-            </select>
+            <div class="modern-select-wrapper" id="studentSelectWrapper" style="display:none;">
+              <select id="studentSelect" class="modern-select">
+                <option value="">— اختر الطالب —</option>
+              </select>
+              <span class="modern-select-arrow"><i class="fa-solid fa-chevron-down"></i></span>
+            </div>
             <div id="currentExpertDisplay" style="margin-top:8px;"></div>
           </div>
       </div>
@@ -592,6 +657,7 @@
           });
           classSelect.onchange = function() {
             const studentSelect = document.getElementById('studentSelect');
+            const studentSelectWrapper = document.getElementById('studentSelectWrapper');
             if(this.value) {
               gameState.currentClass = this.value;
               students = allClasses[this.value] || [];
@@ -604,7 +670,7 @@
                 opt.textContent = name;
                 studentSelect.appendChild(opt);
               });
-              studentSelect.style.display = '';
+              studentSelectWrapper.style.display = '';
               studentSelect.value = '';
               currentExpert = null;
               gameState.currentStudent = '—';
@@ -614,7 +680,7 @@
               students = [];
               updateGameInfo();
               studentSelect.innerHTML = '<option value="">— اختر الطالب —</option>';
-              studentSelect.style.display = 'none';
+              studentSelectWrapper.style.display = 'none';
               currentExpert = null;
               gameState.currentStudent = '—';
               updateExpertDisplay();
