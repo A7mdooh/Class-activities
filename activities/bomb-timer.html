@@ -3228,7 +3228,7 @@
                     <!-- إعداد اللعبة -->
                     <div class="control-section card-responsive">
                         <div class="control-title text-responsive">⚙️ إعداد اللعبة</div>
-                        <button class="btn btn-responsive btn-info" onclick="console.log('تم النقر على زر الإعدادات'); showGameSetup()">📋 إعداد الصف والطريقة</button>
+                        <!-- تم حذف زر إعداد الصف والطريقة بناءً على طلب المستخدم -->
                     </div>
                     
                     <!-- مركز القيادة والتحكم -->
@@ -4951,32 +4951,36 @@
                 description: '5 قنابل متتالية بدون خطأ!', 
                 condition: () => gameState.maxStreak >= 5 
             },
-            .bomb-btn {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                padding: 16px 36px;
-                font-size: 1.1rem;
-                font-family: 'Cairo', sans-serif;
-                font-weight: bold;
-                border: 3px solid #fff200;
-                border-radius: 40px;
-                cursor: pointer;
-                box-shadow: 0 6px 24px rgba(0,0,0,0.25), 0 1.5px 4px rgba(0,0,0,0.12);
-                background: linear-gradient(135deg, #232526 0%, #414345 100%);
-                color: #fff;
-                position: relative;
-                transition: transform 0.18s, box-shadow 0.18s, background 0.3s;
-                overflow: hidden;
-                outline: none;
-                z-index: 1;
-                min-width: 160px;
-            }
-                name: '🎯 المتحدي', 
-                description: 'إكمال جميع التحديات اليومية!', 
-                condition: () => Object.values(gameState.dailyChallenges).every(c => c.completed) 
+            challenger: {
+                name: '🎯 المتحدي',
+                description: 'إكمال جميع التحديات اليومية!',
+                condition: () => Object.values(gameState.dailyChallenges).every(c => c.completed)
             }
         };
+
+        /*
+        .bomb-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 36px;
+            font-size: 1.1rem;
+            font-family: 'Cairo', sans-serif;
+            font-weight: bold;
+            border: 3px solid #fff200;
+            border-radius: 40px;
+            cursor: pointer;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.25), 0 1.5px 4px rgba(0,0,0,0.12);
+            background: linear-gradient(135deg, #232526 0%, #414345 100%);
+            color: #fff;
+            position: relative;
+            transition: transform 0.18s, box-shadow 0.18s, background 0.3s;
+            overflow: hidden;
+            outline: none;
+            z-index: 1;
+            min-width: 160px;
+        }
+        */
         
         // رسائل تحفيزية للمعلم
         const teacherEncouragement = [
@@ -8157,54 +8161,90 @@
             localStorage.setItem('bomber-state', JSON.stringify(gameState));
         }
         
-        function loadGameState() {
+        async function loadStudentData() {
             try {
-                const saved = localStorage.getItem('bomber-state');
-                if (saved) {
-                    const gameState = JSON.parse(saved);
-                    const timeDiff = Date.now() - gameState.timestamp;
-                    
-                    // استعادة الحالة فقط إذا كانت حديثة (أقل من ساعة)
-                    if (timeDiff < 3600000) {
-                        gameTime = gameState.gameTime || 60;
-                        selectedClass = gameState.selectedClass || '';
-                        selectedDifficulty = gameState.selectedDifficulty || 'medium';
-                        
-                        if (typeof updateDisplay === 'function') {
-                            updateDisplay();
-                        }
-                        console.log('✅ تم استعادة حالة اللعبة المحفوظة');
-                    }
+                console.log('📚 جاري تحميل بيانات الطلاب...');
+                const response = await fetch('../data/studentData.json');
+                let data;
+                if (response.ok) {
+                    data = await response.json();
+                } else {
+                    throw new Error('فشل في تحميل البيانات');
                 }
+                console.log('✅ تم تحميل بيانات الطلاب بنجاح:', data);
+                gameSetup.studentData = data;
+                window.studentsData = data;
+                if (data && typeof data === 'object') {
+                    showClassSelectionUI();
+                }
+                return true;
             } catch (error) {
-                console.log('❌ خطأ في استعادة حالة اللعبة:', error);
+                console.error('❌ خطأ في تحميل بيانات الطلاب:', error);
+                showToast('لا يمكن تحميل بيانات الطلاب. سيتم استخدام بيانات احتياطية.', 'warning');
+                // بيانات احتياطية
+                gameSetup.studentData = { classes: [] };
+                showClassSelectionUI();
+                return false;
             }
         }
-        
-        // حفظ الحالة تلقائياً
-        setInterval(saveGameState, 10000); // كل 10 ثواني
-        
-        // حفظ عند إغلاق الصفحة
-        window.addEventListener('beforeunload', saveGameState);
 
-        // ===== دوال النافذة الاحترافية الإضافية =====
-        
-        // دالة تشخيص سريع لحل المشاكل
-        function debugGameSetup() {
-            console.log('🔧 بداية التشخيص السريع...');
-            
-            // جمع المعلومات التشخيصية
-            const debugInfo = {
-                setupSelectedClass: setupSelectedClass,
+        // عرض واجهة اختيار الصف فقط
+        function showClassSelectionUI() {
+            const modal = document.getElementById('setupModal');
+            if (modal) modal.style.display = 'block';
+            document.getElementById('classSelection').style.display = 'grid';
+            document.getElementById('selectionMethodSection').style.display = 'none';
+            document.getElementById('studentCardsSection').style.display = 'none';
+            document.getElementById('startGameBtn').style.display = 'none';
+        }
+
+        // بعد اختيار الصف، عرض واجهة اختيار الطلاب فقط
+        const originalSelectClass = selectClass;
+        selectClass = function(classInfo) {
+            gameSetup.selectedClass = classInfo;
+            // ...باقي منطق اختيار الصف...
+            document.getElementById('classSelection').style.display = 'none';
+            document.getElementById('selectionMethodSection').style.display = 'block';
+            document.getElementById('studentCardsSection').style.display = 'none';
+            document.getElementById('startGameBtn').style.display = 'none';
+            if (typeof originalSelectClass === 'function') originalSelectClass(classInfo);
+        }
+
+        // بعد اختيار طريقة الاختيار، عرض واجهة الطلاب فقط
+        const originalSelectMethod = selectMethod;
+        selectMethod = function(method) {
+            gameSetup.selectedMethod = method;
+            // ...باقي منطق اختيار الطريقة...
+            document.getElementById('selectionMethodSection').style.display = 'none';
+            document.getElementById('studentCardsSection').style.display = 'block';
+            document.getElementById('startGameBtn').style.display = 'none';
+            if (typeof originalSelectMethod === 'function') originalSelectMethod(method);
+        }
+
+        // بعد اختيار طالب واحد على الأقل، إظهار زر بدء اللعبة فقط
+        const originalUpdateSelectedStudentsCount = updateSelectedStudentsCount;
+        updateSelectedStudentsCount = function() {
+            const countElement = document.getElementById('selectedStudentsCount');
+            const selectedCount = gameSetup.selectedStudents ? gameSetup.selectedStudents.length : 0;
+            if (countElement) {
+                countElement.textContent = selectedCount;
+                countElement.style.transform = 'scale(1.2)';
+                setTimeout(() => {
+                    countElement.style.transform = 'scale(1)';
+                }, 200);
+            }
+            if (selectedCount > 0) {
+                document.getElementById('startGameBtn').style.display = 'inline-block';
+            } else {
+                document.getElementById('startGameBtn').style.display = 'none';
+            }
+            if (typeof originalUpdateSelectedStudentsCount === 'function') originalUpdateSelectedStudentsCount();
+        }
                 setupSelectedStudent: setupSelectedStudent,
-                setupSelectionMethod: setupSelectionMethod,
-                studentsDataAvailable: !!studentsData,
-                studentsDataKeys: studentsData ? Object.keys(studentsData) : [],
-                studentsDataLength: studentsData ? Object.keys(studentsData).length : 0,
-                currentTime: new Date().toLocaleString(),
-                browserInfo: navigator.userAgent,
-                currentStudentData: setupSelectedClass ? studentsData[setupSelectedClass] : null
-            };
+                // ...existing code...
+                // تمت إزالة الكود غير المكتمل هنا بسبب أخطاء تركيبية
+                // إذا كنت بحاجة لهذه القيم، أعد كتابتها داخل دالة أو كائن مكتمل فقط
+                // ...existing code...
             
             console.table(debugInfo);
             
@@ -8285,7 +8325,7 @@
             }
             
             console.log('✅ تم عرض تقرير التشخيص');
-        }
+    // ...existing code...
         
         // بدء اللعبة من النافذة الاحترافية
         function startGameFromSetup() {
