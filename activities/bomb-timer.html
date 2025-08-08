@@ -19,240 +19,199 @@
   header .brand i{font-style:normal;font-size:20px}
   header .tabs{display:flex;gap:6px}
   .tab{padding:8px 12px;border:1px solid var(--border);background:#111735;border-radius:10px;cursor:pointer}
-  .tab.active{background:linear-gradient(180deg,#1c2241,#101635);border-color:#33407a}
-  
-  /* Layout */
-  .layout{display:grid;grid-template-columns:320px 1fr 340px;gap:12px;padding:12px}
-  .panel{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:12px;box-shadow:var(--shadow)}
-  h2,h3{margin:.2rem 0 .6rem}
-  .stack{display:grid;gap:10px}
-  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  .row > *{flex:1}
-  label{font-size:.9rem;color:var(--muted)}
-  input,select{width:100%;background:#121936;border:1px solid #2a3569;color:#eaf;padding:10px;border-radius:10px}
-  .switch{display:flex;align-items:center;gap:8px}
-  .switch input{width:18px;height:18px}
-  .btn{background:#1a2142;border:1px solid #2b3568;color:#eaf;padding:10px 12px;border-radius:12px;cursor:pointer;font-weight:700}
-  .btn:disabled{opacity:.5;cursor:not-allowed}
-  .btn.ok{background:linear-gradient(180deg,#1f9d54,#167846);border-color:#0f6135}
-  .btn.warn{background:linear-gradient(180deg,#d17d0d,#a55e08);border-color:#8a4e07}
-  .btn.danger{background:linear-gradient(180deg,#c41d1d,#921616);border-color:#7a1313}
-  .btn.ghost{background:#182044;border-color:#2b3568}
-
-  /* Sections */
-  .tile{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px}
-  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-  .card-item{background:#111735;border:1px solid #26305a;border-radius:12px;padding:10px;text-align:center;cursor:pointer;transition:.2s}
-  .card-item:hover{transform:translateY(-2px)}
-  .card-item.active{outline:2px solid var(--accent);}
-
-  /* Stage */
-  .stage{position:relative;display:grid;place-items:center;overflow:hidden;background:linear-gradient(180deg,#0f1222,#0b0d17);border:1px solid var(--border);border-radius:16px}
-  .bomb{width:170px;height:170px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #384077 0,#0e1328 60%);box-shadow:0 0 0 4px #0c1125 inset, 0 0 32px rgba(0,0,0,.56);position:relative;transition:transform .4s, filter .4s}
-  .bomb::before{content:""; position:absolute; top:-24px; left:50%; transform:translateX(-50%); width:28px; height:28px; background:#2a304f; border-radius:6px; border:2px solid #10142a}
-  .fuse{position:absolute; top:-30px; left:50%; transform:translateX(-50%); width:2px; height:50px; background:linear-gradient(#ffd700,#ff9800,#b45309)}
-  .spark{position:absolute; top:-36px; left:calc(50% + 6px); width:10px; height:10px; border-radius:50%; background:#ffd43b; filter:drop-shadow(0 0 6px #ffd43b); animation:spark 1s linear infinite}
-  @keyframes spark{0%{transform:translate(0,0) scale(1)}50%{transform:translate(6px,-8px) scale(1.2)}100%{transform:translate(12px,-16px) scale(0.8)}}
-  .bomb.yellow{filter:drop-shadow(0 0 18px rgba(247,201,72,.4))}
-  .bomb.red{filter:drop-shadow(0 0 24px rgba(239,68,68,.65));transform:scale(1.08)}
-  .shake-soft{animation:shake .4s linear infinite}
-  .shake-hard{animation:shake .2s linear infinite}
-  @keyframes shake{0%{transform:translate(0,0)}25%{transform:translate(1px,1px)}50%{transform:translate(-1px,0)}75%{transform:translate(1px,-1px)}100%{transform:translate(0,0)}}
-  .flash{position:absolute; inset:0; background:#fff; opacity:0; pointer-events:none}
-  .flash.show{animation:flash .5s ease}
-  @keyframes flash{0%{opacity:.9}100%{opacity:0}}
-  .countdown{position:absolute; bottom:22px; font-weight:900; font-size:46px; letter-spacing:1px; text-shadow:0 0 10px rgba(0,0,0,.5)}
-  .countdown.warn{color:var(--warn)}
-  .countdown.danger{color:var(--danger)}
-  .countdown.mega{position:absolute; inset:0; display:grid; place-items:center; font-size:96px; animation:blink .3s ease-in-out infinite}
-  @keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
-  .heat{position:absolute; top:16px; width:min(560px,85%); height:12px; border-radius:30px; border:1px solid #2f3866; background:#12152a; overflow:hidden}
-  .heat > i{display:block; height:100%; width:0%; background:linear-gradient(90deg,#22c55e,#f59e0b,#ef4444)}
-  .students{position:absolute; bottom:84px; display:flex; gap:10px; flex-wrap:wrap; justify-content:center; max-width:90%}
-  .chip{background:rgba(27,32,51,.7); border:1px solid #2a3159; padding:8px 10px; border-radius:999px; display:flex; align-items:center; gap:8px; backdrop-filter: blur(4px)}
-  .chip b{font-size:1rem}
-  .chip i{font-style:normal; font-size:1.1rem}
-
-  /* KPI & Log */
-  .kpi{display:grid; grid-template-columns:repeat(3,1fr); gap:6px; text-align:center}
-  .kpi .box{background:#131833;border:1px solid var(--border); padding:10px; border-radius:10px}
-  .log{max-height:240px; overflow:auto; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.85rem; background:#0f1329; border:1px dashed var(--border); padding:10px; border-radius:10px}
-
-  /* Results modal */
-  .results{position:absolute; inset:0; display:none; place-items:center; background:rgba(6,8,16,.72); backdrop-filter:blur(6px)}
-  .results.show{display:grid}
-  .card-result{background:#0f142b; border:1px solid var(--border); border-radius:16px; padding:18px; text-align:center; min-width:280px}
-  .badge{display:inline-block; padding:6px 10px; border-radius:999px; border:1px solid #2f3866; background:#151b36; margin:4px}
-
-  /* Two-in-one: teacher vs student panes */
-  .view-toggle{display:flex;gap:6px;margin-inline-start:auto}
-  .views{display:grid;grid-template-columns:1fr;gap:12px}
-  .student-view .teacher-only{display:none}
-  .teacher-view .student-only{display:none}
-
-  /* Accessibility */
-  @media (prefers-reduced-motion: reduce){
-    .shake-soft,.shake-hard,.spark,.countdown.mega{animation:none !important}
-  }
-</style>
-</head>
-<body>
-  <div class="app">
-    <header>
-      <div class="brand"><i>💣</i> <span>نشاط القنبلة — واجهة موحّدة</span></div>
-      <div class="view-toggle">
-        <button id="teacherTab" class="tab active" aria-pressed="true">واجهة المُعلّم</button>
-        <button id="studentTab" class="tab" aria-pressed="false">واجهة الطلاب</button>
+  <!DOCTYPE html>
+  <html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💣 القنبلة الذكية | الإصدار المتقدم</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+      body { background: radial-gradient(ellipse at 70% 0%, #23243a 0%, #0e0f14 100%); color: #f7c948; font-family: 'Cairo', system-ui, sans-serif; margin:0; min-height:100vh; }
+      .main-wrap { max-width: 900px; margin: 0 auto; padding: 0 8px; }
+      .topbar { display:flex; align-items:center; justify-content:space-between; padding:18px 0 8px 0; }
+      .brand { font-size:2.1rem; font-weight:900; letter-spacing:1px; display:flex; align-items:center; gap:10px; color:#ffd700; }
+      .settings-btn { background:none; border:none; color:#ffd700; font-size:1.5rem; cursor:pointer; transition:.2s; }
+      .settings-btn:hover { color:#22c55e; }
+      .notif { position:fixed; top:18px; left:50%; transform:translateX(-50%); background:#23243aee; color:#ffd700; border-radius:16px; box-shadow:0 4px 24px #0008; padding:1rem 2.2rem; font-size:1.2rem; z-index:2000; display:none; align-items:center; gap:0.7rem; animation:notifFadeIn 0.5s; }
+      @keyframes notifFadeIn { from { opacity: 0; top:0; } to { opacity: 1; top:18px; } }
+      .notif.active { display:flex; }
+      .bomb-area { display:flex; flex-direction:column; align-items:center; justify-content:center; margin:2.5rem 0 1.5rem 0; }
+      .bomb-visual { width:170px; height:170px; border-radius:50%; background:radial-gradient(circle at 30% 30%, #384077 0,#0e1328 60%); box-shadow:0 0 0 4px #0c1125 inset, 0 0 32px rgba(0,0,0,.56); position:relative; display:flex; align-items:center; justify-content:center; font-size:4.5rem; color:#ffd700; transition:transform .4s, filter .4s; }
+      .bomb-visual.yellow { filter:drop-shadow(0 0 18px rgba(247,201,72,.4)); }
+      .bomb-visual.red { filter:drop-shadow(0 0 24px rgba(239,68,68,.65)); transform:scale(1.08); }
+      .bomb-visual.shake { animation:shake .2s linear infinite; }
+      @keyframes shake { 0%{transform:translate(0,0)}25%{transform:translate(1px,1px)}50%{transform:translate(-1px,0)}75%{transform:translate(1px,-1px)}100%{transform:translate(0,0)} }
+      .fuse { position:absolute; top:-30px; left:50%; transform:translateX(-50%); width:2px; height:50px; background:linear-gradient(#ffd700,#ff9800,#b45309); }
+      .spark { position:absolute; top:-36px; left:calc(50% + 6px); width:10px; height:10px; border-radius:50%; background:#ffd43b; filter:drop-shadow(0 0 6px #ffd43b); animation:spark 1s linear infinite; }
+      @keyframes spark {0%{transform:translate(0,0) scale(1)}50%{transform:translate(6px,-8px) scale(1.2)}100%{transform:translate(12px,-16px) scale(0.8)}}
+      .countdown { position:absolute; bottom:22px; font-weight:900; font-size:46px; letter-spacing:1px; text-shadow:0 0 10px rgba(0,0,0,.5); color:#fff; }
+      .countdown.warn { color:#f59e0b; }
+      .countdown.danger { color:#ef4444; }
+      .countdown.mega { font-size:96px; animation:blink .3s ease-in-out infinite; }
+      @keyframes blink {0%,100%{opacity:1}50%{opacity:.35}}
+      .heat { width:min(560px,85%); height:12px; border-radius:30px; border:1px solid #2f3866; background:#12152a; overflow:hidden; margin:18px auto 0 auto; }
+      .heat > i { display:block; height:100%; width:0%; background:linear-gradient(90deg,#22c55e,#f59e0b,#ef4444); transition:width .5s; }
+      .students { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:18px 0 0 0; }
+      .chip { background:rgba(27,32,51,.7); border:1px solid #2a3159; padding:8px 10px; border-radius:999px; display:flex; align-items:center; gap:8px; backdrop-filter: blur(4px); font-size:1.1rem; }
+      .chip b { font-size:1rem; }
+      .chip i { font-style:normal; font-size:1.1rem; }
+      .confetti { position:fixed; left:0; top:0; width:100vw; height:100vh; pointer-events:none; z-index:9999; }
+      .flash { position:fixed; inset:0; background:#fff; opacity:0; pointer-events:none; z-index:9998; }
+      .flash.show { animation:flash .5s ease; }
+      @keyframes flash {0%{opacity:.9}100%{opacity:0}}
+      .notif-bar { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:#23243aee; color:#ffd700; border-radius:16px; box-shadow:0 4px 24px #0008; padding:1rem 2.2rem; font-size:1.2rem; z-index:2000; display:none; align-items:center; gap:0.7rem; }
+      .notif-bar.active { display:flex; }
+      .settings-modal { position:fixed; inset:0; background:rgba(20,20,40,0.85); display:none; align-items:center; justify-content:center; z-index:3000; }
+      .settings-modal.active { display:flex; }
+      .settings-content { background:#23243a; color:#ffd700; border-radius:18px; max-width:400px; width:95%; padding:2.5rem 2rem; box-shadow:0 8px 40px #0006; text-align:right; position:relative; }
+      .settings-content h2 { color:#ffd700; font-size:2rem; margin-bottom:1rem; }
+      .settings-content label { display:block; margin:1rem 0 0.5rem 0; font-weight:700; }
+      .settings-content input[type=range] { width:100%; }
+      .settings-close { position:absolute; left:1.2rem; top:1.2rem; background:none; border:none; font-size:1.5rem; color:#ef4444; cursor:pointer; }
+      @media (max-width:600px) { .main-wrap {padding:0 2px;} .bomb-visual{width:120px;height:120px;font-size:2.5rem;} }
+    </style>
+  </head>
+  <body>
+    <div class="main-wrap">
+      <div class="topbar">
+        <div class="brand"><span>💣</span> القنبلة الذكية</div>
+        <button class="settings-btn" id="settingsBtn" title="الإعدادات"><i class="fa fa-gear"></i></button>
       </div>
-    </header>
-
-    <div class="layout views teacher-view" id="viewsRoot">
-      <!-- لوحة إعدادات المعلم (يسار) -->
-      <aside class="panel teacher-only" aria-label="لوحة إعدادات المعلم">
-        <h2>إعدادات الجلسة</h2>
-        <div class="stack">
-          <div>
-            <label>المرحلة</label>
-            <select id="phase">
-              <option value="selectClass">اختيار الصف</option>
-              <option value="selectStudents">اختيار الطلاب</option>
-              <option value="stage">مشهد القنبلة</option>
-            </select>
-          </div>
-          <div>
-            <label>مستوى الصعوبة</label>
-            <select id="difficulty">
-              <option value="Easy">سهل (60s)</option>
-              <option value="Medium" selected>متوسط (35s)</option>
-              <option value="Hard">صعب (20s)</option>
-              <option value="Custom">مخصص</option>
-            </select>
-          </div>
-          <div class="row">
-            <div>
-              <label>المدة الكُليّة (ث)</label>
-              <input id="duration" type="number" min="5" max="300" value="35" />
-            </div>
-            <div>
-              <label>وقت كل لاعب (ث)</label>
-              <input id="perPlayer" type="number" min="5" max="120" value="15" />
-            </div>
-          </div>
-          <div class="row">
-            <div>
-              <label>عدد الطلاب/الجولة</label>
-              <input id="perRound" type="number" min="1" max="5" value="1" />
-            </div>
-            <div class="switch"><input id="soundOn" type="checkbox" checked /><label for="soundOn">الأصوات</label></div>
-          </div>
-          <div class="row">
-            <div class="switch"><input id="allowSurprises" type="checkbox" checked /><label for="allowSurprises">المفاجآت</label></div>
-            <div class="switch"><input id="fairPick" type="checkbox" /><label for="fairPick">اختيار عادل</label></div>
-          </div>
-          <div class="row">
-            <button id="startBtn" class="btn ok" disabled>بدء التحدي ⏱️</button>
-            <button id="pauseBtn" class="btn ghost" disabled>إيقاف مؤقت ⏸</button>
-          </div>
-          <div class="row">
-            <button id="add5Btn" class="btn warn" disabled>+5 ثوانٍ ⏩</button>
-            <button id="successBtn" class="btn ok" disabled>إعلان نجاح ✅</button>
-            <button id="failBtn" class="btn danger" disabled>إنهاء/فشل 💥</button>
-          </div>
-          <div class="tile">
-            <h3>إحصائيات الجلسة</h3>
-            <div class="kpi">
-              <div class="box"><div>الجولات</div><b id="kRounds">0</b></div>
-              <div class="box"><div>نجاحات</div><b id="kWins">0</b></div>
-              <div class="box"><div>فشل</div><b id="kFails">0</b></div>
-            </div>
-          </div>
-          <div class="tile">
-            <h3>سجل الأحداث</h3>
-            <div id="log" class="log" aria-live="polite"></div>
-          </div>
+      <div class="notif" id="notifBar"><span id="notifMsg">تم تفعيل النظام!</span></div>
+      <div class="bomb-area">
+        <div class="bomb-visual" id="bombVisual"><div class="fuse"></div><div class="spark"></div>💣</div>
+        <div class="countdown" id="countdown">—</div>
+        <div class="heat"><i id="heatFill"></i></div>
+        <div class="students" id="selectedChips"></div>
+      </div>
+      <div class="confetti" id="confetti"></div>
+      <div class="flash" id="flash"></div>
+      <div class="notif-bar" id="notifBar2"><span id="notifMsg2"></span></div>
+      <div class="settings-modal" id="settingsModal">
+        <div class="settings-content">
+          <button class="settings-close" id="closeSettings">&times;</button>
+          <h2>إعدادات الصوت</h2>
+          <label>مستوى الصوت</label>
+          <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="0.7">
+          <label><input type="checkbox" id="soundToggle" checked> تفعيل الأصوات</label>
         </div>
-      </aside>
-
-      <!-- المسرح (وسط) -->
-      <main class="stage panel" id="stage" aria-label="منطقة اللعب">
-        <!-- اختيار الصف -->
-        <section id="sectionClass" class="stack">
-          <h2>اختر الصف</h2>
-          <div id="classGrid" class="grid" role="list"></div>
-        </section>
-        <!-- اختيار الطلاب -->
-        <section id="sectionStudents" class="stack" hidden>
-          <h2>اختر الطلاب</h2>
-          <div id="studentsGrid" class="grid" role="list"></div>
-          <div style="text-align:center"><small>يمكن اختيار حتى <span id="limitSpan">1</span> طالب/طلاب في هذه الجولة.</small></div>
-        </section>
-        <!-- مشهد القنبلة -->
-        <section id="sectionStage" class="stack" hidden>
-          <div class="heat"><i id="heatFill"></i></div>
-          <div class="students" id="selectedChips"></div>
-          <div class="bomb" id="bomb">
-            <div class="fuse"></div>
-            <div class="spark" id="spark"></div>
-            <div class="countdown" id="countdown">—</div>
-          </div>
-          <div class="flash" id="flash"></div>
-          <div class="results" id="results">
-            <div class="card-result">
-              <div id="resultIcon" style="font-size:42px">🎉</div>
-              <h2 id="resultTitle">ممتاز!</h2>
-              <p id="resultText">تمت المهمة بنجاح.</p>
-              <div id="resultBadges"></div>
-              <div style="margin-top:10px"><button class="btn ghost" id="closeResults">إغلاق</button></div>
-            </div>
-          </div>
-          <div class="confetti" id="confetti"></div>
-        </section>
-      </main>
-
-      <!-- لوحة الطلاب (يمين) -->
-      <aside class="panel" aria-label="لوحة الطلاب">
-        <h2>واجهة الطلاب</h2>
-        <div id="studentView" class="stack">
-          <div class="tile student-only"><b>بانتظار بدء التحدي…</b></div>
-          <div class="tile">
-            <h3>المشاركون</h3>
-            <div id="turnList" class="stack"></div>
-          </div>
-          <div class="tile">
-            <h3>حالة الدور الحالي</h3>
-            <div id="turnStatus" style="font-size:1rem;color:var(--muted)">—</div>
-          </div>
-        </div>
-      </aside>
+      </div>
     </div>
-  </div>
-
-<script>
-/* ===================== جلب البيانات من JSON ===================== */
-const DATA_URL = 'data/studentData.json';
-let DATA = { classes: [], students: {} };
-
-async function loadData(){
-  try{
-    const res = await fetch(DATA_URL, { cache: 'no-store' });
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    const json = await res.json();
-    // هيكلة مرنة: نقبل شكلين
-    // 1) { classes:[{id,name,icon}], students:{ [classId]: [{id,name,avatar}] } }
-    // 2) { classes:[{id,name,icon, students:[...]}] }
-    if(Array.isArray(json.classes)){
-      DATA.classes = json.classes.map(c=>({ id: c.id || c.classId || String(c.name||'C'), name: c.name || ('صف '+(c.id||'')), icon: c.icon || '🏫', students: c.students }));
-      if(json.students && typeof json.students==='object'){
-        DATA.students = json.students;
-      } else {
-        // ابني القاموس من داخل الكائنات إن وُجد students على مستوى الصف
-        DATA.students = {};
-        DATA.classes.forEach(c=>{ if(Array.isArray(c.students)) DATA.students[c.id] = c.students; });
+    <script>
+      // نظام صوتي متقدم
+      const sounds = {
+        tick: new Audio('../assets/media/sounds/countdown-beep.mp3'),
+        tickFast: new Audio('../assets/media/sounds/Notification.mp3'),
+        alarm: new Audio('../assets/media/sounds/long-beep.mp3'),
+        win: new Audio('../assets/media/sounds/win.mp3'),
+        fail: new Audio('../assets/media/sounds/wrong_answer.mp3'),
+        select: new Audio('../assets/media/sounds/select.mp3'),
+        confetti: new Audio('../assets/media/sounds/kingdom-sounds/cosmic-explosion.mp3'),
+        bonus: new Audio('../assets/media/sounds/kingdom-sounds/bonus-collect.mp3'),
+        click: new Audio('../assets/media/sounds/Click.mp3')
+      };
+      let soundEnabled = true;
+      let volume = 0.7;
+      function playSound(name, force=false) {
+        if (!soundEnabled && !force) return;
+        if (sounds[name]) { sounds[name].volume = volume; sounds[name].currentTime = 0; sounds[name].play().catch(()=>{}); }
       }
-    } else {
-      throw new Error('هيكل غير متوقع لملف البيانات');
-    }
-    buildClassGrid();
+      // إعدادات الصوت
+      document.getElementById('settingsBtn').onclick = ()=>{
+        document.getElementById('settingsModal').classList.add('active');
+      };
+      document.getElementById('closeSettings').onclick = ()=>{
+        document.getElementById('settingsModal').classList.remove('active');
+      };
+      document.getElementById('volumeSlider').oninput = e=>{
+        volume = parseFloat(e.target.value);
+        Object.values(sounds).forEach(s=>s.volume=volume);
+      };
+      document.getElementById('soundToggle').onchange = e=>{
+        soundEnabled = e.target.checked;
+      };
+      // إشعارات عصرية
+      function showNotif(msg, type='info', sec=2) {
+        const bar = document.getElementById('notifBar');
+        document.getElementById('notifMsg').textContent = msg;
+        bar.classList.add('active');
+        setTimeout(()=>bar.classList.remove('active'), sec*1000);
+        playSound('click',true);
+      }
+      function showNotif2(msg, sec=2) {
+        const bar = document.getElementById('notifBar2');
+        document.getElementById('notifMsg2').textContent = msg;
+        bar.classList.add('active');
+        setTimeout(()=>bar.classList.remove('active'), sec*1000);
+      }
+      // confetti
+      function confettiBlast() {
+        const box = document.getElementById('confetti');
+        box.innerHTML = '';
+        for(let i=0;i<120;i++){
+          const p=document.createElement('i');
+          p.style.cssText=`position:absolute;top:-10px;width:8px;height:12px;background:hsla(${Math.floor(Math.random()*360)},90%,60%,.95);transform:rotate(${Math.floor(Math.random()*360)}deg);animation:fall ${2+Math.random()*1.8}s linear forwards;left:${Math.random()*100}%`;
+          box.appendChild(p);
+        }
+        setTimeout(()=>box.innerHTML='',3000);
+        playSound('confetti');
+      }
+      // فلاش
+      function doFlash() {
+        const flash = document.getElementById('flash');
+        flash.classList.remove('show'); void flash.offsetWidth; flash.classList.add('show');
+      }
+      // منطق اللعبة الذكي
+      let timer = null, timeLeft = 35, totalTime = 35, state = 'IDLE';
+      function startGame() {
+        state = 'RUNNING';
+        timeLeft = totalTime;
+        updateBombVisual();
+        timer = setInterval(()=>{
+          timeLeft--;
+          updateBombVisual();
+          if (timeLeft === 10) { showNotif('⚠️ آخر 10 ثوانٍ!','warn',2); playSound('tickFast'); document.getElementById('bombVisual').classList.add('yellow'); }
+          if (timeLeft === 3) { showNotif('🚨 اقترب الانفجار!','danger',2); playSound('alarm'); document.getElementById('bombVisual').classList.add('red','shake'); document.getElementById('countdown').classList.add('mega','danger'); doFlash(); }
+          if (timeLeft <= 0) { clearInterval(timer); endGame(false); }
+          else if (timeLeft < 10) playSound('tickFast');
+          else playSound('tick');
+        },1000);
+      }
+      function updateBombVisual() {
+        document.getElementById('countdown').textContent = timeLeft > 0 ? timeLeft : '—';
+        const fill = document.getElementById('heatFill');
+        fill.style.width = ((1-(timeLeft/totalTime))*100)+'%';
+      }
+      function endGame(success) {
+        state = success ? 'SUCCESS' : 'FAIL';
+        if (success) {
+          showNotif2('🎉 نجاح! أحسنت!');
+          confettiBlast();
+          playSound('win');
+        } else {
+          showNotif2('💥 انفجرت القنبلة!');
+          doFlash();
+          playSound('fail');
+        }
+        document.getElementById('bombVisual').classList.remove('yellow','red','shake');
+        document.getElementById('countdown').classList.remove('mega','danger');
+      }
+      // بدء تلقائي للتجربة
+      showNotif('جاهز؟ اضغط أي مكان للبدء!','info',3);
+      document.body.onclick = function(){ if(state==='IDLE'){ startGame(); showNotif('🚀 بدأ التحدي!','success',2); } };
+      // اختصارات متقدمة
+      window.addEventListener('keydown',e=>{
+        if(state==='RUNNING'){
+          if(e.key===' '){ clearInterval(timer); showNotif('⏸️ تم الإيقاف المؤقت','info',2); state='PAUSED'; }
+          if(e.key==='Enter'){ clearInterval(timer); endGame(true); }
+          if(e.key==='Escape'){ clearInterval(timer); endGame(false); }
+          if(e.key==='ArrowUp'){ timeLeft+=5; showNotif('⏫ +5 ثوانٍ!','success',1); updateBombVisual(); playSound('bonus'); }
+        } else if(state==='PAUSED' && e.key===' '){ startGame(); showNotif('▶️ استئناف','info',1); }
+      });
+    </script>
+  </body>
+  </html>
   }catch(err){
     console.error('فشل جلب البيانات', err);
     const holder = document.getElementById('classGrid');
