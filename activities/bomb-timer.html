@@ -8172,17 +8172,44 @@
                     throw new Error('فشل في تحميل البيانات');
                 }
                 console.log('✅ تم تحميل بيانات الطلاب بنجاح:', data);
-                gameSetup.studentData = data;
+
+                // تحويل البيانات إلى مصفوفة صفوف داخل gameSetup.studentData.classes
+                let classes = [];
+                if (Array.isArray(data.classes)) {
+                    // إذا كان الملف يحتوي على مصفوفة classes مباشرة
+                    classes = data.classes;
+                } else if (Array.isArray(data)) {
+                    // إذا كان الملف عبارة عن مصفوفة صفوف
+                    classes = data;
+                } else if (typeof data === 'object' && data !== null) {
+                    // إذا كان الملف عبارة عن كائن: { "1A": [...], "2B": [...] }
+                    classes = Object.keys(data).map(className => ({
+                        id: className,
+                        name: className,
+                        students: data[className].map((student, idx) =>
+                            typeof student === 'object' ? student : { id: `${className}_${idx+1}`, name: student }
+                        )
+                    }));
+                }
+                gameSetup.studentData = { classes };
                 window.studentsData = data;
-                if (data && typeof data === 'object') {
+
+                if (classes.length > 0) {
                     showClassSelectionUI();
+                } else {
+                    showToast('لا توجد بيانات صفوف متاحة في الملف.', 'error');
                 }
                 return true;
             } catch (error) {
                 console.error('❌ خطأ في تحميل بيانات الطلاب:', error);
                 showToast('لا يمكن تحميل بيانات الطلاب. سيتم استخدام بيانات احتياطية.', 'warning');
-                // بيانات احتياطية
-                gameSetup.studentData = { classes: [] };
+                // بيانات احتياطية افتراضية
+                gameSetup.studentData = {
+                    classes: [
+                        { id: '1A', name: 'الصف 1A', students: [ {id:'1A_1', name:'طالب 1'}, {id:'1A_2', name:'طالب 2'} ] },
+                        { id: '2B', name: 'الصف 2B', students: [ {id:'2B_1', name:'طالب 3'}, {id:'2B_2', name:'طالب 4'} ] }
+                    ]
+                };
                 showClassSelectionUI();
                 return false;
             }
