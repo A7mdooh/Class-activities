@@ -1,403 +1,245 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <!-- أيقونات وأصوات إضافية -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-  <audio id="notifSound" src="../assets/media/sounds/Notification.mp3"></audio>
-  <audio id="progressSound" src="../assets/media/sounds/win.mp3"></audio>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>💣 القنبلة الذكية | تحدي الصف التفاعلي</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>💣 القنبلة الذكية | Teacher & Student</title>
+  <link rel="stylesheet" href="styles.css">
   <style>
-    /* مؤثرات القنبلة */
-    .bomb {
-      transition: all 0.5s cubic-bezier(.4,0,.2,1), box-shadow 0.3s, background 0.3s;
-    }
-    .bomb.bomb-small {
-      width: 90px; height: 90px; font-size: 2.2rem;
-      background: radial-gradient(circle at 30% 30%, #444 0%, #222 60%, #111 100%);
-      border-color: #ffd700;
-    }
-    .bomb.bomb-mid {
-      width: 120px; height: 120px; font-size: 3.5rem;
-      background: radial-gradient(circle at 30% 30%, #ffd700 0%, #ffec80 60%, #ffb300 100%);
-      border-color: #ffd700;
-      box-shadow: 0 0 60px #ffd70099, 0 0 80px #ffd70044;
-    }
-    .bomb.bomb-large {
-      width: 150px; height: 150px; font-size: 4.5rem;
-      background: radial-gradient(circle at 30% 30%, #ff4757 0%, #ffb300 60%, #ffd700 100%);
-      border-color: #ff4757;
-      box-shadow: 0 0 80px #ff4757cc, 0 0 120px #ffd70088;
-    }
-    .bomb.bomb-shake {
-      animation: bombShake 0.2s infinite;
-    }
-    @keyframes bombShake {
-      0% { transform: translate(0,0) rotate(-2deg); }
-      25% { transform: translate(2px,2px) rotate(2deg); }
-      50% { transform: translate(-2px,-2px) rotate(-2deg); }
-      75% { transform: translate(2px,-2px) rotate(2deg); }
-      100% { transform: translate(0,0) rotate(-2deg); }
-    }
-    /* مؤقت ديناميكي */
-    .timer.timer-red { color: #ff4757 !important; animation: timerPulseRed 0.7s infinite alternate; }
-    @keyframes timerPulseRed { 0%{color:#ff4757;} 100%{color:#fff;} }
-    .timer.timer-shake { animation: timerShake 0.2s infinite, timerPulseRed 0.7s infinite alternate; }
-    @keyframes timerShake {
-      0% { transform: translateX(0); }
-      25% { transform: translateX(-4px); }
-      50% { transform: translateX(4px); }
-      75% { transform: translateX(-4px); }
-      100% { transform: translateX(0); }
-    }
-    .timer.timer-big {
-      font-size: 4rem !important;
-      color: #fff;
-      text-shadow: 0 0 24px #ff4757, 0 0 40px #fff;
-      animation: timerFlash 0.4s alternate infinite, timerShake 0.2s infinite;
-      position: fixed; left: 50%; top: 50%; transform: translate(-50%,-50%); z-index: 4000;
-      background: rgba(0,0,0,0.7); padding: 1.2rem 2.5rem; border-radius: 30px;
-      box-shadow: 0 0 60px #fff8;
-    }
-    @keyframes timerFlash { 0%{opacity:1;} 100%{opacity:0.5;} }
-    /* فلاش الشاشة */
-    .screen-flash {
-      position: fixed; left:0; top:0; width:100vw; height:100vh; background:#fff; opacity:0.85; z-index:5000;
-      animation: flashFade 0.5s forwards;
-      pointer-events: none;
-    }
-    @keyframes flashFade { from{opacity:0.85;} to{opacity:0;} }
-    /* شرارات ودخان */
-    .explosion-effect {
-      position: fixed; left:50%; top:50%; transform:translate(-50%,-50%); z-index:6000;
-      pointer-events:none;
-      width:180px; height:180px;
-      background: url('../assets/media/images/firework.gif') center/contain no-repeat;
-      opacity:0.95;
-      animation: explosionFade 1.2s forwards;
-    }
-    @keyframes explosionFade { from{opacity:0.95;} to{opacity:0;} }
-    /* شريط الأدوات العلوي */
-    .top-toolbar {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      height: 60px;
-      background: linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(40,40,40,0.7) 100%);
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 2rem; z-index: 1000;
-      box-shadow: 0 4px 24px #0008;
-      border-bottom: 2px solid #ffd70044;
-      animation: toolbarSlideDown 0.8s cubic-bezier(.4,0,.2,1);
-    }
-    @keyframes toolbarSlideDown {
-      from { opacity: 0; transform: translateY(-100%); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .toolbar-icons { display: flex; gap: 1.2rem; align-items: center; }
-    .toolbar-icon {
-      font-size: 1.7rem; color: #ffd700; background: none; border: none; cursor: pointer;
-      transition: color 0.2s, transform 0.2s;
-      position: relative;
-    }
-    .toolbar-icon:hover { color: #00e676; transform: scale(1.15); }
-    .toolbar-icon:active { color: #ff4757; }
-    .toolbar-icon .fa { pointer-events: none; }
-    .toolbar-icon-badge {
-      position: absolute; top: -8px; right: -8px; background: #ff4757; color: #fff;
-      border-radius: 50%; font-size: 0.7rem; padding: 2px 6px; font-weight: bold;
-      box-shadow: 0 2px 8px #0006;
-    }
-    /* إشعارات */
-    .notif-bar {
-      position: fixed; top: 70px; right: 2rem; min-width: 220px; max-width: 350px;
-      background: #232526ee; color: #ffd700; border-radius: 12px; box-shadow: 0 4px 24px #0008;
-      padding: 1rem 1.5rem; font-size: 1.1rem; z-index: 2000;
-      display: none; align-items: center; gap: 0.7rem;
-      animation: notifFadeIn 0.5s;
-    }
-    @keyframes notifFadeIn { from { opacity: 0; right: 0; } to { opacity: 1; right: 2rem; } }
-    .notif-bar.active { display: flex; }
-    /* شريط التقدم */
-    .progress-bar-wrap {
-      width: 100%; max-width: 400px; margin: 1.5rem auto 0 auto; background: #222b; border-radius: 20px;
-      box-shadow: 0 2px 12px #ffd70022; overflow: hidden; height: 22px; position: relative;
-    }
-    .progress-bar {
-      height: 100%; background: linear-gradient(90deg, #ffd700, #00e676, #ff4757);
-      width: 0%; border-radius: 20px; transition: width 0.7s cubic-bezier(.4,0,.2,1);
-      box-shadow: 0 0 16px #ffd70088;
-    }
-    .progress-label {
-      position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
-      color: #232526; font-weight: bold; font-size: 1rem; letter-spacing: 1px;
-      text-shadow: 0 2px 8px #fff8;
-    }
-    /* نافذة دليل المعلم */
-    .guide-modal {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #181a1bcc;
-      display: flex; align-items: center; justify-content: center; z-index: 3000; display: none;
-    }
-    .guide-modal.active { display: flex; }
-    .guide-content {
-      background: #fff; color: #232526; border-radius: 18px; max-width: 500px; width: 95%;
-      padding: 2.5rem 2rem; box-shadow: 0 8px 40px #0006; text-align: right; position: relative;
-      font-family: 'Cairo', sans-serif;
-    }
-    .guide-content h2 { color: #ffd700; font-size: 2rem; margin-bottom: 1rem; }
-    .guide-content ul { margin: 1rem 0 0 0; padding: 0 1.2rem; }
-    .guide-content li { margin-bottom: 0.7rem; font-size: 1.1rem; }
-    .guide-close {
-      position: absolute; left: 1.2rem; top: 1.2rem; background: none; border: none; font-size: 1.5rem; color: #ff4757; cursor: pointer;
-    }
-    :root {
-      --main-gradient: linear-gradient(135deg, #232526 0%, #414345 100%);
-      --accent: #ffd700;
-      --danger: #ff4757;
-      --success: #00e676;
-      --bg: #181a1b;
-      --card-bg: rgba(255,255,255,0.07);
-      --card-hover: rgba(255,255,255,0.13);
-      --radius: 18px;
-      --shadow: 0 8px 32px rgba(0,0,0,0.25);
-      --transition: 0.25s cubic-bezier(.4,0,.2,1);
-    }
-    body {
-      font-family: 'Cairo', sans-serif;
-      background: var(--main-gradient);
-      min-height: 100vh;
-      margin: 0;
-      color: #fff;
-      overflow-x: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 0;
-    }
-    .creative-header {
-      width: 100%;
-      background: var(--bg);
-      box-shadow: var(--shadow);
-      padding: 2rem 0 1rem 0;
-      text-align: center;
-      border-radius: 0 0 var(--radius) var(--radius);
-      position: relative;
-      z-index: 2;
-    }
-    .creative-header h1 {
-      font-size: 2.5rem;
-      font-weight: 900;
-      background: linear-gradient(90deg, #ffd700, #00e676, #ff4757, #ffd700);
-      background-size: 200% 200%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: gradientMove 4s ease-in-out infinite;
-      margin: 0;
-    }
-    @keyframes gradientMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    .creative-header p {
-      color: var(--accent);
-      font-size: 1.2rem;
-      margin: 0.5rem 0 0 0;
-      letter-spacing: 1px;
-    }
-    .creative-container {
-      width: 100%;
-      max-width: 900px;
-      margin: 2rem auto;
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 2rem 1.5rem 2.5rem 1.5rem;
-      position: relative;
-      overflow: hidden;
-      animation: fadeIn 1s cubic-bezier(.4,0,.2,1);
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(40px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .step-title {
-      font-size: 1.3rem;
-      font-weight: 700;
-      margin-bottom: 1.2rem;
-      color: var(--accent);
-      text-align: center;
-      letter-spacing: 1px;
-    }
-    .class-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 1.2rem;
-      margin-bottom: 2rem;
-    }
-    .class-card {
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-      padding: 1.2rem 0.5rem;
-      text-align: center;
-      cursor: pointer;
-      border: 2px solid transparent;
-      transition: var(--transition);
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #fff;
-      position: relative;
-      overflow: hidden;
-    }
-    .class-card.selected, .class-card:hover {
-      border-color: var(--accent);
-      background: var(--card-hover);
-      box-shadow: 0 4px 16px #ffd70044;
-      color: var(--accent);
-      transform: scale(1.04);
-    }
-    .students-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-    .student-card {
-      background: var(--card-bg);
-      border-radius: 12px;
-      padding: 0.8rem 0.2rem;
-      text-align: center;
-      cursor: pointer;
-      border: 2px solid transparent;
-      transition: var(--transition);
-      font-size: 1rem;
-      font-weight: 600;
-      color: #fff;
-      position: relative;
-      overflow: hidden;
-      user-select: none;
-    }
-    .student-card.selected, .student-card:hover {
-      border-color: var(--success);
-      background: var(--card-hover);
-      color: var(--success);
-      transform: scale(1.05);
-      box-shadow: 0 2px 12px #00e67633;
-    }
-    .bomb-area {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      margin: 2rem 0 1rem 0;
-    }
-    .bomb {
-      width: 120px;
-      height: 120px;
-      background: radial-gradient(circle at 30% 30%, #555 0%, #222 50%, #111 100%);
-      border-radius: 50%;
-      border: 6px solid #ffd700;
-      box-shadow: 0 0 40px #ffd70044, 0 0 60px #ffd70022;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 3.5rem;
-      color: #ffd700;
-      animation: bombPulse 1.5s infinite alternate;
-    }
-    @keyframes bombPulse {
-      0% { box-shadow: 0 0 40px #ffd70044, 0 0 60px #ffd70022; }
-      100% { box-shadow: 0 0 80px #ffd70099, 0 0 120px #ffd70044; }
-    }
-    .timer {
-      font-size: 2.5rem;
-      font-family: 'Courier New', monospace;
-      color: var(--danger);
-      margin-top: 1.2rem;
-      font-weight: 900;
-      letter-spacing: 2px;
-      text-shadow: 0 0 10px #ff4757cc;
-      animation: timerPulse 1s infinite alternate;
-    }
-    @keyframes timerPulse {
-      0% { color: var(--danger); }
-      100% { color: #fff; }
-    }
-    .start-btn {
-      background: var(--accent);
-      color: #232526;
-      border: none;
-      border-radius: 30px;
-      padding: 1rem 2.5rem;
-      font-size: 1.3rem;
-      font-weight: 900;
-      cursor: pointer;
-      margin: 1.5rem auto 0 auto;
-      display: block;
-      box-shadow: 0 4px 16px #ffd70044;
-      transition: var(--transition);
-      outline: none;
-      position: relative;
-      overflow: hidden;
-    }
-    .start-btn:hover {
-      background: #fff;
-      color: var(--danger);
-      box-shadow: 0 8px 32px #ffd70066;
-      transform: scale(1.05);
-    }
-    .success-msg {
-      color: var(--success);
-      font-size: 1.2rem;
-      text-align: center;
-      margin-top: 1.5rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      animation: fadeIn 1s;
-    }
-    .explosion {
-      animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-      color: var(--danger);
-      font-size: 2.2rem;
-      text-align: center;
-      margin-top: 1.5rem;
-      font-weight: 900;
-      letter-spacing: 2px;
-    }
-    @keyframes shake {
-      10%, 90% { transform: translateX(-2px); }
-      20%, 80% { transform: translateX(4px); }
-      30%, 50%, 70% { transform: translateX(-8px); }
-      40%, 60% { transform: translateX(8px); }
-      100% { transform: translateX(0); }
-    }
-    /* أزرار اختيار المشاركين الاحترافية */
-    .bomb-btn {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      font-size: 1.05rem; font-weight: 800; border: none; outline: none;
-      border-radius: 30px; padding: 0.7rem 1.7rem; margin: 0 0.3rem 0.7rem 0;
-      cursor: pointer; box-shadow: 0 2px 12px #0002;
-      transition: background 0.2s, color 0.2s, transform 0.15s;
-      letter-spacing: 1px;
-      background: #232526; color: #ffd700;
-      position: relative;
-    }
-    .bomb-btn i { font-size: 1.2rem; }
-    .bomb-btn-green { background: linear-gradient(90deg,#00e676 60%,#ffd700 100%); color: #232526; }
-    .bomb-btn-red { background: linear-gradient(90deg,#ff4757 60%,#ffd700 100%); color: #fff; }
-    .bomb-btn-gold { background: linear-gradient(90deg,#ffd700 60%,#ff4757 100%); color: #232526; }
-    .bomb-btn-blue { background: linear-gradient(90deg,#00cfff 60%,#ffd700 100%); color: #232526; }
-    .bomb-btn:hover { transform: scale(1.07); box-shadow: 0 4px 18px #ffd70044; }
-    .bomb-btn:active { filter: brightness(0.95); }
+    .role-switcher { position: fixed; top: 10px; left: 10px; z-index: 9999; }
+    .role-switcher button { margin-left: 0.5rem; font-size: 1rem; padding: 0.4rem 1.2rem; border-radius: 18px; border: none; background: #ffd700; color: #232526; font-weight: bold; cursor: pointer; }
+    .role-switcher button.active { background: #00e676; color: #232526; }
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
+  <!-- تبديل الدور -->
+  <div class="role-switcher">
+    <span>الوضع:</span>
+    <button id="teacherModeBtn" class="active">المعلم</button>
+    <button id="studentModeBtn">الطالب</button>
+  </div>
+  <div id="teacherView">
+    <div class="container">
+      <section id="classSelectSection">
+        <h2>اختر الصف</h2>
+        <div id="classGrid" class="class-grid"></div>
+      </section>
+      <section id="studentSelectSection" style="display:none;">
+        <h2>اختر الطلاب المشاركين</h2>
+        <div id="studentsGrid" class="students-grid"></div>
+        <button id="startChallengeBtn" class="main-btn" disabled>بدء التحدي</button>
+      </section>
+      <section id="bombStage" style="display:none;">
+        <div class="bomb-area">
+          <div class="bomb" id="bombVisual">💣</div>
+          <div class="timer" id="globalTimer">00:00</div>
+          <div id="heatMeter" class="heat-meter"></div>
+          <div id="turnInfo"></div>
+          <div id="teacherPanel" class="teacher-panel">
+            <button id="pauseBtn" aria-label="إيقاف مؤقت">⏸</button>
+            <button id="resumeBtn" aria-label="استئناف" style="display:none;">▶️</button>
+            <button id="addTimeBtn" aria-label="+5 ثوانٍ">+5s</button>
+            <button id="successBtn" aria-label="نجاح">✔️</button>
+            <button id="failBtn" aria-label="فشل">💥</button>
+          </div>
+          <div id="eventLog" class="event-log"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+  <div id="studentView" class="hidden">
+    <div class="container">
+      <section id="waitingSection">
+        <div class="bomb bomb-sleep">💣💤</div>
+        <div class="waiting-msg">بانتظار بدء التحدي من المعلم...</div>
+      </section>
+      <section id="studentBombStage" style="display:none;">
+        <div class="bomb-area">
+          <div class="bomb" id="studentBombVisual">💣</div>
+          <div class="timer" id="studentGlobalTimer">00:00</div>
+          <div id="turnList" class="turn-list"></div>
+          <div id="studentTurnInfo"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+  <script>
+    // --- إعداد تبديل الدور ---
+    const teacherView = document.getElementById('teacherView');
+    const studentView = document.getElementById('studentView');
+    document.getElementById('teacherModeBtn').onclick = () => {
+      teacherView.classList.remove('hidden');
+      studentView.classList.add('hidden');
+      document.getElementById('teacherModeBtn').classList.add('active');
+      document.getElementById('studentModeBtn').classList.remove('active');
+    };
+    document.getElementById('studentModeBtn').onclick = () => {
+      teacherView.classList.add('hidden');
+      studentView.classList.remove('hidden');
+      document.getElementById('teacherModeBtn').classList.remove('active');
+      document.getElementById('studentModeBtn').classList.add('active');
+    };
+    // --- بيانات تجريبية للصفوف والطلاب ---
+    const demoData = {
+      'الصف الأول': ['أحمد','سارة','محمد','ليان','سلمان','جود'],
+      'الصف الثاني': ['خالد','ريم','يوسف','هند','سيف','مها'],
+      'الصف الثالث': ['سعيد','نورة','راشد','جمانة','طارق','شهد']
+    };
+  let selectedClass = null;
+  let selectedStudents = [];
+    let gameState = 'IDLE';
+    let turnIndex = 0;
+    let roundConfig = { totalSeconds: 35, perPlayerSeconds: 8 };
+    let globalTimer = null, turnTimer = null;
+    // --- واجهة المعلم ---
+    function buildClassGrid() {
+      const grid = document.getElementById('classGrid');
+      grid.innerHTML = '';
+      Object.keys(demoData).forEach(className => {
+        const card = document.createElement('div');
+        card.className = 'class-card';
+        card.textContent = className;
+        card.onclick = () => selectClass(className, card);
+        grid.appendChild(card);
+      });
+    }
+    function selectClass(className, card) {
+      selectedClass = className;
+      selectedStudents = [];
+      document.querySelectorAll('.class-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      document.getElementById('classSelectSection').style.display = 'none';
+      document.getElementById('studentSelectSection').style.display = '';
+      buildStudentsGrid();
+    }
+    function buildStudentsGrid() {
+      const grid = document.getElementById('studentsGrid');
+      grid.innerHTML = '';
+      if (!selectedClass) return;
+      demoData[selectedClass].forEach(name => {
+        const card = document.createElement('div');
+        card.className = 'student-card';
+        card.textContent = name;
+        card.onclick = () => toggleStudent(card, name);
+        if (selectedStudents.includes(name)) card.classList.add('selected');
+        grid.appendChild(card);
+      });
+      document.getElementById('startChallengeBtn').disabled = selectedStudents.length === 0;
+    }
+    function toggleStudent(card, name) {
+      if (selectedStudents.includes(name)) {
+        selectedStudents = selectedStudents.filter(n => n !== name);
+        card.classList.remove('selected');
+      } else {
+        selectedStudents.push(name);
+        card.classList.add('selected');
+      }
+      document.getElementById('startChallengeBtn').disabled = selectedStudents.length === 0;
+    }
+    document.getElementById('startChallengeBtn').onclick = startChallenge;
+    function startChallenge() {
+      if (!selectedClass || selectedStudents.length === 0) return;
+      gameState = 'ARMING';
+      document.getElementById('studentSelectSection').style.display = 'none';
+      document.getElementById('bombStage').style.display = '';
+      // تمهيد قصير
+      setTimeout(()=>{
+        gameState = 'RUNNING';
+        startGlobalTimer();
+        startTurn(0);
+      }, 1800);
+    }
+    // --- المؤقتات والأدوار ---
+    function startGlobalTimer() {
+      let left = roundConfig.totalSeconds;
+      document.getElementById('globalTimer').textContent = formatTime(left);
+      if (globalTimer) clearInterval(globalTimer);
+      globalTimer = setInterval(()=>{
+        left--;
+        document.getElementById('globalTimer').textContent = formatTime(left);
+        updateHeatMeter(left);
+        if (left <= 0) {
+          clearInterval(globalTimer);
+          endGame('FAIL');
+        }
+      }, 1000);
+    }
+    function startTurn(idx) {
+      turnIndex = idx;
+      updateTurnInfo();
+      let left = roundConfig.perPlayerSeconds;
+      if (turnTimer) clearInterval(turnTimer);
+      turnTimer = setInterval(()=>{
+        left--;
+        updateTurnInfo(left);
+        if (left <= 0) {
+          clearInterval(turnTimer);
+          if (turnIndex < selectedStudents.length-1) startTurn(turnIndex+1);
+          else endGame('SUCCESS');
+        }
+      }, 1000);
+    }
+    function updateTurnInfo(left) {
+      const info = document.getElementById('turnInfo');
+      if (gameState !== 'RUNNING') { info.textContent = ''; return; }
+      const name = selectedStudents[turnIndex];
+      info.textContent = `دور: ${name}  ${(left!==undefined? '⏳ '+left+'s':'')}`;
+    }
+    function updateHeatMeter(left) {
+      const meter = document.getElementById('heatMeter');
+      const percent = 100 - Math.round((left/roundConfig.totalSeconds)*100);
+      meter.innerHTML = `<div class='heat-meter-bar' style='width:${percent}%;'></div>`;
+    }
+    function endGame(result) {
+      gameState = result;
+      document.getElementById('turnInfo').textContent = result==='SUCCESS'?'🎉 نجاح!':'💥 انفجرت القنبلة!';
+      if (globalTimer) clearInterval(globalTimer);
+      if (turnTimer) clearInterval(turnTimer);
+    }
+    // --- أدوات مساعدة ---
+    function formatTime(sec) {
+      sec = Math.max(0, Math.round(sec));
+      return '00:' + String(sec).padStart(2, '0');
+    }
+    // --- واجهة الطالب ---
+    // (تزامن داخلي: الطالب يقرأ الحالة من متغيرات المعلم)
+    function updateStudentView() {
+      const waiting = document.getElementById('waitingSection');
+      const bombStage = document.getElementById('studentBombStage');
+      if (gameState === 'IDLE' || gameState === 'ARMING') {
+        waiting.style.display = '';
+        bombStage.style.display = 'none';
+      } else if (gameState === 'RUNNING') {
+        waiting.style.display = 'none';
+        bombStage.style.display = '';
+        updateStudentBomb();
+      } else {
+        waiting.style.display = 'none';
+        bombStage.style.display = '';
+        document.getElementById('studentTurnInfo').textContent = (gameState==='SUCCESS'?'🎉 نجاح!':'💥 انفجرت القنبلة!');
+      }
+    }
+    function updateStudentBomb() {
+      document.getElementById('studentGlobalTimer').textContent = document.getElementById('globalTimer').textContent;
+      // قائمة الأدوار
+      const turnList = document.getElementById('turnList');
+      turnList.innerHTML = '';
+      selectedStudents.forEach((name,i)=>{
+        const el = document.createElement('div');
+        el.className = 'turn-student'+(i===turnIndex?' active':'');
+        el.textContent = name;
+        turnList.appendChild(el);
+      });
+      document.getElementById('studentTurnInfo').textContent = `دور: ${selectedStudents[turnIndex]}`;
+    }
+    // --- مراقبة التغيرات لتحديث واجهة الطالب ---
+    setInterval(updateStudentView, 500);
+    // --- بدء ---
+    buildClassGrid();
+  </script>
+</body>
+</html>
   <!-- شريط الأدوات العلوي -->
   <div class="top-toolbar">
     <div class="game-logo" style="font-size:1.5rem; font-weight:900; color:#ffd700; display:flex; align-items:center; gap:0.7rem;">
@@ -540,8 +382,7 @@
       showNotif('⚙️ إعدادات قادمة قريباً!');
     };
     let studentData = {};
-    let selectedClass = null;
-    let selectedStudents = [];
+  // (تم تعريف selectedClass وselectedStudents أعلاه)
     let timer = null;
     let timeLeft = 30;
     // تحميل بيانات الطلاب الحقيقية من ملف JSON
