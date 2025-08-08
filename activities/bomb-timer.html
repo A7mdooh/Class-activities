@@ -1,81 +1,138 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>💣 مختبر إبطال المتفجرات التعليمي - أكاديمية الأبطال الصغار</title>
-    
-    <!-- الخطوط والأيقونات -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <!-- المكتبات الخارجية -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-    
-    <!-- ===== ملفات التصميم المتجاوب ===== -->
-    <link rel="stylesheet" href="../assets/css/responsive.css">
-    
-    <!-- الأنماط والسكريبت الموحد -->
-    <style>
-        /* أنماط CSS المدمجة من style.css */
-        body {
-            font-family: 'Cairo', sans-serif;
-            background: linear-gradient(135deg, #f0f4ff, #dfe9f3);
-            margin: 0;
-            padding: 0;
-            direction: rtl;
+
+        // ===== منطق مملكة التحديات: جلب البيانات وبناء الصفوف والطلاب =====
+        let studentData = {};
+        let selectedStudentsList = [];
+
+        async function loadStudentData() {
+            try {
+                const response = await fetch('./data/studentData.json');
+                if (response.ok) {
+                    studentData = await response.json();
+                    console.log('✅ تم تحميل بيانات الطلاب بنجاح:', Object.keys(studentData));
+                } else {
+                    throw new Error('فشل تحميل البيانات');
+                }
+            } catch (error) {
+                console.warn('⚠️ استخدام البيانات الاحتياطية:', error);
+                studentData = {
+                    "خامس 1": ["أحمد محمد السيابي", "فاطمة علي الحارثي", "عبدالله سالم الجابري"],
+                    "خامس 2": ["سارة حسن اليحيائي", "محمد عمر الحديدي", "نور الدين المسافر"]
+                };
+                console.log('📚 تم تحميل البيانات الاحتياطية:', Object.keys(studentData));
+            }
+            loadClassSelection();
         }
 
-        .container {
-            max-width: 800px;
-            margin: auto;
-            padding: 2rem;
-            background: white;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
-            border-radius: 16px;
-            margin-top: 50px;
-            text-align: center;
+        function loadClassSelection() {
+            const container = document.getElementById('classSelection');
+            if (!container) return;
+            container.innerHTML = '';
+            const classNames = Object.keys(studentData);
+            if (classNames.length === 0) {
+                container.innerHTML = '<div style="color: var(--danger-red); text-align: center; padding: 20px;">❌ لا توجد بيانات صفوف متاحة</div>';
+                return;
+            }
+            container.style.display = 'grid';
+            document.getElementById('selectionMethodSection').style.display = 'none';
+            document.getElementById('studentCardsSection').style.display = 'none';
+            document.getElementById('startGameBtn').style.display = 'none';
+            classNames.forEach(className => {
+                const classCard = document.createElement('div');
+                classCard.className = 'class-option';
+                classCard.style.cssText = `text-align:center; border:2px solid var(--oman-red); border-radius:12px; padding:18px 10px; margin:10px; background:rgba(255,255,255,0.08); cursor:pointer; font-size:1.1rem; font-weight:bold; transition:0.2s;`;
+                classCard.innerHTML = `<div style="font-size:2rem;">🏫</div><div>${className}</div><div style="font-size:0.9rem; color:var(--safe-green);">${studentData[className].length} طالب</div>`;
+                classCard.addEventListener('click', function() {
+                    selectClass(className);
+                });
+                container.appendChild(classCard);
+            });
         }
 
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            color: #333;
+        function selectClass(className) {
+            // تمييز البطاقة المختارة
+            document.querySelectorAll('.class-option').forEach(card => {
+                card.style.borderColor = 'rgba(255,255,255,0.2)';
+                card.style.background = 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))';
+                if (card.textContent.includes(className)) {
+                    card.style.borderColor = 'var(--safe-green)';
+                    card.style.background = 'linear-gradient(135deg, rgba(76, 175, 80, 0.3), rgba(76, 175, 80, 0.1))';
+                }
+            });
+            // إظهار قسم اختيار الطريقة
+            document.getElementById('selectionMethodSection').style.display = 'block';
+            document.getElementById('studentCardsSection').style.display = 'none';
+            document.getElementById('startGameBtn').style.display = 'none';
+            // حفظ الصف المختار
+            window.selectedClass = className;
         }
 
-        .section {
-            margin-bottom: 1.5rem;
+        // عند اختيار الطريقة اليدوية، عرض بطاقات الطلاب
+        function selectMethod(method) {
+            window.selectionMethod = method;
+            if (method === 'manual') {
+                loadStudentSelection(window.selectedClass);
+                document.getElementById('studentCardsSection').style.display = 'block';
+            } else {
+                document.getElementById('studentCardsSection').style.display = 'none';
+            }
+            document.getElementById('startGameBtn').style.display = 'none';
         }
 
-        select, button {
-            font-family: 'Cairo', sans-serif;
-            font-size: 1.2rem;
-            padding: 0.6rem 1.2rem;
-            border: 2px solid #ccc;
-            border-radius: 12px;
-            background-color: #f9f9f9;
-            transition: all 0.3s ease;
+        function loadStudentSelection(className) {
+            const studentsGrid = document.getElementById('studentGrid');
+            if (!studentsGrid) return;
+            studentsGrid.innerHTML = '';
+            selectedStudentsList = [];
+            const students = studentData[className] || [];
+            if (students.length === 0) {
+                studentsGrid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: #ff6b6b; padding: 2rem;"><div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div><h3>لا توجد بيانات طلاب لهذا الصف</h3><p>تحقق من ملف البيانات</p></div>`;
+                return;
+            }
+            students.forEach((studentName, index) => {
+                const studentCard = document.createElement('div');
+                studentCard.className = 'student-card';
+                studentCard.dataset.studentName = studentName;
+                studentCard.dataset.studentIndex = index;
+                studentCard.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    toggleStudentSelection(this, studentName);
+                });
+                studentCard.innerHTML = `<div class="selection-indicator">○</div><div class="student-name">${studentName}</div>`;
+                studentsGrid.appendChild(studentCard);
+            });
         }
 
-        select:focus, button:hover {
-            border-color: #4285f4;
-            background-color: #e3efff;
+        function toggleStudentSelection(cardElement, studentName) {
+            if (!cardElement || !studentName) return;
+            const isSelected = cardElement.classList.contains('selected');
+            const selectionIndicator = cardElement.querySelector('.selection-indicator');
+            if (!selectionIndicator) return;
+            if (isSelected) {
+                cardElement.classList.remove('selected');
+                selectionIndicator.textContent = '○';
+                selectedStudentsList = selectedStudentsList.filter(name => name !== studentName);
+            } else {
+                cardElement.classList.add('selected');
+                selectionIndicator.textContent = '✓';
+                selectedStudentsList.push(studentName);
+            }
+            updateSelectedCount();
         }
 
-        button {
-            cursor: pointer;
-            background-color: #4285f4;
-            color: white;
-            font-weight: bold;
-            margin-top: 1rem;
+        function updateSelectedCount() {
+            const countElement = document.getElementById('selectedStudentsCount');
+            if (countElement) {
+                countElement.textContent = selectedStudentsList.length;
+            }
+            // إظهار زر البدء فقط إذا تم اختيار طالب واحد على الأقل
+            if (selectedStudentsList.length > 0) {
+                document.getElementById('startGameBtn').style.display = 'inline-block';
+            } else {
+                document.getElementById('startGameBtn').style.display = 'none';
+            }
         }
-
-            /* ...existing code... */
-            --surface-elevated: rgba(255, 255, 255, 0.1);
-            --surface-glass: rgba(255, 255, 255, 0.05);
-            
             /* أنصاف أقطار الحدود */
             --border-radius-small: 8px;
             --border-radius-medium: 12px;
