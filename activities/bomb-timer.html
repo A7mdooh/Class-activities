@@ -726,12 +726,107 @@
                   gameState.currentStudent = selected;
                   updateExpertDisplay();
                   updateGameInfo();
-                  document.getElementById('bombMessage').textContent = `🎲 تم تعيين الخبير: ${selected}`;
+                  // إظهار مربع التقييم
+                  showEvaluationBox(selected);
                   // تعطيل الزر إذا انتهت القائمة
                   if(randomStudentPool.length === 0){
                     randomBtn.disabled = true;
                     randomBtn.innerHTML = '<i class="fa-solid fa-shuffle"></i> انتهت القائمة';
                   }
+// ========== مربع التقييم ========== 
+function showEvaluationBox(studentName) {
+  // إزالة أي مربع تقييم سابق
+  let oldBox = document.getElementById('evaluationBox');
+  if(oldBox) oldBox.remove();
+  // إنشاء المربع
+  const box = document.createElement('div');
+  box.id = 'evaluationBox';
+  box.innerHTML = `
+    <div class="neon-eval-box">
+      <div style="font-size:1.3rem;font-weight:900;margin-bottom:12px;">تقييم إجابة الطالب</div>
+      <div style="font-size:1.1rem;margin-bottom:18px;">👤 <b>${studentName}</b></div>
+      <button id="evalCorrect" class="eval-btn correct">إجابة صحيحة</button>
+      <button id="evalWrong" class="eval-btn wrong">إجابة خاطئة</button>
+      <button id="evalClose" class="eval-btn close">إغلاق</button>
+    </div>
+  `;
+  // إضافة المربع فوق كل شيء
+  document.body.appendChild(box);
+  // زر صحيحة
+  document.getElementById('evalCorrect').onclick = function(){
+    defuseBomb();
+    box.remove();
+  };
+  // زر خاطئة
+  document.getElementById('evalWrong').onclick = function(){
+    // تفجير القنبلة يدويًا
+    if(gameState.timer) clearInterval(gameState.timer);
+    gameState.isActive = false;
+    gameState.explodedBombs++;
+    updateGameInfo();
+    setGameState('explosion', '💥 إجابة خاطئة — انفجرت القنبلة!');
+    document.getElementById('bombMessage').textContent = 'إجابة خاطئة — حاولوا مجددًا!';
+    bombExplosionEffect();
+    box.remove();
+  };
+  // زر إغلاق
+  document.getElementById('evalClose').onclick = function(){
+    box.remove();
+  };
+}
+
+// ========== أنماط النيون لمربع التقييم ========== 
+const evalBoxStyle = document.createElement('style');
+evalBoxStyle.innerHTML = `
+#evaluationBox {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.55); z-index: 99999; display: flex; align-items: center; justify-content: center;
+  animation: fadeInEval 0.3s;
+}
+@keyframes fadeInEval { from { opacity: 0; } to { opacity: 1; } }
+.neon-eval-box {
+  background: #181a23ee;
+  border-radius: 18px;
+  box-shadow: 0 0 24px #FFD700cc, 0 0 64px #DC143C55;
+  border: 2.5px solid #FFD700;
+  padding: 38px 32px 28px 32px;
+  min-width: 320px;
+  max-width: 90vw;
+  color: #FFD700;
+  text-align: center;
+  position: relative;
+  font-family: 'Cairo', system-ui, sans-serif;
+}
+.eval-btn {
+  margin: 0 10px 0 10px;
+  padding: 12px 28px;
+  font-size: 1.1rem;
+  font-weight: 900;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 0 12px #FFD70055;
+  transition: 0.18s;
+}
+.eval-btn.correct {
+  background: linear-gradient(90deg,#228B22 0%,#FFD700 100%);
+  color: #fff;
+  border: 2px solid #228B22;
+}
+.eval-btn.wrong {
+  background: linear-gradient(90deg,#DC143C 0%,#FFD700 100%);
+  color: #fff;
+  border: 2px solid #DC143C;
+}
+.eval-btn.close {
+  background: #23243a;
+  color: #FFD700;
+  border: 2px solid #FFD700;
+  margin-top: 18px;
+}
+.eval-btn:hover { filter: brightness(1.08); box-shadow: 0 0 0 3px #FFD70099; }
+`;
+document.head.appendChild(evalBoxStyle);
                 };
               }
               randomStudentMode = false;
