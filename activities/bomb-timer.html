@@ -115,23 +115,30 @@
 		</div>
 		<!-- شاشة اللعبة -->
 		<div id="gameScreen" style="display:none">
-			<div class="bomb-area">
-				<div class="bomb-visual" id="bombVisual">
-					<div class="fuse"></div>
-					<div class="spark"></div>
-					💣
-				</div>
-				<div class="countdown" id="countdown">—</div>
-				<div class="heat"><i id="heatFill"></i></div>
-				<div class="students" id="selectedChips" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:18px 0 0 0;"></div>
-				<div id="turnStatus" style="margin:18px 0 0 0;font-size:1.2rem;color:#ffd700;font-weight:700;"></div>
-				<div style="margin:18px 0 0 0;display:flex;gap:12px;">
-					<button id="pauseBtn" style="padding:10px 22px;border-radius:8px;background:#ffd700;color:#23243a;font-weight:700;font-size:1.1rem;">⏸️ إيقاف مؤقت</button>
-					<button id="add5Btn" style="padding:10px 22px;border-radius:8px;background:#22c55e;color:#fff;font-weight:700;font-size:1.1rem;">+5 ثوانٍ</button>
-					<button id="successBtn" style="padding:10px 22px;border-radius:8px;background:#22c55e;color:#fff;font-weight:700;font-size:1.1rem;">✅ نجاح</button>
-					<button id="failBtn" style="padding:10px 22px;border-radius:8px;background:#ef4444;color:#fff;font-weight:700;font-size:1.1rem;">💥 انفجار</button>
-				</div>
-			</div>
+						<div class="bomb-area">
+							<div class="bomb-visual" id="bombVisual">
+								<div class="fuse"></div>
+								<div class="spark"></div>
+								💣
+							</div>
+							<div class="countdown" id="countdown">—</div>
+							<div class="heat"><i id="heatFill"></i></div>
+							<!-- معلومات الطالب الحالي -->
+							<div id="currentStudentInfo" style="margin:18px 0 0 0;display:flex;flex-direction:column;align-items:center;">
+								<div id="currentStudentName" style="font-size:2rem;font-weight:900;color:#ffd700;margin-bottom:6px;"></div>
+								<div id="currentStudentClass" style="font-size:1.1rem;color:#ffe066;"></div>
+							</div>
+							<div class="students" id="selectedChips" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:18px 0 0 0;"></div>
+							<div id="turnStatus" style="margin:18px 0 0 0;font-size:1.2rem;color:#ffd700;font-weight:700;"></div>
+							<!-- أزرار التحكم الجديدة -->
+							<div style="margin:18px 0 0 0;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+								<button id="pauseBtn" style="padding:10px 22px;border-radius:8px;background:#ffd700;color:#23243a;font-weight:700;font-size:1.1rem;display:flex;align-items:center;gap:6px;"><i class="fa-solid fa-pause"></i> إيقاف مؤقت</button>
+								<button id="add5Btn" style="padding:10px 22px;border-radius:8px;background:#22c55e;color:#fff;font-weight:700;font-size:1.1rem;display:flex;align-items:center;gap:6px;"><i class="fa-solid fa-plus"></i> 5 ثوانٍ</button>
+								<button id="successBtn" style="padding:10px 22px;border-radius:8px;background:#22c55e;color:#fff;font-weight:700;font-size:1.1rem;display:flex;align-items:center;gap:6px;"><i class="fa-solid fa-check"></i> نجاح</button>
+								<button id="failBtn" style="padding:10px 22px;border-radius:8px;background:#ef4444;color:#fff;font-weight:700;font-size:1.1rem;display:flex;align-items:center;gap:6px;"><i class="fa-solid fa-bomb"></i> انفجار</button>
+								<button id="nextStudentBtn" style="padding:10px 22px;border-radius:8px;background:#ff9800;color:#fff;font-weight:700;font-size:1.1rem;display:flex;align-items:center;gap:6px;"><i class="fa-solid fa-forward"></i> التالي</button>
+							</div>
+						</div>
 			<div class="confetti" id="confetti"></div>
 			<div class="flash" id="flash"></div>
 			<div class="notif-bar" id="notifBar2"><span id="notifMsg2"></span></div>
@@ -471,10 +478,14 @@
 		};
 		function nextRound() {
 			if(selectedStudents.length === 0){ showResults('END'); return; }
-			roundStudents = selectedStudents.slice(0, 3); // 3 طلاب في كل جولة
-			selectedStudents = selectedStudents.slice(3);
-			document.getElementById('selectedChips').innerHTML = roundStudents.map(name=>`<div class='chip' style='background:#ffd70022;color:#ffd700;padding:8px 14px;border-radius:999px;margin:0 4px;font-weight:700;'>👤 ${name}</div>`).join('');
-			document.getElementById('turnStatus').textContent = `جولة ${roundIndex+1} — ${roundStudents.length} مشاركين`;
+			roundStudents = selectedStudents.slice(0, 1); // طالب واحد في كل جولة
+			selectedStudents = selectedStudents.slice(1);
+			// عرض اسم الطالب الحالي
+			const currentName = roundStudents[0] || '';
+			document.getElementById('currentStudentName').textContent = currentName ? `👤 ${currentName}` : '';
+			document.getElementById('currentStudentClass').textContent = selectedClass ? `الصف: ${selectedClass}` : '';
+			document.getElementById('selectedChips').innerHTML = '';
+			document.getElementById('turnStatus').textContent = `جولة ${roundIndex+1} — ${currentName ? 'طالب واحد' : ''}`;
 			startGame();
 		}
 		function playSound(id) { try{ document.getElementById(id).currentTime=0; document.getElementById(id).play(); }catch{} }
@@ -541,6 +552,19 @@
 		document.getElementById('add5Btn').onclick = ()=>{ gameState.timeLeft+=5; showNotif2('⏫ +5 ثوانٍ!','success',1); updateBombVisual(); playSound('bonusSound'); };
 		document.getElementById('successBtn').onclick = ()=>{ clearInterval(gameState.timer); endGame(true); };
 		document.getElementById('failBtn').onclick = ()=>{ clearInterval(gameState.timer); endGame(false); };
+		// زر التالي
+		document.getElementById('nextStudentBtn').onclick = ()=>{
+			clearInterval(gameState.timer);
+			endGame(false); // اعتبرها انفجار إذا لم يتم التقييم
+			setTimeout(()=>{
+				if(selectedStudents.length > 0){
+					roundIndex++;
+					nextRound();
+				} else {
+					showResults('END');
+				}
+			}, 500);
+		};
 		window.addEventListener('keydown',e=>{
 			if(gameState.isActive && !gameState.isPaused){
 				if(e.key===' '){ document.getElementById('pauseBtn').click(); }
