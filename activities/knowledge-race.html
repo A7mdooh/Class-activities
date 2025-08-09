@@ -487,7 +487,7 @@
         </div>
     </section>
         <!-- Sound Settings Modal (copied from tower-game.html) -->
-        <div class="sound-settings-modal" id="soundSettingsModal">
+    <div class="sound-settings-modal" id="soundSettingsModal" style="display:none;">
             <div class="sound-settings-panel" style="background:rgba(34,36,50,0.98);border-radius:22px;box-shadow:0 8px 40px 0 #000a,0 1.5px 0 #FFD70033;padding:36px 18px 24px 18px;max-width:410px;margin:auto;display:flex;flex-direction:column;align-items:center;">
                 <div class="settings-header" style="width:100%;display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:0;">
                     <div class="settings-title" style="font-size:1.5rem;font-weight:700;letter-spacing:1px;">
@@ -791,7 +791,8 @@
                 }
                 openModal() {
                     if (this.isOpen()) return;
-                    this.elements.modal?.classList.add('show');
+                    this.elements.modal.style.display = 'flex';
+                    this.elements.modal.classList.add('show');
                     this.loadSettings();
                     this.audio.play('settings-open');
                     setTimeout(() => {
@@ -800,11 +801,12 @@
                 }
                 closeModal() {
                     if (!this.isOpen()) return;
-                    this.elements.modal?.classList.remove('show');
+                    this.elements.modal.classList.remove('show');
+                    this.elements.modal.style.display = 'none';
                     this.audio.play('settings-close');
                 }
                 isOpen() {
-                    return this.elements.modal?.classList.contains('show');
+                    return this.elements.modal?.classList.contains('show') && this.elements.modal.style.display !== 'none';
                 }
                 loadSettings() {
                     const volume = Math.round(this.audio.getVolume() * 100);
