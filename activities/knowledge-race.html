@@ -744,7 +744,7 @@
                     this.audio = audioManager;
                     this.initElements();
                     this.setupEvents();
-                    this.loadSettings();
+                    // لا تفتح النافذة تلقائياً أبداً عند التحميل
                 }
                 initElements() {
                     this.elements = {
@@ -790,6 +790,7 @@
                     });
                 }
                 openModal() {
+                    if (this.isOpen()) return;
                     this.elements.modal?.classList.add('show');
                     this.loadSettings();
                     this.audio.play('settings-open');
@@ -798,6 +799,7 @@
                     }, 300);
                 }
                 closeModal() {
+                    if (!this.isOpen()) return;
                     this.elements.modal?.classList.remove('show');
                     this.audio.play('settings-close');
                 }
