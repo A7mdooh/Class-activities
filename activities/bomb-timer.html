@@ -1300,17 +1300,34 @@
         el.onmouseover = null;
       });
     }
-    // ========== Kingdom Sounds ==========
-    let kingdomAudio = null;
-    function playKingdomSound(file) {
-      if(!soundOn) return;
-      try {
-        if(kingdomAudio) { kingdomAudio.pause(); kingdomAudio.currentTime = 0; }
-        kingdomAudio = new Audio('../assets/media/sounds/kingdom-sounds/' + file);
-        kingdomAudio.volume = 0.7;
-        kingdomAudio.play();
-      } catch(e) {}
-    }
+      // ========== Kingdom Sounds ==========
+      let kingdomAudio = null;
+      function playKingdomSound(file) {
+        if(!soundOn) return;
+        try {
+          if(kingdomAudio) { kingdomAudio.pause(); kingdomAudio.currentTime = 0; }
+          kingdomAudio = new Audio('../assets/media/sounds/kingdom-sounds/' + file);
+          kingdomAudio.volume = 0.7;
+          kingdomAudio.play();
+        } catch(e) {}
+      }
+
+      // ====== Spark Sound Effect for Fuse Timer ======
+      let sparkAudio = null;
+      function playSparkSound() {
+        if(!soundOn) return;
+        try {
+          if(sparkAudio) { sparkAudio.pause(); sparkAudio.currentTime = 0; }
+          sparkAudio = new Audio('../assets/media/sounds/kingdom-sounds/creativity-spark.mp3');
+          sparkAudio.loop = true;
+          sparkAudio.volume = 0.45;
+          sparkAudio.play();
+        } catch(e) {}
+      }
+      function stopSparkSound() {
+        if(sparkAudio) { try { sparkAudio.pause(); sparkAudio.currentTime = 0; } catch(e){} }
+        sparkAudio = null;
+      }
     // إشعار تفاعلي للطالب الحالي
     function showStudentNotification(msg, sound, color) {
       const n = document.getElementById('studentNotification');
