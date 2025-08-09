@@ -631,7 +631,7 @@
   <canvas id="confettiCanvas" style="position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:9999;display:none;"></canvas>
   <!-- إشعار تفاعلي أعلى الشاشة -->
   <div id="studentNotification" style="display:none;position:fixed;top:24px;left:50%;transform:translateX(-50%);z-index:5000;background:linear-gradient(90deg,#FFD700,#DC143C);color:#23243a;font-size:1.5rem;font-weight:900;padding:18px 44px;border-radius:18px;box-shadow:0 8px 32px #000a,0 0 24px #FFD70099;animation:notifyPop 0.7s;letter-spacing:1px;min-width:320px;text-align:center;">
-    <!-- سيتم تعبئته ديناميكياً -->
+    <!-- سيتم تعبئته دينامياً -->
   </div>
   <style>
     @keyframes notifyPop {
@@ -873,6 +873,11 @@
       if(!currentExpert) {
         document.getElementById('bombMessage').textContent = 'يرجى اختيار الطالب الخبير أولاً.';
         return;
+      }
+      // تحديث مدة المؤقت من القائمة دائماً عند بدء المؤقت
+      const timerSelect = document.getElementById('timerDurationSelect');
+      if (timerSelect) {
+        customTimerDuration = parseInt(timerSelect.value, 10) || 60;
       }
       gameState.isActive = true;
       gameState.isPaused = false;
