@@ -20,51 +20,6 @@
         @keyframes modalPop {
             0% { transform: scale(0.8) translateY(40px); opacity: 0; }
             100% { transform: scale(1) translateY(0); opacity: 1; }
-        }
-        .modal-content h2 {
-            color: var(--accent-gold);
-            font-size: 1.5rem;
-            font-weight: 900;
-            margin-bottom: 18px;
-            text-shadow: var(--glow-gold);
-        }
-        .modal-content ul {
-            text-align: right;
-            margin: 0 0 18px 0;
-            padding: 0 18px;
-            color: var(--oman-white);
-            font-size: 1.05rem;
-        }
-        .modal-content button {
-            margin-top: 18px;
-        }
-        /* بطاقات الفرق/النقاط */
-        .team-card {
-            background: var(--glass);
-            border: 2px solid #FFD70099;
-            border-radius: 16px;
-            box-shadow: 0 2px 8px #FFD70033;
-            padding: 16px 12px;
-            color: var(--accent-gold);
-            font-size: 1.1rem;
-            font-weight: 700;
-            display: flex; align-items: center; gap: 10px;
-            margin-bottom: 10px;
-            transition: 0.18s;
-        }
-        .team-card .fa-users {
-            font-size: 1.3rem;
-            margin-left: 8px;
-        }
-        .team-card .team-score {
-            margin-right: auto;
-            font-size: 1.2rem;
-            color: var(--oman-green);
-            font-weight: 900;
-            text-shadow: var(--glow-green);
-        }
-        /* إخفاء المودال عند الحاجة */
-        .modal-overlay[hidden] { display: none !important; }
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -75,7 +30,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="../assets/js/activityUtils.js"></script>
-    
     <style>
         /* تأثيرات انتقالية عصرية */
         .info-card, .team-card, .modal-content, .toolbar-btn {
@@ -101,17 +55,7 @@
             border: 2px solid #fff3;
             z-index: 2;
         }
-
-        <!DOCTYPE html>
-        <html lang="ar" dir="rtl">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>🏁 سباق المعرفة العصري</title>
-            <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-            <style>
-                :root {
+    :root {
                     --oman-red: #DC143C;
                     --oman-green: #228B22;
                     --oman-white: #fff;
@@ -210,77 +154,87 @@
                     font-weight: 500;
                     text-shadow: 0 2px 8px #000a;
                 }
-                .main-content {
-                    display: grid;
-                    grid-template-columns: 1fr 1.2fr 1fr;
-                    gap: 24px;
-                    max-width: 1400px;
-                    margin: 0 auto;
-                    padding: 32px 12px 32px 12px;
-                    position: relative;
-                    z-index: 1;
-                }
-                @media (max-width: 1100px) {
-                    .main-content { grid-template-columns: 1fr 1.5fr; }
-                    .game-info { display: none; }
-                }
-                @media (max-width: 900px) {
-                    .main-content { grid-template-columns: 1fr; }
-                    .game-info, .teacher-controls { display: none; }
-                    .race-area { margin: 0 auto; }
-                }
-                .game-info {
-                    display: flex; flex-direction: column; gap: 18px;
-                }
-                .info-card {
+                .arena {
                     background: var(--glass);
-                    border: var(--info-card-border);
+                    border-radius: 24px;
+                    box-shadow: var(--shadow);
+                    margin: 32px auto 0 auto;
+                    max-width: 900px;
+                    padding: 32px 16px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 32px;
+                }
+                .teams-row {
+                    display: flex;
+                    gap: 18px;
+                    justify-content: center;
+                    flex-wrap: wrap;
+                }
+                .team-card {
+                    min-width: 160px;
+                    background: var(--glass);
+                    border: 2px solid var(--accent-gold);
                     border-radius: 16px;
-                    box-shadow: var(--info-card-shadow);
-                    padding: 18px 14px;
+                    box-shadow: 0 2px 8px #FFD70033;
+                    padding: 18px 12px 12px 12px;
                     color: var(--accent-gold);
                     font-size: 1.1rem;
                     font-weight: 700;
-                    display: flex; align-items: center; gap: 12px;
-                    transition: 0.18s;
-                }
-                .info-card:hover, .info-card:focus {
-                    background: #FFD70011;
-                    color: var(--oman-red);
-                    box-shadow: 0 0 0 3px #FFD70055;
-                }
-                .info-card .fa-solid {
-                    font-size: 1.5rem;
-                    margin-left: 8px;
-                }
-                .race-area {
-                    display: flex; flex-direction: column; align-items: center; justify-content: center;
-                    min-height: 480px;
-                    gap: 18px;
+                    display: flex; flex-direction: column; align-items: center;
                     position: relative;
+                    transition: box-shadow 0.3s, background 0.3s, color 0.3s, transform 0.2s;
                 }
-                .game-state {
-                    font-size: 1.3rem;
+                .team-card .team-name {
+                    font-size: 1.2rem;
+                    font-weight: bold;
+                    margin-bottom: 8px;
+                    color: var(--accent-gold);
+                }
+                .team-card .team-progress {
+                    width: 100%;
+                    height: 12px;
+                    background: #fff2;
+                    border-radius: 8px;
+                    margin: 10px 0 0 0;
+                    overflow: hidden;
+                }
+                .team-card .team-progress-bar {
+                    height: 100%;
+                    background: var(--gradient-gold);
+                    border-radius: 8px;
+                    transition: width 0.5s;
+                }
+                .team-card .team-score {
+                    font-size: 1.1rem;
+                    color: var(--oman-green);
                     font-weight: 900;
-                    margin-bottom: 10px;
-                    padding: 8px 22px;
-                    border-radius: 12px;
-                    background: var(--gradient-warning);
-                    color: var(--oman-red);
-                    box-shadow: 0 2px 8px #FFD70033;
-                    transition: background 0.3s, color 0.3s;
-                    text-align: center;
+                    margin-top: 8px;
                 }
-                .state-waiting { background: var(--gradient-warning); color: var(--oman-red); }
-                .state-active { background: var(--gradient-danger); color: var(--oman-white); animation: shake 0.7s infinite alternate; }
-                .state-success { background: var(--gradient-safe); color: var(--oman-green); }
-                .state-explosion { background: var(--gradient-danger); color: var(--oman-white); animation: shake 0.2s 8 alternate; }
-                @keyframes shake {
-                    0% { transform: translateX(0); }
-                    25% { transform: translateX(-4px); }
-                    50% { transform: translateX(4px); }
-                    75% { transform: translateX(-2px); }
-                    100% { transform: translateX(0); }
+                .arena-controls {
+                    display: flex;
+                    gap: 18px;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                }
+                .arena-btn {
+                    background: var(--gradient-gold);
+                    color: var(--oman-red);
+                    border: none;
+                    border-radius: 24px;
+                    font-size: 1.1rem;
+                    font-weight: bold;
+                    padding: 12px 32px;
+                    margin: 0 4px;
+                    box-shadow: 0 2px 8px #FFD70033;
+                    cursor: pointer;
+                    transition: background 0.2s, color 0.2s, transform 0.15s;
+                }
+                .arena-btn:hover {
+                    background: var(--gradient-danger);
+                    color: #fff;
+                    transform: scale(1.05);
                 }
                 .modal-overlay {
                     position: fixed; inset: 0; background: #181a23cc; z-index: 2000;
@@ -321,43 +275,6 @@
                 .modal-content button {
                     margin-top: 18px;
                 }
-                .team-card {
-                    background: var(--glass);
-                    border: 2px solid #FFD70099;
-                    border-radius: 16px;
-                    box-shadow: 0 2px 8px #FFD70033;
-                    padding: 16px 12px;
-                    color: var(--accent-gold);
-                    font-size: 1.1rem;
-                    font-weight: 700;
-                    display: flex; align-items: center; gap: 10px;
-                    margin-bottom: 10px;
-                    transition: 0.18s;
-                    position: relative;
-                    overflow: hidden;
-                    border-width: 3px;
-                }
-                .team-badge {
-                    position: absolute;
-                    top: -16px; left: -16px;
-                    background: var(--accent-gold);
-                    color: var(--oman-red);
-                    font-weight: bold;
-                    font-size: 1.1rem;
-                    width: 38px; height: 38px;
-                    border-radius: 50%;
-                    display: flex; align-items: center; justify-content: center;
-                    box-shadow: 0 2px 8px #FFD70055;
-                    border: 2px solid #fff3;
-                    z-index: 2;
-                }
-                .team-card.winner {
-                    box-shadow: 0 0 24px 6px #FFD700cc, 0 2px 8px #FFD70033;
-                    border-color: #FFD700;
-                    background: linear-gradient(90deg, #fffbe6 0%, #fff 100%);
-                    color: #DC143C;
-                    transform: scale(1.04);
-                }
                 .modal-close {
                     position: absolute;
                     top: 12px; left: 12px;
@@ -378,78 +295,89 @@
                     color: var(--oman-red);
                 }
                 @media (max-width: 600px) {
-                    .main-content {
-                        padding: 12px 2px 12px 2px;
-                        gap: 8px;
-                    }
-                    .modal-content {
-                        padding: 18px 6px 16px 6px;
-                        min-width: 90vw;
-                    }
-                    .header {
-                        padding: 18px 0 10px 0;
-                    }
-                    .header-title {
-                        font-size: 1.5rem;
-                    }
+                    .arena { padding: 12px 2px; }
+                    .main-content { padding: 0; gap: 0; }
+                    .header { padding: 18px 0 10px 0; }
+                    .header-title { font-size: 1.5rem; }
                 }
                 .modal-overlay[hidden] { display: none !important; }
             </style>
         </head>
         <body>
+            <!-- شريط الأدوات العلوي -->
             <nav class="top-toolbar">
-                <button class="toolbar-btn" id="homeBtn" title="العودة للرئيسية"><i class="fas fa-home"></i></button>
+                <button class="toolbar-btn" id="homeBtn" title="الرئيسية"><i class="fas fa-home"></i></button>
                 <button class="toolbar-btn" id="refreshBtn" title="إعادة تحميل"><i class="fas fa-rotate-right"></i></button>
                 <button class="toolbar-btn" id="instructionsBtn" title="تعليمات"><i class="fas fa-question-circle"></i></button>
                 <button class="toolbar-btn" id="fullscreenBtn" title="ملء الشاشة"><i class="fas fa-expand"></i></button>
                 <button class="toolbar-btn" id="soundBtn" title="تشغيل/إيقاف الصوت"><i class="fas fa-volume-up"></i></button>
             </nav>
+            <!-- رأس الصفحة -->
             <header class="header">
                 <div class="header-title">سباق المعرفة <span style="font-size:1.1rem;color:var(--oman-red)">KNOWLEDGE RACE</span></div>
                 <div class="header-subtitle">لعبة تنافسية بين الفرق لاختبار المعلومات والسرعة</div>
             </header>
-            <main class="main-content">
-                <aside class="game-info" id="gameInfo"></aside>
-                <section class="race-area" id="raceArea"></section>
-                <aside class="teacher-controls" id="teacherControls"></aside>
-            </main>
+            <!-- ساحة السباق (الحلبة) -->
+            <section class="arena" id="arena">
+                    <!-- واجهة اختيار الصف والمتنافسين -->
+                    <div id="setupSection" style="width:100%;max-width:500px;margin:0 auto 32px auto;">
+                        <div style="margin-bottom:18px;">
+                            <label for="classSelect" style="font-weight:bold;font-size:1.1rem;">اختر الصف:</label>
+                            <select id="classSelect" style="width:100%;padding:10px 12px;border-radius:12px;border:1.5px solid var(--accent-gold);background:var(--glass);color:var(--accent-gold);font-size:1.1rem;outline:none;margin-top:8px;">
+                                <option value="">-- اختر الصف --</option>
+                            </select>
+                        </div>
+                        <div id="studentsSection" style="display:none;">
+                            <label style="font-weight:bold;font-size:1.1rem;">طريقة اختيار المتنافسين:</label>
+                            <div style="display:flex;gap:12px;margin:12px 0;">
+                                <button class="arena-btn" id="randomSelectBtn" style="flex:1;">عشوائي</button>
+                                <button class="arena-btn" id="manualSelectBtn" style="flex:1;">انتقائي</button>
+                            </div>
+                            <div id="manualStudentsList" style="display:none;"></div>
+                            <button class="arena-btn" id="confirmCompetitorsBtn" style="width:100%;margin-top:12px;display:none;">تأكيد المتنافسين</button>
+                        </div>
+                    </div>
+                    <!-- بعد اختيار المتنافسين تظهر الحلبة -->
+                    <div class="teams-row" id="teamsRow" style="display:none;"></div>
+                    <div class="arena-controls" id="arenaControls" style="display:none;">
+                        <button class="arena-btn" id="startRaceBtn">بدء السباق</button>
+                        <button class="arena-btn" id="nextQuestionBtn">سؤال جديد</button>
+                        <button class="arena-btn" id="correctBtn">إجابة صحيحة</button>
+                        <button class="arena-btn" id="wrongBtn">إجابة خاطئة</button>
+                        <button class="arena-btn" id="pauseBtn">إيقاف مؤقت</button>
+                    </div>
+            </section>
+            <!-- مودال إعداد الفرق -->
             <div class="modal-overlay" id="teamSetupModal" hidden>
                 <div class="modal-content">
                     <button class="modal-close" onclick="this.closest('.modal-overlay').setAttribute('hidden','')" title="إغلاق"><i class="fas fa-times"></i></button>
                     <h2>إعداد الفرق</h2>
                     <div id="classSelection"></div>
                     <div id="teamInputs"></div>
-                    <button id="startGameBtn" class="toolbar-btn" style="width:auto;padding:0 32px;font-size:1.2rem;background:var(--gradient-gold);color:var(--oman-red);font-weight:900;">بدء اللعبة</button>
+                    <button id="startGameBtn" class="arena-btn" style="margin-top:18px;">بدء اللعبة</button>
                 </div>
             </div>
+            <!-- مودال التعليمات -->
             <div class="modal-overlay" id="instructionsModal" hidden>
                 <div class="modal-content">
                     <button class="modal-close" onclick="this.closest('.modal-overlay').setAttribute('hidden','')" title="إغلاق"><i class="fas fa-times"></i></button>
                     <h2>تعليمات اللعبة</h2>
                     <ul>
-                        <li>اختر عدد الفرق وأسماءها.</li>
-                        <li>يتم طرح الأسئلة على الفرق بالتتابع.</li>
+                        <li>اضغط "إعداد الفرق" ثم أدخل أسماء الفرق وعددها.</li>
+                        <li>ابدأ السباق واطرح الأسئلة على الفرق بالتتابع.</li>
+                        <li>استخدم أزرار التحكم لتسجيل الإجابات الصحيحة أو الخاطئة.</li>
                         <li>أول فريق يصل للنهاية يفوز!</li>
                     </ul>
-                    <button onclick="closeInstructions()" class="toolbar-btn" style="width:auto;padding:0 32px;font-size:1.1rem;background:var(--gradient-danger);color:var(--oman-white);font-weight:700;">إغلاق</button>
+                    <button onclick="this.closest('.modal-overlay').setAttribute('hidden','')" class="arena-btn">إغلاق</button>
                 </div>
             </div>
-            <script src="../assets/js/activityUtils.js"></script>
-            <script src="../assets/js/challengeEnhancer.js"></script>
-            <script src="../assets/js/responsive-helper.js"></script>
+            <!-- سكريبتات جاهزة للبرمجة -->
+            <script src="../assets/js/knowledgeRace.js"></script>
         </body>
         </html>
                             </div>
                         </div>
 
-                            <script src="../assets/js/challengeEnhancer.js"></script>
-                            <script src="../assets/js/responsive-helper.js"></script>
-                            <script>
-                                // منطق جلب البيانات ومنطق اللعبة كما هو (لم يتم تغييره)
-                                // ...
-                            </script>
-                    </body>
-                    </html>
         margin: 0;
         padding: 0;
         min-height: 100vh;
