@@ -640,6 +640,25 @@
       100%{transform:translateX(-50%) scale(1);opacity:1;}
     }
   </style>
+  <!-- لوحة الشرف والاحصائيات الاحترافية -->
+  <div id="honorBoard" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);z-index:6000;align-items:center;justify-content:center;animation:fadeInHonor 0.7s;">
+    <div style="background:linear-gradient(135deg,#FFD700 60%,#fff 100%);border-radius:32px;box-shadow:0 8px 48px #000a,0 0 32px #FFD70099;padding:38px 44px 32px 44px;max-width:520px;width:95vw;text-align:center;position:relative;">
+      <h2 style="font-size:2.2rem;color:#DC143C;font-weight:900;margin-bottom:18px;text-shadow:0 0 18px #FFD700;">🏆 لوحة الشرف</h2>
+      <div id="honorStats" style="font-size:1.25rem;color:#23243a;font-weight:900;margin-bottom:18px;"></div>
+      <div id="honorList" style="margin-bottom:18px;"></div>
+      <button class="oman-btn gold" onclick="closeHonorBoard()" style="font-size:1.1rem;">إغلاق</button>
+      <div id="honorFireworks" style="position:absolute;top:-60px;left:50%;transform:translateX(-50%);pointer-events:none;"></div>
+    </div>
+  </div>
+  <style>
+    @keyframes fadeInHonor {
+      0%{opacity:0;}
+      100%{opacity:1;}
+    }
+    .honor-medal {font-size:2rem;margin-left:8px;}
+    .honor-row {margin:8px 0;padding:8px 0;border-bottom:1px solid #FFD70033;display:flex;align-items:center;justify-content:space-between;}
+    .honor-row:last-child{border-bottom:none;}
+  </style>
   <script>
       // ========== Game State & Settings ==========
       const difficultySettings = {
@@ -959,6 +978,7 @@
       bombSuccessEffect();
       showStudentNotification(`🏆 أحسنت يا ${currentExpert}! أنقذت الفريق!`, 'perfect-score.mp3', 'linear-gradient(90deg,#228B22,#FFD700)');
       playKingdomSound('perfect-score.mp3');
+      updateHonorData();
     }
     // ========== Bomb Effects ==========
     function bombExplosionEffect() {
@@ -967,6 +987,7 @@
       bomb.style.animation = 'shake 0.2s 8';
       playKingdomSound('cosmic-explosion.mp3');
       setTimeout(() => { bomb.style.animation = ''; }, 1800);
+      updateHonorData();
     }
     function bombSuccessEffect() {
       const bomb = document.getElementById('bomb');
@@ -1041,6 +1062,53 @@
       playKingdomSound(sound || 'character-intro.mp3');
       setTimeout(()=>{ n.style.display = 'none'; }, 3500);
     }
+    // إحصائيات متقدمة
+    let honorData = {topStudents:[], mostDefused:0, mostExploded:0, maxPoints:0, bestStudent:null};
+    function updateHonorData() {
+      // تحديث الإحصائيات من الجلسة الحالية فقط (يمكن ربطها بملف خارجي لاحقاً)
+      if(!window.sessionHonor) window.sessionHonor = {};
+      const name = currentExpert;
+      if(!name || name==='—') return;
+      if(!window.sessionHonor[name]) window.sessionHonor[name] = {points:0, defused:0, exploded:0};
+      window.sessionHonor[name].points = gameState.points;
+      window.sessionHonor[name].defused = gameState.defusedBombs;
+      window.sessionHonor[name].exploded = gameState.explodedBombs;
+      // حساب أفضل الطلاب
+      const arr = Object.entries(window.sessionHonor).map(([n,v])=>({...v,name:n}));
+      honorData.topStudents = arr.sort((a,b)=>b.points-a.points).slice(0,5);
+      honorData.mostDefused = Math.max(...arr.map(s=>s.defused),0);
+      honorData.mostExploded = Math.max(...arr.map(s=>s.exploded),0);
+      honorData.maxPoints = Math.max(...arr.map(s=>s.points),0);
+      honorData.bestStudent = honorData.topStudents[0]?.name||null;
+    }
+    function showHonorBoard() {
+      updateHonorData();
+      const board = document.getElementById('honorBoard');
+      const stats = document.getElementById('honorStats');
+      const list = document.getElementById('honorList');
+      const fireworks = document.getElementById('honorFireworks');
+      // عرض الإحصائيات
+      stats.innerHTML = `أفضل طالب: <span style='color:#DC143C;'>${honorData.bestStudent||'—'}</span> | أعلى نقاط: <span style='color:#228B22;'>${honorData.maxPoints}</span> | أكثر قنابل مُبطلة: <span style='color:#228B22;'>${honorData.mostDefused}</span> | أكثر انفجارات: <span style='color:#DC143C;'>${honorData.mostExploded}</span>`;
+      // عرض قائمة الشرف
+      list.innerHTML = honorData.topStudents.map((s,i)=>`<div class='honor-row'><span class='honor-medal'>${i===0?'🥇':i===1?'🥈':i===2?'🥉':'🏅'}</span>${s.name}<span style='color:#FFD700;font-size:1.1rem;'>${s.points} نقطة</span></div>`).join('');
+      board.style.display = 'flex';
+      // احتفال fireworks
+      fireworks.innerHTML = `<img src='../assets/media/sounds/firework.gif' style='width:120px;height:120px;' alt='fireworks'>`;
+      setTimeout(()=>{fireworks.innerHTML='';},2000);
+      playKingdomSound('crown-ceremony.mp3');
+    }
+    function closeHonorBoard() {
+      document.getElementById('honorBoard').style.display = 'none';
+    }
+    // زر لعرض لوحة الشرف
+    document.addEventListener('DOMContentLoaded',()=>{
+      const btn = document.createElement('button');
+      btn.className = 'oman-btn gold';
+      btn.innerHTML = '<i class="fa-solid fa-trophy"></i> لوحة الشرف';
+      btn.style = 'position:fixed;bottom:32px;left:32px;z-index:4000;font-size:1.2rem;box-shadow:0 4px 18px #FFD70055;';
+      btn.onclick = showHonorBoard;
+      document.body.appendChild(btn);
+    });
   </script>
 </body>
 </html>
