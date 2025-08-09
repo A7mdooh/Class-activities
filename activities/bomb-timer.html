@@ -1,136 +1,8 @@
       const timer = document.getElementById('timerDisplay');
       if(timer) {
         timer.classList.remove('timer-highlight');
-        void timer.offsetWidth;
-        timer.classList.add('timer-highlight');
-      }
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>💣 لعبة القنبلة المؤقتة</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <style>
-    /* زر عماني متوهج */
-    .oman-btn {
-      position: relative;
-      overflow: hidden;
-      transition: box-shadow 0.25s, background 0.25s, color 0.18s;
-      box-shadow: 0 0 0 #FFD70000;
-    }
-    .oman-btn:after {
-      content: '';
-      position: absolute;
-      top: -60%; left: -60%;
-      width: 220%; height: 220%;
-      background: radial-gradient(circle, #FFD70055 0%, #FFD70000 80%);
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.3s;
-    }
-    .oman-btn:hover:after, .oman-btn:focus:after {
-      opacity: 1;
-      animation: btnGlow 1.2s infinite alternate;
-    }
-    .oman-btn:active {
-      box-shadow: 0 0 18px #FFD700cc, 0 2px 12px #FFD70055;
-      background: linear-gradient(90deg,#FFD70022 0%,#fffbe6 100%);
-      color: #23243a;
-    }
-    @keyframes btnGlow {
-      0% { opacity: 0.7; }
-      100% { opacity: 1; }
-    }
-
-    /* تقييم نيون متوهج */
-    .evaluation-box {
-      box-shadow: 0 0 24px #FFD700cc, 0 2px 18px #FFD70044;
-      animation: evalPulse 1.2s infinite alternate;
-      border: 2.5px solid #FFD700;
-      background: #23243aee;
-    }
-    @keyframes evalPulse {
-      0% { box-shadow: 0 0 24px #FFD700cc, 0 2px 18px #FFD70044; }
-      100% { box-shadow: 0 0 40px #FFD700ee, 0 2px 24px #FFD70077; }
-    }
-
-    /* مؤقت متوهج عند اختيار الطالب */
-    .timer-highlight {
-      animation: timerFlash 1.1s cubic-bezier(.4,0,.2,1) 1;
-      box-shadow: 0 0 32px #FFD700cc, 0 2px 18px #FFD70044;
-    }
-    @keyframes timerFlash {
-      0% { box-shadow: 0 0 0 #FFD70000; }
-      30% { box-shadow: 0 0 32px #FFD700cc, 0 2px 18px #FFD70044; }
-      100% { box-shadow: 0 0 0 #FFD70000; }
-    }
-    .notification {
-      background: #23243aee;
-      color: #FFD700;
-      border: 2px solid #FFD700;
-      border-radius: 14px;
-      box-shadow: 0 0 18px #FFD70099, 0 2px 12px #000a;
-      padding: 16px 32px 16px 18px;
-      font-size: 1.15rem;
-      font-weight: 900;
-      display: flex; align-items: center; gap: 12px;
-      opacity: 0; transform: translateY(-30px) scale(0.95);
-      transition: opacity 0.35s, transform 0.35s;
-      pointer-events: auto;
-      min-width: 220px;
-      max-width: 350px;
-      cursor: pointer;
-      user-select: none;
-    }
-    .notification .notif-icon { font-size: 1.5rem; }
-    .notification.show {
-      opacity: 1;
-      transform: translateY(0) scale(1.04);
-      animation: notifPulse 1.2s infinite alternate;
-    }
-    .notification-success { border-color: #228B22; color: #fff; background: linear-gradient(90deg,#228B22 0%,#FFD700 100%); }
-    .notification-error { border-color: #DC143C; color: #fff; background: linear-gradient(90deg,#DC143C 0%,#FFD700 100%); }
-    .notification-warning { border-color: #FFD700; color: #FFD700; background: #23243aee; }
-    .notification-info { border-color: #FFD700; color: #FFD700; background: #23243aee; }
-    @keyframes notifPulse {
-      0% { box-shadow: 0 0 18px #FFD70099, 0 2px 12px #000a; }
-      100% { box-shadow: 0 0 32px #FFD700cc, 0 2px 18px #FFD70044; }
-    }
-    :root {
-      --oman-red: #DC143C;
-      --oman-green: #228B22;
-      --oman-white: #fff;
-      --accent-gold: #FFD700;
-      --gradient-danger: linear-gradient(90deg, #DC143C 0%, #FFD700 100%);
-      --gradient-safe: linear-gradient(90deg, #228B22 0%, #FFD700 100%);
-      --gradient-warning: linear-gradient(90deg, #FFD700 0%, #DC143C 100%);
-      --gradient-gold: linear-gradient(90deg, #FFD700 0%, #fff 100%);
-      --gradient-dark: linear-gradient(135deg, #181a23 0%, #23243a 100%);
-      --gradient-background: radial-gradient(ellipse at 70% 0%, #23243a 0%, #181a23 100%);
-      --glass: rgba(255,255,255,0.08);
-      --shadow: 0 4px 24px #0006;
-      --glow-gold: 0 0 16px #FFD70099;
-      --glow-red: 0 0 16px #DC143C99;
-      --glow-green: 0 0 16px #228B2299;
-      --info-card-border: 2px solid var(--accent-gold);
-      --info-card-shadow: 0 2px 8px #FFD70033;
-    }
-    html, body {
-      height: 100%;
-      font-family: 'Cairo', system-ui, sans-serif;
-      background: var(--gradient-background);
-      color: var(--oman-white);
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
+      // حدث اختيار الطالب
+  // ...existing code...
       z-index: 0;
       pointer-events: none;
       background: radial-gradient(circle at 80% 10%, #FFD70022 0, transparent 60%),
@@ -1305,6 +1177,60 @@
       let soundOn = true;
       let students = [];
       let allClasses = {};
+      // Keeps original fetch path: '../data/studentData.json'
+      let __classCache = null;
+      async function loadClasses({
+        src = "../data/studentData.json",
+        signal,
+        timeoutMs = 8000,
+        noCache = false,
+      } = {}) {
+        if (!noCache && __classCache) {
+          allClasses = __classCache;
+          populateClassSelect();
+          return __classCache;
+        }
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), timeoutMs);
+        try {
+          const resp = await fetch(src, {
+            method: "GET",
+            headers: { Accept: "application/json" },
+            signal: signal || controller.signal,
+            cache: "no-store",
+          });
+          if (!resp.ok) throw new Error(`Failed to load classes: ${resp.status} ${resp.statusText}`);
+          const data = await resp.json();
+          const validated = validateClassRosters(data);
+          __classCache = validated;
+          allClasses = validated;
+          populateClassSelect();
+          return validated;
+        } catch (err) {
+          if (err && err.name === "AbortError") throw new Error("Classes fetch aborted (timeout/cancelled).");
+          document.getElementById('classSelect').innerHTML = '<option>تعذر تحميل الصفوف</option>';
+          throw err;
+        } finally {
+          clearTimeout(timer);
+        }
+      }
+      function getStudentsForClass(rosters, className) {
+        const arr = rosters?.[className];
+        return Array.isArray(arr) ? arr.slice() : [];
+      }
+      function validateClassRosters(data) {
+        if (typeof data !== "object" || data === null) {
+          throw new Error("Invalid classes JSON: root must be an object.");
+        }
+        const out = {};
+        for (const [k, v] of Object.entries(data)) {
+          if (!Array.isArray(v) || !v.every(x => typeof x === "string")) {
+            throw new Error(`Invalid roster for '${k}': expected string[].`);
+          }
+          out[k] = v;
+        }
+        return out;
+      }
       let currentExpert = null;
       let customTimerDuration = 60;
       let randomStudentMode = false;
@@ -1328,26 +1254,8 @@
       }
     });
 
-    // تحميل بيانات الصفوف من ملف JSON
-    function loadClasses() {
-      fetch('../data/studentData.json')
-        .then(r => r.json())
-        .then(data => {
-          allClasses = data;
-          const classSelect = document.getElementById('classSelect');
-          classSelect.innerHTML = '<option value="">— اختر الصف —</option>';
-          Object.keys(data).forEach(className => {
-            const opt = document.createElement('option');
-            opt.value = className;
-            opt.textContent = className;
-            classSelect.appendChild(opt);
-          });
-          classSelect.onchange = handleClassChange;
-        })
-        .catch(() => {
-          document.getElementById('classSelect').innerHTML = '<option>تعذر تحميل الصفوف</option>';
-        });
-    }
+  // تحميل بيانات الصفوف من ملف JSON (حديث)
+  // يتم استدعاء loadClasses() بدون وسيطات كما في السابق
 
     function populateClassSelect() {
       const classSelect = document.getElementById('classSelect');
@@ -1355,175 +1263,49 @@
       classSelect.innerHTML = '<option value="">— اختر الصف —</option>';
       Object.keys(allClasses).forEach(className => {
         const opt = document.createElement('option');
-        opt.value = className;
-        opt.textContent = className;
-        classSelect.appendChild(opt);
-      });
-      classSelect.onchange = handleClassChange;
-    }
-
-    function handleClassChange() {
-      const studentSelect = document.getElementById('studentSelect');
-      const studentSelectWrapper = document.getElementById('studentSelectWrapper');
-      if(this.value) {
-        gameState.currentClass = this.value;
-        students = allClasses[this.value] || [];
-        updateGameInfo();
-        // بناء قائمة الطلاب المنسدلة
-        studentSelect.innerHTML = '<option value="">— اختر الطالب —</option>';
-        students.forEach(name => {
-          const opt = document.createElement('option');
-          opt.value = name;
-          opt.textContent = name;
-          studentSelect.appendChild(opt);
-        });
-        studentSelectWrapper.style.display = '';
-        studentSelect.value = '';
-        currentExpert = null;
-        gameState.currentStudent = '—';
-        updateExpertDisplay();
-        // إعادة تعيين العشوائي عند تغيير الصف
-        randomStudentPool = [...students];
-        // إعادة تفعيل زر العشوائي
-        const randomBtn = document.getElementById('randomStudentBtn');
-        if(randomBtn) {
-          randomBtn.disabled = false;
-          randomBtn.innerHTML = '<i class="fa-solid fa-shuffle"></i> اختيار عشوائي';
-          randomBtn.onclick = function(){
-            if(!students || students.length === 0){
-              document.getElementById('bombMessage').textContent = 'يرجى اختيار الصف أولاً.';
-              return;
-            }
-            if(randomStudentPool.length === 0){
-              // إعادة ملء القائمة إذا انتهت
-              randomStudentPool = [...students];
-            }
-            // اختيار عشوائي بدون تكرار
-            const idx = Math.floor(Math.random() * randomStudentPool.length);
-            const selected = randomStudentPool.splice(idx, 1)[0];
-            // تعيين الطالب كخبير وتحديث العرض
-            currentExpert = selected;
-            gameState.currentStudent = selected;
-            updateExpertDisplay();
-            updateGameInfo();
-            playGameSound('../assets/media/sounds/kingdom-sounds/character-intro.mp3',0.7);
-            showNotification(`تم اختيار ${selected} كخبير الجولة!`, 'success');
-            animateTimerHighlight();
-            showEvaluationBox(selected);
-          };
-        }
-        randomStudentMode = false;
-      } else {
-        gameState.currentClass = '—';
-        students = [];
-        updateGameInfo();
-        studentSelect.innerHTML = '<option value="">— اختر الطالب —</option>';
-        studentSelectWrapper.style.display = 'none';
-        currentExpert = null;
-        gameState.currentStudent = '—';
-        updateExpertDisplay();
-        randomStudentPool = [];
-        // إعادة تفعيل زر العشوائي
-        const randomBtn = document.getElementById('randomStudentBtn');
-        if(randomBtn) {
-          randomBtn.disabled = false;
-          randomBtn.innerHTML = '<i class="fa-solid fa-shuffle"></i> اختيار عشوائي';
-        }
-        randomStudentMode = false;
-      }
-    }
-
-    // حدث اختيار الطالب
-    document.addEventListener('DOMContentLoaded', function() {
-      const studentSelect = document.getElementById('studentSelect');
-      if(studentSelect) {
-        studentSelect.onchange = function() {
+        function handleClassChange() {
+          const studentSelect = document.getElementById('studentSelect');
+          const studentSelectWrapper = document.getElementById('studentSelectWrapper');
           if(this.value) {
-            currentExpert = this.value;
-            gameState.currentStudent = this.value;
-            updateExpertDisplay();
+            gameState.currentClass = this.value;
+            students = getStudentsForClass(allClasses, this.value);
             updateGameInfo();
-          } else {
+            // بناء قائمة الطلاب المنسدلة
+            studentSelect.innerHTML = '<option value="">— اختر الطالب —</option>';
+            students.forEach(name => {
+              const opt = document.createElement('option');
+              opt.value = name;
+              opt.textContent = name;
+              studentSelect.appendChild(opt);
+            });
+            studentSelectWrapper.style.display = '';
+            studentSelect.value = '';
             currentExpert = null;
             gameState.currentStudent = '—';
             updateExpertDisplay();
-            updateGameInfo();
-          }
-        };
-      }
-    });
-            const studentSelect = document.getElementById('studentSelect');
-            const studentSelectWrapper = document.getElementById('studentSelectWrapper');
-            if(this.value) {
-              gameState.currentClass = this.value;
-              students = allClasses[this.value] || [];
-              updateGameInfo();
-              // بناء قائمة الطلاب المنسدلة
-              studentSelect.innerHTML = '<option value="">— اختر الطالب —</option>';
-              students.forEach(name => {
-                const opt = document.createElement('option');
-                opt.value = name;
-                opt.textContent = name;
-                studentSelect.appendChild(opt);
-              });
-              studentSelectWrapper.style.display = '';
-              studentSelect.value = '';
-              currentExpert = null;
-              gameState.currentStudent = '—';
-              updateExpertDisplay();
-              // إعادة تعيين العشوائي عند تغيير الصف
-              randomStudentPool = [...students];
-              
-              // إعادة تفعيل زر العشوائي
-              const randomBtn = document.getElementById('randomStudentBtn');
-              if(randomBtn) {
-                randomBtn.disabled = false;
-                randomBtn.innerHTML = '<i class="fa-solid fa-shuffle"></i> اختيار عشوائي';
-                randomBtn.onclick = function(){
-                  if(!students || students.length === 0){
-                    document.getElementById('bombMessage').textContent = 'يرجى اختيار الصف أولاً.';
-                    return;
-                  }
-                  if(randomStudentPool.length === 0){
-                    // إعادة ملء القائمة إذا انتهت
-                    randomStudentPool = [...students];
-                  }
-                  // اختيار عشوائي بدون تكرار
-                  const idx = Math.floor(Math.random() * randomStudentPool.length);
-                  const selected = randomStudentPool.splice(idx, 1)[0];
-                  // تعيين الطالب كخبير وتحديث العرض
-                  currentExpert = selected;
-                  gameState.currentStudent = selected;
-                  updateExpertDisplay();
-                  updateGameInfo();
-                  playGameSound('../assets/media/sounds/kingdom-sounds/character-intro.mp3',0.7);
-                  showNotification(`تم اختيار ${selected} كخبير الجولة!`, 'success');
-                  animateTimerHighlight();
-                  showEvaluationBox(selected);
-                };
-              }
-              randomStudentMode = false;
-              
-            } else {
-              gameState.currentClass = '—';
-              students = [];
-              updateGameInfo();
-              studentSelect.innerHTML = '<option value="">— اختر الطالب —</option>';
-              studentSelectWrapper.style.display = 'none';
-              currentExpert = null;
-              gameState.currentStudent = '—';
-              updateExpertDisplay();
-              randomStudentPool = [];
-              
-              // إعادة تفعيل زر العشوائي
-              const randomBtn = document.getElementById('randomStudentBtn');
-              if(randomBtn) {
-                randomBtn.disabled = false;
-                randomBtn.innerHTML = '<i class="fa-solid fa-shuffle"></i> اختيار عشوائي';
-              }
-              randomStudentMode = false;
-            }
-          // ...existing code...
+            // إعادة تعيين العشوائي عند تغيير الصف
+            randomStudentPool = [...students];
+            // إعادة تفعيل زر العشوائي
+            const randomBtn = document.getElementById('randomStudentBtn');
+            if(randomBtn) {
+              randomBtn.disabled = false;
+              randomBtn.innerHTML = '<i class="fa-solid fa-shuffle"></i> اختيار عشوائي';
+              randomBtn.onclick = function(){
+                if(!students || students.length === 0){
+                  document.getElementById('bombMessage').textContent = 'يرجى اختيار الصف أولاً.';
+                  return;
+                }
+                if(randomStudentPool.length === 0){
+                  // إعادة ملء القائمة إذا انتهت
+                  randomStudentPool = [...students];
+                }
+                // اختيار عشوائي بدون تكرار
+                const idx = Math.floor(Math.random() * randomStudentPool.length);
+                const selected = randomStudentPool.splice(idx, 1)[0];
+                // تعيين الطالب كخبير وتحديث العرض
+                currentExpert = selected;
+                gameState.currentStudent = selected;
+  // ...existing code...
   // ...existing code...
     // ========== Toolbar Logic ==========
     function setupToolbar() {
@@ -1729,7 +1511,6 @@
           bomb.style.animation = '';
         }
       }, 1800);
-  }
 </script>
 </body>
 </html>
