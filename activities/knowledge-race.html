@@ -63,9 +63,111 @@
             margin-left: auto;
             margin-right: auto;
             padding: 24px 12px 0 12px;
-            background: var(--glass);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
+            background: linear-gradient(135deg, #23243a 60%, #2c3e50 100%);
+            border-radius: 30px;
+            box-shadow: 0 8px 40px #000a, 0 1.5px 0 #FFD70033;
+            position: relative;
+            overflow: hidden;
+            animation: arenaFadeIn 1.2s cubic-bezier(.68,-0.55,.27,1.55);
+        }
+        @keyframes arenaFadeIn {
+            0% { opacity: 0; transform: scale(0.92) translateY(60px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .arena .arena-btn {
+            transition: box-shadow 0.2s, transform 0.2s, background 0.2s;
+            box-shadow: 0 2px 12px #FFD70022, 0 0 0 #fff0;
+            border-radius: 16px;
+            font-size: 1.15rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #FFD700 0%, #ff6b35 100%);
+            color: #23243a;
+            margin-bottom: 10px;
+        }
+        .arena .arena-btn:hover, .arena .arena-btn:focus {
+            box-shadow: 0 0 24px #FFD70099, 0 2px 12px #FFD70055;
+            background: linear-gradient(90deg, #ff6b35 0%, #FFD700 100%);
+            color: #fff;
+            transform: scale(1.06) translateY(-2px);
+        }
+        .arena .arena-btn.correct {
+            animation: btnCorrect 0.7s cubic-bezier(.68,-0.55,.27,1.55);
+            background: var(--success-gradient) !important;
+            color: #fff !important;
+            box-shadow: 0 0 32px #38ef7d99, 0 2px 12px #11998e55;
+        }
+        .arena .arena-btn.wrong {
+            animation: btnWrong 0.7s cubic-bezier(.68,-0.55,.27,1.55);
+            background: var(--danger-gradient) !important;
+            color: #fff !important;
+            box-shadow: 0 0 32px #fc466b99, 0 2px 12px #fc466b55;
+        }
+        @keyframes btnCorrect {
+            0% { transform: scale(1); box-shadow: 0 0 0 #fff0; }
+            40% { transform: scale(1.13) rotate(-2deg); box-shadow: 0 0 32px #38ef7d99; }
+            100% { transform: scale(1); box-shadow: 0 0 0 #fff0; }
+        }
+        @keyframes btnWrong {
+            0% { transform: scale(1); box-shadow: 0 0 0 #fff0; }
+            40% { transform: scale(1.13) rotate(2deg); box-shadow: 0 0 32px #fc466b99; }
+            100% { transform: scale(1); box-shadow: 0 0 0 #fff0; }
+        }
+        .arena .race-track {
+            width: 100%;
+            min-height: 120px;
+            background: linear-gradient(90deg, #FFD70022 0%, #fff0 100%);
+            border-radius: 18px;
+            margin: 24px 0 32px 0;
+            box-shadow: 0 2px 16px #FFD70022;
+            position: relative;
+            overflow: visible;
+            animation: trackSlideIn 1.2s cubic-bezier(.68,-0.55,.27,1.55);
+        }
+        @keyframes trackSlideIn {
+            0% { opacity: 0; transform: translateX(80px) scale(0.95); }
+            100% { opacity: 1; transform: translateX(0) scale(1); }
+        }
+        .arena .runner {
+            display: inline-block;
+            min-width: 70px;
+            min-height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FFD700 60%, #fff 100%);
+            box-shadow: 0 0 24px #FFD70055, 0 2px 12px #FFD70022;
+            margin: 0 18px;
+            position: relative;
+            z-index: 2;
+            animation: runnerPopIn 1s cubic-bezier(.68,-0.55,.27,1.55);
+        }
+        @keyframes runnerPopIn {
+            0% { opacity: 0; transform: scale(0.7) translateY(40px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .arena .runner.active {
+            box-shadow: 0 0 32px #38ef7d99, 0 2px 12px #11998e55, 0 0 0 8px #FFD70033;
+            animation: runnerActive 0.7s cubic-bezier(.68,-0.55,.27,1.55);
+        }
+        @keyframes runnerActive {
+            0% { transform: scale(1); }
+            40% { transform: scale(1.15) rotate(-3deg); }
+            100% { transform: scale(1); }
+        }
+        .arena .runner.winner {
+            animation: runnerWinner 1.2s cubic-bezier(.68,-0.55,.27,1.55);
+            box-shadow: 0 0 48px #FFD700cc, 0 0 0 12px #FFD70055;
+            border: 3px solid #FFD700;
+        }
+        @keyframes runnerWinner {
+            0% { transform: scale(1); box-shadow: 0 0 0 #fff0; }
+            30% { transform: scale(1.2) rotate(-6deg); box-shadow: 0 0 48px #FFD700cc; }
+            100% { transform: scale(1); box-shadow: 0 0 0 #fff0; }
+        }
+        /* مؤثرات confetti عند الفوز */
+        .confetti-effect {
+            pointer-events: none;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1000;
         }
         .header {
             margin-top: 110px;
