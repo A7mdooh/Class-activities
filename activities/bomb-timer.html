@@ -571,7 +571,8 @@
         <button class="oman-btn gold" id="pauseBtn"><i class="fa-solid fa-pause"></i> إيقاف مؤقت</button>
         <button class="oman-btn red" id="resetBtn"><i class="fa-solid fa-rotate-right"></i> إعادة ضبط</button>
         <button class="oman-btn gold" id="newRoundBtn"><i class="fa-solid fa-forward"></i> جولة جديدة</button>
-        <button class="oman-btn" id="defuseBtn" style="background:var(--gradient-gold);color:#228B22;margin-top:8px;"><i class="fa-solid fa-check"></i> إبطال القنبلة (إجابة شفهية)</button>
+  <button class="oman-btn" id="defuseBtn" style="background:var(--gradient-gold);color:#228B22;margin-top:8px;"><i class="fa-solid fa-check"></i> إبطال القنبلة (إجابة شفهية)</button>
+  <button class="oman-btn red" id="activateBombBtn" style="margin-top:8px;"><i class="fa-solid fa-bomb"></i> تفعيل القنبلة (إجابة خاطئة)</button>
       </div>
     </div>
   </div>
@@ -872,6 +873,23 @@
       document.getElementById('resetBtn').onclick = resetTimer;
       document.getElementById('newRoundBtn').onclick = newRound;
       document.getElementById('defuseBtn').onclick = defuseBomb;
+      // زر تفعيل القنبلة (إجابة خاطئة)
+      const activateBtn = document.getElementById('activateBombBtn');
+      if(activateBtn) {
+        activateBtn.onclick = function() {
+          if(!gameState.isActive) return;
+          if(gameState.timer) clearInterval(gameState.timer);
+          gameState.isActive = false;
+          gameState.explodedBombs++;
+          updateGameInfo();
+          setGameState('explosion', '💥 انفجرت القنبلة (إجابة خاطئة)!');
+          document.getElementById('bombMessage').innerHTML = `<span style='color:#DC143C;font-size:1.2rem;font-weight:900;'>إجابة خاطئة! القنبلة انفجرت يا ${currentExpert}!</span>`;
+          bombExplosionEffect();
+          showStudentNotification(`💥 إجابة خاطئة! انفجرت القنبلة يا ${currentExpert}!`, 'cosmic-explosion.mp3', 'linear-gradient(90deg,#DC143C,#FFD700)');
+          playKingdomSound('battle-victory.mp3');
+          updateHonorData();
+        };
+      }
     }
     function showGameSetup() {
       openModal('guideModal');
@@ -1109,5 +1127,4 @@
   </script>
 </body>
 </html>
-
 
