@@ -308,26 +308,41 @@ class ResponsiveHelper {
     }
 }
 document.addEventListener('DOMContentLoaded', () => {
+
     window.responsiveHelper = new ResponsiveHelper();
+    loadStudentsData();
 });
 
+// تحميل بيانات الطلاب من ملف JSON
+let studentsData = {};
+async function loadStudentsData() {
+    try {
+        const response = await fetch('../data/studentData.json');
+        if (response.ok) {
+            studentsData = await response.json();
+            populateClassSelect();
+            showSmartMessage('تم تحميل بيانات الطلاب بنجاح!');
+        } else {
+            throw new Error('فشل في تحميل البيانات');
+        }
+    } catch (error) {
+        console.log('خطأ في تحميل بيانات الطلاب:', error);
+        studentsData = {};
+        showSmartMessage('تعذر تحميل بيانات الطلاب!');
+    }
+}
+
+function populateClassSelect() {
+    classSelect.innerHTML = '<option value="">-- اختر الصف --</option>';
+    Object.keys(studentsData).forEach(className => {
+        const opt = document.createElement('option');
+        opt.value = className;
+        opt.textContent = className;
+        classSelect.appendChild(opt);
+    });
+}
+
 // بيانات تجريبية للصفوف والطلاب (يمكنك ربطها بملف خارجي لاحقاً)
-const classes = [
-    { id: '1', name: 'الصف الخامس' },
-    { id: '2', name: 'الصف السادس' },
-    { id: '3', name: 'الصف السابع' }
-];
-const students = [
-    { id: 'a', name: 'أحمد', classId: '1' },
-    { id: 'b', name: 'سارة', classId: '1' },
-    { id: 'c', name: 'محمد', classId: '1' },
-    { id: 'd', name: 'نورة', classId: '2' },
-    { id: 'e', name: 'خالد', classId: '2' },
-    { id: 'f', name: 'مها', classId: '2' },
-    { id: 'g', name: 'سلمان', classId: '3' },
-    { id: 'h', name: 'ريم', classId: '3' },
-    { id: 'i', name: 'يوسف', classId: '3' }
-];
 let selectedClass = null;
 let selectedCompetitors = [];
 let selectionMode = null; // 'random' or 'manual'
@@ -346,12 +361,7 @@ const infoBtn = document.getElementById('infoBtn');
 const instructionsModal = document.getElementById('instructionsModal');
 
 // تعبئة قائمة الصفوف
-classes.forEach(cls => {
-    const opt = document.createElement('option');
-    opt.value = cls.id;
-    opt.textContent = cls.name;
-    classSelect.appendChild(opt);
-});
+
 
 classSelect.addEventListener('change', () => {
     selectedClass = classSelect.value;
@@ -370,7 +380,7 @@ randomSelectBtn.addEventListener('click', () => {
     selectionMode = 'random';
     manualStudentsList.style.display = 'none';
     confirmCompetitorsBtn.style.display = '';
-    const classStudents = students.filter(s => s.classId == selectedClass);
+    const classStudents = (studentsData[selectedClass] || []).map((name, idx) => ({ id: 'stu'+idx, name, classId: selectedClass }));
     const n = Math.min(4, classStudents.length);
     selectedCompetitors = shuffle(classStudents).slice(0, n);
 });
@@ -384,7 +394,7 @@ manualSelectBtn.addEventListener('click', () => {
 
 function renderManualStudentsList() {
     manualStudentsList.innerHTML = '';
-    const classStudents = students.filter(s => s.classId == selectedClass);
+    const classStudents = (studentsData[selectedClass] || []).map((name, idx) => ({ id: 'stu'+idx, name, classId: selectedClass }));
     classStudents.forEach(stu => {
         const div = document.createElement('div');
         div.className = 'student-checkbox';
@@ -395,13 +405,14 @@ function renderManualStudentsList() {
 
 confirmCompetitorsBtn.addEventListener('click', () => {
     if (selectionMode === 'manual') {
+        const classStudents = (studentsData[selectedClass] || []).map((name, idx) => ({ id: 'stu'+idx, name, classId: selectedClass }));
         const checked = manualStudentsList.querySelectorAll('input[type=checkbox]:checked');
         if (checked.length < 2) {
             showSmartMessage('اختر على الأقل متنافسين!');
             return;
         }
         selectedCompetitors = Array.from(checked).map(chk => {
-            return students.find(s => s.id == chk.value);
+            return classStudents.find(s => s.id == chk.value);
         });
     }
     if (selectedCompetitors.length < 2) {
