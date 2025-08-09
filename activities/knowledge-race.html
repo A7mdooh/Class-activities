@@ -472,6 +472,39 @@ const wrongBtn = document.getElementById('wrongBtn');
 const pauseBtn = document.getElementById('pauseBtn');
 let currentTurn = 0;
 
+function setArenaControlsState(state) {
+    // state: 'setup', 'active', 'paused', 'finished'
+    if (state === 'setup') {
+        startRaceBtn.disabled = false;
+        nextQuestionBtn.disabled = true;
+        correctBtn.disabled = true;
+        wrongBtn.disabled = true;
+        pauseBtn.disabled = true;
+        pauseBtn.textContent = 'إيقاف مؤقت';
+    } else if (state === 'active') {
+        startRaceBtn.disabled = true;
+        nextQuestionBtn.disabled = false;
+        correctBtn.disabled = false;
+        wrongBtn.disabled = false;
+        pauseBtn.disabled = false;
+        pauseBtn.textContent = 'إيقاف مؤقت';
+    } else if (state === 'paused') {
+        startRaceBtn.disabled = true;
+        nextQuestionBtn.disabled = true;
+        correctBtn.disabled = true;
+        wrongBtn.disabled = true;
+        pauseBtn.disabled = false;
+        pauseBtn.textContent = 'استئناف السباق';
+    } else if (state === 'finished') {
+        startRaceBtn.disabled = true;
+        nextQuestionBtn.disabled = true;
+        correctBtn.disabled = true;
+        wrongBtn.disabled = true;
+        pauseBtn.disabled = true;
+        pauseBtn.textContent = 'إيقاف مؤقت';
+    }
+}
+
 startRaceBtn.addEventListener('click', () => {
     if (raceActive) return;
     raceActive = true;
@@ -485,18 +518,26 @@ startRaceBtn.addEventListener('click', () => {
         stats[stu.id] = { correct: 0, wrong: 0 };
         document.getElementById('progress_' + stu.id).style.width = '0%';
         document.getElementById('score_' + stu.id).textContent = 'النقاط: 0';
+        document.querySelectorAll('.team-card').forEach(card => card.classList.remove('winner'));
     });
     currentTurn = 0;
     showStatsPanel();
     showSmartMessage('انطلق السباق!');
     playSound('start');
     highlightCurrent();
+    setArenaControlsState('active');
 });
 
 pauseBtn.addEventListener('click', () => {
     if (!raceActive) return;
     racePaused = !racePaused;
-    showSmartMessage(racePaused ? 'تم إيقاف السباق مؤقتاً' : 'استئناف السباق!');
+    if (racePaused) {
+        setArenaControlsState('paused');
+        showSmartMessage('تم إيقاف السباق مؤقتاً');
+    } else {
+        setArenaControlsState('active');
+        showSmartMessage('استئناف السباق!');
+    }
 });
 
 nextQuestionBtn.addEventListener('click', () => {
@@ -515,6 +556,7 @@ correctBtn.addEventListener('click', () => {
     playSound('correct');
     showSmartMessage('أحسنت يا ' + stu.name + '!');
     updateStatsPanel();
+    animateCard(stu.id, 'success');
     if (scores[stu.id] >= raceDistance) {
         finishRace(stu);
     } else {
@@ -529,6 +571,7 @@ wrongBtn.addEventListener('click', () => {
     playSound('wrong');
     showSmartMessage('حظاً أوفر يا ' + stu.name + '!');
     updateStatsPanel();
+    animateCard(stu.id, 'fail');
     nextQuestionBtn.click();
 });
 
@@ -548,10 +591,28 @@ function highlightCurrent() {
 
 function finishRace(winner) {
     raceActive = false;
+    setArenaControlsState('finished');
     showSmartMessage('🎉 مبروك للفائز: ' + winner.name + ' 🎉');
     playSound('win');
     confettiEffect();
+    // تمييز بطاقة الفائز
+    const card = Array.from(document.querySelectorAll('.team-card')).find(c => c.querySelector('.team-name').textContent === winner.name);
+    if (card) card.classList.add('winner');
     showHonorBoard();
+}
+// مؤثرات على البطاقة
+function animateCard(stuId, type) {
+    const card = Array.from(document.querySelectorAll('.team-card')).find(c => c.querySelector('.team-name').textContent === (students.find(s=>s.id===stuId)?.name));
+    if (!card) return;
+    if (type === 'success') {
+        card.style.boxShadow = '0 0 32px 8px #28a74599';
+        card.style.transform = 'scale(1.05)';
+        setTimeout(()=>{card.style.boxShadow='';card.style.transform='';}, 600);
+    } else if (type === 'fail') {
+        card.style.boxShadow = '0 0 32px 8px #dc143c99';
+        card.style.transform = 'scale(0.97)';
+        setTimeout(()=>{card.style.boxShadow='';card.style.transform='';}, 600);
+    }
 }
 
 function showStatsPanel() {
@@ -654,8 +715,23 @@ function animateRocket(stuId, percent) {
 }
 // تعليمات
 infoBtn.onclick = () => instructionsModal.removeAttribute('hidden');
-homeBtn.onclick = () => location.reload();
+homeBtn.onclick = () => {
+    // إعادة تعيين كل شيء
+    document.getElementById('setupSection').style.display = '';
+    document.getElementById('teamsRow').style.display = 'none';
+    document.getElementById('arenaControls').style.display = 'none';
+    if (document.getElementById('statsPanel')) document.getElementById('statsPanel').remove();
+    if (document.getElementById('honorBoard')) document.getElementById('honorBoard').remove();
+    selectedClass = null;
+    selectedCompetitors = [];
+    selectionMode = null;
+    classSelect.value = '';
+    studentsSection.style.display = 'none';
+    setArenaControlsState('setup');
+};
 // إغلاق المودال بزر Esc
 window.addEventListener('keydown',e=>{if(e.key==='Escape'){instructionsModal.setAttribute('hidden','')}});
+// تفعيل الحالة الابتدائية للأزرار عند تحميل الصفحة
+setArenaControlsState('setup');
     </script>
 </html>
