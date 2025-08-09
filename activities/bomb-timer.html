@@ -1157,7 +1157,15 @@
       const bomb = document.getElementById('bomb');
       bomb.classList.add('state-explosion');
       bomb.style.animation = 'shake 0.2s 8';
-      playKingdomSound('cosmic-explosion.mp3');
+      // تأثير شرارة انفجار على الفتيل
+      const spark = document.getElementById('fuseTimerSpark');
+      if(spark) {
+        spark.setAttribute('r', 22);
+        spark.setAttribute('fill', 'url(#sparkGradient)');
+        spark.style.transition = 'r 0.2s cubic-bezier(.4,2,.6,1)';
+        setTimeout(()=>{ if(spark) spark.setAttribute('r', 10); }, 700);
+      }
+      playKingdomSound('bomb-explosion.mp3');
       setTimeout(() => { bomb.style.animation = ''; }, 1800);
       updateHonorData();
     }
