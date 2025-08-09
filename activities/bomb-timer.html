@@ -186,8 +186,8 @@
     }
     .bomb {
       width: 180px; height: 180px; border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, #FFD700 0,#23243a 60%);
-      box-shadow: 0 0 0 4px #FFD70044 inset, 0 0 32px #FFD70033, 0 8px 30px #000a;
+      background: radial-gradient(circle at 40% 30%, #FFD700 0 30%, #23243a 70% 100%);
+      box-shadow: 0 0 0 8px #FFD70044 inset, 0 0 48px #FFD70033, 0 12px 40px #000a;
       display: flex; align-items: center; justify-content: center;
       font-size: 5rem; color: #FFD700;
       position: relative;
@@ -196,8 +196,8 @@
       transition: box-shadow 0.3s;
     }
     @keyframes bombPulse {
-      0%,100%{box-shadow: 0 0 0 4px #FFD70044 inset, 0 0 32px #FFD70033, 0 8px 30px #000a;}
-      50%{box-shadow: 0 0 0 8px #FFD70088 inset, 0 0 64px #FFD70077, 0 8px 30px #000a;}
+      0%,100%{box-shadow: 0 0 0 8px #FFD70044 inset, 0 0 48px #FFD70033, 0 12px 40px #000a;}
+      50%{box-shadow: 0 0 0 16px #FFD70088 inset, 0 0 96px #FFD70077, 0 12px 40px #000a;}
     }
     .fuse {
       position: absolute; top: -38px; left: 50%; transform: translateX(-50%);
@@ -515,12 +515,12 @@
     <!-- Bomb Area -->
     <div class="bomb-area">
       <div id="gameState" class="game-state state-waiting">🚨 في انتظار بدء اللعبة</div>
-      <div class="bomb" id="bomb" style="position:relative;z-index:1;width:120px;height:120px;margin:0 auto;background:none;box-shadow:none;">
-        <!-- فتيل متحرك فقط -->
-        <div class="fuse-timer-visual" style="position:absolute;left:50%;top:-70px;transform:translateX(-50%);z-index:100;pointer-events:none;width:40px;height:60px;display:flex;flex-direction:column;align-items:center;">
-          <svg id="fuseTimerSVG" width="40" height="60" style="overflow:visible;">
-            <line id="fuseTimerLine" x1="20" y1="10" x2="20" y2="50" stroke="#FFD700" stroke-width="6" stroke-linecap="round" filter="url(#fuseGlow)"/>
-            <circle id="fuseTimerSpark" cx="20" cy="10" r="9" fill="url(#sparkGradient)" filter="url(#sparkGlow)"/>
+      <div class="bomb" id="bomb" style="position:relative;z-index:1;width:180px;height:180px;margin:0 auto;background:radial-gradient(circle at 40% 30%, #FFD700 0 30%, #23243a 70% 100%);box-shadow:0 0 0 8px #FFD70044 inset,0 0 48px #FFD70033,0 12px 40px #000a;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+        <!-- فتيل متحرك متوهج مع شرارة متقدمة -->
+        <div class="fuse-timer-visual" style="position:absolute;left:50%;top:-60px;transform:translateX(-50%);z-index:100;pointer-events:none;width:60px;height:80px;display:flex;flex-direction:column;align-items:center;">
+          <svg id="fuseTimerSVG" width="60" height="80" style="overflow:visible;">
+            <path id="fuseTimerPath" d="M30,10 Q40,30 30,50 Q20,70 30,70" stroke="#FFD700" stroke-width="6" fill="none" stroke-linecap="round" filter="url(#fuseGlow)"/>
+            <circle id="fuseTimerSpark" r="11" fill="url(#sparkGradient)" filter="url(#sparkGlow)"/>
             <defs>
               <filter id="fuseGlow">
                 <feGaussianBlur stdDeviation="2.5" result="blur"/>
@@ -544,7 +544,11 @@
             </defs>
           </svg>
         </div>
-        <span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;font-size:4rem;filter:drop-shadow(0 0 16px #FFD70099);">💣</span>
+        <!-- مؤقت رقمي عصري -->
+        <div class="timer-display advanced-timer-glow" style="z-index:102;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:90px;height:90px;display:flex;align-items:center;justify-content:center;background:rgba(24,26,35,0.85);border-radius:50%;box-shadow:0 0 24px #FFD70077,0 0 0 6px #FFD70022 inset;">
+          <span class="timer-text" id="timerDisplay" style="font-size:2.2rem;font-weight:900;color:#FFD700;text-shadow:0 0 18px #FFD700cc,0 0 32px #FFD70099;letter-spacing:2px;">00:00</span>
+        </div>
+        <span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;font-size:6rem;filter:drop-shadow(0 0 32px #FFD70099);">💣</span>
       </div>
       <div class="timer-visual-wrapper">
         <svg id="timerRing" width="120" height="120" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;pointer-events:none;">
@@ -980,24 +984,43 @@
       const m = Math.floor(sec/60).toString().padStart(2,'0');
       const s = (sec%60).toString().padStart(2,'0');
       document.getElementById('timerDisplay').textContent = `${m}:${s}`;
-      // تحديث الفتيل المتحرك
-      const fuseLine = document.getElementById('fuseTimerLine');
+      // تحريك الشرارة على مسار الفتيل المنحني
+      const path = document.getElementById('fuseTimerPath');
       const spark = document.getElementById('fuseTimerSpark');
-      if(fuseLine && spark) {
+      if(path && spark) {
         let total = customTimerDuration || 60;
         if(gameState && gameState.timeLeft && gameState.timeLeft > total) total = gameState.timeLeft;
         const percent = Math.max(0, Math.min(1, sec/total));
-        // الفتيل يبدأ من y1=10 (أعلى) إلى y2=50 (أسفل)
-        const yStart = 10;
-        const yEnd = 50;
-        const ySpark = yStart + (yEnd-yStart)*(1-percent);
-        fuseLine.setAttribute('y2', ySpark);
-        spark.setAttribute('cy', ySpark);
+        // حساب موضع الشرارة على المسار
+        const p = getPointOnQuadraticPath(percent);
+        spark.setAttribute('cx', p.x);
+        spark.setAttribute('cy', p.y);
         // لون الفتيل حسب الوقت
-        if(percent > 0.5) fuseLine.setAttribute('stroke', '#FFD700');
-        else if(percent > 0.2) fuseLine.setAttribute('stroke', '#FF9800');
-        else fuseLine.setAttribute('stroke', '#DC143C');
+        if(percent > 0.5) path.setAttribute('stroke', '#FFD700');
+        else if(percent > 0.2) path.setAttribute('stroke', '#FF9800');
+        else path.setAttribute('stroke', '#DC143C');
       }
+    }
+    // دالة لحساب موضع الشرارة على مسار منحني (Quadratic Bezier)
+    function getPointOnQuadraticPath(t) {
+      // المسار: M30,10 Q40,30 30,50 Q20,70 30,70
+      // نقطتان منحنيتان: [30,10] -> [40,30] -> [30,50] -> [20,70] -> [30,70]
+      // نقسم t على نصفين: 0-0.5 للمنحنى الأول، 0.5-1 للثاني
+      if(t <= 0.5) {
+        // منحنى أول: [30,10] Q[40,30] [30,50]
+        const tt = t*2;
+        return quadraticBezier(tt, {x:30,y:10}, {x:40,y:30}, {x:30,y:50});
+      } else {
+        // منحنى ثاني: [30,50] Q[20,70] [30,70]
+        const tt = (t-0.5)*2;
+        return quadraticBezier(tt, {x:30,y:50}, {x:20,y:70}, {x:30,y:70});
+      }
+    }
+    function quadraticBezier(t, p0, p1, p2) {
+      // B(t) = (1-t)^2*P0 + 2*(1-t)*t*P1 + t^2*P2
+      const x = (1-t)*(1-t)*p0.x + 2*(1-t)*t*p1.x + t*t*p2.x;
+      const y = (1-t)*(1-t)*p0.y + 2*(1-t)*t*p1.y + t*t*p2.y;
+      return {x, y};
     }
     // ========== Teacher Controls ==========
     function setupEventListeners() {
