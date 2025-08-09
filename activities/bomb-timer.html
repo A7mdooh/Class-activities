@@ -1221,13 +1221,33 @@
         el.onmouseover = null;
       });
     }
-    // ========== Kingdom Sounds ==========
+    // ========== نظام صوتي متكامل ==========
+    const soundLibrary = {
+      'bomb-explosion': '../assets/media/sounds/kingdom-sounds/bomb-explosion.mp3',
+      'cosmic-explosion': '../assets/media/sounds/kingdom-sounds/cosmic-explosion.mp3',
+      'battle-victory': '../assets/media/sounds/kingdom-sounds/battle-victory.mp3',
+      'ultimate-triumph': '../assets/media/sounds/kingdom-sounds/ultimate-triumph.mp3',
+      'timer-start': '../assets/media/sounds/kingdom-sounds/timer-start.mp3',
+      'timer-pause': '../assets/media/sounds/kingdom-sounds/time-warp.mp3',
+      'time-warning': '../assets/media/sounds/kingdom-sounds/time-warning.mp3',
+      'setting-change': '../assets/media/sounds/kingdom-sounds/setting-change.mp3',
+      'war-drum': '../assets/media/sounds/kingdom-sounds/war-drum.mp3',
+      'star-fall': '../assets/media/sounds/kingdom-sounds/star-fall.mp3',
+      'scanner-beep': '../assets/media/sounds/kingdom-sounds/scanner-beep.mp3',
+      'brain-activate': '../assets/media/sounds/kingdom-sounds/brain-activate.mp3',
+      'character-intro': '../assets/media/sounds/kingdom-sounds/character-intro.mp3',
+      'thunder-rumble': '../assets/media/sounds/kingdom-sounds/thunder-rumble.mp3',
+      'achievement-unlock': '../assets/media/sounds/kingdom-sounds/achievement-unlock.mp3',
+      'Notification': '../assets/media/sounds/Notification.mp3',
+      // أضف المزيد حسب الحاجة
+    };
     let kingdomAudio = null;
-    function playKingdomSound(file) {
+    function playKingdomSound(key) {
       if(!soundOn) return;
       try {
         if(kingdomAudio) { kingdomAudio.pause(); kingdomAudio.currentTime = 0; }
-        kingdomAudio = new Audio('../assets/media/sounds/kingdom-sounds/' + file);
+        let src = soundLibrary[key.replace('.mp3','')] || soundLibrary[key] || ('../assets/media/sounds/kingdom-sounds/' + key);
+        kingdomAudio = new Audio(src);
         kingdomAudio.volume = 0.7;
         kingdomAudio.play();
       } catch(e) {}
