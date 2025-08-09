@@ -587,6 +587,173 @@
             <button class="arena-btn" id="wrongBtn">إجابة خاطئة</button>
             <button class="arena-btn" id="pauseBtn">إيقاف مؤقت</button>
         </div>
+        <!-- لوحة الشرف ومضمار السباق -->
+        <div id="honorBoard" class="honor-board" style="display:none;">
+            <div class="honor-glow"></div>
+            <div class="honor-content">
+                <div class="honor-crown"><i class="fas fa-crown"></i></div>
+                <div class="honor-winner-name" id="winnerName"></div>
+                <div class="honor-winner-avatar" id="winnerAvatar"></div>
+                <div class="honor-message">مبروك الفوز!</div>
+            </div>
+        </div>
+        <div class="race-track" id="raceTrack"></div>
+        <style>
+        .honor-board {
+            position: absolute;
+            top: 30px; left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #fffbe6 60%, #ffe082 100%);
+            border-radius: 28px;
+            box-shadow: 0 8px 40px #FFD70099, 0 1.5px 0 #FFD70033;
+            padding: 32px 38px 28px 38px;
+            z-index: 1002;
+            min-width: 320px;
+            text-align: center;
+            animation: honorPop 1.2s cubic-bezier(.68,-0.55,.27,1.55);
+        }
+        @keyframes honorPop {
+            0% { opacity: 0; transform: translateX(-50%) scale(0.7) translateY(-60px); }
+            100% { opacity: 1; transform: translateX(-50%) scale(1) translateY(0); }
+        }
+        .honor-glow {
+            position: absolute; inset: 0; border-radius: 28px;
+            box-shadow: 0 0 80px 30px #FFD70055, 0 0 0 0 #fff0;
+            z-index: -1;
+        }
+        .honor-crown {
+            font-size: 2.8rem; color: #FFD700; margin-bottom: 10px; text-shadow: 0 0 24px #FFD70099;
+        }
+        .honor-winner-name {
+            font-size: 1.7rem; font-weight: bold; color: #8a2be2; margin-bottom: 8px;
+        }
+        .honor-winner-avatar {
+            width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 12px auto; background: #fff; box-shadow: 0 2px 16px #FFD70055;
+            display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: #FFD700;
+        }
+        .honor-message {
+            font-size: 1.2rem; color: #23243a; margin-top: 10px; font-weight: 700;
+        }
+        .race-track {
+            display: flex; align-items: center; justify-content: flex-start;
+            gap: 0; position: relative; min-height: 120px; margin-top: 40px;
+            background: linear-gradient(90deg, #FFD70022 0%, #fff0 100%);
+            border-radius: 18px;
+            box-shadow: 0 2px 16px #FFD70022;
+            padding: 32px 24px;
+        }
+        .race-tile {
+            width: 60px; height: 60px; border-radius: 16px;
+            background: linear-gradient(135deg, #fffbe6 60%, #ffe082 100%);
+            margin-left: -18px; box-shadow: 0 2px 8px #FFD70033;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; color: #FFD700; font-weight: bold;
+            position: relative;
+            z-index: 1;
+            border: 2px solid #FFD70044;
+        }
+        .race-tile.finish {
+            background: linear-gradient(135deg, #FFD700 60%, #fffbe6 100%);
+            border: 2.5px solid #FFD700;
+            box-shadow: 0 0 24px #FFD70099;
+        }
+        .runner {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            transform: translateY(20px);
+            transition: left 0.7s cubic-bezier(.68,-0.55,.27,1.55);
+            z-index: 10;
+        }
+        .runner.winner {
+            z-index: 20;
+            animation: runnerWinner 1.2s cubic-bezier(.68,-0.55,.27,1.55);
+        }
+        </style>
+        <script>
+        // إعداد بيانات المتسابقين (مثال)
+        const competitors = [
+            { name: 'سالم', avatar: '👦', color: '#FFD700' },
+            { name: 'مريم', avatar: '👧', color: '#8a2be2' }
+        ];
+        const trackLength = 8; // عدد مربعات المضمار
+        let positions = Array(competitors.length).fill(0);
+        let winnerIndex = null;
+
+        function renderTrack() {
+            const track = document.getElementById('raceTrack');
+            track.innerHTML = '';
+            for (let i = 0; i < trackLength; i++) {
+                const tile = document.createElement('div');
+                tile.className = 'race-tile' + (i === trackLength - 1 ? ' finish' : '');
+                tile.textContent = i === trackLength - 1 ? '🏁' : '';
+                track.appendChild(tile);
+            }
+            // رسم المتسابقين
+            competitors.forEach((comp, idx) => {
+                let runner = document.getElementById('runner-' + idx);
+                if (!runner) {
+                    runner = document.createElement('div');
+                    runner.className = 'runner';
+                    runner.id = 'runner-' + idx;
+                    runner.innerHTML = `<span style="font-size:2.2rem;">${comp.avatar}</span>`;
+                    runner.style.background = `linear-gradient(135deg, ${comp.color} 60%, #fff 100%)`;
+                    runner.style.minWidth = '70px';
+                    runner.style.minHeight = '70px';
+                    runner.style.borderRadius = '50%';
+                    runner.style.display = 'flex';
+                    runner.style.alignItems = 'center';
+                    runner.style.justifyContent = 'center';
+                    runner.style.boxShadow = '0 0 24px #FFD70055, 0 2px 12px #FFD70022';
+                    track.appendChild(runner);
+                }
+                // حساب موقع المتسابق
+                const tile = track.children[positions[idx]];
+                if (tile) {
+                    runner.style.left = tile.offsetLeft + 'px';
+                }
+                runner.style.bottom = '100%';
+                runner.classList.toggle('winner', winnerIndex === idx);
+            });
+        }
+
+        function moveRunner(idx) {
+            if (winnerIndex !== null) return;
+            positions[idx] = Math.min(positions[idx] + 1, trackLength - 1);
+            renderTrack();
+            // فوز
+            if (positions[idx] === trackLength - 1) {
+                winnerIndex = idx;
+                showHonorBoard(idx);
+                launchConfetti();
+            }
+        }
+
+        function showHonorBoard(idx) {
+            const board = document.getElementById('honorBoard');
+            document.getElementById('winnerName').textContent = competitors[idx].name;
+            document.getElementById('winnerAvatar').textContent = competitors[idx].avatar;
+            board.style.display = 'block';
+            setTimeout(() => { board.style.opacity = 1; }, 50);
+        }
+
+        function launchConfetti() {
+            if (window.confetti) {
+                confetti({
+                    particleCount: 120,
+                    spread: 90,
+                    origin: { y: 0.3 },
+                    colors: ['#FFD700', '#fff', '#8a2be2']
+                });
+            }
+        }
+
+        // مثال: تحريك المتسابقين عند الضغط على زر (يمكن ربطها بمنطق الإجابة الصحيحة)
+        window.moveRunner = moveRunner;
+        window.onload = () => {
+            renderTrack();
+        };
+        </script>
     </section>
         <!-- Sound Settings Modal (copied from tower-game.html) -->
     <div class="sound-settings-modal" id="soundSettingsModal" style="display:none;">
