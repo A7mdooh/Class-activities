@@ -10,7 +10,6 @@
         <style>
         :root {
             --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --tower-gradient: linear-gradient(45deg, #ffd700 0%, #ff6b35 50%, #ffd700 100%);
             --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
             --danger-gradient: linear-gradient(135deg, #fc466b 0%, #3f5efb 100%);
             --warning-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
@@ -670,19 +669,18 @@
             animation: runnerWinner 1.2s cubic-bezier(.68,-0.55,.27,1.55);
         }
         </style>
-        <script>
-        // إعداد بيانات المتسابقين (مثال)
-        const competitors = [
-            { name: 'سالم', avatar: '👦', color: '#FFD700' },
-            { name: 'مريم', avatar: '👧', color: '#8a2be2' }
-        ];
+    </script>
+        // سباق متقدم: ربط المتسابقين المختارين بمضمار متحرك
+        // إعدادات المضمار
         const trackLength = 8; // عدد مربعات المضمار
-        let positions = Array(competitors.length).fill(0);
-        let winnerIndex = null;
-
-        function renderTrack() {
+        let runnerPositions = [];
+        let runnerColors = [
+            '#FFD700', '#8a2be2', '#28a745', '#dc143c', '#00bcd4', '#ff9800', '#e91e63', '#3f51b5'
+        ];
+        function renderRaceTrack() {
             const track = document.getElementById('raceTrack');
             track.innerHTML = '';
+            // رسم مربعات المضمار
             for (let i = 0; i < trackLength; i++) {
                 const tile = document.createElement('div');
                 tile.className = 'race-tile' + (i === trackLength - 1 ? ' finish' : '');
@@ -690,14 +688,14 @@
                 track.appendChild(tile);
             }
             // رسم المتسابقين
-            competitors.forEach((comp, idx) => {
-                let runner = document.getElementById('runner-' + idx);
+            selectedCompetitors.forEach((stu, idx) => {
+                let runner = document.getElementById('runner-' + stu.id);
                 if (!runner) {
                     runner = document.createElement('div');
                     runner.className = 'runner';
-                    runner.id = 'runner-' + idx;
-                    runner.innerHTML = `<span style="font-size:2.2rem;">${comp.avatar}</span>`;
-                    runner.style.background = `linear-gradient(135deg, ${comp.color} 60%, #fff 100%)`;
+                    runner.id = 'runner-' + stu.id;
+                    runner.innerHTML = `<span style="font-size:2.2rem;">${stu.avatar || '🚀'}</span>`;
+                    runner.style.background = `linear-gradient(135deg, ${runnerColors[idx % runnerColors.length]} 60%, #fff 100%)`;
                     runner.style.minWidth = '70px';
                     runner.style.minHeight = '70px';
                     runner.style.borderRadius = '50%';
@@ -708,54 +706,49 @@
                     track.appendChild(runner);
                 }
                 // حساب موقع المتسابق
-                const tile = track.children[positions[idx]];
+                const pos = runnerPositions[idx] || 0;
+                const tile = track.children[pos];
                 if (tile) {
+                    runner.style.position = 'absolute';
                     runner.style.left = tile.offsetLeft + 'px';
+                    runner.style.bottom = '100%';
                 }
-                runner.style.bottom = '100%';
-                runner.classList.toggle('winner', winnerIndex === idx);
+                runner.classList.toggle('winner', false);
             });
         }
 
-        function moveRunner(idx) {
-            if (winnerIndex !== null) return;
-            positions[idx] = Math.min(positions[idx] + 1, trackLength - 1);
-            renderTrack();
-            // فوز
-            if (positions[idx] === trackLength - 1) {
-                winnerIndex = idx;
-                showHonorBoard(idx);
-                launchConfetti();
-            }
+        // تحديث مواقع المتسابقين بناءً على النقاط
+        function updateRunnerPositions() {
+            runnerPositions = selectedCompetitors.map((stu, idx) => {
+                const score = scores[stu.id] || 0;
+                return Math.min(trackLength - 1, Math.floor((score / raceDistance) * (trackLength - 1)));
+            });
+            renderRaceTrack();
         }
 
-        function showHonorBoard(idx) {
-            const board = document.getElementById('honorBoard');
-            document.getElementById('winnerName').textContent = competitors[idx].name;
-            document.getElementById('winnerAvatar').textContent = competitors[idx].avatar;
-            board.style.display = 'block';
-            setTimeout(() => { board.style.opacity = 1; }, 50);
-        }
+        // استدعاء عند تحديث النقاط أو بدء السباق
+        // استبدل renderTrack وmoveRunner بمنطق جديد
+        // عند تحديث النقاط:
+        // updateRunnerPositions();
 
-        function launchConfetti() {
-            if (window.confetti) {
-                confetti({
-                    particleCount: 120,
-                    spread: 90,
-                    origin: { y: 0.3 },
-                    colors: ['#FFD700', '#fff', '#8a2be2']
-                });
-            }
-        }
+        // عند بدء السباق أو تأكيد المتسابقين:
+        // runnerPositions = Array(selectedCompetitors.length).fill(0);
+        // renderRaceTrack();
 
-        // مثال: تحريك المتسابقين عند الضغط على زر (يمكن ربطها بمنطق الإجابة الصحيحة)
-        window.moveRunner = moveRunner;
-        window.onload = () => {
-            renderTrack();
-        };
-        </script>
+        // عند الفوز:
+        // runner.classList.add('winner');
+
+        // ربط التحديثات بمنطق السباق الحالي
+        // استدعاء renderRaceTrack عند تأكيد المتسابقين
+        // استدعاء updateRunnerPositions عند تحديث النقاط
+        // استدعاء renderRaceTrack عند إعادة تعيين السباق
+
+        // عند تحميل الصفحة، لا ترسم المضمار حتى يتم اختيار المتسابقين
+        window.renderRaceTrack = renderRaceTrack;
+        window.updateRunnerPositions = updateRunnerPositions;
+    <!-- End arena section -->
     </section>
-        <!-- Sound Settings Modal (copied from tower-game.html) -->
+    <!-- Sound Settings Modal (copied from tower-game.html) -->
     <div class="sound-settings-modal" id="soundSettingsModal" style="display:none;">
             <div class="sound-settings-panel" style="background:rgba(34,36,50,0.98);border-radius:22px;box-shadow:0 8px 40px 0 #000a,0 1.5px 0 #FFD70033;padding:36px 18px 24px 18px;max-width:410px;margin:auto;display:flex;flex-direction:column;align-items:center;">
                 <div class="settings-header" style="width:100%;display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:0;">
@@ -775,10 +768,10 @@
                             <span>مستوى الصوت:</span>
                             <span class="volume-value" id="volumeValue">70%</span>
                         </div>
-                        <input type="range" class="volume-slider" id="masterVolumeSlider" min="0" max="100" value="70" style="margin-top:14px;width:100%;height:8px;border-radius:6px;background:linear-gradient(90deg,#FFD700 0%,#8a2be2 100%);">
+                        <input type="range" class="volume-slider" id="masterVolumeSlider" min="0" max="100" value="70" style="margin-top:14px;width:100%;height:8px;border-radius:6px;background:linear-gradient(90deg,#FFD700 0%,#8a2be2 100%);" />
                     </div>
                 </div>
-                <hr style="border:none;border-top:1.5px solid #FFD70022;margin:0 0 18px 0;width:90%;">
+                <hr style="border:none;border-top:1.5px solid #FFD70022;margin:0 0 18px 0;width:90%;" />
                 <div class="settings-group" style="width:100%;margin:0 0 18px 0;padding:18px 12px 10px 12px;border-radius:18px;box-shadow:0 2px 12px #8a2be233;border:1.5px solid #FFD70022;background:rgba(255,255,255,0.03);display:flex;flex-direction:column;align-items:center;">
                     <div class="settings-group-title" style="font-size:1.13rem;margin-bottom:18px;display:flex;align-items:center;gap:8px;font-weight:700;">
                         <i class="fas fa-music"></i>
@@ -841,7 +834,9 @@
                 </div>
             </div>
         </div>
-        <script>
+    </div>
+ </body>
+<script>
         // ResponsiveHelper (keep as is)
         class ResponsiveHelper {
             constructor() {
@@ -1596,7 +1591,7 @@ startRaceBtn.addEventListener('click', () => {
     scores = {};
     progress = {};
     stats = {};
-    selectedCompetitors.forEach(stu => {
+    selectedCompetitors.forEach((stu, idx) => {
         scores[stu.id] = 0;
         progress[stu.id] = 0;
         stats[stu.id] = { correct: 0, wrong: 0 };
@@ -1604,6 +1599,8 @@ startRaceBtn.addEventListener('click', () => {
         document.getElementById('score_' + stu.id).textContent = 'النقاط: 0';
         document.querySelectorAll('.team-card').forEach(card => card.classList.remove('winner'));
     });
+    runnerPositions = Array(selectedCompetitors.length).fill(0);
+    renderRaceTrack();
     currentTurn = 0;
     showStatsPanel();
     showSmartMessage('انطلق السباق!');
@@ -1664,6 +1661,7 @@ function updateProgress(stuId) {
     document.getElementById('progress_' + stuId).style.width = percent + '%';
     document.getElementById('score_' + stuId).textContent = 'النقاط: ' + scores[stuId];
     animateRocket(stuId, percent);
+    updateRunnerPositions();
 }
 
 function highlightCurrent() {
@@ -1682,6 +1680,9 @@ function finishRace(winner) {
     // تمييز بطاقة الفائز
     const card = Array.from(document.querySelectorAll('.team-card')).find(c => c.querySelector('.team-name').textContent === winner.name);
     if (card) card.classList.add('winner');
+    // تمييز المتسابق في المضمار
+    const runner = document.getElementById('runner-' + winner.id);
+    if (runner) runner.classList.add('winner');
     showHonorBoard();
 }
 // مؤثرات على البطاقة
@@ -1811,6 +1812,8 @@ homeBtn.onclick = () => {
     selectionMode = null;
     classSelect.value = '';
     studentsSection.style.display = 'none';
+    runnerPositions = [];
+    if (document.getElementById('raceTrack')) document.getElementById('raceTrack').innerHTML = '';
     setArenaControlsState('setup');
 };
 // إغلاق المودال بزر Esc
