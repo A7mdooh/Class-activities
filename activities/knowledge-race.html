@@ -77,6 +77,75 @@
     <script src="../assets/js/activityUtils.js"></script>
     
     <style>
+        /* تأثيرات انتقالية عصرية */
+        .info-card, .team-card, .modal-content, .toolbar-btn {
+            transition: box-shadow 0.3s, background 0.3s, color 0.3s, transform 0.2s;
+        }
+        .team-card {
+            position: relative;
+            overflow: hidden;
+            border-width: 3px;
+        }
+        /* شارة مركز الفريق */
+        .team-badge {
+            position: absolute;
+            top: -16px; left: -16px;
+            background: var(--accent-gold);
+            color: var(--oman-red);
+            font-weight: bold;
+            font-size: 1.1rem;
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 2px 8px #FFD70055;
+            border: 2px solid #fff3;
+            z-index: 2;
+        }
+        /* ظل متوهج للفريق الفائز */
+        .team-card.winner {
+            box-shadow: 0 0 24px 6px #FFD700cc, 0 2px 8px #FFD70033;
+            border-color: #FFD700;
+            background: linear-gradient(90deg, #fffbe6 0%, #fff 100%);
+            color: #DC143C;
+            transform: scale(1.04);
+        }
+        /* زر إغلاق دائري للمودال */
+        .modal-close {
+            position: absolute;
+            top: 12px; left: 12px;
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: var(--glass);
+            color: var(--accent-gold);
+            border: none;
+            font-size: 1.3rem;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px #FFD70022;
+            transition: background 0.2s, color 0.2s;
+            z-index: 10;
+        }
+        .modal-close:hover {
+            background: #FFD70022;
+            color: var(--oman-red);
+        }
+        /* استجابة أفضل للجوال */
+        @media (max-width: 600px) {
+            .main-content {
+                padding: 12px 2px 12px 2px;
+                gap: 8px;
+            }
+            .modal-content {
+                padding: 18px 6px 16px 6px;
+                min-width: 90vw;
+            }
+            .header {
+                padding: 18px 0 10px 0;
+            }
+            .header-title {
+                font-size: 1.5rem;
+            }
+        }
         :root {
             --oman-red: #DC143C;
 
@@ -376,6 +445,8 @@
 
                         <div class="modal-overlay" id="teamSetupModal" hidden>
                             <div class="modal-content">
+    <button class="modal-close" onclick="this.closest('.modal-overlay').setAttribute('hidden','')" title="إغلاق"><i class="fas fa-times"></i></button>
+    <button class="modal-close" onclick="this.closest('.modal-overlay').setAttribute('hidden','')" title="إغلاق"><i class="fas fa-times"></i></button>
                                 <h2>إعداد الفرق</h2>
                                 <div id="classSelection"></div>
                                 <div id="teamInputs"></div>
