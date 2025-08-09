@@ -656,7 +656,7 @@
       let customTimerDuration = 60;
       let randomStudentMode = false;
       let randomStudentPool = [];
-    // ========== DOMContentLoaded ========== 
+    // ========== DOMContentLoaded ==========
     document.addEventListener('DOMContentLoaded', () => {
       setupToolbar();
       initializeGame();
@@ -664,15 +664,7 @@
       setupGuideTabs();
       loadClasses();
       setupTimerDurationSelect();
-      // تحديث customTimerDuration عند تغيير القائمة
-      const timerSelect = document.getElementById('timerDurationSelect');
-      if(timerSelect) {
-        timerSelect.addEventListener('change', function() {
-          customTimerDuration = parseInt(this.value, 10) || 60;
-        });
-        // تعيين القيمة الافتراضية عند التحميل
-        customTimerDuration = parseInt(timerSelect.value, 10) || 60;
-      }
+  // ...existing code...
     });
 
     // تحميل بيانات الصفوف من ملف JSON
@@ -734,120 +726,12 @@
                   gameState.currentStudent = selected;
                   updateExpertDisplay();
                   updateGameInfo();
-                  // إظهار مربع التقييم
-                  showEvaluationBox(selected);
+                  document.getElementById('bombMessage').textContent = `🎲 تم تعيين الخبير: ${selected}`;
                   // تعطيل الزر إذا انتهت القائمة
                   if(randomStudentPool.length === 0){
                     randomBtn.disabled = true;
                     randomBtn.innerHTML = '<i class="fa-solid fa-shuffle"></i> انتهت القائمة';
                   }
-// ========== مربع التقييم (تحت المؤقت) ========== 
-function showEvaluationBox(studentName) {
-  // إزالة أي مربع تقييم سابق
-  let oldBox = document.getElementById('evaluationBox');
-  if(oldBox) oldBox.remove();
-  // إنشاء المربع
-  const box = document.createElement('div');
-  box.id = 'evaluationBox';
-  box.innerHTML = `
-    <div class="neon-eval-box">
-      <div style="font-size:1.3rem;font-weight:900;margin-bottom:12px;">تقييم إجابة الطالب</div>
-      <div style="font-size:1.1rem;margin-bottom:18px;">👤 <b>${studentName}</b></div>
-      <button id="evalCorrect" class="eval-btn correct">إجابة صحيحة</button>
-      <button id="evalWrong" class="eval-btn wrong">إجابة خاطئة</button>
-      <button id="evalClose" class="eval-btn close">إغلاق</button>
-    </div>
-  `;
-  // إضافة المربع تحت المؤقت
-  const timerDisplay = document.getElementById('timerDisplay');
-  if(timerDisplay && timerDisplay.parentElement && timerDisplay.parentElement.parentElement) {
-    // bomb-area > timer-display, so insert after timer-display
-    const bombArea = timerDisplay.parentElement.parentElement;
-    // إزالة أي مربع تقييم سابق في bomb-area
-    const prevEval = bombArea.querySelector('#evaluationBox');
-    if(prevEval) prevEval.remove();
-    timerDisplay.parentElement.insertAdjacentElement('afterend', box);
-  } else {
-    document.body.appendChild(box);
-  }
-  // زر صحيحة
-  document.getElementById('evalCorrect').onclick = function(){
-    defuseBomb();
-    box.remove();
-  };
-  // زر خاطئة
-  document.getElementById('evalWrong').onclick = function(){
-    if(gameState.timer) clearInterval(gameState.timer);
-    gameState.isActive = false;
-    gameState.explodedBombs++;
-    updateGameInfo();
-    setGameState('explosion', '💥 إجابة خاطئة — انفجرت القنبلة!');
-    document.getElementById('bombMessage').textContent = 'إجابة خاطئة — حاولوا مجددًا!';
-    bombExplosionEffect();
-    box.remove();
-  };
-  // زر إغلاق
-  document.getElementById('evalClose').onclick = function(){
-    box.remove();
-  };
-}
-
-// ========== أنماط النيون لمربع التقييم (تحت المؤقت) ========== 
-const evalBoxStyle = document.createElement('style');
-evalBoxStyle.innerHTML = `
-#evaluationBox {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 12px;
-  margin-bottom: 8px;
-  animation: fadeInEval 0.3s;
-}
-@keyframes fadeInEval { from { opacity: 0; } to { opacity: 1; } }
-.neon-eval-box {
-  background: #181a23ee;
-  border-radius: 18px;
-  box-shadow: 0 0 24px #FFD700cc, 0 0 64px #DC143C55;
-  border: 2.5px solid #FFD700;
-  padding: 38px 32px 28px 32px;
-  min-width: 320px;
-  max-width: 90vw;
-  color: #FFD700;
-  text-align: center;
-  position: relative;
-  font-family: 'Cairo', system-ui, sans-serif;
-}
-.eval-btn {
-  margin: 0 10px 0 10px;
-  padding: 12px 28px;
-  font-size: 1.1rem;
-  font-weight: 900;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 0 12px #FFD70055;
-  transition: 0.18s;
-}
-.eval-btn.correct {
-  background: linear-gradient(90deg,#228B22 0%,#FFD700 100%);
-  color: #fff;
-  border: 2px solid #228B22;
-}
-.eval-btn.wrong {
-  background: linear-gradient(90deg,#DC143C 0%,#FFD700 100%);
-  color: #fff;
-  border: 2px solid #DC143C;
-}
-.eval-btn.close {
-  background: #23243a;
-  color: #FFD700;
-  border: 2px solid #FFD700;
-  margin-top: 18px;
-}
-.eval-btn:hover { filter: brightness(1.08); box-shadow: 0 0 0 3px #FFD70099; }
-`;
-document.head.appendChild(evalBoxStyle);
                 };
               }
               randomStudentMode = false;
@@ -977,16 +861,10 @@ document.head.appendChild(evalBoxStyle);
         document.getElementById('bombMessage').textContent = 'يرجى اختيار الطالب الخبير أولاً.';
         return;
       }
-      // استخدم دائمًا القيمة المختارة من القائمة
-      const timerSelect = document.getElementById('timerDurationSelect');
-      let selectedDuration = 60;
-      if(timerSelect) {
-        selectedDuration = parseInt(timerSelect.value, 10) || 60;
-      }
-      customTimerDuration = selectedDuration;
       gameState.isActive = true;
       gameState.isPaused = false;
-      gameState.timeLeft = customTimerDuration;
+      // استخدم مدة المؤقت المخصصة إذا تم اختيارها
+      gameState.timeLeft = customTimerDuration || difficultySettings[gameState.difficulty].time;
       setGameState('active', '⏳ المؤقت يعمل — أسرعوا!');
       updateTimerDisplay(gameState.timeLeft);
       document.getElementById('bombMessage').textContent = '';
