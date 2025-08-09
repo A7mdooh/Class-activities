@@ -186,78 +186,18 @@
     }
     .bomb {
       width: 180px; height: 180px; border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, #FFD700 0 30%, #FFD70088 40%, #23243a 70%);
-      box-shadow: 0 0 0 8px #FFD70088 inset, 0 0 64px #FFD70077, 0 8px 30px #000a, 0 0 32px #FFD70055;
+      background: radial-gradient(circle at 30% 30%, #FFD700 0,#23243a 60%);
+      box-shadow: 0 0 0 4px #FFD70044 inset, 0 0 32px #FFD70033, 0 8px 30px #000a;
       display: flex; align-items: center; justify-content: center;
       font-size: 5rem; color: #FFD700;
       position: relative;
       margin-bottom: 12px;
-      animation: bombPulse 1.2s infinite, bombGlow 2.2s infinite alternate;
-      transition: box-shadow 0.3s, background 0.3s;
-      overflow: visible;
-    }
-    .bomb-animated {
-      filter: drop-shadow(0 0 24px #FFD70099) drop-shadow(0 0 8px #DC143C66);
+      animation: bombPulse 1.5s infinite;
+      transition: box-shadow 0.3s;
     }
     @keyframes bombPulse {
-      0%,100%{box-shadow: 0 0 0 8px #FFD70088 inset, 0 0 64px #FFD70077, 0 8px 30px #000a, 0 0 32px #FFD70055;}
-      50%{box-shadow: 0 0 0 16px #FFD700cc inset, 0 0 96px #FFD700cc, 0 8px 30px #000a, 0 0 48px #FFD700cc;}
-    }
-    @keyframes bombGlow {
-      0%{filter:brightness(1) drop-shadow(0 0 12px #FFD70099);}
-      100%{filter:brightness(1.15) drop-shadow(0 0 32px #FFD700cc);}
-    }
-    .bomb.state-explosion {
-      animation: bombPulse 0.2s 8, bombShake 0.2s 8, bombGlow 1.2s infinite alternate;
-      background: radial-gradient(circle at 30% 30%, #DC143C 0 40%, #FFD700 60%, #23243a 100%);
-      box-shadow: 0 0 0 12px #DC143Ccc inset, 0 0 64px #FFD70077, 0 8px 30px #000a, 0 0 64px #DC143Ccc;
-    }
-    @keyframes bombShake {
-      0% { transform: translateX(0); }
-      20% { transform: translateX(-8px) rotate(-2deg); }
-      40% { transform: translateX(8px) rotate(2deg); }
-      60% { transform: translateX(-4px) rotate(-1deg); }
-      80% { transform: translateX(4px) rotate(1deg); }
-      100% { transform: translateX(0); }
-    }
-    .bomb.state-success {
-      background: radial-gradient(circle at 30% 30%, #228B22 0 40%, #FFD700 60%, #fff 100%);
-      box-shadow: 0 0 0 12px #228B22cc inset, 0 0 64px #FFD70077, 0 8px 30px #000a, 0 0 64px #228B22cc;
-      animation: bombPulse 0.7s 2, bombGlow 1.2s infinite alternate;
-    }
-    #bombTimerRing {
-      pointer-events: none;
-      filter: drop-shadow(0 0 12px #FFD70099);
-      transition: filter 0.3s;
-    }
-    #timerRing {
-      stroke-dasharray: 596.9026;
-      stroke-dashoffset: 0;
-      transition: stroke 0.3s, stroke-dashoffset 0.5s linear;
-      filter: drop-shadow(0 0 8px #FFD700cc);
-    }
-    .timer-critical #timerRing {
-      stroke: #DC143C;
-      filter: drop-shadow(0 0 16px #DC143Ccc);
-    }
-    .timer-warning #timerRing {
-      stroke: #FFD700;
-      filter: drop-shadow(0 0 16px #FFD700cc);
-    }
-    .timer-success #timerRing {
-      stroke: #228B22;
-      filter: drop-shadow(0 0 16px #228B22cc);
-    }
-    .timer-display.timer-animated {
-      background: linear-gradient(90deg,#FFD70022,#23243a 80%);
-      color: #FFD700;
-      box-shadow: 0 2px 18px #FFD70044;
-      animation: timerGlow 1.2s infinite alternate;
-      border: 2px solid #FFD70055;
-    }
-    @keyframes timerGlow {
-      0%{box-shadow: 0 2px 18px #FFD70044;}
-      100%{box-shadow: 0 2px 32px #FFD700cc;}
+      0%,100%{box-shadow: 0 0 0 4px #FFD70044 inset, 0 0 32px #FFD70033, 0 8px 30px #000a;}
+      50%{box-shadow: 0 0 0 8px #FFD70088 inset, 0 0 64px #FFD70077, 0 8px 30px #000a;}
     }
     .fuse {
       position: absolute; top: -38px; left: 50%; transform: translateX(-50%);
@@ -271,8 +211,8 @@
       position: absolute; top: -48px; left: 50%; transform: translateX(-50%);
       width: 22px; height: 22px; border-radius: 50%;
       background: radial-gradient(circle, #FFD700 60%, #DC143C 100%);
-      filter: drop-shadow(0 0 18px #FFD700cc) drop-shadow(0 0 8px #DC143Ccc);
-      animation: flameFlicker 0.18s infinite alternate, flameMove 1.2s infinite alternate;
+      filter: drop-shadow(0 0 12px #FFD700cc);
+      animation: flameFlicker 0.18s infinite alternate;
       z-index: 3;
       display: flex; align-items: center; justify-content: center;
       font-size: 1.3rem;
@@ -281,9 +221,38 @@
       0% { opacity: 1; transform: translateX(-50%) scale(1); }
       100% { opacity: 0.7; transform: translateX(-50%) scale(1.15); }
     }
-    @keyframes flameMove {
-      0% { filter: drop-shadow(0 0 18px #FFD700cc); }
-      100% { filter: drop-shadow(0 0 32px #FFD700cc) drop-shadow(0 0 16px #DC143Ccc); }
+    .timer-display {
+      font-family: 'Cairo', monospace;
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: var(--accent-gold);
+      background: #181a23cc;
+      border-radius: 18px;
+      padding: 10px 38px;
+      margin: 0 auto 8px auto;
+      text-align: center;
+      letter-spacing: 2px;
+      box-shadow: 0 2px 8px #FFD70033;
+      text-shadow: 0 0 18px #FFD70099;
+      animation: pulseTimer 1.2s infinite;
+    }
+    @keyframes pulseTimer {
+      0%,100%{text-shadow: 0 0 18px #FFD70099;}
+      50%{text-shadow: 0 0 32px #FFD700cc;}
+    }
+    .timer-text {
+      font-size: 1.1rem;
+      color: #FFD700cc;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+    #bombMessage {
+      font-size: 1.1rem;
+      color: #FFD700cc;
+      margin-top: 8px;
+      min-height: 28px;
+      text-align: center;
+      font-weight: 700;
     }
     /* Teacher Controls */
     .teacher-controls {
@@ -543,19 +512,12 @@
     <!-- Bomb Area -->
     <div class="bomb-area">
       <div id="gameState" class="game-state state-waiting">🚨 في انتظار بدء اللعبة</div>
-      <div class="bomb bomb-animated" id="bomb">
-        <svg id="bombTimerRing" width="210" height="210" style="position:absolute;left:-15px;top:-15px;z-index:1;pointer-events:none;">
-          <circle id="timerRingBg" cx="105" cy="105" r="95" stroke="#23243a" stroke-width="18" fill="none"/>
-          <circle id="timerRing" cx="105" cy="105" r="95" stroke="#FFD700" stroke-width="14" fill="none" stroke-linecap="round"/>
-        </svg>
+      <div class="bomb" id="bomb">
         <div class="fuse" id="fuse"></div>
         <div class="fuse-flame" id="fuseFlame">🔥</div>
-        <span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:5.2rem;filter:drop-shadow(0 0 18px #FFD700cc);">💣</span>
-        <div id="bombSpark" style="position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:32px;height:32px;pointer-events:none;display:none;z-index:3;">
-          <svg width="32" height="32"><circle cx="16" cy="16" r="10" fill="#FFD700" opacity="0.8"><animate attributeName="r" values="10;16;10" dur="0.5s" repeatCount="indefinite"/></circle></svg>
-        </div>
+        <span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);">💣</span>
       </div>
-      <div class="timer-display timer-animated"><span class="timer-text" id="timerDisplay">00:00</span></div>
+      <div class="timer-display"><span class="timer-text" id="timerDisplay">00:00</span></div>
       <div id="bombMessage"></div>
     </div>
     <!-- Teacher Controls -->
@@ -609,8 +571,7 @@
         <button class="oman-btn gold" id="pauseBtn"><i class="fa-solid fa-pause"></i> إيقاف مؤقت</button>
         <button class="oman-btn red" id="resetBtn"><i class="fa-solid fa-rotate-right"></i> إعادة ضبط</button>
         <button class="oman-btn gold" id="newRoundBtn"><i class="fa-solid fa-forward"></i> جولة جديدة</button>
-  <button class="oman-btn" id="defuseBtn" style="background:var(--gradient-gold);color:#228B22;margin-top:8px;"><i class="fa-solid fa-check"></i> إبطال القنبلة (إجابة شفهية)</button>
-  <button class="oman-btn red" id="activateBombBtn" style="margin-top:8px;"><i class="fa-solid fa-bomb"></i> تفعيل القنبلة (إجابة خاطئة)</button>
+        <button class="oman-btn" id="defuseBtn" style="background:var(--gradient-gold);color:#228B22;margin-top:8px;"><i class="fa-solid fa-check"></i> إبطال القنبلة (إجابة شفهية)</button>
       </div>
     </div>
   </div>
@@ -679,9 +640,9 @@
       60%{transform:translateX(-50%) scale(1.1);opacity:1;}
       100%{transform:translateX(-50%) scale(1);opacity:1;}
     }
-</style>
-<!-- لوحة الشرف والاحصائيات الاحترافية -->
-<div id="honorBoard" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);z-index:6000;align-items:center;justify-content:center;animation:fadeInHonor 0.7s;">
+  </style>
+  <!-- لوحة الشرف والاحصائيات الاحترافية -->
+  <div id="honorBoard" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);z-index:6000;align-items:center;justify-content:center;animation:fadeInHonor 0.7s;">
     <div style="background:linear-gradient(135deg,#FFD700 60%,#fff 100%);border-radius:32px;box-shadow:0 8px 48px #000a,0 0 32px #FFD70099;padding:38px 44px 32px 44px;max-width:520px;width:95vw;text-align:center;position:relative;">
       <h2 style="font-size:2.2rem;color:#DC143C;font-weight:900;margin-bottom:18px;text-shadow:0 0 18px #FFD700;">🏆 لوحة الشرف</h2>
       <div id="honorStats" style="font-size:1.25rem;color:#23243a;font-weight:900;margin-bottom:18px;"></div>
@@ -700,31 +661,398 @@
     .honor-row:last-child{border-bottom:none;}
   </style>
   <script>
-  // زر تفعيل القنبلة (إجابة خاطئة)
-  document.addEventListener('DOMContentLoaded', function() {
-    var activateBtn = document.getElementById('activateBombBtn');
-    if(activateBtn) {
-      activateBtn.onclick = function() {
-        if(!gameState.isActive) return;
-        if(gameState.timer) clearInterval(gameState.timer);
-        gameState.isActive = false;
-        gameState.explodedBombs++;
-        updateGameInfo();
-        setGameState('explosion', '💥 انفجرت القنبلة (إجابة خاطئة)!');
-        document.getElementById('bombMessage').innerHTML = `<span style='color:#DC143C;font-size:1.2rem;font-weight:900;'>إجابة خاطئة! القنبلة انفجرت يا ${currentExpert}!</span>`;
-        bombExplosionEffect();
-        showStudentNotification(`💥 إجابة خاطئة! انفجرت القنبلة يا ${currentExpert}!`, 'cosmic-explosion.mp3', 'linear-gradient(90deg,#DC143C,#FFD700)');
-        playKingdomSound('battle-victory.mp3');
+      // ========== Game State & Settings ==========
+      const difficultySettings = {
+        easy:    { time: 60, name: 'مبتدئ', color: '#228B22', icon: '🟢' },
+        medium:  { time: 45, name: 'متوسط', color: '#FFD700', icon: '🟡' },
+        hard:    { time: 30, name: 'متقدم', color: '#FF9800', icon: '🟠' },
+        expert:  { time: 20, name: 'خبير', color: '#DC143C', icon: '🔴' }
       };
-    }
-    // إصلاح تحميل الصفوف عند بداية الصفحة
-    if(typeof loadClasses === 'function') {
+      let gameState = {
+        isActive: false,
+        isPaused: false,
+        timeLeft: 0,
+        currentStudent: '—',
+        currentClass: '—',
+        difficulty: 'medium',
+        totalBombs: 5,
+        defusedBombs: 0,
+        explodedBombs: 0,
+        points: 0,
+        timer: null
+      };
+      let soundOn = true;
+      let students = [];
+      let allClasses = {};
+      let currentExpert = null;
+      let customTimerDuration = 60;
+      let randomStudentMode = false;
+      let randomStudentPool = [];
+    // ========== DOMContentLoaded ==========
+    document.addEventListener('DOMContentLoaded', () => {
+      setupToolbar();
+      initializeGame();
+      setupEventListeners();
+      setupGuideTabs();
       loadClasses();
+      setupTimerDurationSelect();
+    });
+
+    // تحميل بيانات الصفوف من ملف JSON
+    function loadClasses() {
+      fetch('../data/studentData.json')
+        .then(r => r.json())
+        .then(data => {
+          allClasses = data;
+          const classSelect = document.getElementById('classSelect');
+          classSelect.innerHTML = '<option value="">— اختر الصف —</option>';
+          Object.keys(data).forEach(className => {
+            const opt = document.createElement('option');
+            opt.value = className;
+            opt.textContent = className;
+            classSelect.appendChild(opt);
+          });
+          classSelect.onchange = function() {
+            const studentSelect = document.getElementById('studentSelect');
+            const studentSelectWrapper = document.getElementById('studentSelectWrapper');
+            if(this.value) {
+              gameState.currentClass = this.value;
+              students = allClasses[this.value] || [];
+              updateGameInfo();
+              // بناء قائمة الطلاب المنسدلة
+              studentSelect.innerHTML = '<option value="">— اختر الطالب —</option>';
+              students.forEach(name => {
+                const opt = document.createElement('option');
+                opt.value = name;
+                opt.textContent = name;
+                studentSelect.appendChild(opt);
+              });
+              studentSelectWrapper.style.display = '';
+              studentSelect.value = '';
+              currentExpert = null;
+              gameState.currentStudent = '—';
+              updateExpertDisplay();
+              // إعادة تعيين العشوائي عند تغيير الصف
+              randomStudentPool = [...students];
+              
+              // إعادة تفعيل زر العشوائي
+              const randomBtn = document.getElementById('randomStudentBtn');
+              if(randomBtn) {
+                randomBtn.disabled = false;
+                randomBtn.innerHTML = '<i class="fa-solid fa-shuffle"></i> اختيار عشوائي';
+                randomBtn.onclick = function(){
+                  if(!students || students.length === 0){
+                    document.getElementById('bombMessage').textContent = 'يرجى اختيار الصف أولاً.';
+                    return;
+                  }
+                  if(randomStudentPool.length === 0){
+                    // إعادة ملء القائمة إذا انتهت
+                    randomStudentPool = [...students];
+                  }
+                  // اختيار عشوائي بدون تكرار
+                  const idx = Math.floor(Math.random() * randomStudentPool.length);
+                  const selected = randomStudentPool.splice(idx, 1)[0];
+                  // تعيين الطالب كخبير وتحديث العرض
+                  currentExpert = selected;
+                  gameState.currentStudent = selected;
+                  updateExpertDisplay();
+                  updateGameInfo();
+                  document.getElementById('bombMessage').textContent = `🎲 تم تعيين الخبير: ${selected}`;
+                  // تعطيل الزر إذا انتهت القائمة
+                  if(randomStudentPool.length === 0){
+                    randomBtn.disabled = true;
+                    randomBtn.innerHTML = '<i class="fa-solid fa-shuffle"></i> انتهت القائمة';
+                  }
+                };
+              }
+              randomStudentMode = false;
+              
+            } else {
+              gameState.currentClass = '—';
+              students = [];
+              updateGameInfo();
+              studentSelect.innerHTML = '<option value="">— اختر الطالب —</option>';
+              studentSelectWrapper.style.display = 'none';
+              currentExpert = null;
+              gameState.currentStudent = '—';
+              updateExpertDisplay();
+              randomStudentPool = [];
+              
+              // إعادة تفعيل زر العشوائي
+              const randomBtn = document.getElementById('randomStudentBtn');
+              if(randomBtn) {
+                randomBtn.disabled = false;
+                randomBtn.innerHTML = '<i class="fa-solid fa-shuffle"></i> اختيار عشوائي';
+              }
+              randomStudentMode = false;
+            }
+          };
+          // حدث اختيار الطالب
+          document.getElementById('studentSelect').onchange = function() {
+            if(this.value) {
+              currentExpert = this.value;
+              gameState.currentStudent = this.value;
+              updateExpertDisplay();
+              updateGameInfo();
+            } else {
+              currentExpert = null;
+              gameState.currentStudent = '—';
+              updateExpertDisplay();
+              updateGameInfo();
+            }
+          };
+        })
+        .catch(() => {
+          document.getElementById('classSelect').innerHTML = '<option>تعذر تحميل الصفوف</option>';
+        });
     }
-  });
-  </script>
-  <!-- Kingdom Sounds -->
-  <script>
+    // ========== Toolbar Logic ==========
+    function setupToolbar() {
+      document.getElementById('homeBtn').onclick = goHome;
+      document.getElementById('refreshBtn').onclick = () => {
+        if(confirm('هل تريد إعادة تشغيل اللعبة؟')) location.reload();
+      };
+      document.getElementById('instructionsBtn').onclick = () => openModal('instructionsModal');
+      document.getElementById('fullscreenBtn').onclick = toggleFullscreen;
+      document.getElementById('soundBtn').onclick = toggleSound;
+    }
+    function goHome() { window.location.href = '#'; }
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    }
+    function toggleSound() {
+      soundOn = !soundOn;
+      document.getElementById('soundBtn').innerHTML = soundOn ? '<i class="fa-solid fa-volume-up"></i>' : '<i class="fa-solid fa-volume-xmark"></i>';
+    }
+    // ========== Game Initialization ==========
+    function initializeGame() {
+      gameState.isActive = false;
+      gameState.isPaused = false;
+      gameState.timeLeft = 0;
+      gameState.currentStudent = '—';
+      gameState.currentClass = '—';
+      gameState.defusedBombs = 0;
+      gameState.explodedBombs = 0;
+      gameState.points = 0;
+      updateGameInfo();
+      setGameState('waiting', '🚨 في انتظار بدء اللعبة');
+      updateTimerDisplay(0);
+      document.getElementById('bombMessage').textContent = '';
+      currentExpert = null;
+      updateExpertDisplay();
+      // إعادة تعيين اختيار مدة المؤقت
+      const timerSelect = document.getElementById('timerDurationSelect');
+      if(timerSelect) timerSelect.value = '60';
+      customTimerDuration = 60;
+    }
+    function updateGameInfo() {
+      document.getElementById('currentStudent').textContent = gameState.currentStudent;
+      document.getElementById('currentClass').textContent = gameState.currentClass;
+      document.getElementById('gamePoints').textContent = gameState.points;
+      document.getElementById('defusedBombs').textContent = gameState.defusedBombs;
+      document.getElementById('explodedBombs').textContent = gameState.explodedBombs;
+      const total = gameState.defusedBombs + gameState.explodedBombs;
+      document.getElementById('successRate').textContent = total > 0 ? Math.round((gameState.defusedBombs/total)*100)+'%' : '0%';
+    }
+    function setGameState(state, msg) {
+      const el = document.getElementById('gameState');
+      el.className = 'game-state state-' + state;
+      el.textContent = msg;
+    }
+    function updateTimerDisplay(sec) {
+      const m = Math.floor(sec/60).toString().padStart(2,'0');
+      const s = (sec%60).toString().padStart(2,'0');
+      document.getElementById('timerDisplay').textContent = `${m}:${s}`;
+    }
+    // ========== Teacher Controls ==========
+    function setupEventListeners() {
+      document.getElementById('startBtn').onclick = startTimer;
+      document.getElementById('pauseBtn').onclick = pauseTimer;
+      document.getElementById('resetBtn').onclick = resetTimer;
+      document.getElementById('newRoundBtn').onclick = newRound;
+      document.getElementById('defuseBtn').onclick = defuseBomb;
+    }
+    function showGameSetup() {
+      openModal('guideModal');
+    }
+    // ========== Expert Selection ==========
+    // تحديث عرض الخبير الحالي
+    function updateExpertDisplay() {
+      const el = document.getElementById('currentExpertDisplay');
+      if(currentExpert) {
+        el.innerHTML = `<span style='color:#FFD700;font-weight:900;'>الخبير الحالي:</span> ${currentExpert}`;
+        showStudentNotification(`🚩 دورك يا ${currentExpert}! استعد للتحدي!`, 'character-intro.mp3', 'linear-gradient(90deg,#FFD700,#228B22)');
+      } else {
+        el.textContent = 'اختر الطالب الخبير للجولة.';
+      }
+    }
+    // ========== Timer Logic ==========
+    function startTimer() {
+      if(gameState.isActive) return;
+      if(!currentExpert) {
+        document.getElementById('bombMessage').textContent = 'يرجى اختيار الطالب الخبير أولاً.';
+        return;
+      }
+      // تحديث مدة المؤقت من القائمة دائماً عند بدء المؤقت
+      const timerSelect = document.getElementById('timerDurationSelect');
+      if (timerSelect) {
+        customTimerDuration = parseInt(timerSelect.value, 10) || 60;
+      }
+      gameState.isActive = true;
+      gameState.isPaused = false;
+      gameState.timeLeft = customTimerDuration || difficultySettings[gameState.difficulty].time;
+      setGameState('active', '⏳ المؤقت يعمل — أسرعوا!');
+      updateTimerDisplay(gameState.timeLeft);
+      document.getElementById('bombMessage').innerHTML = `<span style='color:#FFD700;font-size:1.3rem;font-weight:900;'>${currentExpert}، لديك فرصة لإبطال القنبلة!<br>أجب بسرعة قبل انتهاء الوقت!</span>`;
+      document.getElementById('bomb').classList.remove('state-success','state-explosion');
+      showStudentNotification(`🔥 ${currentExpert} التحدي بدأ!`, 'battle-horn.mp3', 'linear-gradient(90deg,#FFD700,#DC143C)');
+      playKingdomSound('battle-horn.mp3');
+      if(gameState.timer) clearInterval(gameState.timer);
+      gameState.timer = setInterval(() => {
+        if(gameState.isPaused) return;
+        gameState.timeLeft--;
+        updateTimerDisplay(gameState.timeLeft);
+        if(gameState.timeLeft === 10) {
+          showStudentNotification(`⏰ بقي 10 ثوان فقط يا ${currentExpert}!`, 'countdown-tick.mp3', 'linear-gradient(90deg,#FFD700,#DC143C)');
+          playKingdomSound('countdown-tick.mp3');
+        }
+        if(gameState.timeLeft <= 0) {
+          clearInterval(gameState.timer);
+          gameState.timer = null;
+          gameState.isActive = false;
+          gameState.explodedBombs++;
+          updateGameInfo();
+          setGameState('explosion', '💥 انفجرت القنبلة!');
+          document.getElementById('bombMessage').innerHTML = `<span style='color:#DC143C;font-size:1.2rem;font-weight:900;'>انتهى الوقت! القنبلة انفجرت يا ${currentExpert}!</span>`;
+          bombExplosionEffect();
+          showStudentNotification(`💥 انفجرت القنبلة! حظاً أوفر يا ${currentExpert}!`, 'cosmic-explosion.mp3', 'linear-gradient(90deg,#DC143C,#FFD700)');
+          playKingdomSound('battle-victory.mp3');
+        }
+      }, 1000);
+    }
+    function pauseTimer() {
+      if(!gameState.isActive) return;
+      gameState.isPaused = !gameState.isPaused;
+      setGameState(gameState.isPaused ? 'waiting' : 'active', gameState.isPaused ? '⏸️ تم الإيقاف المؤقت' : '⏳ المؤقت يعمل — أسرعوا!');
+    }
+    function resetTimer() {
+      if(gameState.timer) clearInterval(gameState.timer);
+      gameState.isActive = false;
+      gameState.isPaused = false;
+      gameState.timeLeft = 0;
+      setGameState('waiting', '🚨 في انتظار بدء اللعبة');
+      updateTimerDisplay(0);
+      document.getElementById('bombMessage').textContent = '';
+      document.getElementById('bomb').classList.remove('state-success','state-explosion');
+    }
+    function newRound() {
+      resetTimer();
+      currentExpert = null;
+      gameState.currentStudent = '—';
+      updateExpertDisplay();
+      updateGameInfo();
+      document.getElementById('bombMessage').textContent = 'ابدأ جولة جديدة باختيار طالب جديد.';
+      // إذا كان العشوائي مفعل، اختر طالب جديد تلقائياً
+      if(randomStudentMode) {
+        pickRandomStudent();
+      }
+      // إعادة تفعيل زر العشوائي
+      const randomBtn = document.getElementById('randomStudentBtn');
+      if(randomBtn) {
+        randomBtn.disabled = false;
+        randomBtn.innerHTML = '<i class="fa-solid fa-shuffle"></i> اختيار عشوائي';
+        randomStudentMode = false;
+        document.getElementById('studentSelect').disabled = false;
+      }
+    }
+    // ========== Defuse Logic ==========
+    function defuseBomb() {
+      if(!gameState.isActive) return;
+      if(gameState.timer) clearInterval(gameState.timer);
+      gameState.isActive = false;
+      gameState.defusedBombs++;
+      gameState.points += 100;
+      updateGameInfo();
+      setGameState('success', '🎉 تم إبطال القنبلة بنجاح!');
+      document.getElementById('bombMessage').innerHTML = `<span style='color:#228B22;font-size:1.2rem;font-weight:900;'>ممتاز يا ${currentExpert}! تم إبطال القنبلة بنجاح 👏</span>`;
+      bombSuccessEffect();
+      showStudentNotification(`🏆 أحسنت يا ${currentExpert}! أنقذت الفريق!`, 'perfect-score.mp3', 'linear-gradient(90deg,#228B22,#FFD700)');
+      playKingdomSound('perfect-score.mp3');
+      updateHonorData();
+    }
+    // ========== Bomb Effects ==========
+    function bombExplosionEffect() {
+      const bomb = document.getElementById('bomb');
+      bomb.classList.add('state-explosion');
+      bomb.style.animation = 'shake 0.2s 8';
+      playKingdomSound('cosmic-explosion.mp3');
+      setTimeout(() => { bomb.style.animation = ''; }, 1800);
+      updateHonorData();
+    }
+    function bombSuccessEffect() {
+      const bomb = document.getElementById('bomb');
+      bomb.classList.add('state-success');
+      playKingdomSound('achievement-unlock.mp3');
+      if(window.confetti) {
+        document.getElementById('confettiCanvas').style.display = 'block';
+        confetti({
+          particleCount: 120,
+          spread: 90,
+          origin: { y: 0.7 },
+          zIndex: 9999
+        });
+        setTimeout(()=>{
+          document.getElementById('confettiCanvas').style.display = 'none';
+        }, 1200);
+      }
+    }
+    // ========== Modal Helpers ==========
+    function openModal(id) {
+      document.getElementById(id).style.display = 'flex';
+    }
+    function closeModal(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+    // ========== Guide Tabs ==========
+    function setupGuideTabs() {
+      const tabs = document.querySelectorAll('.guide-tab');
+      tabs.forEach(tab => {
+        tab.onclick = function() {
+          tabs.forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          document.querySelectorAll('.guide-content').forEach(c => c.classList.remove('active'));
+          document.getElementById('guide-' + this.dataset.tab).classList.add('active');
+        };
+      });
+    }
+    // ========== Accessibility ==========
+    // Keyboard shortcuts: Space=start/pause, Enter=defuse, Esc=reset
+    document.addEventListener('keydown', e => {
+      if(e.key === ' '){
+        if(gameState.isActive) pauseTimer();
+        else startTimer();
+      }
+      if(e.key === 'Enter') defuseBomb();
+      if(e.key === 'Escape') resetTimer();
+    });
+    // Touch: reduce hover, focus on active
+    if(window.matchMedia('(pointer: coarse)').matches) {
+      document.querySelectorAll('.toolbar-btn, .oman-btn, .info-card').forEach(el => {
+        el.onmouseover = null;
+      });
+    }
+    // ========== Kingdom Sounds ==========
+    let kingdomAudio = null;
+    function playKingdomSound(file) {
+      if(!soundOn) return;
+      try {
+        if(kingdomAudio) { kingdomAudio.pause(); kingdomAudio.currentTime = 0; }
+        kingdomAudio = new Audio('../assets/media/sounds/kingdom-sounds/' + file);
+        kingdomAudio.volume = 0.7;
+        kingdomAudio.play();
+      } catch(e) {}
+    }
     // إشعار تفاعلي للطالب الحالي
     function showStudentNotification(msg, sound, color) {
       const n = document.getElementById('studentNotification');
