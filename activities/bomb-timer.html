@@ -1330,20 +1330,15 @@
 
     // تحميل بيانات الصفوف من ملف JSON
     async function loadClasses() {
-      try {
-  const response = await fetch('../data/studentData.json');
-        if (!response.ok) throw new Error('فشل في تحميل بيانات الصفوف');
-        allClasses = await response.json();
-        populateClassSelect();
-      } catch (error) {
-        // بيانات تجريبية في حال الفشل
-        allClasses = {
-          "الصف الخامس الأساسي (1)": ["أحمد محمد السيابي", "فاطمة سعيد البلوشي", "عبدالله خالد الحارثي"],
-          "الصف الخامس الأساسي (2)": ["محمد علي اليحيائي", "عائشة سالم الحبسي", "يوسف أحمد الكندي"]
-        };
-        populateClassSelect();
-        showNotification('⚠️ تم استخدام بيانات تجريبية - تأكد من وجود ملف البيانات', 'warning');
-      }
+      fetch('../data/studentData.json')
+        .then(r => r.json())
+        .then(data => {
+          allClasses = data;
+          populateClassSelect();
+        })
+        .catch(() => {
+          document.getElementById('classSelect').innerHTML = '<option>تعذر تحميل الصفوف</option>';
+        });
     }
 
     function populateClassSelect() {
@@ -1520,7 +1515,6 @@
               }
               randomStudentMode = false;
             }
-          };
           // ...existing code...
   // ...existing code...
     // ========== Toolbar Logic ==========
