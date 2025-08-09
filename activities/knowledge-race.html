@@ -105,83 +105,304 @@
                         <!-- بطاقات معلومات الفرق/النقاط/الترتيب تملأ ديناميكياً -->
                     </aside>
 
-                    <!-- منطقة السباق الرئيسية -->
-                    <section class="race-area" id="raceArea">
-                        <!-- يتم تعبئتها ديناميكياً بمنطق اللعبة -->
-                    </section>
 
-                    <!-- تحكمات المعلم (اختياري) -->
-                    <aside class="teacher-controls" id="teacherControls">
-                        <!-- أزرار تحكم إضافية للمعلم -->
-                    </aside>
-                </main>
+                    <!DOCTYPE html>
+                    <html lang="ar" dir="rtl">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>🏁 سباق المعرفة العصري</title>
+                        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+                        <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+                        <script src="../assets/js/activityUtils.js"></script>
+                            <style>
+                                :root {
+                                    --oman-red: #DC143C;
+                                    --oman-green: #228B22;
+                                    --oman-white: #fff;
+                                    --accent-gold: #FFD700;
+                                    --gradient-danger: linear-gradient(90deg, #DC143C 0%, #FFD700 100%);
+                                    --gradient-safe: linear-gradient(90deg, #228B22 0%, #FFD700 100%);
+                                    --gradient-warning: linear-gradient(90deg, #FFD700 0%, #DC143C 100%);
+                                    --gradient-gold: linear-gradient(90deg, #FFD700 0%, #fff 100%);
+                                    --gradient-dark: linear-gradient(135deg, #181a23 0%, #23243a 100%);
+                                    --gradient-background: radial-gradient(ellipse at 70% 0%, #23243a 0%, #181a23 100%);
+                                    --glass: rgba(255,255,255,0.08);
+                                    --shadow: 0 4px 24px #0006;
+                                    --glow-gold: 0 0 16px #FFD70099;
+                                    --glow-red: 0 0 16px #DC143C99;
+                                    --glow-green: 0 0 16px #228B2299;
+                                    --info-card-border: 2px solid var(--accent-gold);
+                                    --info-card-shadow: 0 2px 8px #FFD70033;
+                                }
+                                html, body {
+                                    height: 100%;
+                                    font-family: 'Cairo', system-ui, sans-serif;
+                                    background: var(--gradient-background);
+                                    color: var(--oman-white);
+                                    margin: 0;
+                                    padding: 0;
+                                    min-height: 100vh;
+                                    overflow-x: hidden;
+                                }
+                                body::before {
+                                    content: "";
+                                    position: fixed;
+                                    inset: 0;
+                                    z-index: 0;
+                                    pointer-events: none;
+                                    background: radial-gradient(circle at 80% 10%, #FFD70022 0, transparent 60%),
+                                                            radial-gradient(circle at 20% 90%, #DC143C22 0, transparent 60%),
+                                                            radial-gradient(circle at 50% 50%, #228B2222 0, transparent 70%);
+                                    animation: bgMove 12s linear infinite alternate;
+                                }
+                                @keyframes bgMove {
+                                    0% { background-position: 80% 10%, 20% 90%, 50% 50%; }
+                                    100% { background-position: 70% 20%, 30% 80%, 60% 60%; }
+                                }
+                                .top-toolbar {
+                                    position: fixed; top: 0; left: 0; right: 0; height: 68px;
+                                    background: var(--gradient-dark);
+                                    display: flex; align-items: center; justify-content: flex-end;
+                                    gap: 12px; z-index: 1000; box-shadow: var(--shadow);
+                                    padding: 0 24px;
+                                    border-bottom: 2px solid #FFD70033;
+                                    backdrop-filter: blur(10px);
+                                }
+                                .toolbar-btn {
+                                    width: 48px; height: 48px; border-radius: 50%;
+                                    background: var(--glass);
+                                    border: none; color: var(--accent-gold);
+                                    font-size: 1.6rem; display: flex; align-items: center; justify-content: center;
+                                    box-shadow: 0 2px 8px #FFD70022;
+                                    margin: 0 2px; cursor: pointer; transition: 0.18s;
+                                    outline: none;
+                                    position: relative;
+                                }
+                                .toolbar-btn:focus {
+                                    box-shadow: 0 0 0 3px #FFD70099;
+                                }
+                                .toolbar-btn:hover, .toolbar-btn:active {
+                                    background: #FFD70022;
+                                    color: var(--oman-red);
+                                    box-shadow: 0 0 0 3px #FFD70055;
+                                }
+                                .header {
+                                    margin-top: 80px;
+                                    background: var(--gradient-dark);
+                                    border-radius: 0 0 32px 32px;
+                                    box-shadow: var(--shadow);
+                                    padding: 32px 0 18px 0;
+                                    text-align: center;
+                                    position: relative;
+                                }
+                                .header-title {
+                                    font-size: 2.7rem;
+                                    font-weight: 900;
+                                    color: var(--accent-gold);
+                                    letter-spacing: 1px;
+                                    text-shadow: var(--glow-gold);
+                                    animation: pulseTitle 2.5s infinite;
+                                }
+                                @keyframes pulseTitle {
+                                    0%,100%{text-shadow: var(--glow-gold);}
+                                    50%{text-shadow: 0 0 32px #FFD700cc;}
+                                }
+                                .header-subtitle {
+                                    font-size: 1.2rem;
+                                    color: #FFD700cc;
+                                    margin-top: 10px;
+                                    font-weight: 500;
+                                    text-shadow: 0 2px 8px #000a;
+                                }
+                                .main-content {
+                                    display: grid;
+                                    grid-template-columns: 1fr 1.2fr 1fr;
+                                    gap: 24px;
+                                    max-width: 1400px;
+                                    margin: 0 auto;
+                                    padding: 32px 12px 32px 12px;
+                                    position: relative;
+                                    z-index: 1;
+                                }
+                                @media (max-width: 1100px) {
+                                    .main-content { grid-template-columns: 1fr 1.5fr; }
+                                    .game-info { display: none; }
+                                }
+                                @media (max-width: 900px) {
+                                    .main-content { grid-template-columns: 1fr; }
+                                    .game-info, .teacher-controls { display: none; }
+                                    .race-area { margin: 0 auto; }
+                                }
+                                .game-info {
+                                    display: flex; flex-direction: column; gap: 18px;
+                                }
+                                .info-card {
+                                    background: var(--glass);
+                                    border: var(--info-card-border);
+                                    border-radius: 16px;
+                                    box-shadow: var(--info-card-shadow);
+                                    padding: 18px 14px;
+                                    color: var(--accent-gold);
+                                    font-size: 1.1rem;
+                                    font-weight: 700;
+                                    display: flex; align-items: center; gap: 12px;
+                                    transition: 0.18s;
+                                }
+                                .info-card:hover, .info-card:focus {
+                                    background: #FFD70011;
+                                    color: var(--oman-red);
+                                    box-shadow: 0 0 0 3px #FFD70055;
+                                }
+                                .info-card .fa-solid {
+                                    font-size: 1.5rem;
+                                    margin-left: 8px;
+                                }
+                                .race-area {
+                                    display: flex; flex-direction: column; align-items: center; justify-content: center;
+                                    min-height: 480px;
+                                    gap: 18px;
+                                    position: relative;
+                                }
+                                .game-state {
+                                    font-size: 1.3rem;
+                                    font-weight: 900;
+                                    margin-bottom: 10px;
+                                    padding: 8px 22px;
+                                    border-radius: 12px;
+                                    background: var(--gradient-warning);
+                                    color: var(--oman-red);
+                                    box-shadow: 0 2px 8px #FFD70033;
+                                    transition: background 0.3s, color 0.3s;
+                                    text-align: center;
+                                }
+                                .state-waiting { background: var(--gradient-warning); color: var(--oman-red); }
+                                .state-active { background: var(--gradient-danger); color: var(--oman-white); animation: shake 0.7s infinite alternate; }
+                                .state-success { background: var(--gradient-safe); color: var(--oman-green); }
+                                .state-explosion { background: var(--gradient-danger); color: var(--oman-white); animation: shake 0.2s 8 alternate; }
+                                @keyframes shake {
+                                    0% { transform: translateX(0); }
+                                    25% { transform: translateX(-4px); }
+                                    50% { transform: translateX(4px); }
+                                    75% { transform: translateX(-2px); }
+                                    100% { transform: translateX(0); }
+                                }
+                                .modal-overlay {
+                                    position: fixed; inset: 0; background: #181a23cc; z-index: 2000;
+                                    display: flex; align-items: center; justify-content: center;
+                                    transition: 0.3s; backdrop-filter: blur(8px);
+                                }
+                                .modal-content {
+                                    background: var(--glass);
+                                    border-radius: 24px;
+                                    box-shadow: var(--shadow);
+                                    padding: 36px 32px 28px 32px;
+                                    min-width: 320px; max-width: 95vw;
+                                    color: var(--accent-gold);
+                                    border: 2px solid #FFD70055;
+                                    text-align: center;
+                                    font-size: 1.15rem;
+                                    position: relative;
+                                    animation: modalPop 0.5s cubic-bezier(.4,0,.2,1);
+                                }
+                                @keyframes modalPop {
+                                    0% { transform: scale(0.8) translateY(40px); opacity: 0; }
+                                    100% { transform: scale(1) translateY(0); opacity: 1; }
+                                }
+                                .modal-content h2 {
+                                    color: var(--accent-gold);
+                                    font-size: 1.5rem;
+                                    font-weight: 900;
+                                    margin-bottom: 18px;
+                                    text-shadow: var(--glow-gold);
+                                }
+                                .modal-content ul {
+                                    text-align: right;
+                                    margin: 0 0 18px 0;
+                                    padding: 0 18px;
+                                    color: var(--oman-white);
+                                    font-size: 1.05rem;
+                                }
+                                .modal-content button {
+                                    margin-top: 18px;
+                                }
+                                .team-card {
+                                    background: var(--glass);
+                                    border: 2px solid #FFD70099;
+                                    border-radius: 16px;
+                                    box-shadow: 0 2px 8px #FFD70033;
+                                    padding: 16px 12px;
+                                    color: var(--accent-gold);
+                                    font-size: 1.1rem;
+                                    font-weight: 700;
+                                    display: flex; align-items: center; gap: 10px;
+                                    margin-bottom: 10px;
+                                    transition: 0.18s;
+                                }
+                                .team-card .fa-users {
+                                    font-size: 1.3rem;
+                                    margin-left: 8px;
+                                }
+                                .team-card .team-score {
+                                    margin-right: auto;
+                                    font-size: 1.2rem;
+                                    color: var(--oman-green);
+                                    font-weight: 900;
+                                    text-shadow: var(--glow-green);
+                                }
+                                .modal-overlay[hidden] { display: none !important; }
+                            </style>
+                    </head>
+                    <body>
+                        <nav class="top-toolbar">
+                            <button class="toolbar-btn" id="homeBtn" title="العودة للرئيسية"><i class="fas fa-home"></i></button>
+                            <button class="toolbar-btn" id="refreshBtn" title="إعادة تحميل"><i class="fas fa-rotate-right"></i></button>
+                            <button class="toolbar-btn" id="instructionsBtn" title="تعليمات"><i class="fas fa-question-circle"></i></button>
+                            <button class="toolbar-btn" id="fullscreenBtn" title="ملء الشاشة"><i class="fas fa-expand"></i></button>
+                            <button class="toolbar-btn" id="soundBtn" title="تشغيل/إيقاف الصوت"><i class="fas fa-volume-up"></i></button>
+                        </nav>
 
-                <!-- نافذة إعداد الفرق (مودال زجاجي) -->
-                    <div class="modal-overlay" id="teamSetupModal" hidden>
-                    <div class="modal-content">
-                        <h2>إعداد الفرق</h2>
-                        <div id="classSelection"></div>
-                        <div id="teamInputs"></div>
-                        <button id="startGameBtn" class="toolbar-btn" style="width:auto;padding:0 32px;font-size:1.2rem;background:var(--gradient-gold);color:var(--oman-red);font-weight:900;">بدء اللعبة</button>
-                    </div>
-                </div>
+                        <header class="header">
+                            <div class="header-title">سباق المعرفة <span style="font-size:1.1rem;color:var(--oman-red)">KNOWLEDGE RACE</span></div>
+                            <div class="header-subtitle">لعبة تنافسية بين الفرق لاختبار المعلومات والسرعة</div>
+                        </header>
 
-                <!-- نافذة التعليمات (مودال زجاجي) -->
-                    <div class="modal-overlay" id="instructionsModal" hidden>
-                    <div class="modal-content">
-                        <h2>تعليمات اللعبة</h2>
-                        <ul>
-                            <li>اختر عدد الفرق وأسماءها.</li>
-                            <li>يتم طرح الأسئلة على الفرق بالتتابع.</li>
-                            <li>أول فريق يصل للنهاية يفوز!</li>
-                        </ul>
-                        <button onclick="closeInstructions()" class="toolbar-btn" style="width:auto;padding:0 32px;font-size:1.1rem;background:var(--gradient-danger);color:var(--oman-white);font-weight:700;">إغلاق</button>
-                    </div>
-                </div>
+                        <main class="main-content">
+                            <aside class="game-info" id="gameInfo"></aside>
+                            <section class="race-area" id="raceArea"></section>
+                            <aside class="teacher-controls" id="teacherControls"></aside>
+                        </main>
 
-                <script src="../assets/js/challengeEnhancer.js"></script>
-                <script>
-                    // ... منطق جلب البيانات ومنطق اللعبة ...
-                </script>
-            </body>
-            </html>
-            box-shadow: 0 0 0 3px #FFD70099;
-        }
-        .toolbar-btn:hover, .toolbar-btn:active {
-            background: #FFD70022;
-            color: var(--oman-red);
-            box-shadow: 0 0 0 3px #FFD70055;
-        }
-        /* Header */
-        .header {
-            margin-top: 80px;
-            background: var(--gradient-dark);
-            border-radius: 0 0 32px 32px;
-    /* ثيم عصري موحد فقط */
-    :root {
-        --oman-red: #DC143C;
-        --oman-green: #228B22;
-        --oman-white: #fff;
-        --accent-gold: #FFD700;
-        --gradient-danger: linear-gradient(90deg, #DC143C 0%, #FFD700 100%);
-        --gradient-safe: linear-gradient(90deg, #228B22 0%, #FFD700 100%);
-        --gradient-warning: linear-gradient(90deg, #FFD700 0%, #DC143C 100%);
-        --gradient-gold: linear-gradient(90deg, #FFD700 0%, #fff 100%);
-        --gradient-dark: linear-gradient(135deg, #181a23 0%, #23243a 100%);
-        --gradient-background: radial-gradient(ellipse at 70% 0%, #23243a 0%, #181a23 100%);
-        --glass: rgba(255,255,255,0.08);
-        --shadow: 0 4px 24px #0006;
-        --glow-gold: 0 0 16px #FFD70099;
-        --glow-red: 0 0 16px #DC143C99;
-        --glow-green: 0 0 16px #228B2299;
-        --info-card-border: 2px solid var(--accent-gold);
-        --info-card-shadow: 0 2px 8px #FFD70033;
-    }
-    html, body {
-        height: 100%;
-        font-family: 'Cairo', system-ui, sans-serif;
-        background: var(--gradient-background);
-        color: var(--oman-white);
+                        <div class="modal-overlay" id="teamSetupModal" hidden>
+                            <div class="modal-content">
+                                <h2>إعداد الفرق</h2>
+                                <div id="classSelection"></div>
+                                <div id="teamInputs"></div>
+                                <button id="startGameBtn" class="toolbar-btn" style="width:auto;padding:0 32px;font-size:1.2rem;background:var(--gradient-gold);color:var(--oman-red);font-weight:900;">بدء اللعبة</button>
+                            </div>
+                        </div>
+
+                        <div class="modal-overlay" id="instructionsModal" hidden>
+                            <div class="modal-content">
+                                <h2>تعليمات اللعبة</h2>
+                                <ul>
+                                    <li>اختر عدد الفرق وأسماءها.</li>
+                                    <li>يتم طرح الأسئلة على الفرق بالتتابع.</li>
+                                    <li>أول فريق يصل للنهاية يفوز!</li>
+                                </ul>
+                                <button onclick="closeInstructions()" class="toolbar-btn" style="width:auto;padding:0 32px;font-size:1.1rem;background:var(--gradient-danger);color:var(--oman-white);font-weight:700;">إغلاق</button>
+                            </div>
+                        </div>
+
+                            <script src="../assets/js/challengeEnhancer.js"></script>
+                            <script src="../assets/js/responsive-helper.js"></script>
+                            <script>
+                                // منطق جلب البيانات ومنطق اللعبة كما هو (لم يتم تغييره)
+                                // ...
+                            </script>
+                    </body>
+                    </html>
         margin: 0;
         padding: 0;
         min-height: 100vh;
