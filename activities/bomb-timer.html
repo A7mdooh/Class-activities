@@ -516,10 +516,10 @@
     <div class="bomb-area">
       <div id="gameState" class="game-state state-waiting">🚨 في انتظار بدء اللعبة</div>
       <div class="bomb" id="bomb" style="position:relative;z-index:1;width:180px;height:180px;margin:0 auto;display:flex;align-items:center;justify-content:center;background:none;box-shadow:none;border:none;">
-        <!-- فتيل متوهج متدرج منحني مع شرارة متحركة -->
-        <svg id="fuseTimerSVG" width="90" height="110" style="position:absolute;left:50%;top:-60px;transform:translateX(-50%);z-index:100;overflow:visible;pointer-events:none;">
-          <path id="fuseTimerPath" d="M45,10 Q80,40 45,80" stroke="#FFD700" stroke-width="6" fill="none" stroke-linecap="round" filter="url(#fuseGlow)"/>
-          <circle id="fuseTimerSpark" r="10" fill="url(#sparkGradient)" filter="url(#sparkGlow)"/>
+        <!-- فتيل رأسي متوهج مع شرارة متحركة من الأعلى للأسفل -->
+        <svg id="fuseTimerSVG" width="18" height="90" style="position:absolute;left:50%;top:-60px;transform:translateX(-50%);z-index:100;overflow:visible;pointer-events:none;">
+          <line id="fuseTimerPath" x1="9" y1="10" x2="9" y2="80" stroke="#FFD700" stroke-width="6" stroke-linecap="round" filter="url(#fuseGlow)"/>
+          <circle id="fuseTimerSpark" r="10" fill="url(#sparkGradient)" filter="url(#sparkGlow)" cx="9" cy="10"/>
           <defs>
             <filter id="fuseGlow">
               <feGaussianBlur stdDeviation="2.5" result="blur"/>
@@ -978,17 +978,18 @@
       const m = Math.floor(sec/60).toString().padStart(2,'0');
       const s = (sec%60).toString().padStart(2,'0');
       document.getElementById('timerDisplay').textContent = `${m}:${s}`;
-      // تحريك الشرارة على مسار الفتيل المنحني الجديد
+      // تحريك الشرارة من الأعلى للأسفل
       const path = document.getElementById('fuseTimerPath');
       const spark = document.getElementById('fuseTimerSpark');
       if(path && spark) {
         let total = customTimerDuration || 60;
         if(gameState && gameState.timeLeft && gameState.timeLeft > total) total = gameState.timeLeft;
         const percent = Math.max(0, Math.min(1, sec/total));
-        // حساب موضع الشرارة على المسار (Bezier)
-        const p = getPointOnSingleQuadraticPath(percent);
-        spark.setAttribute('cx', p.x);
-        spark.setAttribute('cy', p.y);
+        // الشرارة تبدأ من y=10 وتنتهي عند y=80
+        const yStart = 10;
+        const yEnd = 80;
+        const ySpark = yStart + (yEnd-yStart)*(1-percent);
+        spark.setAttribute('cy', ySpark);
         // لون الفتيل حسب الوقت
         if(percent > 0.5) path.setAttribute('stroke', '#FFD700');
         else if(percent > 0.2) path.setAttribute('stroke', '#FF9800');
