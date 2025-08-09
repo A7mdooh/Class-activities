@@ -495,7 +495,7 @@
   <!-- Header -->
   <div class="header">
     <div class="header-title">💣 لعبة القنبلة المؤقتة</div>
-    <div class="header-subtitle">اختبر سرعة البديهة والتعاون في تحدي إبطال القنبلة قبل انتهاء الوقت! اختر الطالب، اضبط الصعوبة، وابدأ جولات مليئة بالحماس.</div>
+    <div class="header-subtitle">اللعبة تعتمد على أسئلة شفهية من المعلم: اسأل الطالب، ثم اضغط "إبطال القنبلة" إذا أجاب بشكل صحيح قبل انتهاء الوقت!</div>
   </div>
   <!-- Main Content -->
   <div class="main-content">
@@ -570,6 +570,7 @@
         <button class="oman-btn gold" id="pauseBtn"><i class="fa-solid fa-pause"></i> إيقاف مؤقت</button>
         <button class="oman-btn red" id="resetBtn"><i class="fa-solid fa-rotate-right"></i> إعادة ضبط</button>
         <button class="oman-btn gold" id="newRoundBtn"><i class="fa-solid fa-forward"></i> جولة جديدة</button>
+        <button class="oman-btn" id="defuseBtn" style="background:var(--gradient-gold);color:#228B22;margin-top:8px;"><i class="fa-solid fa-check"></i> إبطال القنبلة (إجابة شفهية)</button>
       </div>
     </div>
   </div>
@@ -664,7 +665,6 @@
       setupGuideTabs();
       loadClasses();
       setupTimerDurationSelect();
-  // ...existing code...
     });
 
     // تحميل بيانات الصفوف من ملف JSON
@@ -840,6 +840,7 @@
       document.getElementById('pauseBtn').onclick = pauseTimer;
       document.getElementById('resetBtn').onclick = resetTimer;
       document.getElementById('newRoundBtn').onclick = newRound;
+      document.getElementById('defuseBtn').onclick = defuseBomb;
     }
     function showGameSetup() {
       openModal('guideModal');
@@ -867,8 +868,9 @@
       gameState.timeLeft = customTimerDuration || difficultySettings[gameState.difficulty].time;
       setGameState('active', '⏳ المؤقت يعمل — أسرعوا!');
       updateTimerDisplay(gameState.timeLeft);
-      document.getElementById('bombMessage').textContent = '';
+      document.getElementById('bombMessage').textContent = 'اسأل الطالب سؤالاً شفهياً. إذا أجاب بشكل صحيح قبل انتهاء الوقت، اضغط "إبطال القنبلة".';
       document.getElementById('bomb').classList.remove('state-success','state-explosion');
+      playKingdomSound('battle-horn.mp3');
       if(gameState.timer) clearInterval(gameState.timer);
       gameState.timer = setInterval(() => {
         if(gameState.isPaused) return;
@@ -883,6 +885,7 @@
           setGameState('explosion', '💥 انفجرت القنبلة!');
           document.getElementById('bombMessage').textContent = 'انتهى الوقت — حاولوا مجددًا!';
           bombExplosionEffect();
+          playKingdomSound('battle-victory.mp3');
         }
       }, 1000);
     }
@@ -930,19 +933,22 @@
       gameState.points += 100;
       updateGameInfo();
       setGameState('success', '🎉 تم إبطال القنبلة بنجاح!');
-      document.getElementById('bombMessage').textContent = 'أحسنت! تم إبطال القنبلة.';
+      document.getElementById('bombMessage').textContent = 'أحسنت! الطالب أجاب شفهياً بشكل صحيح وتم إبطال القنبلة.';
       bombSuccessEffect();
+      playKingdomSound('perfect-score.mp3');
     }
     // ========== Bomb Effects ==========
     function bombExplosionEffect() {
       const bomb = document.getElementById('bomb');
       bomb.classList.add('state-explosion');
       bomb.style.animation = 'shake 0.2s 8';
+      playKingdomSound('cosmic-explosion.mp3');
       setTimeout(() => { bomb.style.animation = ''; }, 1800);
     }
     function bombSuccessEffect() {
       const bomb = document.getElementById('bomb');
       bomb.classList.add('state-success');
+      playKingdomSound('achievement-unlock.mp3');
       if(window.confetti) {
         document.getElementById('confettiCanvas').style.display = 'block';
         confetti({
@@ -990,6 +996,17 @@
       document.querySelectorAll('.toolbar-btn, .oman-btn, .info-card').forEach(el => {
         el.onmouseover = null;
       });
+    }
+    // ========== Kingdom Sounds ==========
+    let kingdomAudio = null;
+    function playKingdomSound(file) {
+      if(!soundOn) return;
+      try {
+        if(kingdomAudio) { kingdomAudio.pause(); kingdomAudio.currentTime = 0; }
+        kingdomAudio = new Audio('../assets/media/sounds/kingdom-sounds/' + file);
+        kingdomAudio.volume = 0.7;
+        kingdomAudio.play();
+      } catch(e) {}
     }
   </script>
 </body>
