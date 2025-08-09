@@ -1,1112 +1,109 @@
-      const timer = document.getElementById('timerDisplay');
-      if(timer) {
-        timer.classList.remove('timer-highlight');
-        void timer.offsetWidth;
-        timer.classList.add('timer-highlight');
-      }
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>💣 لعبة القنبلة المؤقتة</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>💣 لعبة القنبلة المؤقتة (نسخة مُفعّلة بالكامل)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
-    /* زر عماني متوهج */
-    .oman-btn {
-      position: relative;
-      overflow: hidden;
-      transition: box-shadow 0.25s, background 0.25s, color 0.18s;
-      box-shadow: 0 0 0 #FFD70000;
-    }
-    .oman-btn:after {
-      content: '';
-      position: absolute;
-      top: -60%; left: -60%;
-      width: 220%; height: 220%;
-      background: radial-gradient(circle, #FFD70055 0%, #FFD70000 80%);
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.3s;
-    }
-    .oman-btn:hover:after, .oman-btn:focus:after {
-      opacity: 1;
-      animation: btnGlow 1.2s infinite alternate;
-    }
-    .oman-btn:active {
-      box-shadow: 0 0 18px #FFD700cc, 0 2px 12px #FFD70055;
-      background: linear-gradient(90deg,#FFD70022 0%,#fffbe6 100%);
-      color: #23243a;
-    }
-    @keyframes btnGlow {
-      0% { opacity: 0.7; }
-      100% { opacity: 1; }
-    }
-
-    /* تقييم نيون متوهج */
-    .evaluation-box {
-      box-shadow: 0 0 24px #FFD700cc, 0 2px 18px #FFD70044;
-      animation: evalPulse 1.2s infinite alternate;
-      border: 2.5px solid #FFD700;
-      background: #23243aee;
-    }
-    @keyframes evalPulse {
-      0% { box-shadow: 0 0 24px #FFD700cc, 0 2px 18px #FFD70044; }
-      100% { box-shadow: 0 0 40px #FFD700ee, 0 2px 24px #FFD70077; }
-    }
-
-    /* مؤقت متوهج عند اختيار الطالب */
-    .timer-highlight {
-      animation: timerFlash 1.1s cubic-bezier(.4,0,.2,1) 1;
-      box-shadow: 0 0 32px #FFD700cc, 0 2px 18px #FFD70044;
-    }
-    @keyframes timerFlash {
-      0% { box-shadow: 0 0 0 #FFD70000; }
-      30% { box-shadow: 0 0 32px #FFD700cc, 0 2px 18px #FFD70044; }
-      100% { box-shadow: 0 0 0 #FFD70000; }
-    }
-    .notification {
-      background: #23243aee;
-      color: #FFD700;
-      border: 2px solid #FFD700;
-      border-radius: 14px;
-      box-shadow: 0 0 18px #FFD70099, 0 2px 12px #000a;
-      padding: 16px 32px 16px 18px;
-      font-size: 1.15rem;
-      font-weight: 900;
-      display: flex; align-items: center; gap: 12px;
-      opacity: 0; transform: translateY(-30px) scale(0.95);
-      transition: opacity 0.35s, transform 0.35s;
-      pointer-events: auto;
-      min-width: 220px;
-      max-width: 350px;
-      cursor: pointer;
-      user-select: none;
-    }
-    .notification .notif-icon { font-size: 1.5rem; }
-    .notification.show {
-      opacity: 1;
-      transform: translateY(0) scale(1.04);
-      animation: notifPulse 1.2s infinite alternate;
-    }
-    .notification-success { border-color: #228B22; color: #fff; background: linear-gradient(90deg,#228B22 0%,#FFD700 100%); }
-    .notification-error { border-color: #DC143C; color: #fff; background: linear-gradient(90deg,#DC143C 0%,#FFD700 100%); }
-    .notification-warning { border-color: #FFD700; color: #FFD700; background: #23243aee; }
-    .notification-info { border-color: #FFD700; color: #FFD700; background: #23243aee; }
-    @keyframes notifPulse {
-      0% { box-shadow: 0 0 18px #FFD70099, 0 2px 12px #000a; }
-      100% { box-shadow: 0 0 32px #FFD700cc, 0 2px 18px #FFD70044; }
-    }
     :root {
-      --oman-red: #DC143C;
-      --oman-green: #228B22;
+      --oman-red: #dc143c;
+      --oman-green: #228b22;
       --oman-white: #fff;
-      --accent-gold: #FFD700;
-      --gradient-danger: linear-gradient(90deg, #DC143C 0%, #FFD700 100%);
-      --gradient-safe: linear-gradient(90deg, #228B22 0%, #FFD700 100%);
-      --gradient-warning: linear-gradient(90deg, #FFD700 0%, #DC143C 100%);
-      --gradient-gold: linear-gradient(90deg, #FFD700 0%, #fff 100%);
+      --accent-gold: #ffd700;
+      --gradient-danger: linear-gradient(90deg, #dc143c 0%, #ffd700 100%);
+      --gradient-safe: linear-gradient(90deg, #228b22 0%, #ffd700 100%);
+      --gradient-warning: linear-gradient(90deg, #ffd700 0%, #dc143c 100%);
+      --gradient-gold: linear-gradient(90deg, #ffd700 0%, #fff 100%);
       --gradient-dark: linear-gradient(135deg, #181a23 0%, #23243a 100%);
       --gradient-background: radial-gradient(ellipse at 70% 0%, #23243a 0%, #181a23 100%);
-      --glass: rgba(255,255,255,0.08);
+      --glass: rgba(255, 255, 255, 0.08);
       --shadow: 0 4px 24px #0006;
-      --glow-gold: 0 0 16px #FFD70099;
-      --glow-red: 0 0 16px #DC143C99;
-      --glow-green: 0 0 16px #228B2299;
+      --glow-gold: 0 0 16px #ffd70099;
       --info-card-border: 2px solid var(--accent-gold);
-      --info-card-shadow: 0 2px 8px #FFD70033;
+      --info-card-shadow: 0 2px 8px #ffd70033;
     }
-    html, body {
-      height: 100%;
-      font-family: 'Cairo', system-ui, sans-serif;
-      background: var(--gradient-background);
-      color: var(--oman-white);
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      background: radial-gradient(circle at 80% 10%, #FFD70022 0, transparent 60%),
-                  radial-gradient(circle at 20% 90%, #DC143C22 0, transparent 60%),
-                  radial-gradient(circle at 50% 50%, #228B2222 0, transparent 70%);
-      animation: bgMove 12s linear infinite alternate;
-    }
-    @keyframes bgMove {
-      0% { background-position: 80% 10%, 20% 90%, 50% 50%; }
-      100% { background-position: 70% 20%, 30% 80%, 60% 60%; }
-    }
-    /* Top Toolbar */
-    .top-toolbar {
-      position: fixed; top: 0; left: 0; right: 0; height: 68px;
-      background: var(--gradient-dark);
-      display: flex; align-items: center; justify-content: flex-end;
-      gap: 12px; z-index: 1000; box-shadow: var(--shadow);
-      padding: 0 24px;
-      border-bottom: 2px solid #FFD70033;
-      backdrop-filter: blur(10px);
-    }
-    .toolbar-btn {
-      width: 48px; height: 48px; border-radius: 50%;
-      background: var(--glass);
-      border: none; color: var(--accent-gold);
-      font-size: 1.6rem; display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 2px 8px #FFD70022;
-      margin: 0 2px; cursor: pointer; transition: 0.18s;
-      outline: none;
-      position: relative;
-    }
-    .toolbar-btn:focus {
-      box-shadow: 0 0 0 3px #FFD70099;
-    }
-    .toolbar-btn:hover, .toolbar-btn:active {
-      background: #FFD70022;
-      color: var(--oman-red);
-      box-shadow: 0 0 0 3px #FFD70055;
-    }
+    html, body { height:100%; min-height:100vh; margin:0; padding:0; background:var(--gradient-background); color:var(--oman-white); font-family:'Cairo', system-ui, sans-serif; overflow-x:hidden; }
+    body::before { content:""; position:fixed; inset:0; z-index:0; pointer-events:none; background: radial-gradient(circle at 80% 10%, #ffd70022 0, transparent 60%), radial-gradient(circle at 20% 90%, #dc143c22 0, transparent 60%), radial-gradient(circle at 50% 50%, #228b2222 0, transparent 70%); animation:bgMove 12s linear infinite alternate; }
+    @keyframes bgMove { 0%{background-position:80% 10%, 20% 90%, 50% 50%} 100%{background-position:70% 20%, 30% 80%, 60% 60%} }
+
+    /* Toolbar */
+    .top-toolbar { position:fixed; top:0; left:0; right:0; height:68px; background:var(--gradient-dark); display:flex; align-items:center; justify-content:flex-end; gap:12px; z-index:1000; box-shadow:var(--shadow); padding:0 24px; border-bottom:2px solid #ffd70033; backdrop-filter:blur(10px); }
+    .toolbar-btn { width:48px; height:48px; border-radius:50%; background:var(--glass); border:none; color:var(--accent-gold); font-size:1.4rem; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px #ffd70022; cursor:pointer; transition:.18s; outline:none; }
+    .toolbar-btn:hover, .toolbar-btn:active { background:#ffd70022; color:var(--oman-red); box-shadow:0 0 0 3px #ffd70055; }
+    .toolbar-btn:focus { box-shadow:0 0 0 3px #ffd70099; }
+
     /* Header */
-    .header {
-      margin-top: 80px;
-      background: var(--gradient-dark);
-      border-radius: 0 0 32px 32px;
-      box-shadow: var(--shadow);
-      padding: 32px 0 18px 0;
-      text-align: center;
-      position: relative;
-    }
-    .header-title {
-      font-size: 2.7rem;
-      font-weight: 900;
-      color: var(--accent-gold);
-      letter-spacing: 1px;
-      text-shadow: var(--glow-gold);
-      animation: pulseTitle 2.5s infinite;
-    }
-    @keyframes pulseTitle {
-      0%,100%{text-shadow: var(--glow-gold);}
-      50%{text-shadow: 0 0 32px #FFD700cc;}
-    }
-    .header-subtitle {
-      font-size: 1.2rem;
-      color: #FFD700cc;
-      margin-top: 10px;
-      font-weight: 500;
-      text-shadow: 0 2px 8px #000a;
-    }
-    /* Main Layout */
-    .main-content {
-      display: grid;
-      grid-template-columns: 1fr 1.2fr 1fr;
-      gap: 24px;
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 32px 12px 32px 12px;
-      position: relative;
-      z-index: 1;
-    }
-    @media (max-width: 1100px) {
-      .main-content { grid-template-columns: 1fr 1.5fr; }
-      .game-info { display: none; }
-    }
-    @media (max-width: 900px) {
-      .main-content { grid-template-columns: 1fr; }
-      .game-info, .teacher-controls { display: none; }
-      .bomb-area { margin: 0 auto; }
-    }
-    /* Info Cards */
-    .game-info {
-      display: flex; flex-direction: column; gap: 18px;
-    }
-    .info-card {
-      background: var(--glass);
-      border: var(--info-card-border);
-      border-radius: 16px;
-      box-shadow: var(--info-card-shadow);
-      padding: 18px 14px;
-      color: var(--accent-gold);
-      font-size: 1.1rem;
-      font-weight: 700;
-      display: flex; align-items: center; gap: 12px;
-      transition: 0.18s;
-    }
-    .info-card:hover, .info-card:focus {
-      background: #FFD70011;
-      color: var(--oman-red);
-      box-shadow: 0 0 0 3px #FFD70055;
-    }
-    .info-card .fa-solid {
-      font-size: 1.5rem;
-      margin-left: 8px;
-    }
-    /* Bomb Area */
-    .bomb-area {
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      min-height: 480px;
-      gap: 18px;
-      position: relative;
-    }
-    .game-state {
-      font-size: 1.3rem;
-      font-weight: 900;
-      margin-bottom: 10px;
-      padding: 8px 22px;
-      border-radius: 12px;
-      background: var(--gradient-warning);
-      color: var(--oman-red);
-      box-shadow: 0 2px 8px #FFD70033;
-      transition: background 0.3s, color 0.3s;
-      text-align: center;
-    }
-    .state-waiting { background: var(--gradient-warning); color: var(--oman-red); }
-    .state-active { background: var(--gradient-danger); color: var(--oman-white); animation: shake 0.7s infinite alternate; }
-    .state-success { background: var(--gradient-safe); color: var(--oman-green); }
-    .state-explosion { background: var(--gradient-danger); color: var(--oman-white); animation: shake 0.2s 8 alternate; }
-    @keyframes shake {
-      0% { transform: translateX(0); }
-      25% { transform: translateX(-4px); }
-      50% { transform: translateX(4px); }
-      75% { transform: translateX(-2px); }
-      100% { transform: translateX(0); }
-    }
-    .bomb {
-      width: 180px; height: 180px; border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, #FFD700 0,#23243a 60%);
-      box-shadow: 0 0 0 4px #FFD70044 inset, 0 0 32px #FFD70033, 0 8px 30px #000a;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 5rem; color: #FFD700;
-      position: relative;
-      margin-bottom: 12px;
-      animation: bombPulse 1.5s infinite;
-      transition: box-shadow 0.3s;
-    }
-    @keyframes bombPulse {
-      0%,100%{box-shadow: 0 0 0 4px #FFD70044 inset, 0 0 32px #FFD70033, 0 8px 30px #000a;}
-      50%{box-shadow: 0 0 0 8px #FFD70088 inset, 0 0 64px #FFD70077, 0 8px 30px #000a;}
-    }
-    .fuse {
-      position: absolute; top: -38px; left: 50%; transform: translateX(-50%);
-      width: 5px; height: 60px; border-radius: 8px;
-      background: linear-gradient(#FFD700,#DC143C,#FFD700 80%);
-      box-shadow: 0 0 8px #FFD70099;
-      z-index: 2;
-      overflow: visible;
-    }
-    .fuse-flame {
-      position: absolute; top: -48px; left: 50%; transform: translateX(-50%);
-      width: 22px; height: 22px; border-radius: 50%;
-      background: radial-gradient(circle, #FFD700 60%, #DC143C 100%);
-      filter: drop-shadow(0 0 12px #FFD700cc);
-      animation: flameFlicker 0.18s infinite alternate;
-      z-index: 3;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.3rem;
-    }
-    @keyframes flameFlicker {
-      0% { opacity: 1; transform: translateX(-50%) scale(1); }
-      100% { opacity: 0.7; transform: translateX(-50%) scale(1.15); }
-    }
-    .timer-display {
-      font-family: 'Cairo', monospace;
-      font-size: 3.5rem;
-      font-weight: 900;
-      color: var(--accent-gold);
-      background: #181a23cc;
-      border-radius: 18px;
-      padding: 10px 38px;
-      margin: 0 auto 8px auto;
-      text-align: center;
-      letter-spacing: 2px;
-      box-shadow: 0 2px 8px #FFD70033;
-      text-shadow: 0 0 18px #FFD70099;
-      animation: pulseTimer 1.2s infinite;
-    }
-    @keyframes pulseTimer {
-      0%,100%{text-shadow: 0 0 18px #FFD70099;}
-      50%{text-shadow: 0 0 32px #FFD700cc;}
-    }
-    .timer-text {
-      font-size: 1.1rem;
-      color: #FFD700cc;
-      margin-bottom: 8px;
-      text-align: center;
-    }
-    #bombMessage {
-      font-size: 1.1rem;
-      color: #FFD700cc;
-      margin-top: 8px;
-      min-height: 28px;
-      text-align: center;
-      font-weight: 700;
-    }
-    /* Teacher Controls */
-    .teacher-controls {
-      background: var(--glass);
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-      padding: 18px 14px 24px 14px;
-      display: flex; flex-direction: column; gap: 18px;
-      min-width: 260px;
-    }
-    .teacher-controls h3 {
-      color: var(--accent-gold);
-      font-size: 1.3rem;
-      font-weight: 900;
-      margin: 0 0 10px 0;
-      text-shadow: var(--glow-gold);
-    }
-    .control-section {
-      margin-bottom: 12px;
-    }
-    .oman-btn {
-      background: var(--gradient-safe);
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      padding: 12px 28px;
-      font-size: 1.1rem;
-      font-weight: 900;
-      cursor: pointer;
-      box-shadow: 0 2px 8px #228B2233;
-      margin: 0 4px 8px 0;
-      transition: 0.18s;
-      outline: none;
-      min-width: 44px;
-      min-height: 44px;
-      display: inline-flex; align-items: center; gap: 8px;
-    }
-    .oman-btn.red { background: var(--gradient-danger); box-shadow: 0 2px 8px #DC143C33; }
-    .oman-btn.gold { background: var(--gradient-gold); color: #DC143C; box-shadow: 0 2px 8px #FFD70033; }
-    .oman-btn:focus {
-      box-shadow: 0 0 0 3px #FFD70099;
-    }
-    .oman-btn:hover, .oman-btn:active {
-      filter: brightness(1.08);
-      background: #FFD70022;
-      color: var(--oman-red);
-    }
-    .difficulty-grid {
-      display: grid; grid-template-columns: repeat(4,1fr); gap: 8px;
-      margin-bottom: 10px;
-    }
-    .difficulty-option {
-      background: #23243a;
-      border-radius: 10px;
-      padding: 10px 0;
-      cursor: pointer;
-      text-align: center;
-      border: 2px solid #FFD70044;
-      color: #FFD700;
-      font-weight: 700;
-      font-size: 1.1rem;
-      transition: 0.18s;
-      user-select: none;
-      position: relative;
-    }
-    .difficulty-option.selected {
-      border-color: #FFD700;
-      background: #FFD70022;
-      color: #228B22;
-    }
-    .difficulty-option .fa-check {
-      position: absolute; left: 10px; top: 10px; color: #228B22; font-size: 1.2rem;
-    }
-    /* Expert Selection */
-    #expertSelectionArea {
-      margin: 10px 0 0 0;
-      display: flex; flex-direction: column; gap: 8px;
-    }
-    #expertSelectionButtons {
-      display: flex; flex-wrap: wrap; gap: 8px;
-      margin-bottom: 8px;
-    }
-    .expert-btn {
-      background: #FFD70022;
-      color: #FFD700;
-      border: 2px solid #FFD70044;
-      border-radius: 8px;
-      padding: 8px 18px;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      margin: 0 2px 4px 0;
-      transition: 0.18s;
-      outline: none;
-      min-width: 44px;
-      min-height: 44px;
-    }
-    .expert-btn.selected {
-      background: var(--gradient-safe);
-      color: #fff;
-      border-color: #228B22;
-    }
-    #currentExpertDisplay {
-      font-size: 1.1rem;
-      color: #FFD700cc;
-      font-weight: 700;
-      margin-bottom: 8px;
-      min-height: 28px;
-    }
-    /* Modals */
-    .modal {
-      display: none; position: fixed; z-index: 4000; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.7); align-items: center; justify-content: center;
-      backdrop-filter: blur(2px);
-    }
-    .modal-content {
-      background: #23243a; color: #fff; max-width: 540px; width: 95vw; margin: 60px auto;
-      border-radius: 18px; box-shadow: 0 8px 32px #000a; padding: 0; overflow: hidden;
-      position: relative;
-    }
-    .modal-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 18px 24px 12px 24px; background: #1a1a2e; border-bottom: 1px solid #FFD70033;
-    }
-    .modal-header h2 {
-      margin: 0; font-size: 1.3rem; color: #FFD700; font-weight: 900;
-    }
-    .modal-close {
-      font-size: 2rem; cursor: pointer; color: #FFD700; background: none; border: none;
-    }
-    .modal-body {
-      padding: 24px; max-height: 70vh; overflow-y: auto;
-    }
-    /* Guide Modal Tabs */
-    .guide-tabs {
-      display: flex; gap: 8px; margin-bottom: 12px;
-    }
-    .guide-tab {
-      background: #FFD70022; color: #FFD700; border: none; border-radius: 8px;
-      padding: 8px 18px; font-size: 1rem; font-weight: 700; cursor: pointer;
-      transition: 0.18s; outline: none;
-    }
-    .guide-tab.active, .guide-tab:focus {
-      background: var(--gradient-gold); color: #DC143C;
-    }
-    .guide-content { display: none; }
-    .guide-content.active { display: block; }
-    /* Modern Select Dropdowns */
-    .modern-select-wrapper {
-      position: relative;
-      width: 100%;
-      margin-top: 8px;
-      margin-bottom: 2px;
-      display: flex;
-      align-items: center;
-    }
-    .modern-select {
-      width: 100%;
-      padding: 12px 44px 12px 16px;
-      border-radius: 12px;
-      border: 2px solid #FFD70055;
-      background: rgba(35,36,58,0.85);
-      color: #FFD700;
-      font-size: 1.13rem;
-      font-family: 'Cairo', system-ui, sans-serif;
-      font-weight: 700;
-      appearance: none;
-      outline: none;
-      box-shadow: 0 2px 8px #FFD70022;
-      transition: border 0.18s, box-shadow 0.18s, background 0.18s;
-      cursor: pointer;
-    }
-    .modern-select:focus {
-      border-color: #FFD700;
-      box-shadow: 0 0 0 3px #FFD70055;
-      background: #23243aee;
-    }
-    .modern-select:hover {
-      border-color: #FFD700;
-      background: #23243aee;
-    }
-    .modern-select-arrow {
-      position: absolute;
-      left: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-      pointer-events: none;
-      color: #FFD700;
-      font-size: 1.2rem;
-      z-index: 2;
-      transition: color 0.18s;
-    }
-    .modern-select:focus ~ .modern-select-arrow,
-    .modern-select:hover ~ .modern-select-arrow {
-      color: #DC143C;
-    }
-    .modern-select option {
-      background: #23243a;
-      color: #FFD700;
-      font-weight: 700;
-      font-size: 1.08rem;
-    }
-    /* Hide default arrow for select */
-    .modern-select::-ms-expand { display: none; }
-    .modern-select::-webkit-select-placeholder { color: #FFD70099; }
-    .modern-select:disabled { background: #23243a55; color: #FFD70077; cursor: not-allowed; }
+    .header { margin-top:80px; background:var(--gradient-dark); border-radius:0 0 32px 32px; box-shadow:var(--shadow); padding:32px 0 18px; text-align:center; position:relative; }
+    .header-title { font-size:2.7rem; font-weight:900; color:var(--accent-gold); letter-spacing:1px; text-shadow:var(--glow-gold); animation:pulseTitle 2.5s infinite; }
+    @keyframes pulseTitle { 0%,100%{text-shadow:var(--glow-gold)} 50%{text-shadow:0 0 32px #ffd700cc} }
+    .header-subtitle { font-size:1.2rem; color:#ffd700cc; margin-top:10px; font-weight:500; text-shadow:0 2px 8px #000a; }
+
+    /* Layout */
+    .main-content { display:grid; grid-template-columns:1fr 1.2fr 1fr; gap:24px; max-width:1400px; margin:0 auto; padding:32px 12px; position:relative; z-index:1; }
+    @media (max-width:1100px){ .main-content{ grid-template-columns:1fr 1.5fr } .game-info{ display:none } }
+    @media (max-width:900px){ .main-content{ grid-template-columns:1fr } .game-info,.teacher-controls{ display:none } .bomb-area{ margin:0 auto } }
+
+    /* Info cards */
+    .game-info { display:flex; flex-direction:column; gap:18px; }
+    .info-card { background:var(--glass); border:var(--info-card-border); border-radius:16px; box-shadow:var(--info-card-shadow); padding:18px 14px; color:var(--accent-gold); font-size:1.05rem; font-weight:800; display:flex; align-items:center; gap:12px; transition:.18s; }
+    .info-card:hover { background:#ffd70011; color:var(--oman-red); box-shadow:0 0 0 3px #ffd70055; }
+
+    /* Bomb area */
+    .bomb-area { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:480px; gap:18px; position:relative; }
+    .game-state { font-size:1.15rem; font-weight:900; padding:8px 22px; border-radius:12px; background:var(--gradient-warning); color:var(--oman-red); box-shadow:0 2px 8px #ffd70033; transition:.3s; text-align:center; }
+    .state-waiting{ background:var(--gradient-warning); color:var(--oman-red) }
+    .state-active{ background:var(--gradient-danger); color:#fff; animation:shake .7s infinite alternate }
+    .state-success{ background:var(--gradient-safe); color:var(--oman-green) }
+    .state-explosion{ background:var(--gradient-danger); color:#fff; animation:shake .2s 8 alternate }
+    @keyframes shake{ 0%{transform:translateX(0)} 25%{transform:translateX(-4px)} 50%{transform:translateX(4px)} 75%{transform:translateX(-2px)} 100%{transform:translateX(0)} }
+
+    .bomb { width:180px; height:180px; border-radius:50%; background: radial-gradient(circle at 30% 30%, #ffd700 0, #23243a 60%); box-shadow:0 0 0 4px #ffd70044 inset, 0 0 32px #ffd70033, 0 8px 30px #000a; display:flex; align-items:center; justify-content:center; font-size:5rem; color:#ffd700; position:relative; margin-bottom:12px; animation:bombPulse 1.5s infinite; transition: box-shadow .3s; }
+    @keyframes bombPulse{ 0%,100%{box-shadow:0 0 0 4px #ffd70044 inset, 0 0 32px #ffd70033, 0 8px 30px #000a} 50%{box-shadow:0 0 0 8px #ffd70088 inset, 0 0 64px #ffd70077, 0 8px 30px #000a} }
+    .fuse{ position:absolute; top:-38px; left:50%; transform:translateX(-50%); width:5px; height:60px; border-radius:8px; background:linear-gradient(#ffd700,#dc143c,#ffd700 80%); box-shadow:0 0 8px #ffd70099; z-index:2; overflow:visible }
+    .fuse-flame{ position:absolute; top:-48px; left:50%; transform:translateX(-50%); width:22px; height:22px; border-radius:50%; background: radial-gradient(circle, #ffd700 60%, #dc143c 100%); filter:drop-shadow(0 0 12px #ffd700cc); animation:flameFlicker .18s infinite alternate; z-index:3; display:flex; align-items:center; justify-content:center; font-size:1.3rem }
+    @keyframes flameFlicker{ 0%{opacity:1; transform:translateX(-50%) scale(1)} 100%{opacity:.7; transform:translateX(-50%) scale(1.15)} }
+
+    .timer-display{ font-family:'Cairo', monospace; font-size:3.2rem; font-weight:900; color:var(--accent-gold); background:#181a23cc; border-radius:18px; padding:10px 38px; margin:0 auto 8px; text-align:center; letter-spacing:2px; box-shadow:0 2px 8px #ffd70033; text-shadow:0 0 18px #ffd70099; animation:pulseTimer 1.2s infinite }
+    @keyframes pulseTimer { 0%,100%{text-shadow:0 0 18px #ffd70099} 50%{text-shadow:0 0 32px #ffd700cc} }
+    .timer-text{ font-size:1.05rem; color:#ffd700cc; margin-bottom:8px; text-align:center }
+    .timer-highlight{ animation: timerFlash 1.1s cubic-bezier(.4,0,.2,1) 1; box-shadow: 0 0 32px #ffd700cc, 0 2px 18px #ffd70044; }
+    @keyframes timerFlash{ 0%{ box-shadow:0 0 0 #ffd70000 } 30%{ box-shadow:0 0 32px #ffd700cc, 0 2px 18px #ffd70044 } 100%{ box-shadow:0 0 0 #ffd70000 } }
+
+    /* Teacher controls */
+    .teacher-controls{ background:var(--glass); border-radius:18px; box-shadow:var(--shadow); padding:18px 14px 24px; display:flex; flex-direction:column; gap:18px; min-width:260px }
+    .teacher-controls h3{ color:var(--accent-gold); font-size:1.25rem; font-weight:900; margin:0 0 10px; text-shadow:var(--glow-gold) }
+    .control-section{ margin-bottom:12px }
+
+    .oman-btn{ background:var(--gradient-safe); color:#fff; border:none; border-radius:12px; padding:12px 18px; font-size:1.05rem; font-weight:900; cursor:pointer; box-shadow:0 2px 8px #228b2233; margin:0 4px 8px 0; transition:.18s; outline:none; min-width:44px; min-height:44px; display:inline-flex; align-items:center; gap:8px; position:relative; overflow:hidden }
+    .oman-btn.gold{ background:var(--gradient-gold); color:var(--oman-red); box-shadow:0 2px 8px #ffd70033 }
+    .oman-btn.red{ background:var(--gradient-danger); box-shadow:0 2px 8px #dc143c33 }
+    .oman-btn:hover{ filter:brightness(1.08) }
+
+    .modern-select-wrapper{ position:relative; width:100%; margin-top:8px; margin-bottom:2px; display:flex; align-items:center }
+    .modern-select{ width:100%; padding:12px 44px 12px 16px; border-radius:12px; border:2px solid #ffd70055; background:rgba(35,36,58,.85); color:#ffd700; font-size:1.05rem; font-family:'Cairo', system-ui, sans-serif; font-weight:800; appearance:none; outline:none; box-shadow:0 2px 8px #ffd70022; transition:border .18s, box-shadow .18s, background .18s; cursor:pointer }
+    .modern-select:hover, .modern-select:focus{ border-color:#ffd700; background:#23243aee; box-shadow:0 0 0 3px #ffd70055 }
+    .modern-select-arrow{ position:absolute; left:16px; top:50%; transform:translateY(-50%); pointer-events:none; color:#ffd700; font-size:1.2rem }
+
     /* Notifications */
-    #notificationContainer {
-      position:fixed;top:24px;right:24px;z-index:99999;display:flex;flex-direction:column;gap:12px;align-items:flex-end;
-    }
-    .notification {
-      background: #23243aee;
-      color: #FFD700;
-      border: 2px solid #FFD700;
-      border-radius: 14px;
-      box-shadow: 0 0 18px #FFD70099, 0 2px 12px #000a;
-      padding: 16px 32px 16px 18px;
-      font-size: 1.15rem;
-      font-weight: 900;
-      display: flex; align-items: center; gap: 12px;
-      opacity: 0; transform: translateY(-30px) scale(0.95);
-      transition: opacity 0.35s, transform 0.35s;
-      pointer-events: auto;
-      min-width: 220px;
-      max-width: 350px;
-      cursor: pointer;
-      user-select: none;
-    }
-    .notification .notif-icon { font-size: 1.5rem; }
-    .notification.show {
-      opacity: 1;
-      transform: translateY(0) scale(1.04);
-      animation: notifPulse 1.2s infinite alternate;
-    }
-    .notification-success { border-color: #228B22; color: #fff; background: linear-gradient(90deg,#228B22 0%,#FFD700 100%); }
-    .notification-error { border-color: #DC143C; color: #fff; background: linear-gradient(90deg,#DC143C 0%,#FFD700 100%); }
-    .notification-warning { border-color: #FFD700; color: #FFD700; background: #23243aee; }
-    .notification-info { border-color: #FFD700; color: #FFD700; background: #23243aee; }
-    @keyframes notifPulse {
-      0% { box-shadow: 0 0 18px #FFD70099, 0 2px 12px #000a; }
-      100% { box-shadow: 0 0 32px #FFD700cc, 0 2px 18px #FFD70044; }
-    }
-    .timer-highlight {
-      box-shadow: 0 0 32px #FFD700cc, 0 0 64px #FFD70077;
-      background: linear-gradient(90deg,#FFD70033 0%,#181a23cc 100%);
-      animation: timerPulse 0.9s;
-    }
-    @keyframes timerPulse {
-      0% { box-shadow: 0 0 0 #FFD70000; }
-      100% { box-shadow: 0 0 32px #FFD700cc, 0 0 64px #FFD70077; }
-    }
-    .bomb-glow-success {
-      box-shadow: 0 0 64px #FFD700cc, 0 0 128px #228B22cc, 0 8px 30px #000a !important;
-      animation: bombGlowSuccess 1.2s;
-    }
-    .bomb-glow-error {
-      box-shadow: 0 0 64px #DC143Ccc, 0 0 128px #FFD700cc, 0 8px 30px #000a !important;
-      animation: bombGlowError 1.2s;
-    }
-    @keyframes bombGlowSuccess {
-      0% { box-shadow: 0 0 0 #FFD70000; }
-      100% { box-shadow: 0 0 64px #FFD700cc, 0 0 128px #228B22cc, 0 8px 30px #000a; }
-    }
-    @keyframes bombGlowError {
-      0% { box-shadow: 0 0 0 #DC143C00; }
-      100% { box-shadow: 0 0 64px #DC143Ccc, 0 0 128px #FFD700cc, 0 8px 30px #000a; }
-    }
-    html, body {
-      height: 100%;
-      font-family: 'Cairo', system-ui, sans-serif;
-      background: var(--gradient-background);
-      color: var(--oman-white);
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      background: radial-gradient(circle at 80% 10%, #FFD70022 0, transparent 60%),
-                  radial-gradient(circle at 20% 90%, #DC143C22 0, transparent 60%),
-                  radial-gradient(circle at 50% 50%, #228B2222 0, transparent 70%);
-      animation: bgMove 12s linear infinite alternate;
-    }
-    @keyframes bgMove {
-      0% { background-position: 80% 10%, 20% 90%, 50% 50%; }
-      100% { background-position: 70% 20%, 30% 80%, 60% 60%; }
-    }
-    /* Top Toolbar */
-    .top-toolbar {
-      position: fixed; top: 0; left: 0; right: 0; height: 68px;
-      background: var(--gradient-dark);
-      display: flex; align-items: center; justify-content: flex-end;
-      gap: 12px; z-index: 1000; box-shadow: var(--shadow);
-      padding: 0 24px;
-      border-bottom: 2px solid #FFD70033;
-      backdrop-filter: blur(10px);
-    }
-    .toolbar-btn {
-      width: 48px; height: 48px; border-radius: 50%;
-      background: var(--glass);
-      border: none; color: var(--accent-gold);
-      font-size: 1.6rem; display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 2px 8px #FFD70022;
-      margin: 0 2px; cursor: pointer; transition: 0.18s;
-      outline: none;
-      position: relative;
-    }
-    .toolbar-btn:focus {
-      box-shadow: 0 0 0 3px #FFD70099;
-    }
-    .toolbar-btn:hover, .toolbar-btn:active {
-      background: #FFD70022;
-      color: var(--oman-red);
-      box-shadow: 0 0 0 3px #FFD70055;
-    }
-    /* Header */
-    .header {
-      margin-top: 80px;
-      background: var(--gradient-dark);
-      border-radius: 0 0 32px 32px;
-      box-shadow: var(--shadow);
-      padding: 32px 0 18px 0;
-      text-align: center;
-      position: relative;
-    }
-    .header-title {
-      font-size: 2.7rem;
-      font-weight: 900;
-      color: var(--accent-gold);
-      letter-spacing: 1px;
-      text-shadow: var(--glow-gold);
-      animation: pulseTitle 2.5s infinite;
-    }
-    @keyframes pulseTitle {
-      0%,100%{text-shadow: var(--glow-gold);}
-      50%{text-shadow: 0 0 32px #FFD700cc;}
-    }
-    .header-subtitle {
-      font-size: 1.2rem;
-      color: #FFD700cc;
-      margin-top: 10px;
-      font-weight: 500;
-      text-shadow: 0 2px 8px #000a;
-    }
-    /* Main Layout */
-    .main-content {
-      display: grid;
-      grid-template-columns: 1fr 1.2fr 1fr;
-      gap: 24px;
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 32px 12px 32px 12px;
-      position: relative;
-      z-index: 1;
-    }
-    @media (max-width: 1100px) {
-      .main-content { grid-template-columns: 1fr 1.5fr; }
-      .game-info { display: none; }
-    }
-    @media (max-width: 900px) {
-      .main-content { grid-template-columns: 1fr; }
-      .game-info, .teacher-controls { display: none; }
-      .bomb-area { margin: 0 auto; }
-    }
-    /* Info Cards */
-    .game-info {
-      display: flex; flex-direction: column; gap: 18px;
-    }
-    .info-card {
-      background: var(--glass);
-      border: var(--info-card-border);
-      border-radius: 16px;
-      box-shadow: var(--info-card-shadow);
-      padding: 18px 14px;
-      color: var(--accent-gold);
-      font-size: 1.1rem;
-      font-weight: 700;
-      display: flex; align-items: center; gap: 12px;
-      transition: 0.18s;
-    }
-    .info-card:hover, .info-card:focus {
-      background: #FFD70011;
-      color: var(--oman-red);
-      box-shadow: 0 0 0 3px #FFD70055;
-    }
-    .info-card .fa-solid {
-      font-size: 1.5rem;
-      margin-left: 8px;
-    }
-    /* Bomb Area */
-    .bomb-area {
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      min-height: 480px;
-      gap: 18px;
-      position: relative;
-    }
-    .game-state {
-      font-size: 1.3rem;
-      font-weight: 900;
-      margin-bottom: 10px;
-      padding: 8px 22px;
-      border-radius: 12px;
-      background: var(--gradient-warning);
-      color: var(--oman-red);
-      box-shadow: 0 2px 8px #FFD70033;
-      transition: background 0.3s, color 0.3s;
-      text-align: center;
-    }
-    .state-waiting { background: var(--gradient-warning); color: var(--oman-red); }
-    .state-active { background: var(--gradient-danger); color: var(--oman-white); animation: shake 0.7s infinite alternate; }
-    .state-success { background: var(--gradient-safe); color: var(--oman-green); }
-    .state-explosion { background: var(--gradient-danger); color: var(--oman-white); animation: shake 0.2s 8 alternate; }
-    @keyframes shake {
-      0% { transform: translateX(0); }
-      25% { transform: translateX(-4px); }
-      50% { transform: translateX(4px); }
-      75% { transform: translateX(-2px); }
-      100% { transform: translateX(0); }
-    }
-    .bomb {
-      width: 180px; height: 180px; border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, #FFD700 0,#23243a 60%);
-      box-shadow: 0 0 0 4px #FFD70044 inset, 0 0 32px #FFD70033, 0 8px 30px #000a;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 5rem; color: #FFD700;
-      position: relative;
-      margin-bottom: 12px;
-      animation: bombPulse 1.5s infinite;
-      transition: box-shadow 0.3s;
-    }
-    @keyframes bombPulse {
-      0%,100%{box-shadow: 0 0 0 4px #FFD70044 inset, 0 0 32px #FFD70033, 0 8px 30px #000a;}
-      50%{box-shadow: 0 0 0 8px #FFD70088 inset, 0 0 64px #FFD70077, 0 8px 30px #000a;}
-    }
-    .fuse {
-      position: absolute; top: -38px; left: 50%; transform: translateX(-50%);
-      width: 5px; height: 60px; border-radius: 8px;
-      background: linear-gradient(#FFD700,#DC143C,#FFD700 80%);
-      box-shadow: 0 0 8px #FFD70099;
-      z-index: 2;
-      overflow: visible;
-    }
-    .fuse-flame {
-      position: absolute; top: -48px; left: 50%; transform: translateX(-50%);
-      width: 22px; height: 22px; border-radius: 50%;
-      background: radial-gradient(circle, #FFD700 60%, #DC143C 100%);
-      filter: drop-shadow(0 0 12px #FFD700cc);
-      animation: flameFlicker 0.18s infinite alternate;
-      z-index: 3;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.3rem;
-    }
-    @keyframes flameFlicker {
-      0% { opacity: 1; transform: translateX(-50%) scale(1); }
-      100% { opacity: 0.7; transform: translateX(-50%) scale(1.15); }
-    }
-    .timer-display {
-      font-family: 'Cairo', monospace;
-      font-size: 3.5rem;
-      font-weight: 900;
-      color: var(--accent-gold);
-      background: #181a23cc;
-      border-radius: 18px;
-      padding: 10px 38px;
-      margin: 0 auto 8px auto;
-      text-align: center;
-      letter-spacing: 2px;
-      box-shadow: 0 2px 8px #FFD70033;
-      text-shadow: 0 0 18px #FFD70099;
-      animation: pulseTimer 1.2s infinite;
-    }
-    @keyframes pulseTimer {
-      0%,100%{text-shadow: 0 0 18px #FFD70099;}
-      50%{text-shadow: 0 0 32px #FFD700cc;}
-    }
-    .timer-text {
-      font-size: 1.1rem;
-      color: #FFD700cc;
-      margin-bottom: 8px;
-      text-align: center;
-    }
-    #bombMessage {
-      font-size: 1.1rem;
-      color: #FFD700cc;
-      margin-top: 8px;
-      min-height: 28px;
-      text-align: center;
-      font-weight: 700;
-    }
-    /* Teacher Controls */
-    .teacher-controls {
-      background: var(--glass);
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-      padding: 18px 14px 24px 14px;
-      display: flex; flex-direction: column; gap: 18px;
-      min-width: 260px;
-    }
-    .teacher-controls h3 {
-      color: var(--accent-gold);
-      font-size: 1.3rem;
-      font-weight: 900;
-      margin: 0 0 10px 0;
-      text-shadow: var(--glow-gold);
-    }
-    .control-section {
-      margin-bottom: 12px;
-    }
-    .oman-btn {
-      background: var(--gradient-safe);
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      padding: 12px 28px;
-      font-size: 1.1rem;
-      font-weight: 900;
-      cursor: pointer;
-      box-shadow: 0 2px 8px #228B2233;
-      margin: 0 4px 8px 0;
-      transition: 0.18s;
-      outline: none;
-      min-width: 44px;
-      min-height: 44px;
-      display: inline-flex; align-items: center; gap: 8px;
-    }
-    .oman-btn.red { background: var(--gradient-danger); box-shadow: 0 2px 8px #DC143C33; }
-    .oman-btn.gold { background: var(--gradient-gold); color: #DC143C; box-shadow: 0 2px 8px #FFD70033; }
-    .oman-btn:focus {
-      box-shadow: 0 0 0 3px #FFD70099;
-    }
-    .oman-btn:hover, .oman-btn:active {
-      filter: brightness(1.08);
-      background: #FFD70022;
-      color: var(--oman-red);
-    }
-    .difficulty-grid {
-      display: grid; grid-template-columns: repeat(4,1fr); gap: 8px;
-      margin-bottom: 10px;
-    }
-    .difficulty-option {
-      background: #23243a;
-      border-radius: 10px;
-      padding: 10px 0;
-      cursor: pointer;
-      text-align: center;
-      border: 2px solid #FFD70044;
-      color: #FFD700;
-      font-weight: 700;
-      font-size: 1.1rem;
-      transition: 0.18s;
-      user-select: none;
-      position: relative;
-    }
-    .difficulty-option.selected {
-      border-color: #FFD700;
-      background: #FFD70022;
-      color: #228B22;
-    }
-    .difficulty-option .fa-check {
-      position: absolute; left: 10px; top: 10px; color: #228B22; font-size: 1.2rem;
-    }
-    /* Expert Selection */
-    #expertSelectionArea {
-      margin: 10px 0 0 0;
-      display: flex; flex-direction: column; gap: 8px;
-    }
-    #expertSelectionButtons {
-      display: flex; flex-wrap: wrap; gap: 8px;
-      margin-bottom: 8px;
-    }
-    .expert-btn {
-      background: #FFD70022;
-      color: #FFD700;
-      border: 2px solid #FFD70044;
-      border-radius: 8px;
-      padding: 8px 18px;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      margin: 0 2px 4px 0;
-      transition: 0.18s;
-      outline: none;
-      min-width: 44px;
-      min-height: 44px;
-    }
-    .expert-btn.selected {
-      background: var(--gradient-safe);
-      color: #fff;
-      border-color: #228B22;
-    }
-    #currentExpertDisplay {
-      font-size: 1.1rem;
-      color: #FFD700cc;
-      font-weight: 700;
-      margin-bottom: 8px;
-      min-height: 28px;
-    }
-    /* Modals */
-    .modal {
-      display: none; position: fixed; z-index: 4000; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.7); align-items: center; justify-content: center;
-      backdrop-filter: blur(2px);
-    }
-    .modal-content {
-      background: #23243a; color: #fff; max-width: 540px; width: 95vw; margin: 60px auto;
-      border-radius: 18px; box-shadow: 0 8px 32px #000a; padding: 0; overflow: hidden;
-      position: relative;
-    }
-    .modal-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 18px 24px 12px 24px; background: #1a1a2e; border-bottom: 1px solid #FFD70033;
-    }
-    .modal-header h2 {
-      margin: 0; font-size: 1.3rem; color: #FFD700; font-weight: 900;
-    }
-    .modal-close {
-      font-size: 2rem; cursor: pointer; color: #FFD700; background: none; border: none;
-    }
-    .modal-body {
-      padding: 24px; max-height: 70vh; overflow-y: auto;
-    }
-    /* Guide Modal Tabs */
-    .guide-tabs {
-      display: flex; gap: 8px; margin-bottom: 12px;
-    }
-    .guide-tab {
-      background: #FFD70022; color: #FFD700; border: none; border-radius: 8px;
-      padding: 8px 18px; font-size: 1rem; font-weight: 700; cursor: pointer;
-      transition: 0.18s; outline: none;
-    }
-    .guide-tab.active, .guide-tab:focus {
-      background: var(--gradient-gold); color: #DC143C;
-    }
-    .guide-content { display: none; }
-    .guide-content.active { display: block; }
-    /* Modern Select Dropdowns */
-    .modern-select-wrapper {
-      position: relative;
-      width: 100%;
-      margin-top: 8px;
-      margin-bottom: 2px;
-      display: flex;
-      align-items: center;
-    }
-    .modern-select {
-      width: 100%;
-      padding: 12px 44px 12px 16px;
-      border-radius: 12px;
-      border: 2px solid #FFD70055;
-      background: rgba(35,36,58,0.85);
-      color: #FFD700;
-      font-size: 1.13rem;
-      font-family: 'Cairo', system-ui, sans-serif;
-      font-weight: 700;
-      appearance: none;
-      outline: none;
-      box-shadow: 0 2px 8px #FFD70022;
-      transition: border 0.18s, box-shadow 0.18s, background 0.18s;
-      cursor: pointer;
-    }
-    .modern-select:focus {
-      border-color: #FFD700;
-      box-shadow: 0 0 0 3px #FFD70055;
-      background: #23243aee;
-    }
-    .modern-select:hover {
-      border-color: #FFD700;
-      background: #23243aee;
-    }
-    .modern-select-arrow {
-      position: absolute;
-      left: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-      pointer-events: none;
-      color: #FFD700;
-      font-size: 1.2rem;
-      z-index: 2;
-      transition: color 0.18s;
-    }
-    .modern-select:focus ~ .modern-select-arrow,
-    .modern-select:hover ~ .modern-select-arrow {
-      color: #DC143C;
-    }
-    .modern-select option {
-      background: #23243a;
-      color: #FFD700;
-      font-weight: 700;
-      font-size: 1.08rem;
-    }
-    /* Hide default arrow for select */
-    .modern-select::-ms-expand { display: none; }
-    .modern-select::-webkit-select-placeholder { color: #FFD70099; }
-    .modern-select:disabled { background: #23243a55; color: #FFD70077; cursor: not-allowed; }
-    /* Notifications */
-    #notificationContainer {
-      position:fixed;top:24px;right:24px;z-index:99999;display:flex;flex-direction:column;gap:12px;align-items:flex-end;
-    }
-    .notification {
-      background: #23243aee;
-      color: #FFD700;
-      border: 2px solid #FFD700;
-      border-radius: 14px;
-      box-shadow: 0 0 18px #FFD70099, 0 2px 12px #000a;
-      padding: 16px 32px 16px 18px;
-      font-size: 1.15rem;
-      font-weight: 900;
-      display: flex; align-items: center; gap: 12px;
-      opacity: 0; transform: translateY(-30px) scale(0.95);
-      transition: opacity 0.35s, transform 0.35s;
-      pointer-events: auto;
-      min-width: 220px;
-      max-width: 350px;
-      cursor: pointer;
-      user-select: none;
-    }
-    .notification .notif-icon { font-size: 1.5rem; }
-    .notification.show {
-      opacity: 1;
-      transform: translateY(0) scale(1.04);
-      animation: notifPulse 1.2s infinite alternate;
-    }
-    .notification-success { border-color: #228B22; color: #fff; background: linear-gradient(90deg,#228B22 0%,#FFD700 100%); }
-    .notification-error { border-color: #DC143C; color: #fff; background: linear-gradient(90deg,#DC143C 0%,#FFD700 100%); }
-    .notification-warning { border-color: #FFD700; color: #FFD700; background: #23243aee; }
-    .notification-info { border-color: #FFD700; color: #FFD700; background: #23243aee; }
-    @keyframes notifPulse {
-      0% { box-shadow: 0 0 18px #FFD70099, 0 2px 12px #000a; }
-      100% { box-shadow: 0 0 32px #FFD700cc, 0 2px 18px #FFD70044; }
-    }
-    .timer-highlight {
-      box-shadow: 0 0 32px #FFD700cc, 0 0 64px #FFD70077;
-      background: linear-gradient(90deg,#FFD70033 0%,#181a23cc 100%);
-      animation: timerPulse 0.9s;
-    }
-    @keyframes timerPulse {
-      0% { box-shadow: 0 0 0 #FFD70000; }
-      100% { box-shadow: 0 0 32px #FFD700cc, 0 0 64px #FFD70077; }
-    }
-    .bomb-glow-success {
-      box-shadow: 0 0 64px #FFD700cc, 0 0 128px #228B22cc, 0 8px 30px #000a !important;
-      animation: bombGlowSuccess 1.2s;
-    }
-    .bomb-glow-error {
-      box-shadow: 0 0 64px #DC143Ccc, 0 0 128px #FFD700cc, 0 8px 30px #000a !important;
-      animation: bombGlowError 1.2s;
-    }
-    @keyframes bombGlowSuccess {
-      0% { box-shadow: 0 0 0 #FFD70000; }
-      100% { box-shadow: 0 0 64px #FFD700cc, 0 0 128px #228B22cc, 0 8px 30px #000a; }
-    }
-    @keyframes bombGlowError {
-      0% { box-shadow: 0 0 0 #DC143C00; }
-      100% { box-shadow: 0 0 64px #DC143Ccc, 0 0 128px #FFD700cc, 0 8px 30px #000a; }
-    }
+    #notificationContainer{ position:fixed; top:24px; right:24px; z-index:99999; display:flex; flex-direction:column; gap:12px; align-items:flex-end }
+    .notification{ background:#23243aee; color:#ffd700; border:2px solid #ffd700; border-radius:14px; box-shadow:0 0 18px #ffd70099, 0 2px 12px #000a; padding:16px 32px 16px 18px; font-size:1.05rem; font-weight:900; display:flex; align-items:center; gap:12px; opacity:0; transform:translateY(-30px) scale(.95); transition:opacity .35s, transform .35s; pointer-events:auto; min-width:220px; max-width:350px; cursor:pointer; user-select:none }
+    .notification.show{ opacity:1; transform:translateY(0) scale(1.04); animation:notifPulse 1.2s infinite alternate }
+    .notification-success{ border-color:#228b22; color:#fff; background:linear-gradient(90deg,#228b22 0%,#ffd700 100%) }
+    .notification-error{ border-color:#dc143c; color:#fff; background:linear-gradient(90deg,#dc143c 0%,#ffd700 100%) }
+    .notification-warning,.notification-info{ border-color:#ffd700; color:#ffd700; background:#23243aee }
+    @keyframes notifPulse{ 0%{ box-shadow:0 0 18px #ffd70099, 0 2px 12px #000a } 100%{ box-shadow:0 0 32px #ffd700cc, 0 2px 18px #ffd70044 } }
+
+    /* Evaluation box */
+    .evaluation-box{ position:fixed; bottom:24px; left:24px; z-index:9999; background:#23243aee; color:#ffd700; border:2.5px solid #ffd700; padding:14px 18px; border-radius:14px; box-shadow:0 0 24px #ffd700cc, 0 2px 18px #ffd70044; font-weight:900; display:none }
+    .evaluation-box.show{ display:block; animation:evalPulse 1.2s infinite alternate }
+    @keyframes evalPulse{ 0%{ box-shadow:0 0 24px #ffd700cc, 0 2px 18px #ffd70044 } 100%{ box-shadow:0 0 40px #ffd700ee, 0 2px 24px #ffd70077 } }
   </style>
 </head>
 <body>
-  <!-- Top Toolbar -->
+  <!-- Toolbar -->
   <div class="top-toolbar">
     <button class="toolbar-btn" id="homeBtn" title="الصفحة الرئيسية"><i class="fa-solid fa-house"></i></button>
     <button class="toolbar-btn" id="refreshBtn" title="إعادة التشغيل"><i class="fa-solid fa-rotate-right"></i></button>
@@ -1114,16 +111,19 @@
     <button class="toolbar-btn" id="fullscreenBtn" title="ملء الشاشة"><i class="fa-solid fa-expand"></i></button>
     <button class="toolbar-btn" id="soundBtn" title="الصوت"><i class="fa-solid fa-volume-up"></i></button>
   </div>
+
   <!-- Header -->
   <div class="header">
     <div class="header-title">💣 لعبة القنبلة المؤقتة</div>
-    <div class="header-subtitle">اختبر سرعة البديهة والتعاون في تحدي إبطال القنبلة قبل انتهاء الوقت! اختر الطالب، اضبط الصعوبة، وابدأ جولات مليئة بالحماس.</div>
+    <div class="header-subtitle">اختبر سرعة البديهة والتعاون… أبطل القنبلة قبل انتهاء الوقت!</div>
   </div>
+
   <!-- Notifications -->
-  <div id="notificationContainer" style="position:fixed;top:24px;right:24px;z-index:99999;display:flex;flex-direction:column;gap:12px;align-items:flex-end;"></div>
-  <!-- Main Content -->
+  <div id="notificationContainer"></div>
+
+  <!-- Main content -->
   <div class="main-content">
-    <!-- Game Info -->
+    <!-- Left: info -->
     <div class="game-info">
       <div class="info-card"><i class="fa-solid fa-user"></i> الطالب الحالي: <span id="currentStudent">—</span></div>
       <div class="info-card"><i class="fa-solid fa-users"></i> الصف: <span id="currentClass">—</span></div>
@@ -1132,7 +132,8 @@
       <div class="info-card"><i class="fa-solid fa-skull-crossbones"></i> القنابل المنفجرة: <span id="explodedBombs">0</span></div>
       <div class="info-card"><i class="fa-solid fa-chart-line"></i> معدل النجاح: <span id="successRate">0%</span></div>
     </div>
-    <!-- Bomb Area -->
+
+    <!-- Center: bomb -->
     <div class="bomb-area">
       <div id="gameState" class="game-state state-waiting">🚨 في انتظار بدء اللعبة</div>
       <div class="bomb" id="bomb">
@@ -1141,11 +142,13 @@
         <span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);">💣</span>
       </div>
       <div class="timer-display"><span class="timer-text" id="timerDisplay">00:00</span></div>
-      <div id="bombMessage"></div>
+      <div id="bombMessage" class="timer-text" style="min-height:28px"></div>
     </div>
-    <!-- Teacher Controls -->
+
+    <!-- Right: teacher controls -->
     <div class="teacher-controls">
       <h3>🎛️ لوحة المعلم</h3>
+
       <div class="control-section">
         <label for="classSelect" style="font-weight:700;color:#FFD700;">اختر الصف:</label>
         <div class="modern-select-wrapper">
@@ -1155,25 +158,24 @@
           <span class="modern-select-arrow"><i class="fa-solid fa-chevron-down"></i></span>
         </div>
       </div>
+
       <div class="control-section">
-          <div>مركز القيادة:</div>
-          <div id="expertSelectionArea">
-            <label for="studentSelect" style="font-weight:700;color:#FFD700;">اختر الطالب:</label>
-            <div class="modern-select-wrapper" id="studentSelectWrapper" style="display:none;">
-              <select id="studentSelect" class="modern-select">
-                <option value="">— اختر الطالب —</option>
-              </select>
-              <span class="modern-select-arrow"><i class="fa-solid fa-chevron-down"></i></span>
-            </div>
-            <div id="currentExpertDisplay" style="margin-top:8px;"></div>
-          </div>
+        <label for="studentSelect" style="font-weight:700;color:#FFD700;">اختر الطالب:</label>
+        <div class="modern-select-wrapper" id="studentSelectWrapper" style="display:none;">
+          <select id="studentSelect" class="modern-select">
+            <option value="">— اختر الطالب —</option>
+          </select>
+          <span class="modern-select-arrow"><i class="fa-solid fa-chevron-down"></i></span>
+        </div>
+        <div id="currentExpertDisplay" class="timer-text" style="margin-top:8px"></div>
       </div>
+
       <div class="control-section">
         <label for="timerDurationSelect" style="font-weight:700;color:#FFD700;">مدة المؤقت:</label>
         <div class="modern-select-wrapper">
           <select id="timerDurationSelect" class="modern-select">
             <option value="30">30 ثانية</option>
-            <option value="60">1 دقيقة</option>
+            <option value="60" selected>1 دقيقة</option>
             <option value="120">2 دقيقة</option>
             <option value="180">3 دقائق</option>
             <option value="240">4 دقائق</option>
@@ -1184,553 +186,332 @@
           <span class="modern-select-arrow"><i class="fa-solid fa-chevron-down"></i></span>
         </div>
       </div>
+
       <div class="control-section">
         <button class="oman-btn gold" id="randomStudentBtn" type="button" style="width:100%;margin-top:2px;">
           <i class="fa-solid fa-shuffle"></i> اختيار عشوائي
         </button>
       </div>
+
       <div class="control-section">
         <button class="oman-btn" id="startBtn"><i class="fa-solid fa-play"></i> بدء المؤقت</button>
         <button class="oman-btn gold" id="pauseBtn"><i class="fa-solid fa-pause"></i> إيقاف مؤقت</button>
         <button class="oman-btn red" id="resetBtn"><i class="fa-solid fa-rotate-right"></i> إعادة ضبط</button>
         <button class="oman-btn gold" id="newRoundBtn"><i class="fa-solid fa-forward"></i> جولة جديدة</button>
       </div>
+
+      <div class="control-section">
+        <button class="oman-btn" id="defuseBtn"><i class="fa-solid fa-check"></i> إبطال القنبلة</button>
+        <button class="oman-btn red" id="explodeBtn"><i class="fa-solid fa-xmark"></i> انفجار</button>
+      </div>
     </div>
   </div>
+
   <!-- Modals -->
-  <div class="modal" id="instructionsModal">
-    <div class="modal-content">
+  <div class="modal" id="instructionsModal" style="display:none; align-items:center; justify-content:center;">
+    <div class="modal-content" style="max-width:560px; width:95vw;">
       <div class="modal-header">
         <h2>تعليمات لعبة القنبلة المؤقتة</h2>
-        <button class="modal-close" onclick="closeModal('instructionsModal')">&times;</button>
+        <button class="modal-close" data-close-modal="instructionsModal">&times;</button>
       </div>
       <div class="modal-body">
-        <ul style="font-size:1.1rem;line-height:2;">
-          <li>اختر الصف والطالب، ثم حدد مستوى الصعوبة.</li>
-          <li>ابدأ المؤقت وأجب بسرعة قبل انفجار القنبلة!</li>
-          <li>استخدم لوحة المعلم للتحكم بالجولات والمؤقت.</li>
-          <li>مستويات الصعوبة:
-            <ul>
-              <li>🟢 مبتدئ: 60 ثانية</li>
-              <li>🟡 متوسط: 45 ثانية</li>
-              <li>🟠 متقدم: 30 ثانية</li>
-              <li>🔴 خبير: 20 ثانية</li>
-            </ul>
-          </li>
+        <ul style="font-size:1.05rem;line-height:2; margin:0; padding-right:18px;">
+          <li>اختر الصف والطالب، ثم حدد مدة المؤقت.</li>
+          <li>ابدأ المؤقت وحفّز الطالب على الإجابة قبل انتهاء الوقت.</li>
+          <li>استخدم الأزرار لإبطال القنبلة أو تسجيل انفجار.</li>
+          <li>زر "جولة جديدة" يختار طالبًا جديدًا ويحضر مؤقتًا جديدًا.</li>
         </ul>
-        <button class="oman-btn gold" style="margin-top:18px;" onclick="closeModal('instructionsModal')">فهمت، لنبدأ!</button>
+        <button class="oman-btn gold" data-close-modal="instructionsModal" style="margin-top:18px;">فهمت، لنبدأ!</button>
       </div>
     </div>
   </div>
-  <div class="modal" id="guideModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>دليل اللعبة</h2>
-        <button class="modal-close" onclick="closeModal('guideModal')">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="guide-tabs">
-          <button class="guide-tab active" data-tab="overview">نظرة عامة</button>
-          <button class="guide-tab" data-tab="teacher">دليل المعلم</button>
-          <button class="guide-tab" data-tab="howto">طريقة اللعب</button>
-          <button class="guide-tab" data-tab="tips">نصائح متقدمة</button>
-        </div>
-        <div class="guide-content active" id="guide-overview">
-          <b>لعبة القنبلة المؤقتة</b> هي تحدي تفاعلي يختبر سرعة التفكير والعمل الجماعي. الهدف هو إبطال القنبلة قبل انتهاء الوقت عبر الإجابة الصحيحة أو تنفيذ المهمة المطلوبة.
-        </div>
-        <div class="guide-content" id="guide-teacher">
-          <b>دليل المعلم:</b> استخدم لوحة التحكم لاختيار الطلاب، ضبط الصعوبة، بدء/إيقاف المؤقت، وتسجيل النقاط. شجع الطلاب على التعاون وسرعة الاستجابة.
-        </div>
-        <div class="guide-content" id="guide-howto">
-          <b>طريقة اللعب:</b> اختر الطالب، حدد الصعوبة، ثم ابدأ المؤقت. إذا نجح الطالب في الإجابة أو المهمة قبل انتهاء الوقت، اضغط "إبطال القنبلة". إذا انتهى الوقت، تسجل "انفجار".
-        </div>
-        <div class="guide-content" id="guide-tips">
-          <b>نصائح متقدمة:</b> جرب مستويات صعوبة مختلفة، استخدم اختيار الطلاب العشوائي، واحتفل بالنجاح باستخدام المؤثرات البصرية.
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- Confetti Canvas (hidden, for later use) -->
-  <canvas id="confettiCanvas" style="position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:9999;display:none;"></canvas>
-  <script>
-    // ========== Smart Sound System ========== 
-    let currentAudio = null;
-    function playGameSound(src, volume = 1, allowOverlap = false) {
-      if (!soundOn) return;
-      try {
-        if (!allowOverlap && currentAudio) {
-          currentAudio.pause();
-          currentAudio.currentTime = 0;
-        }
-        const audio = new Audio(src);
-        audio.volume = volume;
-        audio.play();
-        if (!allowOverlap) currentAudio = audio;
-        audio.onended = () => { if (currentAudio === audio) currentAudio = null; };
-      } catch (e) { /* ignore */ }
-    }
-    // ========== Notification System ========== 
-    function showNotification(msg, type = 'info') {
-      const container = document.getElementById('notificationContainer');
-      if (!container) return;
-      const notif = document.createElement('div');
-      notif.className = `notification notification-${type}`;
-      notif.innerHTML = `<span class="notif-icon">${type === 'success' ? '✅' : type === 'error' ? '❌' : type === 'warning' ? '⚠️' : '🔔'}</span> <span>${msg}</span>`;
-      container.appendChild(notif);
-      setTimeout(() => notif.classList.add('show'), 10);
-      setTimeout(() => {
-        notif.classList.remove('show');
-        setTimeout(() => notif.remove(), 600);
-      }, 3500);
-    }
-      // ========== Game State & Settings ==========
-      const difficultySettings = {
-        easy:    { time: 60, name: 'مبتدئ', color: '#228B22', icon: '🟢' },
-        medium:  { time: 45, name: 'متوسط', color: '#FFD700', icon: '🟡' },
-        hard:    { time: 30, name: 'متقدم', color: '#FF9800', icon: '🟠' },
-        expert:  { time: 20, name: 'خبير', color: '#DC143C', icon: '🔴' }
-      };
-      let gameState = {
-        isActive: false,
-        isPaused: false,
-        timeLeft: 0,
-        currentStudent: '—',
-        currentClass: '—',
-        difficulty: 'medium',
-        totalBombs: 5,
-        defusedBombs: 0,
-        explodedBombs: 0,
-        points: 0,
-        timer: null
-      };
-      let soundOn = true;
-      let students = [];
-      let allClasses = {};
-      let currentExpert = null;
-      let customTimerDuration = 60;
-      let randomStudentMode = false;
-      let randomStudentPool = [];
-    // ========== DOMContentLoaded ========== 
-    document.addEventListener('DOMContentLoaded', () => {
-      setupToolbar();
-      initializeGame();
-      setupEventListeners();
-      setupGuideTabs();
-      loadClasses();
-      setupTimerDurationSelect();
-      // تحديث customTimerDuration عند تغيير القائمة
-      const timerSelect = document.getElementById('timerDurationSelect');
-      if(timerSelect) {
-        timerSelect.addEventListener('change', function() {
-          customTimerDuration = parseInt(this.value, 10) || 60;
-        });
-        // تعيين القيمة الافتراضية عند التحميل
-        customTimerDuration = parseInt(timerSelect.value, 10) || 60;
-      }
-    });
 
-    // تحميل بيانات الصفوف من ملف JSON
-    function loadClasses() {
+  <!-- Confetti Canvas -->
+  <canvas id="confettiCanvas" style="position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:9999;display:none;"></canvas>
+  <div class="evaluation-box" id="evaluationBox">✅ أحسنت يا <span id="evalName">—</span>! (+10 نقاط)</div>
+
+  <script>
+    // ====== الصوت الذكي ======
+    let currentAudio = null, soundOn = true;
+    function playGameSound(src, volume = 1, allowOverlap = false){
+      if(!soundOn) return; // احترام حالة كتم الصوت
+      try{
+        if(!allowOverlap && currentAudio){ currentAudio.pause(); currentAudio.currentTime = 0; }
+        const audio = new Audio(src);
+        audio.volume = volume; audio.play();
+        if(!allowOverlap) currentAudio = audio;
+        audio.onended = () => { if(currentAudio === audio) currentAudio = null; };
+      }catch(e){}
+    }
+
+    // ====== إشعارات ======
+    function showNotification(msg, type = 'info'){
+      const container = document.getElementById('notificationContainer');
+      if(!container) return;
+      const el = document.createElement('div');
+      el.className = `notification notification-${type}`;
+      const icon = type==='success'?'✅': type==='error'?'❌': type==='warning'?'⚠️':'🔔';
+      el.innerHTML = `<span class="notif-icon">${icon}</span><span>${msg}</span>`;
+      container.appendChild(el);
+      setTimeout(()=> el.classList.add('show'), 10);
+      setTimeout(()=>{ el.classList.remove('show'); setTimeout(()=> el.remove(), 600); }, 3500);
+    }
+
+    // ====== حالة اللعبة ======
+    const gameState = {
+      isActive:false, isPaused:false, timeLeft:0, timer:null,
+      currentStudent:'—', currentClass:'—',
+      defusedBombs:0, explodedBombs:0, points:0
+    };
+
+    let students = [];           // قائمة طلاب الصف الحالي
+    let allClasses = {};         // كل الصفوف => { "صف 1": ["اسم" ...] }
+    let currentExpert = null;    // الطالب المختار
+    let customTimerDuration = 60;// افتراضي
+    let randomStudentPool = [];  // للتدوير بدون تكرار
+
+    // ====== أدوات ======
+    const $ = sel => document.querySelector(sel);
+    const $$ = sel => document.querySelectorAll(sel);
+
+    function formatTime(s){
+      s = Math.max(0, Math.floor(s));
+      const m = String(Math.floor(s/60)).padStart(2,'0');
+      const ss = String(s%60).padStart(2,'0');
+      return `${m}:${ss}`;
+    }
+
+    function updateGameInfo(){
+      $('#currentStudent').textContent = gameState.currentStudent || '—';
+      $('#currentClass').textContent = gameState.currentClass || '—';
+      $('#gamePoints').textContent = gameState.points;
+      $('#defusedBombs').textContent = gameState.defusedBombs;
+      $('#explodedBombs').textContent = gameState.explodedBombs;
+      const total = gameState.defusedBombs + gameState.explodedBombs;
+      const rate = total? Math.round((gameState.defusedBombs/total)*100) : 0;
+      $('#successRate').textContent = rate + '%';
+    }
+
+    function setState(cls){
+      const gs = $('#gameState');
+      gs.className = 'game-state ' + cls;
+      if(cls==='state-active') gs.textContent = '⏱️ المؤقت يعمل';
+      else if(cls==='state-success') gs.textContent = '🎉 تم الإبطال بنجاح';
+      else if(cls==='state-explosion') gs.textContent = '💥 انفجرت القنبلة';
+      else gs.textContent = '🚨 في انتظار بدء اللعبة';
+    }
+
+    function animateTimerHighlight(){
+      const t = $('#timerDisplay');
+      if(!t) return;
+      t.classList.remove('timer-highlight'); // إعادة تشغيل الأنيميشن
+      void t.offsetWidth;
+      t.classList.add('timer-highlight');
+    }
+
+    function openModal(id){ const m = document.getElementById(id); if(!m) return; m.style.display='flex'; }
+    function closeModal(id){ const m = document.getElementById(id); if(!m) return; m.style.display='none'; }
+
+    function showEvaluationBox(name){
+      const box = $('#evaluationBox');
+      $('#evalName').textContent = name || '—';
+      box.classList.add('show');
+      setTimeout(()=> box.classList.remove('show'), 3000);
+    }
+
+    function fireConfetti(){
+      const canvas = document.getElementById('confettiCanvas');
+      canvas.style.display = 'block';
+      const myConfetti = confetti.create(canvas, { resize: true, useWorker: true });
+      myConfetti({ particleCount: 200, spread: 70, origin: { y: 0.6 } });
+      setTimeout(()=> canvas.style.display = 'none', 800);
+    }
+
+    // ====== المؤقت ======
+    function startTimer(){
+      if(gameState.isActive && !gameState.isPaused) return; // يعمل بالفعل
+      if(!gameState.timeLeft) gameState.timeLeft = customTimerDuration;
+      setState('state-active');
+      gameState.isActive = true; gameState.isPaused = false;
+      $('#bombMessage').textContent = '';
+      playGameSound('../assets/media/sounds/ui/confirm.mp3', 0.6);
+      if(gameState.timer) clearInterval(gameState.timer);
+      gameState.timer = setInterval(()=>{
+        gameState.timeLeft -= 1;
+        $('#timerDisplay').textContent = formatTime(gameState.timeLeft);
+        if(gameState.timeLeft <= 0){
+          clearInterval(gameState.timer);
+          gameState.timer = null; gameState.isActive = false; gameState.isPaused = false;
+          handleExplosion();
+        }
+      }, 1000);
+      $('#timerDisplay').textContent = formatTime(gameState.timeLeft);
+      animateTimerHighlight();
+    }
+
+    function pauseTimer(){
+      if(!gameState.isActive || gameState.isPaused) return;
+      gameState.isPaused = true; setState('state-waiting');
+      if(gameState.timer) clearInterval(gameState.timer);
+      gameState.timer = null;
+      playGameSound('../assets/media/sounds/ui/pause.mp3', 0.6);
+    }
+
+    function resetTimer(){
+      if(gameState.timer) clearInterval(gameState.timer);
+      gameState.timer = null; gameState.isActive = false; gameState.isPaused = false;
+      gameState.timeLeft = 0; $('#timerDisplay').textContent = '00:00';
+      setState('state-waiting');
+      $('#bombMessage').textContent = '';
+      playGameSound('../assets/media/sounds/ui/reset.mp3', 0.6);
+    }
+
+    function newRound(){
+      resetTimer();
+      // اختيار عشوائي جديد إن أمكن
+      const btn = $('#randomStudentBtn');
+      if(btn && students.length){ btn.click(); }
+      gameState.timeLeft = customTimerDuration;
+      $('#timerDisplay').textContent = formatTime(gameState.timeLeft);
+      showNotification('✨ جولة جديدة بدأت', 'info');
+    }
+
+    function handleDefuse(){
+      if(gameState.timer) { clearInterval(gameState.timer); gameState.timer = null; }
+      gameState.isActive = false; gameState.isPaused = false;
+      setState('state-success');
+      gameState.defusedBombs += 1; gameState.points += 10;
+      updateGameInfo();
+      $('#bombMessage').textContent = '🎯 تم إبطال القنبلة في الوقت المناسب!';
+      fireConfetti();
+      playGameSound('../assets/media/sounds/fx/success.mp3', 0.7);
+      showEvaluationBox(gameState.currentStudent || 'الطالب');
+    }
+
+    function handleExplosion(){
+      setState('state-explosion');
+      gameState.explodedBombs += 1; updateGameInfo();
+      $('#bombMessage').textContent = '💥 انتهى الوقت!';
+      playGameSound('../assets/media/sounds/fx/explosion.mp3', 0.7);
+      showNotification('انفجرت القنبلة! حاول مجددًا.', 'error');
+    }
+
+    // ====== تحميل الصفوف والطلاب ======
+    function loadClasses(){
+      // ملاحظة مهمّة: نحافظ على طريقة جلب البيانات الأصلية كما طلبت
+      // لا تغيّر المسار التالي
       fetch('../data/studentData.json')
         .then(r => r.json())
         .then(data => {
-          allClasses = data;
-          const classSelect = document.getElementById('classSelect');
+          allClasses = data || {};
+          const classSelect = $('#classSelect');
           classSelect.innerHTML = '<option value="">— اختر الصف —</option>';
-          Object.keys(data).forEach(className => {
+          Object.keys(allClasses).forEach(className => {
             const opt = document.createElement('option');
-            opt.value = className;
-            opt.textContent = className;
-            classSelect.appendChild(opt);
+            opt.value = className; opt.textContent = className; classSelect.appendChild(opt);
           });
-          classSelect.onchange = handleClassChange;
         })
-        .catch(() => {
-          document.getElementById('classSelect').innerHTML = '<option>تعذر تحميل الصفوف</option>';
+        .catch(err => {
+          console.error(err);
+          $('#classSelect').innerHTML = '<option value="">تعذر تحميل الصفوف</option>';
+          showNotification('تعذر تحميل بيانات الصفوف', 'error');
         });
     }
 
-    function populateClassSelect() {
-      const classSelect = document.getElementById('classSelect');
-      if (!classSelect) return;
-      classSelect.innerHTML = '<option value="">— اختر الصف —</option>';
-      Object.keys(allClasses).forEach(className => {
-        const opt = document.createElement('option');
-        opt.value = className;
-        opt.textContent = className;
-        classSelect.appendChild(opt);
-      });
-      classSelect.onchange = handleClassChange;
-    }
-
-    function handleClassChange() {
-      const studentSelect = document.getElementById('studentSelect');
-      const studentSelectWrapper = document.getElementById('studentSelectWrapper');
-      if(this.value) {
-        gameState.currentClass = this.value;
-        students = allClasses[this.value] || [];
-        updateGameInfo();
-        // بناء قائمة الطلاب المنسدلة
-        studentSelect.innerHTML = '<option value="">— اختر الطالب —</option>';
-        students.forEach(name => {
-          const opt = document.createElement('option');
-          opt.value = name;
-          opt.textContent = name;
-          studentSelect.appendChild(opt);
-        });
-        studentSelectWrapper.style.display = '';
-        studentSelect.value = '';
-        currentExpert = null;
-        gameState.currentStudent = '—';
-        updateExpertDisplay();
-        // إعادة تعيين العشوائي عند تغيير الصف
-        randomStudentPool = [...students];
-        // إعادة تفعيل زر العشوائي
-        const randomBtn = document.getElementById('randomStudentBtn');
-        if(randomBtn) {
-          randomBtn.disabled = false;
-          randomBtn.innerHTML = '<i class="fa-solid fa-shuffle"></i> اختيار عشوائي';
-          randomBtn.onclick = function(){
-            if(!students || students.length === 0){
-              document.getElementById('bombMessage').textContent = 'يرجى اختيار الصف أولاً.';
-              return;
-            }
-            if(randomStudentPool.length === 0){
-              // إعادة ملء القائمة إذا انتهت
-              randomStudentPool = [...students];
-            }
-            // اختيار عشوائي بدون تكرار
-            const idx = Math.floor(Math.random() * randomStudentPool.length);
-            const selected = randomStudentPool.splice(idx, 1)[0];
-            // تعيين الطالب كخبير وتحديث العرض
-            currentExpert = selected;
-            gameState.currentStudent = selected;
-            updateExpertDisplay();
-            updateGameInfo();
-            playGameSound('../assets/media/sounds/kingdom-sounds/character-intro.mp3',0.7);
-            showNotification(`تم اختيار ${selected} كخبير الجولة!`, 'success');
-            animateTimerHighlight();
-            showEvaluationBox(selected);
-          };
-        }
-        randomStudentMode = false;
-      } else {
-        gameState.currentClass = '—';
-        students = [];
-        updateGameInfo();
-        studentSelect.innerHTML = '<option value="">— اختر الطالب —</option>';
-        studentSelectWrapper.style.display = 'none';
-        currentExpert = null;
-        gameState.currentStudent = '—';
-        updateExpertDisplay();
+    function onClassChange(e){
+      const className = e.target.value;
+      const studentSelect = $('#studentSelect');
+      const wrapper = $('#studentSelectWrapper');
+      if(!className){
+        students = []; gameState.currentClass = '—'; gameState.currentStudent = '—'; currentExpert = null; updateGameInfo();
+        studentSelect.innerHTML = '<option value="">— اختر الطالب —</option>'; wrapper.style.display = 'none';
         randomStudentPool = [];
-        // إعادة تفعيل زر العشوائي
-        const randomBtn = document.getElementById('randomStudentBtn');
-        if(randomBtn) {
-          randomBtn.disabled = false;
-          randomBtn.innerHTML = '<i class="fa-solid fa-shuffle"></i> اختيار عشوائي';
-        }
-        randomStudentMode = false;
-      }
-    }
-
-    // حدث اختيار الطالب
-    document.addEventListener('DOMContentLoaded', function() {
-      const studentSelect = document.getElementById('studentSelect');
-      if(studentSelect) {
-        studentSelect.onchange = function() {
-          if(this.value) {
-            currentExpert = this.value;
-            gameState.currentStudent = this.value;
-            updateExpertDisplay();
-            updateGameInfo();
-          } else {
-            currentExpert = null;
-            gameState.currentStudent = '—';
-            updateExpertDisplay();
-            updateGameInfo();
-          }
-        };
-      }
-    });
-            const studentSelect = document.getElementById('studentSelect');
-            const studentSelectWrapper = document.getElementById('studentSelectWrapper');
-            if(this.value) {
-              gameState.currentClass = this.value;
-              students = allClasses[this.value] || [];
-              updateGameInfo();
-              // بناء قائمة الطلاب المنسدلة
-              studentSelect.innerHTML = '<option value="">— اختر الطالب —</option>';
-              students.forEach(name => {
-                const opt = document.createElement('option');
-                opt.value = name;
-                opt.textContent = name;
-                studentSelect.appendChild(opt);
-              });
-              studentSelectWrapper.style.display = '';
-              studentSelect.value = '';
-              currentExpert = null;
-              gameState.currentStudent = '—';
-              updateExpertDisplay();
-              // إعادة تعيين العشوائي عند تغيير الصف
-              randomStudentPool = [...students];
-              
-              // إعادة تفعيل زر العشوائي
-              const randomBtn = document.getElementById('randomStudentBtn');
-              if(randomBtn) {
-                randomBtn.disabled = false;
-                randomBtn.innerHTML = '<i class="fa-solid fa-shuffle"></i> اختيار عشوائي';
-                randomBtn.onclick = function(){
-                  if(!students || students.length === 0){
-                    document.getElementById('bombMessage').textContent = 'يرجى اختيار الصف أولاً.';
-                    return;
-                  }
-                  if(randomStudentPool.length === 0){
-                    // إعادة ملء القائمة إذا انتهت
-                    randomStudentPool = [...students];
-                  }
-                  // اختيار عشوائي بدون تكرار
-                  const idx = Math.floor(Math.random() * randomStudentPool.length);
-                  const selected = randomStudentPool.splice(idx, 1)[0];
-                  // تعيين الطالب كخبير وتحديث العرض
-                  currentExpert = selected;
-                  gameState.currentStudent = selected;
-                  updateExpertDisplay();
-                  updateGameInfo();
-                  playGameSound('../assets/media/sounds/kingdom-sounds/character-intro.mp3',0.7);
-                  showNotification(`تم اختيار ${selected} كخبير الجولة!`, 'success');
-                  animateTimerHighlight();
-                  showEvaluationBox(selected);
-                };
-              }
-              randomStudentMode = false;
-              
-            } else {
-              gameState.currentClass = '—';
-              students = [];
-              updateGameInfo();
-              studentSelect.innerHTML = '<option value="">— اختر الطالب —</option>';
-              studentSelectWrapper.style.display = 'none';
-              currentExpert = null;
-              gameState.currentStudent = '—';
-              updateExpertDisplay();
-              randomStudentPool = [];
-              
-              // إعادة تفعيل زر العشوائي
-              const randomBtn = document.getElementById('randomStudentBtn');
-              if(randomBtn) {
-                randomBtn.disabled = false;
-                randomBtn.innerHTML = '<i class="fa-solid fa-shuffle"></i> اختيار عشوائي';
-              }
-              randomStudentMode = false;
-            }
-          // ...existing code...
-  // ...existing code...
-    // ========== Toolbar Logic ==========
-    function setupToolbar() {
-      document.getElementById('homeBtn').onclick = goHome;
-      document.getElementById('refreshBtn').onclick = () => {
-        if(confirm('هل تريد إعادة تشغيل اللعبة؟')) location.reload();
-      };
-      document.getElementById('instructionsBtn').onclick = () => openModal('instructionsModal');
-      document.getElementById('fullscreenBtn').onclick = toggleFullscreen;
-      document.getElementById('soundBtn').onclick = toggleSound;
-    }
-    function goHome() { window.location.href = '#'; }
-    function toggleFullscreen() {
-      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-      else document.exitFullscreen();
-    }
-    function toggleSound() {
-      soundOn = !soundOn;
-      document.getElementById('soundBtn').innerHTML = soundOn ? '<i class="fa-solid fa-volume-up"></i>' : '<i class="fa-solid fa-volume-xmark"></i>';
-    }
-    // ========== Game Initialization ==========
-    function initializeGame() {
-      gameState.isActive = false;
-      gameState.isPaused = false;
-      gameState.timeLeft = 0;
-      gameState.currentStudent = '—';
-      gameState.currentClass = '—';
-      gameState.defusedBombs = 0;
-      gameState.explodedBombs = 0;
-      gameState.points = 0;
-      updateGameInfo();
-      setGameState('waiting', '🚨 في انتظار بدء اللعبة');
-      updateTimerDisplay(0);
-      document.getElementById('bombMessage').textContent = '';
-      currentExpert = null;
-      updateExpertDisplay();
-      // إعادة تعيين اختيار مدة المؤقت
-      const timerSelect = document.getElementById('timerDurationSelect');
-      if(timerSelect) timerSelect.value = '60';
-      customTimerDuration = 60;
-    }
-    function updateGameInfo() {
-      document.getElementById('currentStudent').textContent = gameState.currentStudent;
-      document.getElementById('currentClass').textContent = gameState.currentClass;
-      document.getElementById('gamePoints').textContent = gameState.points;
-      document.getElementById('defusedBombs').textContent = gameState.defusedBombs;
-      document.getElementById('explodedBombs').textContent = gameState.explodedBombs;
-      const total = gameState.defusedBombs + gameState.explodedBombs;
-      document.getElementById('successRate').textContent = total > 0 ? Math.round((gameState.defusedBombs/total)*100)+'%' : '0%';
-    }
-    function setGameState(state, msg) {
-      const el = document.getElementById('gameState');
-      el.className = 'game-state state-' + state;
-      el.textContent = msg;
-    }
-    function updateTimerDisplay(sec) {
-      const m = Math.floor(sec/60).toString().padStart(2,'0');
-      const s = (sec%60).toString().padStart(2,'0');
-      document.getElementById('timerDisplay').textContent = `${m}:${s}`;
-    }
-    // ========== Teacher Controls ==========
-    function setupEventListeners() {
-      document.getElementById('startBtn').onclick = function(){
-        playGameSound('../assets/media/sounds/kingdom-sounds/battle-horn.mp3',0.7);
-        startTimer();
-        showNotification('بدأت الجولة! أسرعوا لإبطال القنبلة','info');
-      };
-      document.getElementById('pauseBtn').onclick = function(){
-        playGameSound('../assets/media/sounds/kingdom-sounds/book-close.mp3',0.7);
-        pauseTimer();
-        showNotification(gameState.isPaused ? 'تم إيقاف المؤقت مؤقتاً' : 'استئناف المؤقت','warning');
-      };
-      document.getElementById('resetBtn').onclick = function(){
-        playGameSound('../assets/media/sounds/kingdom-sounds/armor-clank.mp3',0.7);
-        resetTimer();
-        showNotification('تمت إعادة ضبط المؤقت','info');
-      };
-      document.getElementById('newRoundBtn').onclick = function(){
-        playGameSound('../assets/media/sounds/kingdom-sounds/panel-slide.mp3',0.7);
-        newRound();
-        showNotification('جولة جديدة! اختر طالباً جديداً','info');
-      };
-    }
-    function showGameSetup() {
-      openModal('guideModal');
-    }
-    // ========== Expert Selection ==========
-    // تحديث عرض الخبير الحالي
-    function updateExpertDisplay() {
-      const el = document.getElementById('currentExpertDisplay');
-      if(currentExpert) {
-        el.innerHTML = `<span style='color:#FFD700;font-weight:900;'>الخبير الحالي:</span> ${currentExpert}`;
-        playGameSound('../assets/media/sounds/kingdom-sounds/ai-notification.mp3',0.5);
-        animateTimerHighlight();
-        showNotification(`تم تعيين ${currentExpert} كخبير الجولة!`, 'info', false);
-      } else {
-        el.textContent = 'اختر الطالب الخبير للجولة.';
-      }
-    }
-    // ========== Timer Logic ==========
-    function startTimer() {
-  if(gameState.isActive) return;
-  playGameSound('../assets/media/sounds/start-timer.mp3',0.7);
-      if(!currentExpert) {
-        document.getElementById('bombMessage').textContent = 'يرجى اختيار الطالب الخبير أولاً.';
         return;
       }
-      // استخدم دائمًا القيمة المختارة من القائمة
-      const timerSelect = document.getElementById('timerDurationSelect');
-      let selectedDuration = 60;
-      if(timerSelect) {
-        selectedDuration = parseInt(timerSelect.value, 10) || 60;
-      }
-      customTimerDuration = selectedDuration;
-      gameState.isActive = true;
-      gameState.isPaused = false;
-      gameState.timeLeft = customTimerDuration;
-      setGameState('active', '⏳ المؤقت يعمل — أسرعوا!');
-      updateTimerDisplay(gameState.timeLeft);
-      document.getElementById('bombMessage').textContent = '';
-      document.getElementById('bomb').classList.remove('state-success','state-explosion');
-      if(gameState.timer) clearInterval(gameState.timer);
-      gameState.timer = setInterval(() => {
-        if(gameState.isPaused) return;
-        gameState.timeLeft--;
-        updateTimerDisplay(gameState.timeLeft);
-        if(gameState.timeLeft <= 0) {
-          clearInterval(gameState.timer);
-          gameState.timer = null;
-          gameState.isActive = false;
-          gameState.explodedBombs++;
-          updateGameInfo();
-          setGameState('explosion', '💥 انفجرت القنبلة!');
-          document.getElementById('bombMessage').textContent = 'انتهى الوقت — حاولوا مجددًا!';
-          bombExplosionEffect();
-        }
-      }, 1000);
-    }
-    function pauseTimer() {
-  if(!gameState.isActive) return;
-  playGameSound('../assets/media/sounds/long-beep.mp3',0.5);
-      gameState.isPaused = !gameState.isPaused;
-      setGameState(gameState.isPaused ? 'waiting' : 'active', gameState.isPaused ? '⏸️ تم الإيقاف المؤقت' : '⏳ المؤقت يعمل — أسرعوا!');
-    }
-    function resetTimer() {
-  if(gameState.timer) clearInterval(gameState.timer);
-  playGameSound('../assets/media/sounds/countdown-beep.mp3',0.5);
-      gameState.isActive = false;
-      gameState.isPaused = false;
-      gameState.timeLeft = 0;
-      setGameState('waiting', '🚨 في انتظار بدء اللعبة');
-      updateTimerDisplay(0);
-      document.getElementById('bombMessage').textContent = '';
-      document.getElementById('bomb').classList.remove('state-success','state-explosion');
-    }
-    function newRound() {
-  playGameSound('../assets/media/sounds/select.mp3',0.7);
-  resetTimer();
-      currentExpert = null;
-      gameState.currentStudent = '—';
-      updateExpertDisplay();
+      gameState.currentClass = className;
+      students = Array.isArray(allClasses[className]) ? allClasses[className] : [];
       updateGameInfo();
-      document.getElementById('bombMessage').textContent = 'ابدأ جولة جديدة باختيار طالب جديد.';
-      // إذا كان العشوائي مفعل، اختر طالب جديد تلقائياً
-      if(randomStudentMode) {
-        pickRandomStudent();
-      }
-      // إعادة تفعيل زر العشوائي
-      const randomBtn = document.getElementById('randomStudentBtn');
-      if(randomBtn) {
-        randomBtn.disabled = false;
-        randomBtn.innerHTML = '<i class="fa-solid fa-shuffle"></i> اختيار عشوائي';
-        randomStudentMode = false;
-        document.getElementById('studentSelect').disabled = false;
-      }
+      // بناء قائمة الطلاب
+      studentSelect.innerHTML = '<option value="">— اختر الطالب —</option>';
+      students.forEach(n => { const o = document.createElement('option'); o.value = n; o.textContent = n; studentSelect.appendChild(o); });
+      wrapper.style.display = '';
+      studentSelect.value = '';
+      currentExpert = null; gameState.currentStudent = '—';
+      $('#currentExpertDisplay').textContent = '';
+      randomStudentPool = [...students];
     }
-    // ========== Defuse Logic ==========
-    function defuseBomb() {
-      if(!gameState.isActive) return;
-      if(gameState.timer) clearInterval(gameState.timer);
-      gameState.isActive = false;
-      gameState.defusedBombs++;
-      gameState.points += 100;
+
+    function onStudentChange(e){
+      const val = e.target.value;
+      if(val){ currentExpert = val; gameState.currentStudent = val; $('#currentExpertDisplay').textContent = `👑 خبير الجولة: ${val}`; animateTimerHighlight(); }
+      else{ currentExpert = null; gameState.currentStudent = '—'; $('#currentExpertDisplay').textContent = ''; }
       updateGameInfo();
-      setGameState('success', '🎉 تم إبطال القنبلة بنجاح!');
-      document.getElementById('bombMessage').textContent = 'أحسنت! تم إبطال القنبلة.';
-      bombSuccessEffect();
-      playGameSound('../assets/media/sounds/kingdom-sounds/perfect-score.mp3',0.8);
-      showNotification('تم إبطال القنبلة! أحسنت!','success');
-      animateBombGlow('success');
     }
-    // ========== Bomb Effects ==========
-    function bombExplosionEffect() {
-      const bomb = document.getElementById('bomb');
-      bomb.classList.add('state-explosion');
-      bomb.style.animation = 'shake 0.2s 8';
-      playGameSound('../assets/media/sounds/kingdom-sounds/cosmic-explosion.mp3',0.8);
-      showNotification('انفجرت القنبلة!','error');
-      animateBombGlow('error');
-      setTimeout(() => {
-        if(bomb) {
-          bomb.classList.remove('state-explosion');
-          bomb.style.animation = '';
-        }
-      }, 1800);
-  }
-</script>
+
+    function pickRandomStudent(){
+      if(!students.length){ $('#bombMessage').textContent = 'يرجى اختيار الصف أولاً.'; return; }
+      if(!randomStudentPool.length) randomStudentPool = [...students];
+      const idx = Math.floor(Math.random() * randomStudentPool.length);
+      const selected = randomStudentPool.splice(idx, 1)[0];
+      currentExpert = selected; gameState.currentStudent = selected;
+      $('#studentSelect').value = selected;
+      $('#currentExpertDisplay').textContent = `👑 خبير الجولة: ${selected}`;
+      updateGameInfo(); animateTimerHighlight();
+      playGameSound('../assets/media/sounds/kingdom-sounds/character-intro.mp3', 0.7);
+      showNotification(`تم اختيار ${selected} كخبير الجولة!`, 'success');
+      showEvaluationBox(selected);
+    }
+
+    // ====== شريط الأدوات ======
+    function setupToolbar(){
+      $('#homeBtn').addEventListener('click', ()=>{ showNotification('مرحبًا! ✨', 'info'); });
+      $('#refreshBtn').addEventListener('click', ()=> window.location.reload());
+      $('#instructionsBtn').addEventListener('click', ()=> openModal('instructionsModal'));
+      $('[data-close-modal="instructionsModal"]').addEventListener('click', ()=> closeModal('instructionsModal'));
+      $('#fullscreenBtn').addEventListener('click', ()=>{
+        if(!document.fullscreenElement){ document.documentElement.requestFullscreen?.(); }
+        else{ document.exitFullscreen?.(); }
+      });
+      $('#soundBtn').addEventListener('click', (e)=>{
+        soundOn = !soundOn; const i = e.currentTarget.querySelector('i');
+        i.classList.toggle('fa-volume-up', soundOn);
+        i.classList.toggle('fa-volume-xmark', !soundOn);
+        showNotification(soundOn? '🔊 تم تفعيل الصوت' : '🔇 تم كتم الصوت', 'info');
+      });
+    }
+
+    // ====== المستمعات ======
+    function setupEventListeners(){
+      $('#classSelect').addEventListener('change', onClassChange);
+      $('#studentSelect').addEventListener('change', onStudentChange);
+      $('#randomStudentBtn').addEventListener('click', pickRandomStudent);
+      $('#timerDurationSelect').addEventListener('change', e=>{ customTimerDuration = parseInt(e.target.value,10) || 60; if(!gameState.isActive) { gameState.timeLeft = 0; $('#timerDisplay').textContent = '00:00'; } });
+
+      // أزرار المؤقت
+      $('#startBtn').addEventListener('click', startTimer);
+      $('#pauseBtn').addEventListener('click', pauseTimer);
+      $('#resetBtn').addEventListener('click', resetTimer);
+      $('#newRoundBtn').addEventListener('click', newRound);
+
+      // نتيجة الجولة
+      $('#defuseBtn').addEventListener('click', handleDefuse);
+      $('#explodeBtn').addEventListener('click', handleExplosion);
+
+      // إغلاق المودال بالنقر خارج المحتوى
+      document.addEventListener('click', (e)=>{
+        if(e.target.classList?.contains('modal')) closeModal(e.target.id);
+      });
+    }
+
+    // ====== تشغيل أولي ======
+    document.addEventListener('DOMContentLoaded', ()=>{
+      setupToolbar();
+      setupEventListeners();
+      loadClasses(); // ⚠️ يحافظ على fetch('../data/studentData.json')
+      const sel = $('#timerDurationSelect'); customTimerDuration = parseInt(sel.value,10) || 60;
+      $('#timerDisplay').textContent = '00:00';
+      updateGameInfo();
+    });
+  </script>
 </body>
 </html>
