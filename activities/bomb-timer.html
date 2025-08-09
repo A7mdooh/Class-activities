@@ -492,6 +492,9 @@
     <button class="toolbar-btn" id="fullscreenBtn" title="ملء الشاشة"><i class="fa-solid fa-expand"></i></button>
     <button class="toolbar-btn" id="soundBtn" title="الصوت"><i class="fa-solid fa-volume-up"></i></button>
     <button class="toolbar-btn" id="honorBoardBtn" title="لوحة الشرف"><i class="fa-solid fa-trophy"></i></button>
+    <button class="toolbar-btn stats-btn" id="statsBtn" title="إحصائيات متقدمة" style="background: linear-gradient(90deg,#FFD700,#228B22); color: #23243a; box-shadow: 0 0 12px #FFD70099, 0 2px 8px #228B2233; font-weight:900; border:2px solid #FFD700; margin-right:8px;">
+      <i class="fa-solid fa-chart-pie"></i>
+    </button>
   </div>
   <!-- Header -->
   <div class="header">
@@ -830,7 +833,55 @@
         toggleSound();
       };
     }
-    function goHome() { window.location.href = '#'; }
+  function goHome() { window.location.href = '../main.html'; }
+    // زر إحصائيات متقدمة (احترافي)
+    document.addEventListener('DOMContentLoaded',()=>{
+      const statsBtn = document.getElementById('statsBtn');
+      if(statsBtn) statsBtn.onclick = function() {
+        playKingdomSound('brain-activate.mp3');
+        showAdvancedStatsModal();
+      };
+    });
+
+    // نافذة إحصائيات متقدمة
+    function showAdvancedStatsModal() {
+      // إذا كانت النافذة موجودة مسبقاً، أظهرها فقط
+      let modal = document.getElementById('advancedStatsModal');
+      if(modal) { modal.style.display = 'flex'; return; }
+      // إنشاء النافذة ديناميكياً
+      modal = document.createElement('div');
+      modal.className = 'modal';
+      modal.id = 'advancedStatsModal';
+      modal.style.display = 'flex';
+      modal.innerHTML = `
+        <div class="modal-content" style="max-width:600px;">
+          <div class="modal-header">
+            <h2><i class='fa-solid fa-chart-pie' style='color:#228B22;'></i> إحصائيات متقدمة</h2>
+            <button class="modal-close" onclick="closeModal('advancedStatsModal')">&times;</button>
+          </div>
+          <div class="modal-body" id="advancedStatsBody" style="font-size:1.15rem;color:#FFD700;">
+            <!-- سيتم تعبئته دينامياً -->
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      renderAdvancedStats();
+    }
+
+    function renderAdvancedStats() {
+      const el = document.getElementById('advancedStatsBody');
+      if(!el) return;
+      // عرض إحصائيات الجلسة الحالية
+      let html = '';
+      html += `<div style='margin-bottom:12px;'><b>أفضل طالب:</b> <span style='color:#DC143C;'>${honorData.bestStudent||'—'}</span></div>`;
+      html += `<div style='margin-bottom:12px;'><b>أعلى نقاط:</b> <span style='color:#228B22;'>${honorData.maxPoints}</span></div>`;
+      html += `<div style='margin-bottom:12px;'><b>أكثر قنابل مُبطلة:</b> <span style='color:#228B22;'>${honorData.mostDefused}</span></div>`;
+      html += `<div style='margin-bottom:12px;'><b>أكثر انفجارات:</b> <span style='color:#DC143C;'>${honorData.mostExploded}</span></div>`;
+      html += `<hr style='border-color:#FFD70033;margin:12px 0;'>`;
+      html += `<div style='margin-bottom:8px;'><b>أفضل 5 طلاب (حسب النقاط):</b></div>`;
+      html += honorData.topStudents.map((s,i)=>`<div style='margin-bottom:6px;'><span style='font-size:1.2rem;'>${i===0?'🥇':i===1?'🥈':i===2?'🥉':'🏅'}</span> <b>${s.name}</b> — <span style='color:#FFD700;'>${s.points} نقطة</span></div>`).join('');
+      el.innerHTML = html;
+    }
     function toggleFullscreen() {
       if (!document.fullscreenElement) document.documentElement.requestFullscreen();
       else document.exitFullscreen();
