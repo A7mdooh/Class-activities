@@ -847,7 +847,11 @@
     function showAdvancedStatsModal() {
       // إذا كانت النافذة موجودة مسبقاً، أظهرها فقط
       let modal = document.getElementById('advancedStatsModal');
-      if(modal) { modal.style.display = 'flex'; return; }
+      if(modal) {
+        modal.style.display = 'flex';
+        renderAdvancedStats(); // تحديث البيانات عند كل فتح
+        return;
+      }
       // إنشاء النافذة ديناميكياً
       modal = document.createElement('div');
       modal.className = 'modal';
@@ -862,10 +866,23 @@
           <div class="modal-body" id="advancedStatsBody" style="font-size:1.15rem;color:#FFD700;">
             <!-- سيتم تعبئته دينامياً -->
           </div>
+          <div style="display:flex;justify-content:flex-end;gap:12px;padding:0 24px 18px 24px;">
+            <button class="oman-btn red" id="endSessionBtn" style="font-size:1.05rem;"><i class="fa-solid fa-power-off"></i> إنهاء الجلسة</button>
+          </div>
         </div>
       `;
       document.body.appendChild(modal);
       renderAdvancedStats();
+      // زر إنهاء الجلسة
+      document.getElementById('endSessionBtn').onclick = function() {
+        if(confirm('هل أنت متأكد أنك تريد إنهاء الجلسة ومسح جميع الإحصائيات؟')) {
+          // مسح بيانات الجلسة
+          window.sessionHonor = {};
+          honorData = {topStudents:[], mostDefused:0, mostExploded:0, maxPoints:0, bestStudent:null};
+          renderAdvancedStats();
+          showStudentNotification('تم إنهاء الجلسة ومسح الإحصائيات.','setting-change.mp3','linear-gradient(90deg,#FFD700,#DC143C)');
+        }
+      };
     }
 
     function renderAdvancedStats() {
