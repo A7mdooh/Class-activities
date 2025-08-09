@@ -186,18 +186,78 @@
     }
     .bomb {
       width: 180px; height: 180px; border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, #FFD700 0,#23243a 60%);
-      box-shadow: 0 0 0 4px #FFD70044 inset, 0 0 32px #FFD70033, 0 8px 30px #000a;
+      background: radial-gradient(circle at 30% 30%, #FFD700 0 30%, #FFD70088 40%, #23243a 70%);
+      box-shadow: 0 0 0 8px #FFD70088 inset, 0 0 64px #FFD70077, 0 8px 30px #000a, 0 0 32px #FFD70055;
       display: flex; align-items: center; justify-content: center;
       font-size: 5rem; color: #FFD700;
       position: relative;
       margin-bottom: 12px;
-      animation: bombPulse 1.5s infinite;
-      transition: box-shadow 0.3s;
+      animation: bombPulse 1.2s infinite, bombGlow 2.2s infinite alternate;
+      transition: box-shadow 0.3s, background 0.3s;
+      overflow: visible;
+    }
+    .bomb-animated {
+      filter: drop-shadow(0 0 24px #FFD70099) drop-shadow(0 0 8px #DC143C66);
     }
     @keyframes bombPulse {
-      0%,100%{box-shadow: 0 0 0 4px #FFD70044 inset, 0 0 32px #FFD70033, 0 8px 30px #000a;}
-      50%{box-shadow: 0 0 0 8px #FFD70088 inset, 0 0 64px #FFD70077, 0 8px 30px #000a;}
+      0%,100%{box-shadow: 0 0 0 8px #FFD70088 inset, 0 0 64px #FFD70077, 0 8px 30px #000a, 0 0 32px #FFD70055;}
+      50%{box-shadow: 0 0 0 16px #FFD700cc inset, 0 0 96px #FFD700cc, 0 8px 30px #000a, 0 0 48px #FFD700cc;}
+    }
+    @keyframes bombGlow {
+      0%{filter:brightness(1) drop-shadow(0 0 12px #FFD70099);}
+      100%{filter:brightness(1.15) drop-shadow(0 0 32px #FFD700cc);}
+    }
+    .bomb.state-explosion {
+      animation: bombPulse 0.2s 8, bombShake 0.2s 8, bombGlow 1.2s infinite alternate;
+      background: radial-gradient(circle at 30% 30%, #DC143C 0 40%, #FFD700 60%, #23243a 100%);
+      box-shadow: 0 0 0 12px #DC143Ccc inset, 0 0 64px #FFD70077, 0 8px 30px #000a, 0 0 64px #DC143Ccc;
+    }
+    @keyframes bombShake {
+      0% { transform: translateX(0); }
+      20% { transform: translateX(-8px) rotate(-2deg); }
+      40% { transform: translateX(8px) rotate(2deg); }
+      60% { transform: translateX(-4px) rotate(-1deg); }
+      80% { transform: translateX(4px) rotate(1deg); }
+      100% { transform: translateX(0); }
+    }
+    .bomb.state-success {
+      background: radial-gradient(circle at 30% 30%, #228B22 0 40%, #FFD700 60%, #fff 100%);
+      box-shadow: 0 0 0 12px #228B22cc inset, 0 0 64px #FFD70077, 0 8px 30px #000a, 0 0 64px #228B22cc;
+      animation: bombPulse 0.7s 2, bombGlow 1.2s infinite alternate;
+    }
+    #bombTimerRing {
+      pointer-events: none;
+      filter: drop-shadow(0 0 12px #FFD70099);
+      transition: filter 0.3s;
+    }
+    #timerRing {
+      stroke-dasharray: 596.9026;
+      stroke-dashoffset: 0;
+      transition: stroke 0.3s, stroke-dashoffset 0.5s linear;
+      filter: drop-shadow(0 0 8px #FFD700cc);
+    }
+    .timer-critical #timerRing {
+      stroke: #DC143C;
+      filter: drop-shadow(0 0 16px #DC143Ccc);
+    }
+    .timer-warning #timerRing {
+      stroke: #FFD700;
+      filter: drop-shadow(0 0 16px #FFD700cc);
+    }
+    .timer-success #timerRing {
+      stroke: #228B22;
+      filter: drop-shadow(0 0 16px #228B22cc);
+    }
+    .timer-display.timer-animated {
+      background: linear-gradient(90deg,#FFD70022,#23243a 80%);
+      color: #FFD700;
+      box-shadow: 0 2px 18px #FFD70044;
+      animation: timerGlow 1.2s infinite alternate;
+      border: 2px solid #FFD70055;
+    }
+    @keyframes timerGlow {
+      0%{box-shadow: 0 2px 18px #FFD70044;}
+      100%{box-shadow: 0 2px 32px #FFD700cc;}
     }
     .fuse {
       position: absolute; top: -38px; left: 50%; transform: translateX(-50%);
@@ -211,8 +271,8 @@
       position: absolute; top: -48px; left: 50%; transform: translateX(-50%);
       width: 22px; height: 22px; border-radius: 50%;
       background: radial-gradient(circle, #FFD700 60%, #DC143C 100%);
-      filter: drop-shadow(0 0 12px #FFD700cc);
-      animation: flameFlicker 0.18s infinite alternate;
+      filter: drop-shadow(0 0 18px #FFD700cc) drop-shadow(0 0 8px #DC143Ccc);
+      animation: flameFlicker 0.18s infinite alternate, flameMove 1.2s infinite alternate;
       z-index: 3;
       display: flex; align-items: center; justify-content: center;
       font-size: 1.3rem;
@@ -221,38 +281,9 @@
       0% { opacity: 1; transform: translateX(-50%) scale(1); }
       100% { opacity: 0.7; transform: translateX(-50%) scale(1.15); }
     }
-    .timer-display {
-      font-family: 'Cairo', monospace;
-      font-size: 3.5rem;
-      font-weight: 900;
-      color: var(--accent-gold);
-      background: #181a23cc;
-      border-radius: 18px;
-      padding: 10px 38px;
-      margin: 0 auto 8px auto;
-      text-align: center;
-      letter-spacing: 2px;
-      box-shadow: 0 2px 8px #FFD70033;
-      text-shadow: 0 0 18px #FFD70099;
-      animation: pulseTimer 1.2s infinite;
-    }
-    @keyframes pulseTimer {
-      0%,100%{text-shadow: 0 0 18px #FFD70099;}
-      50%{text-shadow: 0 0 32px #FFD700cc;}
-    }
-    .timer-text {
-      font-size: 1.1rem;
-      color: #FFD700cc;
-      margin-bottom: 8px;
-      text-align: center;
-    }
-    #bombMessage {
-      font-size: 1.1rem;
-      color: #FFD700cc;
-      margin-top: 8px;
-      min-height: 28px;
-      text-align: center;
-      font-weight: 700;
+    @keyframes flameMove {
+      0% { filter: drop-shadow(0 0 18px #FFD700cc); }
+      100% { filter: drop-shadow(0 0 32px #FFD700cc) drop-shadow(0 0 16px #DC143Ccc); }
     }
     /* Teacher Controls */
     .teacher-controls {
@@ -512,12 +543,19 @@
     <!-- Bomb Area -->
     <div class="bomb-area">
       <div id="gameState" class="game-state state-waiting">🚨 في انتظار بدء اللعبة</div>
-      <div class="bomb" id="bomb">
+      <div class="bomb bomb-animated" id="bomb">
+        <svg id="bombTimerRing" width="210" height="210" style="position:absolute;left:-15px;top:-15px;z-index:1;pointer-events:none;">
+          <circle id="timerRingBg" cx="105" cy="105" r="95" stroke="#23243a" stroke-width="18" fill="none"/>
+          <circle id="timerRing" cx="105" cy="105" r="95" stroke="#FFD700" stroke-width="14" fill="none" stroke-linecap="round"/>
+        </svg>
         <div class="fuse" id="fuse"></div>
         <div class="fuse-flame" id="fuseFlame">🔥</div>
-        <span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);">💣</span>
+        <span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:5.2rem;filter:drop-shadow(0 0 18px #FFD700cc);">💣</span>
+        <div id="bombSpark" style="position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:32px;height:32px;pointer-events:none;display:none;z-index:3;">
+          <svg width="32" height="32"><circle cx="16" cy="16" r="10" fill="#FFD700" opacity="0.8"><animate attributeName="r" values="10;16;10" dur="0.5s" repeatCount="indefinite"/></circle></svg>
+        </div>
       </div>
-      <div class="timer-display"><span class="timer-text" id="timerDisplay">00:00</span></div>
+      <div class="timer-display timer-animated"><span class="timer-text" id="timerDisplay">00:00</span></div>
       <div id="bombMessage"></div>
     </div>
     <!-- Teacher Controls -->
@@ -874,57 +912,42 @@
       el.className = 'game-state state-' + state;
       el.textContent = msg;
     }
+    // Advanced SVG timer ring animation
     function updateTimerDisplay(sec) {
       const m = Math.floor(sec/60).toString().padStart(2,'0');
       const s = (sec%60).toString().padStart(2,'0');
       document.getElementById('timerDisplay').textContent = `${m}:${s}`;
-    }
-    // ========== Teacher Controls ==========
-    function setupEventListeners() {
-      document.getElementById('startBtn').onclick = startTimer;
-      document.getElementById('pauseBtn').onclick = pauseTimer;
-      document.getElementById('resetBtn').onclick = resetTimer;
-      document.getElementById('newRoundBtn').onclick = newRound;
-      document.getElementById('defuseBtn').onclick = defuseBomb;
-      // زر تفعيل القنبلة (إجابة خاطئة)
-      const activateBtn = document.getElementById('activateBombBtn');
-      if (activateBtn) {
-        activateBtn.onclick = function() {
-          if(!gameState.isActive) return;
-          if(gameState.timer) clearInterval(gameState.timer);
-          gameState.isActive = false;
-          gameState.explodedBombs++;
-          updateGameInfo();
-          setGameState('explosion', '💥 انفجرت القنبلة (إجابة خاطئة)!');
-          document.getElementById('bombMessage').innerHTML = `<span style='color:#DC143C;font-size:1.2rem;font-weight:900;'>إجابة خاطئة! القنبلة انفجرت يا ${currentExpert}!</span>`;
-          bombExplosionEffect();
-          showStudentNotification(`💥 إجابة خاطئة! انفجرت القنبلة يا ${currentExpert}!`, 'cosmic-explosion.mp3', 'linear-gradient(90deg,#DC143C,#FFD700)');
-          playKingdomSound('battle-victory.mp3');
-        };
+      const ring = document.getElementById('timerRing');
+      if(ring && typeof gameState.timeLeft !== 'undefined' && customTimerDuration) {
+        const total = customTimerDuration;
+        const percent = Math.max(0, Math.min(1, gameState.timeLeft/total));
+        const circleLen = 2 * Math.PI * 95;
+        ring.setAttribute('stroke-dasharray', circleLen);
+        ring.setAttribute('stroke-dashoffset', circleLen * (1-percent));
+        // Color transitions
+        const bombDiv = document.getElementById('bomb');
+        if(percent <= 0.15) {
+          ring.setAttribute('stroke', '#DC143C');
+          bombDiv.classList.add('timer-critical');
+          bombDiv.classList.remove('timer-warning','timer-success');
+        } else if(percent <= 0.35) {
+          ring.setAttribute('stroke', '#FFD700');
+          bombDiv.classList.add('timer-warning');
+          bombDiv.classList.remove('timer-critical','timer-success');
+        } else {
+          ring.setAttribute('stroke', '#228B22');
+          bombDiv.classList.add('timer-success');
+          bombDiv.classList.remove('timer-warning','timer-critical');
+        }
       }
     }
-    function showGameSetup() {
-      openModal('guideModal');
-    }
-    // ========== Expert Selection ==========
-    // تحديث عرض الخبير الحالي
-    function updateExpertDisplay() {
-      const el = document.getElementById('currentExpertDisplay');
-      if(currentExpert) {
-        el.innerHTML = `<span style='color:#FFD700;font-weight:900;'>الخبير الحالي:</span> ${currentExpert}`;
-        showStudentNotification(`🚩 دورك يا ${currentExpert}! استعد للتحدي!`, 'character-intro.mp3', 'linear-gradient(90deg,#FFD700,#228B22)');
-      } else {
-        el.textContent = 'اختر الطالب الخبير للجولة.';
-      }
-    }
-    // ========== Timer Logic ==========
+    // Spark effect for bomb
     function startTimer() {
       if(gameState.isActive) return;
       if(!currentExpert) {
         document.getElementById('bombMessage').textContent = 'يرجى اختيار الطالب الخبير أولاً.';
         return;
       }
-      // تحديث مدة المؤقت من القائمة دائماً عند بدء المؤقت
       const timerSelect = document.getElementById('timerDurationSelect');
       if (timerSelect) {
         customTimerDuration = parseInt(timerSelect.value, 10) || 60;
@@ -935,7 +958,11 @@
       setGameState('active', '⏳ المؤقت يعمل — أسرعوا!');
       updateTimerDisplay(gameState.timeLeft);
       document.getElementById('bombMessage').innerHTML = `<span style='color:#FFD700;font-size:1.3rem;font-weight:900;'>${currentExpert}، لديك فرصة لإبطال القنبلة!<br>أجب بسرعة قبل انتهاء الوقت!</span>`;
-      document.getElementById('bomb').classList.remove('state-success','state-explosion');
+      const bombDiv = document.getElementById('bomb');
+      bombDiv.classList.remove('state-success','state-explosion','timer-critical','timer-warning','timer-success');
+      // Spark effect
+      const spark = document.getElementById('bombSpark');
+      if(spark) { spark.style.display = 'block'; }
       showStudentNotification(`🔥 ${currentExpert} التحدي بدأ!`, 'battle-horn.mp3', 'linear-gradient(90deg,#FFD700,#DC143C)');
       playKingdomSound('battle-horn.mp3');
       if(gameState.timer) clearInterval(gameState.timer);
@@ -943,6 +970,12 @@
         if(gameState.isPaused) return;
         gameState.timeLeft--;
         updateTimerDisplay(gameState.timeLeft);
+        // Animate spark
+        if(gameState.timeLeft % 2 === 0 && spark) {
+          spark.style.display = 'block';
+        } else if(spark) {
+          spark.style.display = 'none';
+        }
         if(gameState.timeLeft === 10) {
           showStudentNotification(`⏰ بقي 10 ثوان فقط يا ${currentExpert}!`, 'countdown-tick.mp3', 'linear-gradient(90deg,#FFD700,#DC143C)');
           playKingdomSound('countdown-tick.mp3');
@@ -951,6 +984,7 @@
           clearInterval(gameState.timer);
           gameState.timer = null;
           gameState.isActive = false;
+          if(spark) spark.style.display = 'none';
           gameState.explodedBombs++;
           updateGameInfo();
           setGameState('explosion', '💥 انفجرت القنبلة!');
@@ -974,48 +1008,18 @@
       setGameState('waiting', '🚨 في انتظار بدء اللعبة');
       updateTimerDisplay(0);
       document.getElementById('bombMessage').textContent = '';
-      document.getElementById('bomb').classList.remove('state-success','state-explosion');
+      const bombDiv = document.getElementById('bomb');
+      bombDiv.classList.remove('state-success','state-explosion','timer-critical','timer-warning','timer-success');
+      const spark = document.getElementById('bombSpark');
+      if(spark) spark.style.display = 'none';
     }
-    function newRound() {
-      resetTimer();
-      currentExpert = null;
-      gameState.currentStudent = '—';
-      updateExpertDisplay();
-      updateGameInfo();
-      document.getElementById('bombMessage').textContent = 'ابدأ جولة جديدة باختيار طالب جديد.';
-      // إذا كان العشوائي مفعل، اختر طالب جديد تلقائياً
-      if(randomStudentMode) {
-        pickRandomStudent();
-      }
-      // إعادة تفعيل زر العشوائي
-      const randomBtn = document.getElementById('randomStudentBtn');
-      if(randomBtn) {
-        randomBtn.disabled = false;
-        randomBtn.innerHTML = '<i class="fa-solid fa-shuffle"></i> اختيار عشوائي';
-        randomStudentMode = false;
-        document.getElementById('studentSelect').disabled = false;
-      }
-    }
-    // ========== Defuse Logic ==========
-    function defuseBomb() {
-      if(!gameState.isActive) return;
-      if(gameState.timer) clearInterval(gameState.timer);
-      gameState.isActive = false;
-      gameState.defusedBombs++;
-      gameState.points += 100;
-      updateGameInfo();
-      setGameState('success', '🎉 تم إبطال القنبلة بنجاح!');
-      document.getElementById('bombMessage').innerHTML = `<span style='color:#228B22;font-size:1.2rem;font-weight:900;'>ممتاز يا ${currentExpert}! تم إبطال القنبلة بنجاح 👏</span>`;
-      bombSuccessEffect();
-      showStudentNotification(`🏆 أحسنت يا ${currentExpert}! أنقذت الفريق!`, 'perfect-score.mp3', 'linear-gradient(90deg,#228B22,#FFD700)');
-      playKingdomSound('perfect-score.mp3');
-      updateHonorData();
-    }
-    // ========== Bomb Effects ==========
     function bombExplosionEffect() {
       const bomb = document.getElementById('bomb');
       bomb.classList.add('state-explosion');
-      bomb.style.animation = 'shake 0.2s 8';
+      bomb.style.animation = 'bombPulse 0.2s 8, bombShake 0.2s 8, bombGlow 1.2s infinite alternate';
+      // Spark off
+      const spark = document.getElementById('bombSpark');
+      if(spark) spark.style.display = 'none';
       playKingdomSound('cosmic-explosion.mp3');
       setTimeout(() => { bomb.style.animation = ''; }, 1800);
       updateHonorData();
@@ -1023,6 +1027,9 @@
     function bombSuccessEffect() {
       const bomb = document.getElementById('bomb');
       bomb.classList.add('state-success');
+      // Spark off
+      const spark = document.getElementById('bombSpark');
+      if(spark) spark.style.display = 'none';
       playKingdomSound('achievement-unlock.mp3');
       if(window.confetti) {
         document.getElementById('confettiCanvas').style.display = 'block';
