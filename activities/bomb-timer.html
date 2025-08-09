@@ -1256,6 +1256,7 @@
     // ========== Smart Sound System ========== 
     let currentAudio = null;
     function playGameSound(src, volume = 1, allowOverlap = false) {
+      if (!soundOn) return;
       try {
         if (!allowOverlap && currentAudio) {
           currentAudio.pause();
