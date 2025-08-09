@@ -1077,16 +1077,20 @@
       updateTimerDisplay(gameState.timeLeft);
       document.getElementById('bombMessage').innerHTML = `<span style='color:#FFD700;font-size:1.3rem;font-weight:900;'>${currentExpert}، لديك فرصة لإبطال القنبلة!<br>أجب بسرعة قبل انتهاء الوقت!</span>`;
       document.getElementById('bomb').classList.remove('state-success','state-explosion');
-  showStudentNotification(`🔥 ${currentExpert} التحدي بدأ!`, 'war-drum.mp3', 'linear-gradient(90deg,#FFD700,#DC143C)');
-  playKingdomSound('battle-horn.mp3');
+      showStudentNotification(`🔥 ${currentExpert} التحدي بدأ!`, 'war-drum', 'linear-gradient(90deg,#FFD700,#DC143C)');
+      playKingdomSound('battle-horn');
+      // صوت تفاعلي عند بداية القنبلة
+      setTimeout(()=>{ playKingdomSound('war-drum'); }, 400);
+      setTimeout(()=>{ playKingdomSound('scanner-beep'); }, 1200);
+      setTimeout(()=>{ playKingdomSound('star-fall'); }, 2000);
       if(gameState.timer) clearInterval(gameState.timer);
       gameState.timer = setInterval(() => {
         if(gameState.isPaused) return;
         gameState.timeLeft--;
         updateTimerDisplay(gameState.timeLeft);
         if(gameState.timeLeft === 10) {
-    showStudentNotification(`⏰ بقي 10 ثوان فقط يا ${currentExpert}!`, 'time-warning.mp3', 'linear-gradient(90deg,#FFD700,#DC143C)');
-    playKingdomSound('time-warning.mp3');
+          showStudentNotification(`⏰ بقي 10 ثوان فقط يا ${currentExpert}!`, 'time-warning', 'linear-gradient(90deg,#FFD700,#DC143C)');
+          playKingdomSound('time-warning');
         }
         if(gameState.timeLeft <= 0) {
           clearInterval(gameState.timer);
@@ -1098,7 +1102,7 @@
           document.getElementById('bombMessage').innerHTML = `<span style='color:#DC143C;font-size:1.2rem;font-weight:900;'>انتهى الوقت! القنبلة انفجرت يا ${currentExpert}!</span>`;
           bombExplosionEffect();
           showStudentNotification(`💥 انفجرت القنبلة! حظاً أوفر يا ${currentExpert}!`, 'time-up.mp3', 'linear-gradient(90deg,#DC143C,#FFD700)');
-          playKingdomSound('battle-victory.mp3');
+          playKingdomSound('battle-victory');
         }
       }, 1000);
     }
