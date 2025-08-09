@@ -809,13 +809,26 @@
     }
     // ========== Toolbar Logic ==========
     function setupToolbar() {
-      document.getElementById('homeBtn').onclick = goHome;
+      document.getElementById('homeBtn').onclick = () => {
+        playKingdomSound('setting-change.mp3');
+        goHome();
+      };
       document.getElementById('refreshBtn').onclick = () => {
+        playKingdomSound('time-warp.mp3');
         if(confirm('هل تريد إعادة تشغيل اللعبة؟')) location.reload();
       };
-      document.getElementById('instructionsBtn').onclick = () => openModal('instructionsModal');
-      document.getElementById('fullscreenBtn').onclick = toggleFullscreen;
-      document.getElementById('soundBtn').onclick = toggleSound;
+      document.getElementById('instructionsBtn').onclick = () => {
+        playKingdomSound('scanner-beep.mp3');
+        openModal('instructionsModal');
+      };
+      document.getElementById('fullscreenBtn').onclick = () => {
+        playKingdomSound('star-fall.mp3');
+        toggleFullscreen();
+      };
+      document.getElementById('soundBtn').onclick = () => {
+        playKingdomSound('setting-change.mp3');
+        toggleSound();
+      };
     }
     function goHome() { window.location.href = '#'; }
     function toggleFullscreen() {
@@ -868,16 +881,32 @@
     }
     // ========== Teacher Controls ==========
     function setupEventListeners() {
-      document.getElementById('startBtn').onclick = startTimer;
-      document.getElementById('pauseBtn').onclick = pauseTimer;
-      document.getElementById('resetBtn').onclick = resetTimer;
-      document.getElementById('newRoundBtn').onclick = newRound;
-      document.getElementById('defuseBtn').onclick = defuseBomb;
+      document.getElementById('startBtn').onclick = function() {
+        playKingdomSound('timer-start.mp3');
+        startTimer();
+      };
+      document.getElementById('pauseBtn').onclick = function() {
+        playKingdomSound('timer-pause.mp3');
+        pauseTimer();
+      };
+      document.getElementById('resetBtn').onclick = function() {
+        playKingdomSound('setting-change.mp3');
+        resetTimer();
+      };
+      document.getElementById('newRoundBtn').onclick = function() {
+        playKingdomSound('story-magic.mp3');
+        newRound();
+      };
+      document.getElementById('defuseBtn').onclick = function() {
+        playKingdomSound('ultimate-triumph.mp3');
+        defuseBomb();
+      };
       // زر تفعيل القنبلة (إجابة خاطئة)
       const activateBtn = document.getElementById('activateBombBtn');
       if(activateBtn) {
         activateBtn.onclick = function() {
           if(!gameState.isActive) return;
+          playKingdomSound('thunder-rumble.mp3');
           if(gameState.timer) clearInterval(gameState.timer);
           gameState.isActive = false;
           gameState.explodedBombs++;
@@ -885,7 +914,7 @@
           setGameState('explosion', '💥 انفجرت القنبلة (إجابة خاطئة)!');
           document.getElementById('bombMessage').innerHTML = `<span style='color:#DC143C;font-size:1.2rem;font-weight:900;'>إجابة خاطئة! القنبلة انفجرت يا ${currentExpert}!</span>`;
           bombExplosionEffect();
-          showStudentNotification(`💥 إجابة خاطئة! انفجرت القنبلة يا ${currentExpert}!`, 'cosmic-explosion.mp3', 'linear-gradient(90deg,#DC143C,#FFD700)');
+          showStudentNotification(`💥 إجابة خاطئة! انفجرت القنبلة يا ${currentExpert}!`, 'thunder-rumble.mp3', 'linear-gradient(90deg,#DC143C,#FFD700)');
           playKingdomSound('battle-victory.mp3');
           updateHonorData();
         };
@@ -924,16 +953,16 @@
       updateTimerDisplay(gameState.timeLeft);
       document.getElementById('bombMessage').innerHTML = `<span style='color:#FFD700;font-size:1.3rem;font-weight:900;'>${currentExpert}، لديك فرصة لإبطال القنبلة!<br>أجب بسرعة قبل انتهاء الوقت!</span>`;
       document.getElementById('bomb').classList.remove('state-success','state-explosion');
-      showStudentNotification(`🔥 ${currentExpert} التحدي بدأ!`, 'battle-horn.mp3', 'linear-gradient(90deg,#FFD700,#DC143C)');
-      playKingdomSound('battle-horn.mp3');
+  showStudentNotification(`🔥 ${currentExpert} التحدي بدأ!`, 'war-drum.mp3', 'linear-gradient(90deg,#FFD700,#DC143C)');
+  playKingdomSound('battle-horn.mp3');
       if(gameState.timer) clearInterval(gameState.timer);
       gameState.timer = setInterval(() => {
         if(gameState.isPaused) return;
         gameState.timeLeft--;
         updateTimerDisplay(gameState.timeLeft);
         if(gameState.timeLeft === 10) {
-          showStudentNotification(`⏰ بقي 10 ثوان فقط يا ${currentExpert}!`, 'countdown-tick.mp3', 'linear-gradient(90deg,#FFD700,#DC143C)');
-          playKingdomSound('countdown-tick.mp3');
+    showStudentNotification(`⏰ بقي 10 ثوان فقط يا ${currentExpert}!`, 'time-warning.mp3', 'linear-gradient(90deg,#FFD700,#DC143C)');
+    playKingdomSound('time-warning.mp3');
         }
         if(gameState.timeLeft <= 0) {
           clearInterval(gameState.timer);
@@ -944,7 +973,7 @@
           setGameState('explosion', '💥 انفجرت القنبلة!');
           document.getElementById('bombMessage').innerHTML = `<span style='color:#DC143C;font-size:1.2rem;font-weight:900;'>انتهى الوقت! القنبلة انفجرت يا ${currentExpert}!</span>`;
           bombExplosionEffect();
-          showStudentNotification(`💥 انفجرت القنبلة! حظاً أوفر يا ${currentExpert}!`, 'cosmic-explosion.mp3', 'linear-gradient(90deg,#DC143C,#FFD700)');
+          showStudentNotification(`💥 انفجرت القنبلة! حظاً أوفر يا ${currentExpert}!`, 'time-up.mp3', 'linear-gradient(90deg,#DC143C,#FFD700)');
           playKingdomSound('battle-victory.mp3');
         }
       }, 1000);
@@ -995,8 +1024,8 @@
       setGameState('success', '🎉 تم إبطال القنبلة بنجاح!');
       document.getElementById('bombMessage').innerHTML = `<span style='color:#228B22;font-size:1.2rem;font-weight:900;'>ممتاز يا ${currentExpert}! تم إبطال القنبلة بنجاح 👏</span>`;
       bombSuccessEffect();
-      showStudentNotification(`🏆 أحسنت يا ${currentExpert}! أنقذت الفريق!`, 'perfect-score.mp3', 'linear-gradient(90deg,#228B22,#FFD700)');
-      playKingdomSound('perfect-score.mp3');
+  showStudentNotification(`🏆 أحسنت يا ${currentExpert}! أنقذت الفريق!`, 'ultimate-triumph.mp3', 'linear-gradient(90deg,#228B22,#FFD700)');
+  playKingdomSound('ultimate-triumph.mp3');
       updateHonorData();
     }
     // ========== Bomb Effects ==========
@@ -1078,6 +1107,14 @@
       n.style.display = 'block';
       n.style.background = color || 'linear-gradient(90deg,#FFD700,#DC143C)';
       n.style.animation = 'notifyPop 0.7s';
+      // تشغيل صوت الإشعار العام
+      if(soundOn) {
+        try {
+          let notif = new Audio('../assets/media/sounds/Notification.mp3');
+          notif.volume = 0.7;
+          notif.play();
+        } catch(e) {}
+      }
       playKingdomSound(sound || 'character-intro.mp3');
       setTimeout(()=>{ n.style.display = 'none'; }, 3500);
     }
