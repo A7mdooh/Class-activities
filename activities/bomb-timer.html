@@ -515,10 +515,40 @@
     <!-- Bomb Area -->
     <div class="bomb-area">
       <div id="gameState" class="game-state state-waiting">🚨 في انتظار بدء اللعبة</div>
-      <div class="bomb" id="bomb">
-        <div class="fuse" id="fuse"></div>
-        <div class="fuse-flame" id="fuseFlame">🔥</div>
-        <span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);">💣</span>
+      <div class="bomb" id="bomb" style="position:relative;z-index:1;width:210px;height:210px;margin:0 auto;">
+        <!-- فتيل متحرك فوق المؤقت -->
+        <div class="fuse-timer-visual" style="position:absolute;left:50%;top:-70px;transform:translateX(-50%);z-index:100;pointer-events:none;width:40px;height:60px;display:flex;flex-direction:column;align-items:center;">
+          <svg id="fuseTimerSVG" width="40" height="60" style="overflow:visible;">
+            <line id="fuseTimerLine" x1="20" y1="10" x2="20" y2="50" stroke="#FFD700" stroke-width="6" stroke-linecap="round" filter="url(#fuseGlow)"/>
+            <circle id="fuseTimerSpark" cx="20" cy="10" r="9" fill="url(#sparkGradient)" filter="url(#sparkGlow)"/>
+            <defs>
+              <filter id="fuseGlow">
+                <feGaussianBlur stdDeviation="2.5" result="blur"/>
+                <feMerge>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+              <radialGradient id="sparkGradient" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#fffbe6"/>
+                <stop offset="60%" stop-color="#FFD700"/>
+                <stop offset="100%" stop-color="#DC143C"/>
+              </radialGradient>
+              <filter id="sparkGlow">
+                <feGaussianBlur stdDeviation="4" result="blur"/>
+                <feMerge>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+          </svg>
+        </div>
+        <!-- المؤقت الرقمي -->
+        <div class="timer-display advanced-timer-glow" style="z-index:102;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);">
+          <span class="timer-text" id="timerDisplay">00:00</span>
+        </div>
+        <span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;font-size:7rem;filter:drop-shadow(0 0 32px #FFD70099);">💣</span>
       </div>
       <div class="timer-visual-wrapper">
         <svg id="timerRing" width="120" height="120" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;pointer-events:none;">
@@ -529,69 +559,6 @@
           <span class="timer-text" id="timerDisplay">00:00</span>
         </div>
       </div>
-  <style>
-    .timer-visual-wrapper {
-      position: relative;
-      width: 120px;
-      height: 120px;
-      margin: 0 auto 8px auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 2;
-    }
-    .advanced-timer-glow {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%,-50%);
-      width: 100px;
-      height: 100px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #181a23 60%, #FFD70033 100%);
-      box-shadow: 0 0 32px #FFD70055, 0 0 0 8px #FFD70022 inset, 0 2px 8px #FFD70033;
-      animation: timerGlowPulse 1.2s infinite alternate;
-      border: 3px solid #FFD700cc;
-      transition: box-shadow 0.3s, border 0.3s;
-    }
-    @keyframes timerGlowPulse {
-      0% { box-shadow: 0 0 32px #FFD70055, 0 0 0 8px #FFD70022 inset, 0 2px 8px #FFD70033; border-color: #FFD700cc; }
-      100% { box-shadow: 0 0 64px #FFD700cc, 0 0 0 16px #FFD70044 inset, 0 2px 16px #FFD70077; border-color: #FFD700; }
-    }
-    .timer-display.advanced-timer-glow .timer-text {
-      font-size: 2.7rem;
-      font-weight: 900;
-      color: #FFD700;
-      text-shadow: 0 0 18px #FFD700cc, 0 0 32px #FFD70099;
-      letter-spacing: 2px;
-      animation: timerTextPulse 1.2s infinite alternate;
-    }
-    @keyframes timerTextPulse {
-      0% { color: #FFD700; text-shadow: 0 0 18px #FFD700cc; }
-      100% { color: #fffbe6; text-shadow: 0 0 32px #FFD700; }
-    }
-    #timerRing {
-      pointer-events: none;
-    }
-    #timerRingFg {
-      stroke-dasharray: 339.292; /* 2 * PI * r (r=54) */
-      stroke-dashoffset: 0;
-      filter: drop-shadow(0 0 12px #FFD700cc);
-      transition: stroke-dashoffset 0.7s cubic-bezier(.4,2,.6,1);
-    }
-    #timerRingBg {
-      opacity: 0.25;
-    }
-    @media (max-width: 700px) {
-      .timer-visual-wrapper { width: 80px; height: 80px; }
-      .advanced-timer-glow { width: 64px; height: 64px; }
-      .timer-display.advanced-timer-glow .timer-text { font-size: 1.3rem; }
-      #timerRing { width: 80px; height: 80px; }
-    }
-  </style>
       <div id="bombMessage"></div>
     </div>
     <!-- Teacher Controls -->
@@ -1017,19 +984,23 @@
       const m = Math.floor(sec/60).toString().padStart(2,'0');
       const s = (sec%60).toString().padStart(2,'0');
       document.getElementById('timerDisplay').textContent = `${m}:${s}`;
-      // تحديث حلقة التقدم البصرية
-      const ring = document.getElementById('timerRingFg');
-      if(ring) {
+      // تحديث الفتيل المتحرك
+      const fuseLine = document.getElementById('fuseTimerLine');
+      const spark = document.getElementById('fuseTimerSpark');
+      if(fuseLine && spark) {
         let total = customTimerDuration || 60;
         if(gameState && gameState.timeLeft && gameState.timeLeft > total) total = gameState.timeLeft;
         const percent = Math.max(0, Math.min(1, sec/total));
-        const circumference = 2 * Math.PI * 54;
-        ring.style.strokeDasharray = circumference;
-        ring.style.strokeDashoffset = circumference * (1 - percent);
-        // لون متدرج حسب الوقت
-        if(percent > 0.5) ring.setAttribute('stroke', '#FFD700');
-        else if(percent > 0.2) ring.setAttribute('stroke', '#FF9800');
-        else ring.setAttribute('stroke', '#DC143C');
+        // الفتيل يبدأ من y1=10 (أعلى) إلى y2=50 (أسفل)
+        const yStart = 10;
+        const yEnd = 50;
+        const ySpark = yStart + (yEnd-yStart)*(1-percent);
+        fuseLine.setAttribute('y2', ySpark);
+        spark.setAttribute('cy', ySpark);
+        // لون الفتيل حسب الوقت
+        if(percent > 0.5) fuseLine.setAttribute('stroke', '#FFD700');
+        else if(percent > 0.2) fuseLine.setAttribute('stroke', '#FF9800');
+        else fuseLine.setAttribute('stroke', '#DC143C');
       }
     }
     // ========== Teacher Controls ==========
