@@ -167,19 +167,7 @@
       });
     };
 
-    document.getElementById('confirmStudentsBtn').onclick = function() {
-      // اجمع الطلاب المختارين
-      const checked = Array.from(document.querySelectorAll('#chooseStudentsList input[type=checkbox]:checked')).map(el=>el.value);
-      if(checked.length<2) return showNotif('اختر على الأقل طالبين!','#DC143C');
-      students = checked;
-      scores = {};
-      picked = null;
-      renderStudentList();
-      document.getElementById('currentStudent').textContent = '';
-      updateScoreboard();
-      document.getElementById('chooseStudentsModal').style.display = 'none';
-      showNotif('تم اعتماد الطلاب المختارين!','linear-gradient(90deg,#228B22,#FFD700)');
-    };
+  // ...existing code...
     document.getElementById('classSelect').onchange = function() {
       currentClass = this.value;
       students = [];
