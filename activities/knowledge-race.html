@@ -55,19 +55,21 @@
             }
             </style>
                 <div class="top-toolbar">
-        <!-- واجهة اختيار النمط -->
-        <div id="modeSelectArea" style="max-width:520px;margin:32px auto 0 auto;padding:24px 18px 18px 18px;background:rgba(35,36,58,0.95);border-radius:18px;box-shadow:0 4px 32px #FFD70022;text-align:center;">
-            <h2 style="color:#FFD700;font-size:2rem;font-weight:900;margin-bottom:18px;">اختر نمط السباق</h2>
-            <div style="display:flex;justify-content:center;gap:24px;margin-bottom:18px;">
-                <button class="oman-btn gold" id="individualModeBtn" style="min-width:120px;font-size:1.2rem;">فردي</button>
-                <button class="oman-btn" id="teamModeBtn" style="min-width:120px;font-size:1.2rem;">فرق</button>
+            <!-- واجهة اختيار النمط (تظهر فقط عند البداية) -->
+            <div id="modeSelectArea" style="max-width:520px;margin:32px auto 0 auto;padding:24px 18px 18px 18px;background:rgba(35,36,58,0.95);border-radius:18px;box-shadow:0 4px 32px #FFD70022;text-align:center;display:block;">
+                <h2 style="color:#FFD700;font-size:2rem;font-weight:900;margin-bottom:18px;">اختر نمط السباق</h2>
+                <div style="display:flex;justify-content:center;gap:24px;margin-bottom:18px;">
+                    <button class="oman-btn gold" id="individualModeBtn" style="min-width:120px;font-size:1.2rem;">فردي</button>
+                    <button class="oman-btn" id="teamModeBtn" style="min-width:120px;font-size:1.2rem;">فرق</button>
+                </div>
+                <div id="classSelectWrapper" style="margin-bottom:12px;">
+                    <label for="classSelect" style="font-weight:700;color:#FFD700;">اختر الصف:</label>
+                    <select id="classSelect" class="oman-btn" style="width:60%;margin:0 8px;"></select>
+                </div>
+                <button class="oman-btn gold" id="startRaceBtn" style="font-size:1.2rem;margin-top:8px;">بدء السباق</button>
             </div>
-            <div id="classSelectWrapper" style="margin-bottom:12px;">
-                <label for="classSelect" style="font-weight:700;color:#FFD700;">اختر الصف:</label>
-                <select id="classSelect" class="oman-btn" style="width:60%;margin:0 8px;"></select>
-            </div>
-            <button class="oman-btn gold" id="startRaceBtn" style="font-size:1.2rem;margin-top:8px;">بدء السباق</button>
-        </div>
+            <!-- منطقة السباق (تظهر فقط بعد بدء السباق) -->
+            <div id="raceMainArea" style="display:none;"></div>
         <script>
 // منطق فتح/إغلاق النوافذ الاحترافية
 function openModalOm(id) {
@@ -130,69 +132,69 @@ document.addEventListener('DOMContentLoaded',()=>{
                 });
         }
 
-        // تفعيل واجهة اختيار النمط
-        document.addEventListener('DOMContentLoaded',()=>{
-            loadClasses();
-            document.getElementById('individualModeBtn').onclick = function(){
-                raceMode = 'individual';
-                this.classList.add('gold');
-                document.getElementById('teamModeBtn').classList.remove('gold');
-            };
-            document.getElementById('teamModeBtn').onclick = function(){
-                raceMode = 'team';
-                this.classList.add('gold');
-                document.getElementById('individualModeBtn').classList.remove('gold');
-            };
-            document.getElementById('classSelect').onchange = function(){
-                selectedClass = this.value;
-                students = allClasses[selectedClass] || [];
-            };
-            document.getElementById('startRaceBtn').onclick = function(){
-                if(!raceMode){
-                    showStudentNotification('يرجى اختيار نمط السباق (فردي أو فرق)','time-warning','linear-gradient(90deg,#FFD700,#DC143C)');
-                    return;
-                }
-                if(!selectedClass){
-                    showStudentNotification('يرجى اختيار الصف','time-warning','linear-gradient(90deg,#FFD700,#DC143C)');
-                    return;
-                }
-                // إخفاء واجهة اختيار النمط وبدء السباق
-                document.getElementById('modeSelectArea').style.display = 'none';
-                        // ...استدعاء منطق السباق المناسب لاحقاً...
-                        if(raceMode==='individual') startIndividualRace();
-                        else if(raceMode==='team') startTeamRace();
-                        showStudentNotification('تم اختيار النمط!','ultimate-triumph','linear-gradient(90deg,#228B22,#FFD700)');
-                    };
-                });
+            // تفعيل واجهة اختيار النمط وتنظيم الظهور
+            document.addEventListener('DOMContentLoaded',()=>{
+                loadClasses();
+                // إظهار فقط واجهة اختيار النمط عند البداية
+                document.getElementById('modeSelectArea').style.display = 'block';
+                document.getElementById('raceMainArea').style.display = 'none';
+                document.getElementById('individualModeBtn').onclick = function(){
+                    raceMode = 'individual';
+                    this.classList.add('gold');
+                    document.getElementById('teamModeBtn').classList.remove('gold');
+                };
+                document.getElementById('teamModeBtn').onclick = function(){
+                    raceMode = 'team';
+                    this.classList.add('gold');
+                    document.getElementById('individualModeBtn').classList.remove('gold');
+                };
+                document.getElementById('classSelect').onchange = function(){
+                    selectedClass = this.value;
+                    students = allClasses[selectedClass] || [];
+                };
+                document.getElementById('startRaceBtn').onclick = function(){
+                    if(!raceMode){
+                        showStudentNotification('يرجى اختيار نمط السباق (فردي أو فرق)','time-warning','linear-gradient(90deg,#FFD700,#DC143C)');
+                        return;
+                    }
+                    if(!selectedClass){
+                        showStudentNotification('يرجى اختيار الصف','time-warning','linear-gradient(90deg,#FFD700,#DC143C)');
+                        return;
+                    }
+                    // إخفاء واجهة اختيار النمط
+                    document.getElementById('modeSelectArea').style.display = 'none';
+                    // إظهار منطقة السباق
+                    document.getElementById('raceMainArea').style.display = 'block';
+                    // ...استدعاء منطق السباق المناسب...
+                    if(raceMode==='individual') startIndividualRace();
+                    else if(raceMode==='team') startTeamRace();
+                    showStudentNotification('تم اختيار النمط!','ultimate-triumph','linear-gradient(90deg,#228B22,#FFD700)');
+                };
+            });
 
                 // ========== سباق فردي ==========
                 function startIndividualRace() {
-                    // بناء واجهة السباق
-                    const main = document.createElement('div');
-                    main.id = 'raceMainArea';
-                    main.style = 'max-width:900px;margin:32px auto 0 auto;padding:18px;background:rgba(35,36,58,0.97);border-radius:18px;box-shadow:0 4px 32px #FFD70022;';
-                    let html = `<h2 style='color:#FFD700;font-size:2rem;font-weight:900;text-align:center;margin-bottom:18px;'>سباق فردي - ${selectedClass}</h2>`;
-                    html += `<div id='raceTrackArea'>`;
-                    students.forEach((name,i)=>{
-                        html += `
-                            <div class='track-lane' id='lane-${i}' style='margin-bottom:18px;'>
-                                <div class='team-info'><span class='team-avatar' style='background:var(--accent-color);'>${i+1}</span><span class='team-name'>${name}</span></div>
-                                <div class='track-progress' style='flex:1;margin:0 12px;'><div class='progress-bar' id='progress-${i}' style='width:0%;background:linear-gradient(90deg,#FFD700,#DC143C);'></div></div>
-                                <div class='team-score' id='score-${i}'>0</div>
-                                <button class='oman-btn gold' onclick='advanceStudent(${i})'>إجابة صحيحة</button>
-                            </div>
-                        `;
-                    });
-                    html += `</div>`;
-                    main.innerHTML = html;
-                    // إزالة أي سباق سابق
-                    const old = document.getElementById('raceMainArea');
-                    if(old) old.remove();
-                    document.body.appendChild(main);
-                    // تهيئة النقاط والتقدم
-                    window.raceProgress = students.map(()=>0);
-                    window.raceGoal = 5; // عدد الخطوات للفوز
-                }
+                            // بناء واجهة السباق داخل منطقة raceMainArea فقط
+                            const main = document.getElementById('raceMainArea');
+                            main.style = 'max-width:900px;margin:32px auto 0 auto;padding:18px;background:rgba(35,36,58,0.97);border-radius:18px;box-shadow:0 4px 32px #FFD70022;';
+                            let html = `<h2 style='color:#FFD700;font-size:2rem;font-weight:900;text-align:center;margin-bottom:18px;'>سباق فردي - ${selectedClass}</h2>`;
+                            html += `<div id='raceTrackArea'>`;
+                            students.forEach((name,i)=>{
+                                html += `
+                                    <div class='track-lane' id='lane-${i}' style='margin-bottom:18px;'>
+                                        <div class='team-info'><span class='team-avatar' style='background:var(--accent-color);'>${i+1}</span><span class='team-name'>${name}</span></div>
+                                        <div class='track-progress' style='flex:1;margin:0 12px;'><div class='progress-bar' id='progress-${i}' style='width:0%;background:linear-gradient(90deg,#FFD700,#DC143C);'></div></div>
+                                        <div class='team-score' id='score-${i}'>0</div>
+                                        <button class='oman-btn gold' onclick='advanceStudent(${i})'>إجابة صحيحة</button>
+                                    </div>
+                                `;
+                            });
+                            html += `</div>`;
+                            main.innerHTML = html;
+                            // تهيئة النقاط والتقدم
+                            window.raceProgress = students.map(()=>0);
+                            window.raceGoal = 5; // عدد الخطوات للفوز
+                        }
 
                 // تقدم الطالب خطوة
                 function advanceStudent(idx) {
@@ -231,36 +233,31 @@ document.addEventListener('DOMContentLoaded',()=>{
                         // أسماء الفرق وألوانها
                         const teamNames = ['الفريق الذهبي','الفريق الأحمر','الفريق الأخضر','الفريق الأزرق'];
                         const teamColors = ['#FFD700','#DC143C','#228B22','#007bff'];
-                        // بناء واجهة السباق
-                        const main = document.createElement('div');
-                        main.id = 'raceMainArea';
-                        main.style = 'max-width:900px;margin:32px auto 0 auto;padding:18px;background:rgba(35,36,58,0.97);border-radius:18px;box-shadow:0 4px 32px #FFD70022;';
-                        let html = `<h2 style='color:#FFD700;font-size:2rem;font-weight:900;text-align:center;margin-bottom:18px;'>سباق الفرق - ${selectedClass}</h2>`;
-                        html += `<div id='raceTrackArea'>`;
-                        teams.forEach((members,ti)=>{
-                            html += `
-                                <div class='track-lane' id='team-lane-${ti}' style='margin-bottom:18px;'>
-                                    <div class='team-info'><span class='team-avatar' style='background:${teamColors[ti]};'>${ti+1}</span><span class='team-name'>${teamNames[ti]}</span></div>
-                                    <div class='track-progress' style='flex:1;margin:0 12px;'><div class='progress-bar' id='team-progress-${ti}' style='width:0%;background:linear-gradient(90deg,${teamColors[ti]},#fff);'></div></div>
-                                    <div class='team-score' id='team-score-${ti}'>0</div>
-                                    <button class='oman-btn gold' onclick='advanceTeam(${ti})'>إجابة صحيحة</button>
-                                </div>
-                                <div style='margin:0 0 18px 0;padding-right:60px;font-size:1.05rem;color:#FFD700;'>👥 ${members.join('، ')}</div>
-                            `;
-                        });
-                        html += `</div>`;
-                        main.innerHTML = html;
-                        // إزالة أي سباق سابق
-                        const old = document.getElementById('raceMainArea');
-                        if(old) old.remove();
-                        document.body.appendChild(main);
-                        // تهيئة النقاط والتقدم
-                        window.teamProgress = teams.map(()=>0);
-                        window.teamGoal = 7; // عدد الخطوات للفوز
-                        window.teams = teams;
-                        window.teamNames = teamNames;
-                        window.teamColors = teamColors;
-                    }
+                                // بناء واجهة السباق داخل منطقة raceMainArea فقط
+                                const main = document.getElementById('raceMainArea');
+                                main.style = 'max-width:900px;margin:32px auto 0 auto;padding:18px;background:rgba(35,36,58,0.97);border-radius:18px;box-shadow:0 4px 32px #FFD70022;';
+                                let html = `<h2 style='color:#FFD700;font-size:2rem;font-weight:900;text-align:center;margin-bottom:18px;'>سباق الفرق - ${selectedClass}</h2>`;
+                                html += `<div id='raceTrackArea'>`;
+                                teams.forEach((members,ti)=>{
+                                    html += `
+                                        <div class='track-lane' id='team-lane-${ti}' style='margin-bottom:18px;'>
+                                            <div class='team-info'><span class='team-avatar' style='background:${teamColors[ti]};'>${ti+1}</span><span class='team-name'>${teamNames[ti]}</span></div>
+                                            <div class='track-progress' style='flex:1;margin:0 12px;'><div class='progress-bar' id='team-progress-${ti}' style='width:0%;background:linear-gradient(90deg,${teamColors[ti]},#fff);'></div></div>
+                                            <div class='team-score' id='team-score-${ti}'>0</div>
+                                            <button class='oman-btn gold' onclick='advanceTeam(${ti})'>إجابة صحيحة</button>
+                                        </div>
+                                        <div style='margin:0 0 18px 0;padding-right:60px;font-size:1.05rem;color:#FFD700;'>👥 ${members.join('، ')}</div>
+                                    `;
+                                });
+                                html += `</div>`;
+                                main.innerHTML = html;
+                                // تهيئة النقاط والتقدم
+                                window.teamProgress = teams.map(()=>0);
+                                window.teamGoal = 7; // عدد الخطوات للفوز
+                                window.teams = teams;
+                                window.teamNames = teamNames;
+                                window.teamColors = teamColors;
+                            }
 
                     // تقدم الفريق خطوة
                     function advanceTeam(idx) {
