@@ -3,7 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🏆 سباق المعرفة - لعبة تعليمية تفاعلية</title>
+        <title>🏆 سباق المعرفة - لعبة تعليمية تفاعلية</title>
+            <style>
+            #soundBtn {
+                left: 75px;
+            }
+            #honorBoardBtn {
+                left: 135px;
+            }
+            </style>
+                <div class="top-toolbar">
+        <!-- واجهة اختيار النمط -->
+        <div id="modeSelectArea" style="max-width:520px;margin:32px auto 0 auto;padding:24px 18px 18px 18px;background:rgba(35,36,58,0.95);border-radius:18px;box-shadow:0 4px 32px #FFD70022;text-align:center;">
+            <h2 style="color:#FFD700;font-size:2rem;font-weight:900;margin-bottom:18px;">اختر نمط السباق</h2>
+            <div style="display:flex;justify-content:center;gap:24px;margin-bottom:18px;">
+                <button class="oman-btn gold" id="individualModeBtn" style="min-width:120px;font-size:1.2rem;">فردي</button>
+                <button class="oman-btn" id="teamModeBtn" style="min-width:120px;font-size:1.2rem;">فرق</button>
+            </div>
+            <div id="classSelectWrapper" style="margin-bottom:12px;">
+                <label for="classSelect" style="font-weight:700;color:#FFD700;">اختر الصف:</label>
+                <select id="classSelect" class="oman-btn" style="width:60%;margin:0 8px;"></select>
+            </div>
+            <button class="oman-btn gold" id="startRaceBtn" style="font-size:1.2rem;margin-top:8px;">بدء السباق</button>
+        </div>
+        <script>
+        // متغيرات النمط والصفوف
+        let raceMode = null; // 'individual' أو 'team'
+        let allClasses = {};
+        let students = [];
+        let selectedClass = null;
+
+        // تحميل بيانات الطلاب من ملف studentData.json
+        function loadClasses() {
+            fetch('../data/studentData.json')
+                .then(r => r.json())
+                .then(data => {
+                    allClasses = data;
+                    const classSelect = document.getElementById('classSelect');
+                    classSelect.innerHTML = '<option value="">— اختر الصف —</option>';
+                    Object.keys(data).forEach(className => {
+                        const opt = document.createElement('option');
+                        opt.value = className;
+                        opt.textContent = className;
+                        classSelect.appendChild(opt);
+                    });
+                })
+                .catch(() => {
+                    document.getElementById('classSelect').innerHTML = '<option>تعذر تحميل الصفوف</option>';
+                });
+        }
+
+        // تفعيل واجهة اختيار النمط
+        document.addEventListener('DOMContentLoaded',()=>{
+            loadClasses();
+            document.getElementById('individualModeBtn').onclick = function(){
+                raceMode = 'individual';
+                this.classList.add('gold');
+                document.getElementById('teamModeBtn').classList.remove('gold');
+            };
+            document.getElementById('teamModeBtn').onclick = function(){
+                raceMode = 'team';
+                this.classList.add('gold');
+                document.getElementById('individualModeBtn').classList.remove('gold');
+            };
+            document.getElementById('classSelect').onchange = function(){
+                selectedClass = this.value;
+                students = allClasses[selectedClass] || [];
+            };
+            document.getElementById('startRaceBtn').onclick = function(){
+                if(!raceMode){
+                    showStudentNotification('يرجى اختيار نمط السباق (فردي أو فرق)','time-warning','linear-gradient(90deg,#FFD700,#DC143C)');
+                    return;
+                }
+                if(!selectedClass){
+                    showStudentNotification('يرجى اختيار الصف','time-warning','linear-gradient(90deg,#FFD700,#DC143C)');
+                    return;
+                }
+                // إخفاء واجهة اختيار النمط وبدء السباق
+                document.getElementById('modeSelectArea').style.display = 'none';
+                        // ...استدعاء منطق السباق المناسب لاحقاً...
+                        if(raceMode==='individual') startIndividualRace();
+                        else if(raceMode==='team') startTeamRace();
+                        showStudentNotification('تم اختيار النمط!','ultimate-triumph','linear-gradient(90deg,#228B22,#FFD700)');
+                    };
+                });
+
+                // ========== سباق فردي ==========
+                function startIndividualRace() {
+                    // بناء واجهة السباق
+                    const main = document.createElement('div');
+                    main.id = 'raceMainArea';
+                    main.style = 'max-width:900px;margin:32px auto 0 auto;padding:18px;background:rgba(35,36,58,0.97);border-radius:18px;box-shadow:0 4px 32px #FFD70022;';
+                    let html = `<h2 style='color:#FFD700;font-size:2rem;font-weight:900;text-align:center;margin-bottom:18px;'>سباق فردي - ${selectedClass}</h2>`;
+                    html += `<div id='raceTrackArea'>`;
+                    students.forEach((name,i)=>{
+                        html += `
+                            <div class='track-lane' id='lane-${i}' style='margin-bottom:18px;'>
+                                <div class='team-info'><span class='team-avatar' style='background:var(--accent-color);'>${i+1}</span><span class='team-name'>${name}</span></div>
+                                <div class='track-progress' style='flex:1;margin:0 12px;'><div class='progress-bar' id='progress-${i}' style='width:0%;background:linear-gradient(90deg,#FFD700,#DC143C);'></div></div>
+                                <div class='team-score' id='score-${i}'>0</div>
+                                <button class='oman-btn gold' onclick='advanceStudent(${i})'>إجابة صحيحة</button>
+                            </div>
+                        `;
+                    });
+                    html += `</div>`;
+                    main.innerHTML = html;
+                    // إزالة أي سباق سابق
+                    const old = document.getElementById('raceMainArea');
+                    if(old) old.remove();
+                    document.body.appendChild(main);
+                    // تهيئة النقاط والتقدم
+                    window.raceProgress = students.map(()=>0);
+                    window.raceGoal = 5; // عدد الخطوات للفوز
+                }
+
+                // تقدم الطالب خطوة
+                function advanceStudent(idx) {
+                    if(!window.raceProgress) return;
+                    window.raceProgress[idx]++;
+                    // تحديث العرض
+                    const percent = Math.min(100, (window.raceProgress[idx]/window.raceGoal)*100);
+                    document.getElementById('progress-'+idx).style.width = percent+'%';
+                    document.getElementById('score-'+idx).textContent = window.raceProgress[idx];
+                    // صوت تشجيع عند كل تقدم
+                    playKingdomSound('encourage');
+                    // مؤثرات احتفال عند الفوز
+                    if(window.raceProgress[idx]>=window.raceGoal) {
+                        document.getElementById('lane-'+idx).style.background = 'linear-gradient(90deg,#FFD700,#228B22)';
+                        // تحديد صوت الفوز حسب المركز
+                        let rank = 1;
+                        if(window.raceProgress.filter(v=>v>=window.raceGoal).length>1) rank = window.raceProgress.filter(v=>v>=window.raceGoal).length;
+                        let winSound = rank===1?'win-1':rank===2?'win-2':'win-3';
+                        showStudentNotification(`🏆 مبروك ${students[idx]} فاز بالمركز ${rank}!`,winSound,'linear-gradient(90deg,#228B22,#FFD700)');
+                        playKingdomSound(winSound);
+                        setTimeout(showHonorBoard, 1200);
+                    }
+                }
+
+                // ========== سباق فرق (مستقبلاً) ==========
+                    function startTeamRace() {
+                        // تقسيم الطلاب تلقائياً إلى فرق (2-4 فرق)
+                        let numTeams = 2;
+                        if(students.length >= 12) numTeams = 4;
+                        else if(students.length >= 7) numTeams = 3;
+                        // توزيع الطلاب بالتناوب
+                        let teams = Array.from({length:numTeams},()=>[]);
+                        students.forEach((name,i)=>{
+                            teams[i%numTeams].push(name);
+                        });
+                        // أسماء الفرق وألوانها
+                        const teamNames = ['الفريق الذهبي','الفريق الأحمر','الفريق الأخضر','الفريق الأزرق'];
+                        const teamColors = ['#FFD700','#DC143C','#228B22','#007bff'];
+                        // بناء واجهة السباق
+                        const main = document.createElement('div');
+                        main.id = 'raceMainArea';
+                        main.style = 'max-width:900px;margin:32px auto 0 auto;padding:18px;background:rgba(35,36,58,0.97);border-radius:18px;box-shadow:0 4px 32px #FFD70022;';
+                        let html = `<h2 style='color:#FFD700;font-size:2rem;font-weight:900;text-align:center;margin-bottom:18px;'>سباق الفرق - ${selectedClass}</h2>`;
+                        html += `<div id='raceTrackArea'>`;
+                        teams.forEach((members,ti)=>{
+                            html += `
+                                <div class='track-lane' id='team-lane-${ti}' style='margin-bottom:18px;'>
+                                    <div class='team-info'><span class='team-avatar' style='background:${teamColors[ti]};'>${ti+1}</span><span class='team-name'>${teamNames[ti]}</span></div>
+                                    <div class='track-progress' style='flex:1;margin:0 12px;'><div class='progress-bar' id='team-progress-${ti}' style='width:0%;background:linear-gradient(90deg,${teamColors[ti]},#fff);'></div></div>
+                                    <div class='team-score' id='team-score-${ti}'>0</div>
+                                    <button class='oman-btn gold' onclick='advanceTeam(${ti})'>إجابة صحيحة</button>
+                                </div>
+                                <div style='margin:0 0 18px 0;padding-right:60px;font-size:1.05rem;color:#FFD700;'>👥 ${members.join('، ')}</div>
+                            `;
+                        });
+                        html += `</div>`;
+                        main.innerHTML = html;
+                        // إزالة أي سباق سابق
+                        const old = document.getElementById('raceMainArea');
+                        if(old) old.remove();
+                        document.body.appendChild(main);
+                        // تهيئة النقاط والتقدم
+                        window.teamProgress = teams.map(()=>0);
+                        window.teamGoal = 7; // عدد الخطوات للفوز
+                        window.teams = teams;
+                        window.teamNames = teamNames;
+                        window.teamColors = teamColors;
+                    }
+
+                    // تقدم الفريق خطوة
+                    function advanceTeam(idx) {
+                        if(!window.teamProgress) return;
+                        window.teamProgress[idx]++;
+                        // تحديث العرض
+                        const percent = Math.min(100, (window.teamProgress[idx]/window.teamGoal)*100);
+                        document.getElementById('team-progress-'+idx).style.width = percent+'%';
+                        document.getElementById('team-score-'+idx).textContent = window.teamProgress[idx];
+                        // صوت خاص لكل فريق عند التقدم
+                        let teamSound = ['team-gold','team-red','team-green','team-blue'][idx]||'encourage';
+                        playKingdomSound(teamSound);
+                        // مؤثرات احتفال عند الفوز
+                        if(window.teamProgress[idx]>=window.teamGoal) {
+                            document.getElementById('team-lane-'+idx).style.background = `linear-gradient(90deg,${window.teamColors[idx]},#228B22)`;
+                            // تحديد صوت الفوز حسب المركز
+                            let rank = 1;
+                            if(window.teamProgress.filter(v=>v>=window.teamGoal).length>1) rank = window.teamProgress.filter(v=>v>=window.teamGoal).length;
+                            let winSound = rank===1?'win-1':rank===2?'win-2':'win-3';
+                        showStudentNotification(`🏆 مبروك ${window.teamNames[idx]} فاز بالمركز ${rank}!`,winSound,'linear-gradient(90deg,#228B22,#FFD700)');
+                            playKingdomSound(winSound);
+                            setTimeout(showHonorBoard, 1200);
+                        }
+                    }
+                </script>
+                    <button class="control-btn" id="homeBtn" title="الصفحة الرئيسية"><i class="fa-solid fa-house"></i></button>
+                    <button class="control-btn" id="refreshBtn" title="إعادة التشغيل"><i class="fa-solid fa-rotate-right"></i></button>
+                    <button class="control-btn" id="instructionsBtn" title="تعليمات"><i class="fa-solid fa-circle-question"></i></button>
+                    <button class="control-btn" id="fullscreenBtn" title="ملء الشاشة"><i class="fa-solid fa-expand"></i></button>
+                    <button class="control-btn" id="soundBtn" title="الصوت"><i class="fa-solid fa-volume-up"></i></button>
+                    <button class="control-btn" id="honorBoardBtn" title="لوحة الشرف"><i class="fa-solid fa-trophy"></i></button>
+                </div>
+        <script>
+        // زر لوحة الشرف في التولبار العلوي
+        document.addEventListener('DOMContentLoaded',()=>{
+            const honorBtn = document.getElementById('honorBoardBtn');
+            if(honorBtn) honorBtn.onclick = showHonorBoard;
+        });
+        </script>
+        <!-- إشعار تفاعلي أعلى الشاشة -->
+        <div id="studentNotification"></div>
+        <!-- لوحة الشرف والاحصائيات الاحترافية -->
+        <div id="honorBoard">
+            <div style="background:linear-gradient(135deg,#FFD700 60%,#fff 100%);border-radius:32px;box-shadow:0 8px 48px #000a,0 0 32px #FFD70099;padding:38px 44px 32px 44px;max-width:520px;width:95vw;text-align:center;position:relative;">
+                <h2 style="font-size:2.2rem;color:#DC143C;font-weight:900;margin-bottom:18px;text-shadow:0 0 18px #FFD700;">🏆 لوحة الشرف</h2>
+                <div id="honorStats" style="font-size:1.25rem;color:#23243a;font-weight:900;margin-bottom:18px;"></div>
+                <div id="honorList" style="margin-bottom:18px;"></div>
+                <button class="oman-btn gold" onclick="closeHonorBoard()" style="font-size:1.1rem;">إغلاق</button>
+                <div id="honorFireworks" style="position:absolute;top:-60px;left:50%;transform:translateX(-50%);pointer-events:none;"></div>
+            </div>
+        </div>
     
     <!-- الخطوط والأيقونات -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,105 +249,195 @@
     <link rel="stylesheet" href="../assets/css/style.css">
     <script src="../assets/js/activityUtils.js"></script>
     <style>
-        /* أزرار التحكم الموحدة */
-        .control-btn {
-            position: fixed;
-            top: 15px;
-            font-size: 20px;
-            background: var(--surface-glass);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            color: var(--text-primary);
-            cursor: pointer;
-            transition: var(--transition-normal);
-            padding: 12px;
-            z-index: 2147483647;
-            border-radius: 50%;
-            backdrop-filter: blur(16px);
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: var(--shadow-medium);
-            font-weight: 600;
-        }
-        
-        .control-btn:hover {
-            transform: translateY(-3px) scale(1.1);
-            background: var(--gradient-red);
-            color: var(--oman-white);
-            border-color: var(--oman-red);
-            box-shadow: var(--shadow-glow-red);
-        }
-
-        .control-btn:active {
-            transform: translateY(-1px) scale(1.05);
-        }
-        
-        #homeBtn {
-            right: 15px;
-        }
-        
-        #refreshBtn {
-            right: 75px;
-        }
-        
-        #instructionsBtn {
-            right: 135px;
-        }
-        
-        #fullscreenBtn {
-            left: 15px;
-        }
-        
-        #soundBtn {
-            left: 75px;
-        }
-        
-        /* تحسينات للجوال */
-        @media (max-width: 480px) {
-            .control-btn {
-                font-size: 18px;
-                width: 44px;
-                height: 44px;
-                padding: 10px;
-            }
-            #homeBtn {
-                right: 10px;
-            }
-            #refreshBtn {
-                right: 65px;
-            }
-            #instructionsBtn {
-                right: 120px;
-            }
-            #fullscreenBtn {
-                left: 10px;
-            }
-            #soundBtn {
-                left: 65px;
-            }
-        }
-        
-        /* Base Styles */
+        /* ثيم القنبلة: ألوان ذهبية، خلفية داكنة، مؤثرات بصرية */
         :root {
             --oman-red: #e30613;
             --oman-green: #00693e;
-            --oman-white: #ffffff;
+            --oman-white: #fff;
             --gold: #FFD700;
             --silver: #C0C0C0;
             --bronze: #CD7F32;
-            --primary-bg: #1a1a1a;
-            --secondary-bg: #2d2d2d;
-            --accent-color: #4a90e2;
-            --success-color: #28a745;
-            --warning-color: #ffc107;
-            --danger-color: #dc3545;
-            --team1-color: #007bff;
-            --team2-color: #e74c3c;
-            --team3-color: #28a745;
-            --team4-color: #f39c12;
+            --primary-bg: #23243a;
+            --secondary-bg: #18192b;
+            --accent-color: #FFD700;
+            --success-color: #228B22;
+            --warning-color: #FFD700;
+            --danger-color: #DC143C;
+            --gradient-gold: linear-gradient(90deg,#FFD700,#fffbe6 80%,#FFD700);
+            --gradient-red: linear-gradient(90deg,#DC143C,#FFD700);
+            --surface-glass: rgba(35,36,58,0.85);
+            --shadow-medium: 0 2px 8px #FFD70022;
+            --shadow-glow-red: 0 0 12px #FFD70099, 0 2px 8px #DC143C33;
+            --text-primary: #FFD700;
         }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            color: var(--gold);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* أزرار القنبلة */
+        .oman-btn {
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-radius: 12px;
+            border: 2px solid #FFD70055;
+            background: var(--surface-glass);
+            color: #FFD700;
+            padding: 12px 24px;
+            margin: 6px 0;
+            box-shadow: 0 2px 8px #FFD70022;
+            transition: border 0.18s, box-shadow 0.18s, background 0.18s, color 0.18s;
+            cursor: pointer;
+        }
+        .oman-btn.gold {
+            background: var(--gradient-gold);
+            color: #23243a;
+            border-color: #FFD700;
+            box-shadow: 0 0 12px #FFD70099, 0 2px 8px #FFD70033;
+        }
+        .oman-btn.red {
+            background: var(--gradient-red);
+            color: #fff;
+            border-color: #DC143C;
+            box-shadow: 0 0 12px #DC143C99, 0 2px 8px #FFD70033;
+        }
+        .oman-btn:active {
+            filter: brightness(0.95);
+        }
+
+        /* إشعار تفاعلي أعلى الشاشة */
+        #studentNotification {
+            display:none;position:fixed;top:24px;left:50%;transform:translateX(-50%);z-index:5000;
+            background:linear-gradient(90deg,#FFD700,#DC143C);color:#23243a;font-size:1.5rem;font-weight:900;padding:18px 44px;border-radius:18px;box-shadow:0 8px 32px #000a,0 0 24px #FFD70099;animation:notifyPop 0.7s;letter-spacing:1px;min-width:320px;text-align:center;
+        }
+        @keyframes notifyPop {
+            0% {transform:translateX(-50%) scale(0.7);opacity:0;}
+            60%{transform:translateX(-50%) scale(1.1);opacity:1;}
+            100%{transform:translateX(-50%) scale(1);opacity:1;}
+        }
+
+        /* مؤقت القنبلة (فتيل وشرارة) */
+        .bomb {
+            position:relative;z-index:1;width:180px;height:180px;margin:0 auto;display:flex;align-items:center;justify-content:center;background:none;box-shadow:none;border:none;
+        }
+        .timer-text {
+            position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:2.1rem;font-weight:900;color:#FFD700;text-shadow:0 0 18px #FFD700cc,0 0 32px #FFD70099;letter-spacing:2px;z-index:102;
+        }
+
+        /* لوحة الشرف */
+        #honorBoard {
+            display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);z-index:6000;align-items:center;justify-content:center;animation:fadeInHonor 0.7s;
+        }
+        @keyframes fadeInHonor {
+            0%{opacity:0;}
+            100%{opacity:1;}
+        }
+        .honor-medal {font-size:2rem;margin-left:8px;}
+        .honor-row {margin:8px 0;padding:8px 0;border-bottom:1px solid #FFD70033;display:flex;align-items:center;justify-content:space-between;}
+        .honor-row:last-child{border-bottom:none;}
+
+                /* ...existing code... */
+        </style>
+        <script>
+        // ========== نظام صوتي متكامل ==========
+        let soundOn = true;
+        const soundLibrary = {
+            'bomb-explosion': '../assets/media/sounds/kingdom-sounds/bomb-explosion.mp3',
+            'cosmic-explosion': '../assets/media/sounds/kingdom-sounds/cosmic-explosion.mp3',
+            'battle-victory': '../assets/media/sounds/kingdom-sounds/battle-victory.mp3',
+            'ultimate-triumph': '../assets/media/sounds/kingdom-sounds/ultimate-triumph.mp3',
+            'timer-start': '../assets/media/sounds/kingdom-sounds/timer-start.mp3',
+            'timer-pause': '../assets/media/sounds/kingdom-sounds/time-warp.mp3',
+            'time-warning': '../assets/media/sounds/kingdom-sounds/time-warning.mp3',
+            'setting-change': '../assets/media/sounds/kingdom-sounds/setting-change.mp3',
+            'war-drum': '../assets/media/sounds/kingdom-sounds/war-drum.mp3',
+            'star-fall': '../assets/media/sounds/kingdom-sounds/star-fall.mp3',
+            'scanner-beep': '../assets/media/sounds/kingdom-sounds/scanner-beep.mp3',
+            'brain-activate': '../assets/media/sounds/kingdom-sounds/brain-activate.mp3',
+            'character-intro': '../assets/media/sounds/kingdom-sounds/character-intro.mp3',
+            'thunder-rumble': '../assets/media/sounds/kingdom-sounds/thunder-rumble.mp3',
+            'achievement-unlock': '../assets/media/sounds/kingdom-sounds/achievement-unlock.mp3',
+            'Notification': '../assets/media/sounds/Notification.mp3',
+            'crown-ceremony': '../assets/media/sounds/kingdom-sounds/crown-ceremony.mp3',
+        };
+        let kingdomAudio = null;
+        function playKingdomSound(key) {
+            if(!soundOn) return;
+            try {
+                if(kingdomAudio) { kingdomAudio.pause(); kingdomAudio.currentTime = 0; }
+                let src = soundLibrary[key.replace('.mp3','')] || soundLibrary[key] || ('../assets/media/sounds/kingdom-sounds/' + key);
+                kingdomAudio = new Audio(src);
+                kingdomAudio.volume = 0.7;
+                kingdomAudio.play();
+            } catch(e) {}
+        }
+        // إشعار تفاعلي للطالب الحالي
+        function showStudentNotification(msg, sound, color) {
+            const n = document.getElementById('studentNotification');
+            n.textContent = msg;
+            n.style.display = 'block';
+            n.style.background = color || 'linear-gradient(90deg,#FFD700,#DC143C)';
+            n.style.animation = 'notifyPop 0.7s';
+            // تشغيل صوت الإشعار العام
+            if(soundOn) {
+                try {
+                    let notif = new Audio('../assets/media/sounds/Notification.mp3');
+                    notif.volume = 0.7;
+                    notif.play();
+                } catch(e) {}
+            }
+            playKingdomSound(sound || 'character-intro.mp3');
+            setTimeout(()=>{ n.style.display = 'none'; }, 3500);
+        }
+        // ========== لوحة الشرف ==========
+                // ========== إحصائيات متقدمة ولوحة شرف شاملة ==========
+                let honorData = {ranking:[], best:null, maxPoints:0};
+                function updateHonorData() {
+                    // فردي
+                    if(raceMode==='individual' && window.raceProgress && students) {
+                        honorData.ranking = students.map((name,i)=>({name,points:window.raceProgress[i]||0})).sort((a,b)=>b.points-a.points);
+                        honorData.best = honorData.ranking[0]?.name||null;
+                        honorData.maxPoints = Math.max(...honorData.ranking.map(s=>s.points),0);
+                    }
+                    // فرق
+                    if(raceMode==='team' && window.teamProgress && window.teams) {
+                        honorData.ranking = window.teams.map((members,i)=>({name:window.teamNames[i],points:window.teamProgress[i]||0,members})).sort((a,b)=>b.points-a.points);
+                        honorData.best = honorData.ranking[0]?.name||null;
+                        honorData.maxPoints = Math.max(...honorData.ranking.map(s=>s.points),0);
+                    }
+                }
+                function showHonorBoard() {
+                    updateHonorData();
+                    const board = document.getElementById('honorBoard');
+                    const stats = document.getElementById('honorStats');
+                    const list = document.getElementById('honorList');
+                    const fireworks = document.getElementById('honorFireworks');
+                    // عرض إحصائيات مختصرة
+                    stats.innerHTML = `أفضل ${raceMode==='individual'?'طالب':'فريق'}: <span style='color:#DC143C;'>${honorData.best||'—'}</span> | أعلى نقاط: <span style='color:#228B22;'>${honorData.maxPoints}</span>`;
+                    // عرض ترتيب كامل
+                    list.innerHTML = honorData.ranking.map((s,i)=>`
+                        <div class='honor-row'>
+                            <span class='honor-medal'>${i===0?'🥇':i===1?'🥈':i===2?'🥉':'🏅'}</span>
+                            <b>${s.name}</b>
+                            ${s.members?`<span style='font-size:0.95rem;color:#FFD70099;margin-right:8px;'>👥 ${s.members.join('، ')}</span>`:''}
+                            <span style='color:#FFD700;font-size:1.1rem;margin-right:12px;'>${s.points} نقطة</span>
+                        </div>
+                    `).join('');
+                    board.style.display = 'flex';
+                    // احتفال fireworks
+                    fireworks.innerHTML = `<img src='../assets/media/sounds/firework.gif' style='width:120px;height:120px;' alt='fireworks'>`;
+                    setTimeout(()=>{fireworks.innerHTML='';},2000);
+                    playKingdomSound('crown-ceremony.mp3');
+                }
+        function closeHonorBoard() {
+            document.getElementById('honorBoard').style.display = 'none';
+        }
+        </script>
 
         * {
             margin: 0;
