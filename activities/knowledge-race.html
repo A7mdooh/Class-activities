@@ -753,18 +753,34 @@ function closeHonorBoard() {
       raceScreen.querySelector('#raceHonorBoard').style.display = 'none';
       raceScreen.querySelector('#startRealRaceBtn').onclick = function(){
         let questions = parseInt(document.getElementById('questionsPerStudent').value)||1;
-        // عند بدء السباق، إظهار نافذة التقييم مباشرة
-        startRace(questions);
-        // ضمان ظهور نافذة السؤال حتى لو كان هناك تأخير في DOM
-        setTimeout(function() {
-          let raceArena = document.getElementById('raceArena');
-          if(raceArena) {
-            raceArena.style.display = 'flex';
-            // التأكد من أن نافذة السؤال ظاهرة
-            let raceQuestionBox = document.getElementById('raceQuestionBox');
-            if(raceQuestionBox) raceQuestionBox.style.display = 'block';
+        // عند بدء السباق، إظهار المضمار فقط مع زر "بدء الجولة"
+        startRace(questions, true); // وضع خاص: لا تظهر نافذة السؤال بعد
+        // إظهار زر "بدء الجولة" فوق المضمار
+        let raceArena = document.getElementById('raceArena');
+        if(raceArena) {
+          raceArena.style.display = 'flex';
+          // إضافة زر بدء الجولة إذا لم يكن موجودًا
+          if(!document.getElementById('startRoundBtn')) {
+            let btn = document.createElement('button');
+            btn.id = 'startRoundBtn';
+            btn.textContent = 'بدء الجولة';
+            btn.className = 'neural-button';
+            btn.style = 'font-size:1.2em;padding:1.1em 2.5em;margin:18px auto 0 auto;display:block;background:linear-gradient(90deg,#FFD700,#00f5ff);color:#23243a;font-weight:bold;border-radius:14px;border:none;box-shadow:0 2px 12px #FFD70055;';
+            btn.onclick = function() {
+              btn.style.display = 'none';
+              // إظهار نافذة السؤال
+              let raceQuestionBox = document.getElementById('raceQuestionBox');
+              if(raceQuestionBox) raceQuestionBox.style.display = 'block';
+              showNextQuestion();
+            };
+            raceArena.insertBefore(btn, raceArena.firstChild);
+          } else {
+            document.getElementById('startRoundBtn').style.display = 'block';
           }
-        }, 100);
+          // إخفاء نافذة السؤال حتى الضغط
+          let raceQuestionBox = document.getElementById('raceQuestionBox');
+          if(raceQuestionBox) raceQuestionBox.style.display = 'none';
+        }
       };
     }
 
@@ -774,6 +790,8 @@ function closeHonorBoard() {
     let currentQuestionNumber = 0;
     function startRace(questionsPerStudent) {
       // تهيئة السباق لجولة واحدة
+      let hideQuestionBox = false;
+      if (typeof arguments[1] === 'boolean') hideQuestionBox = arguments[1];
       raceState = {
         students: selectedStudents.map(name=>({name,score:0,progress:0,answers:[]})),
         questionsPerStudent,
@@ -783,11 +801,10 @@ function closeHonorBoard() {
       // إظهار واجهة السباق
       const raceScreen = document.getElementById('raceScreen');
       raceScreen.querySelector('#raceSetup').style.display = 'none';
-  raceScreen.querySelector('#raceArena').style.display = 'flex';
-  raceScreen.querySelector('#raceArena').style.overflowY = 'auto';
-  raceScreen.querySelector('#raceArena').style.maxHeight = '100vh';
+      raceScreen.querySelector('#raceArena').style.display = 'flex';
+      raceScreen.querySelector('#raceArena').style.overflowY = 'auto';
+      raceScreen.querySelector('#raceArena').style.maxHeight = '100vh';
       raceScreen.querySelector('#raceHonorBoard').style.display = 'none';
-      // ضمان ظهور نافذة السؤال وأزرار التقييم بعد رسم DOM
       setTimeout(function() {
         let raceQuestionBox = document.getElementById('raceQuestionBox');
         let raceArena = document.getElementById('raceArena');
@@ -797,12 +814,12 @@ function closeHonorBoard() {
           raceArena.style.maxHeight = '100vh';
         }
         if(raceQuestionBox) {
-          raceQuestionBox.style.display = 'block';
-          raceQuestionBox.scrollIntoView({behavior:'smooth',block:'center'});
+          raceQuestionBox.style.display = hideQuestionBox ? 'none' : 'block';
+          if (!hideQuestionBox) raceQuestionBox.scrollIntoView({behavior:'smooth',block:'center'});
         }
       }, 150);
       renderRaceTrack();
-      showNextQuestion();
+      if (!hideQuestionBox) showNextQuestion();
     }
 
     function renderRaceTrack() {
