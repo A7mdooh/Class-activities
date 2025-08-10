@@ -449,7 +449,7 @@
       };
     }
 
-    // ========== منطق الطلاب والتفاعل الاحترافي الجديد ========== //
+    // ========== منطق الطلاب والتفاعل الذكي ========== //
     let studentsData = {};
     let currentClass = null;
     let students = [];
@@ -457,6 +457,8 @@
     let picked = null;
     let manualSelected = [];
     let mode = null; // 'random' or 'manual'
+    let randomPool = [];
+    let manualPointer = 0;
 
     async function loadStudentsData() {
       try {
@@ -519,14 +521,6 @@
       document.getElementById('playerStatus').textContent = '';
     }
 
-    function startQuestion() {
-      document.getElementById('startBtns').style.display = 'none';
-      document.getElementById('evalBtns').style.display = 'flex';
-      if (picked != null) {
-        document.getElementById('playerStatus').textContent = 'دور الطالب';
-      }
-    }
-
     function pickStudent(idx) {
       picked = idx;
       document.getElementById('currentStudent').textContent = students[idx];
@@ -536,13 +530,16 @@
       window.audioManager && window.audioManager.playSound('select');
     }
 
-    function pickRandomStudent() {
-      if(!students.length) return;
-      let idx;
-      do { idx = Math.floor(Math.random()*students.length); } while(idx===picked && students.length>1);
+    function pickRandomStudentSmart() {
+      // استخدم randomPool لتجنب التكرار حتى يمر الجميع
+      if(randomPool.length === 0) {
+        randomPool = students.map((_,i)=>i);
+      }
+      if(randomPool.length === 0) return;
+      let idxInPool = Math.floor(Math.random()*randomPool.length);
+      let idx = randomPool[idxInPool];
+      randomPool.splice(idxInPool,1);
       pickStudent(idx);
-      window.notificationSystem.show('تم اختيار الطالب عشوائيًا!','linear-gradient(90deg,#6aa6ff,#FFD700)');
-      window.audioManager && window.audioManager.playSound('draw');
     }
 
     function updateScoreboard() {
@@ -569,6 +566,8 @@
       picked = null;
       manualSelected = [];
       mode = null;
+      randomPool = [];
+      manualPointer = 0;
       document.getElementById('studentList').style.display = 'none';
       document.getElementById('controlPanel').style.display = 'none';
       showChooseMethod();
@@ -580,7 +579,12 @@
       mode = 'random';
       hideChooseMethod();
       showControlPanel();
-      pickRandomStudent();
+      randomPool = students.map((_,i)=>i);
+      picked = null;
+      document.getElementById('startBtns').style.display = 'block';
+      document.getElementById('evalBtns').style.display = 'none';
+      document.getElementById('currentStudent').textContent = '';
+      document.getElementById('playerAvatar').textContent = '?';
     };
 
     // زر اختيار يدوي
@@ -602,8 +606,12 @@
       }
       hideManualModal();
       showControlPanel();
-      // في البداية اختر أول طالب من المحددين
-      pickStudent(manualSelected[0]);
+      manualPointer = 0;
+      picked = null;
+      document.getElementById('startBtns').style.display = 'block';
+      document.getElementById('evalBtns').style.display = 'none';
+      document.getElementById('currentStudent').textContent = '';
+      document.getElementById('playerAvatar').textContent = '?';
     };
     document.getElementById('manualCancel').onclick = function() {
       hideManualModal();
@@ -612,7 +620,18 @@
 
     // زر بدء السؤال
     document.getElementById('startQuestionBtn').onclick = function() {
-      startQuestion();
+      if(mode==='random') {
+        pickRandomStudentSmart();
+      } else if(mode==='manual') {
+        if(manualPointer<manualSelected.length) {
+          pickStudent(manualSelected[manualPointer]);
+        }
+      }
+      document.getElementById('startBtns').style.display = 'none';
+      document.getElementById('evalBtns').style.display = 'flex';
+      if (picked != null) {
+        document.getElementById('playerStatus').textContent = 'دور الطالب';
+      }
     };
 
     // أزرار التقييم
@@ -623,36 +642,38 @@
       window.notificationSystem.show('أحسنت! نقطة للطالب','linear-gradient(90deg,#228B22,#FFD700)');
       window.audioManager && window.audioManager.playSound('win');
       updateScoreboard();
-      // في الوضع اليدوي انتقل للطالب التالي من المحددين
       if(mode==='manual') {
-        const idx = manualSelected.indexOf(picked);
-        if(idx!==-1 && idx<manualSelected.length-1) {
-          pickStudent(manualSelected[idx+1]);
+        manualPointer++;
+        if(manualPointer<manualSelected.length) {
           document.getElementById('startBtns').style.display = 'block';
           document.getElementById('evalBtns').style.display = 'none';
+          document.getElementById('currentStudent').textContent = '';
+          document.getElementById('playerAvatar').textContent = '?';
         }
       } else if(mode==='random') {
-        pickRandomStudent();
         document.getElementById('startBtns').style.display = 'block';
         document.getElementById('evalBtns').style.display = 'none';
+        document.getElementById('currentStudent').textContent = '';
+        document.getElementById('playerAvatar').textContent = '?';
       }
     };
     document.getElementById('wrongBtn').onclick = ()=>{
       if(picked==null) return window.notificationSystem.show('اختر طالبًا أولاً!','#DC143C');
       window.notificationSystem.show('حظًا أوفر!','linear-gradient(90deg,#DC143C,#FFD700)');
       window.audioManager && window.audioManager.playSound('wrong_answer');
-      // في الوضع اليدوي انتقل للطالب التالي من المحددين
       if(mode==='manual') {
-        const idx = manualSelected.indexOf(picked);
-        if(idx!==-1 && idx<manualSelected.length-1) {
-          pickStudent(manualSelected[idx+1]);
+        manualPointer++;
+        if(manualPointer<manualSelected.length) {
           document.getElementById('startBtns').style.display = 'block';
           document.getElementById('evalBtns').style.display = 'none';
+          document.getElementById('currentStudent').textContent = '';
+          document.getElementById('playerAvatar').textContent = '?';
         }
       } else if(mode==='random') {
-        pickRandomStudent();
         document.getElementById('startBtns').style.display = 'block';
         document.getElementById('evalBtns').style.display = 'none';
+        document.getElementById('currentStudent').textContent = '';
+        document.getElementById('playerAvatar').textContent = '?';
       }
     };
 
