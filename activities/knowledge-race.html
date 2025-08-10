@@ -387,7 +387,6 @@
         <div class="student-selection-section" id="studentSelectionSection" style="display: none;">
           <h3 style="color: #ff6347; font-size: 1.5rem; margin-bottom: 1rem; text-align: center;">🎯 اختيار المتسابقين</h3>
           <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
-            <button class="neural-button" id="selectAllBtn">✅ اختيار الكل</button>
             <button class="neural-button" id="clearAllBtn">❌ إلغاء الكل</button>
             <button class="neural-button" id="selectRandomBtn">🎲 اختيار عشوائي</button>
           </div>
@@ -538,6 +537,13 @@
         selectedStudents = selectedStudents.filter(s => s !== student);
         if(window.audioManager) audioManager.playSound('button-hover');
       } else {
+        if(selectedStudents.length >= 8) {
+          if(window.notificationSystem) window.notificationSystem.show('الحد الأقصى 8 متسابقين فقط!','#DC143C');
+          if(window.audioManager) audioManager.playSound('ai-beep');
+          card.style.animation = 'shakeX 0.4s';
+          setTimeout(()=>{ card.style.animation = ''; }, 400);
+          return;
+        }
         card.classList.add('selected');
         card.querySelector('.selection-indicator').textContent = '✓';
         selectedStudents.push(student);
@@ -553,17 +559,7 @@
       document.getElementById('selectedCount').textContent = selectedStudents.length;
     }
 
-    document.getElementById('selectAllBtn').onclick = function() {
-      selectedStudents = [];
-      document.querySelectorAll('.student-card').forEach(card => {
-        card.classList.add('selected');
-        card.querySelector('.selection-indicator').textContent = '✓';
-        selectedStudents.push(card.querySelector('.student-name').textContent);
-      });
-      updateSelectedCount();
-      document.getElementById('startRaceBtn').disabled = selectedStudents.length === 0;
-      if(window.audioManager) audioManager.playSound('achievement-unlock');
-    };
+  // تم إزالة زر اختيار الكل نهائياً
     document.getElementById('clearAllBtn').onclick = function() {
       selectedStudents = [];
       document.querySelectorAll('.student-card').forEach(card => {
@@ -674,68 +670,49 @@
       const track = document.getElementById('raceTrack');
       const students = raceState.students;
       let maxScore = raceState.questionsPerStudent;
-      // إذا الطلاب كثيرون (>6) استخدم سكرول أفقي
-      if (students.length > 6) {
-        track.style.overflowX = 'auto';
-        track.style.whiteSpace = 'nowrap';
-        track.style.display = 'flex';
-        track.style.gap = '12px';
-        track.style.padding = '8px 0 8px 0';
-        track.innerHTML = '';
-        students.forEach((student,idx)=>{
-          let percent = (student.score / maxScore) * 100;
-          track.innerHTML += `
-            <div style='display:inline-flex;flex-direction:column;align-items:center;min-width:170px;max-width:180px;width:15vw;'>
-              <div style='width:100%;text-align:center;font-weight:900;font-size:0.95em;color:#FFD700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;'>${student.name}</div>
-              <div class='race-progress-bar' style='width:100%;height:22px;background:linear-gradient(90deg,#23243a,#ffd70022);border-radius:16px;overflow:hidden;position:relative;margin:6px 0;'>
-                <div class='race-progress-inner' style='height:100%;width:${percent}%;background:linear-gradient(90deg,#00f5ff,#ffd700,#ff073a);transition:width 0.7s cubic-bezier(0.68,-0.55,0.27,1.55);box-shadow:0 0 12px #ffd70088;'></div>
-                <div style='position:absolute;right:8px;top:2px;font-size:1em;color:#23243a;font-weight:900;'>${student.score}</div>
-                <div style='position:absolute;left:calc(100% - 28px);top:-8px;font-size:1.5em;'>🏁</div>
-              </div>
-            </div>
-          `;
-        });
-        // أسهم تمرير جانبية عند الحاجة
-        if (!document.getElementById('raceScrollLeft')) {
-          let leftBtn = document.createElement('button');
-          leftBtn.id = 'raceScrollLeft';
-          leftBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
-          leftBtn.style = 'position:absolute;top:50px;right:10px;z-index:10;background:#FFD700;border:none;border-radius:50%;width:38px;height:38px;font-size:1.3em;box-shadow:0 2px 8px #ffd70055;cursor:pointer;opacity:0.85;';
-          leftBtn.onclick = ()=>{ track.scrollBy({left:-180,behavior:'smooth'}); };
-          document.getElementById('raceScreen').appendChild(leftBtn);
-        }
-        if (!document.getElementById('raceScrollRight')) {
-          let rightBtn = document.createElement('button');
-          rightBtn.id = 'raceScrollRight';
-          rightBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
-          rightBtn.style = 'position:absolute;top:50px;left:10px;z-index:10;background:#FFD700;border:none;border-radius:50%;width:38px;height:38px;font-size:1.3em;box-shadow:0 2px 8px #ffd70055;cursor:pointer;opacity:0.85;';
-          rightBtn.onclick = ()=>{ track.scrollBy({left:180,behavior:'smooth'}); };
-          document.getElementById('raceScreen').appendChild(rightBtn);
-        }
-      } else {
-        // إزالة أسهم التمرير إذا لم تعد مطلوبة
-        let l=document.getElementById('raceScrollLeft'); if(l) l.remove();
-        let r=document.getElementById('raceScrollRight'); if(r) r.remove();
-        track.style.overflowX = '';
-        track.style.whiteSpace = '';
-        track.style.display = '';
-        track.style.gap = '';
-        track.style.padding = '';
-        track.innerHTML = '';
-        students.forEach((student,idx)=>{
-          let percent = (student.score / maxScore) * 100;
-          let fontSize = students.length > 4 ? '1em' : '1.1em';
-          track.innerHTML += `
-            <div style='display:flex;align-items:center;margin-bottom:18px;gap:10px;'>
-              <div style='width:90px;text-align:center;font-weight:900;font-size:${fontSize};color:#FFD700;'>${student.name}</div>
-              <div class='race-progress-bar' style='flex:1;height:28px;background:linear-gradient(90deg,#23243a,#ffd70022);border-radius:16px;overflow:hidden;position:relative;'>
-                <div class='race-progress-inner' style='height:100%;width:${percent}%;background:linear-gradient(90deg,#00f5ff,#ffd700,#ff073a);transition:width 0.7s cubic-bezier(0.68,-0.55,0.27,1.55);box-shadow:0 0 16px #ffd70088;'></div>
-                <div style='position:absolute;right:8px;top:2px;font-size:1.1em;color:#23243a;font-weight:900;'>${student.score}</div>
-                <div style='position:absolute;left:calc(100% - 32px);top:-8px;font-size:2em;'>🏁</div>
-              </div>
-            </div>
-          `;
-        });
+      // مضمار احترافي مع أنيميشن حركة المتسابقين
+      track.innerHTML = '';
+      track.style.position = 'relative';
+      track.style.height = '120px';
+      track.style.background = 'linear-gradient(90deg,#23243a 80%,#ffd70022 100%)';
+      track.style.borderRadius = '24px';
+      track.style.boxShadow = '0 2px 18px #ffd70033';
+      track.style.display = 'flex';
+      track.style.justifyContent = 'space-between';
+      track.style.alignItems = 'flex-end';
+      track.style.padding = '24px 32px 18px 32px';
+      let laneWidth = `${Math.floor(100 / students.length)}%`;
+      students.forEach((student, idx) => {
+        let percent = (student.score / maxScore);
+        let runnerId = `runner-${idx}`;
+        let lane = document.createElement('div');
+        lane.style.flex = '1';
+        lane.style.margin = '0 8px';
+        lane.style.position = 'relative';
+        lane.style.height = '100%';
+        lane.innerHTML = `
+          <div style="position:absolute;top:-38px;left:50%;transform:translateX(-50%);font-size:1.1em;font-weight:900;color:#FFD700;text-align:center;white-space:nowrap;">${student.name}</div>
+          <div class="race-lane" style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:60px;height:8px;background:linear-gradient(90deg,#00f5ff,#ffd700,#ff073a);border-radius:8px;box-shadow:0 0 8px #ffd70088;"></div>
+          <div id="${runnerId}" class="race-runner" style="position:absolute;bottom:8px;left:0;transition:left 0.8s cubic-bezier(0.68,-0.55,0.27,1.55);width:60px;height:60px;z-index:2;">
+            <div style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#FFD700 60%,#fffbe6 100%);box-shadow:0 0 18px #FFD70099;display:flex;align-items:center;justify-content:center;font-size:2em;font-weight:900;color:#DC143C;animation:runnerBounce 1.2s infinite alternate;">🏃‍♂️</div>
+            <div style="position:absolute;top:62px;left:50%;transform:translateX(-50%);font-size:1em;color:#23243a;font-weight:900;">${student.score} / ${maxScore}</div>
+          </div>
+        `;
+        track.appendChild(lane);
+        // بعد الإضافة، حرّك العداء حسب التقدم
+        setTimeout(()=>{
+          let runner = document.getElementById(runnerId);
+          if(runner) {
+            runner.style.left = `calc(${percent*100}% - 0px)`;
+          }
+        }, 50);
+      });
+      // أنيميشن العداء
+      if(!document.getElementById('runnerBounceStyle')) {
+        let style = document.createElement('style');
+        style.id = 'runnerBounceStyle';
+        style.innerHTML = `@keyframes runnerBounce {0%{transform:translateY(0);}100%{transform:translateY(-12px);}}`;
+        document.head.appendChild(style);
       }
     }
 
