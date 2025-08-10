@@ -577,13 +577,18 @@
         card.querySelector('.selection-indicator').textContent = '○';
       });
       let cards = Array.from(document.querySelectorAll('.student-card'));
+      // خلط البطاقات عشوائياً بدون تكرار
+      for (let i = cards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [cards[i], cards[j]] = [cards[j], cards[i]];
+      }
       let count = Math.min(8, Math.max(4, Math.floor(cards.length * 0.4)));
-      let shuffled = cards.sort(() => 0.5 - Math.random());
-      let selected = shuffled.slice(0, count);
+      let selected = cards.slice(0, count);
       selected.forEach(card => {
         card.classList.add('selected');
         card.querySelector('.selection-indicator').textContent = '✓';
-        selectedStudents.push(card.querySelector('.student-name').textContent);
+        let name = card.querySelector('.student-name').textContent;
+        if (!selectedStudents.includes(name)) selectedStudents.push(name);
       });
       updateSelectedCount();
       document.getElementById('startRaceBtn').disabled = selectedStudents.length === 0;
