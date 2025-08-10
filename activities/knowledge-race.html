@@ -5,6 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>🏆 سباق المعرفة - لعبة تعليمية تفاعلية</title>
             <style>
+/* نافذة منبثقة احترافية */
+.modal-om {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(30,30,40,0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.2s;
+}
+.modal-om[hidden] { display: none; }
+.modal-om-content {
+    background: linear-gradient(135deg,#23243a 80%,#FFD70022 100%);
+    border-radius: 22px;
+    box-shadow: 0 8px 48px #000a,0 0 32px #FFD70099;
+    padding: 36px 32px 28px 32px;
+    min-width: 320px; max-width: 95vw;
+    color: #FFD700;
+    position: relative;
+    text-align: center;
+}
+.modal-om-close {
+    position: absolute; top: 12px; left: 18px;
+    background: none; border: none; color: #FFD700; font-size: 2rem; font-weight: bold; cursor: pointer;
+    transition: color 0.2s;
+}
+.modal-om-close:hover { color: #DC143C; }
+<!-- نافذة تعليمات احترافية -->
+<div id="instructionsModalOm" class="modal-om" hidden>
+    <div class="modal-om-content">
+        <button class="modal-om-close" onclick="closeModalOm('instructionsModalOm')">&times;</button>
+        <h2 style="color:#FFD700;font-size:2rem;font-weight:900;margin-bottom:18px;">تعليمات سباق المعرفة</h2>
+        <ul style="font-size:1.15rem;line-height:2;text-align:right;direction:rtl;">
+            <li>اختر النمط (فردي أو فرق) ثم اختر الصف.</li>
+            <li>ابدأ السباق، وكل إجابة صحيحة تقدم المتسابق أو الفريق خطوة.</li>
+            <li>أول من يصل للنهاية يفوز ويظهر في لوحة الشرف.</li>
+            <li>يمكنك عرض لوحة الشرف في أي وقت من زر الكأس.</li>
+            <li>استخدم الأزرار العلوية للعودة، كتم الصوت، ملء الشاشة، أو إعادة التشغيل.</li>
+        </ul>
+    </div>
+</div>
             #soundBtn {
                 left: 75px;
             }
@@ -27,6 +69,15 @@
             <button class="oman-btn gold" id="startRaceBtn" style="font-size:1.2rem;margin-top:8px;">بدء السباق</button>
         </div>
         <script>
+// منطق فتح/إغلاق النوافذ الاحترافية
+function openModalOm(id) {
+    // إغلاق أي نافذة أخرى
+    document.querySelectorAll('.modal-om').forEach(m=>m.hidden=true);
+    document.getElementById(id).hidden = false;
+}
+function closeModalOm(id) {
+    document.getElementById(id).hidden = true;
+}
 // تفعيل أزرار التولبار العلوي
 document.addEventListener('DOMContentLoaded',()=>{
     // زر العودة إلى القائمة الرئيسية
@@ -49,9 +100,9 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(refreshBtn) refreshBtn.onclick = ()=>{ location.reload(); };
     // زر التعليمات
     const instructionsBtn = document.getElementById('instructionsBtn');
-    if(instructionsBtn) instructionsBtn.onclick = ()=>{
-        showStudentNotification('تعليمات النشاط: اختر النمط والصف ثم ابدأ السباق.','scanner-beep','linear-gradient(90deg,#FFD700,#228B22)');
-    };
+        if(instructionsBtn) instructionsBtn.onclick = ()=>{
+            openModalOm('instructionsModalOm');
+        };
 });
         // متغيرات النمط والصفوف
         let raceMode = null; // 'individual' أو 'team'
