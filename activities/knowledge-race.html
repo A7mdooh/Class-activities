@@ -52,8 +52,7 @@
     <div class="student-list" id="studentList"></div>
     <div style="text-align:center; margin-bottom:18px;">
     </div>
-    <div class="big-student" id="currentStudent"></div>
-    <div class="big-student" id="currentStudent"></div>
+  <div class="big-student" id="currentStudent"></div>
     <div style="text-align:center; margin-bottom:18px;">
       <button id="correctBtn" style="background:linear-gradient(90deg,#228B22,#FFD700);color:#fff;">إجابة صحيحة ✅</button>
       <button id="wrongBtn" style="background:linear-gradient(90deg,#DC143C,#FFD700);color:#fff;">إجابة خاطئة ❌</button>
@@ -174,22 +173,19 @@
   // ...existing code...
     document.getElementById('classSelect').onchange = function() {
       currentClass = this.value;
-      if (!currentClass || !(studentsData[currentClass]||[]).length) {
-        students = [];
-        scores = {};
-        picked = null;
-        renderStudentList();
-        document.getElementById('currentStudent').textContent = '';
-        updateScoreboard();
-        return;
-      }
-      // عند اختيار صف جديد، أفرغ الطلاب الحاليين حتى يتم اعتماد طلاب جدد
       students = [];
       scores = {};
       picked = null;
       renderStudentList();
       document.getElementById('currentStudent').textContent = '';
       updateScoreboard();
+      // إذا كانت نافذة اختيار الطلاب مفتوحة، حدث القائمة مباشرة
+      if(document.getElementById('chooseStudentsModal').style.display === 'flex') {
+        renderChooseStudentsList();
+        setTimeout(()=>{
+          document.querySelectorAll('#chooseStudentsList input[type=checkbox]').forEach(el=>el.checked = true);
+        }, 0);
+      }
     };
 
     document.getElementById('confirmStudentsBtn').onclick = function() {
