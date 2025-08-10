@@ -170,6 +170,16 @@
   // ...existing code...
     document.getElementById('classSelect').onchange = function() {
       currentClass = this.value;
+      if (!currentClass || !(studentsData[currentClass]||[]).length) {
+        students = [];
+        scores = {};
+        picked = null;
+        renderStudentList();
+        document.getElementById('currentStudent').textContent = '';
+        updateScoreboard();
+        return;
+      }
+      // عند اختيار صف جديد، أفرغ الطلاب الحاليين حتى يتم اعتماد طلاب جدد
       students = [];
       scores = {};
       picked = null;
@@ -267,7 +277,11 @@
       document.querySelectorAll('.student-chip').forEach(el=>el.classList.remove('selected'));
     };
     // تحميل تلقائي عند الفتح
-    loadStudentsData().then(fillClassSelect);
+    loadStudentsData().then(()=>{
+      fillClassSelect();
+      // تأكد من إعادة تعيين currentClass عند إعادة تعبئة القائمة
+      currentClass = document.getElementById('classSelect').value;
+    });
   </script>
 </body>
 </html>
