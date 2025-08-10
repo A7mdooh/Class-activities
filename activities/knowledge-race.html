@@ -638,37 +638,27 @@
         `;
         document.body.appendChild(raceScreen);
       }
-      // إعداد مدخلات الجولات
+      // إعداد مدخل عدد الأسئلة فقط
       const roundInputs = raceScreen.querySelector('#roundInputs');
-      roundInputs.innerHTML = '';
-      for(let i=1;i<=3;i++){
-        roundInputs.innerHTML += `<div style='margin-bottom:10px;'><label style='color:#FFD700;font-weight:700;'>الجولة ${i}:</label> <input type='number' min='1' max='20' value='${i==1?3:i==2?5:8}' id='roundInput${i}' style='width:60px;font-size:1.1em;border-radius:8px;border:1.5px solid #ffd700;padding:4px 8px;text-align:center;'></div>`;
-      }
+      roundInputs.innerHTML = `<div style='margin-bottom:10px;'><label style='color:#FFD700;font-weight:700;'>عدد الأسئلة لكل طالب:</label> <input type='number' min='1' max='20' value='5' id='questionsPerStudent' style='width:60px;font-size:1.1em;border-radius:8px;border:1.5px solid #ffd700;padding:4px 8px;text-align:center;'></div><div style='color:#FFD700;font-size:1em;margin-bottom:8px;'>ملاحظة: هذا الرقم هو عدد الأسئلة التي سيُسألها كل طالب في السباق.</div>`;
       raceScreen.style.display = 'flex';
       raceScreen.querySelector('#raceSetup').style.display = 'block';
       raceScreen.querySelector('#raceArena').style.display = 'none';
       raceScreen.querySelector('#raceHonorBoard').style.display = 'none';
       raceScreen.querySelector('#startRealRaceBtn').onclick = function(){
-        let rounds = [];
-        for(let i=1;i<=3;i++){
-          let val = parseInt(document.getElementById('roundInput'+i).value)||1;
-          rounds.push(val);
-        }
-        startRace(rounds);
+        let questions = parseInt(document.getElementById('questionsPerStudent').value)||1;
+        startRace(questions);
       };
     }
 
     // منطق السباق والجولات
     let raceState = null;
-    function startRace(rounds) {
-      // تهيئة السباق
+    function startRace(questionsPerStudent) {
+      // تهيئة السباق لجولة واحدة
       raceState = {
         students: selectedStudents.map(name=>({name,score:0,progress:0,answers:[]})),
-        rounds,
-        currentRound: 0,
+        questionsPerStudent,
         currentStudentIdx: 0,
-        totalQuestions: rounds.reduce((a,b)=>a+b,0),
-        questionsPerStudent: rounds,
         finished: false
       };
       // إظهار واجهة السباق
@@ -683,7 +673,7 @@
     function renderRaceTrack() {
       const track = document.getElementById('raceTrack');
       const students = raceState.students;
-      let maxScore = raceState.rounds.reduce((a,b)=>a+b,0);
+      let maxScore = raceState.questionsPerStudent;
       // إذا الطلاب كثيرون (>6) استخدم سكرول أفقي
       if (students.length > 6) {
         track.style.overflowX = 'auto';
@@ -750,42 +740,35 @@
     }
 
     function showNextQuestion() {
-      // تحديد الطالب الحالي والجولة
-      let round = raceState.currentRound;
+      // تحديد الطالب الحالي
       let studentIdx = raceState.currentStudentIdx;
       let student = raceState.students[studentIdx];
-      let questionsThisRound = raceState.rounds[round];
-      let answered = student.answers.filter(a=>a.round===round).length;
-      // إذا انتهت الجولة لهذا الطالب انتقل للطالب التالي
-      if(answered >= questionsThisRound) {
+      let answered = student.answers.length;
+      // إذا انتهى هذا الطالب انتقل للطالب التالي
+      if(answered >= raceState.questionsPerStudent) {
         raceState.currentStudentIdx++;
         if(raceState.currentStudentIdx >= raceState.students.length) {
-          // انتقل للجولة التالية
-          raceState.currentStudentIdx = 0;
-          raceState.currentRound++;
-          if(raceState.currentRound >= raceState.rounds.length) {
-            // انتهى السباق
-            finishRace();
-            return;
-          }
+          // انتهى السباق
+          finishRace();
+          return;
         }
         showNextQuestion();
         return;
       }
       // عرض اسم الطالب والسؤال
       document.getElementById('raceCurrentStudent').textContent = student.name;
-      document.getElementById('raceQuestion').textContent = `اسأل سؤال الجولة ${round+1} (${answered+1} من ${questionsThisRound})`;
-      document.getElementById('raceProgressInfo').textContent = `الجولة ${round+1} من ${raceState.rounds.length}`;
+      document.getElementById('raceQuestion').textContent = `اسأل سؤال (${answered+1} من ${raceState.questionsPerStudent})`;
+      document.getElementById('raceProgressInfo').textContent = `عدد الأسئلة لكل طالب: ${raceState.questionsPerStudent}`;
       // تفعيل أزرار التقييم
       document.getElementById('raceCorrectBtn').onclick = ()=>{
         student.score++;
         student.progress++;
-        student.answers.push({round,correct:true});
+        student.answers.push({correct:true});
         renderRaceTrack();
         showNextQuestion();
       };
       document.getElementById('raceWrongBtn').onclick = ()=>{
-        student.answers.push({round,correct:false});
+        student.answers.push({correct:false});
         renderRaceTrack();
         showNextQuestion();
       };
@@ -804,8 +787,8 @@
         statsHtml += `<div style='background:linear-gradient(90deg,#ffd700,#fffbe6);margin:8px 0;padding:12px 18px;border-radius:16px;font-size:1.2em;font-weight:900;color:#DC143C;box-shadow:0 2px 12px #ffd70033;'>${idx+1}. ${s.name} <span style='color:#11998e;font-size:1em;'>(${s.score} نقطة)</span></div>`;
       });
       // إحصائيات إضافية
-      statsHtml += `<div style='margin-top:18px;font-size:1.1em;color:#23243a;'>عدد الجولات: ${raceState.rounds.length}</div>`;
-      statsHtml += `<div style='font-size:1.1em;color:#23243a;'>إجمالي الأسئلة: ${raceState.totalQuestions * raceState.students.length}</div>`;
+      statsHtml += `<div style='margin-top:18px;font-size:1.1em;color:#23243a;'>عدد الأسئلة لكل طالب: ${raceState.questionsPerStudent}</div>`;
+      statsHtml += `<div style='font-size:1.1em;color:#23243a;'>إجمالي الأسئلة: ${raceState.questionsPerStudent * raceState.students.length}</div>`;
       raceScreen.querySelector('#raceStats').innerHTML = statsHtml;
     }
 
