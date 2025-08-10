@@ -27,6 +27,32 @@
             <button class="oman-btn gold" id="startRaceBtn" style="font-size:1.2rem;margin-top:8px;">بدء السباق</button>
         </div>
         <script>
+// تفعيل أزرار التولبار العلوي
+document.addEventListener('DOMContentLoaded',()=>{
+    // زر العودة إلى القائمة الرئيسية
+    const homeBtn = document.getElementById('homeBtn');
+    if(homeBtn) homeBtn.onclick = ()=>{ window.location.href = '../main.html'; };
+    // زر ملء الشاشة
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
+    if(fullscreenBtn) fullscreenBtn.onclick = ()=>{
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+        else document.exitFullscreen();
+    };
+    // زر كتم/تشغيل الصوت
+    const soundBtn = document.getElementById('soundBtn');
+    if(soundBtn) soundBtn.onclick = ()=>{
+        soundOn = !soundOn;
+        soundBtn.innerHTML = soundOn ? '<i class="fa-solid fa-volume-up"></i>' : '<i class="fa-solid fa-volume-xmark"></i>';
+    };
+    // زر إعادة التشغيل
+    const refreshBtn = document.getElementById('refreshBtn');
+    if(refreshBtn) refreshBtn.onclick = ()=>{ location.reload(); };
+    // زر التعليمات
+    const instructionsBtn = document.getElementById('instructionsBtn');
+    if(instructionsBtn) instructionsBtn.onclick = ()=>{
+        showStudentNotification('تعليمات النشاط: اختر النمط والصف ثم ابدأ السباق.','scanner-beep','linear-gradient(90deg,#FFD700,#228B22)');
+    };
+});
         // متغيرات النمط والصفوف
         let raceMode = null; // 'individual' أو 'team'
         let allClasses = {};
