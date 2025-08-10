@@ -1,77 +1,77 @@
 <!-- ...existing code... -->
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>🏆 سباق المعرفة - لعبة تعليمية تفاعلية</title>
-            <style>
-/* نافذة منبثقة احترافية */
-.modal-om {
-    position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    background: rgba(30,30,40,0.85);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    transition: opacity 0.2s;
-}
-.modal-om[hidden] { display: none; }
-.modal-om-content {
-    background: linear-gradient(135deg,#23243a 80%,#FFD70022 100%);
-    border-radius: 22px;
-    box-shadow: 0 8px 48px #000a,0 0 32px #FFD70099;
-    padding: 36px 32px 28px 32px;
-    min-width: 320px; max-width: 95vw;
-    color: #FFD700;
-    position: relative;
-    text-align: center;
-}
-.modal-om-close {
-    position: absolute; top: 12px; left: 18px;
-    background: none; border: none; color: #FFD700; font-size: 2rem; font-weight: bold; cursor: pointer;
-    transition: color 0.2s;
-}
-.modal-om-close:hover { color: #DC143C; }
-            #soundBtn {
-                left: 75px;
-            }
-            #honorBoardBtn {
-                left: 135px;
-            }
-            </style>
-                <div class="top-toolbar">
-            <!-- واجهة اختيار النمط (تظهر فقط عند البداية) -->
-            <div id="modeSelectArea" style="max-width:520px;margin:32px auto 0 auto;padding:24px 18px 18px 18px;background:rgba(35,36,58,0.95);border-radius:18px;box-shadow:0 4px 32px #FFD70022;text-align:center;display:block;">
-                <h2 style="color:#FFD700;font-size:2rem;font-weight:900;margin-bottom:18px;">اختر نمط السباق</h2>
-                <div style="display:flex;justify-content:center;gap:24px;margin-bottom:18px;">
-                    <button class="oman-btn gold" id="individualModeBtn" style="min-width:120px;font-size:1.2rem;">فردي</button>
-                    <button class="oman-btn" id="teamModeBtn" style="min-width:120px;font-size:1.2rem;">فرق</button>
-                </div>
-                <div id="classSelectWrapper" style="margin-bottom:12px;">
-                    <label for="classSelect" style="font-weight:700;color:#FFD700;">اختر الصف:</label>
-                    <select id="classSelect" class="oman-btn" style="width:60%;margin:0 8px;"></select>
-                </div>
-                <button class="oman-btn gold" id="startRaceBtn" style="font-size:1.2rem;margin-top:8px;">بدء السباق</button>
-            </div>
-            <!-- منطقة السباق (تظهر فقط بعد بدء السباق) -->
-            <div id="raceMainArea" style="display:none;"></div>
-        <script>
-// دالة لإخفاء كل المناطق غير المطلوبة
-function hideAllMainAreas() {
-    document.getElementById('modeSelectArea').style.display = 'none';
-    const raceMain = document.getElementById('raceMainArea');
-    if(raceMain) { raceMain.style.display = 'none'; raceMain.innerHTML = ''; }
-}
-// دالة لإغلاق جميع النوافذ المنبثقة الاحترافية
-function closeAllModalsOm() {
-    document.querySelectorAll('.modal-om').forEach(m=>m.hidden=true);
-}
-// منطق فتح/إغلاق النوافذ الاحترافية
-function openModalOm(id) {
-    // إغلاق أي نافذة أخرى
-    document.querySelectorAll('.modal-om').forEach(m=>m.hidden=true);
+                // ========== سباق فردي ==========
+                function startIndividualRace() {
+                    hideAllMainAreas();
+                    closeAllModalsOm();
+                    const main = document.getElementById('raceMainArea');
+                    main.innerHTML = '';
+                    main.style.display = 'block';
+                    main.style.maxWidth = '900px';
+                    main.style.margin = '32px auto 0 auto';
+                    main.style.padding = '18px';
+                    main.style.background = 'rgba(35,36,58,0.97)';
+                    main.style.borderRadius = '18px';
+                    main.style.boxShadow = '0 4px 32px #FFD70022';
+                    let html = `<h2 style='color:#FFD700;font-size:2rem;font-weight:900;text-align:center;margin-bottom:18px;'>سباق فردي - ${selectedClass}</h2>`;
+                    html += `<div id='raceTrackArea'>`;
+                    students.forEach((name,i)=>{
+                        html += buildTrackLane({
+                            id: i,
+                            name: name,
+                            color: 'var(--accent-color)',
+                            members: null,
+                            isTeam: false
+                        });
+                    });
+                    html += `</div>`;
+                    main.innerHTML = html;
+                    window.raceProgress = students.map(()=>0);
+                    window.raceGoal = 5; // عدد الخطوات للفوز
+                }
+
+                // تقدم الطالب خطوة
+                function advanceStudent(idx) {
+                    if(!window.raceProgress) return;
+                    window.raceProgress[idx]++;
+                    updateProgressUnified(idx, false);
+                }
+
+                // ========== سباق فرق (مستقبلاً) ==========
+                function startTeamRace() {
+                    hideAllMainAreas();
+                    closeAllModalsOm();
+                    const main = document.getElementById('raceMainArea');
+                    main.innerHTML = '';
+                    main.style.display = 'block';
+                    main.style.maxWidth = '900px';
+                    main.style.margin = '32px auto 0 auto';
+                    main.style.padding = '18px';
+                    main.style.background = 'rgba(35,36,58,0.97)';
+                    main.style.borderRadius = '18px';
+                    let html = `<h2 style='color:#FFD700;font-size:2rem;font-weight:900;text-align:center;margin-bottom:18px;'>سباق الفرق - ${selectedClass}</h2>`;
+                    html += `<div id='raceTrackArea'>`;
+                    teams.forEach((members,ti)=>{
+                        html += buildTrackLane({
+                            id: ti,
+                            name: teamNames[ti],
+                            color: teamColors[ti],
+                            members: members,
+                            isTeam: true
+                        });
+                    });
+                    window.teamProgress = teams.map(()=>0);
+                    window.teamGoal = 7; // عدد الخطوات للفوز
+                    window.teams = teams;
+                    window.teamNames = teamNames;
+                    window.teamColors = teamColors;
+                }
+
+                // تقدم الفريق خطوة
+                function advanceTeam(idx) {
+                    if(!window.teamProgress) return;
+                    window.teamProgress[idx]++;
+                    updateProgressUnified(idx, true);
+                }
     document.getElementById(id).hidden = false;
 }
 function closeModalOm(id) {
@@ -171,141 +171,85 @@ document.addEventListener('DOMContentLoaded',()=>{
 
                 // ========== سباق فردي ==========
                 function startIndividualRace() {
-                                                    hideAllMainAreas();
-                                                    closeAllModalsOm();
-                                                    const main = document.getElementById('raceMainArea');
-                                                    main.innerHTML = '';
-                                                    main.style.display = 'block';
-                                                    main.style.maxWidth = '900px';
-                                                    main.style.margin = '32px auto 0 auto';
-                                                    main.style.padding = '18px';
-                                                    main.style.background = 'rgba(35,36,58,0.97)';
-                                                    main.style.borderRadius = '18px';
-                                                    main.style.boxShadow = '0 4px 32px #FFD70022';
-                                                    let html = `<h2 style='color:#FFD700;font-size:2rem;font-weight:900;text-align:center;margin-bottom:18px;'>سباق فردي - ${selectedClass}</h2>`;
-                                                    html += `<div id='raceTrackArea'>`;
-                                                    students.forEach((name,i)=>{
-                                                        html += `
-                                                            <div class='track-lane' id='lane-${i}' style='margin-bottom:18px;'>
-                                                                <div class='team-info'><span class='team-avatar' style='background:var(--accent-color);'>${i+1}</span><span class='team-name'>${name}</span></div>
-                                                                <div class='track-progress' style='flex:1;margin:0 12px;'><div class='progress-bar' id='progress-${i}' style='width:0%;background:linear-gradient(90deg,#FFD700,#DC143C);'></div></div>
-                                                                <div class='team-score' id='score-${i}'>0</div>
-                                                                <button class='oman-btn gold' onclick='advanceStudent(${i})'>إجابة صحيحة</button>
-                                                            </div>
-                                                        `;
-                                                    });
-                                                    html += `</div>`;
-                                                    main.innerHTML = html;
-                                                    // تهيئة النقاط والتقدم
-                                                    window.raceProgress = students.map(()=>0);
-                                                    window.raceGoal = 5; // عدد الخطوات للفوز
+                hideAllMainAreas();
+                closeAllModalsOm();
+                const main = document.getElementById('raceMainArea');
+                main.innerHTML = '';
+                main.style.display = 'block';
+                main.style.maxWidth = '900px';
+                main.style.margin = '32px auto 0 auto';
+                main.style.padding = '18px';
+                main.style.background = 'rgba(35,36,58,0.97)';
+                main.style.borderRadius = '18px';
+                main.style.boxShadow = '0 4px 32px #FFD70022';
+                let html = `<h2 style='color:#FFD700;font-size:2rem;font-weight:900;text-align:center;margin-bottom:18px;'>سباق فردي - ${selectedClass}</h2>`;
+                html += `<div id='raceTrackArea'>`;
+                students.forEach((name,i)=>{
+                    html += buildTrackLane({
+                        id: i,
+                        name: name,
+                        color: 'var(--accent-color)',
+                        members: null,
+                        isTeam: false
+                    });
+                });
+                html += `</div>`;
+                main.innerHTML = html;
+                window.raceProgress = students.map(()=>0);
+                window.raceGoal = 5; // عدد الخطوات للفوز
                                                 }
 
                 // تقدم الطالب خطوة
                 function advanceStudent(idx) {
                     if(!window.raceProgress) return;
                     window.raceProgress[idx]++;
-                    // تحديث العرض
-                    const percent = Math.min(100, (window.raceProgress[idx]/window.raceGoal)*100);
-                    document.getElementById('progress-'+idx).style.width = percent+'%';
-                    document.getElementById('score-'+idx).textContent = window.raceProgress[idx];
-                    // صوت تشجيع عند كل تقدم
-                    playKingdomSound('encourage');
-                    // مؤثرات احتفال عند الفوز
-                    if(window.raceProgress[idx]>=window.raceGoal) {
-                        document.getElementById('lane-'+idx).style.background = 'linear-gradient(90deg,#FFD700,#228B22)';
-                        // تحديد صوت الفوز حسب المركز
-                        let rank = 1;
-                        if(window.raceProgress.filter(v=>v>=window.raceGoal).length>1) rank = window.raceProgress.filter(v=>v>=window.raceGoal).length;
-                        let winSound = rank===1?'win-1':rank===2?'win-2':'win-3';
-                        showStudentNotification(`🏆 مبروك ${students[idx]} فاز بالمركز ${rank}!`,winSound,'linear-gradient(90deg,#228B22,#FFD700)');
-                        playKingdomSound(winSound);
-                        confettiEffect();
-                        setTimeout(showHonorBoard, 1200);
-                    }
+                    updateProgressUnified(idx, false);
                 }
 
                 // ========== سباق فرق (مستقبلاً) ==========
                     function startTeamRace() {
-                        // تقسيم الطلاب تلقائياً إلى فرق (2-4 فرق)
-                        let numTeams = 2;
-                        if(students.length >= 12) numTeams = 4;
-                        else if(students.length >= 7) numTeams = 3;
-                        // توزيع الطلاب بالتناوب
-                        let teams = Array.from({length:numTeams},()=>[]);
-                        students.forEach((name,i)=>{
-                            teams[i%numTeams].push(name);
-                        });
-                        // أسماء الفرق وألوانها
-                        const teamNames = ['الفريق الذهبي','الفريق الأحمر','الفريق الأخضر','الفريق الأزرق'];
-                        const teamColors = ['#FFD700','#DC143C','#228B22','#007bff'];
-                                                        hideAllMainAreas();
-                                                        closeAllModalsOm();
-                                                        const main = document.getElementById('raceMainArea');
-                                                        main.innerHTML = '';
-                                                        main.style.display = 'block';
-                                                        main.style.maxWidth = '900px';
-                                                        main.style.margin = '32px auto 0 auto';
-                                                        main.style.padding = '18px';
-                                                        main.style.background = 'rgba(35,36,58,0.97)';
-                                                        main.style.borderRadius = '18px';
-                                                        main.style.boxShadow = '0 4px 32px #FFD70022';
-                                                        let html = `<h2 style='color:#FFD700;font-size:2rem;font-weight:900;text-align:center;margin-bottom:18px;'>سباق الفرق - ${selectedClass}</h2>`;
-                                                        html += `<div id='raceTrackArea'>`;
-                                                        teams.forEach((members,ti)=>{
-                                                            html += `
-                                                                <div class='track-lane' id='team-lane-${ti}' style='margin-bottom:18px;'>
-                                                                    <div class='team-info'><span class='team-avatar' style='background:${teamColors[ti]};'>${ti+1}</span><span class='team-name'>${teamNames[ti]}</span></div>
-                                                                    <div class='track-progress' style='flex:1;margin:0 12px;'><div class='progress-bar' id='team-progress-${ti}' style='width:0%;background:linear-gradient(90deg,${teamColors[ti]},#fff);'></div></div>
-                                                                    <div class='team-score' id='team-score-${ti}'>0</div>
-                                                                    <button class='oman-btn gold' onclick='advanceTeam(${ti})'>إجابة صحيحة</button>
-                                                                </div>
-                                                                <div style='margin:0 0 18px 0;padding-right:60px;font-size:1.05rem;color:#FFD700;'>👥 ${members.join('، ')}</div>
-                                                            `;
-                                                        });
-                                                        html += `</div>`;
-                                                        main.innerHTML = html;
-                                                        // تهيئة النقاط والتقدم
-                                                        window.teamProgress = teams.map(()=>0);
-                                                        window.teamGoal = 7; // عدد الخطوات للفوز
-                                                        window.teams = teams;
-                                                        window.teamNames = teamNames;
-                                                        window.teamColors = teamColors;
+                hideAllMainAreas();
+                closeAllModalsOm();
+                const main = document.getElementById('raceMainArea');
+                main.innerHTML = '';
+                main.style.display = 'block';
+                main.style.maxWidth = '900px';
+                main.style.margin = '32px auto 0 auto';
+                main.style.padding = '18px';
+                main.style.background = 'rgba(35,36,58,0.97)';
+                main.style.borderRadius = '18px';
+                let html = `<h2 style='color:#FFD700;font-size:2rem;font-weight:900;text-align:center;margin-bottom:18px;'>سباق الفرق - ${selectedClass}</h2>`;
+                html += `<div id='raceTrackArea'>`;
+                teams.forEach((members,ti)=>{
+                    html += buildTrackLane({
+                        id: ti,
+                        name: teamNames[ti],
+                        color: teamColors[ti],
+                        members: members,
+                        isTeam: true
+                    });
+                });
+                window.teamProgress = teams.map(()=>0);
+                window.teamGoal = 7; // عدد الخطوات للفوز
+                window.teams = teams;
+                window.teamNames = teamNames;
+                window.teamColors = teamColors;
                                                     }
 
                     // تقدم الفريق خطوة
                     function advanceTeam(idx) {
-                        if(!window.teamProgress) return;
-                        window.teamProgress[idx]++;
-                        // تحديث العرض
-                        const percent = Math.min(100, (window.teamProgress[idx]/window.teamGoal)*100);
-                        document.getElementById('team-progress-'+idx).style.width = percent+'%';
-                        document.getElementById('team-score-'+idx).textContent = window.teamProgress[idx];
-                        // صوت خاص لكل فريق عند التقدم
-                        let teamSound = ['team-gold','team-red','team-green','team-blue'][idx]||'encourage';
-                        playKingdomSound(teamSound);
-                        // مؤثرات احتفال عند الفوز
-                        if(window.teamProgress[idx]>=window.teamGoal) {
-                            document.getElementById('team-lane-'+idx).style.background = `linear-gradient(90deg,${window.teamColors[idx]},#228B22)`;
-                            // تحديد صوت الفوز حسب المركز
-                            let rank = 1;
-                            if(window.teamProgress.filter(v=>v>=window.teamGoal).length>1) rank = window.teamProgress.filter(v=>v>=window.teamGoal).length;
-                            let winSound = rank===1?'win-1':rank===2?'win-2':'win-3';
-                            showStudentNotification(`🏆 مبروك ${window.teamNames[idx]} فاز بالمركز ${rank}!`,winSound,'linear-gradient(90deg,#228B22,#FFD700)');
-                            playKingdomSound(winSound);
-                            confettiEffect();
-                            setTimeout(showHonorBoard, 1200);
-                        }
+                    if(!window.teamProgress) return;
+                    window.teamProgress[idx]++;
+                    updateProgressUnified(idx, true);
 // مؤثرات confetti عند الفوز
 function confettiEffect() {
-    if (window.confetti) {
-        confetti({
-            particleCount: 180,
-            spread: 90,
-            origin: { y: 0.6 }
-        });
-    }
-}
+                if (window.confetti) {
+                    confetti({
+                        particleCount: 180,
+                        spread: 90,
+                        origin: { y: 0.6 }
+                    });
+                }
                     }
                 </script>
                     <button class="control-btn" id="homeBtn" title="الصفحة الرئيسية"><i class="fa-solid fa-house"></i></button>
