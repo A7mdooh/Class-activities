@@ -770,12 +770,25 @@ function closeHonorBoard() {
               btn.style.display = 'none';
               // إظهار نافذة السؤال
               let raceQuestionBox = document.getElementById('raceQuestionBox');
-              if(raceQuestionBox) raceQuestionBox.style.display = 'block';
+              if(raceQuestionBox) {
+                raceQuestionBox.style.display = 'block';
+                raceQuestionBox.scrollIntoView({behavior:'smooth',block:'center'});
+              }
               showNextQuestion();
             };
             raceArena.insertBefore(btn, raceArena.firstChild);
           } else {
-            document.getElementById('startRoundBtn').style.display = 'block';
+            let btn = document.getElementById('startRoundBtn');
+            btn.style.display = 'block';
+            btn.onclick = function() {
+              btn.style.display = 'none';
+              let raceQuestionBox = document.getElementById('raceQuestionBox');
+              if(raceQuestionBox) {
+                raceQuestionBox.style.display = 'block';
+                raceQuestionBox.scrollIntoView({behavior:'smooth',block:'center'});
+              }
+              showNextQuestion();
+            };
           }
           // إخفاء نافذة السؤال حتى الضغط
           let raceQuestionBox = document.getElementById('raceQuestionBox');
