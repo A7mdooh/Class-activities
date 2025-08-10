@@ -597,9 +597,13 @@
 
     document.getElementById('startRaceBtn').onclick = function() {
       if(selectedStudents.length === 0) return;
+      // إخفاء شاشة اختيار الطلاب فورًا
       document.getElementById('selectionPanel').style.display = 'none';
-      showRaceSetupScreen();
-      if(window.audioManager) audioManager.playSound('startapp');
+      // معالجة أي تأخير في DOM
+      setTimeout(function() {
+        showRaceSetupScreen();
+        if(window.audioManager) audioManager.playSound('startapp');
+      }, 50);
     };
 
     // شاشة إعداد الجولات والسباق
@@ -650,10 +654,15 @@
         let questions = parseInt(document.getElementById('questionsPerStudent').value)||1;
         // عند بدء السباق، إظهار نافذة التقييم مباشرة
         startRace(questions);
-        // ضمان ظهور نافذة التقييم
+        // ضمان ظهور نافذة السؤال حتى لو كان هناك تأخير في DOM
         setTimeout(function() {
           let raceArena = document.getElementById('raceArena');
-          if(raceArena) raceArena.style.display = 'flex';
+          if(raceArena) {
+            raceArena.style.display = 'flex';
+            // التأكد من أن نافذة السؤال ظاهرة
+            let raceQuestionBox = document.getElementById('raceQuestionBox');
+            if(raceQuestionBox) raceQuestionBox.style.display = 'block';
+          }
         }, 100);
       };
     }
