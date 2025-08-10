@@ -72,12 +72,15 @@
     let scores = {};
     let picked = null;
 
-    // تحميل بيانات الطلاب من JSON
+    // تحميل بيانات الطلاب من JSON مع تجربة مستخدم احترافية
     async function loadStudentsData() {
       try {
         const res = await fetch('../data/studentData.json');
+        if (!res.ok) throw new Error('فشل في تحميل البيانات');
         studentsData = await res.json();
-      } catch {
+        showNotif('تم تحميل بيانات الطلاب بنجاح','linear-gradient(90deg,#228B22,#FFD700)');
+      } catch (e) {
+        showNotif('تعذر تحميل بيانات الطلاب! سيتم استخدام بيانات افتراضية','linear-gradient(90deg,#DC143C,#FFD700)');
         studentsData = { 'الصف الأول': ['طالب1','طالب2'], 'الصف الثاني': ['طالب3','طالب4'] };
       }
     }
@@ -98,6 +101,10 @@
         opt.value = cls; opt.textContent = cls;
         sel.appendChild(opt);
       });
+      // إضافة رسالة إذا لم توجد صفوف
+      if (Object.keys(studentsData).length === 0) {
+        showNotif('لا توجد صفوف متاحة في البيانات!','#DC143C');
+      }
     }
 
     function renderStudentList() {
@@ -248,6 +255,7 @@
         updateStudentCountSection();
         renderChooseStudentsList();
         document.getElementById('chooseStudentsModal').style.display = 'flex';
+        showNotif('تم تحميل طلاب الصف: '+currentClass,'linear-gradient(90deg,#228B22,#FFD700)');
       }
     };
 
@@ -350,11 +358,12 @@
       document.querySelectorAll('.student-chip').forEach(el=>el.classList.remove('selected'));
     };
     // تحميل تلقائي عند الفتح
+    // تحميل تلقائي عند الفتح مع تجربة مستخدم احترافية
     loadStudentsData().then(()=>{
       fillClassSelect();
-      // إعادة تعيين currentClass للقيمة الافتراضية
       currentClass = '';
       document.getElementById('classSelect').value = '';
+      showNotif('اختر الصف لبدء سباق المعرفة!','linear-gradient(90deg,#FFD700,#23243a)');
     });
   </script>
 </body>
