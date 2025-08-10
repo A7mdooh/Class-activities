@@ -35,18 +35,24 @@
       <select id="classSelect"><option value="">— اختر الصف —</option></select>
       <button id="chooseStudentsBtn">اختيار الطلاب</button>
     </div>
-    <!-- نافذة اختيار الطلاب -->
+    <!-- نافذة اختيار الطلاب المطورة -->
     <div id="chooseStudentsModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(30,30,40,0.85);z-index:9999;align-items:center;justify-content:center;">
-      <div style="background:linear-gradient(135deg,#23243a 80%,#FFD70022 100%);border-radius:22px;box-shadow:0 8px 48px #000a,0 0 32px #FFD70099;padding:36px 32px 28px 32px;min-width:320px;max-width:95vw;color:#FFD700;position:relative;text-align:center;">
+      <div style="background:linear-gradient(135deg,#23243a 80%,#FFD70022 100%);border-radius:22px;box-shadow:0 8px 48px #000a,0 0 32px #FFD70099;padding:36px 32px 28px 32px;min-width:340px;max-width:98vw;color:#FFD700;position:relative;text-align:center;">
         <button id="closeChooseStudents" style="position:absolute;top:12px;left:18px;background:none;border:none;color:#FFD700;font-size:2rem;font-weight:bold;cursor:pointer;">×</button>
         <h2 style="color:#FFD700;font-size:1.5rem;font-weight:900;margin-bottom:18px;">اختيار الطلاب المشاركين</h2>
-        <div id="chooseStudentsList" style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:18px;"></div>
-        <div style="margin-bottom:12px;">
-          <label>عدد الطلاب العشوائي:</label>
-          <input type="number" id="randomCount" min="2" max="30" value="3" style="width:60px;padding:4px 8px;border-radius:8px;border:1px solid #FFD700;">
-          <button id="randomSelectBtn" class="oman-btn gold" style="font-size:1.05rem;">اختيار عشوائي</button>
+        <div style="display:flex;justify-content:center;gap:10px;margin-bottom:16px;">
+          <button class="mode-btn" id="modeRandom" style="padding:7px 18px;">عشوائي</button>
+          <button class="mode-btn" id="modeManual" style="padding:7px 18px;">يدوي</button>
+          <button class="mode-btn" id="modeAll" style="padding:7px 18px;">الكل</button>
         </div>
-        <button id="confirmStudentsBtn" class="oman-btn gold" style="font-size:1.1rem;">اعتماد الطلاب المختارين</button>
+        <div id="studentCountSection" style="display:none;margin-bottom:12px;align-items:center;justify-content:center;gap:8px;">
+          <button id="countMinus" style="font-size:1.3rem;padding:2px 10px;">-</button>
+          <span id="studentCountDisplay" style="font-size:1.2rem;font-weight:bold;min-width:32px;display:inline-block;">3</span>
+          <button id="countPlus" style="font-size:1.3rem;padding:2px 10px;">+</button>
+          <span style="font-size:1rem;">طالب</span>
+        </div>
+        <div id="chooseStudentsList" style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:18px;"></div>
+        <button id="confirmStudentsBtn" class="oman-btn gold" style="font-size:1.1rem;">ابدأ اللعبة</button>
       </div>
     </div>
     <div class="student-list" id="studentList"></div>
@@ -130,15 +136,42 @@
       board.innerHTML = arr.map(s=>`<div class='score-row'><span class='name'>${s.name}</span><span class='score'>${s.score} نقطة</span></div>`).join('');
     }
 
-    // زر اختيار الطلاب
+    // منطق اختيار الطلاب المطور
+    let selectMode = 'random';
+    let targetCount = 3;
+    let manualSelected = new Set();
     document.getElementById('chooseStudentsBtn').onclick = function() {
       if(!currentClass || !(studentsData[currentClass]||[]).length) return showNotif('اختر الصف أولاً!','#DC143C');
+      selectMode = 'random';
+      targetCount = Math.min(3, studentsData[currentClass].length);
+      manualSelected = new Set();
+      updateModeBtns();
+      updateStudentCountSection();
       renderChooseStudentsList();
-      // فعّل جميع الطلاب افتراضيًا عند فتح النافذة
-      setTimeout(()=>{
-        document.querySelectorAll('#chooseStudentsList input[type=checkbox]').forEach(el=>el.checked = true);
-      }, 0);
       document.getElementById('chooseStudentsModal').style.display = 'flex';
+    };
+    function updateModeBtns() {
+      ['modeRandom','modeManual','modeAll'].forEach(id=>{
+        document.getElementById(id).classList.remove('selected');
+      });
+      document.getElementById('mode'+capitalize(selectMode)).classList.add('selected');
+    }
+    function capitalize(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+    document.getElementById('modeRandom').onclick = function(){ selectMode='random'; updateModeBtns(); updateStudentCountSection(); renderChooseStudentsList(); };
+    document.getElementById('modeManual').onclick = function(){ selectMode='manual'; updateModeBtns(); updateStudentCountSection(); renderChooseStudentsList(); };
+    document.getElementById('modeAll').onclick = function(){ selectMode='all'; updateModeBtns(); updateStudentCountSection(); renderChooseStudentsList(); };
+    function updateStudentCountSection() {
+      const sec = document.getElementById('studentCountSection');
+      if(selectMode==='all') { sec.style.display='none'; return; }
+      sec.style.display='flex';
+      document.getElementById('studentCountDisplay').textContent = targetCount;
+    }
+    document.getElementById('countMinus').onclick = function(){
+      if(targetCount>2) { targetCount--; document.getElementById('studentCountDisplay').textContent=targetCount; renderChooseStudentsList(); }
+    };
+    document.getElementById('countPlus').onclick = function(){
+      const max = studentsData[currentClass].length;
+      if(targetCount<max) { targetCount++; document.getElementById('studentCountDisplay').textContent=targetCount; renderChooseStudentsList(); }
     };
     document.getElementById('closeChooseStudents').onclick = function() {
       document.getElementById('chooseStudentsModal').style.display = 'none';
@@ -148,11 +181,38 @@
       const list = document.getElementById('chooseStudentsList');
       list.innerHTML = '';
       const all = studentsData[currentClass]||[];
+      if(selectMode==='all') {
+        all.forEach((name,i)=>{
+          const div = document.createElement('div');
+          div.className = 'student-chip selected';
+          div.textContent = name;
+          list.appendChild(div);
+        });
+        return;
+      }
+      if(selectMode==='random') {
+        // اختيار عشوائي بدون تكرار
+        const shuffled = all.slice();
+        for(let i=shuffled.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]]; }
+        const selected = shuffled.slice(0,targetCount);
+        selected.forEach((name,i)=>{
+          const div = document.createElement('div');
+          div.className = 'student-chip selected';
+          div.textContent = name;
+          list.appendChild(div);
+        });
+        return;
+      }
+      // يدوي
       all.forEach((name,i)=>{
         const div = document.createElement('div');
         div.className = 'student-chip';
-        div.style.userSelect = 'none';
-        div.innerHTML = `<input type='checkbox' id='stu_${i}' value='${name}' style='margin-left:6px;vertical-align:middle;'> <label for='stu_${i}' style='vertical-align:middle;cursor:pointer;'>${name}</label>`;
+        div.textContent = name;
+        div.onclick = function(){
+          if(manualSelected.has(name)) { manualSelected.delete(name); div.classList.remove('selected'); }
+          else if(manualSelected.size<targetCount) { manualSelected.add(name); div.classList.add('selected'); }
+        };
+        if(manualSelected.has(name)) div.classList.add('selected');
         list.appendChild(div);
       });
     }
@@ -189,15 +249,25 @@
     };
 
     document.getElementById('confirmStudentsBtn').onclick = function() {
-      // اجمع الطلاب المختارين
-      const checked = Array.from(document.querySelectorAll('#chooseStudentsList input[type=checkbox]:checked')).map(el=>el.value);
-      if(checked.length<2) return showNotif('اختر على الأقل طالبين!','#DC143C');
-      students = checked;
+      let chosen = [];
+      const all = studentsData[currentClass]||[];
+      if(selectMode==='all') {
+        chosen = all.slice();
+      } else if(selectMode==='random') {
+        const shuffled = all.slice();
+        for(let i=shuffled.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]]; }
+        chosen = shuffled.slice(0,targetCount);
+      } else {
+        chosen = Array.from(manualSelected);
+        if(chosen.length!==targetCount) return showNotif('اختر العدد المطلوب يدويًا!','#DC143C');
+      }
+      if(chosen.length<2) return showNotif('اختر على الأقل طالبين!','#DC143C');
+      students = chosen;
       scores = {};
       picked = null;
       renderStudentList();
       document.getElementById('currentStudent').textContent = '';
-      // ابدأ اللعبة مباشرة: اختر أول طالب تلقائيًا
+      document.getElementById('chooseStudentsModal').style.display = 'none';
       if (students.length > 0) {
         pickStudent(0);
         showNotif('تم اعتماد الطلاب المختارين! بدأت اللعبة.','linear-gradient(90deg,#228B22,#FFD700)');
