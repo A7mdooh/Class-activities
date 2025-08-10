@@ -135,6 +135,10 @@
     document.getElementById('chooseStudentsBtn').onclick = function() {
       if(!currentClass || !(studentsData[currentClass]||[]).length) return showNotif('اختر الصف أولاً!','#DC143C');
       renderChooseStudentsList();
+      // فعّل جميع الطلاب افتراضيًا عند فتح النافذة
+      setTimeout(()=>{
+        document.querySelectorAll('#chooseStudentsList input[type=checkbox]').forEach(el=>el.checked = true);
+      }, 0);
       document.getElementById('chooseStudentsModal').style.display = 'flex';
     };
     document.getElementById('closeChooseStudents').onclick = function() {
