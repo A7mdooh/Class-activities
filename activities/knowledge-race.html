@@ -726,49 +726,49 @@
       const track = document.getElementById('raceTrack');
       const students = raceState.students;
       let maxScore = raceState.questionsPerStudent;
-      // مضمار ماراثون رأسي احترافي
+      // مضمار ماراثون رأسي احترافي وألوان متدرجة عصرية
       track.innerHTML = '';
       track.style.position = 'relative';
       track.style.height = '';
-      track.style.background = 'linear-gradient(180deg,#23243a 80%,#ffd70022 100%)';
-      track.style.borderRadius = '24px';
-      track.style.boxShadow = '0 2px 18px #ffd70033';
+      track.style.background = 'linear-gradient(180deg,#181c2a 60%,#23243a 100%)';
+      track.style.borderRadius = '32px';
+      track.style.boxShadow = '0 6px 32px #00f5ff33, 0 2px 18px #ffd70033';
       track.style.display = 'block';
       track.style.justifyContent = '';
       track.style.alignItems = '';
-      track.style.padding = '32px 0 32px 0';
+      track.style.padding = '40px 0 40px 0';
       // رأس المضمار: اسم الطالب الأول
       let startName = students[0]?.name || '';
       let startDiv = document.createElement('div');
-      startDiv.style = 'display:flex;align-items:center;gap:12px;margin-bottom:18px;justify-content:flex-start;padding-right:32px;';
-      startDiv.innerHTML = `<span style="font-size:1.2em;font-weight:900;color:#00f5ff;">🏁 البداية</span><span style="font-size:1.2em;font-weight:900;color:#FFD700;">${startName}</span>`;
+      startDiv.style = 'display:flex;align-items:center;gap:18px;margin-bottom:28px;justify-content:flex-start;padding-right:40px;';
+      startDiv.innerHTML = `<span style="font-size:1.3em;font-weight:900;color:#00f5ff;text-shadow:0 0 18px #00f5ff99;letter-spacing:0.04em;">🏁 البداية</span><span style="font-size:1.3em;font-weight:900;color:#FFD700;text-shadow:0 0 18px #FFD70099;">${startName}</span>`;
       track.appendChild(startDiv);
       // لكل طالب: مضمار وعداء متحرك
       students.forEach((student, idx) => {
         let percent = (student.score / maxScore);
         let runnerId = `runner-${idx}`;
         let lane = document.createElement('div');
-        lane.style = 'position:relative;height:70px;margin-bottom:24px;display:flex;align-items:center;';
-        // شريط التقدم
+        lane.style = 'position:relative;height:80px;margin-bottom:32px;display:flex;align-items:center;';
+        // شريط التقدم متدرج وحديث
         lane.innerHTML = `
-          <div style="position:absolute;top:50%;left:0;transform:translateY(-50%);width:90%;height:16px;background:linear-gradient(90deg,#23243a,#ffd70022);border-radius:12px;box-shadow:0 0 8px #ffd70055;"></div>
-          <div id="${runnerId}" class="race-runner" style="position:absolute;top:50%;left:0;transform:translateY(-50%);transition:left 0.8s cubic-bezier(0.68,-0.55,0.27,1.55);width:60px;height:60px;z-index:2;">
-            <div style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#FFD700 60%,#fffbe6 100%);box-shadow:0 0 18px #FFD70099;display:flex;align-items:center;justify-content:center;font-size:2em;font-weight:900;color:#DC143C;animation:runnerBounce 1.2s infinite alternate;">
-              <span style='display:inline-block;transform:scaleX(-1);'>🏃‍♂️</span>
+          <div style="position:absolute;top:50%;left:0;transform:translateY(-50%);width:92%;height:20px;background:linear-gradient(90deg,#23243a 0%,#00f5ff 60%,#FFD700 100%);border-radius:14px;box-shadow:0 0 16px #00f5ff55,0 0 8px #ffd70055;"></div>
+          <div id="${runnerId}" class="race-runner" style="position:absolute;top:50%;left:0;transform:translateY(-50%);transition:left 0.8s cubic-bezier(0.68,-0.55,0.27,1.55);width:70px;height:70px;z-index:2;">
+            <div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#FFD700 60%,#00f5ff 100%);box-shadow:0 0 24px #FFD70099,0 0 24px #00f5ff99;display:flex;align-items:center;justify-content:center;font-size:2.3em;font-weight:900;color:#23243a;animation:runnerBounce 1.2s infinite alternate;filter:drop-shadow(0 0 12px #FFD70088);">
+              <span style='display:inline-block;transform:scaleX(-1);text-shadow:0 0 8px #00f5ff;'>🏃‍♂️</span>
             </div>
-            <div style="position:absolute;top:62px;left:50%;transform:translateX(-50%);font-size:1em;color:#23243a;font-weight:900;">${student.name.split(' ')[0]} <span style='color:#11998e;'>${student.score}/${maxScore}</span></div>
+            <div style="position:absolute;top:74px;left:50%;transform:translateX(-50%);font-size:1.08em;color:#00f5ff;font-weight:900;text-shadow:0 0 8px #23243a,#00f5ff99;letter-spacing:0.02em;">${student.name.split(' ')[0]} <span style='color:#FFD700;font-size:1em;text-shadow:0 0 8px #FFD700;'>${student.score}/${maxScore}</span></div>
           </div>
         `;
         // علم النهاية
         if(idx === students.length-1) {
-          lane.innerHTML += `<div style="position:absolute;top:50%;right:0;transform:translateY(-50%);font-size:2.2em;">🚩</div>`;
+          lane.innerHTML += `<div style="position:absolute;top:50%;right:0;transform:translateY(-50%);font-size:2.5em;filter:drop-shadow(0 0 12px #FFD70088);">🚩</div>`;
         }
         track.appendChild(lane);
         // بعد الإضافة، حرّك العداء حسب التقدم
         setTimeout(()=>{
           let runner = document.getElementById(runnerId);
           if(runner) {
-            runner.style.left = `calc(${percent*85}% )`;
+            runner.style.left = `calc(${percent*88}% )`;
           }
         }, 50);
       });
@@ -776,7 +776,7 @@
       if(!document.getElementById('runnerBounceStyle')) {
         let style = document.createElement('style');
         style.id = 'runnerBounceStyle';
-        style.innerHTML = `@keyframes runnerBounce {0%{transform:translateY(0);}100%{transform:translateY(-12px);}}`;
+        style.innerHTML = `@keyframes runnerBounce {0%{transform:translateY(0);}100%{transform:translateY(-16px);}}`;
         document.head.appendChild(style);
       }
     }
