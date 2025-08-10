@@ -649,14 +649,16 @@
 
     // منطق السباق والجولات
     let raceState = null;
+    // عداد السؤال المتتالي
+    let currentQuestionNumber = 0;
     function startRace(questionsPerStudent) {
       // تهيئة السباق لجولة واحدة
       raceState = {
         students: selectedStudents.map(name=>({name,score:0,progress:0,answers:[]})),
         questionsPerStudent,
-        currentStudentIdx: 0,
         finished: false
       };
+      currentQuestionNumber = 0;
       // إظهار واجهة السباق
       const raceScreen = document.getElementById('raceScreen');
       raceScreen.querySelector('#raceSetup').style.display = 'none';
@@ -697,7 +699,9 @@
         lane.innerHTML = `
           <div style="position:absolute;top:50%;left:0;transform:translateY(-50%);width:90%;height:16px;background:linear-gradient(90deg,#23243a,#ffd70022);border-radius:12px;box-shadow:0 0 8px #ffd70055;"></div>
           <div id="${runnerId}" class="race-runner" style="position:absolute;top:50%;left:0;transform:translateY(-50%);transition:left 0.8s cubic-bezier(0.68,-0.55,0.27,1.55);width:60px;height:60px;z-index:2;">
-            <div style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#FFD700 60%,#fffbe6 100%);box-shadow:0 0 18px #FFD70099;display:flex;align-items:center;justify-content:center;font-size:2em;font-weight:900;color:#DC143C;animation:runnerBounce 1.2s infinite alternate;">🏃‍♂️</div>
+            <div style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#FFD700 60%,#fffbe6 100%);box-shadow:0 0 18px #FFD70099;display:flex;align-items:center;justify-content:center;font-size:2em;font-weight:900;color:#DC143C;animation:runnerBounce 1.2s infinite alternate;">
+              <span style='display:inline-block;transform:scaleX(-1);'>🏃‍♂️</span>
+            </div>
             <div style="position:absolute;top:62px;left:50%;transform:translateX(-50%);font-size:1em;color:#23243a;font-weight:900;">${student.name.split(' ')[0]} <span style='color:#11998e;'>${student.score}/${maxScore}</span></div>
           </div>
         `;
@@ -723,37 +727,45 @@
       }
     }
 
+    // منطق الدور المتتالي للأسئلة بين الطلاب
     function showNextQuestion() {
-      // تحديد الطالب الحالي
-      let studentIdx = raceState.currentStudentIdx;
-      let student = raceState.students[studentIdx];
-      let answered = student.answers.length;
-      // إذا انتهى هذا الطالب انتقل للطالب التالي
-      if(answered >= raceState.questionsPerStudent) {
-        raceState.currentStudentIdx++;
-        if(raceState.currentStudentIdx >= raceState.students.length) {
-          // انتهى السباق
-          finishRace();
-          return;
-        }
+      const students = raceState.students;
+      const questionsPerStudent = raceState.questionsPerStudent;
+      // حساب إجمالي الأسئلة في الجولة
+      const totalQuestions = students.length * questionsPerStudent;
+      // أول مرة: تهيئة عداد السؤال
+      if (typeof currentQuestionNumber !== 'number' || currentQuestionNumber < 0) currentQuestionNumber = 0;
+      // إذا انتهت الجولة
+      if (currentQuestionNumber >= totalQuestions) {
+        finishRace();
+        return;
+      }
+      // حساب الطالب والدور الحالي
+      const studentIdx = currentQuestionNumber % students.length;
+      const questionIdx = Math.floor(currentQuestionNumber / students.length);
+      // إذا هذا الطالب أجاب على كل أسئلته، تخطاه
+      if (students[studentIdx].answers.length >= questionsPerStudent) {
+        currentQuestionNumber++;
         showNextQuestion();
         return;
       }
       // عرض اسم الطالب والسؤال
-      document.getElementById('raceCurrentStudent').textContent = student.name;
-      document.getElementById('raceQuestion').textContent = `اسأل سؤال (${answered+1} من ${raceState.questionsPerStudent})`;
-      document.getElementById('raceProgressInfo').textContent = `عدد الأسئلة لكل طالب: ${raceState.questionsPerStudent}`;
+      document.getElementById('raceCurrentStudent').textContent = students[studentIdx].name;
+      document.getElementById('raceQuestion').textContent = `اسأل سؤال (${students[studentIdx].answers.length+1} من ${questionsPerStudent})`;
+      document.getElementById('raceProgressInfo').textContent = `عدد الأسئلة لكل طالب: ${questionsPerStudent}`;
       // تفعيل أزرار التقييم
       document.getElementById('raceCorrectBtn').onclick = ()=>{
-        student.score++;
-        student.progress++;
-        student.answers.push({correct:true});
+        students[studentIdx].score++;
+        students[studentIdx].progress++;
+        students[studentIdx].answers.push({correct:true});
         renderRaceTrack();
+        currentQuestionNumber++;
         showNextQuestion();
       };
       document.getElementById('raceWrongBtn').onclick = ()=>{
-        student.answers.push({correct:false});
+        students[studentIdx].answers.push({correct:false});
         renderRaceTrack();
+        currentQuestionNumber++;
         showNextQuestion();
       };
     }
