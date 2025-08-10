@@ -682,16 +682,24 @@
       // إظهار واجهة السباق
       const raceScreen = document.getElementById('raceScreen');
       raceScreen.querySelector('#raceSetup').style.display = 'none';
-      raceScreen.querySelector('#raceArena').style.display = 'flex';
+  raceScreen.querySelector('#raceArena').style.display = 'flex';
+  raceScreen.querySelector('#raceArena').style.overflowY = 'auto';
+  raceScreen.querySelector('#raceArena').style.maxHeight = '100vh';
       raceScreen.querySelector('#raceHonorBoard').style.display = 'none';
       // ضمان ظهور نافذة السؤال وأزرار التقييم بعد رسم DOM
       setTimeout(function() {
         let raceQuestionBox = document.getElementById('raceQuestionBox');
+        let raceArena = document.getElementById('raceArena');
+        if(raceArena) {
+          raceArena.style.display = 'flex';
+          raceArena.style.overflowY = 'auto';
+          raceArena.style.maxHeight = '100vh';
+        }
         if(raceQuestionBox) {
           raceQuestionBox.style.display = 'block';
           raceQuestionBox.scrollIntoView({behavior:'smooth',block:'center'});
         }
-      }, 100);
+      }, 150);
       renderRaceTrack();
       showNextQuestion();
     }
@@ -780,11 +788,17 @@
       // ضمان ظهور نافذة السؤال وأزرار التقييم
       setTimeout(function() {
         let raceQuestionBox = document.getElementById('raceQuestionBox');
+        let raceArena = document.getElementById('raceArena');
+        if(raceArena) {
+          raceArena.style.display = 'flex';
+          raceArena.style.overflowY = 'auto';
+          raceArena.style.maxHeight = '100vh';
+        }
         if(raceQuestionBox) {
           raceQuestionBox.style.display = 'block';
           raceQuestionBox.scrollIntoView({behavior:'smooth',block:'center'});
         }
-      }, 50);
+      }, 80);
       // عرض اسم الطالب والسؤال
       document.getElementById('raceCurrentStudent').textContent = students[studentIdx].name;
       document.getElementById('raceQuestion').textContent = `اسأل سؤال (${students[studentIdx].answers.length+1} من ${questionsPerStudent})`;
