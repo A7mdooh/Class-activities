@@ -33,7 +33,21 @@
     <div class="select-row">
       <label for="classSelect">الصف:</label>
       <select id="classSelect"><option value="">— اختر الصف —</option></select>
-      <button id="loadStudents">تحميل الطلاب</button>
+      <button id="chooseStudentsBtn">اختيار الطلاب</button>
+    </div>
+    <!-- نافذة اختيار الطلاب -->
+    <div id="chooseStudentsModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(30,30,40,0.85);z-index:9999;align-items:center;justify-content:center;">
+      <div style="background:linear-gradient(135deg,#23243a 80%,#FFD70022 100%);border-radius:22px;box-shadow:0 8px 48px #000a,0 0 32px #FFD70099;padding:36px 32px 28px 32px;min-width:320px;max-width:95vw;color:#FFD700;position:relative;text-align:center;">
+        <button id="closeChooseStudents" style="position:absolute;top:12px;left:18px;background:none;border:none;color:#FFD700;font-size:2rem;font-weight:bold;cursor:pointer;">×</button>
+        <h2 style="color:#FFD700;font-size:1.5rem;font-weight:900;margin-bottom:18px;">اختيار الطلاب المشاركين</h2>
+        <div id="chooseStudentsList" style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:18px;"></div>
+        <div style="margin-bottom:12px;">
+          <label>عدد الطلاب العشوائي:</label>
+          <input type="number" id="randomCount" min="2" max="30" value="3" style="width:60px;padding:4px 8px;border-radius:8px;border:1px solid #FFD700;">
+          <button id="randomSelectBtn" class="oman-btn gold" style="font-size:1.05rem;">اختيار عشوائي</button>
+        </div>
+        <button id="confirmStudentsBtn" class="oman-btn gold" style="font-size:1.1rem;">اعتماد الطلاب المختارين</button>
+      </div>
     </div>
     <div class="student-list" id="studentList"></div>
     <div style="text-align:center; margin-bottom:18px;">
@@ -127,14 +141,58 @@
       board.innerHTML = arr.map(s=>`<div class='score-row'><span class='name'>${s.name}</span><span class='score'>${s.score} نقطة</span></div>`).join('');
     }
 
-    document.getElementById('loadStudents').onclick = async ()=>{
-      await loadStudentsData();
-      fillClassSelect();
-      showNotif('تم تحميل بيانات الطلاب!','linear-gradient(90deg,#228B22,#FFD700)');
+    // زر اختيار الطلاب
+    document.getElementById('chooseStudentsBtn').onclick = function() {
+      if(!currentClass || !(studentsData[currentClass]||[]).length) return showNotif('اختر الصف أولاً!','#DC143C');
+      renderChooseStudentsList();
+      document.getElementById('chooseStudentsModal').style.display = 'flex';
+    };
+    document.getElementById('closeChooseStudents').onclick = function() {
+      document.getElementById('chooseStudentsModal').style.display = 'none';
+    };
+
+    function renderChooseStudentsList() {
+      const list = document.getElementById('chooseStudentsList');
+      list.innerHTML = '';
+      const all = studentsData[currentClass]||[];
+      all.forEach((name,i)=>{
+        const div = document.createElement('div');
+        div.className = 'student-chip';
+        div.style.userSelect = 'none';
+        div.innerHTML = `<input type='checkbox' id='stu_${i}' value='${name}' style='margin-left:6px;vertical-align:middle;'> <label for='stu_${i}' style='vertical-align:middle;cursor:pointer;'>${name}</label>`;
+        list.appendChild(div);
+      });
+    }
+
+    document.getElementById('randomSelectBtn').onclick = function() {
+      const all = studentsData[currentClass]||[];
+      let n = parseInt(document.getElementById('randomCount').value)||3;
+      n = Math.max(2, Math.min(n, all.length));
+      // اختيار عشوائي بدون تكرار
+      const shuffled = all.slice();
+      for(let i=shuffled.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]]; }
+      // حدد فقط أول n
+      document.querySelectorAll('#chooseStudentsList input[type=checkbox]').forEach((el,idx)=>{
+        el.checked = shuffled.slice(0,n).includes(all[idx]);
+      });
+    };
+
+    document.getElementById('confirmStudentsBtn').onclick = function() {
+      // اجمع الطلاب المختارين
+      const checked = Array.from(document.querySelectorAll('#chooseStudentsList input[type=checkbox]:checked')).map(el=>el.value);
+      if(checked.length<2) return showNotif('اختر على الأقل طالبين!','#DC143C');
+      students = checked;
+      scores = {};
+      picked = null;
+      renderStudentList();
+      document.getElementById('currentStudent').textContent = '';
+      updateScoreboard();
+      document.getElementById('chooseStudentsModal').style.display = 'none';
+      showNotif('تم اعتماد الطلاب المختارين!','linear-gradient(90deg,#228B22,#FFD700)');
     };
     document.getElementById('classSelect').onchange = function() {
       currentClass = this.value;
-      students = studentsData[currentClass]||[];
+      students = [];
       scores = {};
       picked = null;
       renderStudentList();
