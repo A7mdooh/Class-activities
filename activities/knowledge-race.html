@@ -681,6 +681,8 @@
       updateSelectedCount();
       document.getElementById('startRaceBtn').disabled = selectedStudents.length === 0;
       if(window.audioManager) audioManager.playSound('cosmic-explosion');
+      // إصلاح: تفعيل زر بدء السباق بعد الاختيار العشوائي
+      document.getElementById('startRaceBtn').style.display = 'inline-block';
     };
 
     document.getElementById('startRaceBtn').onclick = function() {
@@ -753,13 +755,12 @@ function closeHonorBoard() {
       raceScreen.querySelector('#raceHonorBoard').style.display = 'none';
       raceScreen.querySelector('#startRealRaceBtn').onclick = function(){
         let questions = parseInt(document.getElementById('questionsPerStudent').value)||1;
-        // عند بدء السباق، إظهار المضمار فقط مع زر "بدء الجولة"
+        // عند بدء السباق، إظهار المضمار فقط مع زر "انطلاق"
         startRace(questions, true); // وضع خاص: لا تظهر نافذة السؤال بعد
-        // إظهار زر "بدء الجولة" فوق المضمار
         let raceArena = document.getElementById('raceArena');
         if(raceArena) {
           raceArena.style.display = 'flex';
-          // إضافة زر بدء الجولة إذا لم يكن موجودًا
+          // إضافة زر انطلاق إذا لم يكن موجودًا
           if(!document.getElementById('startRoundBtn')) {
             let btn = document.createElement('button');
             btn.id = 'startRoundBtn';
@@ -768,7 +769,6 @@ function closeHonorBoard() {
             btn.style = 'font-size:1.3em;padding:1.2em 2.8em;margin:22px auto 0 auto;display:block;background:linear-gradient(90deg,#FFD700,#00f5ff);color:#23243a;font-weight:bold;border-radius:16px;border:none;box-shadow:0 2px 16px #FFD70055;letter-spacing:0.04em;';
             btn.onclick = function() {
               btn.style.display = 'none';
-              // إظهار نافذة السؤال
               let raceQuestionBox = document.getElementById('raceQuestionBox');
               if(raceQuestionBox) {
                 raceQuestionBox.style.display = 'block';
@@ -842,15 +842,17 @@ function closeHonorBoard() {
       let maxScore = raceState.questionsPerStudent;
       // مضمار ماراثون رأسي احترافي وألوان متدرجة عصرية
       track.innerHTML = '';
-      track.style.position = 'relative';
-      track.style.height = '';
-      track.style.background = 'linear-gradient(180deg,#181c2a 60%,#23243a 100%)';
-      track.style.borderRadius = '32px';
-      track.style.boxShadow = '0 6px 32px #00f5ff33, 0 2px 18px #ffd70033';
-      track.style.display = 'block';
-      track.style.justifyContent = '';
-      track.style.alignItems = '';
-      track.style.padding = '40px 0 40px 0';
+  track.style.position = 'relative';
+  track.style.height = '';
+  track.style.background = 'linear-gradient(180deg,#181c2a 60%,#23243a 100%)';
+  track.style.borderRadius = '32px';
+  track.style.boxShadow = '0 6px 32px #00f5ff33, 0 2px 18px #ffd70033';
+  track.style.display = 'flex';
+  track.style.flexDirection = 'column';
+  track.style.justifyContent = 'flex-start';
+  track.style.alignItems = 'stretch';
+  track.style.padding = '40px 0 40px 0';
+  track.style.overflowX = 'auto';
   // رأس المضمار: اسم الطالب الأول (الاسم الكامل مع إبراز الاسم الأول)
   let startName = students[0]?.name || '';
   let firstName = startName.split(' ')[0] || startName;
@@ -914,13 +916,19 @@ function closeHonorBoard() {
         finishRace();
         return;
       }
-      // حساب الطالب والدور الحالي
-      const studentIdx = currentQuestionNumber % students.length;
-      const questionIdx = Math.floor(currentQuestionNumber / students.length);
-      // إذا هذا الطالب أجاب على كل أسئلته، تخطاه
-      if (students[studentIdx].answers.length >= questionsPerStudent) {
-        currentQuestionNumber++;
-        showNextQuestion();
+      // منطق متتالي: الطالب الأول ثم الثاني ... حتى انتهاء الجولات
+      let studentIdx = currentQuestionNumber % students.length;
+      let found = false;
+      for (let i = 0; i < students.length; i++) {
+        let idx = (currentQuestionNumber + i) % students.length;
+        if (students[idx].answers.length < questionsPerStudent) {
+          studentIdx = idx;
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        finishRace();
         return;
       }
       // ضمان ظهور نافذة السؤال وأزرار التقييم
@@ -952,24 +960,24 @@ function closeHonorBoard() {
       if(window.notificationSystem) window.notificationSystem.show(motivs[Math.floor(Math.random()*motivs.length)],'#FFD700','🎤',1800,'motivate');
       // تفعيل أزرار التقييم
       document.getElementById('raceCorrectBtn').onclick = ()=>{
-        students[studentIdx].score++;
-        students[studentIdx].progress++;
-        students[studentIdx].answers.push({correct:true});
-        renderRaceTrack();
-        // مؤثر احتفالي عند الإجابة الصحيحة
-        showConfetti();
-        window.notificationSystem && window.notificationSystem.show('إجابة رائعة!','lime','✅',1500,'correct');
-        if(window.audioManager) audioManager.playSound('correct');
-        currentQuestionNumber++;
-        showNextQuestion();
+  students[studentIdx].score++;
+  students[studentIdx].progress++;
+  students[studentIdx].answers.push({correct:true});
+  renderRaceTrack();
+  // مؤثر احتفالي عند الإجابة الصحيحة
+  setTimeout(()=>{ showConfetti(); }, 100);
+  setTimeout(()=>{ window.notificationSystem && window.notificationSystem.show('إجابة رائعة!','lime','✅',1500,'correct'); }, 120);
+  if(window.audioManager) setTimeout(()=>{ audioManager.playSound('correct'); }, 120);
+  currentQuestionNumber++;
+  setTimeout(()=>{ showNextQuestion(); }, 200);
       };
       document.getElementById('raceWrongBtn').onclick = ()=>{
-        students[studentIdx].answers.push({correct:false});
-        renderRaceTrack();
-        window.notificationSystem && window.notificationSystem.show('حاول مرة أخرى!','#DC143C','❌',1200,'wrong');
-        if(window.audioManager) audioManager.playSound('wrong');
-        currentQuestionNumber++;
-        showNextQuestion();
+  students[studentIdx].answers.push({correct:false});
+  renderRaceTrack();
+  setTimeout(()=>{ window.notificationSystem && window.notificationSystem.show('حاول مرة أخرى!','#DC143C','❌',1200,'wrong'); }, 80);
+  if(window.audioManager) setTimeout(()=>{ audioManager.playSound('wrong'); }, 100);
+  currentQuestionNumber++;
+  setTimeout(()=>{ showNextQuestion(); }, 200);
       };
     }
 
