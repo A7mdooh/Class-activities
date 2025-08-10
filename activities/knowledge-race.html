@@ -373,9 +373,9 @@
     <div class="subtitle">اختر الصف، ثم اختر طالبًا عشوائيًا أو يدويًا، واسأل سؤالًا شفويًا وقيّم الإجابة!</div>
     <div class="notif" id="notif"></div>
     <div class="select-row">
-      <label for="classSelect">الصف:</label>
-      <select id="classSelect"><option value="">— اختر الصف —</option></select>
-      <button id="loadStudents">تحميل الطلاب</button>
+  <label for="classSelect">الصف:</label>
+  <select id="classSelect"><option value="">— اختر الصف —</option></select>
+  <button id="loadStudents" style="display:none;">تحميل الطلاب</button>
     </div>
     <div class="student-list" id="studentList" style="display:none;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:18px;"></div>
     <div class="choose-method" id="chooseMethod" style="display:none;text-align:center;margin:18px 0;">
@@ -550,13 +550,13 @@
       board.innerHTML = arr.map(s=>`<div class='score-row'><span class='name'>${s.name}</span><span class='score'>${s.score} نقطة</span></div>`).join('');
     }
 
-    // تحميل الطلاب
-    document.getElementById('loadStudents').onclick = async ()=>{
+    // تحميل الطلاب تلقائياً عند الفتح فقط
+    (async ()=>{
       await loadStudentsData();
       fillClassSelect();
       window.notificationSystem.show('تم تحميل بيانات الطلاب!','linear-gradient(90deg,#228B22,#FFD700)');
       window.audioManager && window.audioManager.playSound('startapp');
-    };
+    })();
 
     // عند اختيار الصف
     document.getElementById('classSelect').onchange = function() {
