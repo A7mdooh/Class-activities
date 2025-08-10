@@ -493,12 +493,28 @@
       selectedClass = className;
       allStudents = studentsData[className] || [];
       selectedStudents = [];
+      // إزالة التحديد من جميع البطاقات
       document.querySelectorAll('.class-card').forEach(c => c.classList.remove('selected'));
+      // إضافة تأثير بصري للبطاقة المختارة
       card.classList.add('selected');
-      renderStudentsGrid();
-      document.getElementById('studentSelectionSection').style.display = 'block';
-      updateSelectedCount();
-      document.getElementById('startRaceBtn').disabled = true;
+      card.style.transition = 'box-shadow 0.5s, transform 0.5s';
+      card.style.boxShadow = '0 0 40px 10px #00ffffcc, 0 0 0 4px #ffd700cc';
+      card.style.transform = 'scale(1.08) rotate(-2deg)';
+      setTimeout(()=>{
+        card.style.boxShadow = '';
+        card.style.transform = '';
+      }, 700);
+      // إخفاء جميع بطاقات الصفوف مع تأثير تلاشي
+      const classGrid = document.getElementById('classGrid');
+      classGrid.style.transition = 'opacity 0.7s cubic-bezier(0.68,-0.55,0.27,1.55)';
+      classGrid.style.opacity = '0';
+      setTimeout(()=>{
+        classGrid.style.display = 'none';
+        renderStudentsGrid();
+        document.getElementById('studentSelectionSection').style.display = 'block';
+        updateSelectedCount();
+        document.getElementById('startRaceBtn').disabled = true;
+      }, 700);
       if(window.audioManager) audioManager.playSound('panel-slide');
     }
 
