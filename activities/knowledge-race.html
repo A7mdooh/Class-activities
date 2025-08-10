@@ -363,6 +363,7 @@
     <div class="game-logo">سباق المعرفة</div>
     <div class="toolbar-icons">
       <div class="toolbar-icon sound-icon" id="soundToggle" data-tooltip="تشغيل/إيقاف الصوت"><i class="fas fa-volume-up"></i></div>
+      <div class="toolbar-icon cache-icon" id="clearCacheBtn" data-tooltip="مسح الكاش"><i class="fas fa-broom"></i></div>
       <div class="toolbar-icon settings-icon" id="settingsBtn" data-tooltip="الإعدادات"><i class="fas fa-cog"></i></div>
       <div class="toolbar-icon fullscreen-icon" id="fullscreenBtn" data-tooltip="ملء الشاشة"><i class="fas fa-expand"></i></div>
     </div>
@@ -438,6 +439,23 @@
           icon.classList.add('fa-volume-up');
           window.notificationSystem && window.notificationSystem.show('تم تفعيل الصوت','#228B22');
         }
+      };
+    }
+    // زر مسح الكاش
+    const clearCacheBtn = document.getElementById('clearCacheBtn');
+    if (clearCacheBtn) {
+      clearCacheBtn.onclick = function() {
+        // مسح localStorage وsessionStorage
+        localStorage.clear();
+        sessionStorage.clear();
+        // محاولة مسح كاش الخدمة (إن وجد)
+        if ('caches' in window) {
+          caches.keys().then(function(names) {
+            for (let name of names) caches.delete(name);
+          });
+        }
+        window.notificationSystem && window.notificationSystem.show('تم مسح الكاش بنجاح!','#00ffff');
+        window.audioManager && window.audioManager.playSound('cosmic-portal');
       };
     }
     // زر الإعدادات (نافذة وهمية)
