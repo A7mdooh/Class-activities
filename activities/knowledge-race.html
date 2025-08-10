@@ -37,9 +37,19 @@
     </div>
     <div class="student-list" id="studentList"></div>
     <div style="text-align:center; margin-bottom:18px;">
-      <button id="randomPick" style="font-size:1.1rem;">اختيار عشوائي 👀</button>
+      <button id="openPicker" style="font-size:1.1rem;">بدء اختيار متسابق 🎲</button>
     </div>
     <div class="big-student" id="currentStudent"></div>
+    <!-- نافذة اختيار المتسابق الزجاجية -->
+    <div id="pickerModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(30,30,40,0.85);z-index:9999;align-items:center;justify-content:center;">
+      <div style="background:linear-gradient(135deg,#23243a 80%,#FFD70022 100%);border-radius:22px;box-shadow:0 8px 48px #000a,0 0 32px #FFD70099;padding:36px 32px 28px 32px;min-width:320px;max-width:95vw;color:#FFD700;position:relative;text-align:center;">
+        <button id="closePicker" style="position:absolute;top:12px;left:18px;background:none;border:none;color:#FFD700;font-size:2rem;font-weight:bold;cursor:pointer;">×</button>
+        <h2 style="color:#FFD700;font-size:1.5rem;font-weight:900;margin-bottom:18px;">اختيار متسابق عشوائي</h2>
+        <div id="pickerNames" style="height:56px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:bold;background:rgba(255,255,255,0.07);border-radius:12px;margin-bottom:18px;transition:box-shadow .2s;"></div>
+        <button id="startPicker" class="oman-btn gold" style="font-size:1.1rem;">ابدأ الدوران</button>
+        <button id="stopPicker" class="oman-btn red" style="font-size:1.1rem;display:none;">أوقف الآن</button>
+      </div>
+    </div>
     <div style="text-align:center; margin-bottom:18px;">
       <button id="correctBtn" style="background:linear-gradient(90deg,#228B22,#FFD700);color:#fff;">إجابة صحيحة ✅</button>
       <button id="wrongBtn" style="background:linear-gradient(90deg,#DC143C,#FFD700);color:#fff;">إجابة خاطئة ❌</button>
@@ -131,19 +141,88 @@
       document.getElementById('currentStudent').textContent = '';
       updateScoreboard();
     };
-    document.getElementById('randomPick').onclick = pickRandomStudent;
+    // زر فتح نافذة اختيار المتسابق
+    document.getElementById('openPicker').onclick = function() {
+      if(!students.length) return showNotif('اختر الصف أولاً!','#DC143C');
+      document.getElementById('pickerModal').style.display = 'flex';
+      renderPickerNames();
+      resetPickerUI();
+    };
+    document.getElementById('closePicker').onclick = function() {
+      document.getElementById('pickerModal').style.display = 'none';
+      stopPickerAnim();
+    };
+
+    // متغيرات حركة العجلة
+    let pickerInterval = null;
+    let pickerCurrent = 0;
+    let pickerOrder = [];
+
+    function renderPickerNames() {
+      const el = document.getElementById('pickerNames');
+      pickerOrder = students.slice();
+      shuffleArray(pickerOrder);
+      el.innerHTML = pickerOrder.map((n,i)=>`<span style="margin:0 18px;${i===0?'color:#FFD700;text-shadow:0 0 8px #FFD700;':''}">${n}</span>`).join('');
+    }
+    function shuffleArray(arr) {
+      for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
+    }
+    function resetPickerUI() {
+      document.getElementById('startPicker').style.display = '';
+      document.getElementById('stopPicker').style.display = 'none';
+    }
+    function startPickerAnim() {
+      if(!pickerOrder.length) return;
+      pickerCurrent = 0;
+      pickerInterval = setInterval(()=>{
+        pickerCurrent = (pickerCurrent+1)%pickerOrder.length;
+        updatePickerHighlight();
+      }, 80);
+      document.getElementById('startPicker').style.display = 'none';
+      document.getElementById('stopPicker').style.display = '';
+    }
+    function stopPickerAnim() {
+      if(pickerInterval) clearInterval(pickerInterval);
+      pickerInterval = null;
+      document.getElementById('startPicker').style.display = '';
+      document.getElementById('stopPicker').style.display = 'none';
+    }
+    function updatePickerHighlight() {
+      const el = document.getElementById('pickerNames');
+      el.innerHTML = pickerOrder.map((n,i)=>`<span style="margin:0 18px;${i===pickerCurrent?'color:#FFD700;text-shadow:0 0 8px #FFD700;font-size:1.7rem;':''}">${n}</span>`).join('');
+    }
+    document.getElementById('startPicker').onclick = function() {
+      startPickerAnim();
+    };
+    document.getElementById('stopPicker').onclick = function() {
+      if(!pickerInterval) return;
+      stopPickerAnim();
+      // مؤثر توقف احترافي
+      updatePickerHighlight();
+      setTimeout(()=>{
+        // إعلان الفائز
+        const idx = students.indexOf(pickerOrder[pickerCurrent]);
+        pickStudent(idx);
+        document.getElementById('pickerModal').style.display = 'none';
+        showNotif('🎉 تم اختيار المتسابق!','linear-gradient(90deg,#FFD700,#228B22)');
+      }, 400);
+    };
     document.getElementById('correctBtn').onclick = ()=>{
       if(picked==null) return showNotif('اختر طالبًا أولاً!','#DC143C');
       const name = students[picked];
       scores[name] = (scores[name]||0)+1;
       showNotif('أحسنت! نقطة للطالب','linear-gradient(90deg,#228B22,#FFD700)');
       updateScoreboard();
-      pickRandomStudent();
+      picked = null;
+      document.getElementById('currentStudent').textContent = '';
+      document.querySelectorAll('.student-chip').forEach(el=>el.classList.remove('selected'));
     };
     document.getElementById('wrongBtn').onclick = ()=>{
       if(picked==null) return showNotif('اختر طالبًا أولاً!','#DC143C');
       showNotif('حظًا أوفر!','linear-gradient(90deg,#DC143C,#FFD700)');
-      pickRandomStudent();
+      picked = null;
+      document.getElementById('currentStudent').textContent = '';
+      document.querySelectorAll('.student-chip').forEach(el=>el.classList.remove('selected'));
     };
     // تحميل تلقائي عند الفتح
     loadStudentsData().then(fillClassSelect);
