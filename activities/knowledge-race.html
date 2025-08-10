@@ -772,6 +772,9 @@
         showNextQuestion();
         return;
       }
+      // ضمان ظهور نافذة السؤال وأزرار التقييم
+      let raceQuestionBox = document.getElementById('raceQuestionBox');
+      if(raceQuestionBox) raceQuestionBox.style.display = 'block';
       // عرض اسم الطالب والسؤال
       document.getElementById('raceCurrentStudent').textContent = students[studentIdx].name;
       document.getElementById('raceQuestion').textContent = `اسأل سؤال (${students[studentIdx].answers.length+1} من ${questionsPerStudent})`;
