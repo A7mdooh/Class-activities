@@ -445,12 +445,13 @@
           error: 'kingdom-sounds/ai-beep.mp3',
         };
         this.isMuted = false;
+        this.volume = 1;
       }
       playSound(name, opts={}) {
         if(this.isMuted) return;
         let src = this.sounds[name] || name;
         let audio = new Audio('../assets/media/sounds/' + src);
-        audio.volume = opts.volume ?? 1;
+        audio.volume = (typeof opts.volume === 'number') ? opts.volume : (typeof this.volume === 'number' ? this.volume : 1);
         audio.play();
       }
       toggleMute() { this.isMuted = !this.isMuted; }
