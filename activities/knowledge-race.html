@@ -359,6 +359,12 @@
   </style>
 </head>
 <body>
+  <!-- إشعارات تفاعلية أعلى الشاشة -->
+  <div id="notificationBar" style="position:fixed;top:0;left:50%;transform:translateX(-50%);z-index:20000;min-width:220px;max-width:90vw;padding:14px 28px;background:linear-gradient(90deg,#23243a 60%,#ffd700 100%);color:#fffbe6;font-size:1.15em;font-weight:800;border-radius:0 0 18px 18px;box-shadow:0 8px 32px #FFD70055,0 2px 8px #FFD70022;display:none;align-items:center;gap:12px;text-align:center;pointer-events:none;animation:fadeInNotif 0.7s;">
+    <span id="notifIcon" style="font-size:1.3em;"></span>
+    <span id="notifMsg"></span>
+  </div>
+  <style>@keyframes fadeInNotif{0%{opacity:0;transform:translateY(-30px) scale(0.95);}100%{opacity:1;transform:translateY(0) scale(1);}}</style>
   <div class="top-toolbar">
     <div class="game-logo">سباق المعرفة</div>
     <div class="toolbar-icons">
@@ -420,7 +426,60 @@
     <div class="scoreboard" id="scoreboard"></div>
   </div>
   <script>
-    // ...existing AudioManager, NotificationSystem, toolbar, victoryManager code...
+    // ========== نظام الصوت الاحترافي ========== // 
+    class AudioManager {
+      constructor() {
+        this.sounds = {
+          welcome: 'kingdom-sounds/character-intro.mp3',
+          instruction: 'kingdom-sounds/book-open.mp3',
+          select: 'kingdom-sounds/button-hover.mp3',
+          correct: 'kingdom-sounds/perfect-score.mp3',
+          wrong: 'kingdom-sounds/bomb-explosion.mp3',
+          motivate: 'kingdom-sounds/achievement-unlock.mp3',
+          start: 'kingdom-sounds/adventure-theme.mp3',
+          finish: 'kingdom-sounds/battle-victory.mp3',
+          cheer: 'kingdom-sounds/crowd-cheer.mp3',
+          click: 'kingdom-sounds/cosmic-click.mp3',
+          panel: 'kingdom-sounds/panel-slide.mp3',
+          notify: 'kingdom-sounds/ai-notification.mp3',
+          error: 'kingdom-sounds/ai-beep.mp3',
+        };
+        this.isMuted = false;
+      }
+      playSound(name, opts={}) {
+        if(this.isMuted) return;
+        let src = this.sounds[name] || name;
+        let audio = new Audio('../assets/media/sounds/' + src);
+        audio.volume = opts.volume ?? 1;
+        audio.play();
+      }
+      toggleMute() { this.isMuted = !this.isMuted; }
+    }
+    window.audioManager = new AudioManager();
+
+    // ========== نظام الإشعارات التفاعلية ========== //
+    class NotificationSystem {
+      constructor() {
+        this.bar = document.getElementById('notificationBar');
+        this.icon = document.getElementById('notifIcon');
+        this.msg = document.getElementById('notifMsg');
+        this.timeout = null;
+      }
+      show(msg, color='#FFD700', icon='💡', duration=3200, sound='notify') {
+        this.bar.style.display = 'flex';
+        this.bar.style.background = `linear-gradient(90deg,#23243a 60%,${color} 100%)`;
+        this.icon.textContent = icon;
+        this.msg.textContent = msg;
+        this.bar.style.animation = 'fadeInNotif 0.7s';
+        if(window.audioManager && sound) audioManager.playSound(sound);
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(()=>{ this.hide(); }, duration);
+      }
+      hide() { this.bar.style.display = 'none'; }
+    }
+    window.notificationSystem = new NotificationSystem();
+
+    // ...existing toolbar, victoryManager code...
 
     // ========== تفعيل أزرار الشريط العلوي ========== //
     // زر الصوت
@@ -492,6 +551,13 @@
         studentsData = { 'الصف الأول': ['طالب1','طالب2'], 'الصف الثاني': ['طالب3','طالب4'] };
       }
       renderClassGrid();
+      // إشعار ترحيبي وتعليمات
+      setTimeout(()=>{
+        window.notificationSystem.show('مرحبًا بكم في سباق المعرفة!','cyan','👑',3500,'welcome');
+        setTimeout(()=>{
+          window.notificationSystem.show('اختر الصف ثم المتسابقين لبدء المنافسة','gold','📖',4000,'instruction');
+        }, 3700);
+      }, 800);
     }
 
     function renderClassGrid() {
@@ -532,7 +598,8 @@
         updateSelectedCount();
         document.getElementById('startRaceBtn').disabled = true;
       }, 700);
-      if(window.audioManager) audioManager.playSound('panel-slide');
+  if(window.audioManager) audioManager.playSound('panel');
+  window.notificationSystem && window.notificationSystem.show('اختر المتسابقين (حتى 8) ثم اضغط بدء','gold','🎯',3500,'instruction');
     }
 
     function renderStudentsGrid() {
@@ -553,11 +620,11 @@
         card.classList.remove('selected');
         card.querySelector('.selection-indicator').textContent = '○';
         selectedStudents = selectedStudents.filter(s => s !== student);
-        if(window.audioManager) audioManager.playSound('button-hover');
+        if(window.audioManager) audioManager.playSound('select');
       } else {
         if(selectedStudents.length >= 8) {
-          if(window.notificationSystem) window.notificationSystem.show('الحد الأقصى 8 متسابقين فقط!','#DC143C');
-          if(window.audioManager) audioManager.playSound('ai-beep');
+          if(window.notificationSystem) window.notificationSystem.show('الحد الأقصى 8 متسابقين فقط!','#DC143C','🚫',2500,'error');
+          if(window.audioManager) audioManager.playSound('error');
           card.style.animation = 'shakeX 0.4s';
           setTimeout(()=>{ card.style.animation = ''; }, 400);
           return;
@@ -565,7 +632,10 @@
         card.classList.add('selected');
         card.querySelector('.selection-indicator').textContent = '✓';
         selectedStudents.push(student);
-        if(window.audioManager) audioManager.playSound('point-earn');
+        if(window.audioManager) audioManager.playSound('select');
+        // رسالة تحفيزية عشوائية
+        const motivs = ['أحسنت!','ممتاز!','اختيار رائع!','جاهز للتحدي!','بطل قادم!','💪🔥'];
+        if(window.notificationSystem) window.notificationSystem.show(motivs[Math.floor(Math.random()*motivs.length)],'#38ef7d','⚡',1200,'motivate');
       }
       updateSelectedCount();
       document.getElementById('startRaceBtn').disabled = selectedStudents.length === 0;
@@ -615,13 +685,14 @@
 
     document.getElementById('startRaceBtn').onclick = function() {
       if(selectedStudents.length === 0) return;
+      window.notificationSystem && window.notificationSystem.show('استعدوا للسباق!','gold','🚀',2000,'start');
+      if(window.audioManager) audioManager.playSound('start');
       // إخفاء شاشة اختيار الطلاب فورًا
       document.getElementById('selectionPanel').style.display = 'none';
       // معالجة أي تأخير في DOM
       setTimeout(function() {
         showRaceSetupScreen();
-        if(window.audioManager) audioManager.playSound('startapp');
-      }, 50);
+      }, 600);
     };
 
     // شاشة إعداد الجولات والسباق
@@ -833,18 +904,29 @@ function closeHonorBoard() {
       document.getElementById('raceCurrentStudent').textContent = students[studentIdx].name;
       document.getElementById('raceQuestion').textContent = `اسأل سؤال (${students[studentIdx].answers.length+1} من ${questionsPerStudent})`;
       document.getElementById('raceProgressInfo').textContent = `عدد الأسئلة لكل طالب: ${questionsPerStudent}`;
+      // رسالة تحفيزية عشوائية عند كل سؤال
+      const motivs = [
+        'ركز جيدًا وأجب بثقة!','أنت البطل القادم!','أظهر مهاراتك!','كلنا نشجعك!','حظًا موفقًا!','أنت قدها!','👏🔥','💡'
+      ];
+      if(window.notificationSystem) window.notificationSystem.show(motivs[Math.floor(Math.random()*motivs.length)],'#FFD700','🎤',1800,'motivate');
       // تفعيل أزرار التقييم
       document.getElementById('raceCorrectBtn').onclick = ()=>{
         students[studentIdx].score++;
         students[studentIdx].progress++;
         students[studentIdx].answers.push({correct:true});
         renderRaceTrack();
+        // مؤثر احتفالي عند الإجابة الصحيحة
+        showConfetti();
+        window.notificationSystem && window.notificationSystem.show('إجابة رائعة!','lime','✅',1500,'correct');
+        if(window.audioManager) audioManager.playSound('correct');
         currentQuestionNumber++;
         showNextQuestion();
       };
       document.getElementById('raceWrongBtn').onclick = ()=>{
         students[studentIdx].answers.push({correct:false});
         renderRaceTrack();
+        window.notificationSystem && window.notificationSystem.show('حاول مرة أخرى!','#DC143C','❌',1200,'wrong');
+        if(window.audioManager) audioManager.playSound('wrong');
         currentQuestionNumber++;
         showNextQuestion();
       };
@@ -859,6 +941,10 @@ function closeHonorBoard() {
       // ضمان ظهور أزرار لوحة الشرف
       const honorActions = raceScreen.querySelector('#raceHonorBoard .neural-button')?.parentElement;
       if(honorActions) honorActions.style.display = 'flex';
+      // مؤثر احتفالي وصوتي عند نهاية السباق
+      showConfetti();
+      if(window.audioManager) { audioManager.playSound('finish'); setTimeout(()=>audioManager.playSound('cheer'), 800); }
+      window.notificationSystem && window.notificationSystem.show('انتهى السباق! تهانينا للجميع!','gold','🏆',3500,'finish');
       // ترتيب الطلاب حسب النقاط
       let sorted = [...raceState.students].sort((a,b)=>b.score-a.score);
       let statsHtml = '<div style="margin-bottom:18px;font-size:1.2em;color:#23243a;font-weight:700;">ترتيب المتسابقين:</div>';
@@ -869,6 +955,27 @@ function closeHonorBoard() {
       statsHtml += `<div style='margin-top:18px;font-size:1.1em;color:#23243a;'>عدد الأسئلة لكل طالب: ${raceState.questionsPerStudent}</div>`;
       statsHtml += `<div style='font-size:1.1em;color:#23243a;'>إجمالي الأسئلة: ${raceState.questionsPerStudent * raceState.students.length}</div>`;
       raceScreen.querySelector('#raceStats').innerHTML = statsHtml;
+    // ====== مؤثر احتفالي (كونفيتي) ====== //
+    function showConfetti() {
+      for(let i=0;i<22;i++) {
+        setTimeout(()=>{
+          const c = document.createElement('div');
+          c.textContent = ['🎉','✨','🌟','💫','🎊','🥇','🥳'][Math.floor(Math.random()*7)];
+          c.style.position = 'fixed';
+          c.style.fontSize = (Math.random()*1.2+1.2)+'em';
+          c.style.pointerEvents = 'none';
+          c.style.zIndex = '20001';
+          c.style.left = (window.innerWidth*Math.random()*0.9+window.innerWidth*0.05)+'px';
+          c.style.top = (window.innerHeight*Math.random()*0.5)+'px';
+          c.style.opacity = 1;
+          document.body.appendChild(c);
+          c.animate([
+            { transform: 'translateY(0) scale(1)', opacity: 1 },
+            { transform: `translateY(${Math.random()*180+120}px) scale(0.7)`, opacity: 0.2 }
+          ], { duration: 1800+Math.random()*800, easing: 'ease-out' }).onfinish = ()=>c.remove();
+        }, i*60);
+      }
+    }
     }
 
     // تحميل الطلاب تلقائيًا عند الفتح
