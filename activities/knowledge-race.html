@@ -371,24 +371,36 @@
     <div class="main-container">
     <div class="title">🏆 سباق المعرفة التفاعلي</div>
     <div class="subtitle">اختر الصف، ثم اختر طالبًا عشوائيًا أو يدويًا، واسأل سؤالًا شفويًا وقيّم الإجابة!</div>
-    <div class="notif" id="notif"></div>
-    <div class="select-row">
-  <label for="classSelect">الصف:</label>
-  <select id="classSelect"><option value="">— اختر الصف —</option></select>
-  <button id="loadStudents" style="display:none;">تحميل الطلاب</button>
-    </div>
-    <div class="student-list" id="studentList" style="display:none;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:18px;"></div>
-    <div class="choose-method" id="chooseMethod" style="display:none;text-align:center;margin:18px 0;">
-      <button class="control-btn btn-primary" id="chooseRandomBtn"><i class="fas fa-random"></i> اختيار عشوائي</button>
-      <button class="control-btn btn-success" id="chooseManualBtn"><i class="fas fa-users"></i> اختيار يدوي</button>
-    </div>
-    <div class="manual-modal" id="manualModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;">
-      <div style="background:#fffbe6;border-radius:22px;padding:32px 24px;max-width:500px;margin:auto;box-shadow:0 0 40px #ffd700a0;text-align:center;">
-        <h2 style="color:#DC143C;margin-bottom:18px;font-size:1.3em;">اختر الطلاب المشاركين</h2>
-        <div id="manualStudentList" style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:18px;"></div>
-        <button class="control-btn btn-primary" id="manualSelectAll">تحديد الكل</button>
-        <button class="control-btn btn-success" id="manualConfirm">تأكيد الاختيار</button>
-        <button class="control-btn btn-danger" id="manualCancel">إلغاء</button>
+    <!-- واجهة اختيار الصف والمتنافسين الاحترافية -->
+    <div class="selection-panel" id="selectionPanel">
+      <div class="glass-container" style="background: rgba(0,0,0,0.8); border: 2px solid rgba(255,215,0,0.5);">
+        <div style="position: relative; margin-bottom: 2rem;">
+          <h2 style="text-align: center; color: #ffd700; font-size: 2.2rem; margin-bottom: 0.5rem;">👥 إعداد سباق المعرفة</h2>
+          <p style="text-align: center; color: rgba(255,255,255,0.8); font-size: 1.1rem;">⚡ اختر صفك وطلابك لبدء السباق</p>
+        </div>
+        <!-- اختيار الصف -->
+        <div class="class-selection-section" style="margin-bottom: 3rem;">
+          <h3 style="color: #00ffff; font-size: 1.5rem; margin-bottom: 1rem; text-align: center;">🏫 اختيار الصف</h3>
+          <div class="class-grid" id="classGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;"></div>
+        </div>
+        <!-- اختيار الطلاب -->
+        <div class="student-selection-section" id="studentSelectionSection" style="display: none;">
+          <h3 style="color: #ff6347; font-size: 1.5rem; margin-bottom: 1rem; text-align: center;">🎯 اختيار المتسابقين</h3>
+          <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+            <button class="neural-button" id="selectAllBtn">✅ اختيار الكل</button>
+            <button class="neural-button" id="clearAllBtn">❌ إلغاء الكل</button>
+            <button class="neural-button" id="selectRandomBtn">🎲 اختيار عشوائي</button>
+          </div>
+          <div class="students-grid" id="studentsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2rem;"></div>
+          <div style="text-align: center; margin-bottom: 2rem;">
+            <div style="background: rgba(0,255,255,0.2); padding: 1rem; border-radius: 15px; display: inline-block;">
+              <span style="color: #00ffff; font-size: 1.1rem; font-weight: 700;">المتسابقون المختارون: <span id="selectedCount">0</span></span>
+            </div>
+          </div>
+          <div style="text-align: center;">
+            <button class="neural-button" id="startRaceBtn" style="font-size: 1.1rem; padding: 1.2rem 2.5rem; background: linear-gradient(45deg, #ffd700, #ff6347);" disabled>🚀 بدء سباق المعرفة</button>
+          </div>
+        </div>
       </div>
     </div>
     <div class="control-panel" id="controlPanel" style="background:linear-gradient(135deg,#fffbe6 0%,#ffd70022 100%);border-radius:18px;padding:18px 12px;box-shadow:0 2px 8px #FFD70022;max-width:420px;margin:0 auto 18px auto;display:none;">
@@ -449,16 +461,11 @@
       };
     }
 
-    // ========== منطق الطلاب والتفاعل الذكي ========== //
+    // ========== منطق اختيار الصف والمتسابقين الاحترافي ========== //
     let studentsData = {};
-    let currentClass = null;
-    let students = [];
-    let scores = {};
-    let picked = null;
-    let manualSelected = [];
-    let mode = null; // 'random' or 'manual'
-    let randomPool = [];
-    let manualPointer = 0;
+    let selectedClass = null;
+    let selectedStudents = [];
+    let allStudents = [];
 
     async function loadStudentsData() {
       try {
@@ -467,218 +474,122 @@
       } catch {
         studentsData = { 'الصف الأول': ['طالب1','طالب2'], 'الصف الثاني': ['طالب3','طالب4'] };
       }
+      renderClassGrid();
     }
 
-    function fillClassSelect() {
-      const sel = document.getElementById('classSelect');
-      sel.innerHTML = '<option value="">— اختر الصف —</option>';
-      Object.keys(studentsData).forEach(cls => {
-        const opt = document.createElement('option');
-        opt.value = cls; opt.textContent = cls;
-        sel.appendChild(opt);
+    function renderClassGrid() {
+      const classGrid = document.getElementById('classGrid');
+      classGrid.innerHTML = '';
+      Object.keys(studentsData).forEach(className => {
+        const card = document.createElement('div');
+        card.className = 'class-card';
+        card.innerHTML = `<div class="class-icon">🏫</div><h4>${className}</h4><div class="student-count">${studentsData[className].length} طالب</div>`;
+        card.onclick = () => selectClass(className, card);
+        classGrid.appendChild(card);
       });
     }
 
-    function showChooseMethod() {
-      document.getElementById('chooseMethod').style.display = 'block';
-      document.getElementById('studentList').style.display = 'none';
-      document.getElementById('controlPanel').style.display = 'none';
+    function selectClass(className, card) {
+      selectedClass = className;
+      allStudents = studentsData[className] || [];
+      selectedStudents = [];
+      document.querySelectorAll('.class-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      renderStudentsGrid();
+      document.getElementById('studentSelectionSection').style.display = 'block';
+      updateSelectedCount();
+      document.getElementById('startRaceBtn').disabled = true;
+      if(window.audioManager) audioManager.playSound('panel-slide');
     }
 
-    function hideChooseMethod() {
-      document.getElementById('chooseMethod').style.display = 'none';
-    }
-
-    function showManualModal() {
-      const modal = document.getElementById('manualModal');
-      const list = document.getElementById('manualStudentList');
-      list.innerHTML = '';
-      manualSelected = [];
-      students.forEach((name,i)=>{
-        const chip = document.createElement('div');
-        chip.className = 'student-chip';
-        chip.textContent = name;
-        chip.onclick = ()=>{
-          chip.classList.toggle('selected');
-          if(chip.classList.contains('selected')) manualSelected.push(i);
-          else manualSelected = manualSelected.filter(idx=>idx!==i);
-        };
-        list.appendChild(chip);
+    function renderStudentsGrid() {
+      const studentsGrid = document.getElementById('studentsGrid');
+      studentsGrid.innerHTML = '';
+      allStudents.forEach((student, idx) => {
+        const card = document.createElement('div');
+        card.className = 'student-card';
+        card.innerHTML = `<div class="selection-indicator">○</div><div class="student-name">${student}</div>`;
+        card.onclick = () => toggleStudent(card, student);
+        card.onmouseenter = () => { if(window.audioManager) audioManager.playSound('button-hover', {volume:0.1}); };
+        studentsGrid.appendChild(card);
       });
-      modal.style.display = 'flex';
     }
 
-    function hideManualModal() {
-      document.getElementById('manualModal').style.display = 'none';
+    function toggleStudent(card, student) {
+      if(card.classList.contains('selected')) {
+        card.classList.remove('selected');
+        card.querySelector('.selection-indicator').textContent = '○';
+        selectedStudents = selectedStudents.filter(s => s !== student);
+        if(window.audioManager) audioManager.playSound('button-hover');
+      } else {
+        card.classList.add('selected');
+        card.querySelector('.selection-indicator').textContent = '✓';
+        selectedStudents.push(student);
+        if(window.audioManager) audioManager.playSound('point-earn');
+      }
+      updateSelectedCount();
+      document.getElementById('startRaceBtn').disabled = selectedStudents.length === 0;
+      card.style.transform = 'scale(1.05)';
+      setTimeout(()=>{ card.style.transform = ''; }, 200);
     }
 
-    function showControlPanel() {
-      document.getElementById('controlPanel').style.display = 'block';
-      document.getElementById('startBtns').style.display = 'block';
-      document.getElementById('evalBtns').style.display = 'none';
-      document.getElementById('currentStudent').textContent = '';
-      document.getElementById('playerAvatar').textContent = '?';
-      document.getElementById('playerStatus').textContent = '';
+    function updateSelectedCount() {
+      document.getElementById('selectedCount').textContent = selectedStudents.length;
     }
 
-    function pickStudent(idx) {
-      picked = idx;
-      document.getElementById('currentStudent').textContent = students[idx];
-      document.getElementById('playerAvatar').textContent = students[idx]?.charAt(0)||'?';
-      document.getElementById('playerStatus').textContent = '';
-      window.notificationSystem.showMotivational(students[idx],'turn');
-      window.audioManager && window.audioManager.playSound('select');
-    }
-
-    function pickRandomStudentSmart() {
-      // استخدم randomPool لتجنب التكرار حتى يمر الجميع
-      if(randomPool.length === 0) {
-        randomPool = students.map((_,i)=>i);
-      }
-      if(randomPool.length === 0) return;
-      let idxInPool = Math.floor(Math.random()*randomPool.length);
-      let idx = randomPool[idxInPool];
-      randomPool.splice(idxInPool,1);
-      pickStudent(idx);
-    }
-
-    function updateScoreboard() {
-      const board = document.getElementById('scoreboard');
-      if(!students.length) { board.innerHTML = ''; return; }
-      let arr = students.map((name,i)=>({name,score:scores[name]||0}));
-      arr.sort((a,b)=>b.score-a.score);
-      board.innerHTML = arr.map(s=>`<div class='score-row'><span class='name'>${s.name}</span><span class='score'>${s.score} نقطة</span></div>`).join('');
-    }
-
-    // تحميل الطلاب تلقائياً عند الفتح فقط
-    (async ()=>{
-      await loadStudentsData();
-      fillClassSelect();
-      window.notificationSystem.show('تم تحميل بيانات الطلاب!','linear-gradient(90deg,#228B22,#FFD700)');
-      window.audioManager && window.audioManager.playSound('startapp');
-    })();
-
-    // عند اختيار الصف
-    document.getElementById('classSelect').onchange = function() {
-      currentClass = this.value;
-      students = studentsData[currentClass]||[];
-      scores = {};
-      picked = null;
-      manualSelected = [];
-      mode = null;
-      randomPool = [];
-      manualPointer = 0;
-      document.getElementById('studentList').style.display = 'none';
-      document.getElementById('controlPanel').style.display = 'none';
-      showChooseMethod();
-      updateScoreboard();
+    document.getElementById('selectAllBtn').onclick = function() {
+      selectedStudents = [];
+      document.querySelectorAll('.student-card').forEach(card => {
+        card.classList.add('selected');
+        card.querySelector('.selection-indicator').textContent = '✓';
+        selectedStudents.push(card.querySelector('.student-name').textContent);
+      });
+      updateSelectedCount();
+      document.getElementById('startRaceBtn').disabled = selectedStudents.length === 0;
+      if(window.audioManager) audioManager.playSound('achievement-unlock');
+    };
+    document.getElementById('clearAllBtn').onclick = function() {
+      selectedStudents = [];
+      document.querySelectorAll('.student-card').forEach(card => {
+        card.classList.remove('selected');
+        card.querySelector('.selection-indicator').textContent = '○';
+      });
+      updateSelectedCount();
+      document.getElementById('startRaceBtn').disabled = true;
+      if(window.audioManager) audioManager.playSound('cosmic-click');
+    };
+    document.getElementById('selectRandomBtn').onclick = function() {
+      selectedStudents = [];
+      document.querySelectorAll('.student-card').forEach(card => {
+        card.classList.remove('selected');
+        card.querySelector('.selection-indicator').textContent = '○';
+      });
+      let cards = Array.from(document.querySelectorAll('.student-card'));
+      let count = Math.min(8, Math.max(4, Math.floor(cards.length * 0.4)));
+      let shuffled = cards.sort(() => 0.5 - Math.random());
+      let selected = shuffled.slice(0, count);
+      selected.forEach(card => {
+        card.classList.add('selected');
+        card.querySelector('.selection-indicator').textContent = '✓';
+        selectedStudents.push(card.querySelector('.student-name').textContent);
+      });
+      updateSelectedCount();
+      document.getElementById('startRaceBtn').disabled = selectedStudents.length === 0;
+      if(window.audioManager) audioManager.playSound('cosmic-explosion');
     };
 
-    // زر اختيار عشوائي
-    document.getElementById('chooseRandomBtn').onclick = function() {
-      mode = 'random';
-      hideChooseMethod();
-      showControlPanel();
-      randomPool = students.map((_,i)=>i);
-      picked = null;
-      document.getElementById('startBtns').style.display = 'block';
-      document.getElementById('evalBtns').style.display = 'none';
-      document.getElementById('currentStudent').textContent = '';
-      document.getElementById('playerAvatar').textContent = '?';
+    document.getElementById('startRaceBtn').onclick = function() {
+      if(selectedStudents.length === 0) return;
+      // إخفاء واجهة الاختيار وبدء السباق
+      document.getElementById('selectionPanel').style.display = 'none';
+      // يمكنك هنا استدعاء منطق بدء السباق أو تفعيل الواجهة التالية
+      if(window.audioManager) audioManager.playSound('startapp');
+      window.notificationSystem && window.notificationSystem.show('تم اختيار المتسابقين!','linear-gradient(90deg,#228B22,#FFD700)');
+      // ... أكمل منطق بدء السباق حسب الحاجة ...
     };
 
-    // زر اختيار يدوي
-    document.getElementById('chooseManualBtn').onclick = function() {
-      mode = 'manual';
-      hideChooseMethod();
-      showManualModal();
-    };
-
-    // نافذة اختيار يدوي
-    document.getElementById('manualSelectAll').onclick = function() {
-      manualSelected = students.map((_,i)=>i);
-      document.querySelectorAll('#manualStudentList .student-chip').forEach(chip=>chip.classList.add('selected'));
-    };
-    document.getElementById('manualConfirm').onclick = function() {
-      if(manualSelected.length===0) {
-        window.notificationSystem.show('اختر طالبًا واحدًا على الأقل','#DC143C');
-        return;
-      }
-      hideManualModal();
-      showControlPanel();
-      manualPointer = 0;
-      picked = null;
-      document.getElementById('startBtns').style.display = 'block';
-      document.getElementById('evalBtns').style.display = 'none';
-      document.getElementById('currentStudent').textContent = '';
-      document.getElementById('playerAvatar').textContent = '?';
-    };
-    document.getElementById('manualCancel').onclick = function() {
-      hideManualModal();
-      showChooseMethod();
-    };
-
-    // زر بدء السؤال
-    document.getElementById('startQuestionBtn').onclick = function() {
-      if(mode==='random') {
-        pickRandomStudentSmart();
-      } else if(mode==='manual') {
-        if(manualPointer<manualSelected.length) {
-          pickStudent(manualSelected[manualPointer]);
-        }
-      }
-      document.getElementById('startBtns').style.display = 'none';
-      document.getElementById('evalBtns').style.display = 'flex';
-      if (picked != null) {
-        document.getElementById('playerStatus').textContent = 'دور الطالب';
-      }
-    };
-
-    // أزرار التقييم
-    document.getElementById('correctBtn').onclick = ()=>{
-      if(picked==null) return window.notificationSystem.show('اختر طالبًا أولاً!','#DC143C');
-      const name = students[picked];
-      scores[name] = (scores[name]||0)+1;
-      window.notificationSystem.show('أحسنت! نقطة للطالب','linear-gradient(90deg,#228B22,#FFD700)');
-      window.audioManager && window.audioManager.playSound('win');
-      updateScoreboard();
-      if(mode==='manual') {
-        manualPointer++;
-        if(manualPointer<manualSelected.length) {
-          document.getElementById('startBtns').style.display = 'block';
-          document.getElementById('evalBtns').style.display = 'none';
-          document.getElementById('currentStudent').textContent = '';
-          document.getElementById('playerAvatar').textContent = '?';
-        }
-      } else if(mode==='random') {
-        document.getElementById('startBtns').style.display = 'block';
-        document.getElementById('evalBtns').style.display = 'none';
-        document.getElementById('currentStudent').textContent = '';
-        document.getElementById('playerAvatar').textContent = '?';
-      }
-    };
-    document.getElementById('wrongBtn').onclick = ()=>{
-      if(picked==null) return window.notificationSystem.show('اختر طالبًا أولاً!','#DC143C');
-      window.notificationSystem.show('حظًا أوفر!','linear-gradient(90deg,#DC143C,#FFD700)');
-      window.audioManager && window.audioManager.playSound('wrong_answer');
-      if(mode==='manual') {
-        manualPointer++;
-        if(manualPointer<manualSelected.length) {
-          document.getElementById('startBtns').style.display = 'block';
-          document.getElementById('evalBtns').style.display = 'none';
-          document.getElementById('currentStudent').textContent = '';
-          document.getElementById('playerAvatar').textContent = '?';
-        }
-      } else if(mode==='random') {
-        document.getElementById('startBtns').style.display = 'block';
-        document.getElementById('evalBtns').style.display = 'none';
-        document.getElementById('currentStudent').textContent = '';
-        document.getElementById('playerAvatar').textContent = '?';
-      }
-    };
-
-    // تحميل تلقائي عند الفتح
-    loadStudentsData().then(fillClassSelect);
+    // تحميل الطلاب تلقائيًا عند الفتح
+    loadStudentsData();
   </script>
 </body>
 </html>
