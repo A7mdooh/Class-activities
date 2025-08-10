@@ -648,7 +648,13 @@
       raceScreen.querySelector('#raceHonorBoard').style.display = 'none';
       raceScreen.querySelector('#startRealRaceBtn').onclick = function(){
         let questions = parseInt(document.getElementById('questionsPerStudent').value)||1;
+        // عند بدء السباق، إظهار نافذة التقييم مباشرة
         startRace(questions);
+        // ضمان ظهور نافذة التقييم
+        setTimeout(function() {
+          let raceArena = document.getElementById('raceArena');
+          if(raceArena) raceArena.style.display = 'flex';
+        }, 100);
       };
     }
 
