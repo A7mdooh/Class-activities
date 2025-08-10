@@ -856,6 +856,9 @@ function closeHonorBoard() {
       const raceScreen = document.getElementById('raceScreen');
       raceScreen.querySelector('#raceArena').style.display = 'none';
       raceScreen.querySelector('#raceHonorBoard').style.display = 'flex';
+      // ضمان ظهور أزرار لوحة الشرف
+      const honorActions = raceScreen.querySelector('#raceHonorBoard .neural-button')?.parentElement;
+      if(honorActions) honorActions.style.display = 'flex';
       // ترتيب الطلاب حسب النقاط
       let sorted = [...raceState.students].sort((a,b)=>b.score-a.score);
       let statsHtml = '<div style="margin-bottom:18px;font-size:1.2em;color:#23243a;font-weight:700;">ترتيب المتسابقين:</div>';
