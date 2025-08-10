@@ -71,6 +71,16 @@
             <!-- منطقة السباق (تظهر فقط بعد بدء السباق) -->
             <div id="raceMainArea" style="display:none;"></div>
         <script>
+// دالة لإخفاء كل المناطق غير المطلوبة
+function hideAllMainAreas() {
+    document.getElementById('modeSelectArea').style.display = 'none';
+    const raceMain = document.getElementById('raceMainArea');
+    if(raceMain) { raceMain.style.display = 'none'; raceMain.innerHTML = ''; }
+}
+// دالة لإغلاق جميع النوافذ المنبثقة الاحترافية
+function closeAllModalsOm() {
+    document.querySelectorAll('.modal-om').forEach(m=>m.hidden=true);
+}
 // منطق فتح/إغلاق النوافذ الاحترافية
 function openModalOm(id) {
     // إغلاق أي نافذة أخرى
@@ -174,33 +184,35 @@ document.addEventListener('DOMContentLoaded',()=>{
 
                 // ========== سباق فردي ==========
                 function startIndividualRace() {
-                                    // تحديث محتوى raceMainArea فقط
-                                    const main = document.getElementById('raceMainArea');
-                                    main.style.display = 'block';
-                                    main.style.maxWidth = '900px';
-                                    main.style.margin = '32px auto 0 auto';
-                                    main.style.padding = '18px';
-                                    main.style.background = 'rgba(35,36,58,0.97)';
-                                    main.style.borderRadius = '18px';
-                                    main.style.boxShadow = '0 4px 32px #FFD70022';
-                                    let html = `<h2 style='color:#FFD700;font-size:2rem;font-weight:900;text-align:center;margin-bottom:18px;'>سباق فردي - ${selectedClass}</h2>`;
-                                    html += `<div id='raceTrackArea'>`;
-                                    students.forEach((name,i)=>{
-                                        html += `
-                                            <div class='track-lane' id='lane-${i}' style='margin-bottom:18px;'>
-                                                <div class='team-info'><span class='team-avatar' style='background:var(--accent-color);'>${i+1}</span><span class='team-name'>${name}</span></div>
-                                                <div class='track-progress' style='flex:1;margin:0 12px;'><div class='progress-bar' id='progress-${i}' style='width:0%;background:linear-gradient(90deg,#FFD700,#DC143C);'></div></div>
-                                                <div class='team-score' id='score-${i}'>0</div>
-                                                <button class='oman-btn gold' onclick='advanceStudent(${i})'>إجابة صحيحة</button>
-                                            </div>
-                                        `;
-                                    });
-                                    html += `</div>`;
-                                    main.innerHTML = html;
-                                    // تهيئة النقاط والتقدم
-                                    window.raceProgress = students.map(()=>0);
-                                    window.raceGoal = 5; // عدد الخطوات للفوز
-                                }
+                                                    hideAllMainAreas();
+                                                    closeAllModalsOm();
+                                                    const main = document.getElementById('raceMainArea');
+                                                    main.innerHTML = '';
+                                                    main.style.display = 'block';
+                                                    main.style.maxWidth = '900px';
+                                                    main.style.margin = '32px auto 0 auto';
+                                                    main.style.padding = '18px';
+                                                    main.style.background = 'rgba(35,36,58,0.97)';
+                                                    main.style.borderRadius = '18px';
+                                                    main.style.boxShadow = '0 4px 32px #FFD70022';
+                                                    let html = `<h2 style='color:#FFD700;font-size:2rem;font-weight:900;text-align:center;margin-bottom:18px;'>سباق فردي - ${selectedClass}</h2>`;
+                                                    html += `<div id='raceTrackArea'>`;
+                                                    students.forEach((name,i)=>{
+                                                        html += `
+                                                            <div class='track-lane' id='lane-${i}' style='margin-bottom:18px;'>
+                                                                <div class='team-info'><span class='team-avatar' style='background:var(--accent-color);'>${i+1}</span><span class='team-name'>${name}</span></div>
+                                                                <div class='track-progress' style='flex:1;margin:0 12px;'><div class='progress-bar' id='progress-${i}' style='width:0%;background:linear-gradient(90deg,#FFD700,#DC143C);'></div></div>
+                                                                <div class='team-score' id='score-${i}'>0</div>
+                                                                <button class='oman-btn gold' onclick='advanceStudent(${i})'>إجابة صحيحة</button>
+                                                            </div>
+                                                        `;
+                                                    });
+                                                    html += `</div>`;
+                                                    main.innerHTML = html;
+                                                    // تهيئة النقاط والتقدم
+                                                    window.raceProgress = students.map(()=>0);
+                                                    window.raceGoal = 5; // عدد الخطوات للفوز
+                                                }
 
                 // تقدم الطالب خطوة
                 function advanceStudent(idx) {
@@ -239,37 +251,39 @@ document.addEventListener('DOMContentLoaded',()=>{
                         // أسماء الفرق وألوانها
                         const teamNames = ['الفريق الذهبي','الفريق الأحمر','الفريق الأخضر','الفريق الأزرق'];
                         const teamColors = ['#FFD700','#DC143C','#228B22','#007bff'];
-                                        // تحديث محتوى raceMainArea فقط
-                                        const main = document.getElementById('raceMainArea');
-                                        main.style.display = 'block';
-                                        main.style.maxWidth = '900px';
-                                        main.style.margin = '32px auto 0 auto';
-                                        main.style.padding = '18px';
-                                        main.style.background = 'rgba(35,36,58,0.97)';
-                                        main.style.borderRadius = '18px';
-                                        main.style.boxShadow = '0 4px 32px #FFD70022';
-                                        let html = `<h2 style='color:#FFD700;font-size:2rem;font-weight:900;text-align:center;margin-bottom:18px;'>سباق الفرق - ${selectedClass}</h2>`;
-                                        html += `<div id='raceTrackArea'>`;
-                                        teams.forEach((members,ti)=>{
-                                            html += `
-                                                <div class='track-lane' id='team-lane-${ti}' style='margin-bottom:18px;'>
-                                                    <div class='team-info'><span class='team-avatar' style='background:${teamColors[ti]};'>${ti+1}</span><span class='team-name'>${teamNames[ti]}</span></div>
-                                                    <div class='track-progress' style='flex:1;margin:0 12px;'><div class='progress-bar' id='team-progress-${ti}' style='width:0%;background:linear-gradient(90deg,${teamColors[ti]},#fff);'></div></div>
-                                                    <div class='team-score' id='team-score-${ti}'>0</div>
-                                                    <button class='oman-btn gold' onclick='advanceTeam(${ti})'>إجابة صحيحة</button>
-                                                </div>
-                                                <div style='margin:0 0 18px 0;padding-right:60px;font-size:1.05rem;color:#FFD700;'>👥 ${members.join('، ')}</div>
-                                            `;
-                                        });
-                                        html += `</div>`;
-                                        main.innerHTML = html;
-                                        // تهيئة النقاط والتقدم
-                                        window.teamProgress = teams.map(()=>0);
-                                        window.teamGoal = 7; // عدد الخطوات للفوز
-                                        window.teams = teams;
-                                        window.teamNames = teamNames;
-                                        window.teamColors = teamColors;
-                                    }
+                                                        hideAllMainAreas();
+                                                        closeAllModalsOm();
+                                                        const main = document.getElementById('raceMainArea');
+                                                        main.innerHTML = '';
+                                                        main.style.display = 'block';
+                                                        main.style.maxWidth = '900px';
+                                                        main.style.margin = '32px auto 0 auto';
+                                                        main.style.padding = '18px';
+                                                        main.style.background = 'rgba(35,36,58,0.97)';
+                                                        main.style.borderRadius = '18px';
+                                                        main.style.boxShadow = '0 4px 32px #FFD70022';
+                                                        let html = `<h2 style='color:#FFD700;font-size:2rem;font-weight:900;text-align:center;margin-bottom:18px;'>سباق الفرق - ${selectedClass}</h2>`;
+                                                        html += `<div id='raceTrackArea'>`;
+                                                        teams.forEach((members,ti)=>{
+                                                            html += `
+                                                                <div class='track-lane' id='team-lane-${ti}' style='margin-bottom:18px;'>
+                                                                    <div class='team-info'><span class='team-avatar' style='background:${teamColors[ti]};'>${ti+1}</span><span class='team-name'>${teamNames[ti]}</span></div>
+                                                                    <div class='track-progress' style='flex:1;margin:0 12px;'><div class='progress-bar' id='team-progress-${ti}' style='width:0%;background:linear-gradient(90deg,${teamColors[ti]},#fff);'></div></div>
+                                                                    <div class='team-score' id='team-score-${ti}'>0</div>
+                                                                    <button class='oman-btn gold' onclick='advanceTeam(${ti})'>إجابة صحيحة</button>
+                                                                </div>
+                                                                <div style='margin:0 0 18px 0;padding-right:60px;font-size:1.05rem;color:#FFD700;'>👥 ${members.join('، ')}</div>
+                                                            `;
+                                                        });
+                                                        html += `</div>`;
+                                                        main.innerHTML = html;
+                                                        // تهيئة النقاط والتقدم
+                                                        window.teamProgress = teams.map(()=>0);
+                                                        window.teamGoal = 7; // عدد الخطوات للفوز
+                                                        window.teams = teams;
+                                                        window.teamNames = teamNames;
+                                                        window.teamColors = teamColors;
+                                                    }
 
                     // تقدم الفريق خطوة
                     function advanceTeam(idx) {
