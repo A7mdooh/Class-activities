@@ -670,40 +670,47 @@
       const track = document.getElementById('raceTrack');
       const students = raceState.students;
       let maxScore = raceState.questionsPerStudent;
-      // مضمار احترافي مع أنيميشن حركة المتسابقين
+      // مضمار ماراثون رأسي احترافي
       track.innerHTML = '';
       track.style.position = 'relative';
-      track.style.height = '120px';
-      track.style.background = 'linear-gradient(90deg,#23243a 80%,#ffd70022 100%)';
+      track.style.height = '';
+      track.style.background = 'linear-gradient(180deg,#23243a 80%,#ffd70022 100%)';
       track.style.borderRadius = '24px';
       track.style.boxShadow = '0 2px 18px #ffd70033';
-      track.style.display = 'flex';
-      track.style.justifyContent = 'space-between';
-      track.style.alignItems = 'flex-end';
-      track.style.padding = '24px 32px 18px 32px';
-      let laneWidth = `${Math.floor(100 / students.length)}%`;
+      track.style.display = 'block';
+      track.style.justifyContent = '';
+      track.style.alignItems = '';
+      track.style.padding = '32px 0 32px 0';
+      // رأس المضمار: اسم الطالب الأول
+      let startName = students[0]?.name || '';
+      let startDiv = document.createElement('div');
+      startDiv.style = 'display:flex;align-items:center;gap:12px;margin-bottom:18px;justify-content:flex-start;padding-right:32px;';
+      startDiv.innerHTML = `<span style="font-size:1.2em;font-weight:900;color:#00f5ff;">🏁 البداية</span><span style="font-size:1.2em;font-weight:900;color:#FFD700;">${startName}</span>`;
+      track.appendChild(startDiv);
+      // لكل طالب: مضمار وعداء متحرك
       students.forEach((student, idx) => {
         let percent = (student.score / maxScore);
         let runnerId = `runner-${idx}`;
         let lane = document.createElement('div');
-        lane.style.flex = '1';
-        lane.style.margin = '0 8px';
-        lane.style.position = 'relative';
-        lane.style.height = '100%';
+        lane.style = 'position:relative;height:70px;margin-bottom:24px;display:flex;align-items:center;';
+        // شريط التقدم
         lane.innerHTML = `
-          <div style="position:absolute;top:-38px;left:50%;transform:translateX(-50%);font-size:1.1em;font-weight:900;color:#FFD700;text-align:center;white-space:nowrap;">${student.name}</div>
-          <div class="race-lane" style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:60px;height:8px;background:linear-gradient(90deg,#00f5ff,#ffd700,#ff073a);border-radius:8px;box-shadow:0 0 8px #ffd70088;"></div>
-          <div id="${runnerId}" class="race-runner" style="position:absolute;bottom:8px;left:0;transition:left 0.8s cubic-bezier(0.68,-0.55,0.27,1.55);width:60px;height:60px;z-index:2;">
+          <div style="position:absolute;top:50%;left:0;transform:translateY(-50%);width:90%;height:16px;background:linear-gradient(90deg,#23243a,#ffd70022);border-radius:12px;box-shadow:0 0 8px #ffd70055;"></div>
+          <div id="${runnerId}" class="race-runner" style="position:absolute;top:50%;left:0;transform:translateY(-50%);transition:left 0.8s cubic-bezier(0.68,-0.55,0.27,1.55);width:60px;height:60px;z-index:2;">
             <div style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#FFD700 60%,#fffbe6 100%);box-shadow:0 0 18px #FFD70099;display:flex;align-items:center;justify-content:center;font-size:2em;font-weight:900;color:#DC143C;animation:runnerBounce 1.2s infinite alternate;">🏃‍♂️</div>
-            <div style="position:absolute;top:62px;left:50%;transform:translateX(-50%);font-size:1em;color:#23243a;font-weight:900;">${student.score} / ${maxScore}</div>
+            <div style="position:absolute;top:62px;left:50%;transform:translateX(-50%);font-size:1em;color:#23243a;font-weight:900;">${student.name.split(' ')[0]} <span style='color:#11998e;'>${student.score}/${maxScore}</span></div>
           </div>
         `;
+        // علم النهاية
+        if(idx === students.length-1) {
+          lane.innerHTML += `<div style="position:absolute;top:50%;right:0;transform:translateY(-50%);font-size:2.2em;">🚩</div>`;
+        }
         track.appendChild(lane);
         // بعد الإضافة، حرّك العداء حسب التقدم
         setTimeout(()=>{
           let runner = document.getElementById(runnerId);
           if(runner) {
-            runner.style.left = `calc(${percent*100}% - 0px)`;
+            runner.style.left = `calc(${percent*85}% )`;
           }
         }, 50);
       });
