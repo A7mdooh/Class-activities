@@ -820,26 +820,32 @@ function closeHonorBoard() {
       track.style.justifyContent = '';
       track.style.alignItems = '';
       track.style.padding = '40px 0 40px 0';
-      // رأس المضمار: اسم الطالب الأول
-      let startName = students[0]?.name || '';
-      let startDiv = document.createElement('div');
-      startDiv.style = 'display:flex;align-items:center;gap:18px;margin-bottom:28px;justify-content:flex-start;padding-right:40px;';
-      startDiv.innerHTML = `<span style="font-size:1.3em;font-weight:900;color:#00f5ff;text-shadow:0 0 18px #00f5ff99;letter-spacing:0.04em;">🏁 البداية</span><span style="font-size:1.3em;font-weight:900;color:#FFD700;text-shadow:0 0 18px #FFD70099;">${startName}</span>`;
-      track.appendChild(startDiv);
+  // رأس المضمار: اسم الطالب الأول (الاسم الكامل مع إبراز الاسم الأول)
+  let startName = students[0]?.name || '';
+  let firstName = startName.split(' ')[0] || startName;
+  let restName = startName.slice(firstName.length).trim();
+  let startDiv = document.createElement('div');
+  startDiv.style = 'display:flex;align-items:center;gap:18px;margin-bottom:28px;justify-content:flex-start;padding-right:40px;';
+  startDiv.innerHTML = `<span style="font-size:1.3em;font-weight:900;color:#00f5ff;text-shadow:0 0 18px #00f5ff99;letter-spacing:0.04em;">🏁 البداية</span><span style="font-size:1.3em;font-weight:900;"><span style='color:#FFD700;text-shadow:0 0 18px #FFD70099;'>${firstName}</span> <span style='color:#fffbe6;'>${restName}</span></span>`;
+  track.appendChild(startDiv);
       // لكل طالب: مضمار وعداء متحرك
       students.forEach((student, idx) => {
         let percent = (student.score / maxScore);
         let runnerId = `runner-${idx}`;
         let lane = document.createElement('div');
         lane.style = 'position:relative;height:80px;margin-bottom:32px;display:flex;align-items:center;';
-        // شريط التقدم متدرج وحديث
+        // شريط التقدم متدرج وحديث (الاسم الكامل مع إبراز الاسم الأول)
+        let sFirst = student.name.split(' ')[0] || student.name;
+        let sRest = student.name.slice(sFirst.length).trim();
         lane.innerHTML = `
           <div style="position:absolute;top:50%;left:0;transform:translateY(-50%);width:92%;height:20px;background:linear-gradient(90deg,#23243a 0%,#00f5ff 60%,#FFD700 100%);border-radius:14px;box-shadow:0 0 16px #00f5ff55,0 0 8px #ffd70055;"></div>
           <div id="${runnerId}" class="race-runner" style="position:absolute;top:50%;left:0;transform:translateY(-50%);transition:left 0.8s cubic-bezier(0.68,-0.55,0.27,1.55);width:70px;height:70px;z-index:2;">
             <div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#FFD700 60%,#00f5ff 100%);box-shadow:0 0 24px #FFD70099,0 0 24px #00f5ff99;display:flex;align-items:center;justify-content:center;font-size:2.3em;font-weight:900;color:#23243a;animation:runnerBounce 1.2s infinite alternate;filter:drop-shadow(0 0 12px #FFD70088);">
               <span style='display:inline-block;transform:scaleX(-1);text-shadow:0 0 8px #00f5ff;'>🏃‍♂️</span>
             </div>
-            <div style="position:absolute;top:74px;left:50%;transform:translateX(-50%);font-size:1.08em;color:#00f5ff;font-weight:900;text-shadow:0 0 8px #23243a,#00f5ff99;letter-spacing:0.02em;">${student.name.split(' ')[0]} <span style='color:#FFD700;font-size:1em;text-shadow:0 0 8px #FFD700;'>${student.score}/${maxScore}</span></div>
+            <div style="position:absolute;top:74px;left:50%;transform:translateX(-50%);font-size:1.08em;font-weight:900;text-shadow:0 0 8px #23243a,#00f5ff99;letter-spacing:0.02em;">
+              <span style='color:#FFD700;'>${sFirst}</span> <span style='color:#00f5ff;'>${sRest}</span> <span style='color:#FFD700;font-size:1em;text-shadow:0 0 8px #FFD700;'>${student.score}/${maxScore}</span>
+            </div>
           </div>
         `;
         // علم النهاية
@@ -901,7 +907,11 @@ function closeHonorBoard() {
         }
       }, 80);
       // عرض اسم الطالب والسؤال
-      document.getElementById('raceCurrentStudent').textContent = students[studentIdx].name;
+  // إبراز الاسم الأول بنفس طريقة العداء
+  let sName = students[studentIdx].name;
+  let sFirst = sName.split(' ')[0] || sName;
+  let sRest = sName.slice(sFirst.length).trim();
+  document.getElementById('raceCurrentStudent').innerHTML = `<span style='color:#FFD700;'>${sFirst}</span> <span style='color:#00f5ff;'>${sRest}</span>`;
       document.getElementById('raceQuestion').textContent = `اسأل سؤال (${students[studentIdx].answers.length+1} من ${questionsPerStudent})`;
       document.getElementById('raceProgressInfo').textContent = `عدد الأسئلة لكل طالب: ${questionsPerStudent}`;
       // رسالة تحفيزية عشوائية عند كل سؤال
