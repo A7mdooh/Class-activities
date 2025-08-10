@@ -239,12 +239,15 @@
       renderStudentList();
       document.getElementById('currentStudent').textContent = '';
       updateScoreboard();
-      // إذا كانت نافذة اختيار الطلاب مفتوحة، حدث القائمة مباشرة
-      if(document.getElementById('chooseStudentsModal').style.display === 'flex') {
+      // عند اختيار الصف، افتح نافذة اختيار الطلاب مباشرة مع إعادة تهيئة المنطق
+      if(currentClass && (studentsData[currentClass]||[]).length) {
+        selectMode = 'random';
+        targetCount = Math.min(3, studentsData[currentClass].length);
+        manualSelected = new Set();
+        updateModeBtns();
+        updateStudentCountSection();
         renderChooseStudentsList();
-        setTimeout(()=>{
-          document.querySelectorAll('#chooseStudentsList input[type=checkbox]').forEach(el=>el.checked = true);
-        }, 0);
+        document.getElementById('chooseStudentsModal').style.display = 'flex';
       }
     };
 
