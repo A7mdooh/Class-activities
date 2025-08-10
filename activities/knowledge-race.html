@@ -684,9 +684,14 @@
       raceScreen.querySelector('#raceSetup').style.display = 'none';
       raceScreen.querySelector('#raceArena').style.display = 'flex';
       raceScreen.querySelector('#raceHonorBoard').style.display = 'none';
-      // ضمان ظهور نافذة السؤال
-      let raceQuestionBox = document.getElementById('raceQuestionBox');
-      if(raceQuestionBox) raceQuestionBox.style.display = 'block';
+      // ضمان ظهور نافذة السؤال وأزرار التقييم بعد رسم DOM
+      setTimeout(function() {
+        let raceQuestionBox = document.getElementById('raceQuestionBox');
+        if(raceQuestionBox) {
+          raceQuestionBox.style.display = 'block';
+          raceQuestionBox.scrollIntoView({behavior:'smooth',block:'center'});
+        }
+      }, 100);
       renderRaceTrack();
       showNextQuestion();
     }
@@ -773,8 +778,13 @@
         return;
       }
       // ضمان ظهور نافذة السؤال وأزرار التقييم
-      let raceQuestionBox = document.getElementById('raceQuestionBox');
-      if(raceQuestionBox) raceQuestionBox.style.display = 'block';
+      setTimeout(function() {
+        let raceQuestionBox = document.getElementById('raceQuestionBox');
+        if(raceQuestionBox) {
+          raceQuestionBox.style.display = 'block';
+          raceQuestionBox.scrollIntoView({behavior:'smooth',block:'center'});
+        }
+      }, 50);
       // عرض اسم الطالب والسؤال
       document.getElementById('raceCurrentStudent').textContent = students[studentIdx].name;
       document.getElementById('raceQuestion').textContent = `اسأل سؤال (${students[studentIdx].answers.length+1} من ${questionsPerStudent})`;
