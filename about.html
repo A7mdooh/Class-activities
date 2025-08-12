@@ -4,75 +4,200 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>برنامج الأنشطة الصفية - تعريف وشرح</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --main: #0ea5e9;
+            --main-dark: #0369a1;
+            --accent: #fbbf24;
+            --bg: #f8fafc;
+            --white: #fff;
+            --card: #e0f2fe;
+            --shadow: 0 8px 32px rgba(14,165,233,0.10);
+            --radius: 22px;
+            --transition: 0.4s cubic-bezier(.4,2,.3,1);
+        }
         body {
             font-family: 'Cairo', Tahoma, Arial, sans-serif;
-            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ef 100%);
-            color: #222;
+            background: linear-gradient(120deg, var(--main) 0%, var(--bg) 100%);
+            color: #1e293b;
             margin: 0;
-            padding: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
         }
-        .container {
-            max-width: 900px;
-            margin: 40px auto;
-            background: #fff;
-            border-radius: 18px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-            padding: 32px 28px;
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 80% 10%, #fbbf24 0%, transparent 60%),
+                        radial-gradient(circle at 10% 90%, #0ea5e9 0%, transparent 70%),
+                        radial-gradient(circle at 50% 50%, #38bdf8 0%, transparent 80%);
+            opacity: 0.13;
+            z-index: 0;
+            pointer-events: none;
+            animation: bgmove 18s linear infinite alternate;
         }
-        h1, h2, h3 {
-            color: #1e3a8a;
-            margin-top: 0;
+        @keyframes bgmove {
+            0% { background-position: 80% 10%, 10% 90%, 50% 50%; }
+            100% { background-position: 60% 30%, 30% 80%, 60% 60%; }
+        }
+        .landing-container {
+            max-width: 1050px;
+            margin: 0 auto;
+            padding: 48px 18px 32px 18px;
+            position: relative;
+            z-index: 2;
+        }
+        .hero {
+            background: linear-gradient(120deg, var(--white) 80%, var(--accent) 120%);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 48px 32px 32px 32px;
+            text-align: center;
+            margin-bottom: 38px;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInDown 1.1s cubic-bezier(.4,2,.3,1);
+        }
+        @keyframes fadeInDown {
+            0% { opacity: 0; transform: translateY(-60px) scale(0.98); }
+            100% { opacity: 1; transform: none; }
+        }
+        .hero h1 {
+            font-size: 2.7rem;
+            color: var(--main-dark);
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+            font-weight: 700;
+            text-shadow: 0 2px 12px #bae6fd44;
+        }
+        .hero p {
+            font-size: 1.25rem;
+            color: #334155;
+            margin-bottom: 0;
+        }
+        .cta-btn {
+            margin-top: 32px;
+            background: var(--main);
+            color: var(--white);
+            border: none;
+            border-radius: 50px;
+            padding: 16px 38px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            box-shadow: 0 4px 18px #0ea5e933;
+            cursor: pointer;
+            transition: background var(--transition), transform var(--transition);
+            outline: none;
+        }
+        .cta-btn:hover {
+            background: var(--main-dark);
+            transform: scale(1.06) translateY(-2px);
         }
         .section {
-            margin-bottom: 32px;
+            margin-bottom: 38px;
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 28px 22px 18px 22px;
+            animation: fadeInUp 1.2s cubic-bezier(.4,2,.3,1);
+        }
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(60px) scale(0.98); }
+            100% { opacity: 1; transform: none; }
+        }
+        h2 {
+            color: var(--main-dark);
+            margin-top: 0;
+            font-size: 2rem;
         }
         ul {
             padding-right: 24px;
         }
         .activity-list {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 18px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 22px;
+            margin-top: 18px;
         }
         .activity-card {
-            background: #f1f5f9;
-            border-radius: 10px;
-            padding: 16px 12px;
-            box-shadow: 0 2px 8px rgba(30,58,138,0.06);
+            background: var(--white);
+            border-radius: 16px;
+            padding: 18px 14px 16px 14px;
+            box-shadow: 0 2px 12px #0ea5e91a;
+            transition: transform 0.25s cubic-bezier(.4,2,.3,1), box-shadow 0.25s;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInCard 1.2s cubic-bezier(.4,2,.3,1);
+        }
+        .activity-card:hover {
+            transform: translateY(-8px) scale(1.04) rotate(-1deg);
+            box-shadow: 0 8px 32px #0ea5e933;
+        }
+        @keyframes fadeInCard {
+            0% { opacity: 0; transform: scale(0.95) translateY(30px); }
+            100% { opacity: 1; transform: none; }
         }
         .activity-card h4 {
             margin: 0 0 8px 0;
-            color: #2563eb;
+            color: var(--main);
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+        .activity-card p {
+            color: #334155;
+            font-size: 1rem;
         }
         .features {
-            background: #e0e7ef;
-            border-radius: 10px;
+            background: #f1f5f9;
+            border-radius: 12px;
             padding: 16px 12px;
+            box-shadow: 0 2px 8px #bae6fd33;
+        }
+        .footer {
+            text-align:center; color:#64748b; font-size:15px; margin-top: 32px;
+        }
+        /* مؤثرات عائمة */
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.18;
+            pointer-events: none;
+            animation: float 8s infinite ease-in-out;
+        }
+        .bubble1 { width: 120px; height: 120px; background: var(--main); left: 2%; top: 8%; animation-delay: 0s; }
+        .bubble2 { width: 80px; height: 80px; background: var(--accent); right: 6%; top: 18%; animation-delay: 2s; }
+        .bubble3 { width: 60px; height: 60px; background: #38bdf8; left: 12%; bottom: 10%; animation-delay: 4s; }
+        .bubble4 { width: 100px; height: 100px; background: #fbbf24; right: 10%; bottom: 8%; animation-delay: 1s; }
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-30px) scale(1.08); }
+            100% { transform: translateY(0) scale(1); }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>برنامج الأنشطة الصفية</h1>
-        <div class="section">
-            <h2>مقدمة عن البرنامج</h2>
-            <p>
-                برنامج الأنشطة الصفية هو منصة تفاعلية متكاملة تهدف إلى تعزيز التفاعل والمشاركة داخل الصف من خلال مجموعة متنوعة من الألعاب والأنشطة التعليمية الممتعة. صُمم البرنامج ليكون سهل الاستخدام للمعلمين والطلاب، ويوفر بيئة محفزة تدعم التعلم النشط والتنافس الإيجابي.
+    <div class="landing-container">
+        <div class="bubble bubble1"></div>
+        <div class="bubble bubble2"></div>
+        <div class="bubble bubble3"></div>
+        <div class="bubble bubble4"></div>
+        <section class="hero">
+            <h1>برنامج الأنشطة الصفية</h1>
+            <p>منصة تفاعلية متكاملة تعزز التفاعل والمشاركة داخل الصف عبر مجموعة من الألعاب والأنشطة التعليمية الحديثة.</p>
+            <a href="#activities" class="cta-btn">استكشف الأنشطة</a>
+        </section>
+        <div class="section" style="text-align:center;">
+            <h2>لماذا برنامج الأنشطة الصفية؟</h2>
+            <p style="font-size:1.15rem;max-width:600px;margin:auto;">
+                صُمم البرنامج ليكون سهل الاستخدام للمعلمين والطلاب، ويوفر بيئة محفزة تدعم التعلم النشط والتنافس الإيجابي، مع واجهات عصرية وأدوات ذكية لإدارة الصف وتحفيز الطلاب.
             </p>
         </div>
-        <div class="section">
-            <h2>الواجهات الرئيسية</h2>
-            <ul>
-                <li><strong>الصفحة الرئيسية:</strong> تعرض جميع الأنشطة المتاحة بشكل منظم مع إمكانية الوصول السريع لكل نشاط.</li>
-                <li><strong>واجهة إدارة الطلاب:</strong> لإضافة وتعديل بيانات الطلاب ومتابعة تقدمهم.</li>
-                <li><strong>واجهة إدارة الجدول:</strong> لتنظيم مواعيد الأنشطة وتوزيعها على الحصص.</li>
-                <li><strong>واجهة التحكم في الأنشطة:</strong> تتيح للمعلم بدء وإيقاف الأنشطة والتحكم في المؤثرات الصوتية والبصرية.</li>
-            </ul>
-        </div>
-        <div class="section">
-            <h2>الأنشطة المتوفرة في البرنامج</h2>
+        <div class="section" id="activities">
+            <h2>الأنشطة التفاعلية</h2>
             <div class="activity-list">
                 <div class="activity-card">
                     <h4>الاسم العشوائي</h4>
@@ -136,16 +261,16 @@
             <h2>مميزات البرنامج</h2>
             <div class="features">
                 <ul>
-                    <li>تصميم عصري وجذاب سهل الاستخدام.</li>
+                    <li>تصميم عصري متجاوب مع مؤثرات بصرية متقدمة.</li>
                     <li>تنوع كبير في الأنشطة لتناسب جميع الأعمار والمستويات.</li>
                     <li>إمكانية تخصيص الأنشطة حسب احتياجات المعلم.</li>
-                    <li>دعم المؤثرات الصوتية والبصرية لزيادة التفاعل.</li>
+                    <li>دعم المؤثرات الصوتية والبصرية والأنيميشن لزيادة التفاعل.</li>
                     <li>إدارة بيانات الطلاب وجدولة الأنشطة بسهولة.</li>
                     <li>متوافق مع جميع الأجهزة والمتصفحات الحديثة.</li>
                 </ul>
             </div>
         </div>
-        <div class="section" style="text-align:center; color:#64748b; font-size:15px;">
+        <div class="footer">
             <p>جميع الحقوق محفوظة &copy; 2025 - برنامج الأنشطة الصفية</p>
         </div>
     </div>
